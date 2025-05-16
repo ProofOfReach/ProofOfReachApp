@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>API Documentation | Nostr Ad Marketplace</title>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:300,400,700|Roboto:300,400,700" rel="stylesheet">
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        font-family: 'Roboto', sans-serif;
+      }
+      #redoc-container {
+        width: 100%;
+        height: 100%;
+      }
+      .header {
+        background: #1f2937;
+        padding: 12px 24px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+      }
+      .header h1 {
+        color: #8b5cf6;
+        font-size: 20px;
+        margin: 0;
+      }
+      .header a {
+        background-color: #8b5cf6;
+        color: white;
+        padding: 8px 16px;
+        border-radius: 4px;
+        text-decoration: none;
+        font-size: 14px;
+      }
+    </style>
+    <script src="https://cdn.redoc.ly/redoc/latest/bundles/redoc.standalone.js"></script>
+  </head>
+  <body>
+    <div class="header">
+      <h1>Nostr Ad Marketplace API</h1>
+      <a href="/">Back to Home</a>
+    </div>
+    <div id="redoc-container"></div>
+    <script>
+      // Will be replaced by server with actual spec
+      const spec = SPEC_PLACEHOLDER;
+      const options = {
+        scrollYOffset: 64,
+        hideDownloadButton: false,
+        expandResponses: '200,201',
+        theme: {
+          colors: {
+            primary: { main: '#8b5cf6' }
+          }
+        }
+      };
+      Redoc.init(spec, options, document.getElementById('redoc-container'));
+    </script>
+  </body>
+</html>

@@ -1,0 +1,121 @@
+/**
+ * Custom styles for ReDoc API documentation
+ */
+
+/* Main container styling */
+.redoc-wrap {
+  background-color: #111827 !important;
+  color: #e5e7eb !important;
+}
+
+/* Allow content to fill available height */
+.api-content {
+  max-height: none !important;
+  overflow: visible !important;
+}
+
+/* Fix for method content being cut off */
+[data-section-id] > div {
+  min-height: auto !important;
+  overflow: visible !important;
+}
+
+/* Fix for scrollable content areas */
+.scrollbar-container {
+  max-height: calc(100vh - 64px) !important;
+  overflow-y: auto !important;
+}
+
+/* Improve sidebar appearance and ensure sidebar is clickable */
+.menu-content {
+  background-color: #1f2937 !important;
+  padding-bottom: 100px !important; /* Ensure we can scroll to see all menu items */
+  z-index: 100 !important; /* Ensure sidebar is above other elements */
+  pointer-events: auto !important; /* Make sure menu items are clickable */
+}
+
+/* Ensure label items in menu are clickable */
+.menu-content label {
+  cursor: pointer !important;
+  pointer-events: auto !important;
+}
+
+/* Make sure menu items are visible and clickable */
+.menu-item {
+  pointer-events: auto !important;
+  position: relative !important;
+  z-index: 200 !important;
+}
+
+/* Dark theme compatible right panel */
+div[role="complementary"] {
+  background-color: #111827 !important;
+}
+
+/* Improve code examples readability */
+.redoc-json {
+  background-color: #1a1a1a !important;
+}
+
+.redoc-json .token.property {
+  color: #9ca3af !important;
+}
+
+.redoc-json .token.string {
+  color: #a5d6ff !important;
+}
+
+.redoc-json .token.number {
+  color: #79c0ff !important;
+}
+
+.redoc-json .token.boolean {
+  color: #ffa657 !important;
+}
+
+.redoc-json .token.null {
+  color: #ff7b72 !important;
+}
+
+/* Response samples */
+.react-tabs__tab-panel .redoc-json {
+  max-height: none !important;
+}
+
+/* Response examples theme*/
+.react-tabs__tab-panel {
+  background-color: #1f2937 !important;
+}
+
+.react-tabs__tab {
+  color: #e5e7eb !important;
+  border-color: #374151 !important;
+}
+
+.react-tabs__tab--selected {
+  background-color: #374151 !important;
+  color: #ffffff !important;
+}
+
+/* Fix API method styling */
+.http-verb {
+  border-radius: 3px !important;
+  font-weight: bold !important;
+  text-transform: uppercase !important;
+}
+
+/* Adjustments for mobile */
+@media (max-width: 768px) {
+  .redoc-wrap {
+    flex-direction: column !important;
+  }
+  
+  .menu-content {
+    width: 100% !important;
+    max-height: 300px !important;
+  }
+  
+  div[role="complementary"] {
+    width: 100% !important;
+  }
+}

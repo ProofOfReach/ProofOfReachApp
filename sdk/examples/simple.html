@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nostr Ad Marketplace SDK Example</title>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+      line-height: 1.6;
+      color: #333;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    header {
+      border-bottom: 1px solid #eee;
+      padding-bottom: 20px;
+      margin-bottom: 20px;
+    }
+    h1 {
+      color: #2a2a72;
+    }
+    main {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 30px;
+    }
+    article {
+      padding-right: 20px;
+    }
+    aside {
+      padding: 20px;
+      background-color: #f9f9f9;
+      border-radius: 5px;
+    }
+    .ad-container {
+      margin-bottom: 30px;
+    }
+    .nostr-ad {
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      padding: 15px;
+      background-color: white;
+      transition: all 0.2s ease;
+      text-decoration: none;
+      color: inherit;
+      display: block;
+    }
+    .nostr-ad:hover {
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      transform: translateY(-2px);
+    }
+    .ad-image {
+      width: 100%;
+      height: auto;
+      border-radius: 4px;
+      margin-bottom: 12px;
+    }
+    .ad-title {
+      font-size: 18px;
+      margin: 0 0 8px 0;
+      color: #2a2a72;
+    }
+    .ad-description {
+      font-size: 14px;
+      margin: 0 0 12px 0;
+      color: #555;
+    }
+    .ad-cta {
+      display: inline-block;
+      background-color: #4a4a9e;
+      color: white;
+      padding: 6px 16px;
+      border-radius: 4px;
+      font-size: 14px;
+      margin-top: 8px;
+    }
+    .ad-sponsorship {
+      font-size: 12px;
+      color: #999;
+      margin-top: 10px;
+      text-align: right;
+    }
+    .loading {
+      padding: 20px;
+      text-align: center;
+      color: #666;
+      background-color: #f5f5f5;
+      border-radius: 8px;
+      font-style: italic;
+    }
+    .debug-panel {
+      margin-top: 40px;
+      padding: 15px;
+      background-color: #f5f5f5;
+      border-radius: 8px;
+    }
+    .debug-panel pre {
+      background-color: #eee;
+      padding: 10px;
+      border-radius: 4px;
+      overflow-x: auto;
+    }
+    button {
+      background-color: #4a4a9e;
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+    button:hover {
+      background-color: #3a3a7e;
+    }
+    select, input {
+      padding: 8px;
+      margin-bottom: 10px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      width: 100%;
+    }
+    label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: 500;
+    }
+    .controls {
+      margin-bottom: 20px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Nostr Ad Marketplace SDK Example</h1>
+    <p>This page demonstrates how to integrate the Nostr Ad Marketplace SDK into a website.</p>
+  </header>
+
+  <main>
+    <article>
+      <h2>Mock Article Content</h2>
+      <p>This is where your regular content would go. The ad is shown in the sidebar on the right.</p>
+      
+      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam auctor, nisl eget ultricies tincidunt, nunc nisl aliquam nisl, eget aliquam nisl nisl eget nisl.</p>
+      
+      <p>Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Vestibulum tortor quam, feugiat vitae, ultricies eget, tempor sit amet, ante.</p>
+      
+      <div class="ad-container">
+        <div id="in-content-ad" class="loading">Loading in-content ad...</div>
+      </div>
+
+      <p>Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Vestibulum tortor quam, feugiat vitae, ultricies eget, tempor sit amet, ante.</p>
+      
+      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam auctor, nisl eget ultricies tincidunt, nunc nisl aliquam nisl, eget aliquam nisl nisl eget nisl.</p>
+
+      <div class="debug-panel">
+        <h3>Debug Panel</h3>
+        <div class="controls">
+          <label for="api-key">API Key:</label>
+          <input type="text" id="api-key" placeholder="Enter your API key">
+          
+          <label for="placement">Placement:</label>
+          <select id="placement">
+            <option value="sidebar">Sidebar</option>
+            <option value="feed">Feed</option>
+            <option value="banner">Banner</option>
+            <option value="sponsored">Sponsored</option>
+            <option value="native">Native</option>
+          </select>
+          
+          <label for="interests">Interests (comma-separated):</label>
+          <input type="text" id="interests" placeholder="bitcoin, nostr, technology">
+          
+          <label for="format">Format:</label>
+          <select id="format">
+            <option value="text-image">Text + Image</option>
+            <option value="text">Text Only</option>
+            <option value="image">Image Only</option>
+            <option value="rich">Rich</option>
+          </select>
+          
+          <button id="refresh-ad">Refresh Ads</button>
+        </div>
+        <h4>Last Request:</h4>
+        <pre id="request-log">No requests yet</pre>
+        <h4>SDK Response:</h4>
+        <pre id="response-log">No responses yet</pre>
+      </div>
+    </article>
+
+    <aside>
+      <h3>Sponsored Content</h3>
+      <div id="sidebar-ad" class="loading">Loading sidebar ad...</div>
+    </aside>
+  </main>
+
+  <!-- Load the SDK -->
+  <script src="../dist/nostr-ad-marketplace-sdk.min.js"></script>
+  
+  <script>
+    // DOM Elements
+    const apiKeyInput = document.getElementById('api-key');
+    const placementSelect = document.getElementById('placement');
+    const interestsInput = document.getElementById('interests');
+    const formatSelect = document.getElementById('format');
+    const refreshButton = document.getElementById('refresh-ad');
+    const requestLog = document.getElementById('request-log');
+    const responseLog = document.getElementById('response-log');
+    const sidebarAdContainer = document.getElementById('sidebar-ad');
+    const inContentAdContainer = document.getElementById('in-content-ad');
+    
+    // Initialize with default or stored API key
+    apiKeyInput.value = localStorage.getItem('nostrad_api_key') || 'TEST_API_KEY_000';
+    
+    // Save API key when changed
+    apiKeyInput.addEventListener('change', () => {
+      localStorage.setItem('nostrad_api_key', apiKeyInput.value);
+    });
+    
+    // Initialize SDK with the API key
+    let adSDK;
+    
+    function initializeSDK() {
+      const apiKey = apiKeyInput.value || 'TEST_API_KEY_000';
+      
+      // Create SDK instance
+      adSDK = new NostrAdMarketplaceSDK({
+        apiKey,
+        baseUrl: window.location.hostname === 'localhost' ? 'http://localhost:5000' : 'https://api.nostradmarketplace.com',
+        debug: true
+      });
+      
+      // Log initialization
+      requestLog.textContent = `SDK initialized with API key: ${apiKey}`;
+    }
+    
+    // Fetch and display ads
+    async function loadAds() {
+      if (!adSDK) {
+        initializeSDK();
+      }
+      
+      // Get current settings
+      const placement = placementSelect.value;
+      const interests = interestsInput.value.split(',').map(i => i.trim()).filter(Boolean);
+      const format = formatSelect.value;
+      
+      // Show loading state
+      sidebarAdContainer.innerHTML = '<div class="loading">Loading ad...</div>';
+      inContentAdContainer.innerHTML = '<div class="loading">Loading ad...</div>';
+      
+      // Log request params
+      const requestParams = { placement, interests, format };
+      requestLog.textContent = JSON.stringify(requestParams, null, 2);
+      
+      try {
+        // Load sidebar ad
+        const sidebarAd = await adSDK.serveAd({
+          placement: 'sidebar',
+          interests,
+          format
+        });
+        
+        // Load in-content ad with different placement
+        const inContentAd = await adSDK.serveAd({
+          placement: 'feed',
+          interests,
+          format
+        });
+        
+        // Log response
+        responseLog.textContent = JSON.stringify({
+          sidebarAd,
+          inContentAd
+        }, null, 2);
+        
+        // Render ads
+        renderAd(sidebarAd, sidebarAdContainer, 'sidebar');
+        renderAd(inContentAd, inContentAdContainer, 'feed');
+        
+      } catch (error) {
+        console.error('Error loading ads:', error);
+        responseLog.textContent = JSON.stringify(error, null, 2);
+        
+        sidebarAdContainer.innerHTML = `<div class="nostr-ad">
+          <p class="ad-title">Error loading ad</p>
+          <p class="ad-description">${error.message}</p>
+        </div>`;
+        
+        inContentAdContainer.innerHTML = `<div class="nostr-ad">
+          <p class="ad-title">Error loading ad</p>
+          <p class="ad-description">${error.message}</p>
+        </div>`;
+      }
+    }
+    
+    // Render an ad to the container
+    function renderAd(ad, container, placement) {
+      if (!ad) {
+        container.innerHTML = `<div class="nostr-ad">
+          <p class="ad-title">No ad available</p>
+          <p class="ad-description">No suitable ad found for this placement.</p>
+        </div>`;
+        return;
+      }
+      
+      // Create the ad HTML
+      container.innerHTML = `
+        <a href="${ad.targetUrl}" target="_blank" rel="noopener" 
+           class="nostr-ad" onclick="trackAdClick('${ad.id}', '${placement}')">
+          ${ad.imageUrl ? `<img src="${ad.imageUrl}" alt="${ad.title}" class="ad-image">` : ''}
+          <h3 class="ad-title">${ad.title}</h3>
+          <p class="ad-description">${ad.description}</p>
+          <span class="ad-cta">Learn More</span>
+          <div class="ad-sponsorship">Sponsored</div>
+        </a>
+      `;
+    }
+    
+    // Track ad clicks
+    window.trackAdClick = function(adId, placement) {
+      if (!adSDK) {
+        initializeSDK();
+      }
+      
+      adSDK.trackClick({
+        adId,
+        placement,
+        pubkey: 'EXAMPLE_PUBKEY' // Replace with your actual pubkey if available
+      }).then(response => {
+        console.log('Click tracked successfully:', response);
+      }).catch(error => {
+        console.error('Failed to track click:', error);
+      });
+      
+      // We don't prevent default because we want the link to open
+    };
+    
+    // Event listeners
+    refreshButton.addEventListener('click', loadAds);
+    
+    // Load ads on page load
+    document.addEventListener('DOMContentLoaded', loadAds);
+  </script>
+</body>
+</html>

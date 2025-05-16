@@ -1,0 +1,110 @@
+
+🔧 Part 1: Update openapi.ts
+Add the following two endpoints:
+GET /ads/serve – Public ad-serving endpoint
+
+ts
+Copy
+Edit
+/ads/serve:
+  get:
+    summary: Serve a single ad
+    description: Returns a contextual ad for SDK or publisher integration.
+    tags: [Ads]
+    parameters:
+      - name: placement
+        in: query
+        schema:
+          type: string
+        required: false
+        description: Placement zone (e.g. 'sidebar', 'header')
+      - name: pubkey
+        in: query
+        schema:
+          type: string
+        required: false
+        description: Optional Nostr pubkey of the publisher
+    responses:
+      '200':
+        description: Returns one ad object
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Ad'
+POST /auth/nostr-login – Nostr-based login endpoint
+
+ts
+Copy
+Edit
+/auth/nostr-login:
+  post:
+    summary: Nostr login
+    description: Accepts a signed challenge and returns a session token or JWT.
+    tags: [Authentication]
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            required: [pubkey, signature, challenge]
+            properties:
+              pubkey:
+                type: string
+              signature:
+                type: string
+              challenge:
+                type: string
+    responses:
+      '200':
+        description: Returns session token
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                token:
+                  type: string
+                  description: Session token or JWT
+Additional OpenAPI Fixes:
+Ensure all referenced schemas like Ad are defined in components.schemas
+
+Add description fields where missing
+
+Use OpenAPIV3.Document syntax throughout
+
+Remove any redundant or unused schema definitions
+
+📦 Part 2: Create a Lightweight JS SDK (in /sdk/index.ts)
+SDK Features (MVP):
+init(config: { endpoint: string }): Initializes base API URL
+
+getAd(placement?: string, pubkey?: string): Calls /ads/serve and returns JSON
+
+trackEvent(type: 'click' | 'impression', adId: string): (Stub only for now)
+
+Example usage:
+ts
+Copy
+Edit
+import { init, getAd } from '@nostr-ads/sdk';
+
+init({ endpoint: 'https://api.nostrads.xyz' });
+
+const ad = await getAd('sidebar', 'npub1...xyz');
+console.log(ad); // { id, imageUrl, headline, destinationUrl }
+Make this SDK zero-dependency (just uses fetch)
+
+Add error handling (try/catch, console.warn)
+
+Export as ES module and add README.md with example usage
+
+✅ At the end, return:
+
+The updated openapi.ts
+
+The SDK file (sdk/index.ts)
+
+A brief SDK README.md that explains usage for developers (especially publishers)
+
+Everything should assume MVP status: functional but simple, public by default, and ready for demo use.

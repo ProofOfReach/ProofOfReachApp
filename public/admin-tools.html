@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Access Repair Tools</title>
+  <style>
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 2rem;
+      line-height: 1.6;
+      color: #1f2937;
+    }
+    h1 {
+      color: #3B82F6;
+      margin-bottom: 1.5rem;
+    }
+    h2 {
+      color: #4B5563;
+      margin-top: 1.5rem;
+      margin-bottom: 1rem;
+    }
+    .card {
+      background-color: #f9fafb;
+      border-radius: 0.5rem;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      border: 1px solid #e5e7eb;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    }
+    .card-header {
+      display: flex;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+    .card-header h3 {
+      margin: 0;
+      color: #111827;
+    }
+    .card-badge {
+      margin-left: auto;
+      padding: 0.25rem 0.5rem;
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 500;
+    }
+    .badge-primary {
+      background-color: #93c5fd;
+      color: #1e40af;
+    }
+    .badge-success {
+      background-color: #86efac;
+      color: #166534;
+    }
+    .badge-warning {
+      background-color: #fde68a;
+      color: #92400e;
+    }
+    .badge-danger {
+      background-color: #fca5a5;
+      color: #991b1b;
+    }
+    button {
+      background-color: #3B82F6;
+      color: white;
+      border: none;
+      border-radius: 0.25rem;
+      padding: 0.5rem 1rem;
+      font-size: 1rem;
+      cursor: pointer;
+      margin-right: 0.5rem;
+      margin-bottom: 0.5rem;
+      transition: background-color 0.2s;
+    }
+    button:hover {
+      background-color: #2563eb;
+    }
+    button.danger {
+      background-color: #EF4444;
+    }
+    button.danger:hover {
+      background-color: #dc2626;
+    }
+    button.success {
+      background-color: #10B981;
+    }
+    button.success:hover {
+      background-color: #059669;
+    }
+    button.warning {
+      background-color: #F59E0B;
+    }
+    button.warning:hover {
+      background-color: #d97706;
+    }
+    code {
+      background-color: #e5e7eb;
+      padding: 0.2rem 0.4rem;
+      border-radius: 0.25rem;
+      font-family: monospace;
+      font-size: 0.875rem;
+    }
+    pre {
+      background-color: #1f2937;
+      color: #e5e7eb;
+      padding: 1rem;
+      border-radius: 0.5rem;
+      overflow-x: auto;
+      font-size: 0.875rem;
+    }
+    .logs {
+      max-height: 200px;
+      overflow-y: auto;
+      margin-top: 1rem;
+      padding: 0.5rem;
+      background-color: #f3f4f6;
+      border-radius: 0.25rem;
+      font-family: monospace;
+      font-size: 0.75rem;
+    }
+    .role-item {
+      display: flex;
+      align-items: center;
+      padding: 0.5rem;
+      border-bottom: 1px solid #e5e7eb;
+    }
+    .role-item:last-child {
+      border-bottom: none;
+    }
+    .role-badge {
+      display: inline-block;
+      padding: 0.25rem 0.5rem;
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 500;
+      margin-left: auto;
+    }
+    .tabs {
+      display: flex;
+      border-bottom: 1px solid #e5e7eb;
+      margin-bottom: 1rem;
+    }
+    .tab {
+      padding: 0.5rem 1rem;
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+    }
+    .tab.active {
+      border-bottom-color: #3B82F6;
+      color: #3B82F6;
+      font-weight: 500;
+    }
+    .tab-content {
+      display: none;
+    }
+    .tab-content.active {
+      display: block;
+    }
+    .footer {
+      margin-top: 2rem;
+      padding-top: 1rem;
+      border-top: 1px solid #e5e7eb;
+      font-size: 0.875rem;
+      color: #6b7280;
+    }
+  </style>
+</head>
+<body>
+  <h1>Admin Access Repair Tools</h1>
+  
+  <p>This page provides tools to fix admin access issues in the Nostr Ad Marketplace. Follow the steps below to repair your admin access.</p>
+  
+  <div class="card">
+    <div class="card-header">
+      <h3>Role Status</h3>
+      <span id="status-badge" class="card-badge badge-warning">Checking...</span>
+    </div>
+    
+    <div id="role-status">
+      <p>Checking current role status...</p>
+    </div>
+    
+    <button onclick="checkRoleStatus()">Refresh Status</button>
+  </div>
+  
+  <div class="tabs">
+    <div class="tab active" data-tab="repair">Quick Repair</div>
+    <div class="tab" data-tab="advanced">Advanced Tools</div>
+    <div class="tab" data-tab="logs">Logs</div>
+  </div>
+  
+  <div class="tab-content active" data-tab-content="repair">
+    <div class="card">
+      <div class="card-header">
+        <h3>1-Click Admin Fix</h3>
+        <span class="card-badge badge-success">Recommended</span>
+      </div>
+      
+      <p>This will apply all necessary fixes to ensure your admin access is working:</p>
+      <ul>
+        <li>Clear all role-related cache in the browser</li>
+        <li>Set admin role in localStorage</li>
+        <li>Force the application to recognize admin privileges</li>
+      </ul>
+      
+      <button class="success" onclick="applyAllFixes()">Apply All Fixes</button>
+      <button onclick="navigateToDashboard()">Go to Dashboard</button>
+    </div>
+  </div>
+  
+  <div class="tab-content" data-tab-content="advanced">
+    <div class="card">
+      <div class="card-header">
+        <h3>Clear Role Cache</h3>
+      </div>
+      
+      <p>Clears all role-related data from browser storage.</p>
+      
+      <button class="danger" onclick="clearRoleCache()">Clear Role Cache</button>
+    </div>
+    
+    <div class="card">
+      <div class="card-header">
+        <h3>Force Admin Role</h3>
+      </div>
+      
+      <p>Manually sets the admin role in browser storage.</p>
+      
+      <button class="warning" onclick="forceAdminRole()">Force Admin Role</button>
+    </div>
+    
+    <div class="card">
+      <div class="card-header">
+        <h3>Override Role Provider</h3>
+      </div>
+      
+      <p>This advanced fix overrides the React context provider for roles.</p>
+      
+      <button onclick="overrideRoleProvider()">Override Provider</button>
+    </div>
+  </div>
+  
+  <div class="tab-content" data-tab-content="logs">
+    <div class="card">
+      <div class="card-header">
+        <h3>Action Logs</h3>
+      </div>
+      
+      <div id="action-logs" class="logs">
+        <div>Tool initialized at [<span id="init-time"></span>]</div>
+      </div>
+      
+      <button onclick="clearLogs()">Clear Logs</button>
+    </div>
+  </div>
+  
+  <div class="footer">
+    <p>Nostr Ad Marketplace Admin Tools | Created for troubleshooting admin access issues</p>
+  </div>
+  
+  <script>
+    // Initialize
+    document.getElementById('init-time').textContent = new Date().toLocaleTimeString();
+    
+    // Tab functionality
+    document.querySelectorAll('.tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        // Remove active class from all tabs
+        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+        // Add active class to clicked tab
+        tab.classList.add('active');
+        
+        // Hide all tab content
+        document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+        // Show related tab content
+        const tabName = tab.getAttribute('data-tab');
+        document.querySelector(`.tab-content[data-tab-content="${tabName}"]`).classList.add('active');
+      });
+    });
+    
+    // Logging function
+    function log(message) {
+      const logs = document.getElementById('action-logs');
+      const time = new Date().toLocaleTimeString();
+      logs.innerHTML += `<div>[${time}] ${message}</div>`;
+      logs.scrollTop = logs.scrollHeight;
+      console.log(`[AdminTools] ${message}`);
+    }
+    
+    // Clear logs
+    function clearLogs() {
+      const logs = document.getElementById('action-logs');
+      logs.innerHTML = `<div>Logs cleared at [${new Date().toLocaleTimeString()}]</div>`;
+    }
+    
+    // Check role status
+    function checkRoleStatus() {
+      log('Checking role status...');
+      
+      const namespace = 'nostr-ads';
+      const statusDiv = document.getElementById('role-status');
+      const statusBadge = document.getElementById('status-badge');
+      
+      const currentRole = localStorage.getItem(`${namespace}:currentRole`);
+      const cachedRoles = localStorage.getItem(`${namespace}:cachedAvailableRoles`);
+      const timestamp = localStorage.getItem(`${namespace}:roleCacheTimestamp`);
+      
+      let html = '<h3>Current Browser Role Data</h3>';
+      let isAdmin = false;
+      
+      if (currentRole) {
+        html += `<div class="role-item">
+          <strong>Current Role:</strong> 
+          <span class="role-badge" style="background-color: ${currentRole === 'admin' ? '#86efac' : '#93c5fd'}; color: ${currentRole === 'admin' ? '#166534' : '#1e40af'};">
+            ${currentRole}
+          </span>
+        </div>`;
+        
+        if (currentRole === 'admin') {
+          isAdmin = true;
+        }
+      } else {
+        html += '<div class="role-item"><strong>Current Role:</strong> <em>Not set</em></div>';
+      }
+      
+      if (cachedRoles) {
+        try {
+          const roles = JSON.parse(cachedRoles);
+          html += '<div class="role-item"><strong>Available Roles:</strong> ';
+          
+          roles.forEach(role => {
+            html += `<span class="role-badge" style="margin-left: 4px; background-color: ${role === 'admin' ? '#86efac' : '#e5e7eb'}; color: ${role === 'admin' ? '#166534' : '#374151'};">
+              ${role}
+            </span>`;
+            
+            if (role === 'admin') {
+              isAdmin = true;
+            }
+          });
+          
+          html += '</div>';
+        } catch (e) {
+          html += `<div class="role-item"><strong>Available Roles:</strong> <em>Invalid format: ${cachedRoles}</em></div>`;
+        }
+      } else {
+        html += '<div class="role-item"><strong>Available Roles:</strong> <em>Not set</em></div>';
+      }
+      
+      if (timestamp) {
+        const date = new Date(parseInt(timestamp));
+        html += `<div class="role-item"><strong>Cache Timestamp:</strong> <code>${date.toLocaleString()}</code></div>`;
+      } else {
+        html += '<div class="role-item"><strong>Cache Timestamp:</strong> <em>Not set</em></div>';
+      }
+      
+      // Update status badge
+      if (isAdmin && currentRole === 'admin') {
+        statusBadge.className = 'card-badge badge-success';
+        statusBadge.textContent = 'Admin Active';
+      } else if (isAdmin) {
+        statusBadge.className = 'card-badge badge-warning';
+        statusBadge.textContent = 'Admin Available';
+      } else {
+        statusBadge.className = 'card-badge badge-danger';
+        statusBadge.textContent = 'Admin Not Found';
+      }
+      
+      statusDiv.innerHTML = html;
+      log(`Role status checked. Admin status: ${isAdmin ? 'Found' : 'Not found'}`);
+    }
+    
+    // Force admin role
+    function forceAdminRole() {
+      log('Forcing admin role...');
+      
+      const namespace = 'nostr-ads';
+      
+      // Set current role
+      localStorage.setItem(`${namespace}:currentRole`, 'admin');
+      
+      // Set available roles
+      localStorage.setItem(
+        `${namespace}:cachedAvailableRoles`,
+        JSON.stringify(['viewer', 'admin'])
+      );
+      
+      // Set timestamp to now
+      localStorage.setItem(
+        `${namespace}:roleCacheTimestamp`,
+        Date.now().toString()
+      );
+      
+      // Set legacy admin flag (for backward compatibility)
+      localStorage.setItem(`${namespace}:isAdmin`, 'true');
+      
+      // Set roles object
+      localStorage.setItem(
+        `${namespace}:roles`,
+        JSON.stringify({
+          viewer: true,
+          admin: true,
+          advertiser: false,
+          publisher: false,
+          stakeholder: false,
+          developer: false
+        })
+      );
+      
+      // Dispatch storage changed event
+      window.dispatchEvent(
+        new StorageEvent('storage', {
+          key: `${namespace}:currentRole`,
+          newValue: 'admin',
+          storageArea: localStorage
+        })
+      );
+      
+      // Custom event for our application
+      window.dispatchEvent(
+        new CustomEvent('system:storage-changed', {
+          detail: {
+            key: 'currentRole',
+            value: 'admin',
+            previousValue: null,
+            storageType: 'localStorage',
+            namespace
+          }
+        })
+      );
+      
+      log('Admin role has been forced in localStorage');
+      checkRoleStatus();
+    }
+    
+    // Clear role cache
+    function clearRoleCache() {
+      log('Clearing role cache...');
+      
+      const namespace = 'nostr-ads';
+      
+      // Clear role-related localStorage items
+      const itemsToClear = [
+        'currentRole',
+        'cachedAvailableRoles',
+        'roleCacheTimestamp',
+        'isAdmin',
+        'isAdvertiser',
+        'isPublisher',
+        'isDeveloper',
+        'isStakeholder',
+        'roleObject',
+        'roles',
+        'testModeState'
+      ];
+      
+      // Clear items with namespace prefix
+      itemsToClear.forEach(item => {
+        const key = `${namespace}:${item}`;
+        if (localStorage.getItem(key)) {
+          log(`Cleared ${key}`);
+          localStorage.removeItem(key);
+        }
+      });
+      
+      // Clear legacy items without namespace
+      itemsToClear.forEach(item => {
+        if (localStorage.getItem(item)) {
+          log(`Cleared legacy ${item}`);
+          localStorage.removeItem(item);
+        }
+      });
+      
+      log('Role cache has been cleared');
+      checkRoleStatus();
+    }
+    
+    // Override role provider
+    function overrideRoleProvider() {
+      log('Injecting role provider override script...');
+      
+      const script = document.createElement('script');
+      script.src = '/override-provider.js';
+      document.body.appendChild(script);
+      
+      log('Role provider override script injected');
+    }
+    
+    // Apply all fixes
+    function applyAllFixes() {
+      log('Applying all fixes...');
+      
+      // Clear role cache first
+      clearRoleCache();
+      
+      // Force admin role
+      forceAdminRole();
+      
+      // Override provider
+      overrideRoleProvider();
+      
+      log('All fixes applied successfully!');
+      
+      // Set a success message
+      const statusBadge = document.getElementById('status-badge');
+      statusBadge.className = 'card-badge badge-success';
+      statusBadge.textContent = 'Fixes Applied';
+      
+      // Show navigation hint
+      setTimeout(() => {
+        if (confirm('Fixes applied successfully! Would you like to go to the dashboard now?')) {
+          navigateToDashboard();
+        }
+      }, 1000);
+    }
+    
+    // Navigate to dashboard
+    function navigateToDashboard() {
+      log('Navigating to dashboard...');
+      window.location.href = '/dashboard';
+    }
+    
+    // Check status on load
+    document.addEventListener('DOMContentLoaded', checkRoleStatus);
+  </script>
+</body>
+</html>

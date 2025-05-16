@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="400" height="300" viewBox="0 0 400 300" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background Elements -->
+  <rect x="20" y="50" width="360" height="200" rx="15" fill="#f0f0ff" opacity="0.8"/>
+  
+  <!-- Advertising Billboard -->
+  <rect x="60" y="70" width="280" height="120" rx="5" fill="#ffffff" stroke="#9333ea" stroke-width="3"/>
+  <rect x="70" y="80" width="260" height="90" rx="3" fill="#f5f3ff"/>
+  <path d="M100 120 L150 100 L200 130 L250 90 L300 110" stroke="#9333ea" stroke-width="3" fill="none"/>
+  
+  <!-- Lightning Elements -->
+  <path d="M210 130 L200 160 L220 155 L205 190" stroke="#f59e0b" stroke-width="5" fill="none"/>
+  <path d="M230 135 L220 165 L240 160 L225 195" stroke="#f59e0b" stroke-width="5" fill="none"/>
+  
+  <!-- Target/Audience Elements -->
+  <circle cx="300" cy="170" r="40" fill="#f5f3ff" stroke="#9333ea" stroke-width="2"/>
+  <circle cx="300" cy="170" r="30" fill="#f0f0ff" stroke="#9333ea" stroke-width="2"/>
+  <circle cx="300" cy="170" r="20" fill="#e9d5ff" stroke="#9333ea" stroke-width="2"/>
+  <circle cx="300" cy="170" r="10" fill="#c084fc" stroke="#9333ea" stroke-width="2"/>
+  
+  <!-- Data Points -->
+  <circle cx="100" cy="120" r="5" fill="#7c3aed"/>
+  <circle cx="150" cy="100" r="5" fill="#7c3aed"/>
+  <circle cx="200" cy="130" r="5" fill="#7c3aed"/>
+  <circle cx="250" cy="90" r="5" fill="#7c3aed"/>
+  <circle cx="300" cy="110" r="5" fill="#7c3aed"/>
+  
+  <!-- Device -->
+  <rect x="80" y="180" width="100" height="60" rx="5" fill="#ffffff" stroke="#9333ea" stroke-width="2"/>
+  <rect x="90" y="190" width="80" height="40" rx="2" fill="#e9d5ff"/>
+  <rect x="120" y="235" width="20" height="5" rx="2" fill="#9333ea"/>
+</svg>

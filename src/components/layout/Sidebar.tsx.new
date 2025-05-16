@@ -1,0 +1,265 @@
+import React, { useState, useEffect, useRef } from 'react';
+import Link from 'next/link';
+import { useRouter } from 'next/router';
+import { 
+  User, FileText, Settings, Home, PieChart, 
+  Plus, List, CheckSquare, Shield, Edit3, Lock,
+  DollarSign, LogOut, Code, Key
+} from 'react-feather';
+import { useRole, UserRole } from '../../context/NewRoleContext';
+import { useAuth } from '../../hooks/useAuth';
+import MegaphoneIcon from '../icons/MegaphoneIcon';
+import SatsIcon from '../icons/SatsIcon';
+import CurrencyToggle from '../CurrencyToggle';
+import ExchangeRateDisplay from '../ExchangeRateDisplay';
+
+const Sidebar: React.FC = () => {
+  const { role, setRole, availableRoles, isRoleAvailable, clearRole } = useRole();
+  const { auth, logout } = useAuth();
+  const router = useRouter();
+  const [sidebarExpanded, setSidebarExpanded] = useState(true);
+  
+  // Role icons with appropriate colors
+  const roleIcons = {
+    user: <User className="w-5 h-5 text-blue-500" />,
+    advertiser: <MegaphoneIcon className="w-5 h-5 text-orange-500" />,
+    publisher: <Edit3 className="w-5 h-5 text-green-500" />,
+    admin: <Shield className="w-5 h-5 text-purple-500" />,
+    stakeholder: <DollarSign className="w-5 h-5 text-emerald-500" />
+  };
+
+  // Role labels
+  const roleLabels = {
+    user: 'User',
+    advertiser: 'Advertiser',
+    publisher: 'Publisher',
+    admin: 'Admin',
+    stakeholder: 'Stakeholder'
+  };
+
+  // Menu items for each role
+  const menuItems = {
+    user: [
+      { icon: <Home className="w-5 h-5" />, label: 'Dashboard', href: '/dashboard/user' },
+      { icon: <PieChart className="w-5 h-5" />, label: 'Nostr Feed', href: '/nostr-feed' },
+      { icon: <SatsIcon className="w-5 h-5" />, label: 'Wallet', href: '/dashboard/wallet' },
+      { icon: <Code className="w-5 h-5" />, label: 'Developer', href: '/dashboard/developer' },
+      { icon: <Settings className="w-5 h-5" />, label: 'Settings', href: '/dashboard/settings' }
+    ],
+    advertiser: [
+      { icon: <Home className="w-5 h-5" />, label: 'Dashboard', href: '/dashboard/advertiser' },
+      { icon: <PieChart className="w-5 h-5" />, label: 'Analytics', href: '/dashboard/advertiser/analytics' },
+      { icon: <SatsIcon className="w-5 h-5" />, label: 'Billing', href: '/dashboard/advertiser/billing' },
+      { icon: <Code className="w-5 h-5" />, label: 'Developer', href: '/dashboard/developer' }
+    ],
+    publisher: [
+      { icon: <Home className="w-5 h-5" />, label: 'Dashboard', href: '/dashboard/publisher' },
+      { icon: <FileText className="w-5 h-5" />, label: 'Ad Spaces', href: '/dashboard/publisher/spaces' },
+      { icon: <CheckSquare className="w-5 h-5" />, label: 'Approvals', href: '/dashboard/publisher/approvals' },
+      { icon: <Shield className="w-5 h-5" />, label: 'Rules', href: '/dashboard/publisher/rules' },
+      { icon: <SatsIcon className="w-5 h-5" />, label: 'Earnings', href: '/dashboard/publisher/earnings' },
+      { icon: <Code className="w-5 h-5" />, label: 'Developer', href: '/dashboard/developer' }
+    ],
+    admin: [
+      { icon: <Home className="w-5 h-5" />, label: 'Dashboard', href: '/dashboard/admin' },
+      { icon: <User className="w-5 h-5" />, label: 'Users', href: '/dashboard/admin/users' },
+      { icon: <MegaphoneIcon className="w-5 h-5" />, label: 'Campaigns', href: '/dashboard/admin/campaigns' },
+      { icon: <SatsIcon className="w-5 h-5" />, label: 'Transactions', href: '/dashboard/admin/transactions' },
+      { icon: <Shield className="w-5 h-5" />, label: 'System', href: '/dashboard/admin/system' }
+    ],
+    stakeholder: [
+      { icon: <Home className="w-5 h-5" />, label: 'Dashboard', href: '/dashboard/stakeholder' },
+      { icon: <PieChart className="w-5 h-5" />, label: 'Analytics', href: '/dashboard/stakeholder/analytics' },
+      { icon: <DollarSign className="w-5 h-5" />, label: 'Financials', href: '/dashboard/stakeholder/financials' }
+    ]
+  };
+
+  // Toggle sidebar expansion (for mobile)
+  const toggleSidebar = () => {
+    setSidebarExpanded(!sidebarExpanded);
+  };
+
+  // Get background color based on current role
+  const getRoleBackgroundColor = (checkRole: UserRole) => {
+    if (role === checkRole) {
+      switch(checkRole) {
+        case 'user': return 'bg-blue-100 dark:bg-blue-900/20';
+        case 'advertiser': return 'bg-orange-100 dark:bg-orange-900/20';
+        case 'publisher': return 'bg-green-100 dark:bg-green-900/20';
+        case 'admin': return 'bg-purple-100 dark:bg-purple-900/20';
+        case 'stakeholder': return 'bg-emerald-100 dark:bg-emerald-900/20';
+      }
+    }
+    return 'hover:bg-gray-100 dark:hover:bg-gray-800';
+  };
+
+  // Get text color based on current role
+  const getRoleTextColor = (checkRole: UserRole) => {
+    if (role === checkRole) {
+      switch(checkRole) {
+        case 'user': return 'text-blue-700 dark:text-blue-300';
+        case 'advertiser': return 'text-orange-700 dark:text-orange-300';
+        case 'publisher': return 'text-green-700 dark:text-green-300';
+        case 'admin': return 'text-purple-700 dark:text-purple-300';
+        case 'stakeholder': return 'text-emerald-700 dark:text-emerald-300';
+      }
+    }
+    return 'text-gray-700 dark:text-gray-300';
+  };
+
+  // Get active menu item styling
+  const getActiveClass = (href: string) => {
+    // For Dashboard items, we need a more exact match to avoid highlighting for all pages
+    const isDashboardLink = href === '/dashboard/user' || 
+                           href === '/dashboard/advertiser' ||
+                           href === '/dashboard/publisher' ||
+                           href === '/dashboard/admin' ||
+                           href === '/dashboard/stakeholder';
+    
+    // For dashboard links, only match exact paths
+    // For other links, match the path or its sub-paths
+    const isActive = isDashboardLink 
+      ? router.pathname === href
+      : (router.pathname === href || router.pathname.startsWith(`${href}/`));
+    
+    let activeClass = '';
+    
+    if (isActive) {
+      // Determine the role for styling based on the URL path (more reliable)
+      const pathBasedRole = router.pathname.includes('/dashboard/advertiser') ? 'advertiser' :
+                           router.pathname.includes('/dashboard/publisher') ? 'publisher' : 
+                           router.pathname.includes('/dashboard/admin') ? 'admin' :
+                           router.pathname.includes('/dashboard/stakeholder') ? 'stakeholder' :
+                           router.pathname.includes('/dashboard/user') ? 'user' : 'user';
+      
+      // For styling purposes, use the path-based role for consistent styling
+      switch(pathBasedRole) {
+        case 'user':
+          activeClass = 'bg-blue-100 text-blue-700 dark:bg-blue-900/20 dark:text-blue-300';
+          break;
+        case 'advertiser':
+          activeClass = 'bg-orange-100 text-orange-700 dark:bg-orange-900/20 dark:text-orange-300';
+          break;
+        case 'publisher':
+          activeClass = 'bg-green-100 text-green-700 dark:bg-green-900/20 dark:text-green-300';
+          break;
+        case 'admin':
+          activeClass = 'bg-purple-100 text-purple-700 dark:bg-purple-900/20 dark:text-purple-300';
+          break;
+        case 'stakeholder':
+          activeClass = 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/20 dark:text-emerald-300';
+          break;
+      }
+    } else {
+      activeClass = 'hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-700 dark:text-gray-300';
+    }
+    
+    return activeClass;
+  };
+
+  return (
+    <>
+      {/* Mobile toggle button - visible only on small screens */}
+      <button 
+        onClick={toggleSidebar}
+        className="md:hidden fixed z-50 bottom-4 right-4 p-2 rounded-full bg-purple-600 text-white shadow-lg"
+      >
+        <List className="w-6 h-6" />
+      </button>
+      
+      {/* Sidebar backdrop for mobile - only visible when sidebar is expanded on mobile */}
+      {sidebarExpanded && (
+        <div 
+          className="md:hidden fixed inset-0 bg-black bg-opacity-50 z-20"
+          onClick={() => setSidebarExpanded(false)}
+        />
+      )}
+      
+      {/* Sidebar */}
+      <aside 
+        className={`fixed md:sticky top-0 z-30 h-screen bg-white dark:bg-gray-900 border-r border-gray-200 dark:border-gray-700 transition-all duration-300 w-56 ${
+          sidebarExpanded ? 'left-0' : '-left-56 md:left-0'
+        }`}
+      >
+        {/* Logo area */}
+        <div className="px-4 py-4 border-b border-gray-200 dark:border-gray-700">
+          <h1 className="text-xl font-bold text-purple-600 dark:text-purple-400">Nostr Ad Market</h1>
+        </div>
+        
+        {/* Current Role Display */}
+        <div className="p-4 border-b border-gray-200 dark:border-gray-700">
+          <div className={`w-full flex items-center px-3 py-2 text-sm rounded-md border border-gray-300 dark:border-gray-600 ${
+            getRoleBackgroundColor(role)
+          } ${
+            getRoleTextColor(role)
+          }`}>
+            <div className="flex items-center">
+              <span className="mr-3">{roleIcons[role]}</span>
+              <span>{roleLabels[role]}</span>
+            </div>
+          </div>
+        </div>
+        
+        {/* Menu items */}
+        <nav className="p-4 flex flex-col h-[calc(100vh-120px)]">
+          <h2 className="text-xs uppercase text-gray-500 dark:text-gray-400 mb-2 font-semibold">Menu</h2>
+          <ul className="space-y-1 w-full min-w-0">
+            {menuItems[role].map((item) => (
+              <li key={item.label}>
+                <Link 
+                  href={item.href}
+                  className={`flex items-center px-3 py-2 text-sm rounded-md transition-colors transition-all duration-200 ${getActiveClass(item.href)}`}
+                >
+                  <span className="mr-3 flex-shrink-0">{item.icon}</span>
+                  <span className="truncate">{item.label}</span>
+                </Link>
+              </li>
+            ))}
+          </ul>
+          
+          {/* Switch Role button */}
+          <div className="mt-6 mb-4">
+            <Link
+              href="/test-mode/switch-role"
+              className="w-full flex items-center px-3 py-2 text-sm rounded-md transition-colors transition-all duration-200 text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/20 dark:text-blue-400"
+            >
+              <span className="mr-3 flex-shrink-0">
+                <User className="w-5 h-5" />
+              </span>
+              <span className="truncate">Switch Role</span>
+            </Link>
+          </div>
+          
+          {/* Logout button */}
+          <div className="mt-auto">
+            <button
+              onClick={() => {
+                // Show confirmation dialog
+                if (window.confirm('Are you sure you want to log out?')) {
+                  // Use direct navigation to system logout page
+                  window.location.href = '/system/logout';
+                }
+              }}
+              className="w-full flex items-center px-3 py-2 text-sm rounded-md transition-colors transition-all duration-200 text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 dark:text-red-400"
+            >
+              <span className="mr-3 flex-shrink-0">
+                <LogOut className="w-5 h-5" />
+              </span>
+              <span className="truncate">Logout</span>
+            </button>
+          </div>
+          
+          {/* Currency toggle at bottom of sidebar */}
+          <div className="pt-4 border-t border-gray-200 dark:border-gray-700">
+            <div className="flex flex-col">
+              <CurrencyToggle className="w-full mb-2" />
+              <ExchangeRateDisplay className="text-xs text-gray-500 dark:text-gray-400 mt-1" />
+            </div>
+          </div>
+        </nav>
+      </aside>
+    </>
+  );
+};
+
+export default Sidebar;

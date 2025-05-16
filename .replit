@@ -1,0 +1,200 @@
+modules = ["nodejs-20", "postgresql-16"]
+
+[nix]
+channel = "stable-24_05"
+packages = ["wget", "zip", "lsof", "sqlite", "rsync"]
+
+[workflows]
+runButton = "Project"
+
+[[workflows.workflow]]
+name = "Project"
+mode = "parallel"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Nostr Ad Marketplace Server"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Run Tests"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Test Watch Mode"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Prisma Generate"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Prisma DB Push"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Prisma Studio"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Clean Server Start"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Test API Key Auth"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Test API Keys Index"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Test API Keys ID"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Start Dev Server"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Test TestModeBanner"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Dev Server"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Test Error Service"
+
+[[workflows.workflow]]
+name = "Nostr Ad Marketplace Server"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "npm install && npx prisma generate && npm run dev"
+waitForPort = 5000
+
+[[workflows.workflow]]
+name = "Run Tests"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "npx jest"
+
+[[workflows.workflow]]
+name = "Test Watch Mode"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "npx jest --watch"
+
+[[workflows.workflow]]
+name = "Prisma Generate"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "npx prisma generate"
+
+[[workflows.workflow]]
+name = "Prisma DB Push"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "npx prisma db push"
+
+[[workflows.workflow]]
+name = "Prisma Studio"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "npx prisma studio"
+
+[[workflows.workflow]]
+name = "Clean Server Start"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "rm -rf node_modules/.cache && npx prisma generate && NODE_OPTIONS='--no-warnings' next dev -p 5000 -H 0.0.0.0"
+waitForPort = 5000
+
+[[workflows.workflow]]
+name = "Test API Key Auth"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "npx jest src/lib/__tests__/apiKeyAuth.test.ts"
+
+[[workflows.workflow]]
+name = "Test API Keys Index"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "npx jest src/pages/api/auth/api-keys/__tests__/index.test.ts"
+
+[[workflows.workflow]]
+name = "Test API Keys ID"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "npx jest src/pages/api/auth/api-keys/__tests__/id.test.ts"
+
+[[workflows.workflow]]
+name = "Start Dev Server"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "NODE_OPTIONS='--no-warnings' npx next dev -p 5000 -H 0.0.0.0"
+waitForPort = 5000
+
+[[workflows.workflow]]
+name = "Test TestModeBanner"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "npx jest src/__tests__/components/TestModeBanner.test.tsx"
+
+[[workflows.workflow]]
+name = "Dev Server"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "npm run dev"
+waitForPort = 5000
+
+[[workflows.workflow]]
+name = "Test Error Service"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "npx jest src/__tests__/lib/errorService.test.ts"
+
+[deployment]
+run = ["sh", "-c", "npm install && npx prisma generate && npm run dev"]
+
+[[ports]]
+localPort = 5000
+externalPort = 80
+
+[[ports]]
+localPort = 5555
+externalPort = 3000
+
+[[ports]]
+localPort = 5556
+externalPort = 3001
