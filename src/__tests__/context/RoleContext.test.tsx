@@ -2,7 +2,8 @@ import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { RoleProvider, useRole } from '../../context/RoleContext';
 import { AuthContext } from '../../hooks/useAuth';
-import { UserRole } from '../../context/RoleContext';
+//import { UserRole } from '../../context/RoleContext';
+import { UserRoleType } from '../../types/role';
 import { RoleProviderRefactored } from '../../context/NewRoleContextRefactored';
 import { AuthProvider } from '../../context/AuthContext';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
@@ -14,12 +15,12 @@ jest.mock('../../hooks/useAuth', () => {
       pubkey: 'test-pubkey',
       isLoggedIn: true,
       isTestMode: true,
-      availableRoles: ['viewer' as UserRole, 'advertiser' as UserRole, 'publisher' as UserRole],
+      availableRoles: ['viewer' as UserRoleType, 'advertiser' as UserRoleType, 'publisher' as UserRoleType],
       profile: null,
     },
     login: jest.fn().mockResolvedValue(true),
     logout: jest.fn().mockResolvedValue(undefined),
-    refreshRoles: jest.fn().mockResolvedValue(['viewer' as UserRole, 'advertiser' as UserRole, 'publisher' as UserRole]),
+    refreshRoles: jest.fn().mockResolvedValue(['viewer' as UserRoleType, 'advertiser' as UserRoleType, 'publisher' as UserRoleType]),
     addRole: jest.fn().mockResolvedValue(true),
     removeRole: jest.fn().mockResolvedValue(true),
   };
@@ -99,23 +100,23 @@ const TestComponent = () => {
         ))}
       </ul>
       <div data-testid="user-available">
-        User available: {isRoleAvailable('user' as UserRole) ? 'Yes' : 'No'}
+        User available: {isRoleAvailable('viewer' as UserRoleType) ? 'Yes' : 'No'}
       </div>
       <div data-testid="advertiser-available">
-        Advertiser available: {isRoleAvailable('advertiser' as UserRole) ? 'Yes' : 'No'}
+        Advertiser available: {isRoleAvailable('advertiser' as UserRoleType) ? 'Yes' : 'No'}
       </div>
       <div data-testid="publisher-available">
-        Publisher available: {isRoleAvailable('publisher' as UserRole) ? 'Yes' : 'No'}
+        Publisher available: {isRoleAvailable('publisher' as UserRoleType) ? 'Yes' : 'No'}
       </div>
-      <button onClick={() => setRole('user' as UserRole)}>Set User</button>
-      <button onClick={() => setRole('advertiser' as UserRole)}>Set Advertiser</button>
-      <button onClick={() => setRole('publisher' as UserRole)}>Set Publisher</button>
+      <button onClick={() => setRole('viewer' as UserRoleType)}>Set User</button>
+      <button onClick={() => setRole('advertiser' as UserRoleType)}>Set Advertiser</button>
+      <button onClick={() => setRole('publisher' as UserRoleType)}>Set Publisher</button>
     </div>
   );
 };
 
 // Helper function to create the test component wrapper
-const renderTestComponent = (initialRole: UserRole = 'user') => {
+const renderTestComponent = (initialRole: UserRoleType = 'viewer') => {
   const queryClient = new QueryClient();
   
   // Create a wrapper component with both old and new providers
@@ -126,7 +127,7 @@ const renderTestComponent = (initialRole: UserRole = 'user') => {
     <QueryClientProvider client={queryClient}>
       <AuthContext.Provider value={useAuthMock()}>
         <RoleProviderRefactored initialRole={initialRole}>
-          <RoleProvider initialRole={initialRole}>
+          <RoleProvider initialRole={initialRole as any}>
             <TestComponent />
           </RoleProvider>
         </RoleProviderRefactored>
@@ -144,21 +145,21 @@ describe('RoleContext', () => {
   
   it('provides the default role as viewer', () => {
     localStorage.setItem('userRole', 'viewer'); // Make sure localStorage has the correct value
-    renderTestComponent('viewer' as UserRole);
+    renderTestComponent('viewer' as UserRoleType);
     expect(screen.getByTestId('current-role')).toHaveTextContent('Current Role: viewer');
   });
   
   it('loads the role from localStorage if available', () => {
     localStorage.setItem('userRole', 'advertiser');
-    renderTestComponent('advertiser' as UserRole);
+    renderTestComponent('advertiser' as UserRoleType);
     expect(screen.getByTestId('current-role')).toHaveTextContent('Current Role: advertiser');
   });
   
   // For the role changing tests, we'll simplify and focus on one role change at a time
   // This makes debugging easier and tests more focused
-  it('changes role from user to advertiser', async () => {
-    localStorage.setItem('userRole', 'user');
-    renderTestComponent('user' as UserRole);
+  it('changes role from viewer to advertiser', async () => {
+    localStorage.setItem('userRole', 'viewer');
+    renderTestComponent('viewer' as UserRoleType);
     
     // Verify initial role
     expect(screen.getByTestId('current-role')).toHaveTextContent('Current Role: user');
