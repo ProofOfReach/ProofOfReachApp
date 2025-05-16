@@ -43,7 +43,7 @@ export interface RoleData {
 const DEFAULT_CONFIG: RoleServiceConfig = {
   apiUrl: '/api/enhanced-roles',
   debug: false,
-  defaultRole: 'user',
+  defaultRole: 'viewer',
   storageKey: 'nostr_ads_role_data'
 };
 
@@ -196,7 +196,7 @@ export class UnifiedRoleService {
     try {
       // Test mode users have all roles
       if (userId.startsWith('pk_test_')) {
-        return ['user', 'advertiser', 'publisher', 'admin', 'stakeholder'];
+        return ['viewer', 'advertiser', 'publisher', 'admin', 'stakeholder'];
       }
       
       // Check if we have a cached version and aren't forcing a refresh
@@ -218,7 +218,7 @@ export class UnifiedRoleService {
       }
       
       // Determine available roles based on user flags
-      const roles: UserRoleType[] = ['user'];
+      const roles: UserRoleType[] = ['viewer'];
       
       if (user.isAdvertiser) {
         roles.push('advertiser');

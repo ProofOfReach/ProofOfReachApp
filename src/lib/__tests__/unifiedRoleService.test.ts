@@ -55,8 +55,8 @@ global.fetch = jest.fn(() =>
   Promise.resolve({
     ok: true,
     json: () => Promise.resolve({ 
-      currentRole: 'user',
-      availableRoles: ['user', 'advertiser']
+      currentRole: 'viewer',
+      availableRoles: ['viewer', 'advertiser']
     }),
     status: 200,
     statusText: 'OK'
@@ -123,7 +123,7 @@ describe('UnifiedRoleService', () => {
       // Setup mock data in localStorage
       const mockData: RoleData = {
         currentRole: 'publisher' as UserRoleType,
-        availableRoles: ['user', 'publisher'] as UserRoleType[],
+        availableRoles: ['viewer', 'publisher'] as UserRoleType[],
         timestamp: Date.now()
       };
       
@@ -145,8 +145,8 @@ describe('UnifiedRoleService', () => {
       (service as any).cache = null;
       
       const data = service.getRoleData();
-      expect(data.currentRole).toBe('user');
-      expect(data.availableRoles).toEqual(['user']);
+      expect(data.currentRole).toBe('viewer');
+      expect(data.availableRoles).toEqual(['viewer']);
     });
     
     it('should store and retrieve role data correctly', () => {
@@ -154,7 +154,7 @@ describe('UnifiedRoleService', () => {
       
       const testData: RoleData = {
         currentRole: 'advertiser' as UserRoleType,
-        availableRoles: ['user', 'advertiser'] as UserRoleType[],
+        availableRoles: ['viewer', 'advertiser'] as UserRoleType[],
         timestamp: Date.now()
       };
       
@@ -162,7 +162,7 @@ describe('UnifiedRoleService', () => {
       
       const retrievedData = service.getRoleData();
       expect(retrievedData.currentRole).toBe('advertiser');
-      expect(retrievedData.availableRoles).toEqual(['user', 'advertiser']);
+      expect(retrievedData.availableRoles).toEqual(['viewer', 'advertiser']);
     });
     
     it('should update current role for the local context', () => {
@@ -170,8 +170,8 @@ describe('UnifiedRoleService', () => {
       
       // Set up available roles
       service.setRoleData({
-        currentRole: 'user' as UserRoleType,
-        availableRoles: ['user', 'advertiser', 'publisher'] as UserRoleType[],
+        currentRole: 'viewer' as UserRoleType,
+        availableRoles: ['viewer', 'advertiser', 'publisher'] as UserRoleType[],
         timestamp: Date.now()
       });
       
@@ -187,8 +187,8 @@ describe('UnifiedRoleService', () => {
       
       // Set up available roles that don't include 'admin'
       service.setRoleData({
-        currentRole: 'user' as UserRoleType,
-        availableRoles: ['user', 'advertiser'] as UserRoleType[],
+        currentRole: 'viewer' as UserRoleType,
+        availableRoles: ['viewer', 'advertiser'] as UserRoleType[],
         timestamp: Date.now()
       });
       
@@ -196,19 +196,19 @@ describe('UnifiedRoleService', () => {
       const result = service.setCurrentRoleInLocalContext('admin' as UserRoleType);
       
       expect(result).toBe(false);
-      expect(service.getCurrentRoleFromLocalContext()).toBe('user'); // Should remain unchanged
+      expect(service.getCurrentRoleFromLocalContext()).toBe('viewer'); // Should remain unchanged
     });
     
     it('should properly check if a role is available', () => {
       const service = new UnifiedRoleService();
       
       service.setRoleData({
-        currentRole: 'user' as UserRoleType,
-        availableRoles: ['user', 'advertiser'] as UserRoleType[],
+        currentRole: 'viewer' as UserRoleType,
+        availableRoles: ['viewer', 'advertiser'] as UserRoleType[],
         timestamp: Date.now()
       });
       
-      expect(service.isRoleAvailable('user')).toBe(true);
+      expect(service.isRoleAvailable('viewer')).toBe(true);
       expect(service.isRoleAvailable('advertiser')).toBe(true);
       expect(service.isRoleAvailable('admin')).toBe(false);
     });
@@ -245,7 +245,7 @@ describe('UnifiedRoleService', () => {
       const roles = await unifiedRoleService.getUserRoles('pk_test_user123');
       
       // Test users should get all roles
-      expect(roles).toEqual(['user', 'advertiser', 'publisher', 'admin', 'stakeholder']);
+      expect(roles).toEqual(['viewer', 'advertiser', 'publisher', 'admin', 'stakeholder']);
     });
     
     it('should return available roles based on user flags', async () => {
@@ -261,7 +261,7 @@ describe('UnifiedRoleService', () => {
       
       const roles = await unifiedRoleService.getUserRoles('user123');
       
-      expect(roles).toContain('user');
+      expect(roles).toContain('viewer');
       expect(roles).toContain('advertiser');
       expect(roles).toContain('publisher');
       expect(roles).not.toContain('admin');
@@ -274,7 +274,7 @@ describe('UnifiedRoleService', () => {
       
       const roles = await unifiedRoleService.getUserRoles('unknown_user');
       
-      expect(roles).toEqual(['user']);
+      expect(roles).toEqual(['viewer']);
     });
     
     it('should update user roles in the database', async () => {
@@ -350,8 +350,8 @@ describe('UnifiedRoleService', () => {
     it('should handle server errors gracefully', async () => {
       // Set up local data
       const initialData = {
-        currentRole: 'user' as UserRoleType,
-        availableRoles: ['user'] as UserRoleType[],
+        currentRole: 'viewer' as UserRoleType,
+        availableRoles: ['viewer'] as UserRoleType[],
         timestamp: Date.now()
       };
       

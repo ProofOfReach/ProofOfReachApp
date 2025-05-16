@@ -14,12 +14,12 @@ jest.mock('../../hooks/useAuth', () => {
       pubkey: 'test-pubkey',
       isLoggedIn: true,
       isTestMode: true,
-      availableRoles: ['user' as UserRole, 'advertiser' as UserRole, 'publisher' as UserRole],
+      availableRoles: ['viewer' as UserRole, 'advertiser' as UserRole, 'publisher' as UserRole],
       profile: null,
     },
     login: jest.fn().mockResolvedValue(true),
     logout: jest.fn().mockResolvedValue(undefined),
-    refreshRoles: jest.fn().mockResolvedValue(['user' as UserRole, 'advertiser' as UserRole, 'publisher' as UserRole]),
+    refreshRoles: jest.fn().mockResolvedValue(['viewer' as UserRole, 'advertiser' as UserRole, 'publisher' as UserRole]),
     addRole: jest.fn().mockResolvedValue(true),
     removeRole: jest.fn().mockResolvedValue(true),
   };
@@ -43,13 +43,13 @@ jest.mock('../../hooks/useAuthRefactored', () => {
         isLoggedIn: true,
         pubkey: 'test-pubkey',
         isTestMode: true,
-        availableRoles: ['user', 'advertiser', 'publisher'],
+        availableRoles: ['viewer', 'advertiser', 'publisher'],
       },
       login: jest.fn().mockResolvedValue({
         isLoggedIn: true,
         pubkey: 'test-pubkey',
         isTestMode: true,
-        availableRoles: ['user', 'advertiser', 'publisher']
+        availableRoles: ['viewer', 'advertiser', 'publisher']
       }),
       logout: jest.fn().mockResolvedValue(undefined),
       refreshRoles: jest.fn().mockResolvedValue({
@@ -142,10 +142,10 @@ describe('RoleContext', () => {
     jest.clearAllMocks();
   });
   
-  it('provides the default role as user', () => {
-    localStorage.setItem('userRole', 'user'); // Make sure localStorage has the correct value
-    renderTestComponent('user' as UserRole);
-    expect(screen.getByTestId('current-role')).toHaveTextContent('Current Role: user');
+  it('provides the default role as viewer', () => {
+    localStorage.setItem('userRole', 'viewer'); // Make sure localStorage has the correct value
+    renderTestComponent('viewer' as UserRole);
+    expect(screen.getByTestId('current-role')).toHaveTextContent('Current Role: viewer');
   });
   
   it('loads the role from localStorage if available', () => {

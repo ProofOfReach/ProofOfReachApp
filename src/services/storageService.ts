@@ -156,7 +156,7 @@ export class StorageService {
    */
   static getCurrentRole(): UserRoleType {
     // Server-side rendering check
-    if (typeof window === 'undefined') return 'user';
+    if (typeof window === 'undefined') return 'viewer';
     
     try {
       // Try using RoleManager first (most authoritative)
@@ -193,7 +193,7 @@ export class StorageService {
     }
     
     // Default to user role
-    return 'user';
+    return 'viewer';
   }
   
   static isTestModeActive(): boolean {
@@ -325,8 +325,8 @@ export class StorageService {
     return {
       isActive: true,
       expiryTime: Date.now() + (4 * 60 * 60 * 1000), // 4 hours from now
-      currentRole: 'user',
-      availableRoles: ['user'],
+      currentRole: 'viewer',
+      availableRoles: ['viewer'],
       lastUpdated: Date.now()
     };
   }
