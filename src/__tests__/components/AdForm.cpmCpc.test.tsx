@@ -83,14 +83,27 @@ describe('AdForm CPM/CPC Functionality', () => {
   });
   
   it('requires either CPM or CPC to be set when submitting the form', async () => {
-    render(<AdForm onSubmit={mockOnSubmit} isSubmitting={false} />);
+    render(
+      <AdForm 
+        onSubmit={mockOnSubmit} 
+        isSubmitting={false} 
+        initialData={{
+          bidPerImpression: 0,
+          bidPerClick: 0
+        }}
+      />
+    );
     
     // Fill in other required fields
+    fireEvent.change(screen.getByLabelText(/Advertiser Name/i), {
+      target: { value: 'Test Advertiser' }
+    });
+    
     fireEvent.change(screen.getByLabelText(/Ad Title/i), {
       target: { value: 'Test Ad Title' }
     });
     
-    fireEvent.change(screen.getByLabelText(/Description/i), {
+    fireEvent.change(screen.getByLabelText(/Ad Description/i), {
       target: { value: 'Test Description' }
     });
     
@@ -99,8 +112,8 @@ describe('AdForm CPM/CPC Functionality', () => {
     });
     
     // Set both CPM and CPC to 0
-    fireEvent.change(screen.getByLabelText(/CPM/i), { target: { value: '0' } });
-    fireEvent.change(screen.getByLabelText(/CPC/i), { target: { value: '0' } });
+    fireEvent.change(screen.getByLabelText(/CPM \(Cost per Mille\/1000 Impressions\)/i), { target: { value: '0' } });
+    fireEvent.change(screen.getByLabelText(/CPC \(Cost per Click\)/i), { target: { value: '0' } });
     
     // Submit the form
     fireEvent.click(screen.getByRole('button', { name: /Create Ad/i }));
@@ -114,7 +127,7 @@ describe('AdForm CPM/CPC Functionality', () => {
     expect(mockOnSubmit).not.toHaveBeenCalled();
     
     // Now set a valid CPM
-    fireEvent.change(screen.getByLabelText(/CPM/i), { target: { value: '15' } });
+    fireEvent.change(screen.getByLabelText(/CPM \(Cost per Mille\/1000 Impressions\)/i), { target: { value: '15' } });
     
     // Submit again
     fireEvent.click(screen.getByRole('button', { name: /Create Ad/i }));
@@ -126,36 +139,29 @@ describe('AdForm CPM/CPC Functionality', () => {
   });
   
   it('correctly toggles between CPM and CPC', async () => {
-    await act(async () => {
-      render(<AdForm onSubmit={mockOnSubmit} isSubmitting={false} />);
-    });
+    // Directly render the component without async act since it's not needed
+    render(<AdForm onSubmit={mockOnSubmit} isSubmitting={false} initialData={{ bidPerImpression: 0, bidPerClick: 0 }} />);
     
     // Get the CPM and CPC inputs
-    const cpmInput = screen.getByLabelText(/CPM/i);
-    const cpcInput = screen.getByLabelText(/CPC/i);
+    const cpmInput = screen.getByLabelText(/CPM \(Cost per Mille\/1000 Impressions\)/i);
+    const cpcInput = screen.getByLabelText(/CPC \(Cost per Click\)/i);
     
     // Set a value for CPM
-    await act(async () => {
-      fireEvent.change(cpmInput, { target: { value: '25' } });
-    });
+    fireEvent.change(cpmInput, { target: { value: '25' } });
     
     // CPC should be disabled and set to 0
     expect(cpcInput).toBeDisabled();
     expect(cpcInput).toHaveValue(0);
     
     // Clear CPM field
-    await act(async () => {
-      fireEvent.change(cpmInput, { target: { value: '0' } });
-    });
+    fireEvent.change(cpmInput, { target: { value: '0' } });
     
     // Both should be enabled now
     expect(cpmInput).not.toBeDisabled();
     expect(cpcInput).not.toBeDisabled();
     
     // Set a value for CPC
-    await act(async () => {
-      fireEvent.change(cpcInput, { target: { value: '75' } });
-    });
+    fireEvent.change(cpcInput, { target: { value: '75' } });
     
     // CPM should be disabled and set to 0
     expect(cpmInput).toBeDisabled();
@@ -164,11 +170,11 @@ describe('AdForm CPM/CPC Functionality', () => {
   
   it('verifies that CPC is disabled when bidPerImpression > 0', () => {
     // Set up with CPM active
-    render(<AdForm onSubmit={mockOnSubmit} isSubmitting={false} />);
+    render(<AdForm onSubmit={mockOnSubmit} isSubmitting={false} initialData={{ bidPerImpression: 0, bidPerClick: 0 }} />);
     
     // Get the input fields
-    const cpmInput = screen.getByLabelText(/CPM/i);
-    const cpcInput = screen.getByLabelText(/CPC/i);
+    const cpmInput = screen.getByLabelText(/CPM \(Cost per Mille\/1000 Impressions\)/i);
+    const cpcInput = screen.getByLabelText(/CPC \(Cost per Click\)/i);
     
     // Set a CPM value
     fireEvent.change(cpmInput, { target: { value: '25' } });
@@ -179,11 +185,11 @@ describe('AdForm CPM/CPC Functionality', () => {
   
   it('verifies that CPM is disabled when bidPerClick > 0', () => {
     // Set up with CPC active
-    render(<AdForm onSubmit={mockOnSubmit} isSubmitting={false} />);
+    render(<AdForm onSubmit={mockOnSubmit} isSubmitting={false} initialData={{ bidPerImpression: 0, bidPerClick: 0 }} />);
     
     // Get the input fields
-    const cpmInput = screen.getByLabelText(/CPM/i);
-    const cpcInput = screen.getByLabelText(/CPC/i);
+    const cpmInput = screen.getByLabelText(/CPM \(Cost per Mille\/1000 Impressions\)/i);
+    const cpcInput = screen.getByLabelText(/CPC \(Cost per Click\)/i);
     
     // Set a CPC value
     fireEvent.change(cpcInput, { target: { value: '50' } });
