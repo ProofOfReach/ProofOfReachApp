@@ -3,7 +3,7 @@ import { campaignService, CreateCampaignDto } from '../../services/campaignServi
 import { ApiError } from '../../utils/apiError';
 
 // Mock PrismaClient
-jest.mock('@prisma/client', () => {
+jest.mock('../../lib/prisma', () => {
   const mockCampaigns: any[] = [];
   
   // Mock campaign for testing
@@ -29,7 +29,7 @@ jest.mock('@prisma/client', () => {
   mockCampaigns.push({ ...mockCampaign });
   
   return {
-    PrismaClient: jest.fn().mockImplementation(() => ({
+    prisma: {
       campaign: {
         create: jest.fn().mockImplementation(({ data }) => {
           const newCampaign = {
@@ -76,28 +76,39 @@ jest.mock('@prisma/client', () => {
           return Promise.resolve(deletedCampaign);
         }),
       },
-    })),
-    Prisma: {
-      PrismaClientKnownRequestError: class PrismaClientKnownRequestError extends Error {
-        constructor(message: string, meta: any) {
-          super(message);
-          this.name = 'PrismaClientKnownRequestError';
-          this.meta = meta;
-        }
-        meta: any;
-        code: string = 'P2025';
-      }
-    },
-    CampaignStatus: {
-      DRAFT: 'DRAFT',
-      ACTIVE: 'ACTIVE',
-      PAUSED: 'PAUSED',
-      ENDED: 'ENDED',
-      SCHEDULED: 'SCHEDULED',
-      REVIEW: 'REVIEW',
     },
   };
 });
+
+// Mock the errorHandling module to prevent actual errors from being thrown
+jest.mock('../../lib/errorHandling', () => ({
+  throwApiError: jest.fn().mockImplementation((status, message) => {
+    throw new ApiError(message, status);
+  }),
+}));
+
+// Mock the CampaignStatus from @prisma/client
+jest.mock('@prisma/client', () => ({
+  CampaignStatus: {
+    DRAFT: 'DRAFT',
+    ACTIVE: 'ACTIVE',
+    PAUSED: 'PAUSED',
+    ENDED: 'ENDED',
+    SCHEDULED: 'SCHEDULED',
+    REVIEW: 'REVIEW',
+  },
+  Prisma: {
+    PrismaClientKnownRequestError: class PrismaClientKnownRequestError extends Error {
+      constructor(message: string, meta: any) {
+        super(message);
+        this.name = 'PrismaClientKnownRequestError';
+        this.meta = meta;
+      }
+      meta: any;
+      code: string = 'P2025';
+    }
+  },
+}));
 
 describe('Campaign Service', () => {
   // Reset mocks before each test
