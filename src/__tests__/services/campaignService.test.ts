@@ -89,12 +89,12 @@ jest.mock('@prisma/client', () => {
       }
     },
     CampaignStatus: {
-      DRAFT: DRAFT_STATUS,
-      ACTIVE: ACTIVE_STATUS,
-      PAUSED: PAUSED_STATUS,
-      ENDED: ENDED_STATUS,
-      SCHEDULED: SCHEDULED_STATUS,
-      REVIEW: REVIEW_STATUS,
+      DRAFT: 'DRAFT',
+      ACTIVE: 'ACTIVE',
+      PAUSED: 'PAUSED',
+      ENDED: 'ENDED',
+      SCHEDULED: 'SCHEDULED',
+      REVIEW: 'REVIEW',
     },
   };
 });
@@ -245,7 +245,7 @@ describe('Campaign Service', () => {
       
       expect(campaign).toEqual(expect.objectContaining({
         id: 'campaign-1',
-        status: 'PAUSED',
+        status: 'PAUSED' as CampaignStatus,
       }));
 
       // Clean up spy

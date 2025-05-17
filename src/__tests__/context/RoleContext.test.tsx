@@ -8,9 +8,9 @@ import { AuthProvider } from '../../context/AuthContext';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 // Define type-safe roles for consistent usage
-const VIEWER_ROLE = 'viewer' as UserRoleType;
-const ADVERTISER_ROLE = 'advertiser' as UserRoleType;
-const PUBLISHER_ROLE = 'publisher' as UserRoleType;
+const VIEWER_ROLE = 'viewer' as unknown as UserRole;
+const ADVERTISER_ROLE = 'advertiser' as unknown as UserRole;
+const PUBLISHER_ROLE = 'publisher' as unknown as UserRole;
 
 // Mock the Auth context
 jest.mock('../../hooks/useAuth', () => {
