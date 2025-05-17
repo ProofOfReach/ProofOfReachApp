@@ -11,6 +11,28 @@
  * - Better error correlation and context tracking
  */
 
+/**
+ * Format a user-friendly error message from various error types
+ * @param error The error object or message
+ * @param defaultMessage Fallback message if error cannot be processed
+ * @returns A user-friendly error message as a string
+ */
+export function formatUserErrorMessage(error: any, defaultMessage: string = 'An error occurred'): string {
+  if (error instanceof Error) {
+    return error.message;
+  }
+  
+  if (typeof error === 'string') {
+    return error;
+  }
+  
+  if (error && typeof error === 'object' && error.message) {
+    return error.message;
+  }
+  
+  return defaultMessage;
+}
+
 import { v4 as uuidv4 } from 'uuid';
 import { 
   ErrorCategory,
