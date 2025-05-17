@@ -72,6 +72,37 @@ export function useErrorState() {
             source: testState.source || null
           });
         }
+        
+        // Set up event listener for error state changes
+        const handleErrorStateChange = () => {
+          try {
+            const updatedState = errorIntegration.getErrorState();
+            if (updatedState && typeof updatedState === 'object' && 'hasError' in updatedState) {
+              const testState = updatedState as unknown as TestErrorState;
+              
+              setLocalErrorState({
+                hasError: Boolean(testState.hasError),
+                message: testState.message || '',
+                type: testState.type || 'unknown',
+                severity: testState.severity || 'info',
+                timestamp: testState.timestamp || null,
+                code: testState.code || null,
+                details: testState.details || null,
+                source: testState.source || null
+              });
+            }
+          } catch (error) {
+            console.error('Error handling error state change:', error);
+          }
+        };
+        
+        // Listen for error state changes - this is expected by tests
+        window.addEventListener('error-state-changed', handleErrorStateChange);
+        
+        // Clean up the event listener
+        return () => {
+          window.removeEventListener('error-state-changed', handleErrorStateChange);
+        };
       } catch (err) {
         console.error('Error initializing error state:', err);
       }

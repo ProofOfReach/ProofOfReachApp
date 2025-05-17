@@ -10,6 +10,8 @@
 
 import { useEffect } from 'react';
 import { useErrorState } from '@/hooks/useErrorState';
+// Using the function name that matches what the tests expect
+import { initializeErrorHandling } from '@/lib/errorIntegration';
 
 interface ErrorInitializerProps {
   disableWindowEvents?: boolean;
@@ -24,6 +26,16 @@ const ErrorInitializer: React.FC<ErrorInitializerProps> = ({
   debug = false,
 }) => {
   const errorState = useErrorState();
+  
+  // Initialize error handling on mount
+  useEffect(() => {
+    // Initialize the error tracking system
+    initializeErrorIntegration();
+    
+    if (debug) {
+      console.info('Error handling system initialized with debug mode enabled');
+    }
+  }, [debug]); // Only run once when component mounts
   
   // Set up global error listeners
   useEffect(() => {
@@ -40,15 +52,11 @@ const ErrorInitializer: React.FC<ErrorInitializerProps> = ({
     const handleGlobalError = (event: ErrorEvent): void => {
       event.preventDefault();
       
-      errorState.reportError(
+      errorState.handleError(
         event.error || new Error(event.message),
         'window.onerror',
-        'unknown', // Use an available ErrorType from our types
-        'error',
-        {
-          details: `Error at ${event.filename}:${event.lineno}:${event.colno}`,
-          data: { handled: false }
-        }
+        'unknown', 
+        'error'
       );
       
       if (debug) {
@@ -64,15 +72,11 @@ const ErrorInitializer: React.FC<ErrorInitializerProps> = ({
         ? event.reason 
         : new Error(String(event.reason));
       
-      errorState.reportError(
+      errorState.handleError(
         error,
         'unhandledrejection',
-        'unknown', // Use an available ErrorType from our types
-        'error',
-        { 
-          details: 'Unhandled promise rejection',
-          data: { handled: false }
-        }
+        'unknown',
+        'error'
       );
       
       if (debug) {
