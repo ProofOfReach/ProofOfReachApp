@@ -1,6 +1,6 @@
 import { createMocks } from 'node-mocks-http';
 import type { NextApiRequest, NextApiResponse } from 'next';
-import walletHandler from '../../../pages/api/wallet';
+import walletHandler from '../../../pages/api/wallet/index';
 import { prisma } from '../../../lib/prismaClient';
 import { logger } from '../../../lib/logger';
 
@@ -25,11 +25,18 @@ jest.mock('../../../lib/logger', () => ({
   }
 }));
 
-// Mock the requireAuth middleware
-jest.mock('../../../lib/auth', () => ({
-  requireAuth: jest.fn().mockImplementation((handler) => {
+// Mock the enhanced auth middleware
+jest.mock('../../../utils/enhancedAuthMiddleware', () => ({
+  enhancedAuthMiddleware: jest.fn().mockImplementation((handler) => {
     return async (req: NextApiRequest, res: NextApiResponse) => {
-      return await handler(req, res, 'test-pubkey', 'user123');
+      const user = {
+        pubkey: 'test-pubkey',
+        userId: 'user123',
+        isAuthenticated: true,
+        isTestMode: false,
+        roles: ['user']
+      };
+      return await handler(req, res, user);
     };
   })
 }));
@@ -124,7 +131,7 @@ describe('/api/wallet endpoint', () => {
       // Check response
       expect(res._getStatusCode()).toBe(500);
       expect(JSON.parse(res._getData())).toEqual({
-        error: 'Internal server error',
+        error: 'Error retrieving balance',
       });
     });
     
