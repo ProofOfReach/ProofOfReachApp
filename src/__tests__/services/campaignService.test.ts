@@ -17,7 +17,7 @@ jest.mock('@prisma/client', () => {
     endDate: null,
     budget: 100000,
     dailyBudget: 10000,
-    status: 'ACTIVE' as CampaignStatus,
+    status: 'ACTIVE',
     targetLocation: null,
     targetInterests: null,
     targetAge: null,
@@ -89,12 +89,12 @@ jest.mock('@prisma/client', () => {
       }
     },
     CampaignStatus: {
-      DRAFT: 'DRAFT',
-      ACTIVE: 'ACTIVE',
-      PAUSED: 'PAUSED',
-      ENDED: 'ENDED',
-      SCHEDULED: 'SCHEDULED',
-      REVIEW: 'REVIEW',
+      DRAFT: DRAFT_STATUS,
+      ACTIVE: ACTIVE_STATUS,
+      PAUSED: PAUSED_STATUS,
+      ENDED: ENDED_STATUS,
+      SCHEDULED: SCHEDULED_STATUS,
+      REVIEW: REVIEW_STATUS,
     },
   };
 });

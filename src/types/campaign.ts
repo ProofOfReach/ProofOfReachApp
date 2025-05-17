@@ -1,4 +1,14 @@
-export type CampaignStatus = 'ACTIVE' | 'PAUSED' | 'DRAFT' | 'COMPLETED' | 'REJECTED';
+export type CampaignStatus = 'ACTIVE' | 'PAUSED' | 'DRAFT' | 'COMPLETED' | 'REJECTED' | 'ENDED' | 'SCHEDULED' | 'REVIEW';
+
+// Type-safe campaign status constants
+export const ACTIVE_STATUS: CampaignStatus = 'ACTIVE';
+export const PAUSED_STATUS: CampaignStatus = 'PAUSED';
+export const DRAFT_STATUS: CampaignStatus = 'DRAFT';
+export const COMPLETED_STATUS: CampaignStatus = 'COMPLETED';
+export const REJECTED_STATUS: CampaignStatus = 'REJECTED';
+export const ENDED_STATUS: CampaignStatus = 'ENDED';
+export const SCHEDULED_STATUS: CampaignStatus = 'SCHEDULED';
+export const REVIEW_STATUS: CampaignStatus = 'REVIEW';
 
 export interface Ad {
   id: string;
