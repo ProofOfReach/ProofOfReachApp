@@ -6,7 +6,7 @@
  * React-friendly way.
  */
 
-import { useContext, useCallback } from 'react';
+import { useContext, useCallback, useEffect, useState } from 'react';
 import { ErrorContext } from '@/context/ErrorContext';
 import { errorIntegration } from '@/lib/errorIntegration';
 import { ErrorSeverity, ErrorState, ErrorType } from '@/types/errors';
@@ -18,10 +18,55 @@ import { ErrorSeverity, ErrorState, ErrorType } from '@/types/errors';
  */
 export function useErrorState() {
   const errorContext = useContext(ErrorContext);
+  const [errorState, setLocalErrorState] = useState(() => errorIntegration.getErrorState());
   
   if (!errorContext) {
     throw new Error('useErrorState must be used within an ErrorContext.Provider');
   }
+  
+  // Listen for error state changes
+  useEffect(() => {
+    const handleErrorStateChange = () => {
+      setLocalErrorState(errorIntegration.getErrorState());
+    };
+    
+    // Add event listener for error state changes
+    window.addEventListener('error-state-changed', handleErrorStateChange);
+    
+    // Poll for changes as a backup mechanism
+    const intervalId = setInterval(handleErrorStateChange, 1000);
+    
+    return () => {
+      window.removeEventListener('error-state-changed', handleErrorStateChange);
+      clearInterval(intervalId);
+    };
+  }, []);
+  
+  /**
+   * Set error state
+   */
+  const setError = useCallback((error: any): void => {
+    errorIntegration.updateErrorState(error);
+  }, []);
+  
+  /**
+   * Clear error state
+   */
+  const clearError = useCallback((): void => {
+    errorIntegration.resetErrorTracking();
+  }, []);
+  
+  /**
+   * Handle an error
+   */
+  const handleError = useCallback((
+    error: Error | string,
+    component?: string,
+    errorType?: string,
+    severity: ErrorSeverity = 'error'
+  ): void => {
+    errorIntegration.reportError(error, component, errorType, severity);
+  }, []);
   
   /**
    * Report a new error
@@ -38,13 +83,6 @@ export function useErrorState() {
     }
   ): ErrorState => {
     return errorIntegration.reportError(error, source, type, severity, options);
-  }, []);
-  
-  /**
-   * Set a global error from an existing error state
-   */
-  const setError = useCallback((error: ErrorState): void => {
-    errorIntegration.setGlobalError(error);
   }, []);
   
   /**
@@ -96,18 +134,29 @@ export function useErrorState() {
   
   return {
     // Current error state
-    errors: errorContext.state.errors,
-    globalError: errorContext.state.globalError,
-    toastError: errorContext.state.toastError,
-    hasErrors: errorContext.state.errors.length > 0,
+    ...errorState,
+    hasError: errorState.hasError || false,
+    message: errorState.message || '',
+    type: errorState.type || 'unknown',
+    severity: errorState.severity || 'info',
     
-    // Error management functions
-    reportError,
+    // Error management functions from tests
     setError,
+    clearError,
+    handleError,
+    
+    // Additional error functions for the app
+    reportError,
     showToast,
     setGlobalError,
     dismissError,
     dismissAllErrors,
-    getErrorMetrics
+    getErrorMetrics,
+    
+    // Current error state from context
+    errors: errorContext.state.errors,
+    globalError: errorContext.state.globalError,
+    toastError: errorContext.state.toastError,
+    hasErrors: errorContext.state.errors.length > 0,
   };
 }

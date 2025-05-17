@@ -6,9 +6,11 @@
  * available to components via React Context.
  */
 
-import React, { createContext, useState, useEffect, useMemo, useCallback } from 'react';
-import { ErrorState, ErrorContextState, defaultErrorState } from '@/types/errors';
+import React, { createContext, useState, useEffect, useMemo, useCallback, useContext } from 'react';
+import { ErrorState, ErrorContextState, defaultErrorState, ErrorSeverity } from '@/types/errors';
 import { errorIntegration } from '@/lib/errorIntegration';
+import { errorService } from '@/lib/errorService';
+import { toast } from '@/utils/toast';
 
 // Create the context with a default value
 export const ErrorContext = createContext<{
@@ -112,6 +114,85 @@ export const ErrorProvider: React.FC<ErrorProviderProps> = ({
       {children}
     </ErrorContext.Provider>
   );
+};
+
+/**
+ * Hook to access the error context
+ * 
+ * Returns error state and methods to update it
+ */
+export const useError = () => {
+  const context = useContext(ErrorContext);
+  
+  if (!context) {
+    throw new Error('useError must be used within an ErrorProvider');
+  }
+  
+  // Simplify the state for component use
+  return {
+    errorState: {
+      message: context.state.globalError?.message || '',
+      type: context.state.globalError?.type || 'unknown',
+      severity: context.state.globalError?.severity || 'error'
+    },
+    setError: context.setGlobalError,
+    clearError: () => context.setGlobalError(null),
+    errors: context.state.errors
+  };
+};
+
+/**
+ * Hook for simplified error reporting
+ * 
+ * Provides simplified error reporting functions
+ */
+export const useErrorReporting = () => {
+  const context = useContext(ErrorContext);
+  
+  if (!context) {
+    throw new Error('useErrorReporting must be used within an ErrorProvider');
+  }
+  
+  const reportError = useCallback((error: Error | string, component?: string, errorType?: string) => {
+    const errorMessage = error instanceof Error ? error.message : error;
+    
+    // Show error toast
+    toast.error(`Error: ${errorMessage}`);
+    
+    // Report error to service
+    errorService.reportError(error, component, errorType || 'app');
+  }, []);
+  
+  return { reportError };
+};
+
+/**
+ * Hook for simplified toast-based error display
+ * 
+ * Provides simplified methods to show different types of toasts
+ */
+export const useErrorToast = () => {
+  const showErrorToast = useCallback((message: string, severity: ErrorSeverity = 'error') => {
+    switch (severity) {
+      case 'info':
+        toast.info(message);
+        break;
+      case 'warning':
+        toast.warning(message);
+        break;
+      case 'error':
+      case 'critical':
+        toast.error(message);
+        break;
+      case 'success':
+        toast.success(message);
+        break;
+      default:
+        toast.info(message);
+    }
+  }, []);
+  
+  return { showErrorToast };
 };
 
 export default ErrorProvider;
