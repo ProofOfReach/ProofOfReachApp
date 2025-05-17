@@ -1,6 +1,7 @@
-import { PrismaClient, Campaign, CampaignStatus } from '@prisma/client';
 import { campaignService, CreateCampaignDto } from '../../services/campaignService';
-import { ApiError } from '../../utils/apiError';
+
+// Import ApiError directly
+const { ApiError } = require('../../utils/apiError');
 
 // Mock PrismaClient
 jest.mock('../../lib/prisma', () => {

@@ -91,19 +91,20 @@ jest.mock('../../hooks/useAuthRefactored', () => {
   };
 });
 
-// Create type-safe versions of roles for the old Role system
-const viewerRole = 'viewer' as unknown as UserRole;
-const advertiserRole = 'advertiser' as unknown as UserRole;
-const publisherRole = 'publisher' as unknown as UserRole;
+// Instead of type casting which causes issues, let's properly handle the roles
+// by creating type-safe constants that match the expected types in the context
+const viewerRole = VIEWER_ROLE;
+const advertiserRole = ADVERTISER_ROLE;
+const publisherRole = PUBLISHER_ROLE;
 
 // Test component that uses the role context
 const TestComponent = () => {
   const { role, setRole, availableRoles, isRoleAvailable } = useRole();
   
-  // Convert role type functions to use our constants
+  // We need to cast the role strings to UserRole type for the context functions
   const checkViewerAvailable = () => {
     try {
-      return isRoleAvailable(viewerRole);
+      return isRoleAvailable(viewerRole as unknown as UserRole);
     } catch (e) {
       return false;
     }
@@ -111,7 +112,7 @@ const TestComponent = () => {
   
   const checkAdvertiserAvailable = () => {
     try {
-      return isRoleAvailable(advertiserRole);
+      return isRoleAvailable(advertiserRole as unknown as UserRole);
     } catch (e) {
       return false;
     }
@@ -119,7 +120,7 @@ const TestComponent = () => {
   
   const checkPublisherAvailable = () => {
     try {
-      return isRoleAvailable(publisherRole);
+      return isRoleAvailable(publisherRole as unknown as UserRole);
     } catch (e) {
       return false;
     }
@@ -127,7 +128,7 @@ const TestComponent = () => {
   
   const handleSetViewer = () => {
     try {
-      setRole(viewerRole);
+      setRole(viewerRole as unknown as UserRole);
     } catch (e) {
       console.error('Error setting viewer role:', e);
     }
@@ -135,7 +136,7 @@ const TestComponent = () => {
   
   const handleSetAdvertiser = () => {
     try {
-      setRole(advertiserRole);
+      setRole(advertiserRole as unknown as UserRole);
     } catch (e) {
       console.error('Error setting advertiser role:', e);
     }
@@ -143,7 +144,7 @@ const TestComponent = () => {
   
   const handleSetPublisher = () => {
     try {
-      setRole(publisherRole);
+      setRole(publisherRole as unknown as UserRole);
     } catch (e) {
       console.error('Error setting publisher role:', e);
     }
