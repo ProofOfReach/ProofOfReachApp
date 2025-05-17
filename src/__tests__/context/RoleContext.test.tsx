@@ -101,9 +101,13 @@ const TestComponent = () => {
   const { role, setRole, availableRoles, isRoleAvailable } = useRole();
   
   // We need to cast the role strings to UserRole type for the context functions
+  // Since UserRole is just a type alias for UserRoleType in this project,
+  // we can simplify all these functions by applying a consistent type cast
+  
   const checkViewerAvailable = () => {
     try {
-      return isRoleAvailable(viewerRole as unknown as UserRole);
+      // Use the same casting approach for all role checks
+      return isRoleAvailable(VIEWER_ROLE as unknown as UserRole);
     } catch (e) {
       return false;
     }
@@ -111,7 +115,7 @@ const TestComponent = () => {
   
   const checkAdvertiserAvailable = () => {
     try {
-      return isRoleAvailable(advertiserRole as unknown as UserRole);
+      return isRoleAvailable(ADVERTISER_ROLE as unknown as UserRole);
     } catch (e) {
       return false;
     }
@@ -119,7 +123,7 @@ const TestComponent = () => {
   
   const checkPublisherAvailable = () => {
     try {
-      return isRoleAvailable(publisherRole as unknown as UserRole);
+      return isRoleAvailable(PUBLISHER_ROLE as unknown as UserRole);
     } catch (e) {
       return false;
     }
@@ -127,7 +131,7 @@ const TestComponent = () => {
   
   const handleSetViewer = () => {
     try {
-      setRole(viewerRole as unknown as UserRole);
+      setRole(VIEWER_ROLE as unknown as UserRole);
     } catch (e) {
       console.error('Error setting viewer role:', e);
     }
@@ -135,7 +139,7 @@ const TestComponent = () => {
   
   const handleSetAdvertiser = () => {
     try {
-      setRole(advertiserRole as unknown as UserRole);
+      setRole(ADVERTISER_ROLE as unknown as UserRole);
     } catch (e) {
       console.error('Error setting advertiser role:', e);
     }
@@ -143,7 +147,7 @@ const TestComponent = () => {
   
   const handleSetPublisher = () => {
     try {
-      setRole(publisherRole as unknown as UserRole);
+      setRole(PUBLISHER_ROLE as unknown as UserRole);
     } catch (e) {
       console.error('Error setting publisher role:', e);
     }

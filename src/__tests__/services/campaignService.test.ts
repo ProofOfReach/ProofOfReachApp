@@ -1,4 +1,14 @@
 import { campaignService, CreateCampaignDto } from '../../services/campaignService';
+import { 
+  ACTIVE_STATUS,
+  PAUSED_STATUS,
+  DRAFT_STATUS,
+  COMPLETED_STATUS,
+  REJECTED_STATUS,
+  ENDED_STATUS,
+  SCHEDULED_STATUS,
+  REVIEW_STATUS
+} from '../../types/campaign';
 
 // Import ApiError directly
 const { ApiError } = require('../../utils/apiError');
@@ -88,15 +98,17 @@ jest.mock('../../lib/errorHandling', () => ({
   }),
 }));
 
+// We've already imported these constants at the top of the file
+
 // Mock the CampaignStatus from @prisma/client
 jest.mock('@prisma/client', () => ({
   CampaignStatus: {
-    DRAFT: 'DRAFT',
-    ACTIVE: 'ACTIVE',
-    PAUSED: 'PAUSED',
-    ENDED: 'ENDED',
-    SCHEDULED: 'SCHEDULED',
-    REVIEW: 'REVIEW',
+    DRAFT: DRAFT_STATUS,
+    ACTIVE: ACTIVE_STATUS,
+    PAUSED: PAUSED_STATUS,
+    ENDED: ENDED_STATUS,
+    SCHEDULED: SCHEDULED_STATUS,
+    REVIEW: REVIEW_STATUS,
   },
   Prisma: {
     PrismaClientKnownRequestError: class PrismaClientKnownRequestError extends Error {
