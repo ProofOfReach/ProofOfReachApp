@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, screen, fireEvent, act } from '@testing-library/react';
 import ErrorToast from '@/components/errors/ErrorToast';
-import { ErrorCategory } from '@/lib/errorService';
+import { ErrorCategory } from '@/types/errors';
 
 // Mock the setTimeout and clearTimeout functions
 jest.useFakeTimers();

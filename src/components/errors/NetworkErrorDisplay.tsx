@@ -6,34 +6,56 @@
  */
 
 import React from 'react';
-import { ErrorState } from '@/types/errors';
 
 export interface NetworkErrorDisplayProps {
-  errors: ErrorState | ErrorState[];
+  error?: Error | null;
+  message?: string;
   title?: string;
-  showTroubleshooting?: boolean;
+  showHelpTips?: boolean;
   onRetry?: () => void;
   className?: string;
 }
 
 const NetworkErrorDisplay: React.FC<NetworkErrorDisplayProps> = ({
-  errors,
+  error,
+  message,
   title = 'Network Error',
-  showTroubleshooting = true,
+  showHelpTips = true,
   onRetry,
   className = '',
 }) => {
-  // Convert single error to array for consistent handling
-  const errorArray = Array.isArray(errors) ? errors : [errors];
-  const hasErrors = errorArray.length > 0;
-  
-  // If no errors, don't render anything
-  if (!hasErrors) {
-    return null;
-  }
+  // Determine which message to display
+  const getDisplayMessage = (): string => {
+    if (message) {
+      return message;
+    }
+    
+    if (error) {
+      // Check for common network error patterns and provide friendly messages
+      const errorMessage = error.message.toLowerCase();
+      
+      if (errorMessage.includes('timeout') || errorMessage.includes('timed out')) {
+        return 'Connection timed out. The server is taking too long to respond.';
+      }
+      
+      if (errorMessage.includes('offline') || errorMessage.includes('internet')) {
+        return 'Network connection lost. Please check your internet connection.';
+      }
+      
+      if (errorMessage.includes('abort') || errorMessage.includes('interrupt')) {
+        return 'The connection was interrupted. Please try again.';
+      }
+      
+      // Use the error message directly if none of the patterns match
+      return error.message;
+    }
+    
+    // Default message if no error or custom message provided
+    return 'Unable to connect to the network';
+  };
   
   // Common troubleshooting steps
-  const troubleshootingSteps = [
+  const helpTips = [
     'Check your internet connection',
     'Refresh the page',
     'Clear your browser cache',
@@ -53,28 +75,16 @@ const NetworkErrorDisplay: React.FC<NetworkErrorDisplayProps> = ({
           <h3 className="text-sm font-medium text-blue-800">{title}</h3>
           
           <div className="mt-2">
-            <ul className="list-disc pl-5 space-y-1">
-              {errorArray.map((error, index) => (
-                <li key={error.id || index} className="text-sm text-blue-700">
-                  {error.message}
-                  
-                  {error.details && (
-                    <div className="mt-1 text-xs text-blue-600">
-                      {error.details}
-                    </div>
-                  )}
-                </li>
-              ))}
-            </ul>
+            <p className="text-sm text-blue-700">{getDisplayMessage()}</p>
           </div>
           
-          {showTroubleshooting && (
+          {showHelpTips && (
             <div className="mt-3">
-              <h4 className="text-xs font-semibold text-blue-800">Try these steps:</h4>
+              <h4 className="text-xs font-semibold text-blue-800">Try the following:</h4>
               <ul className="list-disc pl-5 space-y-1 mt-1">
-                {troubleshootingSteps.map((step, index) => (
+                {helpTips.map((tip, index) => (
                   <li key={index} className="text-xs text-blue-700">
-                    {step}
+                    {tip}
                   </li>
                 ))}
               </ul>
@@ -87,7 +97,7 @@ const NetworkErrorDisplay: React.FC<NetworkErrorDisplayProps> = ({
                 onClick={onRetry}
                 className="inline-flex items-center px-3 py-1.5 border border-transparent text-xs font-medium rounded-md text-blue-700 bg-blue-100 hover:bg-blue-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
               >
-                Retry Connection
+                Try Again
               </button>
             </div>
           )}
