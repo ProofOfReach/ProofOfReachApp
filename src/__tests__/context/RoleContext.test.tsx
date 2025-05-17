@@ -1,16 +1,16 @@
 import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { RoleProvider, useRole, UserRole } from '../../context/RoleContext';
-import { AuthContext } from '../../hooks/useAuth';
 import { UserRoleType } from '../../types/role';
+import { AuthContext } from '../../hooks/useAuth';
 import { RoleProviderRefactored } from '../../context/NewRoleContextRefactored';
 import { AuthProvider } from '../../context/AuthContext';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 // Define type-safe roles for consistent usage
-const VIEWER_ROLE = 'viewer' as unknown as UserRole;
-const ADVERTISER_ROLE = 'advertiser' as unknown as UserRole;
-const PUBLISHER_ROLE = 'publisher' as unknown as UserRole;
+const VIEWER_ROLE = 'viewer' as UserRoleType;
+const ADVERTISER_ROLE = 'advertiser' as UserRoleType;
+const PUBLISHER_ROLE = 'publisher' as UserRoleType;
 
 // Mock the Auth context
 jest.mock('../../hooks/useAuth', () => {
