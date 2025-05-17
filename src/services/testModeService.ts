@@ -35,7 +35,7 @@ interface TestModeSession {
 
 // Default session parameters
 const DEFAULT_SESSION_DURATION = 4 * 60 * 60 * 1000; // 4 hours in milliseconds
-const DEFAULT_ROLE: UserRoleType = 'user';
+const DEFAULT_ROLE = 'viewer' as UserRoleType;
 /**
  * TestModeService singleton
  * 
@@ -137,7 +137,7 @@ export class TestModeService {
     try {
       // Server-side rendering check
       if (typeof window === 'undefined') {
-        return 'user';
+        return 'viewer' as UserRoleType;
       }
       
       // First try to get from RoleManager as the single source of truth
@@ -161,10 +161,10 @@ export class TestModeService {
       }
       
       // Default fallback
-      return 'user';
+      return 'viewer' as UserRoleType;
     } catch (error) {
       this.handleError('Error getting current role in test mode', error);
-      return 'user';
+      return 'viewer' as UserRoleType;
     }
   }
   
@@ -175,7 +175,7 @@ export class TestModeService {
     try {
       // Server-side rendering check
       if (typeof window === 'undefined') {
-        return ['user'];
+        return ['viewer'] as UserRoleType[];
       }
       
       // Try to get available roles from the static RoleManager method
@@ -199,10 +199,10 @@ export class TestModeService {
       }
       
       // Default to just the user role
-      return ['user'];
+      return ['viewer'] as UserRoleType[];
     } catch (error) {
       this.handleError('Error getting available roles in test mode', error);
-      return ['user'];
+      return ['viewer'] as UserRoleType[];
     }
   }
   
@@ -513,7 +513,15 @@ export class TestModeService {
    * Check if test mode is allowed in the current environment
    */
   public isTestModeAllowed(): boolean {
-    // Test mode is allowed in development and test environments
+    // In test environments, check localStorage for the isDevelopment flag
+    if (typeof window !== 'undefined' && window.localStorage) {
+      const isDevelopment = window.localStorage.getItem('isDevelopment') === 'true';
+      if (isDevelopment) {
+        return true;
+      }
+    }
+    
+    // Fall back to environment check
     return process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'test';
   }
   

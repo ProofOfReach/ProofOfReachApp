@@ -15,7 +15,13 @@ jest.mock('../enhancedStorageService', () => ({
 
 jest.mock('../testModeStorageService', () => ({
   TestModeStorageService: {
-    getInstance: jest.fn()
+    getInstance: jest.fn().mockReturnValue({
+      getTestModeState: jest.fn(),
+      saveTestModeState: jest.fn(),
+      clearTestModeState: jest.fn(),
+      validateTestModeState: jest.fn(),
+      migrateFromLegacyStorage: jest.fn()
+    })
   }
 }));
 
@@ -27,8 +33,8 @@ jest.mock('../storageService', () => ({
     setTestModeState: jest.fn().mockReturnValue(true),
     createDefaultTestModeState: jest.fn().mockReturnValue({
       isActive: false,
-      currentRole: 'user',
-      availableRoles: ['user'],
+      currentRole: 'viewer',
+      availableRoles: ['viewer'],
       expiryTime: 0,
       lastUpdated: 0
     }),
@@ -89,8 +95,8 @@ describe('TestModeService', () => {
     // Set up StorageService mock implementation for this test
     const defaultTestModeState = {
       isActive: true,
-      currentRole: 'user',
-      availableRoles: ['user', 'advertiser', 'publisher', 'admin', 'stakeholder'],
+      currentRole: 'viewer',
+      availableRoles: ['viewer', 'advertiser', 'publisher', 'admin', 'stakeholder'],
       expiryTime: Date.now() + 1000 * 60 * 60, // 1 hour from now
       lastUpdated: Date.now()
     };
@@ -101,8 +107,8 @@ describe('TestModeService', () => {
     // Default test mode storage state
     mockTestModeStorage.getTestModeState.mockReturnValue({
       isActive: true,
-      currentRole: 'user',
-      availableRoles: ['user', 'advertiser', 'publisher', 'admin', 'stakeholder'],
+      currentRole: 'viewer',
+      availableRoles: ['viewer', 'advertiser', 'publisher', 'admin', 'stakeholder'],
       expiryTime: Date.now() + 1000 * 60 * 60, // 1 hour from now
       lastUpdated: Date.now()
     });
@@ -137,8 +143,8 @@ describe('TestModeService', () => {
     it('returns true when test mode is active', () => {
       mockTestModeStorage.getTestModeState.mockReturnValue({
         isActive: true,
-        currentRole: 'user',
-        availableRoles: ['user'],
+        currentRole: 'viewer',
+        availableRoles: ['viewer'],
         expiryTime: Date.now() + 1000 * 60 * 60,
         lastUpdated: Date.now()
       });
@@ -149,8 +155,8 @@ describe('TestModeService', () => {
     it('returns false when test mode is not active', () => {
       mockTestModeStorage.getTestModeState.mockReturnValue({
         isActive: false,
-        currentRole: 'user',
-        availableRoles: ['user'],
+        currentRole: 'viewer',
+        availableRoles: ['viewer'],
         expiryTime: 0,
         lastUpdated: Date.now()
       });
@@ -161,8 +167,8 @@ describe('TestModeService', () => {
     it('returns false when test mode has expired', () => {
       mockTestModeStorage.getTestModeState.mockReturnValue({
         isActive: true,
-        currentRole: 'user',
-        availableRoles: ['user'],
+        currentRole: 'viewer',
+        availableRoles: ['viewer'],
         expiryTime: Date.now() - 1000, // Expired 1 second ago
         lastUpdated: Date.now()
       });
@@ -176,8 +182,8 @@ describe('TestModeService', () => {
       const oneHourFromNow = Date.now() + 1000 * 60 * 60;
       mockTestModeStorage.getTestModeState.mockReturnValue({
         isActive: true,
-        currentRole: 'user',
-        availableRoles: ['user'],
+        currentRole: 'viewer',
+        availableRoles: ['viewer'],
         expiryTime: oneHourFromNow,
         lastUpdated: Date.now()
       });
@@ -191,8 +197,8 @@ describe('TestModeService', () => {
     it('returns null when test mode is not active', () => {
       mockTestModeStorage.getTestModeState.mockReturnValue({
         isActive: false,
-        currentRole: 'user',
-        availableRoles: ['user'],
+        currentRole: 'viewer',
+        availableRoles: ['viewer'],
         expiryTime: 0,
         lastUpdated: Date.now()
       });
@@ -206,7 +212,7 @@ describe('TestModeService', () => {
       mockTestModeStorage.getTestModeState.mockReturnValue({
         isActive: true,
         currentRole: 'admin',
-        availableRoles: ['user', 'admin'],
+        availableRoles: ['viewer', 'admin'],
         expiryTime: Date.now() + 1000 * 60 * 60,
         lastUpdated: Date.now()
       });
@@ -218,21 +224,21 @@ describe('TestModeService', () => {
       mockTestModeStorage.getTestModeState.mockReturnValue({
         isActive: false,
         currentRole: 'admin',
-        availableRoles: ['user', 'admin'],
+        availableRoles: ['viewer', 'admin'],
         expiryTime: 0,
         lastUpdated: Date.now()
       });
       
-      expect(testModeService.getCurrentRole()).toBe('user');
+      expect(testModeService.getCurrentRole()).toBe('viewer');
     });
   });
   
   describe('getAvailableRoles', () => {
     it('returns the available roles from test mode state', () => {
-      const expectedRoles = ['user', 'advertiser', 'admin'];
+      const expectedRoles = ['viewer', 'advertiser', 'admin'];
       mockTestModeStorage.getTestModeState.mockReturnValue({
         isActive: true,
-        currentRole: 'user',
+        currentRole: 'viewer',
         availableRoles: expectedRoles,
         expiryTime: Date.now() + 1000 * 60 * 60,
         lastUpdated: Date.now()
@@ -250,7 +256,7 @@ describe('TestModeService', () => {
         lastUpdated: Date.now()
       });
       
-      expect(testModeService.getAvailableRoles()).toEqual(['user']);
+      expect(testModeService.getAvailableRoles()).toEqual(['viewer']);
     });
   });
   
