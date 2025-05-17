@@ -368,6 +368,12 @@ export function reportAuthError(
   );
 }
 
+// Create an alias for initializeErrorIntegration to support the tests
+// This function is exported separately to match what the tests expect
+export function initializeErrorHandling(): void {
+  return initializeErrorIntegration();
+}
+
 // Export all functions as a single object for convenience
 export const errorIntegration = {
   createError,

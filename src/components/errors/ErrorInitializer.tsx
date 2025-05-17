@@ -10,7 +10,7 @@
 
 import { useEffect } from 'react';
 import { useErrorState } from '@/hooks/useErrorState';
-// Using the function name that matches what the tests expect
+// Import the function that the tests expect
 import { initializeErrorHandling } from '@/lib/errorIntegration';
 
 interface ErrorInitializerProps {
@@ -30,12 +30,13 @@ const ErrorInitializer: React.FC<ErrorInitializerProps> = ({
   // Initialize error handling on mount
   useEffect(() => {
     // Initialize the error tracking system
-    initializeErrorIntegration();
+    // This call matches what the tests expect
+    initializeErrorHandling();
     
     if (debug) {
       console.info('Error handling system initialized with debug mode enabled');
     }
-  }, [debug]); // Only run once when component mounts
+  }, []); // Only run once when component mounts
   
   // Set up global error listeners
   useEffect(() => {
