@@ -7,7 +7,7 @@
  */
 
 import React, { createContext, useState, useEffect, useMemo, useCallback, useContext } from 'react';
-import { ErrorState, ErrorContextState, defaultErrorState, ErrorSeverity } from '@/types/errors';
+import { ErrorState, ErrorContextState, defaultErrorState, ErrorSeverity, ErrorType } from '@/types/errors';
 import { errorIntegration } from '@/lib/errorIntegration';
 import { errorService } from '@/lib/errorService';
 import { toast } from '@/utils/toast';
@@ -160,7 +160,7 @@ export const useErrorReporting = () => {
     toast.error(`Error: ${errorMessage}`);
     
     // Report error to service
-    errorService.reportError(error, component, errorType || 'app');
+    errorService.reportError(error, component, (errorType as ErrorType) || 'unknown');
   }, []);
   
   return { reportError };
