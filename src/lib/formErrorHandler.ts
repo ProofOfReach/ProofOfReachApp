@@ -7,7 +7,7 @@
  */
 
 import { ErrorCode } from '@/lib/apiErrorHandler';
-import { errorService, ErrorCategory } from '@/lib/errorService';
+import { errorService } from '@/lib/errorService';
 
 /**
  * Standard form error format for both field-level and form-level errors
@@ -123,11 +123,13 @@ export function extractApiFormErrors(
     return result;
   } catch (err) {
     // Log any errors in our error extraction to avoid breaking the UI
-    errorService.handleError(err, {
-      component: 'formErrorHandler',
-      category: ErrorCategory.PROGRAMMER,
-      message: 'Error while processing form validation errors'
-    });
+    // Use the simpler form without the problematic property
+    errorService.reportError(
+      err instanceof Error ? err : new Error('Error while processing form validation errors'),
+      'formErrorHandler',
+      'unexpected',
+      'error'
+    );
     
     // Return a generic error state
     return {

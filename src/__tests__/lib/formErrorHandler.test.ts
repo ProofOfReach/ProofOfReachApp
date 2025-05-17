@@ -17,6 +17,7 @@ import {
 } from '@/lib/formErrorHandler';
 import { ErrorCode } from '@/lib/apiErrorHandler';
 import { errorService } from '@/lib/errorService';
+import { ErrorCategory } from '@/types/errors';
 
 describe('Form Error Handler', () => {
   describe('createEmptyFormErrorState', () => {
@@ -123,11 +124,14 @@ describe('Form Error Handler', () => {
         }
       };
       
+      // Mock the reportError method for this specific test
+      errorService.reportError = jest.fn();
+      
       const result = extractApiFormErrors(errorObj);
       
       expect(result.formError).toBe('Please correct the errors below');
       expect(result.fieldErrors).toEqual({});
-      expect(errorService.handleError).toHaveBeenCalled();
+      expect(errorService.reportError).toHaveBeenCalled();
     });
   });
   
