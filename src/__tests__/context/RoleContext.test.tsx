@@ -91,11 +91,10 @@ jest.mock('../../hooks/useAuthRefactored', () => {
   };
 });
 
-// Instead of type casting which causes issues, let's properly handle the roles
-// by creating type-safe constants that match the expected types in the context
-const viewerRole = VIEWER_ROLE;
-const advertiserRole = ADVERTISER_ROLE;
-const publisherRole = PUBLISHER_ROLE;
+// Create properly typed role variables that can work with our context
+const viewerRole = VIEWER_ROLE as unknown as UserRole;
+const advertiserRole = ADVERTISER_ROLE as unknown as UserRole;
+const publisherRole = PUBLISHER_ROLE as unknown as UserRole;
 
 // Test component that uses the role context
 const TestComponent = () => {
@@ -183,16 +182,9 @@ const renderTestComponent = (initialRole: UserRoleType = VIEWER_ROLE) => {
   const useAuthMock = require('../../hooks/useAuth').useAuth;
   
   // Map our role constants to the appropriate type
-  let castedRole: UserRole;
-  if (initialRole === VIEWER_ROLE) {
-    castedRole = viewerRole;
-  } else if (initialRole === ADVERTISER_ROLE) {
-    castedRole = advertiserRole;
-  } else if (initialRole === PUBLISHER_ROLE) {
-    castedRole = publisherRole;
-  } else {
-    castedRole = viewerRole; // Fallback to viewer role
-  }
+  // Since UserRole is a type alias for UserRoleType, we can use the same value
+  // The explicit cast ensures TypeScript is happy
+  const castedRole = initialRole as unknown as UserRole;
   
   // Set up the role in localStorage before rendering
   localStorage.setItem('currentRole', initialRole);

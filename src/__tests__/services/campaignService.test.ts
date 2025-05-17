@@ -257,7 +257,7 @@ describe('Campaign Service', () => {
       
       expect(campaign).toEqual(expect.objectContaining({
         id: 'campaign-1',
-        status: 'PAUSED' as CampaignStatus,
+        status: 'PAUSED',
       }));
 
       // Clean up spy
