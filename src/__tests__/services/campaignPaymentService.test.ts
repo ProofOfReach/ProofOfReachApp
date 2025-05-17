@@ -4,9 +4,8 @@ import { walletService } from '../../services/walletService';
 import { ApiError } from '../../utils/apiError';
 
 // Mock Prisma
-jest.mock('../../lib/db', () => ({
-  __esModule: true,
-  default: {
+jest.mock('../../lib/prismaClient', () => ({
+  prisma: {
     campaign: {
       findUnique: jest.fn(),
       update: jest.fn(),
