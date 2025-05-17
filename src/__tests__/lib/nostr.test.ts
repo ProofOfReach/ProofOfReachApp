@@ -119,7 +119,7 @@ describe('Nostr Library', () => {
       expect(result).toBeNull();
       expect(window.nostr!.getPublicKey).toHaveBeenCalled();
       expect(consoleSpy).toHaveBeenCalledWith(
-        'Error getting Nostr public key:',
+        'Timeout or error while waiting for Nostr extension:',
         expect.any(Error)
       );
       

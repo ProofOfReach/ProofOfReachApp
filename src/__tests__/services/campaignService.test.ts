@@ -92,10 +92,11 @@ jest.mock('../../lib/prisma', () => {
 
 // Mock the errorHandling module to prevent actual errors from being thrown
 jest.mock('../../lib/errorHandling', () => {
-  // Use the imported ApiError class
   return {
-    throwApiError: jest.fn().mockImplementation((status, message) => {
-      throw new ApiError(message, status);
+    throwApiError: jest.fn().mockImplementation((status: number, message: string) => {
+      // Use the actual ApiError class
+      const { ApiError } = jest.requireActual('../../utils/apiError');
+      throw new ApiError(status, message);
     }),
   };
 });
@@ -103,12 +104,12 @@ jest.mock('../../lib/errorHandling', () => {
 // Mock the CampaignStatus from @prisma/client
 jest.mock('@prisma/client', () => ({
   CampaignStatus: {
-    DRAFT: DRAFT_STATUS,
-    ACTIVE: ACTIVE_STATUS,
-    PAUSED: PAUSED_STATUS,
-    ENDED: ENDED_STATUS,
-    SCHEDULED: SCHEDULED_STATUS,
-    REVIEW: REVIEW_STATUS,
+    DRAFT: 'DRAFT',
+    ACTIVE: 'ACTIVE',
+    PAUSED: 'PAUSED',
+    ENDED: 'ENDED',
+    SCHEDULED: 'SCHEDULED',
+    REVIEW: 'REVIEW',
   },
   Prisma: {
     PrismaClientKnownRequestError: class PrismaClientKnownRequestError extends Error {

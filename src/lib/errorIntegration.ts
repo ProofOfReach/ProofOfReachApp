@@ -283,15 +283,41 @@ export function addErrorListener(listener: () => void): () => void {
 }
 
 /**
+ * Track error recovery time
+ * 
+ * @param startTime The timestamp when the error originally occurred
+ * @param userRecovered Whether the user took action to recover
+ */
+export function trackErrorRecovery(startTime: number, userRecovered: boolean = false): void {
+  const recoveryTime = Date.now() - startTime;
+  
+  // Use window.__errorMetrics if available for detailed tracking
+  if (typeof window !== 'undefined' && window.__errorMetrics && window.__errorMetrics.trackRecovery) {
+    window.__errorMetrics.trackRecovery(recoveryTime, userRecovered);
+  }
+  
+  // Log recovery for debugging
+  console.log(`Error recovered in ${recoveryTime}ms, user recovered: ${userRecovered}`);
+}
+
+/**
  * Get error metrics
  */
 export function getErrorMetrics() {
+  // Use window.__errorMetrics if available
+  if (typeof window !== 'undefined' && window.__errorMetrics && window.__errorMetrics.getMetrics) {
+    return window.__errorMetrics.getMetrics();
+  }
+  
+  // Default metrics
   return {
     totalErrors: totalErrorCount,
-    activeErrors: currentErrors.length,
-    lastErrorTime,
-    hasGlobalError: !!globalError,
-    hasToastError: !!toastError
+    recoveredErrors: 0,
+    criticalErrors: 0,
+    averageRecoveryTime: 0,
+    errorFrequency: 0,
+    userImpactedCount: 0,
+    userRecoveryRate: 0
   };
 }
 
@@ -374,6 +400,28 @@ export function initializeErrorHandling(): void {
   return initializeErrorIntegration();
 }
 
+/**
+ * Reset the error state
+ * Used mainly for testing purposes
+ */
+export function resetErrorState(): void {
+  currentErrors = [];
+  globalError = null;
+  toastError = null;
+  lastErrorTime = 0;
+  totalErrorCount = 0;
+  initialized = false;
+  
+  // Dispatch clear event
+  if (typeof document !== 'undefined') {
+    const event = new CustomEvent(ERROR_EVENTS.ALL_ERRORS_CLEARED);
+    document.dispatchEvent(event);
+  }
+  
+  // Notify listeners
+  notifyListeners();
+}
+
 // Export all functions as a single object for convenience
 export const errorIntegration = {
   createError,
@@ -392,5 +440,6 @@ export const errorIntegration = {
   reportNetworkError,
   reportApiError,
   reportValidationError,
-  reportAuthError
+  reportAuthError,
+  resetErrorState
 };

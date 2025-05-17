@@ -72,6 +72,10 @@ args = "Test Error Service"
 task = "workflow.run"
 args = "Test useErrorState Hook"
 
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Test Campaign Service"
+
 [[workflows.workflow]]
 name = "Nostr Ad Marketplace Server"
 author = "agent"
@@ -195,6 +199,14 @@ author = "agent"
 [[workflows.workflow.tasks]]
 task = "shell.exec"
 args = "npx jest src/__tests__/hooks/useErrorState.test.tsx"
+
+[[workflows.workflow]]
+name = "Test Campaign Service"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "npx jest src/__tests__/services/campaignService.test.ts --no-cache"
 
 [deployment]
 run = ["sh", "-c", "npm install && npx prisma generate && npm run dev"]
