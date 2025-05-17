@@ -7,11 +7,10 @@ import {
   REJECTED_STATUS,
   ENDED_STATUS,
   SCHEDULED_STATUS,
-  REVIEW_STATUS
+  REVIEW_STATUS,
+  CampaignStatus
 } from '../../types/campaign';
-
-// Import ApiError directly
-const { ApiError } = require('../../utils/apiError');
+import { ApiError } from '../../utils/apiError';
 
 // Mock PrismaClient
 jest.mock('../../lib/prisma', () => {
@@ -92,13 +91,14 @@ jest.mock('../../lib/prisma', () => {
 });
 
 // Mock the errorHandling module to prevent actual errors from being thrown
-jest.mock('../../lib/errorHandling', () => ({
-  throwApiError: jest.fn().mockImplementation((status, message) => {
-    throw new ApiError(message, status);
-  }),
-}));
-
-// We've already imported these constants at the top of the file
+jest.mock('../../lib/errorHandling', () => {
+  // Use the imported ApiError class
+  return {
+    throwApiError: jest.fn().mockImplementation((status, message) => {
+      throw new ApiError(message, status);
+    }),
+  };
+});
 
 // Mock the CampaignStatus from @prisma/client
 jest.mock('@prisma/client', () => ({
