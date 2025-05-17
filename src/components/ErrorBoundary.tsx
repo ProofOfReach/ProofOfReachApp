@@ -12,6 +12,10 @@ import { toast } from '@/utils/toast';
 interface ErrorBoundaryProps {
   children: ReactNode;
   fallback?: ReactNode;
+  onError?: (error: Error, errorInfo: ErrorInfo) => void;
+  onReset?: () => void;
+  showDetails?: boolean;
+  componentName?: string;
 }
 
 interface ErrorBoundaryState {
@@ -40,30 +44,55 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
   }
 
   componentDidCatch(error: Error, errorInfo: ErrorInfo): void {
-    // Log the error to our error service
-    errorService.reportError(error, 'ErrorBoundary', 'unexpected', 'error');
+    const { componentName = 'ErrorBoundary', onError } = this.props;
+    
+    // Log the error to our error service with additional context
+    errorService.reportError(
+      error,
+      componentName,
+      'unexpected',
+      'error',
+      {
+        details: errorInfo.componentStack ? String(errorInfo.componentStack) : undefined,
+        userFacing: true,
+        recoverable: true,
+        retryable: true
+      }
+    );
     
     // Update state with error details
     this.setState({
       errorInfo,
     });
     
+    // Call onError handler if provided
+    if (onError) {
+      onError(error, errorInfo);
+    }
+    
     // Show toast notification
     toast.error(`An error occurred: ${error.message}`);
   }
 
   handleRetry = (): void => {
+    const { onReset } = this.props;
+    
     // Reset the error state to trigger a re-render
     this.setState({
       hasError: false,
       error: null,
       errorInfo: null,
     });
+    
+    // Call onReset handler if provided
+    if (onReset) {
+      onReset();
+    }
   };
 
   render(): ReactNode {
     const { hasError, error, errorInfo } = this.state;
-    const { children, fallback } = this.props;
+    const { children, fallback, showDetails } = this.props;
 
     if (hasError) {
       // Render custom fallback if provided, otherwise render default error UI
@@ -100,10 +129,10 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
             </p>
           </div>
           
-          {process.env.NODE_ENV === 'development' && (
+          {(showDetails || process.env.NODE_ENV === 'development') && (
             <div className="mb-4">
               <h3 className="font-medium text-gray-800 dark:text-white mb-2">
-                Error Details:
+                Technical Details
               </h3>
               <div className="bg-gray-100 dark:bg-gray-700 p-3 rounded overflow-auto max-h-40 text-sm">
                 <p className="font-mono">{error?.toString()}</p>

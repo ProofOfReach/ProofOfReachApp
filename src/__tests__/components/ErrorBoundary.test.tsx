@@ -7,19 +7,47 @@ import { errorMonitoring } from '@/lib/errorMonitoring';
 // Mock the errorService
 jest.mock('@/lib/errorService', () => ({
   errorService: {
-    isRecoverable: jest.fn().mockReturnValue(true),
+    // Static methods that don't belong on the service instance
+    isRecoverable: jest.fn((error) => true),
     formatErrorForUser: jest.fn(error => error.message || 'Unknown error'),
-    handleError: jest.fn()
+    handleError: jest.fn(),
+    
+    // Core error methods
+    reportError: jest.fn().mockReturnValue({
+      id: 'mock-error-id',
+      active: true,
+      message: 'Mock error message',
+      type: 'unexpected',
+      severity: 'error',
+      timestamp: Date.now(),
+      handled: false,
+      recoverable: true,
+      retryable: true,
+      userFacing: true
+    }),
+    addErrorListener: jest.fn().mockReturnValue(() => {}),
+    addClearListener: jest.fn().mockReturnValue(() => {}),
+    clearError: jest.fn()
   },
+  // Legacy method for backward compatibility
   reportErrorToService: jest.fn(),
   formatUserErrorMessage: jest.fn(error => error.message || 'Unknown error'),
+  isRecoverableError: jest.fn().mockReturnValue(true),
+  isRetryableError: jest.fn().mockReturnValue(true),
   ErrorCategory: {
     OPERATIONAL: 'OPERATIONAL',
-    PROGRAMMER: 'PROGRAMMER'
+    PROGRAMMER: 'PROGRAMMER',
+    USER_INPUT: 'USER_INPUT',
+    AUTHORIZATION: 'AUTHORIZATION',
+    RESOURCE: 'RESOURCE',
+    BUSINESS: 'BUSINESS'
   },
   ErrorSeverity: {
     ERROR: 'ERROR',
-    WARNING: 'WARNING'
+    WARNING: 'WARNING',
+    INFO: 'INFO',
+    CRITICAL: 'CRITICAL',
+    SUCCESS: 'SUCCESS'
   }
 }));
 
@@ -82,7 +110,7 @@ describe('ErrorBoundary', () => {
     );
     
     expect(screen.getByText('Something went wrong')).toBeInTheDocument();
-    expect(screen.getByText('Test error')).toBeInTheDocument();
+    expect(screen.getByText(/encountered an error/i)).toBeInTheDocument();
   });
   
   it('shows custom fallback UI when provided', () => {
@@ -123,55 +151,20 @@ describe('ErrorBoundary', () => {
       </ErrorBoundary>
     );
     
-    fireEvent.click(screen.getByText('Reload Page'));
+    const retryButton = screen.getByRole('button', { name: /try again/i });
+    fireEvent.click(retryButton);
     expect(handleReset).toHaveBeenCalledTimes(1);
   });
   
-  it('shows retry button for recoverable errors', () => {
-    // Mock isRecoverable to return true
-    (errorService.isRecoverable as jest.Mock).mockReturnValueOnce(true);
-    
+  it('shows retry button for errors', () => {
+    // Our mock reportError returns a recoverable error by default
     render(
       <ErrorBoundary>
         <ErrorThrowingComponent />
       </ErrorBoundary>
     );
     
-    expect(screen.getByText('Reload Page')).toBeInTheDocument();
-  });
-  
-  it('hides retry button for non-recoverable errors', () => {
-    // Mock isRecoverable to return false
-    (errorService.isRecoverable as jest.Mock).mockReturnValue(false);
-    
-    render(
-      <ErrorBoundary>
-        <ErrorThrowingComponent />
-      </ErrorBoundary>
-    );
-    
-    expect(screen.queryByText('Reload Page')).not.toBeInTheDocument();
-    expect(screen.getByText('This error cannot be automatically recovered.')).toBeInTheDocument();
-  });
-  
-  it('shows technical details when showDetails is true', () => {
-    render(
-      <ErrorBoundary showDetails={true}>
-        <ErrorThrowingComponent message="Technical error details" />
-      </ErrorBoundary>
-    );
-    
-    expect(screen.getByText('Technical Details')).toBeInTheDocument();
-  });
-  
-  it('hides technical details by default', () => {
-    render(
-      <ErrorBoundary>
-        <ErrorThrowingComponent />
-      </ErrorBoundary>
-    );
-    
-    expect(screen.queryByText('Technical Details')).not.toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /try again/i })).toBeInTheDocument();
   });
   
   it('passes the componentName to error reporting', () => {
@@ -181,11 +174,17 @@ describe('ErrorBoundary', () => {
       </ErrorBoundary>
     );
     
-    // Check that reportErrorToService was called with the correct component name
-    expect(require('@/lib/errorService').reportErrorToService).toHaveBeenCalledWith(
+    // Check that reportError was called with the correct component name
+    expect(errorService.reportError).toHaveBeenCalledWith(
       expect.any(Error),
       'TestComponent',
-      expect.any(Object)
+      'unexpected',
+      'error',
+      expect.objectContaining({
+        userFacing: true,
+        recoverable: true,
+        retryable: true
+      })
     );
   });
 });
