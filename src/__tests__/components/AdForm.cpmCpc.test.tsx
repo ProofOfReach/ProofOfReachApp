@@ -18,10 +18,8 @@ describe('AdForm CPM/CPC Functionality', () => {
     jest.clearAllMocks();
   });
 
-  it('renders with updated CPM/CPC terminology', async () => {
-    await act(async () => {
-      render(<AdForm onSubmit={mockOnSubmit} isSubmitting={false} />);
-    });
+  it('renders with updated CPM/CPC terminology', () => {
+    render(<AdForm onSubmit={mockOnSubmit} isSubmitting={false} initialData={{}} />);
 
     // Check that the new terminology is used
     expect(screen.getByLabelText(/CPM \(Cost per Mille\/1000 Impressions\)/i)).toBeInTheDocument();
@@ -36,10 +34,8 @@ describe('AdForm CPM/CPC Functionality', () => {
     expect(tooltipTrigger).toBeInTheDocument();
   });
   
-  it('disables CPC field when CPM is filled', async () => {
-    await act(async () => {
-      render(<AdForm onSubmit={mockOnSubmit} isSubmitting={false} initialData={{ bidPerImpression: 0, bidPerClick: 0 }} />);
-    });
+  it('disables CPC field when CPM is filled', () => {
+    render(<AdForm onSubmit={mockOnSubmit} isSubmitting={false} initialData={{ bidPerImpression: 0, bidPerClick: 0 }} />);
     
     // Get the CPM and CPC inputs
     const cpmInput = screen.getByLabelText(/CPM \(Cost per Mille\/1000 Impressions\)/i);
@@ -50,9 +46,7 @@ describe('AdForm CPM/CPC Functionality', () => {
     expect(cpcInput).not.toBeDisabled();
     
     // Set a value for CPM
-    await act(async () => {
-      fireEvent.change(cpmInput, { target: { value: '20' } });
-    });
+    fireEvent.change(cpmInput, { target: { value: '20' } });
     
     // Now CPC should be disabled
     expect(cpcInput).toBeDisabled();
@@ -61,19 +55,15 @@ describe('AdForm CPM/CPC Functionality', () => {
     expect(screen.getByText(/CPM is currently active/i)).toBeInTheDocument();
   });
   
-  it('disables CPM field when CPC is filled', async () => {
-    await act(async () => {
-      render(<AdForm onSubmit={mockOnSubmit} isSubmitting={false} initialData={{ bidPerImpression: 0, bidPerClick: 0 }} />);
-    });
+  it('disables CPM field when CPC is filled', () => {
+    render(<AdForm onSubmit={mockOnSubmit} isSubmitting={false} initialData={{ bidPerImpression: 0, bidPerClick: 0 }} />);
     
     // Get the CPM and CPC inputs
     const cpmInput = screen.getByLabelText(/CPM \(Cost per Mille\/1000 Impressions\)/i);
     const cpcInput = screen.getByLabelText(/CPC \(Cost per Click\)/i);
     
     // Set a value for CPC
-    await act(async () => {
-      fireEvent.change(cpcInput, { target: { value: '50' } });
-    });
+    fireEvent.change(cpcInput, { target: { value: '50' } });
     
     // Now CPM should be disabled
     expect(cpmInput).toBeDisabled();
@@ -120,7 +110,8 @@ describe('AdForm CPM/CPC Functionality', () => {
     
     // Check that validation error appears
     await waitFor(() => {
-      expect(screen.getByText(/Either CPM or CPC must be set/i)).toBeInTheDocument();
+      // Use getAllByText to handle multiple matching elements and check that at least one exists
+      expect(screen.getAllByText(/Either CPM or CPC must be set/i).length).toBeGreaterThan(0);
     });
     
     // Verify that the onSubmit handler was not called
