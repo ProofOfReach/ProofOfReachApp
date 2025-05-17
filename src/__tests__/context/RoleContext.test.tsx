@@ -1,8 +1,7 @@
 import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
-import { RoleProvider, useRole } from '../../context/RoleContext';
+import { RoleProvider, useRole, UserRole } from '../../context/RoleContext';
 import { AuthContext } from '../../hooks/useAuth';
-//import { UserRole } from '../../context/RoleContext';
 import { UserRoleType } from '../../types/role';
 import { RoleProviderRefactored } from '../../context/NewRoleContextRefactored';
 import { AuthProvider } from '../../context/AuthContext';
@@ -100,17 +99,17 @@ const TestComponent = () => {
         ))}
       </ul>
       <div data-testid="user-available">
-        User available: {isRoleAvailable('viewer' as UserRoleType) ? 'Yes' : 'No'}
+        User available: {isRoleAvailable('viewer' as UserRole) ? 'Yes' : 'No'}
       </div>
       <div data-testid="advertiser-available">
-        Advertiser available: {isRoleAvailable('advertiser' as UserRoleType) ? 'Yes' : 'No'}
+        Advertiser available: {isRoleAvailable('advertiser' as UserRole) ? 'Yes' : 'No'}
       </div>
       <div data-testid="publisher-available">
-        Publisher available: {isRoleAvailable('publisher' as UserRoleType) ? 'Yes' : 'No'}
+        Publisher available: {isRoleAvailable('publisher' as UserRole) ? 'Yes' : 'No'}
       </div>
-      <button onClick={() => setRole('viewer' as UserRoleType)}>Set User</button>
-      <button onClick={() => setRole('advertiser' as UserRoleType)}>Set Advertiser</button>
-      <button onClick={() => setRole('publisher' as UserRoleType)}>Set Publisher</button>
+      <button onClick={() => setRole('viewer' as UserRole)}>Set User</button>
+      <button onClick={() => setRole('advertiser' as UserRole)}>Set Advertiser</button>
+      <button onClick={() => setRole('publisher' as UserRole)}>Set Publisher</button>
     </div>
   );
 };
@@ -144,13 +143,13 @@ describe('RoleContext', () => {
   });
   
   it('provides the default role as viewer', () => {
-    localStorage.setItem('userRole', 'viewer'); // Make sure localStorage has the correct value
+    localStorage.setItem('currentRole', 'viewer'); // Make sure localStorage has the correct value
     renderTestComponent('viewer' as UserRoleType);
     expect(screen.getByTestId('current-role')).toHaveTextContent('Current Role: viewer');
   });
   
   it('loads the role from localStorage if available', () => {
-    localStorage.setItem('userRole', 'advertiser');
+    localStorage.setItem('currentRole', 'advertiser');
     renderTestComponent('advertiser' as UserRoleType);
     expect(screen.getByTestId('current-role')).toHaveTextContent('Current Role: advertiser');
   });
@@ -158,16 +157,16 @@ describe('RoleContext', () => {
   // For the role changing tests, we'll simplify and focus on one role change at a time
   // This makes debugging easier and tests more focused
   it('changes role from viewer to advertiser', async () => {
-    localStorage.setItem('userRole', 'viewer');
+    localStorage.setItem('currentRole', 'viewer');
     renderTestComponent('viewer' as UserRoleType);
     
     // Verify initial role
-    expect(screen.getByTestId('current-role')).toHaveTextContent('Current Role: user');
+    expect(screen.getByTestId('current-role')).toHaveTextContent('Current Role: viewer');
     
     // Change to advertiser
     fireEvent.click(screen.getByText('Set Advertiser'));
     // Manually update localStorage to simulate what happens in the real implementation
-    localStorage.setItem('userRole', 'advertiser');
+    localStorage.setItem('currentRole', 'advertiser');
     
     // Wait for the state to update
     await waitFor(() => {
@@ -175,17 +174,17 @@ describe('RoleContext', () => {
     });
   });
   
-  it('changes role from user to publisher', async () => {
-    localStorage.setItem('userRole', 'user');
-    renderTestComponent('user' as UserRole);
+  it('changes role from viewer to publisher', async () => {
+    localStorage.setItem('currentRole', 'viewer');
+    renderTestComponent('viewer' as UserRoleType);
     
     // Verify initial role
-    expect(screen.getByTestId('current-role')).toHaveTextContent('Current Role: user');
+    expect(screen.getByTestId('current-role')).toHaveTextContent('Current Role: viewer');
     
     // Change to publisher
     fireEvent.click(screen.getByText('Set Publisher'));
     // Manually update localStorage
-    localStorage.setItem('userRole', 'publisher');
+    localStorage.setItem('currentRole', 'publisher');
     
     // Wait for the state to update
     await waitFor(() => {
@@ -194,27 +193,27 @@ describe('RoleContext', () => {
   });
   
   it('updates localStorage when the role changes', async () => {
-    localStorage.setItem('userRole', 'user');
-    renderTestComponent('user' as UserRole);
+    localStorage.setItem('currentRole', 'viewer');
+    renderTestComponent('viewer' as UserRoleType);
     
     // Verify initial localStorage state
-    expect(localStorage.getItem('userRole')).toBe('user');
+    expect(localStorage.getItem('currentRole')).toBe('viewer');
     
     // Change to advertiser and update localStorage manually 
     // (we need to do this manually since we're bypassing the actual implementation)
     fireEvent.click(screen.getByText('Set Advertiser'));
-    localStorage.setItem('userRole', 'advertiser');
+    localStorage.setItem('currentRole', 'advertiser');
     
     // Verify both the UI and localStorage reflect the change
     await waitFor(() => {
       expect(screen.getByTestId('current-role')).toHaveTextContent('Current Role: advertiser');
-      expect(localStorage.getItem('userRole')).toBe('advertiser');
+      expect(localStorage.getItem('currentRole')).toBe('advertiser');
     });
   });
   
   it('correctly reports available roles', () => {
-    localStorage.setItem('userRole', 'user');
-    renderTestComponent('user' as UserRole);
+    localStorage.setItem('currentRole', 'viewer');
+    renderTestComponent('viewer' as UserRoleType);
     
     // With our mock, all roles should be available
     expect(screen.getByTestId('user-available')).toHaveTextContent('User available: Yes');
