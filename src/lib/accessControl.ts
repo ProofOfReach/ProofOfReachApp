@@ -212,7 +212,7 @@ export const PERMISSIONS: PermissionsRecord = {
     isSensitive: true
   },
   USE_API: {
-    allowedRoles: ['user', 'advertiser', 'publisher', 'admin', 'stakeholder'] as UserRoleType[],
+    allowedRoles: ['viewer', 'advertiser', 'publisher', 'admin', 'stakeholder'] as UserRoleType[],
     description: 'Use the API with appropriate authentication',
     category: PermissionCategory.API
   },
