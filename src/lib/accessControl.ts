@@ -164,12 +164,12 @@ export const PERMISSIONS: PermissionsRecord = {
   
   // Analytics permissions
   VIEW_ANALYTICS: {
-    allowedRoles: ['advertiser', 'publisher', 'admin', 'stakeholder', 'user'] as UserRoleType[],
+    allowedRoles: ['advertiser', 'publisher', 'admin', 'stakeholder', 'viewer'] as UserRoleType[],
     description: 'View general analytics',
     category: PermissionCategory.ANALYTICS
   },
   VIEW_BASIC_ANALYTICS: {
-    allowedRoles: ['advertiser', 'publisher', 'admin', 'stakeholder', 'user'] as UserRoleType[],
+    allowedRoles: ['advertiser', 'publisher', 'admin', 'stakeholder', 'viewer'] as UserRoleType[],
     description: 'View basic analytics dashboards',
     category: PermissionCategory.ANALYTICS
   },
@@ -254,7 +254,7 @@ export const PERMISSIONS: PermissionsRecord = {
 // Define route access permissions
 export const ROUTE_PERMISSIONS: Record<string, UserRoleType[]> = {
   // Public routes (accessible to all authenticated users)
-  '/dashboard': ['user', 'advertiser', 'publisher', 'admin', 'stakeholder'],
+  '/dashboard': ['viewer', 'advertiser', 'publisher', 'admin', 'stakeholder'],
   
   // Advertiser routes
   '/dashboard/advertiser': ['advertiser', 'admin'],
@@ -277,7 +277,7 @@ export const ROUTE_PERMISSIONS: Record<string, UserRoleType[]> = {
   '/dashboard/finance': ['stakeholder', 'admin'],
   
   // Example routes
-  '/dashboard/examples/role-access': ['user', 'advertiser', 'publisher', 'admin', 'stakeholder'],
+  '/dashboard/examples/role-access': ['viewer', 'advertiser', 'publisher', 'admin', 'stakeholder'],
 };
 
 /**
@@ -290,7 +290,7 @@ export const PUBLIC_ROUTES = [
   '/dashboard',
   '/dashboard/profile',
   '/dashboard/settings',
-  '/dashboard/user'
+  '/dashboard/viewer'
 ];
 
 /**
@@ -647,15 +647,15 @@ export function getRoleDashboardPath(role: UserRoleType | string): string {
       return '/dashboard/admin';
     case 'stakeholder':
       return '/dashboard/stakeholder';
-    case 'user':
+    case 'viewer':
     default:
-      return '/dashboard/user';
+      return '/dashboard/viewer';
   }
 }
 
 // Define the available roles in the system
 export const ROLES = {
-  USER: 'user' as UserRoleType,
+  VIEWER: 'viewer' as UserRoleType,
   ADVERTISER: 'advertiser' as UserRoleType,
   PUBLISHER: 'publisher' as UserRoleType,
   ADMIN: 'admin' as UserRoleType,
@@ -667,7 +667,7 @@ export const ROLES = {
  * @returns Array of all role types
  */
 export function getAllRoles(): UserRoleType[] {
-  return ['user', 'advertiser', 'publisher', 'admin', 'stakeholder'];
+  return ['viewer', 'advertiser', 'publisher', 'admin', 'stakeholder'];
 }
 
 /**

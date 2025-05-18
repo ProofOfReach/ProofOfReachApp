@@ -321,7 +321,7 @@ export const RoleProvider: React.FC<RoleProviderProps> = ({
       const hasRedirected = sessionStorage.getItem('dashboard_redirected');
       if (!hasRedirected) {
         sessionStorage.setItem('dashboard_redirected', 'true');
-        router.replace('/dashboard/user');
+        router.replace('/dashboard/viewer');
       }
     }
   }, [router.pathname, router.isReady]);
@@ -387,7 +387,7 @@ export const RoleProvider: React.FC<RoleProviderProps> = ({
    * Get the current role, ensuring it's a valid UserRole
    */
   const getCurrentRole = (): UserRole => {
-    return ensureValidRole(roleData?.currentRole || 'user');
+    return ensureValidRole(roleData?.currentRole || 'viewer');
   };
   
   /**

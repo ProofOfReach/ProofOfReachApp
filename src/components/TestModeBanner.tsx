@@ -438,7 +438,7 @@ export default function TestModeBanner() {
               <div className="pt-2 border-t border-yellow-100 dark:border-yellow-800">
                 <div className="text-xs font-medium mb-1">Switch Role:</div>
                 <div className="flex flex-wrap gap-2" data-testid="role-switcher">
-                  {['user', 'advertiser', 'publisher', 'admin', 'stakeholder'].map(role => (
+                  {['viewer', 'advertiser', 'publisher', 'admin', 'stakeholder'].map(role => (
                     <button
                       key={role}
                       onClick={() => handleRoleSwitch(role)}

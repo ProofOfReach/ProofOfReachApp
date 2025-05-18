@@ -13,7 +13,7 @@ import CurrencyToggle from '../CurrencyToggle';
 import ExchangeRateDisplay from '../ExchangeRateDisplay';
 
 // Define a UserRole type to ensure consistency
-export type UserRole = 'user' | 'advertiser' | 'publisher' | 'admin' | 'stakeholder';
+export type UserRole = 'viewer' | 'advertiser' | 'publisher' | 'admin' | 'stakeholder';
 
 interface UnifiedSidebarProps {
   isTestMode?: boolean;
