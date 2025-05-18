@@ -291,7 +291,7 @@ describe('Sidebar Component', () => {
   
   it('applies correct styling to role buttons', () => {
     render(
-      <AllProvidersWrapper initialRole="user">
+      <AllProvidersWrapper initialRole="viewer">
         <Sidebar />
       </AllProvidersWrapper>
     );

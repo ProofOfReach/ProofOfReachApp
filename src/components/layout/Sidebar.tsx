@@ -22,7 +22,10 @@ const Sidebar: React.FC = () => {
   
   // For backward compatibility, try to use both role context systems
   // with priority to the refactored version
-  const role = typeof window !== 'undefined' && localStorage.getItem('userRole') as UserRole || refactoredRole || originalRole;
+  const storedRole = typeof window !== 'undefined' && localStorage.getItem('userRole') as string;
+  // Convert any 'user' role to 'viewer' for backward compatibility
+  const normalizedRole = storedRole === 'user' ? 'viewer' : storedRole;
+  const role = (normalizedRole as UserRole) || refactoredRole || originalRole;
   const setRole = refactoredSetRole || originalSetRole;
   const availableRoles = refactoredAvailableRoles.length > 0 ? refactoredAvailableRoles : originalAvailableRoles;
   const isRoleAvailable = refactoredIsRoleAvailable || originalIsRoleAvailable;
@@ -47,7 +50,7 @@ const Sidebar: React.FC = () => {
   
   // Role icons with appropriate colors
   const roleIcons = {
-    user: <User className="w-5 h-5 text-blue-500" />,
+    viewer: <User className="w-5 h-5 text-blue-500" />,
     advertiser: <MegaphoneIcon className="w-5 h-5 text-orange-500" />,
     publisher: <Edit3 className="w-5 h-5 text-green-500" />,
     admin: <Shield className="w-5 h-5 text-purple-500" />,
@@ -56,7 +59,7 @@ const Sidebar: React.FC = () => {
 
   // Role labels
   const roleLabels = {
-    user: 'User',
+    viewer: 'Viewer',
     advertiser: 'Advertiser',
     publisher: 'Publisher',
     admin: 'Admin',
@@ -65,7 +68,7 @@ const Sidebar: React.FC = () => {
 
   // Core menu items for each role
   const coreMenuItems = {
-    user: [
+    viewer: [
       { icon: <Home className="w-5 h-5" />, label: 'Dashboard', href: '/dashboard' },
       { icon: <PieChart className="w-5 h-5" />, label: 'Nostr Feed', href: '/nostr-feed' },
       { icon: <SatsIcon className="w-5 h-5" />, label: 'Wallet', href: '/dashboard/wallet' },
@@ -106,7 +109,7 @@ const Sidebar: React.FC = () => {
   
   // Combine core and bottom items
   const menuItems = {
-    user: [...coreMenuItems.user, ...bottomMenuItems],
+    viewer: [...coreMenuItems.viewer, ...bottomMenuItems],
     advertiser: [...coreMenuItems.advertiser, ...bottomMenuItems],
     publisher: [...coreMenuItems.publisher, ...bottomMenuItems],
     admin: [...coreMenuItems.admin, ...bottomMenuItems],
