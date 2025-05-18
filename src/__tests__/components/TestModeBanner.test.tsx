@@ -47,7 +47,7 @@ describe('TestModeBanner', () => {
       isTestModeAllowed: true,
       isDevEnvironment: true,
       currentRole: 'admin',
-      availableRoles: ['user', 'advertiser', 'publisher', 'admin', 'stakeholder'],
+      availableRoles: ['viewer', 'advertiser', 'publisher', 'admin', 'stakeholder'],
       createTimeLimitedSession: jest.fn(),
       createTestScenario: jest.fn(),
       setDebugMode: jest.fn()
@@ -108,7 +108,7 @@ describe('TestModeBanner', () => {
       isTestModeAllowed: true,
       isDevEnvironment: true,
       currentRole: 'admin',
-      availableRoles: ['user', 'advertiser', 'publisher', 'admin', 'stakeholder'],
+      availableRoles: ['viewer', 'advertiser', 'publisher', 'admin', 'stakeholder'],
       createTimeLimitedSession: jest.fn(),
       createTestScenario: jest.fn(),
       setDebugMode: jest.fn()
@@ -136,7 +136,7 @@ describe('TestModeBanner', () => {
       isTestModeAllowed: true,
       isDevEnvironment: true,
       currentRole: 'admin',
-      availableRoles: ['user', 'advertiser', 'publisher', 'admin', 'stakeholder'],
+      availableRoles: ['viewer', 'advertiser', 'publisher', 'admin', 'stakeholder'],
       createTimeLimitedSession: jest.fn(),
       createTestScenario: jest.fn(),
       setDebugMode: jest.fn()
@@ -175,7 +175,7 @@ describe('TestModeBanner', () => {
       isTestModeAllowed: true,
       isDevEnvironment: true,
       currentRole: 'admin',
-      availableRoles: ['user', 'advertiser', 'publisher', 'admin', 'stakeholder'],
+      availableRoles: ['viewer', 'advertiser', 'publisher', 'admin', 'stakeholder'],
       createTimeLimitedSession: jest.fn(),
       createTestScenario: jest.fn(),
       setDebugMode: jest.fn()
@@ -208,7 +208,7 @@ describe('TestModeBanner', () => {
       isTestModeAllowed: true,
       isDevEnvironment: true,
       currentRole: 'admin',
-      availableRoles: ['user', 'advertiser', 'publisher', 'admin', 'stakeholder'],
+      availableRoles: ['viewer', 'advertiser', 'publisher', 'admin', 'stakeholder'],
       createTimeLimitedSession: jest.fn(),
       createTestScenario: jest.fn(),
       setDebugMode: jest.fn()
@@ -266,8 +266,8 @@ describe('TestModeBanner', () => {
       setCurrentRole: mockSetCurrentRole,
       isTestModeAllowed: true,
       isDevEnvironment: true,
-      currentRole: 'user',
-      availableRoles: ['user', 'advertiser', 'publisher', 'admin', 'stakeholder'],
+      currentRole: 'viewer',
+      availableRoles: ['viewer', 'advertiser', 'publisher', 'admin', 'stakeholder'],
       createTimeLimitedSession: jest.fn(),
       createTestScenario: jest.fn(),
       setDebugMode: jest.fn()
