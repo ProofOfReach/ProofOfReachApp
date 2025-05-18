@@ -296,12 +296,12 @@ describe('Sidebar Component', () => {
       </AllProvidersWrapper>
     );
     
-    // Default role is user, check if it has blue styling
-    const roleButton = screen.getByText('User').closest('button');
+    // Default role is viewer, check if it has blue styling
+    const roleButton = screen.getByText('Viewer').closest('button');
     expect(roleButton?.className).toContain('bg-blue-100');
     
     // Open dropdown
-    fireEvent.click(screen.getByText('User'));
+    fireEvent.click(screen.getByText('Viewer'));
     
     // Advertiser button should be visible with default styling
     const advertiserOption = screen.getByText('Advertiser').closest('button');

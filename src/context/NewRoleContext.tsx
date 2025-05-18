@@ -27,15 +27,15 @@ interface RoleContextType {
  * In a production application, these would come from environment variables
  */
 const isDevEnvironment = process.env.NODE_ENV === 'development'; // Only true in development mode
-const ALL_ROLES: UserRole[] = ['user', 'advertiser', 'publisher', 'admin', 'stakeholder'];
+const ALL_ROLES: UserRole[] = ['viewer', 'advertiser', 'publisher', 'admin', 'stakeholder'];
 
 /**
  * Create the context with sensible default values
  */
 const RoleContext = createContext<RoleContextType>({
-  role: 'user',
+  role: 'viewer',
   setRole: async () => false,
-  availableRoles: ['user'],
+  availableRoles: ['viewer'],
   isRoleAvailable: () => false,
   clearRole: () => {},
   isChangingRole: false,
@@ -100,10 +100,10 @@ export const RoleProvider: React.FC<RoleProviderProps> = ({
   };
 
   /**
-   * Ensure a role is valid, or return 'user' as fallback
+   * Ensure a role is valid, or return 'viewer' as fallback
    */
   const ensureValidRole = (role: string): UserRole => {
-    return isValidRole(role) ? role : 'user';
+    return isValidRole(role) ? role : 'viewer';
   };
   
   /**
@@ -120,7 +120,7 @@ export const RoleProvider: React.FC<RoleProviderProps> = ({
         
         return {
           availableRoles: ALL_ROLES,
-          currentRole: isValidRole(storedRole || '') ? storedRole! : 'user',
+          currentRole: isValidRole(storedRole || '') ? storedRole! : 'viewer',
           timestamp: Date.now()
         };
       }
@@ -133,7 +133,7 @@ export const RoleProvider: React.FC<RoleProviderProps> = ({
         
         return {
           availableRoles: ALL_ROLES,
-          currentRole: isValidRole(storedRole || '') ? storedRole! : 'user',
+          currentRole: isValidRole(storedRole || '') ? storedRole! : 'viewer',
           timestamp: Date.now()
         };
       }
@@ -141,13 +141,13 @@ export const RoleProvider: React.FC<RoleProviderProps> = ({
       // Production mode - use authorized roles from the server
       // Make sure to capture all available roles
       console.log("Available roles from auth:", auth?.availableRoles);
-      const availableRoles = auth?.availableRoles || ['user'];
+      const availableRoles = auth?.availableRoles || ['viewer'];
       const storedRole = localStorage.getItem('userRole');
       
       // Ensure the role is both valid and authorized
       const currentRole = storedRole && isValidRole(storedRole) && availableRoles.includes(storedRole as UserRole)
         ? storedRole
-        : 'user';
+        : 'viewer';
         
       // Make sure all available roles are properly stored
       if (auth?.isTestMode) {
@@ -174,7 +174,7 @@ export const RoleProvider: React.FC<RoleProviderProps> = ({
         const storedRole = localStorage.getItem('userRole');
         return {
           availableRoles: ALL_ROLES,
-          currentRole: isValidRole(storedRole || '') ? storedRole! : 'user',
+          currentRole: isValidRole(storedRole || '') ? storedRole! : 'viewer',
           timestamp: Date.now()
         };
       }
@@ -195,7 +195,7 @@ export const RoleProvider: React.FC<RoleProviderProps> = ({
             // Validate the role
             const currentRole = storedRole && isValidRole(storedRole) 
               ? storedRole
-              : 'user';
+              : 'viewer';
               
             return {
               availableRoles,
@@ -210,8 +210,8 @@ export const RoleProvider: React.FC<RoleProviderProps> = ({
       
       // Default fallback data - if auth has availableRoles, use those
       return {
-        availableRoles: auth?.availableRoles || ['user'],
-        currentRole: initialRole || 'user',
+        availableRoles: auth?.availableRoles || ['viewer'],
+        currentRole: initialRole || 'viewer',
         timestamp: 0
       };
     },
@@ -359,8 +359,8 @@ export const RoleProvider: React.FC<RoleProviderProps> = ({
       return true;
     }
     
-    // User role is always available
-    if (roleToCheck === 'user') {
+    // Viewer role is always available
+    if (roleToCheck === 'viewer') {
       return true;
     }
     
@@ -377,8 +377,8 @@ export const RoleProvider: React.FC<RoleProviderProps> = ({
     localStorage.removeItem('roleCacheTimestamp');
     
     client.setQueryData<RoleDataType>([ROLE_CACHE_KEY], {
-      availableRoles: ['user'],
-      currentRole: 'user',
+      availableRoles: ['viewer'],
+      currentRole: 'viewer',
       timestamp: Date.now()
     });
   };
@@ -396,7 +396,7 @@ export const RoleProvider: React.FC<RoleProviderProps> = ({
   const contextValue: RoleContextType = {
     role: getCurrentRole(),
     setRole,
-    availableRoles: roleData?.availableRoles || ['user'],
+    availableRoles: roleData?.availableRoles || ['viewer'],
     isRoleAvailable,
     clearRole,
     isChangingRole

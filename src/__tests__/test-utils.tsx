@@ -45,7 +45,7 @@ jest.mock('../hooks/useAuthRefactored', () => ({
 
 // Mock the NewRoleContextRefactored
 jest.mock('../context/NewRoleContextRefactored', () => {
-  const ALL_ROLES = ['user', 'advertiser', 'publisher', 'admin', 'stakeholder'] as const;
+  const ALL_ROLES = ['viewer', 'advertiser', 'publisher', 'admin', 'stakeholder'] as const;
   const React = require('react');
   const createContext = React.createContext;
   
