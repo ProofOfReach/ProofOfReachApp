@@ -269,16 +269,16 @@ describe('Sidebar Component', () => {
     jest.spyOn(window, 'confirm').mockImplementation(() => true);
     
     render(
-      <AllProvidersWrapper initialRole="user">
+      <AllProvidersWrapper initialRole="viewer">
         <Sidebar />
       </AllProvidersWrapper>
     );
     
-    // Initially in user role
+    // Initially in viewer role
     expect(screen.getByText('Nostr Feed')).toBeInTheDocument();
     
     // Open dropdown and change to advertiser role
-    fireEvent.click(screen.getByText('User'));
+    fireEvent.click(screen.getByText('Viewer'));
     fireEvent.click(screen.getByText('Advertiser'));
     
     // In the actual component, we directly update window.location.href
@@ -340,7 +340,7 @@ describe('Sidebar Component', () => {
         isLoggedIn: true,
         pubkey: 'npub_test123456789',
         isTestMode: false,
-        availableRoles: ['user'],
+        availableRoles: ['viewer'],
       },
       login: jest.fn().mockResolvedValue({
         isLoggedIn: true,
