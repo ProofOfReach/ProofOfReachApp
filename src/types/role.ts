@@ -12,7 +12,7 @@
  * Available user roles in the system
  * This matches the Prisma schema's UserRole enum
  */
-export type UserRoleType = 'viewer' | 'advertiser' | 'publisher' | 'admin' | 'stakeholder';
+export type UserRoleType = 'viewer' | 'advertiser' | 'publisher' | 'admin' | 'stakeholder' | 'user';
 
 /**
  * Role data structure for consistent storage and retrieval
@@ -51,7 +51,7 @@ export interface RoleCapabilities {
  * Check if a string is a valid UserRoleType
  */
 export function isValidUserRole(role: string): role is UserRoleType {
-  return ['viewer', 'advertiser', 'publisher', 'admin', 'stakeholder'].includes(role as UserRoleType);
+  return ['viewer', 'advertiser', 'publisher', 'admin', 'stakeholder', 'user'].includes(role as UserRoleType);
 }
 
 /**

@@ -6,7 +6,8 @@ import {
   accessControl,
   checkPermission,
   checkRouteAccess,
-  getRoleCapabilities
+  getRoleCapabilities,
+  PERMISSIONS
 } from '../accessControl';
 import { UserRoleType } from '../../types/role';
 
