@@ -2,9 +2,12 @@ import { screen, fireEvent, waitFor } from '@testing-library/react';
 import AdvertiserDashboard from '../../../pages/dashboard/advertiser';
 import React from 'react';
 
+// Import render directly to avoid jest hook errors
+import { render as tlRender } from '@testing-library/react';
+
 // Custom render function to avoid test-utils dependencies
 const render = (ui: React.ReactElement) => {
-  return require('@testing-library/react').render(ui, {
+  return tlRender(ui, {
     wrapper: ({ children }: { children: React.ReactNode }) => <>{children}</>
   });
 };

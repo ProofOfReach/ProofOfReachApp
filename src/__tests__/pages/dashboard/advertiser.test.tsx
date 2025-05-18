@@ -66,55 +66,57 @@ const mockCampaigns = [
   }
 ];
 
-// Mock SWR
-jest.mock('swr', () => ({
-  __esModule: true,
-  default: jest.fn().mockImplementation((key) => {
-    if (key === '/api/campaigns') {
+// Mock SWR with proper TypeScript typing
+jest.mock('swr', () => {
+  return {
+    __esModule: true,
+    default: jest.fn().mockImplementation((key: string) => {
+      if (key === '/api/campaigns') {
+        return {
+          data: mockCampaigns,
+          isLoading: false,
+          error: null,
+          mutate: jest.fn()
+        };
+      }
+      if (key === '/api/wallet/balance') {
+        return {
+          data: { balance: 5000 },
+          isLoading: false,
+          error: null,
+          mutate: jest.fn()
+        };
+      }
+      if (key === '/api/ads') {
+        return {
+          data: mockAds,
+          isLoading: false,
+          error: null,
+          mutate: jest.fn()
+        };
+      }
+      if (key.includes('/api/analytics/advertiser')) {
+        return {
+          data: {
+            totalImpressions: 500,
+            totalClicks: 50,
+            totalSpent: 1500,
+            ctr: 0.1,
+            daily: []
+          },
+          isLoading: false,
+          error: null
+        };
+      }
       return {
-        data: mockCampaigns,
+        data: null,
         isLoading: false,
         error: null,
         mutate: jest.fn()
       };
-    }
-    if (key === '/api/wallet/balance') {
-      return {
-        data: { balance: 5000 },
-        isLoading: false,
-        error: null,
-        mutate: jest.fn()
-      };
-    }
-    if (key === '/api/ads') {
-      return {
-        data: mockAds,
-        isLoading: false,
-        error: null,
-        mutate: jest.fn()
-      };
-    }
-    if (key.includes('/api/analytics/advertiser')) {
-      return {
-        data: {
-          totalImpressions: 500,
-          totalClicks: 50,
-          totalSpent: 1500,
-          ctr: 0.1,
-          daily: []
-        },
-        isLoading: false,
-        error: null
-      };
-    }
-    return {
-      data: null,
-      isLoading: false,
-      error: null,
-      mutate: jest.fn()
-    };
-  })
-}));
+    })
+  };
+});
 
 // Mock auth hook
 jest.mock('../../../hooks/useAuth', () => ({
@@ -186,70 +188,8 @@ jest.mock('../../../context/RoleContext', () => {
   };
 });
 
-// Mock ads data
-const mockAds = [
-  {
-    id: 'ad-1',
-    title: 'Test Ad 1',
-    description: 'This is a test ad description',
-    imageUrl: 'https://example.com/image1.jpg',
-    targetUrl: 'https://example.com/target1',
-    budget: 5000,
-    bidPerImpression: 10,
-    status: 'ACTIVE',
-    createdAt: '2023-04-01T12:00:00Z',
-    impressions: 120,
-    clicks: 15,
-  },
-  {
-    id: 'ad-2',
-    title: 'Test Ad 2',
-    description: 'Another test ad description',
-    imageUrl: 'https://example.com/image2.jpg',
-    targetUrl: 'https://example.com/target2',
-    budget: 3000,
-    bidPerImpression: 5,
-    status: 'PENDING',
-    createdAt: '2023-04-02T12:00:00Z',
-    impressions: 0,
-    clicks: 0,
-  },
-  {
-    id: 'ad-3',
-    title: 'Test Ad 3',
-    description: 'Yet another test ad description',
-    imageUrl: 'https://example.com/image3.jpg',
-    targetUrl: 'https://example.com/target3',
-    budget: 2000,
-    bidPerImpression: 8,
-    status: 'PAUSED',
-    createdAt: '2023-04-03T12:00:00Z',
-    impressions: 45,
-    clicks: 5,
-  },
-];
-
-// Mock SWR
-jest.mock('swr', () => {
-  const originalModule = jest.requireActual('swr');
-  return {
-    __esModule: true,
-    default: jest.fn().mockImplementation((key) => {
-      if (key === '/api/ads') {
-        return {
-          data: mockAds,
-          error: undefined,
-          mutate: jest.fn(),
-        };
-      }
-      return {
-        data: undefined,
-        error: undefined,
-        isLoading: true,
-      };
-    })
-  };
-});
+// Second SWR mock is causing conflicts with the first one and is redundant
+// (The mockAds are already defined at the top of the file and used in the first SWR mock)
 
 // Mock Next Router
 jest.mock('next/router', () => ({
