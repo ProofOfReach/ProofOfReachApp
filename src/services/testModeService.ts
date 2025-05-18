@@ -437,7 +437,7 @@ export class TestModeService {
       }
       
       // All potential roles
-      const allRoles: UserRoleType[] = ['user', 'advertiser', 'publisher', 'admin', 'stakeholder'];
+      const allRoles: UserRoleType[] = ['viewer', 'advertiser', 'publisher', 'admin', 'stakeholder'];
       
       // First try using RoleManager (but don't depend on it)
       let success = true;

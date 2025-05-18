@@ -250,8 +250,8 @@ describe('TestModeService', () => {
     it('returns only the default role when test mode is not active', () => {
       mockTestModeStorage.getTestModeState.mockReturnValue({
         isActive: false,
-        currentRole: 'user',
-        availableRoles: ['user', 'admin', 'advertiser'],
+        currentRole: 'viewer',
+        availableRoles: ['viewer', 'admin', 'advertiser'],
         expiryTime: 0,
         lastUpdated: Date.now()
       });
@@ -455,8 +455,8 @@ describe('TestModeService', () => {
     it('creates a time-limited test session', () => {
       mockTestModeStorage.getTestModeState.mockReturnValue({
         isActive: false,
-        currentRole: 'user',
-        availableRoles: ['user'],
+        currentRole: 'viewer',
+        availableRoles: ['viewer'],
         expiryTime: 0,
         lastUpdated: Date.now()
       });
