@@ -23,7 +23,7 @@ jest.mock('../context/TestModeContext', () => {
       isDevEnvironment: true,
       isDevelopment: true
     }),
-    TestModeProvider: ({ children }) => React.createElement(React.Fragment, null, children)
+    TestModeProvider: ({ children }: { children: React.ReactNode }) => React.createElement(React.Fragment, null, children)
   };
 });
 
@@ -180,7 +180,7 @@ const customRender = (
   options?: CustomRenderOptions,
 ) => {
   // Create a pure function wrapper component
-  function Wrapper({ children }: { children: React.ReactNode }): JSX.Element {
+  function Wrapper({ children }: { children: React.ReactNode }): React.ReactElement {
     // Use either the provided auth context or the default mock
     // Cast to the appropriate role type to avoid type errors
     const initialRole = (options?.initialRole || "advertiser") as UserRole & UserRoleType;
@@ -197,7 +197,7 @@ const customRender = (
     if (!options?.skipRoleProvider) {
       // First wrap with RoleProvider
       wrappedUI = (
-        <RoleProvider initialRole={initialRole}>
+        <RoleProvider initialRole={initialRole as UserRole}>
           {wrappedUI}
         </RoleProvider>
       );
