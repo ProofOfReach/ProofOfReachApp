@@ -17,7 +17,7 @@ import { useAuth } from '../../hooks/useAuth';
  * or complex context providers. It determines the role directly from localStorage and
  * works completely independently of server state.
  */
-export type UserRole = 'user' | 'advertiser' | 'publisher' | 'admin' | 'stakeholder';
+export type UserRole = 'viewer' | 'advertiser' | 'publisher' | 'admin' | 'stakeholder';
 
 const StaticClientSidebar: React.FC = () => {
   const router = useRouter();

@@ -213,7 +213,7 @@ describe('Sidebar Component', () => {
       addRole: jest.fn().mockResolvedValue(true),
       removeRole: jest.fn().mockResolvedValue(true),
       hasRole: jest.fn().mockImplementation((role) => 
-        ['user', 'advertiser', 'publisher'].includes(role)
+        ['viewer', 'advertiser', 'publisher'].includes(role)
       ),
       isLoading: false
     });

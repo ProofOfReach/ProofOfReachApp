@@ -21,7 +21,7 @@ const DebugRoleEnabler: React.FC = () => {
   const { isActive, enableTestMode, disableTestMode, currentRole: testModeCurrentRole } = testModeData;
   const [isExpanded, setIsExpanded] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [currentRole, setCurrentRole] = useState<UserRoleType>('user');
+  const [currentRole, setCurrentRole] = useState<UserRoleType>('viewer');
   
   // Listen for role changes using the new event system
   useAppEvent(ROLE_EVENTS.ROLE_CHANGED, (payload) => {
@@ -47,9 +47,9 @@ const DebugRoleEnabler: React.FC = () => {
       // Then try legacy storage as fallback
       const fallbackRole = storedRole || 
                           localStorage.getItem('currentRole') || 
-                          'user';
+                          'viewer';
       
-      const validRole = typeof fallbackRole === 'string' ? fallbackRole : 'user';
+      const validRole = typeof fallbackRole === 'string' ? fallbackRole : 'viewer';
       if (RoleManager.isValidRole(validRole)) {
         setCurrentRole(validRole as UserRoleType);
       }

@@ -45,7 +45,7 @@ export default function TestModeBanner() {
   // Always start with the debug panel collapsed for test compatibility
   const [isDebugExpanded, setIsDebugExpanded] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [currentRole, setCurrentRole] = useState<UserRoleType>('user');
+  const [currentRole, setCurrentRole] = useState<UserRoleType>('viewer');
   
   // Listen for new unified role events
   useAppEvent(ROLE_EVENTS.ROLE_CHANGED, (payload) => {
@@ -125,16 +125,16 @@ export default function TestModeBanner() {
       const fallbackRole = storedRole || 
                           localStorage.getItem('currentRole') || 
                           RoleService.getCurrentRole() ||
-                          'user';
+                          'viewer';
       
-      const validRole = typeof fallbackRole === 'string' ? fallbackRole : 'user';
+      const validRole = typeof fallbackRole === 'string' ? fallbackRole : 'viewer';
       if (RoleManager.isValidRole(validRole)) {
         setCurrentRole(validRole as UserRoleType);
         // Update RoleManager to maintain consistency
         RoleManager.setCurrentRole(validRole as UserRoleType);
       } else {
         // Ultimate fallback
-        setCurrentRole('user');
+        setCurrentRole('viewer');
       }
     }
   }, []);
@@ -211,7 +211,7 @@ export default function TestModeBanner() {
   const handleEnableAllRoles = async () => {
     setIsLoading(true);
     try {
-      const allRoles: UserRoleType[] = ['user', 'advertiser', 'publisher', 'admin', 'stakeholder'];
+      const allRoles: UserRoleType[] = ['viewer', 'advertiser', 'publisher', 'admin', 'stakeholder'];
       let success = false;
       
       // Phase 6 improvement: First try using TestModeService directly
