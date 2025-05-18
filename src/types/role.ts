@@ -12,7 +12,7 @@
  * Available user roles in the system
  * This matches the Prisma schema's UserRole enum
  */
-export type UserRoleType = 'viewer' | 'advertiser' | 'publisher' | 'admin' | 'stakeholder' | 'user';
+export type UserRoleType = 'viewer' | 'advertiser' | 'publisher' | 'admin' | 'stakeholder';
 
 /**
  * Role data structure for consistent storage and retrieval
