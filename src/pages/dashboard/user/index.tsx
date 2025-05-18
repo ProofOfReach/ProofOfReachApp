@@ -30,7 +30,7 @@ const UserDashboardPage = () => {
     <div className="space-y-6">
       <div className="flex items-center space-x-2">
         <Home className="h-8 w-8 text-blue-500" />
-        <h1 className="text-2xl font-bold text-gray-900 dark:text-white">User Dashboard</h1>
+        <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Viewer Dashboard</h1>
       </div>
       
       {/* Use the dashboard component we already created */}
@@ -73,7 +73,7 @@ const UserDashboardPage = () => {
 
 // Use our improved dashboard layout
 UserDashboardPage.getLayout = (page: React.ReactElement) => {
-  return <ImprovedDashboardLayout title="User Dashboard">{page}</ImprovedDashboardLayout>;
+  return <ImprovedDashboardLayout title="Viewer Dashboard">{page}</ImprovedDashboardLayout>;
 };
 
 export default UserDashboardPage;

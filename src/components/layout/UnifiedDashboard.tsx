@@ -32,7 +32,7 @@ const UnifiedDashboard: React.FC<UnifiedDashboardProps> = ({ initialRole }) => {
   
   // Role titles for the page title
   const roleTitles = {
-    user: 'User Dashboard',
+    user: 'Viewer Dashboard',
     advertiser: 'Advertiser Dashboard',
     publisher: 'Publisher Dashboard',
     admin: 'Admin Dashboard',

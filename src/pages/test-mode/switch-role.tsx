@@ -64,7 +64,7 @@ const SwitchRolePage: React.FC = () => {
   const roles = [
     {
       id: 'user',
-      name: 'User Dashboard',
+      name: 'Viewer Dashboard',
       description: 'Basic user account management and settings',
       path: '/dashboard/user',
       icon: <User className="w-8 h-8 text-blue-500" />,

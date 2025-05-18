@@ -178,7 +178,7 @@ const MainDashboard = () => {
         return (
           <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-100 dark:border-blue-800 rounded-lg p-6">
             <h3 className="text-lg font-semibold text-blue-800 dark:text-blue-300 mb-3">
-              User Dashboard
+              Viewer Dashboard
             </h3>
             <p className="text-blue-700 dark:text-blue-400 mb-4">
               Welcome to the Nostr Ad Marketplace. Select a role to see specialized dashboard content.

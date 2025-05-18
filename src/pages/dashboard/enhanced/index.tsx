@@ -151,7 +151,7 @@ const EnhancedDashboardPage: React.FC = () => {
         return (
           <div className="bg-gray-50 dark:bg-gray-800 p-6 rounded-lg border border-gray-200 dark:border-gray-700">
             <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-300 mb-4">
-              User Dashboard
+              Viewer Dashboard
             </h2>
             <p className="text-gray-700 dark:text-gray-400 mb-4">
               Welcome to your dashboard. Choose a role to get started.

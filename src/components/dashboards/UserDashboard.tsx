@@ -26,7 +26,7 @@ const UserDashboard: React.FC<UserDashboardProps> = ({ page = '' }) => {
 const UserHomeContent: React.FC = () => {
   return (
     <div>
-      <h1 className="text-2xl font-bold mb-4">User Dashboard</h1>
+      <h1 className="text-2xl font-bold mb-4">Viewer Dashboard</h1>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow">
           <h2 className="text-lg font-medium mb-2">Welcome to Nostr Ad Marketplace</h2>
