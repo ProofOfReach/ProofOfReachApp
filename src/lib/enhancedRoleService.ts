@@ -149,7 +149,7 @@ export async function changeUserRole(
       
       return {
         id: updatedUser.id,
-        currentRole: 'user',
+        currentRole: 'viewer',
         availableRoles: mapUserToAvailableRoles(updatedUser),
         isTestUser: updatedUser.isTestUser,
         createdAt: updatedUser.createdAt,
@@ -308,17 +308,17 @@ export async function enableAllRoles(userId: string): Promise<UserRoleData> {
     // Get available roles
     const availableRoles = mapUserToAvailableRoles(updatedUser);
     
-    // Default to user's current role or 'user' if not available
-    let currentRole: RoleType | 'user' = updatedUser.currentRole as RoleType | 'user' || 'user';
+    // Default to user's current role or 'viewer' if not available
+    let currentRole: RoleType | 'viewer' = updatedUser.currentRole as RoleType | 'viewer' || 'viewer';
     
-    // If current role isn't valid, reset to user
-    if (currentRole !== 'user' && !availableRoles.includes(currentRole as RoleType)) {
-      currentRole = 'user';
+    // If current role isn't valid, reset to viewer
+    if (currentRole !== 'viewer' && !availableRoles.includes(currentRole as RoleType)) {
+      currentRole = 'viewer';
       
-      // Update the user's role to 'user'
+      // Update the user's role to 'viewer'
       await prisma.user.update({
         where: { id: userId },
-        data: { currentRole: 'user' },
+        data: { currentRole: 'viewer' },
       });
     }
     
