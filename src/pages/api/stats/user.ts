@@ -1,8 +1,9 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { ApiError } from '@/utils/apiError';
-import { handleApiError } from '@/lib/errorHandling';
+import { handleError } from '@/lib/errorHandling';
 import { PrismaClient } from '@prisma/client';
 import { enhancedAuthMiddleware, AuthenticatedUser } from '@/utils/enhancedAuthMiddleware';
+import { logger } from '@/lib/logger';
 
 const prisma = new PrismaClient();
 
@@ -45,32 +46,42 @@ async function handler(req: NextApiRequest, res: NextApiResponse, user: Authenti
     if (req.method !== 'GET') {
       return res.status(405).json({ error: 'Method not allowed' });
     }
+    
+    // Check if we're in test mode
+    const isTestMode = user.isTestMode || (typeof process !== 'undefined' && process.env.NODE_ENV === 'test');
+    logger.debug(`User stats API called, test mode: ${isTestMode}`);
 
-    // Fetch user data from database if needed
-    const dbUser = await prisma.user.findUnique({
-      where: { id: user.userId },
-    });
-
-    // If not found, try with pubkey
-    if (!dbUser) {
-      const pubkeyUser = await prisma.user.findFirst({
-        where: { nostrPubkey: user.pubkey },
+    // Fetch user data from database if needed and not in test mode
+    let dbUser = null;
+    if (!isTestMode) {
+      dbUser = await prisma.user.findUnique({
+        where: { id: user.userId },
       });
-      
-      if (!pubkeyUser) {
-        // In test mode, we might not have a real user in DB
-        if (!user.isTestMode) {
-          throw new ApiError('User not found', 404);
+
+      // If not found, try with pubkey
+      if (!dbUser && user.pubkey) {
+        dbUser = await prisma.user.findFirst({
+          where: { nostrPubkey: user.pubkey },
+        });
+        
+        if (!dbUser) {
+          throw new ApiError(404, 'User not found');
         }
       }
     }
 
-    // This would normally fetch actual stats from the database
-    // For now, we're providing sample data to display in the UI
+    // For test mode or actual users, provide stats for UI display
+    // In test mode, generate some consistent but random-looking stats
+    let userIdNum = 0;
     
-    // Generate some random-ish but consistent stats based on user ID
-    // In a real implementation, these would come from database queries
-    const userIdNum = parseInt(user.userId.replace(/[^0-9]/g, '').substring(0, 3)) || 123;
+    if (isTestMode) {
+      // In test mode, generate stats based on current date for consistency
+      const dateStr = new Date().toISOString().slice(0, 10).replace(/-/g, '');
+      userIdNum = parseInt(dateStr.substring(6), 10) || 123;
+    } else {
+      // For real users, base it on their user ID
+      userIdNum = parseInt(user.userId.replace(/[^0-9]/g, '').substring(0, 3), 10) || 123;
+    }
     
     const stats = {
       viewCount: 500 + (userIdNum % 1000),
@@ -78,11 +89,38 @@ async function handler(req: NextApiRequest, res: NextApiResponse, user: Authenti
       followersCount: 25 + (userIdNum % 100)
     };
 
+    logger.debug(`Returning user stats: ${JSON.stringify(stats)}`);
     return res.status(200).json(stats);
   } catch (error) {
-    return handleApiError(error, req, res);
+    return handleError(error, req, res);
   }
 }
 
-// Use the enhanced auth middleware - all users can access their stats
-export default enhancedAuthMiddleware(handler);
+// Special version for test mode that skips auth in development
+const withAuth = process.env.NODE_ENV === 'development'
+  ? (handler: any) => {
+      return async (req: NextApiRequest, res: NextApiResponse) => {
+        // Check if we have test mode headers/cookies
+        const isTestMode = req.headers['x-test-mode'] === 'true' || 
+                           req.cookies?.isTestMode === 'true';
+                           
+        if (isTestMode) {
+          logger.info('Test mode detected, bypassing auth for stats API');
+          // Create test user
+          const testUser: AuthenticatedUser = {
+            userId: 'test-user-id',
+            pubkey: 'test-pubkey',
+            isTestMode: true,
+            roles: ['viewer', 'advertiser', 'publisher'],
+            currentRole: 'viewer'
+          };
+          return handler(req, res, testUser);
+        }
+        
+        // Otherwise use the normal auth middleware
+        return enhancedAuthMiddleware(handler)(req, res);
+      };
+    }
+  : enhancedAuthMiddleware;
+
+export default withAuth(handler);
