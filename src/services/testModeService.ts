@@ -265,7 +265,8 @@ export class TestModeService {
         try {
           // Set compatibility flags with error handling for each storage operation
           if (typeof localStorage !== 'undefined') {
-            localStorage.setItem(STORAGE_KEYS.BYPASS_API_CALLS, 'true');
+            // Use direct string to avoid reference errors during migration
+            localStorage.setItem('bypass_api_calls', 'true');
           }
           
           if (typeof sessionStorage !== 'undefined') {
@@ -331,7 +332,7 @@ export class TestModeService {
       // Clear legacy storage
       sessionStorage.removeItem('testModeEnabled');
       sessionStorage.removeItem('testModeExpiry');
-      localStorage.removeItem(STORAGE_KEYS.BYPASS_API_CALLS);
+      localStorage.removeItem('bypass_api_calls');
       localStorage.removeItem('isTestMode');
       
       // Dispatch events (both new and legacy)
@@ -530,7 +531,7 @@ export class TestModeService {
    * @param duration Session duration in minutes
    * @param role Initial role for the session
    */
-  public createTimeLimitedSession(duration: number, role: UserRoleType = 'user'): boolean {
+  public createTimeLimitedSession(duration: number, role: UserRoleType = 'viewer'): boolean {
     // Convert minutes to milliseconds
     const durationMs = duration * 60 * 1000;
     return this.enableTestMode(durationMs, role);
