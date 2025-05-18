@@ -38,7 +38,7 @@ const EnhancedSidebar: React.FC = () => {
   const role = localStorageRole || refactoredRole || originalRole;
   
   // Handle legacy 'user' role if present
-  const normalizedRole = role === 'user' ? 'viewer' : role;
+  const normalizedRole = role === 'user' as any ? 'viewer' : role;
   const setRole = refactoredSetRole || originalSetRole;
   const availableRoles = refactoredAvailableRoles.length > 0 ? refactoredAvailableRoles : originalAvailableRoles;
   const isRoleAvailable = refactoredIsRoleAvailable || originalIsRoleAvailable;
@@ -64,7 +64,7 @@ const EnhancedSidebar: React.FC = () => {
   
   // Role icons with appropriate colors
   const roleIcons = {
-    user: <User className="w-5 h-5 text-blue-500" />,
+    viewer: <User className="w-5 h-5 text-blue-500" />,
     advertiser: <MegaphoneIcon className="w-5 h-5 text-orange-500" />,
     publisher: <Edit3 className="w-5 h-5 text-green-500" />,
     admin: <Shield className="w-5 h-5 text-purple-500" />,
@@ -73,7 +73,7 @@ const EnhancedSidebar: React.FC = () => {
 
   // Role labels
   const roleLabels = {
-    user: 'User',
+    viewer: 'Viewer',
     advertiser: 'Advertiser',
     publisher: 'Publisher',
     admin: 'Admin',
@@ -82,8 +82,8 @@ const EnhancedSidebar: React.FC = () => {
 
   // Menu items for each role
   const menuItems = {
-    user: [
-      { icon: <Home className="w-5 h-5" />, label: 'Dashboard', href: '/dashboard/user' },
+    viewer: [
+      { icon: <Home className="w-5 h-5" />, label: 'Dashboard', href: '/dashboard/viewer' },
       { icon: <PieChart className="w-5 h-5" />, label: 'Nostr Feed', href: '/nostr-feed' },
       { icon: <SatsIcon className="w-5 h-5" />, label: 'Wallet', href: '/dashboard/wallet' },
       { icon: <Code className="w-5 h-5" />, label: 'Developer', href: '/dashboard/developer' },
@@ -130,13 +130,13 @@ const EnhancedSidebar: React.FC = () => {
     setRoleDropdownOpen(false);
     
     // Store new role in localStorage before changing context
-    localStorage.setItem('userRole', newRole);
+    localStorage.setItem('currentRole', newRole);
     
     // Critical for test mode: Set force_role_refresh to true
     localStorage.setItem('force_role_refresh', 'true');
     
     // Each role has a dedicated dashboard path
-    let targetPath = '/dashboard/user';
+    let targetPath = '/dashboard/viewer';
     
     if (newRole === 'publisher') {
       targetPath = '/dashboard/publisher';
@@ -164,14 +164,14 @@ const EnhancedSidebar: React.FC = () => {
   
   // Get filtered role options (all roles except current one)
   const getFilteredRoleOptions = () => {
-    return (['user', 'advertiser', 'publisher', 'admin', 'stakeholder'] as UserRole[])
-      .filter(roleOption => roleOption !== role);
+    return (['viewer', 'advertiser', 'publisher', 'admin', 'stakeholder'] as UserRole[])
+      .filter(roleOption => roleOption !== normalizedRole);
   };
 
   // Get background color based on current role
   const getRoleBackgroundColor = (checkRole: UserRole) => {
     switch(checkRole) {
-      case 'user': return 'bg-blue-100 dark:bg-blue-900/20';
+      case 'viewer': return 'bg-blue-100 dark:bg-blue-900/20';
       case 'advertiser': return 'bg-orange-100 dark:bg-orange-900/20';
       case 'publisher': return 'bg-green-100 dark:bg-green-900/20';
       case 'admin': return 'bg-purple-100 dark:bg-purple-900/20';
@@ -182,7 +182,7 @@ const EnhancedSidebar: React.FC = () => {
   // Get text color based on current role
   const getRoleTextColor = (checkRole: UserRole) => {
     switch(checkRole) {
-      case 'user': return 'text-blue-700 dark:text-blue-300';
+      case 'viewer': return 'text-blue-700 dark:text-blue-300';
       case 'advertiser': return 'text-orange-700 dark:text-orange-300';
       case 'publisher': return 'text-green-700 dark:text-green-300';
       case 'admin': return 'text-purple-700 dark:text-purple-300';
@@ -193,7 +193,7 @@ const EnhancedSidebar: React.FC = () => {
   // Get active menu item styling
   const getActiveClass = (href: string) => {
     // For Dashboard items, we need a more exact match to avoid highlighting for all pages
-    const isDashboardLink = href === '/dashboard/user' || 
+    const isDashboardLink = href === '/dashboard/viewer' || 
                            href === '/dashboard/advertiser' ||
                            href === '/dashboard/publisher' ||
                            href === '/dashboard/admin' ||
@@ -213,11 +213,11 @@ const EnhancedSidebar: React.FC = () => {
                            router.pathname.includes('/dashboard/publisher') ? 'publisher' : 
                            router.pathname.includes('/dashboard/admin') ? 'admin' :
                            router.pathname.includes('/dashboard/stakeholder') ? 'stakeholder' :
-                           router.pathname.includes('/dashboard/user') ? 'user' : 'user';
+                           router.pathname.includes('/dashboard/viewer') ? 'viewer' : 'viewer';
       
       // For styling purposes, use the path-based role for consistent styling
       switch(pathBasedRole) {
-        case 'user':
+        case 'viewer':
           activeClass = 'bg-blue-100 text-blue-700 dark:bg-blue-900/20 dark:text-blue-300';
           break;
         case 'advertiser':
@@ -261,8 +261,8 @@ const EnhancedSidebar: React.FC = () => {
             onClick={() => setRoleDropdownOpen(!roleDropdownOpen)}
           >
             <div className="flex items-center">
-              <span className="mr-3">{roleIcons[role]}</span>
-              <span>{roleLabels[role]}</span>
+              <span className="mr-3">{roleIcons[normalizedRole as keyof typeof roleIcons]}</span>
+              <span>{roleLabels[normalizedRole as keyof typeof roleLabels]}</span>
             </div>
             <ChevronDown 
               className={cn(
@@ -320,7 +320,7 @@ const EnhancedSidebar: React.FC = () => {
         <div className="w-full">
           <h2 className="text-xs uppercase text-gray-500 dark:text-gray-400 mb-2 font-semibold px-2">Menu</h2>
           <NavigationMenuList className="flex-col space-y-1 space-x-0 w-full min-w-0">
-            {menuItems[role].map((item) => (
+            {menuItems[normalizedRole as keyof typeof menuItems]?.map((item) => (
               <NavigationMenuItem key={item.label} active={getActiveClass(item.href).includes('bg-')}>
                 <NavigationMenuNextLink 
                   href={item.href}
