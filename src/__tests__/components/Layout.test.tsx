@@ -115,7 +115,7 @@ describe('Layout Component', () => {
     // Mock the router for dashboard path
     const originalUseRouter = require('next/router').useRouter;
     require('next/router').useRouter = () => ({
-      pathname: '/dashboard/user',
+      pathname: '/dashboard/viewer',
       query: {},
       push: jest.fn(),
       replace: jest.fn(),
