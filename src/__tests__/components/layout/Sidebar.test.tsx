@@ -77,7 +77,7 @@ const AllProvidersWrapper: React.FC<{
   initialRole?: UserRole;
 }> = ({ 
   children, 
-  initialRole = 'user' 
+  initialRole = 'viewer' 
 }) => {
   const testQueryClient = createTestQueryClient();
   
@@ -179,12 +179,12 @@ describe('Sidebar Component', () => {
         pubkey: 'test-pubkey',
         isLoggedIn: true,
         isTestMode: false,
-        availableRoles: ['user', 'advertiser', 'publisher'],
+        availableRoles: ['viewer', 'advertiser', 'publisher'],
         profile: null
       },
       login: jest.fn().mockResolvedValue(true),
       logout: jest.fn().mockResolvedValue(undefined),
-      refreshRoles: jest.fn().mockResolvedValue(['user', 'advertiser', 'publisher']),
+      refreshRoles: jest.fn().mockResolvedValue(['viewer', 'advertiser', 'publisher']),
       addRole: jest.fn().mockResolvedValue(true),
       removeRole: jest.fn().mockResolvedValue(true)
     });
@@ -195,20 +195,20 @@ describe('Sidebar Component', () => {
         isLoggedIn: true,
         pubkey: 'npub_test123456789',
         isTestMode: false,
-        availableRoles: ['user', 'advertiser', 'publisher'],
+        availableRoles: ['viewer', 'advertiser', 'publisher'],
       },
       login: jest.fn().mockResolvedValue({
         isLoggedIn: true,
         pubkey: 'npub_test123456789',
         isTestMode: false,
-        availableRoles: ['user', 'advertiser', 'publisher']
+        availableRoles: ['viewer', 'advertiser', 'publisher']
       }),
       logout: jest.fn().mockResolvedValue(undefined),
       refreshRoles: jest.fn().mockResolvedValue({
         isLoggedIn: true,
         pubkey: 'npub_test123456789',
         isTestMode: false,
-        availableRoles: ['user', 'advertiser', 'publisher']
+        availableRoles: ['viewer', 'advertiser', 'publisher']
       }),
       addRole: jest.fn().mockResolvedValue(true),
       removeRole: jest.fn().mockResolvedValue(true),

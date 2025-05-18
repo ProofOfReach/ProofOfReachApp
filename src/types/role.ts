@@ -51,7 +51,7 @@ export interface RoleCapabilities {
  * Check if a string is a valid UserRoleType
  */
 export function isValidUserRole(role: string): role is UserRoleType {
-  return ['viewer', 'advertiser', 'publisher', 'admin', 'stakeholder', 'user'].includes(role as UserRoleType);
+  return ['viewer', 'advertiser', 'publisher', 'admin', 'stakeholder'].includes(role as UserRoleType);
 }
 
 /**

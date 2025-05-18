@@ -521,13 +521,7 @@ export function getRoleCapabilities(
     enhancedCapabilities['VIEW_ANALYTICS'].granted = true;
   }
   
-  // Special handling for 'user' role
-  if (role === 'user') {
-    // Ensure user role specifically has VIEW_ANALYTICS permission for tests
-    if (enhancedCapabilities['VIEW_ANALYTICS']) {
-      enhancedCapabilities['VIEW_ANALYTICS'].granted = true;
-    }
-  }
+  // Previous special handling for 'user' role removed
 
   // Work with a copy of the capabilities for inheritance processing
   // This prevents modifications to the original object during iteration
