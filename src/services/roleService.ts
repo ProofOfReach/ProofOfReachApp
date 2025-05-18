@@ -36,6 +36,38 @@ class RoleService {
       return false;
     }
   }
+  
+  /**
+   * Set test mode state
+   * @param enabled Whether to enable or disable test mode
+   * @param expiryInMinutes Optional expiry time in minutes
+   * @returns Whether the operation was successful
+   */
+  setTestMode(enabled: boolean, expiryInMinutes?: number): boolean {
+    try {
+      if (typeof window === 'undefined' || !localStorage) {
+        return false;
+      }
+      
+      // Set the test mode flag
+      localStorage.setItem('isTestMode', enabled ? 'true' : 'false');
+      
+      // Handle expiry if provided
+      if (enabled && expiryInMinutes && sessionStorage) {
+        const expiryTime = Date.now() + (expiryInMinutes * 60 * 1000);
+        sessionStorage.setItem('testModeExpiry', expiryTime.toString());
+      } else if (!enabled && sessionStorage) {
+        // Clear expiry when disabling
+        sessionStorage.removeItem('testModeExpiry');
+      }
+      
+      logger.log(`Test mode ${enabled ? 'enabled' : 'disabled'}${expiryInMinutes ? ` with ${expiryInMinutes} minute expiry` : ''}`);
+      return true;
+    } catch (error) {
+      logger.error('Error setting test mode:', error);
+      return false;
+    }
+  }
   /**
    * Get the current role for a user
    * @param userId The user ID

@@ -10,6 +10,7 @@ import * as React from 'react';
 
 // Set up mocks first, before imports  
 jest.mock('../context/TestModeContext', () => {
+  const React = require('react');
   return {
     useTestMode: jest.fn().mockReturnValue({
       isTestMode: true,
@@ -22,7 +23,7 @@ jest.mock('../context/TestModeContext', () => {
       isDevEnvironment: true,
       isDevelopment: true
     }),
-    TestModeProvider: ({ children }: { children: React.ReactNode }) => React.createElement(React.Fragment, null, children)
+    TestModeProvider: ({ children }) => React.createElement(React.Fragment, null, children)
   };
 });
 
@@ -170,9 +171,8 @@ const createTestQueryClient = () =>
 // This avoids double-mocking that could lead to conflicts
 const { RoleProviderRefactored } = require('../context/NewRoleContextRefactored');
 
-// Get TestModeProvider and RoleProvider from our mocks
+// Get TestModeProvider from our mocks
 const { TestModeProvider } = require('../context/TestModeContext');
-const { RoleProviderRefactored } = require('../context/NewRoleContextRefactored');
 
 // Custom render that includes providers
 const customRender = (
