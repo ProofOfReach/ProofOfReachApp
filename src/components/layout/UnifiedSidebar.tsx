@@ -67,19 +67,19 @@ const UnifiedSidebar: React.FC<UnifiedSidebarProps> = ({ isTestMode = false }) =
     if (path.includes('/dashboard/publisher')) return 'publisher';
     if (path.includes('/dashboard/admin')) return 'admin';
     if (path.includes('/dashboard/stakeholder')) return 'stakeholder';
-    if (path.includes('/dashboard/user')) return 'user';
+    if (path.includes('/dashboard/viewer')) return 'viewer';
     
     // Get from localStorage as fallback 
     const storedRole = typeof window !== 'undefined' 
-      ? localStorage.getItem('userRole') as UserRole || 'user'
-      : 'user';
+      ? localStorage.getItem('userRole') as UserRole || 'viewer'
+      : 'viewer';
       
     return storedRole;
   };
   
   // Role icons with appropriate colors
   const roleIcons = {
-    user: <User className="w-5 h-5 text-blue-500" />,
+    viewer: <User className="w-5 h-5 text-blue-500" />,
     advertiser: <MegaphoneIcon className="w-5 h-5 text-orange-500" />,
     publisher: <Edit3 className="w-5 h-5 text-green-500" />,
     admin: <Shield className="w-5 h-5 text-purple-500" />,
@@ -88,7 +88,7 @@ const UnifiedSidebar: React.FC<UnifiedSidebarProps> = ({ isTestMode = false }) =
 
   // Role labels
   const roleLabels = {
-    user: 'User',
+    viewer: 'Viewer',
     advertiser: 'Advertiser',
     publisher: 'Publisher',
     admin: 'Admin',
@@ -97,8 +97,8 @@ const UnifiedSidebar: React.FC<UnifiedSidebarProps> = ({ isTestMode = false }) =
 
   // Core menu items for each role
   const coreMenuItems = {
-    user: [
-      { icon: <Home className="w-5 h-5" />, label: 'Dashboard', href: '/dashboard/user' },
+    viewer: [
+      { icon: <Home className="w-5 h-5" />, label: 'Dashboard', href: '/dashboard/viewer' },
       { icon: <PieChart className="w-5 h-5" />, label: 'Nostr Feed', href: '/nostr-feed' },
       { icon: <SatsIcon className="w-5 h-5" />, label: 'Wallet', href: '/dashboard/wallet' },
     ],
@@ -207,22 +207,22 @@ const UnifiedSidebar: React.FC<UnifiedSidebarProps> = ({ isTestMode = false }) =
     // Simple check to determine available roles based on current path
     // For testing, we unlock all roles
     if (path.includes('/dashboard/advertiser')) {
-      return ['advertiser', 'user'].includes(roleToCheck);
+      return ['advertiser', 'viewer'].includes(roleToCheck);
     } else if (path.includes('/dashboard/publisher')) {
-      return ['publisher', 'user'].includes(roleToCheck);
+      return ['publisher', 'viewer'].includes(roleToCheck);
     } else if (path.includes('/dashboard/admin')) {
-      return ['admin', 'user'].includes(roleToCheck);
+      return ['admin', 'viewer'].includes(roleToCheck);
     } else if (path.includes('/dashboard/stakeholder')) {
-      return ['stakeholder', 'user'].includes(roleToCheck);
+      return ['stakeholder', 'viewer'].includes(roleToCheck);
     } else {
-      return roleToCheck === 'user';
+      return roleToCheck === 'viewer';
     }
   };
 
   // Get background color based on current role
   const getRoleBackgroundColor = (checkRole: UserRole) => {
     switch(checkRole) {
-      case 'user': return 'bg-blue-100 dark:bg-blue-900/20';
+      case 'viewer': return 'bg-blue-100 dark:bg-blue-900/20';
       case 'advertiser': return 'bg-orange-100 dark:bg-orange-900/20';
       case 'publisher': return 'bg-green-100 dark:bg-green-900/20';
       case 'admin': return 'bg-purple-100 dark:bg-purple-900/20';
@@ -234,7 +234,7 @@ const UnifiedSidebar: React.FC<UnifiedSidebarProps> = ({ isTestMode = false }) =
   // Get text color based on current role
   const getRoleTextColor = (checkRole: UserRole) => {
     switch(checkRole) {
-      case 'user': return 'text-blue-700 dark:text-blue-300';
+      case 'viewer': return 'text-blue-700 dark:text-blue-300';
       case 'advertiser': return 'text-orange-700 dark:text-orange-300';
       case 'publisher': return 'text-green-700 dark:text-green-300';
       case 'admin': return 'text-purple-700 dark:text-purple-300';

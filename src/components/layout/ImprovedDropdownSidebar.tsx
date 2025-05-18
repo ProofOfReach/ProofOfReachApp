@@ -30,10 +30,10 @@ const ImprovedDropdownSidebar: React.FC = () => {
     label: string;
     icon: React.ReactNode;
   }[]> = {
-    user: [
+    viewer: [
       { href: '/dashboard', label: 'Dashboard', icon: <Home className="w-5 h-5" /> },
       { href: '/nostr-feed', label: 'Nostr Feed', icon: <PieChart className="w-5 h-5" /> },
-      { href: '/dashboard/user/settings', label: 'Settings', icon: <Settings className="w-5 h-5" /> },
+      { href: '/dashboard/viewer/settings', label: 'Settings', icon: <Settings className="w-5 h-5" /> },
     ],
     advertiser: [
       { href: '/dashboard', label: 'Dashboard', icon: <Home className="w-5 h-5" /> },
@@ -67,7 +67,7 @@ const ImprovedDropdownSidebar: React.FC = () => {
   const getActiveClass = (href: string) => {
     // For Dashboard items, we need a more exact match to avoid highlighting for all pages
     const isDashboardLink = href === '/dashboard' ||
-                           href === '/dashboard/user' || 
+                           href === '/dashboard/viewer' || 
                            href === '/dashboard/advertiser' ||
                            href === '/dashboard/publisher' ||
                            href === '/dashboard/admin' ||
@@ -87,11 +87,11 @@ const ImprovedDropdownSidebar: React.FC = () => {
                            router.pathname.includes('/dashboard/publisher') ? 'publisher' : 
                            router.pathname.includes('/dashboard/admin') ? 'admin' :
                            router.pathname.includes('/dashboard/stakeholder') ? 'stakeholder' :
-                           router.pathname.includes('/dashboard/user') ? 'user' : currentRole;
+                           router.pathname.includes('/dashboard/viewer') ? 'viewer' : currentRole;
       
       // For styling purposes, use the path-based role for consistent styling
       switch(pathBasedRole) {
-        case 'user':
+        case 'viewer':
           activeClass = 'bg-blue-100 text-blue-700 dark:bg-blue-900/20 dark:text-blue-300';
           break;
         case 'advertiser':

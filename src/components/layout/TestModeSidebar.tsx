@@ -19,7 +19,7 @@ import ForceLogoutButton from '../ForceLogoutButton';
  * architecture. This is a standalone component that operates independently 
  * of the role context.
  */
-export type UserRole = 'user' | 'advertiser' | 'publisher' | 'admin' | 'stakeholder';
+export type UserRole = 'viewer' | 'advertiser' | 'publisher' | 'admin' | 'stakeholder';
 
 const TestModeSidebar: React.FC = () => {
   const router = useRouter();
@@ -30,17 +30,20 @@ const TestModeSidebar: React.FC = () => {
   
   // Determine current role from URL
   const determineCurrentRoleFromURL = (): UserRole => {
-    if (typeof window === 'undefined') return 'user';
+    if (typeof window === 'undefined') return 'viewer';
     
     const path = window.location.pathname;
     if (path.includes('/dashboard/advertiser')) return 'advertiser';
     if (path.includes('/dashboard/publisher')) return 'publisher';
     if (path.includes('/dashboard/admin')) return 'admin';
     if (path.includes('/dashboard/stakeholder')) return 'stakeholder';
-    return 'user';
+    if (path.includes('/dashboard/viewer')) return 'viewer';
+    // Legacy compatibility: if URL contains '/dashboard/user', return 'viewer' role
+    if (path.includes('/dashboard/user')) return 'viewer';
+    return 'viewer';
   };
   
-  const [currentRole, setCurrentRole] = useState<UserRole>('user');
+  const [currentRole, setCurrentRole] = useState<UserRole>('viewer');
   
   // Update current role based on URL whenever it changes
   useEffect(() => {
@@ -63,7 +66,7 @@ const TestModeSidebar: React.FC = () => {
 
   // Role icons with appropriate colors
   const roleIcons = {
-    user: <User className="w-5 h-5 text-blue-500" />,
+    viewer: <User className="w-5 h-5 text-blue-500" />,
     advertiser: <MegaphoneIcon className="w-5 h-5 text-orange-500" />,
     publisher: <Edit3 className="w-5 h-5 text-green-500" />,
     admin: <Shield className="w-5 h-5 text-purple-500" />,
@@ -72,7 +75,7 @@ const TestModeSidebar: React.FC = () => {
 
   // Role labels
   const roleLabels = {
-    user: 'User',
+    viewer: 'Viewer',
     advertiser: 'Advertiser',
     publisher: 'Publisher',
     admin: 'Admin',
@@ -81,8 +84,8 @@ const TestModeSidebar: React.FC = () => {
 
   // Define core menu items for each role
   const coreMenuItems = {
-    user: [
-      { icon: <Home className="w-5 h-5" />, label: 'Dashboard', href: '/dashboard/user' },
+    viewer: [
+      { icon: <Home className="w-5 h-5" />, label: 'Dashboard', href: '/dashboard/viewer' },
       { icon: <FileText className="w-5 h-5" />, label: 'Nostr Feed', href: '/nostr-feed' },
       { icon: <SatsIcon className="w-5 h-5" />, label: 'My Wallet', href: '/dashboard/wallet' },
     ],
@@ -124,7 +127,7 @@ const TestModeSidebar: React.FC = () => {
   
   // Combine core and bottom items
   const menuItems = {
-    user: [...coreMenuItems.user, ...bottomMenuItems],
+    viewer: [...coreMenuItems.viewer, ...bottomMenuItems],
     advertiser: [...coreMenuItems.advertiser, ...bottomMenuItems],
     publisher: [...coreMenuItems.publisher, ...bottomMenuItems],
     admin: [...coreMenuItems.admin, ...bottomMenuItems],
@@ -142,7 +145,8 @@ const TestModeSidebar: React.FC = () => {
     // Set localStorage values for test mode support
     localStorage.setItem('isTestMode', 'true');
     localStorage.setItem('force_role_refresh', 'true');
-    localStorage.setItem('userRole', newRole);
+    localStorage.setItem('currentRole', newRole); // Set currentRole to the new role
+    localStorage.setItem('userRole', newRole); // Keep userRole for backwards compatibility
     localStorage.setItem(`test_${newRole}_role`, 'true');
     
     // Direct navigation
@@ -161,7 +165,7 @@ const TestModeSidebar: React.FC = () => {
     
     if (isActive) {
       switch(currentRole) {
-        case 'user': return 'bg-blue-100 text-blue-700 dark:bg-blue-900/20 dark:text-blue-300';
+        case 'viewer': return 'bg-blue-100 text-blue-700 dark:bg-blue-900/20 dark:text-blue-300';
         case 'advertiser': return 'bg-orange-100 text-orange-700 dark:bg-orange-900/20 dark:text-orange-300';
         case 'publisher': return 'bg-green-100 text-green-700 dark:bg-green-900/20 dark:text-green-300';
         case 'admin': return 'bg-purple-100 text-purple-700 dark:bg-purple-900/20 dark:text-purple-300'; 
@@ -176,7 +180,7 @@ const TestModeSidebar: React.FC = () => {
   const getRoleBackgroundColor = (role: UserRole) => {
     if (role === currentRole) {
       switch(role) {
-        case 'user': return 'bg-blue-100 dark:bg-blue-900/20';
+        case 'viewer': return 'bg-blue-100 dark:bg-blue-900/20';
         case 'advertiser': return 'bg-orange-100 dark:bg-orange-900/20';
         case 'publisher': return 'bg-green-100 dark:bg-green-900/20';
         case 'admin': return 'bg-purple-100 dark:bg-purple-900/20';
@@ -190,7 +194,7 @@ const TestModeSidebar: React.FC = () => {
   const getRoleTextColor = (role: UserRole) => {
     if (role === currentRole) {
       switch(role) {
-        case 'user': return 'text-blue-700 dark:text-blue-300';
+        case 'viewer': return 'text-blue-700 dark:text-blue-300';
         case 'advertiser': return 'text-orange-700 dark:text-orange-300';
         case 'publisher': return 'text-green-700 dark:text-green-300';
         case 'admin': return 'text-purple-700 dark:text-purple-300';
@@ -202,7 +206,7 @@ const TestModeSidebar: React.FC = () => {
   
   // Get all roles except current for dropdown
   const getFilteredRoleOptions = () => {
-    return (['user', 'advertiser', 'publisher', 'admin', 'stakeholder'] as UserRole[])
+    return (['viewer', 'advertiser', 'publisher', 'admin', 'stakeholder'] as UserRole[])
       .filter(role => role !== currentRole);
   };
   

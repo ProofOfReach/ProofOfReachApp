@@ -16,7 +16,7 @@ import ExchangeRateDisplay from '../ExchangeRateDisplay';
 
 const DropdownSidebar: React.FC = () => {
   // Use useState to track local role state in addition to context for more reliable updates
-  const [localRole, setLocalRole] = useState<UserRole>('user');
+  const [localRole, setLocalRole] = useState<UserRole>('viewer');
   const { role, setRole, availableRoles, isRoleAvailable, setAvailableRoles } = useRole();
   const { auth, refreshRoles } = useAuth();
   const router = useRouter();
@@ -60,7 +60,7 @@ const DropdownSidebar: React.FC = () => {
       
       // Force availability of all roles in the context immediately
       if (setAvailableRoles) {
-        const allRoles: UserRole[] = ['user', 'advertiser', 'publisher', 'admin', 'stakeholder'];
+        const allRoles: UserRole[] = ['viewer', 'advertiser', 'publisher', 'admin', 'stakeholder'];
         console.log('Forcing available roles in dropdown to:', allRoles);
         setAvailableRoles(allRoles);
       }
@@ -83,7 +83,7 @@ const DropdownSidebar: React.FC = () => {
             console.log('All roles enabled in database');
             // Force availability of all roles in the context again after API call
             if (setAvailableRoles) {
-              const allRoles: UserRole[] = ['user', 'advertiser', 'publisher', 'admin', 'stakeholder'];
+              const allRoles: UserRole[] = ['viewer', 'advertiser', 'publisher', 'admin', 'stakeholder'];
               setAvailableRoles(allRoles);
             }
           } else {
@@ -161,7 +161,7 @@ const DropdownSidebar: React.FC = () => {
   
   // Role icons with appropriate colors
   const roleIcons = {
-    user: <User className="w-5 h-5 text-blue-500" />,
+    viewer: <User className="w-5 h-5 text-blue-500" />,
     advertiser: <MegaphoneIcon className="w-5 h-5 text-orange-500" />,
     publisher: <Edit3 className="w-5 h-5 text-green-500" />,
     admin: <Shield className="w-5 h-5 text-purple-500" />,
@@ -170,7 +170,7 @@ const DropdownSidebar: React.FC = () => {
 
   // Role labels
   const roleLabels = {
-    user: 'User',
+    viewer: 'Viewer',
     advertiser: 'Advertiser',
     publisher: 'Publisher',
     admin: 'Admin',
@@ -179,8 +179,8 @@ const DropdownSidebar: React.FC = () => {
 
   // Menu items for each role
   const menuItems = {
-    user: [
-      { icon: <Home className="w-5 h-5" />, label: 'Dashboard', href: '/dashboard/user' },
+    viewer: [
+      { icon: <Home className="w-5 h-5" />, label: 'Dashboard', href: '/dashboard/viewer' },
       { icon: <PieChart className="w-5 h-5" />, label: 'Nostr Feed', href: '/nostr-feed' },
       { icon: <SatsIcon className="w-5 h-5" />, label: 'Wallet', href: '/dashboard/wallet' },
       { icon: <Code className="w-5 h-5" />, label: 'Developer', href: '/dashboard/developer' },
@@ -334,7 +334,7 @@ const DropdownSidebar: React.FC = () => {
   // Get background color based on current role
   const getRoleBackgroundColor = (checkRole: UserRole) => {
     switch(checkRole) {
-      case 'user': return 'bg-blue-100 dark:bg-blue-900/20';
+      case 'viewer': return 'bg-blue-100 dark:bg-blue-900/20';
       case 'advertiser': return 'bg-orange-100 dark:bg-orange-900/20';
       case 'publisher': return 'bg-green-100 dark:bg-green-900/20';
       case 'admin': return 'bg-purple-100 dark:bg-purple-900/20';
@@ -345,7 +345,7 @@ const DropdownSidebar: React.FC = () => {
   // Get text color based on current role
   const getRoleTextColor = (checkRole: UserRole) => {
     switch(checkRole) {
-      case 'user': return 'text-blue-700 dark:text-blue-300';
+      case 'viewer': return 'text-blue-700 dark:text-blue-300';
       case 'advertiser': return 'text-orange-700 dark:text-orange-300';
       case 'publisher': return 'text-green-700 dark:text-green-300';
       case 'admin': return 'text-purple-700 dark:text-purple-300';

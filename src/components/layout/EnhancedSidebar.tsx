@@ -32,7 +32,13 @@ const EnhancedSidebar: React.FC = () => {
   
   // For backward compatibility, try to use both role context systems
   // with priority to the refactored version
-  const role = typeof window !== 'undefined' && localStorage.getItem('userRole') as UserRole || refactoredRole || originalRole;
+  // Check for both currentRole and legacy userRole in localStorage
+  const localStorageRole = typeof window !== 'undefined' && 
+    (localStorage.getItem('currentRole') || localStorage.getItem('userRole')) as UserRole;
+  const role = localStorageRole || refactoredRole || originalRole;
+  
+  // Handle legacy 'user' role if present
+  const normalizedRole = role === 'user' ? 'viewer' : role;
   const setRole = refactoredSetRole || originalSetRole;
   const availableRoles = refactoredAvailableRoles.length > 0 ? refactoredAvailableRoles : originalAvailableRoles;
   const isRoleAvailable = refactoredIsRoleAvailable || originalIsRoleAvailable;
