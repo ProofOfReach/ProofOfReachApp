@@ -4,8 +4,8 @@ import { Home } from 'react-feather';
 
 import ImprovedDashboardLayout from '@/components/layout/ImprovedDashboardLayout';
 import CurrencyAmount from '@/components/CurrencyAmount';
-// Import our already created user dashboard component
-import UserDashboardComponent from '@/components/dashboard/user/UserDashboard';
+// Import our viewer dashboard component
+import ViewerDashboardComponent from '@/components/dashboards/ViewerDashboard';
 
 // Define fetcher for SWR
 const fetcher = (url: string) => 
@@ -33,8 +33,8 @@ const UserDashboardPage = () => {
         <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Viewer Dashboard</h1>
       </div>
       
-      {/* Use the dashboard component we already created */}
-      <UserDashboardComponent />
+      {/* Use the viewer dashboard component */}
+      <ViewerDashboardComponent />
       
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
