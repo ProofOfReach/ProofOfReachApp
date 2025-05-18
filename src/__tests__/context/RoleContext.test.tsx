@@ -162,7 +162,7 @@ const TestComponent = () => {
         ))}
       </ul>
       <div data-testid="user-available">
-        User available: {checkViewerAvailable() ? 'Yes' : 'No'}
+        Viewer available: {checkViewerAvailable() ? 'Yes' : 'No'}
       </div>
       <div data-testid="advertiser-available">
         Advertiser available: {checkAdvertiserAvailable() ? 'Yes' : 'No'}
@@ -170,7 +170,7 @@ const TestComponent = () => {
       <div data-testid="publisher-available">
         Publisher available: {checkPublisherAvailable() ? 'Yes' : 'No'}
       </div>
-      <button onClick={handleSetViewer}>Set User</button>
+      <button onClick={handleSetViewer}>Set Viewer</button>
       <button onClick={handleSetAdvertiser}>Set Advertiser</button>
       <button onClick={handleSetPublisher}>Set Publisher</button>
     </div>
@@ -318,7 +318,7 @@ describe('RoleContext', () => {
     renderTestComponent('viewer' as UserRoleType);
     
     // With our mock, all roles should be available
-    expect(screen.getByTestId('user-available')).toHaveTextContent('User available: Yes');
+    expect(screen.getByTestId('user-available')).toHaveTextContent('Viewer available: Yes');
     expect(screen.getByTestId('advertiser-available')).toHaveTextContent('Advertiser available: Yes');
     expect(screen.getByTestId('publisher-available')).toHaveTextContent('Publisher available: Yes');
   });
