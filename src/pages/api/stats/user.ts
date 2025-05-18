@@ -1,8 +1,8 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import { authMiddleware } from '@/utils/authMiddleware';
 import { ApiError } from '@/utils/apiError';
 import { handleApiError } from '@/lib/errorHandling';
 import { PrismaClient } from '@prisma/client';
+import { enhancedAuthMiddleware, AuthenticatedUser } from '@/utils/enhancedAuthMiddleware';
 
 const prisma = new PrismaClient();
 
@@ -40,19 +40,29 @@ const prisma = new PrismaClient();
  *       500:
  *         description: Server error
  */
-async function handler(req: NextApiRequest, res: NextApiResponse, userId: string) {
+async function handler(req: NextApiRequest, res: NextApiResponse, user: AuthenticatedUser) {
   try {
     if (req.method !== 'GET') {
       return res.status(405).json({ error: 'Method not allowed' });
     }
 
-    // Fetch user data
-    const user = await prisma.user.findUnique({
-      where: { id: userId },
+    // Fetch user data from database if needed
+    const dbUser = await prisma.user.findUnique({
+      where: { id: user.userId },
     });
 
-    if (!user) {
-      throw new ApiError('User not found', 404);
+    // If not found, try with pubkey
+    if (!dbUser) {
+      const pubkeyUser = await prisma.user.findFirst({
+        where: { nostrPubkey: user.pubkey },
+      });
+      
+      if (!pubkeyUser) {
+        // In test mode, we might not have a real user in DB
+        if (!user.isTestMode) {
+          throw new ApiError('User not found', 404);
+        }
+      }
     }
 
     // This would normally fetch actual stats from the database
@@ -60,7 +70,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse, userId: string
     
     // Generate some random-ish but consistent stats based on user ID
     // In a real implementation, these would come from database queries
-    const userIdNum = parseInt(userId.replace(/[^0-9]/g, '').substring(0, 3)) || 123;
+    const userIdNum = parseInt(user.userId.replace(/[^0-9]/g, '').substring(0, 3)) || 123;
     
     const stats = {
       viewCount: 500 + (userIdNum % 1000),
@@ -74,4 +84,5 @@ async function handler(req: NextApiRequest, res: NextApiResponse, userId: string
   }
 }
 
-export default authMiddleware(handler);
+// Use the enhanced auth middleware - all users can access their stats
+export default enhancedAuthMiddleware(handler);
