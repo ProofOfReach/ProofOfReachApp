@@ -18,10 +18,10 @@ import { transitionToRole, addRoleSwitchedListener } from '../utils/roleTransiti
  */
 export const useUnifiedRole = () => {
   // State for the current role
-  const [currentRole, setCurrentRole] = useState<UserRole>('user');
+  const [currentRole, setCurrentRole] = useState<UserRole>('viewer');
   
   // State for available roles
-  const [availableRoles, setAvailableRoles] = useState<UserRole[]>(['user']);
+  const [availableRoles, setAvailableRoles] = useState<UserRole[]>(['viewer']);
   
   // State for loading/transitioning status
   const [isTransitioning, setIsTransitioning] = useState<boolean>(false);
@@ -44,7 +44,7 @@ export const useUnifiedRole = () => {
           setIsTestMode(true);
           
           // In test mode, all roles are available
-          setAvailableRoles(['user', 'advertiser', 'publisher', 'admin', 'stakeholder']);
+          setAvailableRoles(['viewer', 'advertiser', 'publisher', 'admin', 'stakeholder']);
           
           // Use role from localStorage or default to advertiser
           const localRole = localStorage.getItem('userRole');
@@ -59,8 +59,8 @@ export const useUnifiedRole = () => {
         if (!userId) {
           // No user logged in
           if (isMounted) {
-            setAvailableRoles(['user']);
-            setCurrentRole('user');
+            setAvailableRoles(['viewer']);
+            setCurrentRole('viewer');
           }
           return;
         }
@@ -81,10 +81,10 @@ export const useUnifiedRole = () => {
       } catch (error) {
         logger.error('Error initializing role state:', error);
         
-        // Default to basic user role
+        // Default to basic viewer role
         if (isMounted) {
-          setAvailableRoles(['user']);
-          setCurrentRole('user');
+          setAvailableRoles(['viewer']);
+          setCurrentRole('viewer');
         }
       }
     };
