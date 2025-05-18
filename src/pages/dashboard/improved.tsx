@@ -1,6 +1,6 @@
 import { NextPage } from 'next';
 import ImprovedDashboardLayout from '@/components/layout/ImprovedDashboardLayout';
-import UserDashboard from '@/components/dashboard/user/UserDashboard';
+import ViewerDashboard from '@/components/dashboards/ViewerDashboard';
 
 /**
  * Dashboard page using the improved layout component
@@ -8,7 +8,7 @@ import UserDashboard from '@/components/dashboard/user/UserDashboard';
 const ImprovedDashboardPage: NextPage = () => {
   return (
     <ImprovedDashboardLayout title="Improved Dashboard">
-      <UserDashboard />
+      <ViewerDashboard />
     </ImprovedDashboardLayout>
   );
 };
