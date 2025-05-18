@@ -32,9 +32,9 @@ jest.mock('../../../context/RoleContext', () => {
   const React = require('react');
   return {
     useRole: () => ({
-      role: 'user',
+      role: 'viewer',
       setRole: jest.fn(),
-      availableRoles: ['user', 'advertiser', 'publisher'],
+      availableRoles: ['viewer', 'advertiser', 'publisher'],
       isRoleAvailable: () => true,
     }),
     RoleProvider: ({ children }: { children: React.ReactNode }) => React.createElement(React.Fragment, null, children)
@@ -82,7 +82,7 @@ describe('Dashboard Page', () => {
     render(<DashboardPage />);
     
     // Page should show welcome text and dashboard title
-    expect(screen.getByText('User Dashboard')).toBeInTheDocument();
+    expect(screen.getByText('Viewer Dashboard')).toBeInTheDocument();
     expect(screen.getByText('Welcome to Nostr Ad Marketplace')).toBeInTheDocument();
     expect(screen.getByText('Select a role to get started with the platform:')).toBeInTheDocument();
     
