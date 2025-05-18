@@ -8,6 +8,35 @@ import { logger } from '../lib/logger';
  */
 class RoleService {
   /**
+   * Check if the application is in test mode
+   * @returns Whether test mode is active
+   */
+  isTestMode(): boolean {
+    try {
+      // Check for test mode in localStorage
+      if (typeof window !== 'undefined' && localStorage) {
+        const testMode = localStorage.getItem('isTestMode') === 'true';
+        const testModeExpiry = sessionStorage?.getItem('testModeExpiry');
+        
+        // If there's an expiry time, check if it's still valid
+        if (testModeExpiry) {
+          const expiryTime = parseInt(testModeExpiry, 10);
+          if (expiryTime > Date.now()) {
+            return true;
+          }
+        }
+        
+        return testMode || false;
+      }
+      
+      // In SSR context, check NODE_ENV
+      return process.env.NODE_ENV === 'test';
+    } catch (error) {
+      // If there's an error accessing localStorage (like in SSR context)
+      return false;
+    }
+  }
+  /**
    * Get the current role for a user
    * @param userId The user ID
    * @returns The current role or null if not set
