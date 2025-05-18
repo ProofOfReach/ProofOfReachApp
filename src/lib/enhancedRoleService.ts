@@ -5,7 +5,7 @@ import { logger } from './logger';
 /**
  * Valid role types in the system
  */
-export type RoleType = 'admin' | 'advertiser' | 'publisher' | 'developer' | 'stakeholder' | 'user';
+export type RoleType = 'admin' | 'advertiser' | 'publisher' | 'developer' | 'stakeholder' | 'viewer';
 
 /**
  * Type for User with included userRoles relation
@@ -27,7 +27,7 @@ type UserWithRoles = User & {
  */
 export interface UserRoleData {
   id: string;
-  currentRole: RoleType | 'user';
+  currentRole: RoleType | 'viewer';
   availableRoles: RoleType[];
   isTestUser: boolean;
   createdAt: Date;
@@ -88,16 +88,16 @@ export async function getUserRoleData(userId: string): Promise<UserRoleData | nu
     // Get available roles
     const availableRoles = mapUserToAvailableRoles(user);
     
-    // Get current role from last role change or default to 'user'
-    let currentRole: RoleType = 'user';
+    // Get current role from last role change or default to 'viewer'
+    let currentRole: RoleType = 'viewer';
     
     // If user has the currentRole field, use it
     if (user.currentRole) {
       currentRole = user.currentRole as RoleType;
       
       // Validate that the current role is in available roles
-      if (currentRole !== 'user' && !availableRoles.includes(currentRole as unknown as RoleType)) {
-        currentRole = 'user';
+      if (currentRole !== 'viewer' && !availableRoles.includes(currentRole as unknown as RoleType)) {
+        currentRole = 'viewer';
       }
     }
     
@@ -124,7 +124,7 @@ export async function getUserRoleData(userId: string): Promise<UserRoleData | nu
  */
 export async function changeUserRole(
   userId: string,
-  role: RoleType | 'user'
+  role: RoleType | 'viewer'
 ): Promise<UserRoleData> {
   try {
     // Verify user exists and has access to the requested role
@@ -135,11 +135,11 @@ export async function changeUserRole(
     }
     
     // If switching to regular user, that's always allowed
-    if (role === 'user') {
+    if (role === 'viewer') {
       const updatedUser = await prisma.user.update({
         where: { id: userId },
         data: { 
-          currentRole: 'user',
+          currentRole: 'viewer',
           lastRoleChange: new Date()
         },
         include: { 
