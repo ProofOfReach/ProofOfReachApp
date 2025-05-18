@@ -36,7 +36,7 @@ async function fixUserRoles() {
       const needsFix = user.isAdmin === true || 
                        user.isDeveloper === true || 
                        user.isStakeholder === true ||
-                       (user.currentRole !== 'viewer' && user.currentRole !== 'user');
+                       (user.currentRole !== 'viewer');
                        
       if (needsFix) {
         console.log(`Fixing roles for user ${user.id} (${user.nostrPubkey.substring(0, 8)}...)`);

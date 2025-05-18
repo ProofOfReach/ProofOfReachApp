@@ -368,7 +368,7 @@ export async function createUserWithTestMode(userId: string): Promise<UserRoleDa
         isDeveloper: true,
         isStakeholder: true,
         isTestUser: true,
-        currentRole: 'user',
+        currentRole: 'viewer',
         lastRoleChange: new Date(),
         // Create role entries in the UserRole table
         userRoles: {
@@ -413,7 +413,7 @@ export async function createUserWithTestMode(userId: string): Promise<UserRoleDa
     
     return {
       id: newUser.id,
-      currentRole: 'user',
+      currentRole: 'viewer',
       availableRoles: mapUserToAvailableRoles(newUser),
       isTestUser: newUser.isTestUser,
       createdAt: newUser.createdAt,
@@ -522,7 +522,7 @@ export async function toggleTestMode(userId: string, enabled: boolean): Promise<
     // Return formatted user role data
     return {
       id: updatedUser.id,
-      currentRole: updatedUser.currentRole as RoleType | 'user',
+      currentRole: updatedUser.currentRole as RoleType | 'viewer',
       availableRoles,
       isTestUser: updatedUser.isTestUser,
       createdAt: updatedUser.createdAt,
