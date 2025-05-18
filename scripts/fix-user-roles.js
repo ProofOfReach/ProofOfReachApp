@@ -1,5 +1,5 @@
 /**
- * Script to fix user roles in the database
+ * Script to fix viewer roles in the database
  * 
  * This script will correct role assignments for all non-admin users
  */
@@ -15,7 +15,7 @@ const ADMIN_PUBKEYS = [
 
 async function fixUserRoles() {
   try {
-    console.log('Starting user role fix process...');
+    console.log('Starting viewer role fix process...');
     
     // Get all non-admin users that may have incorrect privileges
     const nonAdminUsers = await prisma.user.findMany({
@@ -129,10 +129,10 @@ async function fixUserRoles() {
       console.log('Please ensure at least one user with the specified pubkeys exists.');
     }
     
-    console.log('User role fix process complete!');
+    console.log('Viewer role fix process complete!');
     
   } catch (error) {
-    console.error('Error fixing user roles:', error);
+    console.error('Error fixing viewer roles:', error);
   } finally {
     await prisma.$disconnect();
   }

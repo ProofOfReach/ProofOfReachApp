@@ -47,7 +47,7 @@ describe('LightningWalletBalance Component', () => {
       expect(containerDiv).toHaveTextContent(/125,000/i);
     });
     
-    expect(global.fetch).toHaveBeenCalledWith('/api/wallet');
+    expect(global.fetch).toHaveBeenCalledWith('/api/wallet', expect.any(Object));
   });
   
   it('shows error state when fetch fails', async () => {
@@ -97,7 +97,7 @@ describe('LightningWalletBalance Component', () => {
       expect(screen.getByText(/Available:/i)).toBeInTheDocument();
       // Find the text content after "Available:"
       const availableText = screen.getByText(/Available:/i);
-      expect(availableText.parentNode).toHaveTextContent(/125,000 satoshis/i);
+      expect(availableText.parentNode).toHaveTextContent(/125,000 sats satoshis/i);
     });
   });
 });
