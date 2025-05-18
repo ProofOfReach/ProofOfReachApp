@@ -7,7 +7,7 @@
 /**
  * User roles
  */
-export type UserRole = 'user' | 'advertiser' | 'publisher' | 'admin' | 'stakeholder';
+export type UserRole = 'viewer' | 'advertiser' | 'publisher' | 'admin' | 'stakeholder';
 
 /**
  * Authentication state

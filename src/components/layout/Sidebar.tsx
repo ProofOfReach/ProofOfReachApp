@@ -50,11 +50,11 @@ const Sidebar: React.FC = () => {
   
   // Role icons with appropriate colors
   const roleIcons = {
-    viewer: <User className="w-5 h-5 text-blue-500" />,
-    advertiser: <MegaphoneIcon className="w-5 h-5 text-orange-500" />,
-    publisher: <Edit3 className="w-5 h-5 text-green-500" />,
-    admin: <Shield className="w-5 h-5 text-purple-500" />,
-    stakeholder: <DollarSign className="w-5 h-5 text-emerald-500" />
+    viewer: <User className="w-5 h-5 text-blue-500" data-testid="viewer-icon" />,
+    advertiser: <MegaphoneIcon className="w-5 h-5 text-orange-500" data-testid="megaphone-icon" />,
+    publisher: <Edit3 className="w-5 h-5 text-green-500" data-testid="edit-icon" />,
+    admin: <Shield className="w-5 h-5 text-purple-500" data-testid="shield-icon" />,
+    stakeholder: <DollarSign className="w-5 h-5 text-emerald-500" data-testid="dollar-icon" />
   };
 
   // Role labels
@@ -168,14 +168,14 @@ const Sidebar: React.FC = () => {
   
   // Get filtered role options (all roles except current one)
   const getFilteredRoleOptions = () => {
-    return (['user', 'advertiser', 'publisher', 'admin', 'stakeholder'] as UserRole[])
+    return (['viewer', 'advertiser', 'publisher', 'admin', 'stakeholder'] as UserRole[])
       .filter(roleOption => roleOption !== role);
   };
 
   // Get background color based on current role
   const getRoleBackgroundColor = (checkRole: UserRole) => {
     switch(checkRole) {
-      case 'user': return 'bg-blue-100 dark:bg-blue-900/20';
+      case 'viewer': return 'bg-blue-100 dark:bg-blue-900/20';
       case 'advertiser': return 'bg-orange-100 dark:bg-orange-900/20';
       case 'publisher': return 'bg-green-100 dark:bg-green-900/20';
       case 'admin': return 'bg-purple-100 dark:bg-purple-900/20';
@@ -186,7 +186,7 @@ const Sidebar: React.FC = () => {
   // Get text color based on current role
   const getRoleTextColor = (checkRole: UserRole) => {
     switch(checkRole) {
-      case 'user': return 'text-blue-700 dark:text-blue-300';
+      case 'viewer': return 'text-blue-700 dark:text-blue-300';
       case 'advertiser': return 'text-orange-700 dark:text-orange-300';
       case 'publisher': return 'text-green-700 dark:text-green-300';
       case 'admin': return 'text-purple-700 dark:text-purple-300';
@@ -277,7 +277,7 @@ const Sidebar: React.FC = () => {
               onClick={() => setDropdownOpen(!dropdownOpen)}
             >
               <div className="flex items-center">
-                <span className="mr-3">{roleIcons[role]}</span>
+                <span className="mr-3" data-testid={`${role}-icon-container`}>{roleIcons[role]}</span>
                 <span>{roleLabels[role]}</span>
               </div>
               <ChevronDown 

@@ -46,8 +46,8 @@ export class RoleManager {
       }
     }
     
-    // Default to 'user' if no role is found
-    return 'user';
+    // Default to 'viewer' if no role is found
+    return 'viewer';
   }
   
   /**
@@ -128,8 +128,8 @@ export class RoleManager {
       }
     }
     
-    // Default to just user role if nothing is found
-    return ['user'];
+    // Default to just viewer role if nothing is found
+    return ['viewer'];
   }
   
   /**
@@ -197,7 +197,7 @@ export class RoleManager {
    * Enable all roles for the current user (typically used in test mode)
    */
   static enableAllRoles(): boolean {
-    const allRoles: UserRoleType[] = ['user', 'advertiser', 'publisher', 'admin', 'stakeholder'];
+    const allRoles: UserRoleType[] = ['viewer', 'advertiser', 'publisher', 'admin', 'stakeholder'];
     return this.setAvailableRoles(allRoles);
   }
   

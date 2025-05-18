@@ -229,18 +229,18 @@ describe('Sidebar Component', () => {
     jest.resetAllMocks();
   });
 
-  it('renders with user role by default', () => {
+  it('renders with viewer role by default', () => {
     render(
-      <AllProvidersWrapper initialRole="user">
+      <AllProvidersWrapper initialRole="viewer">
         <Sidebar />
       </AllProvidersWrapper>
     );
     
     // Check if role selector exists
-    expect(screen.getByText('User')).toBeInTheDocument();
-    expect(screen.getByTestId('user-icon')).toBeInTheDocument();
+    expect(screen.getByText('Viewer')).toBeInTheDocument();
+    expect(screen.getByTestId('viewer-icon-container')).toBeInTheDocument();
     
-    // Check if user menu items are displayed
+    // Check if viewer menu items are displayed
     expect(screen.getByText('Dashboard')).toBeInTheDocument();
     expect(screen.getByText('Nostr Feed')).toBeInTheDocument();
     expect(screen.getByText('Wallet')).toBeInTheDocument();
@@ -249,15 +249,15 @@ describe('Sidebar Component', () => {
   
   it('shows correct role options in dropdown', () => {
     render(
-      <AllProvidersWrapper initialRole="user">
+      <AllProvidersWrapper initialRole="viewer">
         <Sidebar />
       </AllProvidersWrapper>
     );
     
     // Open the dropdown
-    fireEvent.click(screen.getByText('User'));
+    fireEvent.click(screen.getByText('Viewer'));
     
-    // Since User is active, dropdown should show other roles
+    // Since Viewer is active, dropdown should show other roles
     expect(screen.getByText('Advertiser')).toBeInTheDocument();
     expect(screen.getByText('Publisher')).toBeInTheDocument();
     expect(screen.getByTestId('megaphone-icon')).toBeInTheDocument();

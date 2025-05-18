@@ -183,7 +183,7 @@ export default function TestModeBanner() {
     // 4. Extra safety check with RoleManager in non-test environments
     const roleManagerCurrentRole = RoleManager.getCurrentRole();
     if (roleManagerCurrentRole !== 'admin') {
-      logger.debug('TestModeBanner not shown: RoleManager says viewer is not admin');
+      logger.debug(`Test mode legacy check denied: ${currentRole} role is not admin`, { currentRole: roleManagerCurrentRole });
       return null;
     }
   } else {
