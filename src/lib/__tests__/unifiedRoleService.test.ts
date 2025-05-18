@@ -367,8 +367,8 @@ describe('UnifiedRoleService', () => {
       const result = await unifiedRoleService.syncWithServer();
       
       // Should return the local data if server sync fails
-      expect(result.currentRole).toBe('user');
-      expect(result.availableRoles).toEqual(['user']);
+      expect(result.currentRole).toBe('viewer');
+      expect(result.availableRoles).toEqual(['viewer']);
     });
   });
 });

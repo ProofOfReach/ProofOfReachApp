@@ -116,7 +116,7 @@ describe('Access Control System', () => {
       expect(checkRouteAccess('/dashboard/admin', 'publisher')).toBe(false);
       expect(checkRouteAccess('/dashboard/admin', 'advertiser')).toBe(false);
       expect(checkRouteAccess('/dashboard/admin', 'stakeholder')).toBe(false);
-      expect(checkRouteAccess('/dashboard/admin', 'user')).toBe(false);
+      expect(checkRouteAccess('/dashboard/admin', 'viewer')).toBe(false);
     });
 
     it('should handle nested paths correctly', () => {
@@ -133,7 +133,7 @@ describe('Access Control System', () => {
         '/dashboard/settings'
       ];
       
-      const roles: UserRoleType[] = ['admin', 'advertiser', 'publisher', 'stakeholder', 'user' as UserRoleType];
+      const roles: UserRoleType[] = ['admin', 'advertiser', 'publisher', 'stakeholder', 'viewer'];
       
       for (const route of publicRoutes) {
         for (const role of roles) {
@@ -178,8 +178,8 @@ describe('Access Control System', () => {
       expect(capabilities.MANAGE_USERS).toBe(false);
     });
 
-    it('should return basic capabilities for user role', () => {
-      const capabilities = getRoleCapabilities('user');
+    it('should return basic capabilities for viewer role', () => {
+      const capabilities = getRoleCapabilities('viewer');
       
       expect(capabilities.VIEW_ANALYTICS).toBe(true);
       expect(capabilities.CREATE_ADS).toBe(false);

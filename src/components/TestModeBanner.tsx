@@ -166,7 +166,7 @@ export default function TestModeBanner() {
     logger.debug('TestModeBanner in production environment - strict check');
     // In production, NEVER show the test mode banner to non-admin users
     if (currentRole !== 'admin') {
-      logger.debug('TestModeBanner not shown: user is not admin in production');
+      logger.debug('TestModeBanner not shown: viewer is not admin in production');
       return null;
     }
   } else if (process.env.NODE_ENV !== 'test') {
@@ -176,14 +176,14 @@ export default function TestModeBanner() {
     // 3. Only show test mode banner to admin users in non-test environments
     // This ensures regular users won't see the debug banner
     if (currentRole !== 'admin') {
-      logger.debug('TestModeBanner not shown: user is not admin');
+      logger.debug('TestModeBanner not shown: viewer is not admin');
       return null;
     }
     
     // 4. Extra safety check with RoleManager in non-test environments
     const roleManagerCurrentRole = RoleManager.getCurrentRole();
     if (roleManagerCurrentRole !== 'admin') {
-      logger.debug('TestModeBanner not shown: RoleManager says user is not admin');
+      logger.debug('TestModeBanner not shown: RoleManager says viewer is not admin');
       return null;
     }
   } else {

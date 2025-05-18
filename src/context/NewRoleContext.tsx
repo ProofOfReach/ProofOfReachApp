@@ -7,7 +7,7 @@ import { useAuth } from '../hooks/useAuth';
  * Define the possible user roles
  * Using TypeScript's union types ensures type safety throughout the application
  */
-export type UserRole = 'user' | 'advertiser' | 'publisher' | 'admin' | 'stakeholder';
+export type UserRole = 'viewer' | 'advertiser' | 'publisher' | 'admin' | 'stakeholder';
 
 /**
  * Interface for the context value
