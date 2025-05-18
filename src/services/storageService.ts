@@ -192,7 +192,7 @@ export class StorageService {
       logger.error('Error in getCurrentRole:', e);
     }
     
-    // Default to user role
+    // Default to viewer role
     return 'viewer';
   }
   
@@ -223,7 +223,7 @@ export class StorageService {
         
         if (!isAdmin) {
           // Non-admin users should never see test mode
-          logger.debug('Test mode denied: user role is not admin', { currentRole });
+          logger.debug('Test mode denied: viewer role is not admin', { currentRole });
           return false;
         }
         
@@ -245,7 +245,7 @@ export class StorageService {
       
       if (!isAdmin) {
         // Non-admin users should never see test mode
-        logger.debug('Test mode legacy check denied: user role is not admin', { currentRole });
+        logger.debug('Test mode legacy check denied: viewer role is not admin', { currentRole });
         return false;
       }
       

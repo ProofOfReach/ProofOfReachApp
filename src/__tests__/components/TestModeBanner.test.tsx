@@ -54,7 +54,7 @@ describe('TestModeBanner', () => {
     });
     
     // Default mock implementation for RoleService
-    (RoleService.getCurrentRole as jest.Mock).mockReturnValue('user');
+    (RoleService.getCurrentRole as jest.Mock).mockReturnValue('viewer');
     (RoleService.enableAllRoles as jest.Mock).mockResolvedValue(true);
     (RoleService.changeRole as jest.Mock).mockImplementation(() => {
       // Simulate a role change by dispatching the roleSwitched event
@@ -63,7 +63,7 @@ describe('TestModeBanner', () => {
     });
     
     // Default mock implementation for RoleManager
-    (RoleManager.getCurrentRole as jest.Mock).mockReturnValue('user');
+    (RoleManager.getCurrentRole as jest.Mock).mockReturnValue('viewer');
     (RoleManager.setCurrentRole as jest.Mock).mockReturnValue(false); // Force fallback to context methods
     // Create a proper mock for isValidRole with correct typing
     (RoleManager.isValidRole as unknown as jest.Mock).mockReturnValue(true); // Always consider roles valid in tests
@@ -72,7 +72,7 @@ describe('TestModeBanner', () => {
     Object.defineProperty(window, 'localStorage', {
       value: {
         getItem: jest.fn().mockImplementation(key => {
-          if (key === 'currentRole') return 'user';
+          if (key === 'currentRole') return 'viewer';
           return null;
         }),
         setItem: jest.fn(),
@@ -214,8 +214,8 @@ describe('TestModeBanner', () => {
       setDebugMode: jest.fn()
     });
     
-    // Start with 'user' role
-    (RoleService.getCurrentRole as jest.Mock).mockReturnValue('user');
+    // Start with 'viewer' role
+    (RoleService.getCurrentRole as jest.Mock).mockReturnValue('viewer');
     
     const { rerender } = render(<TestModeBanner />);
     
@@ -224,7 +224,7 @@ describe('TestModeBanner', () => {
     fireEvent.click(debugToggle);
     
     // Current role should be displayed
-    expect(screen.getByTestId('current-role')).toHaveTextContent('user');
+    expect(screen.getByTestId('current-role')).toHaveTextContent('viewer');
     
     // Click the Advertiser role button
     const advertiserButton = screen.getByTestId('role-button-advertiser');
