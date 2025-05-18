@@ -102,7 +102,7 @@ const SimplifiedDashboardPage: NextPageWithLayout = () => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
           {/* Local Role State */}
           <div className={`p-4 rounded-lg border ${
-            currentRole === 'user' ? 'bg-blue-50 dark:bg-blue-900/20 border-blue-100 dark:border-blue-800' :
+            currentRole === 'viewer' ? 'bg-blue-50 dark:bg-blue-900/20 border-blue-100 dark:border-blue-800' :
             currentRole === 'advertiser' ? 'bg-orange-50 dark:bg-orange-900/20 border-orange-100 dark:border-orange-800' :
             currentRole === 'publisher' ? 'bg-green-50 dark:bg-green-900/20 border-green-100 dark:border-green-800' :
             currentRole === 'admin' ? 'bg-purple-50 dark:bg-purple-900/20 border-purple-100 dark:border-purple-800' :
@@ -111,7 +111,7 @@ const SimplifiedDashboardPage: NextPageWithLayout = () => {
           }`}>
             <p className="text-sm font-semibold text-gray-700 dark:text-gray-300">Local Role</p>
             <p className={`text-xl font-bold ${
-              currentRole === 'user' ? 'text-blue-600 dark:text-blue-300' :
+              currentRole === 'viewer' ? 'text-blue-600 dark:text-blue-300' :
               currentRole === 'advertiser' ? 'text-orange-600 dark:text-orange-300' :
               currentRole === 'publisher' ? 'text-green-600 dark:text-green-300' :
               currentRole === 'admin' ? 'text-purple-600 dark:text-purple-300' :

@@ -247,7 +247,7 @@ const WorkingDashboard = () => {
           <p className="text-gray-600 dark:text-gray-400 mb-4">
             This example implements direct role switching with immediate UI updates. Your current role is:
             <span className={`font-bold ml-2 ${
-              currentRole === 'user' ? 'text-blue-600 dark:text-blue-300' :
+              currentRole === 'viewer' ? 'text-blue-600 dark:text-blue-300' :
               currentRole === 'advertiser' ? 'text-orange-600 dark:text-orange-300' :
               currentRole === 'publisher' ? 'text-green-600 dark:text-green-300' :
               currentRole === 'admin' ? 'text-purple-600 dark:text-purple-300' :
@@ -259,12 +259,12 @@ const WorkingDashboard = () => {
           
           <div className="flex gap-4 mb-6">
             <button 
-              onClick={() => handleRoleChange('user')} 
-              className={`px-4 py-2 rounded-md ${currentRole === 'user' 
+              onClick={() => handleRoleChange('viewer')} 
+              className={`px-4 py-2 rounded-md ${currentRole === 'viewer' 
                 ? 'bg-blue-600 text-white' 
                 : 'bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-300'}`}
             >
-              User
+              Viewer
             </button>
             <button 
               onClick={() => handleRoleChange('advertiser')} 
