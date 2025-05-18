@@ -24,8 +24,8 @@ const StaticClientSidebar: React.FC = () => {
   const [sidebarExpanded, setSidebarExpanded] = useState(true);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [isChangingRole, setIsChangingRole] = useState(false);
-  const [currentRole, setCurrentRole] = useState<UserRole>('user');
-  const [availableRoles, setAvailableRoles] = useState<UserRole[]>(['user']);
+  const [currentRole, setCurrentRole] = useState<UserRole>('viewer');
+  const [availableRoles, setAvailableRoles] = useState<UserRole[]>(['viewer']);
   const [hasMounted, setHasMounted] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const { logout } = useAuth();
@@ -40,12 +40,12 @@ const StaticClientSidebar: React.FC = () => {
     
     // If in test mode, all roles are available
     if (isTestMode) {
-      setAvailableRoles(['user', 'advertiser', 'publisher', 'admin', 'stakeholder']);
+      setAvailableRoles(['viewer', 'advertiser', 'publisher', 'admin', 'stakeholder']);
     }
     
     // Get current role from localStorage
     const storedRole = localStorage.getItem('userRole');
-    if (storedRole && ['user', 'advertiser', 'publisher', 'admin', 'stakeholder'].includes(storedRole)) {
+    if (storedRole && ['viewer', 'advertiser', 'publisher', 'admin', 'stakeholder'].includes(storedRole)) {
       setCurrentRole(storedRole as UserRole);
     } else {
       // Try to determine role from URL
@@ -53,7 +53,7 @@ const StaticClientSidebar: React.FC = () => {
       else if (router.pathname.includes('/dashboard/publisher')) setCurrentRole('publisher');
       else if (router.pathname.includes('/dashboard/admin')) setCurrentRole('admin');
       else if (router.pathname.includes('/dashboard/stakeholder')) setCurrentRole('stakeholder');
-      else setCurrentRole('user');
+      else setCurrentRole('viewer');
     }
   }, [router.pathname]);
   
@@ -73,7 +73,7 @@ const StaticClientSidebar: React.FC = () => {
 
   // Role icons with appropriate colors
   const roleIcons = {
-    user: <User className="w-5 h-5 text-blue-500" />,
+    viewer: <User className="w-5 h-5 text-blue-500" />,
     advertiser: <MegaphoneIcon className="w-5 h-5 text-orange-500" />,
     publisher: <Edit3 className="w-5 h-5 text-green-500" />,
     admin: <Shield className="w-5 h-5 text-purple-500" />,
@@ -82,7 +82,7 @@ const StaticClientSidebar: React.FC = () => {
 
   // Role labels
   const roleLabels = {
-    user: 'User',
+    viewer: 'Viewer',
     advertiser: 'Advertiser',
     publisher: 'Publisher',
     admin: 'Admin',
@@ -91,9 +91,9 @@ const StaticClientSidebar: React.FC = () => {
 
   // Define menu items for each role
   const menuItems = {
-    user: [
-      { icon: <Home className="w-5 h-5" />, label: 'Dashboard', href: '/dashboard/user' },
-      { icon: <Settings className="w-5 h-5" />, label: 'Settings', href: '/dashboard/user/settings' }
+    viewer: [
+      { icon: <Home className="w-5 h-5" />, label: 'Dashboard', href: '/dashboard/viewer' },
+      { icon: <Settings className="w-5 h-5" />, label: 'Settings', href: '/dashboard/viewer/settings' }
     ],
     advertiser: [
       { icon: <Home className="w-5 h-5" />, label: 'Dashboard', href: '/dashboard/advertiser' },
