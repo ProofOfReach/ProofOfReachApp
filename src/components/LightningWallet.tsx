@@ -448,7 +448,7 @@ const LightningWallet: React.FC<LightningWalletProps> = ({
                           Copy
                         </button>
                       </div>
-                      <p className="text-xs font-mono break-all text-gray-600 dark:text-gray-400">
+                      <p className="text-xs font-mono break-all text-gray-600 dark:text-gray-400" data-testid="invoice-text">
                         {invoice}
                       </p>
                     </div>
@@ -464,6 +464,7 @@ const LightningWallet: React.FC<LightningWalletProps> = ({
 
                     {isTestMode ? (
                       <button
+                        data-testid="add-test-sats-button"
                         onClick={() => {
                           // In test mode, directly update balance
                           const newBalance = (balance || 0) + depositAmount;
