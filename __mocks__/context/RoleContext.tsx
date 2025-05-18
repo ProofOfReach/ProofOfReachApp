@@ -5,13 +5,13 @@
 import React, { ReactNode } from 'react';
 
 // Type aliases for backward compatibility
-export type UserRole = 'user' | 'advertiser' | 'publisher' | 'admin' | 'stakeholder';
+export type UserRole = 'viewer' | 'advertiser' | 'publisher' | 'admin' | 'stakeholder';
 
 // Mock implementation of useRole
 export const useRole = jest.fn().mockReturnValue({
   role: 'advertiser',
   setRole: jest.fn().mockResolvedValue(true),
-  availableRoles: ['user', 'advertiser', 'publisher', 'admin', 'stakeholder'],
+  availableRoles: ['viewer', 'advertiser', 'publisher', 'admin', 'stakeholder'],
   isRoleAvailable: jest.fn().mockReturnValue(true),
   clearRole: jest.fn(),
   isChangingRole: false
@@ -29,7 +29,7 @@ export const RoleProviderWithQueryClient: React.FC<{ children: ReactNode; initia
 
 // Mock implementation of constants
 export const ROLES = {
-  USER: 'user' as UserRole,
+  VIEWER: 'viewer' as UserRole,
   ADVERTISER: 'advertiser' as UserRole,
   PUBLISHER: 'publisher' as UserRole,
   ADMIN: 'admin' as UserRole,
@@ -38,7 +38,7 @@ export const ROLES = {
 
 // Mock implementation of utility functions
 export function isValidRole(role: string): role is UserRole {
-  return ['user', 'advertiser', 'publisher', 'admin', 'stakeholder'].includes(role as UserRole);
+  return ['viewer', 'advertiser', 'publisher', 'admin', 'stakeholder'].includes(role as UserRole);
 }
 
 // Mock permission checking functions
@@ -73,7 +73,7 @@ export function getRoleCapabilities(role: UserRole): any {
 export const useRoleWithAccess = jest.fn().mockReturnValue({
   role: 'advertiser',
   currentRole: 'advertiser',
-  availableRoles: ['user', 'advertiser', 'publisher', 'admin', 'stakeholder'],
+  availableRoles: ['viewer', 'advertiser', 'publisher', 'admin', 'stakeholder'],
   can: jest.fn().mockReturnValue(true),
   canAccess: jest.fn().mockReturnValue(true),
   canAccessCurrentRoute: true,
@@ -93,7 +93,7 @@ export const useRoleWithAccess = jest.fn().mockReturnValue({
   isPublisher: false,
   isAdmin: false,
   isStakeholder: false,
-  isUser: false
+  isViewer: false
 });
 
 // Mock accessControl export

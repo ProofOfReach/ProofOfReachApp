@@ -30,9 +30,9 @@ jest.mock('swr', () => ({
 // Mock RoleContext
 jest.mock('../../../context/RoleContext', () => ({
   useRole: () => ({
-    role: 'user',
+    role: 'viewer',
     setRole: jest.fn(),
-    availableRoles: ['user', 'advertiser', 'publisher'],
+    availableRoles: ['viewer', 'advertiser', 'publisher'],
     isRoleAvailable: () => true,
   }),
 }));
@@ -72,7 +72,7 @@ jest.mock('../../../context/TestModeContext', () => {
 // Mock RoleService
 jest.mock('../../../lib/roleService', () => ({
   RoleService: {
-    getCurrentRole: jest.fn().mockReturnValue('user'),
+    getCurrentRole: jest.fn().mockReturnValue('viewer'),
     changeRole: jest.fn(),
   }
 }));
@@ -91,15 +91,15 @@ jest.mock('../../../components/ui', () => ({
 }));
 
 describe('Dashboard Page', () => {
-  it('renders the dashboard with user role', () => {
+  it('renders the dashboard with viewer role', () => {
     render(<DashboardPage />);
     
     // Verify the dashboard title is rendered
-    expect(screen.getByText('User Dashboard')).toBeInTheDocument();
+    expect(screen.getByText('Viewer Dashboard')).toBeInTheDocument();
     
     // Verify system status section
     expect(screen.getByText('System Status')).toBeInTheDocument();
     expect(screen.getByText('Current Role:')).toBeInTheDocument();
-    expect(screen.getByText('user')).toBeInTheDocument();
+    expect(screen.getByText('viewer')).toBeInTheDocument();
   });
 });
