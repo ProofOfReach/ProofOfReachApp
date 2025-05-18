@@ -8,6 +8,7 @@ import { getTestModeStatus } from '../context/TestModeContext';
  * - Getting the current user role
  * - Changing the user role (with support for both test and production mode)
  * - Clearing local state during logout
+ * - Managing test mode status
  * 
  * It maintains state in localStorage for persistence and uses custom events
  * for cross-component communication.
@@ -15,6 +16,7 @@ import { getTestModeStatus } from '../context/TestModeContext';
 export class RoleService {
   // Local storage keys
   private static readonly ROLE_KEY = 'currentRole';
+  private static readonly TEST_MODE_KEY = 'isTestMode';
   
   /**
    * Get the current user role from localStorage
@@ -194,5 +196,42 @@ export class RoleService {
       // This would be enhanced to check with the server in a real implementation
       return this.getCurrentRole() === role;
     }
+  }
+  
+  /**
+   * Check if test mode is enabled
+   * @returns boolean indicating if test mode is active
+   */
+  public static isTestMode(): boolean {
+    if (typeof window === 'undefined') return false;
+    
+    // First check the context's test mode status
+    const contextTestMode = getTestModeStatus();
+    if (contextTestMode !== null && contextTestMode !== undefined) {
+      return contextTestMode;
+    }
+    
+    // Fall back to localStorage if context is not available
+    return localStorage.getItem(this.TEST_MODE_KEY) === 'true';
+  }
+  
+  /**
+   * Enable or disable test mode
+   * @param enabled Whether to enable or disable test mode
+   */
+  public static setTestMode(enabled: boolean): void {
+    if (typeof window === 'undefined') return;
+    
+    // Store the test mode flag in localStorage
+    localStorage.setItem(this.TEST_MODE_KEY, enabled ? 'true' : 'false');
+    
+    // Dispatch events for test mode change
+    const eventName = enabled ? 'testModeEnabled' : 'testModeDisabled';
+    document.dispatchEvent(new CustomEvent(eventName));
+    
+    // Also dispatch generic test mode event
+    document.dispatchEvent(new CustomEvent('testModeChanged', {
+      detail: { enabled }
+    }));
   }
 }
