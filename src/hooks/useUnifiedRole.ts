@@ -47,7 +47,7 @@ export const useUnifiedRole = () => {
           setAvailableRoles(['viewer', 'advertiser', 'publisher', 'admin', 'stakeholder']);
           
           // Use role from localStorage or default to advertiser
-          const localRole = localStorage.getItem('userRole');
+          const localRole = localStorage.getItem('viewerRole');
           setCurrentRole(isValidRole(localRole) ? localRole as UserRole : 'advertiser');
           
           return;

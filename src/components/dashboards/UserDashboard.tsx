@@ -1,21 +1,21 @@
 import React from 'react';
 
-interface UserDashboardProps {
+interface ViewerDashboardProps {
   page?: string;
 }
 
-const UserDashboard: React.FC<UserDashboardProps> = ({ page = '' }) => {
+const ViewerDashboard: React.FC<ViewerDashboardProps> = ({ page = '' }) => {
   // Render different content based on the page path
   const renderContent = () => {
     switch (page) {
       case 'settings':
-        return <UserSettingsContent />;
+        return <ViewerSettingsContent />;
       case 'wallet':
-        return <UserWalletContent />;
+        return <ViewerWalletContent />;
       case 'developer':
-        return <UserDeveloperContent />;
+        return <ViewerDeveloperContent />;
       default:
-        return <UserHomeContent />;
+        return <ViewerHomeContent />;
     }
   };
   
@@ -23,7 +23,7 @@ const UserDashboard: React.FC<UserDashboardProps> = ({ page = '' }) => {
 };
 
 // Home content
-const UserHomeContent: React.FC = () => {
+const ViewerHomeContent: React.FC = () => {
   return (
     <div>
       <h1 className="text-2xl font-bold mb-4">Viewer Dashboard</h1>
@@ -60,10 +60,10 @@ const UserHomeContent: React.FC = () => {
 };
 
 // Settings content
-const UserSettingsContent: React.FC = () => {
+const ViewerSettingsContent: React.FC = () => {
   return (
     <div>
-      <h1 className="text-2xl font-bold mb-4">User Settings</h1>
+      <h1 className="text-2xl font-bold mb-4">Viewer Settings</h1>
       <div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow">
         <h2 className="text-lg font-medium mb-2">Account Preferences</h2>
         <div className="space-y-4">
