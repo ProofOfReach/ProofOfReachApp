@@ -225,15 +225,25 @@ export const AuthProviderRefactored: React.FC<AuthProviderProps> = ({ children }
       setIsLoading(true);
       try {
         const authStatus = await authService.checkAuth();
-        setAuthState(authStatus);
         
-        // If we have a test mode user, we might want to set localStorage 
-        // to help with persistence (matching old implementation)
-        if (authStatus && authStatus.isTestMode && typeof window !== 'undefined') {
-          localStorage.setItem('isTestMode', 'true');
+        // Only update state if we got a valid auth status back
+        if (authStatus) {
+          setAuthState(authStatus);
+          
+          // If we have a test mode user, we might want to set localStorage 
+          // to help with persistence (matching old implementation)
+          if (authStatus.isTestMode && typeof window !== 'undefined') {
+            localStorage.setItem('isTestMode', 'true');
+          }
+        } else {
+          // If no auth status was returned, treat as logged out
+          setAuthState(null);
         }
       } catch (error) {
+        // Log the error but don't crash
         logger.error('Auth check error:', error);
+        // Set auth state to null to avoid infinite loading states
+        setAuthState(null);
       } finally {
         setIsLoading(false);
       }
