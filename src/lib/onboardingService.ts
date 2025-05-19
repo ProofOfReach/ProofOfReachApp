@@ -15,6 +15,41 @@ const onboardingService = {
    * @returns Promise resolving to true if onboarding is complete, false otherwise
    */
   isOnboardingComplete: async (pubkey: string, role: UserRoleType): Promise<boolean> => {
+    // If we're running in the browser, we need to call the API instead of accessing Prisma directly
+    if (typeof window !== 'undefined') {
+      try {
+        // Make an API call to check onboarding status
+        const response = await fetch(`/api/onboarding/status?pubkey=${encodeURIComponent(pubkey)}&role=${encodeURIComponent(role)}`);
+        
+        if (!response.ok) {
+          throw new Error(`API error: ${response.statusText}`);
+        }
+        
+        const data = await response.json();
+        return !!data.isComplete;
+      } catch (error) {
+        // Report the error
+        errorService.reportError(
+          error instanceof Error ? error : `API error checking onboarding status`,
+          'onboardingService.isOnboardingComplete.clientSide',
+          'api',
+          'warning',
+          {
+            data: { pubkey, role },
+            category: ErrorCategory.OPERATIONAL,
+            userFacing: false
+          }
+        );
+        
+        // Log for debugging
+        logger.debug(`Client-side error checking onboarding status for ${pubkey} with role ${role}, treating as not complete`);
+        
+        // If there's any error during the check, safely assume onboarding is not complete
+        return false;
+      }
+    }
+    
+    // Server-side code path
     try {
       // Simplified check for onboarding complete status
       // We'll just check if there's an onboarding record with isComplete=true
@@ -32,7 +67,7 @@ const onboardingService = {
       // Report the error to the central error service but continue
       errorService.reportError(
         error instanceof Error ? error : `Database error checking onboarding status`,
-        'onboardingService.isOnboardingComplete',
+        'onboardingService.isOnboardingComplete.serverSide',
         'api',
         'warning',
         {
@@ -57,6 +92,53 @@ const onboardingService = {
    */
   markOnboardingComplete: async (pubkey: string, role: UserRoleType): Promise<void> => {
     const correlationId = `onboarding-completion-${pubkey}-${role}`;
+    
+    // If we're running in the browser, use the API instead
+    if (typeof window !== 'undefined') {
+      try {
+        // Call API to mark onboarding complete
+        const response = await fetch('/api/onboarding/complete', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ pubkey, role }),
+        });
+        
+        if (!response.ok) {
+          const errorData = await response.json().catch(() => ({ error: response.statusText }));
+          throw new Error(errorData.error || 'Failed to mark onboarding complete');
+        }
+        
+        // Successfully marked complete
+        return;
+      } catch (error) {
+        // Report client-side error
+        errorService.reportError(
+          error instanceof Error ? error : 'Error marking onboarding complete (client-side)',
+          'onboardingService.markOnboardingComplete.clientSide',
+          'api',
+          'error',
+          {
+            data: { pubkey, role },
+            category: ErrorCategory.OPERATIONAL,
+            userFacing: true,
+            correlationId
+          }
+        );
+        
+        logger.error('Client-side error marking onboarding complete', {
+          error: error instanceof Error ? error.message : 'Unknown error',
+          pubkey,
+          role
+        });
+        
+        // Re-throw the error so the UI can handle it
+        throw error;
+      }
+    }
+    
+    // Server-side implementation
     try {
       // Get the user record first
       let user;
@@ -186,6 +268,9 @@ const onboardingService = {
         pubkey,
         role
       });
+      
+      // Re-throw the error so it can be handled appropriately
+      throw error;
     }
   },
 
@@ -197,6 +282,54 @@ const onboardingService = {
   resetOnboardingStatus: async (pubkey: string, role?: UserRoleType): Promise<void> => {
     const correlationId = `onboarding-reset-${pubkey}-${role || 'all'}`;
     
+    // Handle client-side scenario
+    if (typeof window !== 'undefined') {
+      try {
+        // Make API call to reset onboarding status
+        const endpoint = role 
+          ? `/api/onboarding/reset?pubkey=${encodeURIComponent(pubkey)}&role=${encodeURIComponent(role)}`
+          : `/api/onboarding/reset?pubkey=${encodeURIComponent(pubkey)}`;
+          
+        const response = await fetch(endpoint, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          }
+        });
+        
+        if (!response.ok) {
+          const errorData = await response.json().catch(() => ({ error: response.statusText }));
+          throw new Error(errorData.error || 'Failed to reset onboarding status');
+        }
+        
+        return;
+      } catch (error) {
+        // Report client-side error
+        errorService.reportError(
+          error instanceof Error ? error : 'Error resetting onboarding status (client-side)',
+          'onboardingService.resetOnboardingStatus.clientSide',
+          'api',
+          'error',
+          {
+            data: { pubkey, role },
+            category: ErrorCategory.OPERATIONAL,
+            userFacing: true,
+            correlationId
+          }
+        );
+        
+        logger.error('Client-side error resetting onboarding status', {
+          error: error instanceof Error ? error.message : 'Unknown error',
+          pubkey,
+          role
+        });
+        
+        // Re-throw for caller handling
+        throw error;
+      }
+    }
+    
+    // Server-side implementation
     try {
       // Try to get the user, but don't block if there's an error
       let user;
@@ -356,6 +489,9 @@ const onboardingService = {
         pubkey, 
         role 
       });
+      
+      // Re-throw for appropriate handling
+      throw error;
     }
   },
 
@@ -473,7 +609,7 @@ const onboardingService = {
     const correlationId = `onboarding-redirect-${pubkey}-${role}`;
     
     try {
-      // Check if onboarding is complete for this role
+      // Check if onboarding is complete for this role - already handles browser/server distinction
       const isComplete = await onboardingService.isOnboardingComplete(pubkey, role);
       
       if (!isComplete) {
