@@ -1,4 +1,4 @@
-import { ReactNode, useEffect, useState, useCallback } from 'react';
+import { ReactNode, useEffect, useState, useCallback, useRef } from 'react';
 import { AuthContext } from '../hooks/useAuthRefactored';
 import { AuthService } from '../services/authService';
 import { AuthState, AuthStateContext, UserRole } from '../types/auth';
@@ -18,8 +18,8 @@ export const AuthProviderRefactored: React.FC<AuthProviderProps> = ({ children }
   const [authState, setAuthState] = useState<AuthState | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   
-  // Initialize auth service
-  const authService = new AuthService();
+  // Use a ref to maintain a single instance of auth service to prevent recreation on renders
+  const authServiceRef = useRef<AuthService>(new AuthService());
   
   /**
    * Function to check if the user has a specific role
@@ -34,11 +34,28 @@ export const AuthProviderRefactored: React.FC<AuthProviderProps> = ({ children }
   
   /**
    * Function to attempt login
+   * 
+   * @param pubkey - The Nostr public key
+   * @param secondParam - Can be either a signed message string or a boolean indicating test mode
+   * @returns The authentication state
    */
-  const login = useCallback(async (pubkey: string, signedMessage: string): Promise<AuthState> => {
+  const login = useCallback(async (pubkey: string, secondParam: string | boolean): Promise<AuthState> => {
     setIsLoading(true);
     try {
-      const newAuthState = await authService.login(pubkey, signedMessage);
+      // Determine if this is a test mode login
+      const isTestMode = typeof secondParam === 'boolean' ? secondParam : 
+                       (typeof secondParam === 'string' && secondParam === 'true');
+      
+      let newAuthState: AuthState;
+      
+      if (isTestMode) {
+        // Use the login method but indicate it's a test login
+        newAuthState = await authServiceRef.current.login(pubkey, 'TEST_MODE');
+      } else {
+        // Regular login with signed message
+        newAuthState = await authServiceRef.current.login(pubkey, secondParam as string);
+      }
+      
       setAuthState(newAuthState);
       logger.log('Login successful, roles:', newAuthState.availableRoles);
       setIsLoading(false);
@@ -48,7 +65,7 @@ export const AuthProviderRefactored: React.FC<AuthProviderProps> = ({ children }
       logger.error('Login error:', error);
       throw error;
     }
-  }, [authService]);
+  }, []);
   
   /**
    * Function to log out
@@ -58,7 +75,7 @@ export const AuthProviderRefactored: React.FC<AuthProviderProps> = ({ children }
     try {
       // The logout method now handles redirection directly, 
       // cleaning localStorage and redirecting to /login
-      await authService.logout();
+      await authServiceRef.current.logout();
       setAuthState(null);
       logger.log('Logout successful');
       
@@ -79,7 +96,7 @@ export const AuthProviderRefactored: React.FC<AuthProviderProps> = ({ children }
         window.location.href = '/login';
       }
     }
-  }, [authService]);
+  }, []);
   
   /**
    * Function to refresh the user's roles
@@ -87,7 +104,7 @@ export const AuthProviderRefactored: React.FC<AuthProviderProps> = ({ children }
   const refreshRoles = useCallback(async (pubkey: string): Promise<AuthState> => {
     setIsLoading(true);
     try {
-      const newAuthState = await authService.refreshRoles(pubkey);
+      const newAuthState = await authServiceRef.current.refreshRoles(pubkey);
       setAuthState(newAuthState);
       logger.log('Roles refreshed, new roles:', newAuthState.availableRoles);
       setIsLoading(false);
@@ -97,7 +114,7 @@ export const AuthProviderRefactored: React.FC<AuthProviderProps> = ({ children }
       logger.error('Refresh roles error:', error);
       throw error;
     }
-  }, [authService]);
+  }, []);
   
   /**
    * Function to add a role to the user
@@ -224,7 +241,7 @@ export const AuthProviderRefactored: React.FC<AuthProviderProps> = ({ children }
     const checkAuth = async () => {
       setIsLoading(true);
       try {
-        const authStatus = await authService.checkAuth();
+        const authStatus = await authServiceRef.current.checkAuth();
         
         // Only update state if we got a valid auth status back
         if (authStatus) {
@@ -250,7 +267,7 @@ export const AuthProviderRefactored: React.FC<AuthProviderProps> = ({ children }
     };
     
     checkAuth();
-  }, [authService]);
+  }, []);
   
   /**
    * The value to provide to consumers

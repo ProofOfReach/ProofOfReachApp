@@ -40,9 +40,12 @@ export class AuthService {
    */
   async login(pubkey: string, signedMessage: string): Promise<AuthState> {
     try {
-      // For test pubkeys, we can create a synthetic authState directly
+      // Check if this is a test mode login (from AuthProviderRefactored's indicator)
+      const isTestModeLogin = signedMessage === 'TEST_MODE';
+      
+      // For test pubkeys or explicit test mode logins, we can create a synthetic authState directly
       // This avoids making a network request for test logins
-      if (this.isTestPublicKey(pubkey)) {
+      if (this.isTestPublicKey(pubkey) || isTestModeLogin) {
         logger.log(`Test login for ${pubkey}, bypassing API`);
         
         // Determine roles based on the pubkey suffix
