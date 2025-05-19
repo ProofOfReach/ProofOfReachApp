@@ -1,6 +1,10 @@
-import prisma from '@/lib/prisma';
+import { PrismaClient } from '@prisma/client';
 import { logger } from '@/lib/logger';
 import { UserRoleType } from '@/types/role';
+
+// Instead of importing prisma, create a new instance directly
+// This ensures we have a valid client even if the imported one fails
+const prisma = new PrismaClient();
 
 /**
  * Service for managing onboarding state and redirections
