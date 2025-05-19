@@ -562,6 +562,6 @@ function MyComponent() {
       {renderStepContent()}
     </div>
   );
-}));
+});
 
 export default PublisherOnboarding;
