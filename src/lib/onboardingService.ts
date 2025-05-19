@@ -1,6 +1,8 @@
 import prisma from '@/lib/prisma';
 import { logger } from '@/lib/logger';
 import { UserRoleType } from '@/types/role';
+import { errorService } from '@/lib/errorService';
+import { ErrorCategory } from '@/types/errors';
 
 /**
  * Service for managing onboarding state and redirections
@@ -27,8 +29,23 @@ const onboardingService = {
       
       return !!onboardingRecord?.isComplete;
     } catch (error) {
-      // If there's any error during the check, safely assume onboarding is not complete
+      // Report the error to the central error service but continue
+      errorService.reportError(
+        error instanceof Error ? error : `Database error checking onboarding status`,
+        'onboardingService.isOnboardingComplete',
+        'api',
+        'warning',
+        {
+          data: { pubkey, role },
+          category: ErrorCategory.OPERATIONAL,
+          userFacing: false
+        }
+      );
+      
+      // Log for debugging
       logger.debug(`Error or no record found for ${pubkey} with role ${role}, treating as not complete`);
+      
+      // If there's any error during the check, safely assume onboarding is not complete
       return false;
     }
   },
@@ -39,6 +56,7 @@ const onboardingService = {
    * @param role The role to mark as complete
    */
   markOnboardingComplete: async (pubkey: string, role: UserRoleType): Promise<void> => {
+    const correlationId = `onboarding-completion-${pubkey}-${role}`;
     try {
       // Get the user record first
       let user;
@@ -47,8 +65,21 @@ const onboardingService = {
           where: { nostrPubkey: pubkey }
         });
       } catch (userError) {
+        // Report the error
+        errorService.reportError(
+          userError instanceof Error ? userError : 'Error finding user for onboarding completion',
+          'onboardingService.markOnboardingComplete.findUser',
+          'api',
+          'warning',
+          {
+            data: { pubkey, role },
+            category: ErrorCategory.OPERATIONAL,
+            userFacing: false,
+            correlationId
+          }
+        );
+        
         logger.warn(`Error finding user for onboarding completion: ${userError instanceof Error ? userError.message : 'Unknown error'}`);
-        // We'll continue without the user record and try to create a minimal onboarding record
       }
 
       if (!user) {
@@ -76,8 +107,22 @@ const onboardingService = {
             }
           });
         } catch (createError) {
+          // Report the error using our service
+          errorService.reportError(
+            createError instanceof Error ? createError : 'Could not create onboarding record',
+            'onboardingService.markOnboardingComplete.createRecord',
+            'api',
+            'warning',
+            {
+              data: { pubkey, role },
+              category: ErrorCategory.OPERATIONAL,
+              userFacing: false,
+              correlationId,
+              details: 'Attempted to create minimal onboarding record without user ID'
+            }
+          );
+          
           logger.warn(`Could not create onboarding record: ${createError instanceof Error ? createError.message : 'Unknown error'}`);
-          // We'll continue anyway to provide a smooth flow
         }
         return;
       }
@@ -105,16 +150,42 @@ const onboardingService = {
         });
         logger.info(`Onboarding marked complete for user ${pubkey} with role ${role}`);
       } catch (upsertError) {
+        // Report the error using our service
+        errorService.reportError(
+          upsertError instanceof Error ? upsertError : 'Error upserting onboarding record',
+          'onboardingService.markOnboardingComplete.upsertRecord',
+          'api',
+          'warning',
+          {
+            data: { pubkey, role, userId: user.id },
+            category: ErrorCategory.OPERATIONAL,
+            userFacing: false,
+            correlationId
+          }
+        );
+        
         logger.warn(`Error upserting onboarding record: ${upsertError instanceof Error ? upsertError.message : 'Unknown error'}`);
-        // Continue to provide a smooth flow
       }
     } catch (error) {
+      // Report the main function error
+      errorService.reportError(
+        error instanceof Error ? error : 'Error in markOnboardingComplete',
+        'onboardingService.markOnboardingComplete',
+        'api',
+        'error',
+        {
+          data: { pubkey, role },
+          category: ErrorCategory.OPERATIONAL,
+          userFacing: false,
+          correlationId
+        }
+      );
+      
       logger.error('Error in markOnboardingComplete', {
         error: error instanceof Error ? error.message : 'Unknown error',
         pubkey,
         role
       });
-      // Log but don't throw error to prevent disrupting the flow
     }
   },
 
@@ -124,6 +195,8 @@ const onboardingService = {
    * @param role The role to reset onboarding for (optional - if not provided, resets all roles)
    */
   resetOnboardingStatus: async (pubkey: string, role?: UserRoleType): Promise<void> => {
+    const correlationId = `onboarding-reset-${pubkey}-${role || 'all'}`;
+    
     try {
       // Try to get the user, but don't block if there's an error
       let user;
@@ -132,13 +205,25 @@ const onboardingService = {
           where: { nostrPubkey: pubkey }
         });
       } catch (userError) {
+        // Report error to the monitoring system
+        errorService.reportError(
+          userError instanceof Error ? userError : 'Error finding user for onboarding reset',
+          'onboardingService.resetOnboardingStatus.findUser',
+          'api', 
+          'warning',
+          {
+            data: { pubkey, role },
+            category: ErrorCategory.OPERATIONAL,
+            userFacing: false,
+            correlationId
+          }
+        );
+        
         logger.warn(`Error finding user for reset: ${userError instanceof Error ? userError.message : 'Unknown error'}`);
-        // Continue without the user record
       }
 
       if (!user) {
         logger.warn(`User with pubkey ${pubkey} not found when resetting onboarding status`);
-        // Continue anyway to try the reset operation
       }
 
       if (role) {
@@ -160,7 +245,21 @@ const onboardingService = {
           });
           logger.info(`Onboarding reset for user ${pubkey} with role ${role}`);
         } catch (roleError) {
-          // The record might not exist yet, which is fine
+          // Report the error but continue
+          errorService.reportError(
+            roleError instanceof Error ? roleError : 'Could not reset onboarding for role',
+            'onboardingService.resetOnboardingStatus.resetRole',
+            'api',
+            'info', // Less critical since we'll try fallback
+            {
+              data: { pubkey, role },
+              category: ErrorCategory.OPERATIONAL,
+              userFacing: false,
+              correlationId,
+              details: 'The onboarding record might not exist yet, trying fallback creation'
+            }
+          );
+          
           logger.warn(`Could not reset onboarding for role ${role}, might not exist yet.`);
           
           // Try creation instead of update as a fallback
@@ -187,6 +286,20 @@ const onboardingService = {
             });
             logger.info(`Created fresh onboarding record for user ${pubkey} with role ${role}`);
           } catch (createError) {
+            // Report the error
+            errorService.reportError(
+              createError instanceof Error ? createError : 'Could not create onboarding record',
+              'onboardingService.resetOnboardingStatus.createRecord',
+              'api',
+              'warning',
+              {
+                data: { pubkey, role },
+                category: ErrorCategory.OPERATIONAL,
+                userFacing: false,
+                correlationId
+              }
+            );
+            
             logger.warn(`Could not create onboarding record: ${createError instanceof Error ? createError.message : 'Unknown error'}`);
           }
         }
@@ -206,17 +319,43 @@ const onboardingService = {
           });
           logger.info(`Onboarding reset for user ${pubkey} across all roles`);
         } catch (updateError) {
-          // No records might exist yet, which is fine
+          // Report the error
+          errorService.reportError(
+            updateError instanceof Error ? updateError : 'Could not reset all onboarding records',
+            'onboardingService.resetOnboardingStatus.resetAll',
+            'api',
+            'warning',
+            {
+              data: { pubkey },
+              category: ErrorCategory.OPERATIONAL,
+              userFacing: false,
+              correlationId
+            }
+          );
+          
           logger.warn(`Could not reset onboarding records, might not exist yet: ${updateError instanceof Error ? updateError.message : 'Unknown error'}`);
         }
       }
     } catch (error) {
+      // Report the main function error
+      errorService.reportError(
+        error instanceof Error ? error : 'Error in resetOnboardingStatus',
+        'onboardingService.resetOnboardingStatus',
+        'api',
+        'error',
+        {
+          data: { pubkey, role },
+          category: ErrorCategory.OPERATIONAL,
+          userFacing: false,
+          correlationId
+        }
+      );
+      
       logger.error('Error in resetOnboardingStatus', { 
         error: error instanceof Error ? error.message : 'Unknown error', 
         pubkey, 
         role 
       });
-      // Log but don't throw error to prevent disrupting the flow
     }
   },
 
@@ -227,6 +366,8 @@ const onboardingService = {
    * @param step The current step in the onboarding process
    */
   saveOnboardingStep: async (pubkey: string, role: UserRoleType, step: string): Promise<void> => {
+    const correlationId = `onboarding-step-${pubkey}-${role}-${step}`;
+    
     try {
       // Try to get the user, but don't block the entire operation if it fails
       let user;
@@ -235,8 +376,21 @@ const onboardingService = {
           where: { nostrPubkey: pubkey }
         });
       } catch (userError) {
+        // Report the error
+        errorService.reportError(
+          userError instanceof Error ? userError : 'Error finding user when saving onboarding step',
+          'onboardingService.saveOnboardingStep.findUser',
+          'api',
+          'warning',
+          {
+            data: { pubkey, role, step },
+            category: ErrorCategory.OPERATIONAL,
+            userFacing: false,
+            correlationId
+          }
+        );
+        
         logger.warn(`Error finding user when saving step: ${userError instanceof Error ? userError.message : 'Unknown error'}`);
-        // Continue without the user record
       }
 
       if (!user) {
@@ -269,17 +423,43 @@ const onboardingService = {
         
         logger.info(`Saved onboarding step "${step}" for user ${pubkey} with role ${role}`);
       } catch (dbError) {
+        // Report the error
+        errorService.reportError(
+          dbError instanceof Error ? dbError : 'Error saving onboarding step to database',
+          'onboardingService.saveOnboardingStep.upsert',
+          'api',
+          'warning',
+          {
+            data: { pubkey, role, step, userId: user?.id },
+            category: ErrorCategory.OPERATIONAL,
+            userFacing: false,
+            correlationId
+          }
+        );
+        
         logger.warn(`Error saving onboarding step to database: ${dbError instanceof Error ? dbError.message : 'Unknown error'}`);
-        // We'll continue anyway to ensure the UI flow isn't disrupted
       }
     } catch (error) {
+      // Report the main error
+      errorService.reportError(
+        error instanceof Error ? error : 'Error in saveOnboardingStep',
+        'onboardingService.saveOnboardingStep',
+        'api',
+        'error',
+        {
+          data: { pubkey, role, step },
+          category: ErrorCategory.OPERATIONAL,
+          userFacing: false,
+          correlationId
+        }
+      );
+      
       logger.error('Error in saveOnboardingStep', { 
         error: error instanceof Error ? error.message : 'Unknown error', 
         pubkey,
         role, 
         step 
       });
-      // Log but don't throw - the UI should still work even if steps aren't saved
     }
   },
 
@@ -290,6 +470,8 @@ const onboardingService = {
    * @returns Promise resolving to the URL to redirect to
    */
   getPostLoginRedirectUrl: async (pubkey: string, role: UserRoleType): Promise<string> => {
+    const correlationId = `onboarding-redirect-${pubkey}-${role}`;
+    
     try {
       // Check if onboarding is complete for this role
       const isComplete = await onboardingService.isOnboardingComplete(pubkey, role);
@@ -313,11 +495,27 @@ const onboardingService = {
           return '/dashboard'; // Default fallback
       }
     } catch (error) {
+      // Report error through the central system
+      errorService.reportError(
+        error instanceof Error ? error : 'Error getting post-login redirect URL',
+        'onboardingService.getPostLoginRedirectUrl',
+        'api',
+        'warning',
+        {
+          data: { pubkey, role },
+          category: ErrorCategory.OPERATIONAL,
+          userFacing: false,
+          correlationId,
+          details: 'Defaulting to /onboarding as fallback redirect'
+        }
+      );
+      
       logger.error('Error getting post-login redirect URL', { 
-        error, 
+        error: error instanceof Error ? error.message : 'Unknown error', 
         pubkey, 
         role 
       });
+      
       // If there's an error, default to the onboarding page to be safe
       return '/onboarding';
     }
