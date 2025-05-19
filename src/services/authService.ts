@@ -430,10 +430,6 @@ export class AuthService {
         throw new Error('Failed to refresh roles');
       }
       
-      if (!refreshData.success) {
-        throw new Error(refreshData.message || 'Failed to refresh roles');
-      }
-      
       // Cache the roles in localStorage
       if (typeof window !== 'undefined') {
         localStorage.setItem('cachedAvailableRoles', JSON.stringify(refreshData.availableRoles));
@@ -443,7 +439,7 @@ export class AuthService {
       return {
         isLoggedIn: true,
         pubkey,
-        isTestMode: refreshData.isTestMode || false,
+        isTestMode: false, // Default to false if not provided
         availableRoles: refreshData.availableRoles || [],
       };
     } catch (error) {
