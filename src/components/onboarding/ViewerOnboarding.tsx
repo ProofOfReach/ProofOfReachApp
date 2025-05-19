@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { OnboardingStep } from '@/context/OnboardingContext';
 import OnboardingProgress from '@/components/onboarding/OnboardingProgress';
 import { CheckCircle, Search, ChevronRight, ChevronLeft } from 'react-feather';
@@ -8,8 +8,31 @@ interface ViewerOnboardingProps {
   onComplete?: () => void;
 }
 
-const ViewerOnboarding: React.FC<ViewerOnboardingProps> = ({ currentStep = 'welcome', onComplete }) => {
-  const [step, setStep] = useState<string>(currentStep === 'role-selection' ? 'welcome' : currentStep as string);
+const ViewerOnboarding: React.FC<ViewerOnboardingProps> = ({ currentStep = 'role-selection', onComplete }) => {
+  // Map from OnboardingContext step names to local step names
+  const mapOnboardingStepToLocal = (step: OnboardingStep): string => {
+    const stepMap: Record<string, string> = {
+      'role-selection': 'welcome',
+      'preferences': 'welcome',
+      'discovery': 'discovery',
+      'notifications': 'discovery',
+      'privacy': 'discovery',
+      'feedback': 'complete',
+      'complete': 'complete'
+    };
+    
+    return stepMap[step] || 'welcome'; // Default to welcome if step is not recognized
+  };
+  
+  // Initialize step from incoming currentStep prop
+  const [step, setStep] = useState<string>(mapOnboardingStepToLocal(currentStep));
+  
+  // Update step if currentStep prop changes
+  useEffect(() => {
+    const mappedStep = mapOnboardingStepToLocal(currentStep);
+    setStep(mappedStep);
+    console.log('ViewerOnboarding - Mapped incoming step', currentStep, 'to', mappedStep);
+  }, [currentStep]);
 
   const handleNext = () => {
     switch (step) {
@@ -244,7 +267,23 @@ const ViewerOnboarding: React.FC<ViewerOnboardingProps> = ({ currentStep = 'welc
         );
         
       default:
-        return <div>Unknown step</div>;
+        // Debug information to help diagnose issues
+        return (
+          <div className="p-4 bg-yellow-50 border border-yellow-200 rounded-md">
+            <p className="text-yellow-800">
+              Unknown step: {step}. Please go back and try again.
+            </p>
+            <p className="text-yellow-700 mt-2 text-xs">
+              Received original step: {currentStep}
+            </p>
+            <button 
+              onClick={() => setStep('welcome')}
+              className="mt-3 px-3 py-1 bg-yellow-200 text-yellow-800 rounded hover:bg-yellow-300"
+            >
+              Go to Welcome
+            </button>
+          </div>
+        );
     }
   };
 
