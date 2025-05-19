@@ -105,11 +105,11 @@ describe('UrlParamsPreview Component', () => {
     expect(mockWriteText).toHaveBeenCalledWith(`${mockBaseUrl}?${mockParams}`);
   });
 
-  it('shows "Copied!" message after copying', () => {
+  it('shows "Copied!" message after copying', async () => {
     // Mock the clipboard API
     Object.assign(navigator, {
       clipboard: {
-        writeText: jest.fn(),
+        writeText: jest.fn().mockResolvedValue(undefined),
       },
     });
     
@@ -126,8 +126,9 @@ describe('UrlParamsPreview Component', () => {
     // Click the copy button
     fireEvent.click(screen.getByText('Copy'));
     
-    // Should now show "Copied!"
-    expect(screen.getByText('Copied!')).toBeInTheDocument();
+    // Use findByText instead of getByText to wait for the state change
+    const copiedElement = await screen.findByText('Copied!');
+    expect(copiedElement).toBeInTheDocument();
   });
 
   it('resets "Copied!" message after timeout', async () => {
@@ -136,7 +137,7 @@ describe('UrlParamsPreview Component', () => {
     // Mock the clipboard API
     Object.assign(navigator, {
       clipboard: {
-        writeText: jest.fn(),
+        writeText: jest.fn().mockResolvedValue(undefined),
       },
     });
     
@@ -150,8 +151,9 @@ describe('UrlParamsPreview Component', () => {
     // Click the copy button
     fireEvent.click(screen.getByText('Copy'));
     
-    // "Copied!" message should be shown
-    expect(screen.getByText('Copied!')).toBeInTheDocument();
+    // Use findByText instead of getByText to wait for state update
+    const copiedElement = await screen.findByText('Copied!');
+    expect(copiedElement).toBeInTheDocument();
     
     // Advance timer to simulate timeout
     jest.advanceTimersByTime(2000);
@@ -162,7 +164,7 @@ describe('UrlParamsPreview Component', () => {
     jest.useRealTimers();
   });
 
-  it('handles copy failure gracefully', () => {
+  it('handles copy failure gracefully', async () => {
     // Mock clipboard API to reject
     Object.assign(navigator, {
       clipboard: {
@@ -185,7 +187,8 @@ describe('UrlParamsPreview Component', () => {
     fireEvent.click(screen.getByText('Copy'));
     
     // Should still show "Copied!" even if the actual copy failed
-    expect(screen.getByText('Copied!')).toBeInTheDocument();
+    const copiedElement = await screen.findByText('Copied!');
+    expect(copiedElement).toBeInTheDocument();
     
     // Restore console.error
     console.error = originalConsoleError;

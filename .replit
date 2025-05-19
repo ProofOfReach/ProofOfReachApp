@@ -88,6 +88,10 @@ args = "Run Specific Dashboard Tests"
 task = "workflow.run"
 args = "Run Dashboard Tests Only"
 
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Start Server"
+
 [[workflows.workflow]]
 name = "Nostr Ad Marketplace Server"
 author = "agent"
@@ -243,6 +247,15 @@ author = "agent"
 [[workflows.workflow.tasks]]
 task = "shell.exec"
 args = "npx jest src/__tests__/pages/dashboard"
+
+[[workflows.workflow]]
+name = "Start Server"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "npm run dev"
+waitForPort = 5000
 
 [deployment]
 run = ["sh", "-c", "npm install && npx prisma generate && npm run dev"]
