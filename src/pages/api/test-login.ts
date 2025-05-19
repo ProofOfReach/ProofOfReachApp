@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { prisma } from '../../lib/prismaClient';
-import cookie from 'cookie';
+import { serialize } from 'cookie';
 import { logger } from '../../lib/logger';
 
 /**
@@ -57,23 +57,24 @@ export default async function handler(
         });
       }
 
-      // Set a simple auth cookie directly
-      res.setHeader('Set-Cookie', [
-        cookie.serialize('nostr_pubkey', pubkey, {
-          httpOnly: false,
-          secure: process.env.NODE_ENV !== 'development',
-          sameSite: 'lax',
-          path: '/',
-          maxAge: 60 * 60 * 24 * 7 // 1 week
-        }),
-        cookie.serialize('auth_token', `simple_token_${pubkey.substring(0, 8)}`, {
-          httpOnly: true,
-          secure: process.env.NODE_ENV !== 'development',
-          sameSite: 'lax',
-          path: '/',
-          maxAge: 60 * 60 * 24 * 7 // 1 week
-        })
-      ]);
+      // Set authentication cookies
+      const pubkeyCookie = serialize('nostr_pubkey', pubkey, {
+        httpOnly: false,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'lax',
+        path: '/',
+        maxAge: 60 * 60 * 24 * 7 // 1 week
+      });
+      
+      const authTokenCookie = serialize('auth_token', `simple_token_${pubkey.substring(0, 8)}`, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'lax',
+        path: '/',
+        maxAge: 60 * 60 * 24 * 7 // 1 week
+      });
+      
+      res.setHeader('Set-Cookie', [pubkeyCookie, authTokenCookie]);
 
       // Return success response with debug information
       return res.status(200).json({
