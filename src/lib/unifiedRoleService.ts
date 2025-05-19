@@ -377,15 +377,18 @@ export class UnifiedRoleService {
    */
   private async setCurrentRoleOnServer(userId: string, role: UserRoleType): Promise<boolean> {
     try {
+      // Normalize the role (convert 'user' to 'viewer')
+      const normalizedRole = normalizeRole(role);
+      
       // For local state management, update the current context
-      if (!userId || !isValidUserRole(role)) {
+      if (!userId || !isValidUserRole(normalizedRole as UserRoleType)) {
         return false;
       }
       
       // Check if user has this role
-      const hasThisRole = await this.hasRole(userId, role);
+      const hasThisRole = await this.hasRole(userId, normalizedRole as UserRoleType);
       if (!hasThisRole) {
-        this.debug(`User ${userId} does not have role ${role}`);
+        this.debug(`User ${userId} does not have role ${normalizedRole}`);
         return false;
       }
       
@@ -437,17 +440,20 @@ export class UnifiedRoleService {
    */
   public setCurrentRoleInLocalContext(role: UserRoleType): boolean {
     try {
+      // Normalize the role (convert 'user' to 'viewer')
+      const normalizedRole = normalizeRole(role);
+      
       const currentData = this.getRoleData();
       
-      // Check if the role is available for this user
-      if (!currentData.availableRoles.includes(role)) {
-        this.debug(`Role ${role} is not available for this user`);
+      // Check if the normalized role is available for this user
+      if (!currentData.availableRoles.includes(normalizedRole as UserRoleType)) {
+        this.debug(`Role ${normalizedRole} is not available for this user`);
         return false;
       }
       
       const newData = {
         ...currentData,
-        currentRole: role,
+        currentRole: normalizedRole as UserRoleType,
         timestamp: Date.now()
       };
       
