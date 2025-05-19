@@ -104,15 +104,22 @@ describe('Campaign Payment Service', () => {
       expect(result).toBe(false);
     });
     
-    it('should return false if campaign not found', async () => {
+    it('should handle case when campaign is not found', async () => {
       // Setup mocks
       (prisma.campaign.findUnique as jest.Mock).mockResolvedValue(null);
+      
+      // Create a spy to capture the error
+      const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation();
       
       // Execute
       const result = await campaignPaymentService.checkCampaignFunding('nonexistent');
       
       // Verify
       expect(result).toBe(false);
+      expect(consoleErrorSpy).toHaveBeenCalled();
+      
+      // Clean up spy
+      consoleErrorSpy.mockRestore();
     });
     
     it('should return false and handle database errors', async () => {
