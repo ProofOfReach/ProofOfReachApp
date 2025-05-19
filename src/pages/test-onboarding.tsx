@@ -3,7 +3,7 @@ import { NextPage } from 'next';
 import Layout from '@/components/Layout';
 import { OnboardingProvider } from '@/context/OnboardingContext';
 import OnboardingWizard from '@/components/onboarding/OnboardingWizard';
-import { api } from '@/lib/api';
+import { getWithAuth } from '@/lib/api';
 import { useRouter } from 'next/router';
 
 /**
@@ -34,8 +34,14 @@ const TestOnboardingPage: NextPage = () => {
         setPubkey(extractedPubkey);
         
         // Get onboarding status
-        const onboardingStatus = await api.get(`/api/onboarding/status?pubkey=${extractedPubkey}&role=viewer`);
-        setOnboardingData(onboardingStatus);
+        try {
+          const response = await getWithAuth(`/api/onboarding/status?pubkey=${extractedPubkey}&role=viewer`);
+          const data = await response.json();
+          setOnboardingData(data);
+        } catch (apiError) {
+          console.warn('Unable to fetch onboarding status. This is okay for testing.', apiError);
+        }
+        
         setIsLoading(false);
       } catch (err: any) {
         console.error('Error checking auth status:', err);
