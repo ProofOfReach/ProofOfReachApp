@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { NextPage } from 'next';
-import { useAuthRefactored } from '@/context/NewRoleContextRefactored';
+import { useAuthRefactored } from '@/hooks/useAuthRefactored';
 import { OnboardingProvider } from '@/context/OnboardingContext';
 import OnboardingWizard from '@/components/onboarding/OnboardingWizard';
 import Layout from '@/components/Layout';

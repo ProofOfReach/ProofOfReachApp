@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { useRouter } from 'next/router';
-import { useAuthRefactored } from '@/context/NewRoleContextRefactored';
+import { useAuthRefactored } from '@/hooks/useAuthRefactored';
 import { UserRoleType } from '@/types/role';
 import { useRole } from '@/context/RoleContext';
 import onboardingService from '@/lib/onboardingService';
