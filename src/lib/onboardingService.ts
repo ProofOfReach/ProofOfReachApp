@@ -41,7 +41,10 @@ const onboardingService = {
         pubkey, 
         role 
       });
-      throw new Error(`Failed to check onboarding status: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      
+      // Instead of throwing, return false to indicate onboarding is not complete
+      // This makes the function more resilient during login flows
+      return false;
     }
   },
 
@@ -59,7 +62,7 @@ const onboardingService = {
 
       if (!user) {
         logger.warn(`User with pubkey ${pubkey} not found when marking onboarding complete`);
-        throw new Error('User not found');
+        return; // Return silently instead of throwing
       }
 
       // Upsert the onboarding record (create if it doesn't exist, update if it does)
@@ -90,7 +93,7 @@ const onboardingService = {
         pubkey, 
         role 
       });
-      throw new Error(`Failed to mark onboarding as complete: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      // Log but don't throw error to prevent disrupting the flow
     }
   },
 
@@ -108,38 +111,48 @@ const onboardingService = {
 
       if (!user) {
         logger.warn(`User with pubkey ${pubkey} not found when resetting onboarding status`);
-        throw new Error('User not found');
+        return; // Return silently instead of throwing
       }
 
       if (role) {
-        // Reset specific role
-        await prisma.userOnboarding.update({
-          where: {
-            userPubkey_role: {
-              userPubkey: pubkey,
-              role
+        try {
+          // Reset specific role
+          await prisma.userOnboarding.update({
+            where: {
+              userPubkey_role: {
+                userPubkey: pubkey,
+                role
+              }
+            },
+            data: {
+              isComplete: false,
+              completedAt: null,
+              lastStep: null
             }
-          },
-          data: {
-            isComplete: false,
-            completedAt: null,
-            lastStep: null
-          }
-        });
-        logger.info(`Onboarding reset for user ${pubkey} with role ${role}`);
+          });
+          logger.info(`Onboarding reset for user ${pubkey} with role ${role}`);
+        } catch (roleError) {
+          // The record might not exist yet, which is fine
+          logger.warn(`Could not reset onboarding for role ${role}, might not exist yet.`);
+        }
       } else {
-        // Reset all roles
-        await prisma.userOnboarding.updateMany({
-          where: {
-            userPubkey: pubkey
-          },
-          data: {
-            isComplete: false,
-            completedAt: null,
-            lastStep: null
-          }
-        });
-        logger.info(`Onboarding reset for user ${pubkey} across all roles`);
+        try {
+          // Reset all roles
+          await prisma.userOnboarding.updateMany({
+            where: {
+              userPubkey: pubkey
+            },
+            data: {
+              isComplete: false,
+              completedAt: null,
+              lastStep: null
+            }
+          });
+          logger.info(`Onboarding reset for user ${pubkey} across all roles`);
+        } catch (updateError) {
+          // No records might exist yet, which is fine
+          logger.warn(`Could not reset onboarding records, might not exist yet.`);
+        }
       }
     } catch (error) {
       logger.error('Error resetting onboarding status', { 
@@ -147,7 +160,7 @@ const onboardingService = {
         pubkey, 
         role 
       });
-      throw new Error(`Failed to reset onboarding status: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      // Log but don't throw error to prevent disrupting the flow
     }
   },
 
@@ -166,7 +179,7 @@ const onboardingService = {
 
       if (!user) {
         logger.warn(`User with pubkey ${pubkey} not found when saving onboarding step`);
-        throw new Error('User not found');
+        return; // Return silently instead of throwing
       }
 
       // Upsert the onboarding record
@@ -188,6 +201,8 @@ const onboardingService = {
           userId: user.id
         }
       });
+      
+      logger.info(`Saved onboarding step "${step}" for user ${pubkey} with role ${role}`);
     } catch (error) {
       logger.error('Error saving onboarding step', { 
         error, 
