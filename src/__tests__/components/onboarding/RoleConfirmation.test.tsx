@@ -43,13 +43,13 @@ describe('RoleConfirmation', () => {
     expect(screen.getByText(/select your role/i)).toBeInTheDocument();
 
     // Should display all role options
-    const viewerOption = screen.getByText(/viewer/i);
-    const publisherOption = screen.getByText(/publisher/i);
-    const advertiserOption = screen.getByText(/advertiser/i);
-
-    expect(viewerOption).toBeInTheDocument();
-    expect(publisherOption).toBeInTheDocument();
-    expect(advertiserOption).toBeInTheDocument();
+    const roleCards = screen.getAllByTestId('role-card');
+    expect(roleCards.length).toBe(3);
+    
+    // Check that we have each role title within the cards
+    expect(roleCards[0].textContent).toMatch(/viewer/i);
+    expect(roleCards[1].textContent).toMatch(/publisher/i);
+    expect(roleCards[2].textContent).toMatch(/advertiser/i);
 
     // Should display descriptions for each role
     expect(screen.getByText(/browse ads and content/i)).toBeInTheDocument();
