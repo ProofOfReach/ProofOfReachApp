@@ -25,7 +25,7 @@ const RoleConfirmation: React.FC<RoleConfirmationProps> = ({ onConfirm }) => {
     {
       role: 'viewer' as UserRoleType,
       title: 'Viewer',
-      description: 'Browse content and interact with ads across the Nostr network',
+      description: 'Browse ads and content across the Nostr network',
       icon: <Users className="h-8 w-8 text-blue-500" />,
       benefits: [
         'Personalized content recommendations',
@@ -39,7 +39,7 @@ const RoleConfirmation: React.FC<RoleConfirmationProps> = ({ onConfirm }) => {
     {
       role: 'publisher' as UserRoleType,
       title: 'Publisher',
-      description: 'Monetize your content with relevant ads and earn Bitcoin',
+      description: 'Monetize your content with Bitcoin through the Nostr network',
       icon: <Package className="h-8 w-8 text-green-500" />,
       benefits: [
         'Earn Bitcoin for your content',
@@ -53,7 +53,7 @@ const RoleConfirmation: React.FC<RoleConfirmationProps> = ({ onConfirm }) => {
     {
       role: 'advertiser' as UserRoleType,
       title: 'Advertiser',
-      description: 'Create campaigns and reach your target audience on Nostr',
+      description: 'Promote your products and services on the Nostr network',
       icon: <Radio className="h-8 w-8 text-purple-500" />,
       benefits: [
         'Target specific audience interests',
@@ -70,7 +70,7 @@ const RoleConfirmation: React.FC<RoleConfirmationProps> = ({ onConfirm }) => {
     <div className="py-6">
       <div className="text-center mb-8">
         <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
-          Choose Your Role
+          Select your role
         </h2>
         <p className="mt-2 text-gray-600 dark:text-gray-300">
           Select how you'd like to use the Nostr Ad Marketplace platform
@@ -81,6 +81,7 @@ const RoleConfirmation: React.FC<RoleConfirmationProps> = ({ onConfirm }) => {
         {roleCards.map((card) => (
           <div 
             key={card.role}
+            data-testid="role-card"
             className={`border rounded-lg p-6 cursor-pointer transition hover:shadow-md
               ${card.color === 'blue' ? 'hover:border-blue-500' : 
                 card.color === 'green' ? 'hover:border-green-500' : 
@@ -93,7 +94,7 @@ const RoleConfirmation: React.FC<RoleConfirmationProps> = ({ onConfirm }) => {
               <div className="mb-4">
                 {card.icon}
               </div>
-              <h3 className="text-xl font-semibold mb-2 text-center text-gray-900 dark:text-white">
+              <h3 className="text-xl font-semibold mb-2 text-center text-gray-900 dark:text-white" data-testid={`${card.role}-title`}>
                 {card.title}
               </h3>
               <p className="text-gray-600 dark:text-gray-300 text-center mb-4">
