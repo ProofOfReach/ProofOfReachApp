@@ -69,6 +69,9 @@ const ViewerOnboarding: React.FC<ViewerOnboardingProps> = ({ currentStep = 'role
     setStep(mappedStep);
     console.log('ViewerOnboarding - Mapped incoming step', currentStep, 'to', mappedStep);
   }, [currentStep]);
+  
+  // The main component will show its own progress indicator, so we'll hide ours
+  const shouldShowProgress = false;
 
   const handleNext = () => {
     switch (step) {
@@ -331,8 +334,8 @@ const ViewerOnboarding: React.FC<ViewerOnboardingProps> = ({ currentStep = 'role
   };
 
   return (
-    <div className="p-6 bg-white dark:bg-gray-800 rounded-lg shadow-sm">
-      <OnboardingProgress />
+    <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm">
+      {shouldShowProgress && <OnboardingProgress />}
       {renderStepContent()}
       {renderNavButtons()}
     </div>
