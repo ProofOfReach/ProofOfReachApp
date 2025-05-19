@@ -1,5 +1,43 @@
 # Project Learnings
 
+## 2025-05-19 — Test Suite Reliability Improvements
+
+**Session Goal:** Fix failing tests across components, services, and UI elements to improve test suite reliability and maintain code quality.
+
+**Problem Identified:**
+- WalletService tests were failing due to improperly mocked Prisma client
+- UrlParamsPreview component tests were failing due to asynchronous clipboard operations
+- LayoutNavbar tests had memory leaks from not properly cleaning up after each test
+- TestModeBanner component tests were failing due to role context issues
+- useErrorState hook tests were inconsistent due to improper error handling
+- About 10% of tests were failing across the codebase, making it difficult to ensure code quality
+
+**What Was Done:**
+- Fixed WalletService tests by correctly mocking the Prisma client and improving error handling
+- Repaired UrlParamsPreview component tests by addressing asynchronous clipboard behavior
+- Enhanced LayoutNavbar tests by splitting them into smaller, more focused test cases
+- Improved test cleanup to prevent memory leaks and test cross-contamination
+- Added proper error boundaries and handling in useErrorState hook tests
+- Achieved 95% test passing rate (762 passing tests out of 801 total)
+- Verified application functionality with running server after test fixes
+
+**Lessons Learned:**
+- Proper mocking of database clients is essential for reliable service layer tests
+- Asynchronous operations like clipboard access need special handling in tests
+- Component tests should be properly isolated with thorough cleanup
+- Tests should be split into smaller units for easier debugging and maintenance
+- Memory management in tests is crucial to prevent unexpected test failures
+- Role-based component tests need proper context setup mimicking real scenarios
+- Testing large UI components benefits from breaking tests into smaller, focused scenarios
+
+**Open Questions / Next Steps:**
+1. Address remaining 5% of failing tests, focusing on less critical components
+2. Evaluate test coverage gaps and add tests for untested functionality
+3. Consider implementing more robust error boundary testing for error handling components
+4. Improve documentation of testing patterns for components that use clipboard or other browser APIs
+5. Evaluate strategies for better handling of asynchronous operations in tests
+6. Consider implementing visual regression tests for UI components to catch styling issues
+
 ## 2025-05-15 — User Role Management System Modernization
 
 **Session Goal:** Update the role management system to use the new UserRole model structure instead of deprecated boolean flags.
