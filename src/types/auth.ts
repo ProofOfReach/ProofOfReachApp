@@ -112,7 +112,10 @@ export interface LogoutResponse {
  * Response from refresh roles API
  */
 export interface RefreshRolesResponse {
+  success: boolean;
+  message?: string;
   availableRoles: UserRole[];
+  isTestMode?: boolean;
 }
 
 /**
