@@ -42,9 +42,9 @@ describe('SimplifiedEnhancedSidebar Component', () => {
     expect(screen.getByText('Nostr Ad Market')).toBeInTheDocument();
   });
 
-  it('displays the user role selector', () => {
+  it('displays the viewer role selector', () => {
     render(<SimplifiedEnhancedSidebar />);
-    expect(screen.getByTestId('role-selector-user')).toBeInTheDocument();
+    expect(screen.getByTestId('role-selector-viewer')).toBeInTheDocument();
   });
 
   it('has a role dropdown element', () => {
