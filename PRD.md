@@ -63,7 +63,8 @@ Current digital ad systems are centralized and opaque. They extract large rents,
   - **Data Visualization:** StandardizedDataTable component with search, sort, and filter capabilities for consistent data presentation
   - **User Access Management:** Role-based access control system with separate test mode for UI visibility
 - **Backend:** Node.js or Go (simple REST API with WebSocket for real-time zap confirmations)
-- **Database:** PostgreSQL (ad campaign metadata) + Redis for caching
+- **Database:** SQLite with Prisma ORM for development and testing
+  - **IMPORTANT:** Development and testing MUST use SQLite only; PostgreSQL migration is planned for future production deployment but NOT to be used until formal migration
   - **Role Management:** Flexible UserRole table structure with role transitions and fallback mechanisms
 - **Lightning:** LNbits, LND, or OpenNode (abstracted via WebLN)
 - **Nostr Integration:** nostr-tools for key management and event publishing
