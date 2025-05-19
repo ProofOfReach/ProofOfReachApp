@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { UserRoleType } from '@/types/role';
 import { useRole } from '@/context/RoleContext';
 import { useOnboarding } from '@/context/OnboardingContext';
@@ -9,8 +9,40 @@ type RoleConfirmationProps = {
 };
 
 const RoleConfirmation: React.FC<RoleConfirmationProps> = ({ onConfirm }) => {
-  const { availableRoles } = useRole();
+  const roleContext = useRole();
   const { setSelectedRole } = useOnboarding();
+  
+  // Create a state to hold available roles, with a default that includes all roles
+  const [availableRoles, setAvailableRoles] = useState<UserRoleType[]>(['viewer', 'publisher', 'advertiser']);
+  
+  // Check if we're in test mode
+  const isTestMode = typeof window !== 'undefined' && 
+    (window.location.pathname.includes('test-onboarding') || 
+    localStorage.getItem('isTestMode') === 'true');
+  
+  useEffect(() => {
+    // In test mode, force all roles to be available
+    if (isTestMode) {
+      setAvailableRoles(['viewer', 'publisher', 'advertiser']);
+    } 
+    // Otherwise use the roles from context if available
+    else if (roleContext && roleContext.availableRoles && roleContext.availableRoles.length > 0) {
+      setAvailableRoles(roleContext.availableRoles);
+    }
+    // Fallback to ensure at least one role is available
+    else if (!availableRoles.length) {
+      setAvailableRoles(['advertiser']);
+    }
+  }, [roleContext, isTestMode]);
+  
+  // For debugging
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      console.log('RoleConfirmation - Available roles:', availableRoles);
+      console.log('RoleConfirmation - Context roles:', roleContext?.availableRoles || 'None');
+      console.log('RoleConfirmation - Is test mode:', isTestMode);
+    }
+  }, [availableRoles, roleContext, isTestMode]);
 
   const handleRoleSelection = (role: UserRoleType) => {
     // First call the context function to update the selected role
@@ -22,7 +54,7 @@ const RoleConfirmation: React.FC<RoleConfirmationProps> = ({ onConfirm }) => {
     }
   };
 
-  const roleCards = [
+  const allRoleCards = [
     {
       role: 'viewer' as UserRoleType,
       title: 'Viewer',
@@ -65,7 +97,12 @@ const RoleConfirmation: React.FC<RoleConfirmationProps> = ({ onConfirm }) => {
       buttonText: 'Set Up as Advertiser',
       color: 'purple'
     }
-  ].filter(card => availableRoles.includes(card.role));
+  ];
+  
+  // In test mode, show all roles, otherwise filter based on available roles
+  const roleCards = isTestMode 
+    ? allRoleCards 
+    : allRoleCards.filter(card => availableRoles.includes(card.role));
 
   return (
     <div className="py-6">
@@ -139,6 +176,17 @@ const RoleConfirmation: React.FC<RoleConfirmationProps> = ({ onConfirm }) => {
         <p>
           You can change roles or manage multiple roles after completing onboarding.
         </p>
+        
+        {/* Debug info for test mode */}
+        {isTestMode && (
+          <div className="mt-4 p-3 bg-gray-100 dark:bg-gray-800 rounded-md text-xs text-left">
+            <p className="font-mono"><strong>Debug info:</strong></p>
+            <p className="font-mono">Is test mode: {isTestMode ? 'Yes' : 'No'}</p>
+            <p className="font-mono">Available roles: {availableRoles.join(', ') || 'None'}</p>
+            <p className="font-mono">Context roles: {roleContext?.availableRoles?.join(', ') || 'None'}</p>
+            <p className="font-mono">Showing roles: {roleCards.map(r => r.role).join(', ')}</p>
+          </div>
+        )}
       </div>
     </div>
   );
