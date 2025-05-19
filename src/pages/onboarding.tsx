@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { NextPage } from 'next';
-import { useAuth } from '@/context/AuthContext';
+import useAuth from '@/hooks/useAuth';
 import { OnboardingProvider } from '@/context/OnboardingContext';
 import OnboardingWizard from '@/components/onboarding/OnboardingWizard';
 import Layout from '@/components/Layout';
@@ -9,7 +9,11 @@ import Loading from '@/components/Loading';
 
 const OnboardingPage: NextPage = () => {
   const router = useRouter();
-  const { auth, loading, isLoggedIn } = useAuth();
+  const { auth } = useAuth();
+  
+  // Determine loading and login state
+  const loading = auth === null;
+  const isLoggedIn = auth?.isLoggedIn || false;
   
   // Redirect to login if not authenticated
   useEffect(() => {

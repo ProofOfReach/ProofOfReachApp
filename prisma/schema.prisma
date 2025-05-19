@@ -17,6 +17,12 @@ model User {
   nostrPubkey   String    @unique
   balance       Int       @default(0) // In satoshis
   
+  // Legacy role flags - keep these to maintain compatibility
+  isAdvertiser  Boolean   @default(false)
+  isPublisher   Boolean   @default(false)
+  isAdmin       Boolean   @default(false)
+  isStakeholder Boolean   @default(false)
+  
   // Role management fields
   currentRole   String    @default("viewer") // Current active role
   previousRole  String    @default("viewer") // Previous role before switching
