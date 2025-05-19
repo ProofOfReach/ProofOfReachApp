@@ -71,6 +71,7 @@ const ViewerOnboarding: React.FC<ViewerOnboardingProps> = ({ currentStep = 'role
             onClick={handleNext}
             className="px-4 py-2 bg-purple-600 text-white rounded hover:bg-purple-700"
             aria-label="Next"
+            data-testid="next-button"
           >
             Next <ChevronRight size={16} className="inline ml-1" />
           </button>
@@ -83,6 +84,7 @@ const ViewerOnboarding: React.FC<ViewerOnboardingProps> = ({ currentStep = 'role
             onClick={handleBack}
             className="px-4 py-2 border border-gray-300 rounded hover:bg-gray-50 dark:border-gray-600 dark:hover:bg-gray-800"
             aria-label="Back"
+            data-testid="back-button"
           >
             <ChevronLeft size={16} className="inline mr-1" /> Back
           </button>
@@ -90,6 +92,7 @@ const ViewerOnboarding: React.FC<ViewerOnboardingProps> = ({ currentStep = 'role
             onClick={handleNext}
             className="px-4 py-2 bg-purple-600 text-white rounded hover:bg-purple-700"
             aria-label="Complete"
+            data-testid="complete-button"
           >
             Complete
           </button>
@@ -102,6 +105,7 @@ const ViewerOnboarding: React.FC<ViewerOnboardingProps> = ({ currentStep = 'role
             onClick={handleBack}
             className="px-4 py-2 border border-gray-300 rounded hover:bg-gray-50 dark:border-gray-600 dark:hover:bg-gray-800"
             aria-label="Back"
+            data-testid="back-button"
           >
             <ChevronLeft size={16} className="inline mr-1" /> Back
           </button>
@@ -109,8 +113,9 @@ const ViewerOnboarding: React.FC<ViewerOnboardingProps> = ({ currentStep = 'role
             onClick={handleNext}
             className="px-4 py-2 bg-purple-600 text-white rounded hover:bg-purple-700"
             aria-label="Next"
+            data-testid="next-button"
           >
-            Next <ChevronRight size={16} className="inline ml-1" />
+            Continue <ChevronRight size={16} className="inline ml-1" />
           </button>
         </div>
       );
