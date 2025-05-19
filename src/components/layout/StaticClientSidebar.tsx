@@ -216,7 +216,7 @@ const StaticClientSidebar: React.FC = () => {
   
   // Get all roles except current for dropdown
   const getFilteredRoleOptions = () => {
-    return (['user', 'advertiser', 'publisher', 'admin', 'stakeholder'] as UserRole[])
+    return (['viewer', 'advertiser', 'publisher', 'admin', 'stakeholder'] as UserRole[])
       .filter(role => role !== currentRole);
   };
   

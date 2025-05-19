@@ -40,7 +40,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
     
     // Change the user's role
-    const userData = await enhancedRoleService.changeUserRole(userId, role as RoleType | 'user');
+    const userData = await enhancedRoleService.changeUserRole(userId, role as RoleType | 'viewer');
     
     // Return success with updated user data
     return res.status(200).json({ 

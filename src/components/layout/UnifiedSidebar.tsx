@@ -194,7 +194,7 @@ const UnifiedSidebar: React.FC<UnifiedSidebarProps> = ({ isTestMode = false }) =
   
   // Get filtered role options (all roles except current one)
   const getFilteredRoleOptions = () => {
-    return (['user', 'advertiser', 'publisher', 'admin', 'stakeholder'] as UserRole[])
+    return (['viewer', 'advertiser', 'publisher', 'admin', 'stakeholder'] as UserRole[])
       .filter(roleOption => roleOption !== currentRole);
   };
   

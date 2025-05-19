@@ -313,7 +313,7 @@ const DropdownSidebar: React.FC = () => {
     console.log('Current path:', router.pathname);
     
     // Force all roles to be available in this test component
-    const allRoles = ['user', 'advertiser', 'publisher', 'admin', 'stakeholder'] as UserRole[];
+    const allRoles = ['viewer', 'advertiser', 'publisher', 'admin', 'stakeholder'] as UserRole[];
     
     // Return all roles except the current one - use localRole for more reliable filtering
     return allRoles.filter(roleOption => roleOption !== localRole);

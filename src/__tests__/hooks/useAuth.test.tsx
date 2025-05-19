@@ -288,8 +288,8 @@ describe('useAuth Hook', () => {
         refreshedRoles = await result.current.refreshRoles();
       });
       
-      expect(refreshedRoles).toEqual(['user', 'advertiser']);
-      expect(result.current.auth?.availableRoles).toEqual(['user', 'advertiser']);
+      expect(refreshedRoles).toEqual(['viewer', 'advertiser']);
+      expect(result.current.auth?.availableRoles).toEqual(['viewer', 'advertiser']);
     });
     
     it('handles adding a role successfully', async () => {

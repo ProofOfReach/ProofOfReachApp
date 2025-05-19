@@ -191,7 +191,7 @@ const DirectRoleSwitcher: React.FC = () => {
     }
     
     // Fallback to all roles if no cache is available
-    return (['user', 'advertiser', 'publisher', 'admin', 'stakeholder'] as UserRole[])
+    return (['viewer', 'advertiser', 'publisher', 'admin', 'stakeholder'] as UserRole[])
       .filter(roleOption => roleOption !== currentRole);
   };
   
