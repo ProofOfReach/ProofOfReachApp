@@ -341,7 +341,7 @@ describe('useAuth Hook', () => {
       });
       
       (UserManager.isTestMode as jest.Mock).mockResolvedValue(false);
-      (UserManager.getUserRoles as jest.Mock).mockResolvedValue([.viewer. as UserRole, 'advertiser' as UserRole, 'publisher' as UserRole]);
+      (UserManager.getUserRoles as jest.Mock).mockResolvedValue(['viewer' as UserRole, 'advertiser' as UserRole, 'publisher' as UserRole]);
       
       const { result } = renderHook(() => useAuthProvider());
       

@@ -200,9 +200,7 @@ const SimplifiedDashboardLayout: React.FC<SimplifiedDashboardLayoutProps> = ({
       
       {/* Role transition overlay */}
       <RoleTransitionOverlay
-        isActive={transitionState.active}
-        fromRole={transitionState.fromRole}
-        toRole={transitionState.toRole}
+        isChangingRole={transitionState.active}
       />
     </div>
   );

@@ -204,7 +204,7 @@ export const useAuthProvider = () => {
         pubkey: '',
         isLoggedIn: false,
         isTestMode: false,
-        availableRoles: ['user'],
+        availableRoles: ['viewer'],
         profile: null,
       });
     } catch (error) {
