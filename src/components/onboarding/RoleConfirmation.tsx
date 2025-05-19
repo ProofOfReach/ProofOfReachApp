@@ -1,20 +1,29 @@
 import React from 'react';
-import { UserRole } from '@prisma/client';
-import { useRoleContext } from '@/context/RoleContext';
+import { UserRoleType } from '@/types/role';
+import { useRole } from '@/context/RoleContext';
 import { useOnboarding } from '@/context/OnboardingContext';
-import { Users, Radio, Megaphone } from 'react-feather';
+import { Users, Radio, Package } from 'react-feather';
 
-const RoleConfirmation: React.FC = () => {
-  const { availableRoles } = useRoleContext();
+type RoleConfirmationProps = {
+  onConfirm?: (role: UserRoleType) => void;
+};
+
+const RoleConfirmation: React.FC<RoleConfirmationProps> = ({ onConfirm }) => {
+  const { availableRoles } = useRole();
   const { setSelectedRole } = useOnboarding();
 
-  const handleRoleSelection = (role: UserRole) => {
+  const handleRoleSelection = (role: UserRoleType) => {
     setSelectedRole(role);
+    
+    // If onConfirm prop is provided (for tests), call it
+    if (onConfirm) {
+      onConfirm(role);
+    }
   };
 
   const roleCards = [
     {
-      role: 'viewer' as UserRole,
+      role: 'viewer' as UserRoleType,
       title: 'Viewer',
       description: 'Browse content and interact with ads across the Nostr network',
       icon: <Users className="h-8 w-8 text-blue-500" />,
@@ -28,10 +37,10 @@ const RoleConfirmation: React.FC = () => {
       color: 'blue'
     },
     {
-      role: 'publisher' as UserRole,
+      role: 'publisher' as UserRoleType,
       title: 'Publisher',
       description: 'Monetize your content with relevant ads and earn Bitcoin',
-      icon: <Megaphone className="h-8 w-8 text-green-500" />,
+      icon: <Package className="h-8 w-8 text-green-500" />,
       benefits: [
         'Earn Bitcoin for your content',
         'Control ad placement and categories',
@@ -42,7 +51,7 @@ const RoleConfirmation: React.FC = () => {
       color: 'green'
     },
     {
-      role: 'advertiser' as UserRole,
+      role: 'advertiser' as UserRoleType,
       title: 'Advertiser',
       description: 'Create campaigns and reach your target audience on Nostr',
       icon: <Radio className="h-8 w-8 text-purple-500" />,

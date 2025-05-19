@@ -1,8 +1,8 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { useRouter } from 'next/router';
-import { useAuth } from '@/context/AuthContext';
-import { UserRole } from '@prisma/client';
-import { useRoleContext } from '@/context/RoleContext';
+import useAuth from '@/hooks/useAuth';
+import { UserRoleType } from '@/types/role';
+import { useRole } from '@/context/RoleContext';
 import onboardingService from '@/lib/onboardingService';
 
 // Define the steps for each role's onboarding process
@@ -68,8 +68,8 @@ type OnboardingContextType = {
   isLastStep: boolean;
   goToNextStep: () => void;
   goToPreviousStep: () => void;
-  setSelectedRole: (role: UserRole) => void;
-  selectedRole: UserRole | null;
+  setSelectedRole: (role: UserRoleType) => void;
+  selectedRole: UserRoleType | null;
   completeOnboarding: () => Promise<void>;
   isLoading: boolean;
   skipOnboarding: () => Promise<void>;
@@ -83,15 +83,16 @@ type OnboardingProviderProps = {
 
 export const OnboardingProvider: React.FC<OnboardingProviderProps> = ({ children }) => {
   const { auth } = useAuth();
-  const { currentRole } = useRoleContext();
+  const roleContext = useRole();
+  const currentRole = roleContext?.currentRole;
   const router = useRouter();
   
   const [currentStep, setCurrentStep] = useState<OnboardingStep>('role-selection');
-  const [selectedRole, setSelectedRole] = useState<UserRole | null>(null);
+  const [selectedRole, setSelectedRole] = useState<UserRoleType | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   
   // Initialize steps based on the current role or selected role
-  const getStepsForRole = (role: UserRole | null): OnboardingStep[] => {
+  const getStepsForRole = (role: UserRoleType | null): OnboardingStep[] => {
     switch (role) {
       case 'viewer':
         return viewerSteps;
@@ -144,7 +145,7 @@ export const OnboardingProvider: React.FC<OnboardingProviderProps> = ({ children
   }, [selectedRole, currentRole, auth, router]);
   
   // Handle role selection
-  const handleRoleSelection = (role: UserRole) => {
+  const handleRoleSelection = (role: UserRoleType) => {
     setSelectedRole(role);
     const steps = getStepsForRole(role);
     setCurrentStep(steps[1]); // Skip to the first step after role selection
@@ -171,8 +172,9 @@ export const OnboardingProvider: React.FC<OnboardingProviderProps> = ({ children
     if (auth?.pubkey && selectedRole) {
       setIsLoading(true);
       try {
-        await onboardingService.markOnboardingComplete(auth.pubkey, selectedRole);
-        const redirectUrl = await onboardingService.getPostLoginRedirectUrl(auth.pubkey, selectedRole);
+        // Convert UserRoleType to Prisma UserRole string for service methods
+        await onboardingService.markOnboardingComplete(auth.pubkey, selectedRole as any);
+        const redirectUrl = await onboardingService.getPostLoginRedirectUrl(auth.pubkey, selectedRole as any);
         router.push(redirectUrl);
       } catch (error) {
         console.error('Error completing onboarding:', error);
@@ -189,8 +191,9 @@ export const OnboardingProvider: React.FC<OnboardingProviderProps> = ({ children
       try {
         const role = selectedRole || currentRole;
         if (role) {
-          await onboardingService.markOnboardingComplete(auth.pubkey, role);
-          const redirectUrl = await onboardingService.getPostLoginRedirectUrl(auth.pubkey, role);
+          // Convert UserRoleType to Prisma UserRole string for service methods
+          await onboardingService.markOnboardingComplete(auth.pubkey, role as any);
+          const redirectUrl = await onboardingService.getPostLoginRedirectUrl(auth.pubkey, role as any);
           router.push(redirectUrl);
         }
       } catch (error) {
