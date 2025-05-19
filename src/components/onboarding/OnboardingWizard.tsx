@@ -27,15 +27,15 @@ const OnboardingWizard: React.FC = () => {
     }
     
     if (selectedRole === 'viewer') {
-      return <ViewerOnboarding currentStep={currentStep} />;
+      return <ViewerOnboarding currentStep={currentStep} onComplete={completeOnboarding} />;
     }
     
     if (selectedRole === 'publisher') {
-      return <PublisherOnboarding currentStep={currentStep} />;
+      return <PublisherOnboarding currentStep={currentStep} onComplete={completeOnboarding} />;
     }
     
     if (selectedRole === 'advertiser') {
-      return <AdvertiserOnboarding currentStep={currentStep} />;
+      return <AdvertiserOnboarding currentStep={currentStep} onComplete={completeOnboarding} />;
     }
     
     // Fallback content
