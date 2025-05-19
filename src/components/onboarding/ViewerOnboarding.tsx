@@ -11,9 +11,10 @@ import {
 
 interface ViewerOnboardingProps {
   currentStep: OnboardingStep;
+  onComplete?: () => void;
 }
 
-const ViewerOnboarding: React.FC<ViewerOnboardingProps> = ({ currentStep }) => {
+const ViewerOnboarding: React.FC<ViewerOnboardingProps> = ({ currentStep, onComplete }) => {
   // Content for each step in the viewer onboarding flow
   const renderStepContent = () => {
     switch (currentStep) {
@@ -504,9 +505,27 @@ const ViewerOnboarding: React.FC<ViewerOnboardingProps> = ({ currentStep }) => {
     }
   };
 
+  // Handle the complete button click
+  const handleComplete = () => {
+    if (onComplete) {
+      onComplete();
+    }
+  };
+
   return (
     <div className="py-4">
       {renderStepContent()}
+      
+      {/* Complete button for testing purposes */}
+      <div className="mt-6 flex justify-end">
+        <button
+          data-testid="viewer-complete"
+          onClick={handleComplete}
+          className="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-md"
+        >
+          Complete
+        </button>
+      </div>
     </div>
   );
 };

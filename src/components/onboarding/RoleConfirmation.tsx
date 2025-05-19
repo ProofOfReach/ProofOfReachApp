@@ -116,6 +116,7 @@ const RoleConfirmation: React.FC<RoleConfirmationProps> = ({ onConfirm }) => {
               </div>
               
               <button 
+                data-testid={`select-${card.role}`}
                 className={`w-full py-2 px-4 rounded-md transition
                   ${card.color === 'blue' ? 
                     'bg-blue-500 hover:bg-blue-600 text-white' : 

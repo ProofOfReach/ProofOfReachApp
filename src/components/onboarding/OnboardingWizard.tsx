@@ -15,10 +15,24 @@ const OnboardingWizard: React.FC = () => {
     isFirstStep, 
     isLastStep,
     selectedRole,
+    setCurrentStep,
     completeOnboarding,
     isLoading,
     skipOnboarding
   } = useOnboarding();
+  
+  // Handle invalid role case
+  React.useEffect(() => {
+    // If we have an invalid role and not on role-selection,
+    // go back to role selection
+    if (currentStep !== 'role-selection' && 
+        selectedRole !== 'viewer' && 
+        selectedRole !== 'publisher' && 
+        selectedRole !== 'advertiser') {
+      // Using the function directly from context
+      setCurrentStep('role-selection');
+    }
+  }, [currentStep, selectedRole]);
   
   // Render the current step content based on step and selected role
   const renderStepContent = () => {
