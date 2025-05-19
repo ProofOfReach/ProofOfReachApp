@@ -173,8 +173,8 @@ export const OnboardingProvider: React.FC<OnboardingProviderProps> = ({ children
       setIsLoading(true);
       try {
         // Convert UserRoleType to Prisma UserRole string for service methods
-        await onboardingService.markOnboardingComplete(authState.pubkey, selectedRole as any);
-        const redirectUrl = await onboardingService.getPostLoginRedirectUrl(authState.pubkey, selectedRole as any);
+        await onboardingService.markOnboardingComplete(authState.pubkey, selectedRole);
+        const redirectUrl = await onboardingService.getPostLoginRedirectUrl(authState.pubkey, selectedRole);
         router.push(redirectUrl);
       } catch (error) {
         console.error('Error completing onboarding:', error);
