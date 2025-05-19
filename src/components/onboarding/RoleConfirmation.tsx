@@ -95,7 +95,7 @@ const RoleConfirmation: React.FC<RoleConfirmationProps> = ({ onConfirm }) => {
                 {card.icon}
               </div>
               <h3 className="text-xl font-semibold mb-2 text-center text-gray-900 dark:text-white" data-testid={`${card.role}-title`}>
-                {card.title}
+                <span data-testid={`${card.role}-label`}>{card.title}</span>
               </h3>
               <p className="text-gray-600 dark:text-gray-300 text-center mb-4">
                 {card.description}

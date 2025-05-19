@@ -1,22 +1,19 @@
+// Mock modules before imports
+jest.mock('@/context/OnboardingContext', () => ({
+  useOnboarding: jest.fn()
+}));
+
+jest.mock('@/context/AuthContext', () => ({
+  useAuth: jest.fn()
+}));
+
+// Now import modules
 import React from 'react';
 import { render, screen, fireEvent, act } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import OnboardingWizard from '@/components/onboarding/OnboardingWizard';
 import { useOnboarding } from '@/context/OnboardingContext';
-
-// Mock the onboarding context hook
-jest.mock('@/context/OnboardingContext', () => ({
-  useOnboarding: jest.fn()
-}));
-
-// Mock the auth context hook
-jest.mock('@/context/AuthContext', () => ({
-  useAuth: () => ({
-    auth: { pubkey: 'test-pubkey' },
-    isAuthenticated: true,
-    loading: false
-  })
-}));
+import { useAuth } from '@/context/AuthContext';
 
 // Define types for the components
 type OnboardingComponentProps = {
