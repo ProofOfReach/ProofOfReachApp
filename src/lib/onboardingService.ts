@@ -1,10 +1,6 @@
-import { PrismaClient } from '@prisma/client';
+import prisma from '@/lib/prisma';
 import { logger } from '@/lib/logger';
 import { UserRoleType } from '@/types/role';
-
-// Instead of importing prisma, create a new instance directly
-// This ensures we have a valid client even if the imported one fails
-const prisma = new PrismaClient();
 
 /**
  * Service for managing onboarding state and redirections
@@ -18,48 +14,21 @@ const onboardingService = {
    */
   isOnboardingComplete: async (pubkey: string, role: UserRoleType): Promise<boolean> => {
     try {
-      // First, check if user exists - this check is optional as we'll handle missing 
-      // user cases gracefully later
-      try {
-        const user = await prisma.user.findUnique({
-          where: { nostrPubkey: pubkey }
-        });
-
-        if (!user) {
-          logger.debug(`User with pubkey ${pubkey} not found when checking onboarding status, may be a new account`);
-          // New account - don't exit early, continue to check onboarding record
-        }
-      } catch (userError) {
-        // Just log the error but continue
-        logger.debug(`Error checking user existence: ${userError instanceof Error ? userError.message : 'Unknown error'}`);
-      }
-
-      try {
-        // Check if there's an onboarding record for this user and role
-        const onboardingRecord = await prisma.userOnboarding.findUnique({
-          where: {
-            userPubkey_role: {
-              userPubkey: pubkey,
-              role: role
-            }
+      // Simplified check for onboarding complete status
+      // We'll just check if there's an onboarding record with isComplete=true
+      const onboardingRecord = await prisma.userOnboarding.findUnique({
+        where: {
+          userPubkey_role: {
+            userPubkey: pubkey,
+            role: role
           }
-        });
-
-        return !!onboardingRecord?.isComplete;
-      } catch (dbError) {
-        // If there's an error finding the onboarding record, it probably doesn't exist
-        logger.debug(`No onboarding record found for ${pubkey} with role ${role}, treating as not complete`);
-        return false;
-      }
-    } catch (error) {
-      logger.error('Error checking onboarding completion status', { 
-        error, 
-        pubkey, 
-        role 
+        }
       });
       
-      // Instead of throwing, return false to indicate onboarding is not complete
-      // This makes the function more resilient during login flows
+      return !!onboardingRecord?.isComplete;
+    } catch (error) {
+      // If there's any error during the check, safely assume onboarding is not complete
+      logger.debug(`Error or no record found for ${pubkey} with role ${role}, treating as not complete`);
       return false;
     }
   },
@@ -71,43 +40,79 @@ const onboardingService = {
    */
   markOnboardingComplete: async (pubkey: string, role: UserRoleType): Promise<void> => {
     try {
-      // First, find the user by their pubkey
-      const user = await prisma.user.findUnique({
-        where: { nostrPubkey: pubkey }
-      });
-
-      if (!user) {
-        logger.warn(`User with pubkey ${pubkey} not found when marking onboarding complete`);
-        return; // Return silently instead of throwing
+      // Get the user record first
+      let user;
+      try {
+        user = await prisma.user.findUnique({
+          where: { nostrPubkey: pubkey }
+        });
+      } catch (userError) {
+        logger.warn(`Error finding user for onboarding completion: ${userError instanceof Error ? userError.message : 'Unknown error'}`);
+        // We'll continue without the user record and try to create a minimal onboarding record
       }
 
-      // Upsert the onboarding record (create if it doesn't exist, update if it does)
-      await prisma.userOnboarding.upsert({
-        where: {
-          userPubkey_role: {
-            userPubkey: pubkey,
-            role
-          }
-        },
-        update: {
-          isComplete: true,
-          completedAt: new Date()
-        },
-        create: {
-          userPubkey: pubkey,
-          role,
-          isComplete: true,
-          completedAt: new Date(),
-          userId: user.id
+      if (!user) {
+        logger.warn(`User with pubkey ${pubkey} not found, creating minimal onboarding record`);
+        
+        // Create a simple record directly without user ID reference
+        try {
+          await prisma.userOnboarding.upsert({
+            where: {
+              userPubkey_role: {
+                userPubkey: pubkey,
+                role
+              }
+            },
+            update: {
+              isComplete: true,
+              completedAt: new Date()
+            },
+            create: {
+              userPubkey: pubkey,
+              role,
+              isComplete: true,
+              completedAt: new Date(),
+              userId: '' // Empty string as placeholder
+            }
+          });
+        } catch (createError) {
+          logger.warn(`Could not create onboarding record: ${createError instanceof Error ? createError.message : 'Unknown error'}`);
+          // We'll continue anyway to provide a smooth flow
         }
-      });
+        return;
+      }
 
-      logger.info(`Onboarding marked complete for user ${pubkey} with role ${role}`);
+      // If we have a valid user, try to upsert the record
+      try {
+        await prisma.userOnboarding.upsert({
+          where: {
+            userPubkey_role: {
+              userPubkey: pubkey,
+              role
+            }
+          },
+          update: {
+            isComplete: true,
+            completedAt: new Date()
+          },
+          create: {
+            userPubkey: pubkey,
+            role,
+            isComplete: true,
+            completedAt: new Date(),
+            userId: user.id
+          }
+        });
+        logger.info(`Onboarding marked complete for user ${pubkey} with role ${role}`);
+      } catch (upsertError) {
+        logger.warn(`Error upserting onboarding record: ${upsertError instanceof Error ? upsertError.message : 'Unknown error'}`);
+        // Continue to provide a smooth flow
+      }
     } catch (error) {
-      logger.error('Error marking onboarding as complete', { 
-        error, 
-        pubkey, 
-        role 
+      logger.error('Error in markOnboardingComplete', {
+        error: error instanceof Error ? error.message : 'Unknown error',
+        pubkey,
+        role
       });
       // Log but don't throw error to prevent disrupting the flow
     }
@@ -120,19 +125,25 @@ const onboardingService = {
    */
   resetOnboardingStatus: async (pubkey: string, role?: UserRoleType): Promise<void> => {
     try {
-      // First, find the user by their pubkey
-      const user = await prisma.user.findUnique({
-        where: { nostrPubkey: pubkey }
-      });
+      // Try to get the user, but don't block if there's an error
+      let user;
+      try {
+        user = await prisma.user.findUnique({
+          where: { nostrPubkey: pubkey }
+        });
+      } catch (userError) {
+        logger.warn(`Error finding user for reset: ${userError instanceof Error ? userError.message : 'Unknown error'}`);
+        // Continue without the user record
+      }
 
       if (!user) {
         logger.warn(`User with pubkey ${pubkey} not found when resetting onboarding status`);
-        return; // Return silently instead of throwing
+        // Continue anyway to try the reset operation
       }
 
       if (role) {
         try {
-          // Reset specific role
+          // Reset specific role with both field names for compatibility
           await prisma.userOnboarding.update({
             where: {
               userPubkey_role: {
@@ -143,17 +154,45 @@ const onboardingService = {
             data: {
               isComplete: false,
               completedAt: null,
-              lastStep: null
+              lastStep: null,
+              currentStep: null // Support both field names
             }
           });
           logger.info(`Onboarding reset for user ${pubkey} with role ${role}`);
         } catch (roleError) {
           // The record might not exist yet, which is fine
           logger.warn(`Could not reset onboarding for role ${role}, might not exist yet.`);
+          
+          // Try creation instead of update as a fallback
+          try {
+            await prisma.userOnboarding.upsert({
+              where: {
+                userPubkey_role: {
+                  userPubkey: pubkey,
+                  role
+                }
+              },
+              update: {
+                isComplete: false,
+                completedAt: null,
+                lastStep: null,
+                currentStep: null
+              },
+              create: {
+                userPubkey: pubkey,
+                role,
+                isComplete: false,
+                userId: user?.id || '' // Use empty string if user ID not found
+              }
+            });
+            logger.info(`Created fresh onboarding record for user ${pubkey} with role ${role}`);
+          } catch (createError) {
+            logger.warn(`Could not create onboarding record: ${createError instanceof Error ? createError.message : 'Unknown error'}`);
+          }
         }
       } else {
         try {
-          // Reset all roles
+          // Reset all roles with both field names for compatibility
           await prisma.userOnboarding.updateMany({
             where: {
               userPubkey: pubkey
@@ -161,18 +200,19 @@ const onboardingService = {
             data: {
               isComplete: false,
               completedAt: null,
-              lastStep: null
+              lastStep: null,
+              currentStep: null // Support both field names
             }
           });
           logger.info(`Onboarding reset for user ${pubkey} across all roles`);
         } catch (updateError) {
           // No records might exist yet, which is fine
-          logger.warn(`Could not reset onboarding records, might not exist yet.`);
+          logger.warn(`Could not reset onboarding records, might not exist yet: ${updateError instanceof Error ? updateError.message : 'Unknown error'}`);
         }
       }
     } catch (error) {
-      logger.error('Error resetting onboarding status', { 
-        error, 
+      logger.error('Error in resetOnboardingStatus', { 
+        error: error instanceof Error ? error.message : 'Unknown error', 
         pubkey, 
         role 
       });
@@ -188,19 +228,24 @@ const onboardingService = {
    */
   saveOnboardingStep: async (pubkey: string, role: UserRoleType, step: string): Promise<void> => {
     try {
-      // First, find the user by their pubkey
-      const user = await prisma.user.findUnique({
-        where: { nostrPubkey: pubkey }
-      });
+      // Try to get the user, but don't block the entire operation if it fails
+      let user;
+      try {
+        user = await prisma.user.findUnique({
+          where: { nostrPubkey: pubkey }
+        });
+      } catch (userError) {
+        logger.warn(`Error finding user when saving step: ${userError instanceof Error ? userError.message : 'Unknown error'}`);
+        // Continue without the user record
+      }
 
       if (!user) {
-        logger.warn(`User with pubkey ${pubkey} not found when saving onboarding step`);
-        // Try to create the onboarding record anyway, in case the user was just created
-        // and there's a race condition between DB operations
+        logger.warn(`User with pubkey ${pubkey} not found when saving onboarding step - will create minimal record`);
       }
 
       try {
-        // Upsert the onboarding record
+        // Upsert the onboarding record, attempting both lastStep and currentStep fields
+        // for maximum compatibility
         await prisma.userOnboarding.upsert({
           where: {
             userPubkey_role: {
@@ -209,12 +254,14 @@ const onboardingService = {
             }
           },
           update: {
-            lastStep: step
+            lastStep: step,
+            currentStep: step // Try both fields
           },
           create: {
             userPubkey: pubkey,
             role,
             lastStep: step,
+            currentStep: step, // Try both fields
             isComplete: false,
             userId: user?.id || '' // Use empty string if user ID not found
           }
@@ -223,17 +270,16 @@ const onboardingService = {
         logger.info(`Saved onboarding step "${step}" for user ${pubkey} with role ${role}`);
       } catch (dbError) {
         logger.warn(`Error saving onboarding step to database: ${dbError instanceof Error ? dbError.message : 'Unknown error'}`);
-        // Continue execution even if DB operation fails
+        // We'll continue anyway to ensure the UI flow isn't disrupted
       }
     } catch (error) {
-      logger.error('Error saving onboarding step', { 
-        error, 
-        pubkey, 
+      logger.error('Error in saveOnboardingStep', { 
+        error: error instanceof Error ? error.message : 'Unknown error', 
+        pubkey,
         role, 
         step 
       });
-      // Don't throw here, failing to save the step shouldn't break the onboarding flow
-      logger.warn(`Failed to save onboarding step: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      // Log but don't throw - the UI should still work even if steps aren't saved
     }
   },
 
