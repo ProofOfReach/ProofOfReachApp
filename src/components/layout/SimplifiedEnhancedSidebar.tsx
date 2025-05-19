@@ -23,7 +23,7 @@ const SimplifiedEnhancedSidebar: React.FC = () => {
   const [roleDropdownOpen, setRoleDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   // Default role used for demo purposes
-  const [currentRole, setCurrentRole] = useState<UserRole>('user');
+  const [currentRole, setCurrentRole] = useState<UserRole>('viewer');
   
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -58,7 +58,7 @@ const SimplifiedEnhancedSidebar: React.FC = () => {
   
   // Get filtered role options (all roles except current one)
   const getFilteredRoleOptions = (): UserRole[] => {
-    return (['user', 'advertiser', 'publisher', 'admin', 'stakeholder'] as UserRole[])
+    return (['viewer', 'advertiser', 'publisher', 'admin', 'stakeholder'] as UserRole[])
       .filter(roleOption => roleOption !== currentRole);
   };
   

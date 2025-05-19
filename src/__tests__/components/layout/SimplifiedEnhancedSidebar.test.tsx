@@ -98,7 +98,7 @@ describe('SimplifiedEnhancedSidebar Component', () => {
     render(<SimplifiedEnhancedSidebar />);
     
     // Open dropdown
-    fireEvent.click(screen.getByTestId('role-selector-user'));
+    fireEvent.click(screen.getByTestId('role-selector-viewer'));
     
     // Click on advertiser option
     fireEvent.click(screen.getByTestId('role-option-advertiser'));
