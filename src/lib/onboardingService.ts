@@ -24,17 +24,23 @@ const onboardingService = {
         return false;
       }
 
-      // Check if there's an onboarding record for this user and role
-      const onboardingRecord = await prisma.userOnboarding.findUnique({
-        where: {
-          userPubkey_role: {
-            userPubkey: pubkey,
-            role
+      try {
+        // Check if there's an onboarding record for this user and role
+        const onboardingRecord = await prisma.userOnboarding.findUnique({
+          where: {
+            userPubkey_role: {
+              userPubkey: pubkey,
+              role
+            }
           }
-        }
-      });
+        });
 
-      return onboardingRecord?.isComplete || false;
+        return onboardingRecord?.isComplete || false;
+      } catch (dbError) {
+        // If there's an error finding the onboarding record, it probably doesn't exist
+        logger.warn(`Error finding onboarding record for ${pubkey} with role ${role}`, { dbError });
+        return false;
+      }
     } catch (error) {
       logger.error('Error checking onboarding completion status', { 
         error, 
