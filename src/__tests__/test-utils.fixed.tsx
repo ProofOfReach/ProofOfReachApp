@@ -28,7 +28,7 @@ jest.mock('../context/TestModeContext', () => {
 jest.mock('../hooks/useAuthRefactored', () => ({
   useAuthRefactored: () => ({
     authState: {
-      roles: ['user', 'advertiser'] as UserRoleType[],
+      roles: ['viewer', 'advertiser'] as UserRoleType[],
       isAuthenticated: true,
     },
     refreshRoles: jest.fn(),
@@ -42,13 +42,13 @@ jest.mock('../hooks/useAuthRefactored', () => ({
 
 // Mock the NewRoleContextRefactored
 jest.mock('../context/NewRoleContextRefactored', () => {
-  const ALL_ROLES = ['user', 'advertiser', 'publisher', 'admin', 'stakeholder'] as const;
+  const ALL_ROLES = ['viewer', 'advertiser', 'publisher', 'admin', 'stakeholder'] as const;
   
   // Create a mock context with a proper Provider component
   const mockContext = React.createContext({
     role: 'advertiser',
     setRole: jest.fn(),
-    availableRoles: ['user', 'advertiser', 'publisher'],
+    availableRoles: ['viewer', 'advertiser', 'publisher'],
     isRoleAvailable: jest.fn().mockReturnValue(true),
     hasPermission: jest.fn().mockReturnValue(true),
     checkPermission: jest.fn().mockReturnValue(true),
@@ -80,7 +80,7 @@ jest.mock('../context/NewRoleContextRefactored', () => {
     const contextValue = {
       role,
       setRole: mockSetRole,
-      availableRoles: ['user', 'advertiser', 'publisher', 'admin', 'stakeholder'],
+      availableRoles: ['viewer', 'advertiser', 'publisher', 'admin', 'stakeholder'],
       isRoleAvailable: jest.fn().mockReturnValue(true),
       hasPermission: jest.fn().mockReturnValue(true),
       checkPermission: jest.fn().mockReturnValue(true),

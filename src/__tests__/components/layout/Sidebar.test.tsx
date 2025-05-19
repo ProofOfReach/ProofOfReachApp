@@ -324,7 +324,7 @@ describe('Sidebar Component', () => {
         pubkey: 'test-pubkey',
         isLoggedIn: true,
         isTestMode: false,
-        availableRoles: ['user'],
+        availableRoles: ['viewer'],
         profile: null
       },
       login: jest.fn(),
@@ -346,14 +346,14 @@ describe('Sidebar Component', () => {
         isLoggedIn: true,
         pubkey: 'npub_test123456789',
         isTestMode: false,
-        availableRoles: ['user']
+        availableRoles: ['viewer']
       }),
       logout: jest.fn().mockResolvedValue(undefined),
       refreshRoles: jest.fn().mockResolvedValue({
         isLoggedIn: true,
         pubkey: 'npub_test123456789',
         isTestMode: false,
-        availableRoles: ['user']
+        availableRoles: ['viewer']
       }),
       addRole: jest.fn().mockResolvedValue(true),
       removeRole: jest.fn().mockResolvedValue(true),
@@ -362,7 +362,7 @@ describe('Sidebar Component', () => {
     });
     
     render(
-      <AllProvidersWrapper initialRole="user">
+      <AllProvidersWrapper initialRole="viewer">
         <Sidebar />
       </AllProvidersWrapper>
     );

@@ -2,7 +2,7 @@ import { ReactNode } from 'react';
 import { NavItem } from '@/components/ui/nav-group';
 
 // Define role type for type safety
-export type UserRole = 'user' | 'advertiser' | 'publisher' | 'admin' | 'stakeholder';
+export type UserRole = 'viewer' | 'advertiser' | 'publisher' | 'admin' | 'stakeholder';
 
 // Define icon names
 export type IconName = 
@@ -60,7 +60,7 @@ export function buildNavigation(role: UserRole, currentPath: string): NavSection
 
   // Role-specific main navigation items
   const mainItems: Record<UserRole, NavItemWithIconName[]> = {
-    user: [
+    viewer: [
       {
         label: 'Nostr Feed',
         href: '/nostr-feed',
@@ -216,11 +216,11 @@ export function getRoleIconAndColor(role: UserRole): {
     textColor: string;
     label: string;
   }> = {
-    user: {
+    viewer: {
       iconName: 'user',
       bgColor: 'bg-blue-100 dark:bg-blue-900/20',
       textColor: 'text-blue-700 dark:text-blue-300',
-      label: 'User'
+      label: 'Viewer'
     },
     advertiser: {
       iconName: 'megaphone',

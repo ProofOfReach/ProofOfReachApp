@@ -63,7 +63,7 @@ const createAuthProvider = (authState: AuthState | null, children: React.ReactNo
       auth: authState,
       login: jest.fn().mockResolvedValue(true),
       logout: jest.fn().mockResolvedValue(undefined),
-      refreshRoles: jest.fn().mockResolvedValue(['user', 'advertiser'] as UserRole[]),
+      refreshRoles: jest.fn().mockResolvedValue(['viewer', 'advertiser'] as UserRole[]),
       addRole: jest.fn().mockResolvedValue(true),
       removeRole: jest.fn().mockResolvedValue(true),
     }}>
@@ -79,7 +79,7 @@ describe('CreateAdPage', () => {
     pubkey: 'test-pubkey',
     isLoggedIn: true,
     isTestMode: false,
-    availableRoles: ['user', 'advertiser'],
+    availableRoles: ['viewer', 'advertiser'],
     profile: {
       name: 'Test User',
       displayName: 'Test',

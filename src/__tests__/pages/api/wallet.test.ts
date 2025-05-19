@@ -34,7 +34,7 @@ jest.mock('../../../utils/enhancedAuthMiddleware', () => ({
         userId: 'user123',
         isAuthenticated: true,
         isTestMode: false,
-        roles: ['user']
+        roles: ['viewer']
       };
       return await handler(req, res, user);
     };

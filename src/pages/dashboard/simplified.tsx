@@ -24,7 +24,7 @@ const SimplifiedDashboardPage: NextPageWithLayout = () => {
       localStorage.setItem('force_all_roles_available', 'true');
       
       // Ensure all roles are available
-      localStorage.setItem('test_user_role', 'true');
+      localStorage.setItem('test_viewer_role', 'true');
       localStorage.setItem('test_advertiser_role', 'true');
       localStorage.setItem('test_publisher_role', 'true');
       localStorage.setItem('test_admin_role', 'true');
@@ -73,7 +73,7 @@ const SimplifiedDashboardPage: NextPageWithLayout = () => {
   // Helper function to get color for a role
   const getRoleColor = (roleType: string) => {
     switch (roleType) {
-      case 'user': return 'blue';
+      case 'viewer': return 'blue';
       case 'advertiser': return 'orange';
       case 'publisher': return 'green';
       case 'admin': return 'purple';
@@ -125,7 +125,7 @@ const SimplifiedDashboardPage: NextPageWithLayout = () => {
           
           {/* Context Role */}
           <div className={`p-4 rounded-lg border ${
-            role === 'user' ? 'bg-blue-50 dark:bg-blue-900/20 border-blue-100 dark:border-blue-800' :
+            role === 'viewer' ? 'bg-blue-50 dark:bg-blue-900/20 border-blue-100 dark:border-blue-800' :
             role === 'advertiser' ? 'bg-orange-50 dark:bg-orange-900/20 border-orange-100 dark:border-orange-800' :
             role === 'publisher' ? 'bg-green-50 dark:bg-green-900/20 border-green-100 dark:border-green-800' :
             role === 'admin' ? 'bg-purple-50 dark:bg-purple-900/20 border-purple-100 dark:border-purple-800' :
@@ -134,7 +134,7 @@ const SimplifiedDashboardPage: NextPageWithLayout = () => {
           }`}>
             <p className="text-sm font-semibold text-gray-700 dark:text-gray-300">Context Role</p>
             <p className={`text-xl font-bold ${
-              role === 'user' ? 'text-blue-600 dark:text-blue-300' :
+              role === 'viewer' ? 'text-blue-600 dark:text-blue-300' :
               role === 'advertiser' ? 'text-orange-600 dark:text-orange-300' :
               role === 'publisher' ? 'text-green-600 dark:text-green-300' :
               role === 'admin' ? 'text-purple-600 dark:text-purple-300' :

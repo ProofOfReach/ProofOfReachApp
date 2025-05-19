@@ -181,7 +181,7 @@ jest.mock('../../../context/RoleContext', () => {
     useRole: jest.fn().mockReturnValue({
       role: 'advertiser',
       setRole: jest.fn(),
-      availableRoles: ['user', 'advertiser', 'publisher'],
+      availableRoles: ['viewer', 'advertiser', 'publisher'],
       isRoleAvailable: jest.fn().mockReturnValue(true),
     }),
     RoleProvider: ({ children }) => React.createElement(React.Fragment, null, children)

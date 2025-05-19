@@ -57,7 +57,7 @@ const UserManagementPage: NextPageWithLayout = () => {
               id: '4', 
               npub: 'npub4abcdef1234567890abcdef1234567890abcdef1234567890abcdef123456', 
               name: 'David Brown', 
-              role: 'user', 
+              role: 'viewer', 
               status: 'inactive', 
               lastActive: '2025-04-30T11:33:12Z',
               joinDate: '2025-03-22T00:00:00Z'
@@ -142,7 +142,7 @@ const UserManagementPage: NextPageWithLayout = () => {
                 <option value="admin">Admin</option>
                 <option value="advertiser">Advertiser</option>
                 <option value="publisher">Publisher</option>
-                <option value="user">User</option>
+                <option value="viewer">Viewer</option>
                 <option value="stakeholder">Stakeholder</option>
               </select>
               <Filter className="absolute left-3 top-2.5 h-5 w-5 text-gray-400" />
@@ -202,7 +202,7 @@ const UserManagementPage: NextPageWithLayout = () => {
                           ${user.role === 'admin' ? 'bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-300' : ''}
                           ${user.role === 'advertiser' ? 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300' : ''}
                           ${user.role === 'publisher' ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300' : ''}
-                          ${user.role === 'user' ? 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300' : ''}
+                          ${user.role === 'viewer' ? 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300' : ''}
                           ${user.role === 'stakeholder' ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-300' : ''}
                         `}>
                           {user.role.charAt(0).toUpperCase() + user.role.slice(1)}

@@ -10,7 +10,7 @@ import React from 'react';
 
 // Mock the UserManager model
 jest.mock('../../models/user', () => ({
-  getUserRoles: jest.fn().mockResolvedValue(['user' as UserRole]),
+  getUserRoles: jest.fn().mockResolvedValue(['viewer' as UserRole]),
   enableAllRolesForTestUser: jest.fn().mockResolvedValue(true),
   getUserProfile: jest.fn().mockResolvedValue(null),
   isTestMode: jest.fn().mockResolvedValue(false),

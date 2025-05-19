@@ -76,9 +76,9 @@ jest.mock('../../../context/TestModeContext', () => {
 jest.mock('../../../context/RoleContext', () => {
   return {
     useRole: jest.fn().mockReturnValue({
-      role: 'user',
+      role: 'viewer',
       setRole: jest.fn(),
-      availableRoles: ['user', 'advertiser', 'publisher'],
+      availableRoles: ['viewer', 'advertiser', 'publisher'],
       isRoleAvailable: jest.fn().mockReturnValue(true),
     }),
     RoleProvider: ({ children }: { children: React.ReactNode }) => <>{children}</>
@@ -122,7 +122,7 @@ describe('Dashboard Index Component', () => {
         isLoggedIn: true,
         user: {
           id: 'test-user-id',
-          role: 'user',
+          role: 'viewer',
           pubkey: 'test-pubkey',
           name: 'Test User',
           email: 'test@example.com'

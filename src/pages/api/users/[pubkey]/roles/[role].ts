@@ -13,14 +13,14 @@ export default function handler(
     return res.status(400).json({ error: 'Invalid or missing pubkey parameter' });
   }
   
-  if (!role || typeof role !== 'string' || !['user', 'advertiser', 'publisher'].includes(role)) {
+  if (!role || typeof role !== 'string' || !['viewer', 'advertiser', 'publisher'].includes(role)) {
     return res.status(400).json({ error: 'Invalid or missing role parameter' });
   }
   
   if (req.method === 'DELETE') {
-    // Cannot remove the 'user' role
-    if (role === 'user') {
-      return res.status(400).json({ error: 'Cannot remove the user role' });
+    // Cannot remove the 'viewer' role
+    if (role === 'viewer') {
+      return res.status(400).json({ error: 'Cannot remove the viewer role' });
     }
     
     // In a real implementation, this would update the database

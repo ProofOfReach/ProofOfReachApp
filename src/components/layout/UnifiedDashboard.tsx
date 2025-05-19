@@ -6,7 +6,7 @@ import Sidebar from './Sidebar';
 import RoleTransition from '../loading/RoleTransition';
 
 // Lazy-loaded dashboard content components
-const UserDashboard = React.lazy(() => import('../dashboards/UserDashboard'));
+const ViewerDashboard = React.lazy(() => import('../dashboards/UserDashboard'));
 const AdvertiserDashboard = React.lazy(() => import('../dashboards/AdvertiserDashboard'));
 const PublisherDashboard = React.lazy(() => import('../dashboards/PublisherDashboard'));
 const AdminDashboard = React.lazy(() => import('../dashboards/AdminDashboard'));
@@ -32,7 +32,7 @@ const UnifiedDashboard: React.FC<UnifiedDashboardProps> = ({ initialRole }) => {
   
   // Role titles for the page title
   const roleTitles = {
-    user: 'Viewer Dashboard',
+    viewer: 'Viewer Dashboard',
     advertiser: 'Advertiser Dashboard',
     publisher: 'Publisher Dashboard',
     admin: 'Admin Dashboard',
@@ -70,7 +70,7 @@ const UnifiedDashboard: React.FC<UnifiedDashboardProps> = ({ initialRole }) => {
     // We use React.Suspense to handle the lazy-loaded components
     return (
       <React.Suspense fallback={<DashboardLoading />}>
-        {role === 'user' && <UserDashboard page={pagePath} />}
+        {role === 'viewer' && <ViewerDashboard page={pagePath} />}
         {role === 'advertiser' && <AdvertiserDashboard page={pagePath} />}
         {role === 'publisher' && <PublisherDashboard page={pagePath} />}
         {role === 'admin' && <AdminDashboard page={pagePath} />}

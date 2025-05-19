@@ -7,7 +7,7 @@ const mockAuthState: AuthState = {
   pubkey: 'test-pubkey-123456789',
   isTestMode: true,
   isLoggedIn: true,
-  availableRoles: ['user', 'advertiser', 'publisher'] as UserRoleType[],
+  availableRoles: ['viewer', 'advertiser', 'publisher'] as UserRoleType[],
   profile: {
     name: 'Test User',
     displayName: 'Test',
@@ -19,7 +19,7 @@ const mockNostrAuth = {
   auth: mockAuthState,
   login: jest.fn().mockResolvedValue(true),
   logout: jest.fn().mockResolvedValue(undefined),
-  refreshRoles: jest.fn().mockResolvedValue(['user', 'advertiser', 'publisher'] as UserRoleType[]),
+  refreshRoles: jest.fn().mockResolvedValue(['viewer', 'advertiser', 'publisher'] as UserRoleType[]),
   addRole: jest.fn().mockResolvedValue(true),
   removeRole: jest.fn().mockResolvedValue(true),
 };

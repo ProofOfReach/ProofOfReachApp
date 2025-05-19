@@ -61,7 +61,7 @@ jest.mock('../../hooks/useAuthRefactored', () => {
         isLoggedIn: true,
         pubkey: 'test-pubkey',
         isTestMode: true,
-        availableRoles: ['user', 'advertiser', 'publisher']
+        availableRoles: ['viewer', 'advertiser', 'publisher']
       }),
       hasRole: jest.fn().mockImplementation((role) => true),
       addRole: jest.fn().mockResolvedValue(true),
@@ -71,7 +71,7 @@ jest.mock('../../hooks/useAuthRefactored', () => {
           isLoggedIn: true,
           pubkey: 'test-pubkey',
           isTestMode: true,
-          availableRoles: ['user', 'advertiser', 'publisher'],
+          availableRoles: ['viewer', 'advertiser', 'publisher'],
           currentRole: role
         });
       }),
@@ -83,7 +83,7 @@ jest.mock('../../hooks/useAuthRefactored', () => {
           isLoggedIn: true,
           pubkey: 'test-pubkey',
           isTestMode: true,
-          availableRoles: ['user', 'advertiser', 'publisher'],
+          availableRoles: ['viewer', 'advertiser', 'publisher'],
           currentRole: role
         });
       }),

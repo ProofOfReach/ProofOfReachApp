@@ -43,12 +43,12 @@ const ViewerHomeContent: React.FC = () => {
               </a>
             </li>
             <li>
-              <a href="/dashboard/user/settings" className="text-blue-500 dark:text-blue-400 hover:underline">
+              <a href="/dashboard/viewer/settings" className="text-blue-500 dark:text-blue-400 hover:underline">
                 Account Settings
               </a>
             </li>
             <li>
-              <a href="/dashboard/user/wallet" className="text-blue-500 dark:text-blue-400 hover:underline">
+              <a href="/dashboard/viewer/wallet" className="text-blue-500 dark:text-blue-400 hover:underline">
                 Manage Wallet
               </a>
             </li>

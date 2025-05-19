@@ -2,7 +2,7 @@ import { UserRoleType } from '../../types/role';
 
 const useAuthRefactoredMock = jest.fn().mockReturnValue({
   authState: {
-    roles: ['user', 'advertiser'] as UserRoleType[],
+    roles: ['viewer', 'advertiser'] as UserRoleType[],
     isAuthenticated: true,
   },
   refreshRoles: jest.fn(),
