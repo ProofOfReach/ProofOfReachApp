@@ -12,6 +12,7 @@ import { ErrorProvider } from '@/context/ErrorContext';
 import ErrorInitializer from '@/components/errors/ErrorInitializer';
 import ErrorBoundary from '@/components/ErrorBoundary';
 import { TestModeProvider } from '@/context/TestModeContext';
+import { AuthProviderRefactored } from '@/providers/AuthProviderRefactored';
 import '@/styles/globals.css';
 
 // Define types for pages with layouts
@@ -36,11 +37,14 @@ export default function MyApp({ Component, pageProps }: AppPropsWithLayout) {
         {/* Initialize error handling system */}
         <ErrorInitializer />
         
-        {/* Wrap with TestModeProvider for app-wide availability */}
-        <TestModeProvider>
-          {/* Apply page-specific layout */}
-          {getLayout(<Component {...pageProps} />)}
-        </TestModeProvider>
+        {/* Wrap with Auth provider for access to authentication */}
+        <AuthProviderRefactored>
+          {/* Wrap with TestModeProvider for app-wide availability */}
+          <TestModeProvider>
+            {/* Apply page-specific layout */}
+            {getLayout(<Component {...pageProps} />)}
+          </TestModeProvider>
+        </AuthProviderRefactored>
       </ErrorProvider>
     </ErrorBoundary>
   );
