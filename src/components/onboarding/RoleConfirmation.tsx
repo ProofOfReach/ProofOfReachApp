@@ -120,7 +120,7 @@ const RoleConfirmation: React.FC<RoleConfirmationProps> = ({ onConfirm }) => {
           <div 
             key={card.role}
             data-testid="role-card"
-            className={`border rounded-lg p-6 cursor-pointer transition hover:shadow-md
+            className={`border rounded-lg p-6 cursor-pointer transition hover:shadow-md flex flex-col h-full
               ${card.color === 'blue' ? 'hover:border-blue-500' : 
                 card.color === 'green' ? 'hover:border-green-500' : 
                 'hover:border-purple-500'
@@ -128,45 +128,50 @@ const RoleConfirmation: React.FC<RoleConfirmationProps> = ({ onConfirm }) => {
             `}
             onClick={() => handleRoleSelection(card.role)}
           >
-            <div className="flex flex-col items-center">
-              <div className="mb-4">
-                {card.icon}
+            <div className="flex flex-col h-full">
+              <div className="flex flex-col items-center">
+                <div className="mb-4">
+                  {card.icon}
+                </div>
+                <h3 className="text-xl font-semibold mb-2 text-center text-gray-900 dark:text-white" data-testid={`${card.role}-title`}>
+                  <span data-testid={`${card.role}-label`}>{card.title}</span>
+                </h3>
+                <p className="text-gray-600 dark:text-gray-300 text-center mb-4">
+                  {card.description}
+                </p>
+                
+                <div className="w-full mb-5 border-t border-gray-200 dark:border-gray-700 pt-4">
+                  <h4 className="text-sm font-medium mb-2 text-gray-700 dark:text-gray-300">
+                    Benefits:
+                  </h4>
+                  <ul className="space-y-2">
+                    {card.benefits.map((benefit, index) => (
+                      <li key={index} className="flex items-start text-sm">
+                        <span className={`mr-2 mt-0.5 text-${card.color === 'blue' ? 'blue' : card.color === 'green' ? 'green' : 'purple'}-500`}>•</span>
+                        <span className="text-gray-600 dark:text-gray-300">{benefit}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
               </div>
-              <h3 className="text-xl font-semibold mb-2 text-center text-gray-900 dark:text-white" data-testid={`${card.role}-title`}>
-                <span data-testid={`${card.role}-label`}>{card.title}</span>
-              </h3>
-              <p className="text-gray-600 dark:text-gray-300 text-center mb-4">
-                {card.description}
-              </p>
-              
-              <div className="w-full mb-5 border-t border-gray-200 dark:border-gray-700 pt-4">
-                <h4 className="text-sm font-medium mb-2 text-gray-700 dark:text-gray-300">
-                  Benefits:
-                </h4>
-                <ul className="space-y-2">
-                  {card.benefits.map((benefit, index) => (
-                    <li key={index} className="flex items-start text-sm">
-                      <span className={`mr-2 mt-0.5 text-${card.color === 'blue' ? 'blue' : card.color === 'green' ? 'green' : 'purple'}-500`}>•</span>
-                      <span className="text-gray-600 dark:text-gray-300">{benefit}</span>
-                    </li>
-                  ))}
-                </ul>
+                
+              {/* Button is always at the bottom with flex */}
+              <div className="mt-auto pt-4">
+                <button 
+                  data-testid={`select-${card.role}`}
+                  onClick={() => handleRoleSelection(card.role)}
+                  className={`w-full py-2 px-4 rounded-md transition
+                    ${card.color === 'blue' ? 
+                      'bg-blue-500 hover:bg-blue-600 text-white' : 
+                      card.color === 'green' ? 
+                      'bg-green-500 hover:bg-green-600 text-white' : 
+                      'bg-purple-500 hover:bg-purple-600 text-white'
+                    }
+                  `}
+                >
+                  {card.buttonText}
+                </button>
               </div>
-              
-              <button 
-                data-testid={`select-${card.role}`}
-                onClick={() => handleRoleSelection(card.role)}
-                className={`w-full py-2 px-4 rounded-md transition
-                  ${card.color === 'blue' ? 
-                    'bg-blue-500 hover:bg-blue-600 text-white' : 
-                    card.color === 'green' ? 
-                    'bg-green-500 hover:bg-green-600 text-white' : 
-                    'bg-purple-500 hover:bg-purple-600 text-white'
-                  }
-                `}
-              >
-                {card.buttonText}
-              </button>
             </div>
           </div>
         ))}
