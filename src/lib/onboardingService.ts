@@ -1,10 +1,13 @@
+import { prisma } from '@/lib/prisma';
 import { UserRole } from '@/types/auth';
-import { logger } from './logger';
+import { logger } from '@/lib/logger';
+import { errorService } from '@/lib/errorService';
+import { ApiError } from '@/utils/apiError';
 
 /**
  * Service for managing onboarding state and redirections
  */
-export const OnboardingService = {
+const OnboardingService = {
   /**
    * Check if a user has completed onboarding
    * @param pubkey The user's public key
@@ -13,14 +16,31 @@ export const OnboardingService = {
    */
   isOnboardingComplete: async (pubkey: string, role: UserRole): Promise<boolean> => {
     try {
-      // Check localStorage first for client-side onboarding status
-      if (typeof window !== 'undefined') {
-        const key = `nostr-ads:onboarding:${pubkey}:${role}`;
-        return localStorage.getItem(key) === 'complete';
+      if (!pubkey) {
+        logger.warn('Cannot check onboarding status: No pubkey provided');
+        return false;
       }
-      return false;
+
+      const onboardingStatus = await prisma.userOnboarding.findFirst({
+        where: {
+          userPubkey: pubkey,
+          role: role,
+        },
+      });
+
+      return !!onboardingStatus?.isComplete;
     } catch (error) {
-      logger.error('Error checking onboarding status:', error);
+      errorService.reportError({
+        error,
+        context: {
+          operation: 'isOnboardingComplete',
+          pubkey,
+          role,
+        },
+        message: 'Failed to check onboarding status',
+      });
+      
+      // Default to false on error to ensure user can go through onboarding
       return false;
     }
   },
@@ -32,13 +52,41 @@ export const OnboardingService = {
    */
   markOnboardingComplete: async (pubkey: string, role: UserRole): Promise<void> => {
     try {
-      if (typeof window !== 'undefined') {
-        const key = `nostr-ads:onboarding:${pubkey}:${role}`;
-        localStorage.setItem(key, 'complete');
-        logger.log(`Onboarding marked complete for role: ${role}`);
+      if (!pubkey) {
+        logger.warn('Cannot complete onboarding: No pubkey provided');
+        return;
       }
+
+      await prisma.userOnboarding.upsert({
+        where: {
+          userPubkey_role: {
+            userPubkey: pubkey,
+            role: role,
+          },
+        },
+        update: {
+          isComplete: true,
+          completedAt: new Date(),
+        },
+        create: {
+          userPubkey: pubkey,
+          role: role,
+          isComplete: true,
+          completedAt: new Date(),
+        },
+      });
+
+      logger.debug(`Onboarding completed for user ${pubkey} with role ${role}`);
     } catch (error) {
-      logger.error('Error marking onboarding complete:', error);
+      errorService.reportError({
+        error,
+        context: {
+          operation: 'markOnboardingComplete',
+          pubkey,
+          role,
+        },
+        message: 'Failed to complete onboarding',
+      });
     }
   },
 
@@ -49,24 +97,56 @@ export const OnboardingService = {
    */
   resetOnboardingStatus: async (pubkey: string, role?: UserRole): Promise<void> => {
     try {
-      if (typeof window !== 'undefined') {
-        if (role) {
-          // Reset specific role
-          const key = `nostr-ads:onboarding:${pubkey}:${role}`;
-          localStorage.removeItem(key);
-          logger.log(`Onboarding reset for role: ${role}`);
-        } else {
-          // Reset all roles
-          const rolesToReset: UserRole[] = ['viewer', 'publisher', 'advertiser', 'admin'];
-          rolesToReset.forEach(r => {
-            const key = `nostr-ads:onboarding:${pubkey}:${r}`;
-            localStorage.removeItem(key);
-          });
-          logger.log('Onboarding reset for all roles');
-        }
+      if (!pubkey) {
+        logger.warn('Cannot reset onboarding: No pubkey provided');
+        return;
+      }
+
+      if (role) {
+        // Reset specific role
+        await prisma.userOnboarding.upsert({
+          where: {
+            userPubkey_role: {
+              userPubkey: pubkey,
+              role: role,
+            },
+          },
+          update: {
+            isComplete: false,
+            completedAt: null,
+          },
+          create: {
+            userPubkey: pubkey,
+            role: role,
+            isComplete: false,
+          },
+        });
+
+        logger.debug(`Onboarding reset for user ${pubkey} with role ${role}`);
+      } else {
+        // Reset all roles
+        await prisma.userOnboarding.updateMany({
+          where: {
+            userPubkey: pubkey,
+          },
+          data: {
+            isComplete: false,
+            completedAt: null,
+          },
+        });
+
+        logger.debug(`Onboarding reset for all roles of user ${pubkey}`);
       }
     } catch (error) {
-      logger.error('Error resetting onboarding status:', error);
+      errorService.reportError({
+        error,
+        context: {
+          operation: 'resetOnboardingStatus',
+          pubkey,
+          role,
+        },
+        message: 'Failed to reset onboarding status',
+      });
     }
   },
 
@@ -78,30 +158,44 @@ export const OnboardingService = {
    */
   getPostLoginRedirectUrl: async (pubkey: string, role: UserRole): Promise<string> => {
     try {
-      // Check if user has completed onboarding for their role
-      const isComplete = await OnboardingService.isOnboardingComplete(pubkey, role);
-      
-      if (!isComplete) {
-        // Direct to onboarding if not complete
+      if (!pubkey) {
+        logger.warn('Cannot determine redirect URL: No pubkey provided');
+        return '/dashboard';
+      }
+
+      const onboardingComplete = await OnboardingService.isOnboardingComplete(pubkey, role);
+
+      if (onboardingComplete) {
+        // If onboarding is complete, redirect to the appropriate dashboard
+        switch (role) {
+          case 'viewer':
+            return '/dashboard/viewer';
+          case 'publisher':
+            return '/dashboard/publisher';
+          case 'advertiser':
+            return '/dashboard/advertiser';
+          case 'admin':
+            return '/dashboard/admin';
+          default:
+            return '/dashboard';
+        }
+      } else {
+        // If onboarding is not complete, redirect to the onboarding page
         return '/onboarding';
       }
-      
-      // Otherwise, redirect to the appropriate dashboard
-      switch (role) {
-        case 'viewer':
-          return '/dashboard/viewer';
-        case 'publisher':
-          return '/dashboard/publisher';
-        case 'advertiser':
-          return '/dashboard/advertiser';
-        case 'admin':
-          return '/dashboard/admin';
-        default:
-          return '/dashboard';
-      }
     } catch (error) {
-      logger.error('Error getting post-login redirect URL:', error);
-      return '/dashboard'; // Fallback to dashboard on error
+      errorService.reportError({
+        error,
+        context: {
+          operation: 'getPostLoginRedirectUrl',
+          pubkey,
+          role,
+        },
+        message: 'Failed to determine redirect URL',
+      });
+      
+      // Default to dashboard on error
+      return '/dashboard';
     }
   }
 };

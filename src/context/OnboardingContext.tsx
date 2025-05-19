@@ -1,62 +1,97 @@
-import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { useRouter } from 'next/router';
-import { useAuthRefactored } from '@/hooks/useAuthRefactored';
-import { UserRole } from '@/types/auth';
-import OnboardingService from '@/lib/onboardingService';
-import { logger } from '@/lib/logger';
+import { useAuth } from '@/context/AuthContext';
+import { UserRole } from '@prisma/client';
+import { useRoleContext } from '@/context/RoleContext';
+import onboardingService from '@/lib/onboardingService';
 
-// Onboarding steps for different roles
-export type ViewerOnboardingStep = 'welcome' | 'role-info' | 'preferences' | 'complete';
-export type PublisherOnboardingStep = 'choose-integration' | 'ad-slot-config' | 'setup-wallet' | 'enable-test-mode' | 'go-live' | 'complete';
-export type AdvertiserOnboardingStep = 'create-campaign' | 'set-targeting' | 'budget-schedule' | 'fund-account' | 'dashboard-intro' | 'complete';
+// Define the steps for each role's onboarding process
+export type OnboardingStep = 
+  // Viewer steps
+  | 'preferences'
+  | 'discovery'
+  | 'notifications'
+  | 'privacy'
+  | 'feedback'
+  // Publisher steps
+  | 'choose-integration'
+  | 'ad-slot-config'
+  | 'setup-wallet'
+  | 'enable-test-mode'
+  | 'go-live'
+  // Advertiser steps
+  | 'create-campaign'
+  | 'set-targeting'
+  | 'budget-schedule'
+  | 'fund-account'
+  | 'dashboard-intro'
+  // Shared steps
+  | 'role-selection'
+  | 'complete';
 
-// Union type of all possible steps
-export type OnboardingStep = ViewerOnboardingStep | PublisherOnboardingStep | AdvertiserOnboardingStep;
+// Define role-specific step sequences
+const viewerSteps: OnboardingStep[] = [
+  'role-selection',
+  'preferences',
+  'discovery',
+  'notifications',
+  'privacy',
+  'feedback',
+  'complete'
+];
 
-// Context interface
-interface OnboardingContextType {
+const publisherSteps: OnboardingStep[] = [
+  'role-selection',
+  'choose-integration',
+  'ad-slot-config',
+  'setup-wallet',
+  'enable-test-mode',
+  'go-live',
+  'complete'
+];
+
+const advertiserSteps: OnboardingStep[] = [
+  'role-selection',
+  'create-campaign',
+  'set-targeting',
+  'budget-schedule',
+  'fund-account',
+  'dashboard-intro',
+  'complete'
+];
+
+type OnboardingContextType = {
   currentStep: OnboardingStep;
+  progress: number;
   totalSteps: number;
-  currentStepIndex: number;
-  role: UserRole;
-  isComplete: boolean;
+  isFirstStep: boolean;
+  isLastStep: boolean;
   goToNextStep: () => void;
   goToPreviousStep: () => void;
-  goToStep: (step: OnboardingStep) => void;
+  setSelectedRole: (role: UserRole) => void;
+  selectedRole: UserRole | null;
   completeOnboarding: () => Promise<void>;
-  resetOnboarding: () => Promise<void>;
-}
+  isLoading: boolean;
+  skipOnboarding: () => Promise<void>;
+};
 
-// Create context with default values
-const OnboardingContext = createContext<OnboardingContextType>({
-  currentStep: 'welcome',
-  totalSteps: 0,
-  currentStepIndex: 0,
-  role: 'viewer',
-  isComplete: false,
-  goToNextStep: () => {},
-  goToPreviousStep: () => {},
-  goToStep: () => {},
-  completeOnboarding: async () => {},
-  resetOnboarding: async () => {}
-});
+const OnboardingContext = createContext<OnboardingContextType | undefined>(undefined);
 
-// Define step sequences for each role
-const viewerSteps: ViewerOnboardingStep[] = ['welcome', 'role-info', 'preferences', 'complete'];
-const publisherSteps: PublisherOnboardingStep[] = ['choose-integration', 'ad-slot-config', 'setup-wallet', 'enable-test-mode', 'go-live', 'complete'];
-const advertiserSteps: AdvertiserOnboardingStep[] = ['create-campaign', 'set-targeting', 'budget-schedule', 'fund-account', 'dashboard-intro', 'complete'];
+type OnboardingProviderProps = {
+  children: ReactNode;
+};
 
-export const OnboardingProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const { isLoggedIn, auth } = useAuthRefactored();
+export const OnboardingProvider: React.FC<OnboardingProviderProps> = ({ children }) => {
+  const { auth } = useAuth();
+  const { currentRole } = useRoleContext();
   const router = useRouter();
-  const role = (auth?.currentRole as UserRole) || 'viewer';
   
-  // State for tracking current step
-  const [currentStep, setCurrentStep] = useState<OnboardingStep>('welcome');
-  const [isComplete, setIsComplete] = useState(false);
+  const [currentStep, setCurrentStep] = useState<OnboardingStep>('role-selection');
+  const [selectedRole, setSelectedRole] = useState<UserRole | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   
-  // Get the appropriate step sequence based on the user's role
-  const stepSequence = (): OnboardingStep[] => {
+  // Initialize steps based on the current role or selected role
+  const getStepsForRole = (role: UserRole | null): OnboardingStep[] => {
     switch (role) {
       case 'viewer':
         return viewerSteps;
@@ -65,150 +100,133 @@ export const OnboardingProvider: React.FC<{ children: ReactNode }> = ({ children
       case 'advertiser':
         return advertiserSteps;
       default:
-        return viewerSteps;
+        return ['role-selection'] as OnboardingStep[];
     }
   };
   
-  // Get the current step index and total steps
-  const currentStepIndex = stepSequence().indexOf(currentStep);
-  const totalSteps = stepSequence().length;
+  const roleSpecificSteps = getStepsForRole(selectedRole || currentRole);
+  const currentStepIndex = roleSpecificSteps.indexOf(currentStep);
+  const totalSteps = roleSpecificSteps.length;
+  const progress = Math.round(((currentStepIndex + 1) / totalSteps) * 100);
+  const isFirstStep = currentStepIndex === 0;
+  const isLastStep = currentStepIndex === totalSteps - 1;
+  
+  // Initialize onboarding state when the component mounts
+  useEffect(() => {
+    const initializeOnboarding = async () => {
+      // Only set the role-specific step if we're past role selection
+      if (selectedRole && currentStep === 'role-selection') {
+        const steps = getStepsForRole(selectedRole);
+        setCurrentStep(steps[1]); // Skip to the first role-specific step
+      }
+      
+      // If coming back to onboarding with a current role, initialize with that role
+      if (!selectedRole && currentRole && currentRole !== 'admin') {
+        setSelectedRole(currentRole);
+        
+        // Check if onboarding was already in progress
+        if (auth?.pubkey) {
+          try {
+            const isComplete = await onboardingService.isOnboardingComplete(auth.pubkey, currentRole);
+            if (isComplete) {
+              // Redirect to dashboard if onboarding is already complete
+              const redirectUrl = await onboardingService.getPostLoginRedirectUrl(auth.pubkey, currentRole);
+              router.push(redirectUrl);
+            }
+          } catch (error) {
+            console.error('Error checking onboarding status:', error);
+          }
+        }
+      }
+    };
+    
+    initializeOnboarding();
+  }, [selectedRole, currentRole, auth, router]);
+  
+  // Handle role selection
+  const handleRoleSelection = (role: UserRole) => {
+    setSelectedRole(role);
+    const steps = getStepsForRole(role);
+    setCurrentStep(steps[1]); // Skip to the first step after role selection
+  };
   
   // Navigate to the next step
   const goToNextStep = () => {
-    const sequence = stepSequence();
-    const currentIndex = sequence.indexOf(currentStep);
-    
-    if (currentIndex < sequence.length - 1) {
-      const nextStep = sequence[currentIndex + 1];
-      setCurrentStep(nextStep);
+    const nextIndex = currentStepIndex + 1;
+    if (nextIndex < roleSpecificSteps.length) {
+      setCurrentStep(roleSpecificSteps[nextIndex]);
     }
   };
   
   // Navigate to the previous step
   const goToPreviousStep = () => {
-    const sequence = stepSequence();
-    const currentIndex = sequence.indexOf(currentStep);
-    
-    if (currentIndex > 0) {
-      const prevStep = sequence[currentIndex - 1];
-      setCurrentStep(prevStep);
+    const prevIndex = currentStepIndex - 1;
+    if (prevIndex >= 0) {
+      setCurrentStep(roleSpecificSteps[prevIndex]);
     }
   };
   
-  // Go to a specific step
-  const goToStep = (step: OnboardingStep) => {
-    if (stepSequence().includes(step)) {
-      setCurrentStep(step);
-    } else {
-      logger.warn(`Invalid step for ${role} role: ${step}`);
-    }
-  };
-  
-  // Mark onboarding as complete
+  // Mark onboarding as complete and redirect to the appropriate dashboard
   const completeOnboarding = async () => {
-    if (!isLoggedIn || !auth?.pubkey) {
-      logger.error('Cannot complete onboarding: user not logged in');
-      return;
-    }
-    
-    try {
-      await OnboardingService.markOnboardingComplete(auth.pubkey, role);
-      setIsComplete(true);
-      
-      // Redirect to the appropriate dashboard
-      let redirectPath = '/dashboard';
-      
-      switch (role) {
-        case 'viewer':
-          redirectPath = '/dashboard/viewer';
-          break;
-        case 'publisher':
-          redirectPath = '/dashboard/publisher';
-          break;
-        case 'advertiser':
-          redirectPath = '/dashboard/advertiser';
-          break;
-        case 'admin':
-          redirectPath = '/dashboard/admin';
-          break;
+    if (auth?.pubkey && selectedRole) {
+      setIsLoading(true);
+      try {
+        await onboardingService.markOnboardingComplete(auth.pubkey, selectedRole);
+        const redirectUrl = await onboardingService.getPostLoginRedirectUrl(auth.pubkey, selectedRole);
+        router.push(redirectUrl);
+      } catch (error) {
+        console.error('Error completing onboarding:', error);
+      } finally {
+        setIsLoading(false);
       }
-      
-      router.push(redirectPath);
-    } catch (error) {
-      logger.error('Error completing onboarding:', error);
     }
   };
   
-  // Reset onboarding progress
-  const resetOnboarding = async () => {
-    if (!isLoggedIn || !auth?.pubkey) {
-      logger.error('Cannot reset onboarding: user not logged in');
-      return;
-    }
-    
-    try {
-      await OnboardingService.resetOnboardingStatus(auth.pubkey, role);
-      
-      // Reset to first step for the role
-      const firstStep = stepSequence()[0];
-      setCurrentStep(firstStep);
-      setIsComplete(false);
-    } catch (error) {
-      logger.error('Error resetting onboarding:', error);
-    }
-  };
-  
-  // Initialize onboarding
-  useEffect(() => {
-    const initOnboarding = async () => {
-      if (isLoggedIn && auth?.pubkey) {
-        try {
-          // Check if onboarding is already complete for this role
-          const onboardingComplete = await OnboardingService.isOnboardingComplete(auth.pubkey, role);
-          setIsComplete(onboardingComplete);
-          
-          // Set initial step to the first step in the sequence for the role
-          const firstStep = stepSequence()[0];
-          setCurrentStep(firstStep);
-        } catch (error) {
-          logger.error('Error initializing onboarding:', error);
+  // Skip onboarding and redirect to the appropriate dashboard
+  const skipOnboarding = async () => {
+    if (auth?.pubkey && (selectedRole || currentRole)) {
+      setIsLoading(true);
+      try {
+        const role = selectedRole || currentRole;
+        if (role) {
+          await onboardingService.markOnboardingComplete(auth.pubkey, role);
+          const redirectUrl = await onboardingService.getPostLoginRedirectUrl(auth.pubkey, role);
+          router.push(redirectUrl);
         }
+      } catch (error) {
+        console.error('Error skipping onboarding:', error);
+      } finally {
+        setIsLoading(false);
       }
-    };
-    
-    initOnboarding();
-  }, [isLoggedIn, auth?.pubkey, role]);
+    }
+  };
   
-  // Provide the context value
-  const contextValue: OnboardingContextType = {
+  const value = {
     currentStep,
+    progress,
     totalSteps,
-    currentStepIndex,
-    role,
-    isComplete,
+    isFirstStep,
+    isLastStep,
     goToNextStep,
     goToPreviousStep,
-    goToStep,
+    setSelectedRole: handleRoleSelection,
+    selectedRole,
     completeOnboarding,
-    resetOnboarding
+    isLoading,
+    skipOnboarding,
   };
   
   return (
-    <OnboardingContext.Provider value={contextValue}>
+    <OnboardingContext.Provider value={value}>
       {children}
     </OnboardingContext.Provider>
   );
 };
 
-// Hook to use the onboarding context
 export const useOnboarding = () => {
   const context = useContext(OnboardingContext);
-  
-  if (!context) {
+  if (context === undefined) {
     throw new Error('useOnboarding must be used within an OnboardingProvider');
   }
-  
   return context;
 };
-
-export default OnboardingContext;

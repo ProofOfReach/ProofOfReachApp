@@ -34,6 +34,7 @@ model User {
   apiKeys       ApiKey[]
   activities    UserActivity[]
   userRoles     UserRole[]
+  onboarding    UserOnboarding[]
   
   // Indexes for enhanced role management
   @@index([isTestUser])
@@ -328,4 +329,25 @@ model UserRole {
   @@index([userId])
   @@index([userId, role])
   @@index([userId, isActive])
+}
+
+// Model to track onboarding progress for users in different roles
+model UserOnboarding {
+  id            String    @id @default(cuid())
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  userPubkey    String    // The user's public key
+  role          String    // The role: viewer, advertiser, publisher, admin
+  isComplete    Boolean   @default(false) // Whether onboarding is complete for this role
+  completedAt   DateTime? // When onboarding was completed
+  lastStep      String?   // The last step the user was on before leaving
+  
+  // Relation back to User
+  userId        String
+  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  // Unique constraint to ensure one record per user per role
+  @@unique([userPubkey, role], name: "userPubkey_role")
+  @@index([userId, role])
+  @@index([isComplete])
 }

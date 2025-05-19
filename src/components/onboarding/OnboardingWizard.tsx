@@ -1,127 +1,117 @@
-import React, { useEffect } from 'react';
-import { useRouter } from 'next/router';
+import React from 'react';
 import { useOnboarding } from '@/context/OnboardingContext';
-import { useAuthRefactored } from '@/hooks/useAuthRefactored';
+import OnboardingProgress from './OnboardingProgress';
 import RoleConfirmation from './RoleConfirmation';
 import ViewerOnboarding from './ViewerOnboarding';
 import PublisherOnboarding from './PublisherOnboarding';
 import AdvertiserOnboarding from './AdvertiserOnboarding';
-import OnboardingProgress from './OnboardingProgress';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { ArrowLeft, ArrowRight, X } from 'react-feather';
 
-/**
- * Main onboarding wizard component that orchestrates the entire onboarding flow
- */
 const OnboardingWizard: React.FC = () => {
-  const router = useRouter();
-  const { authState, isLoggedIn } = useAuthRefactored();
-  const {
-    isOnboarding,
-    role,
-    currentStep,
-    progress,
-    isRoleConfirmed,
-    startOnboarding,
-    confirmRole,
-    nextStep,
-    prevStep,
+  const { 
+    currentStep, 
+    goToNextStep, 
+    goToPreviousStep, 
+    isFirstStep, 
+    isLastStep,
+    selectedRole,
     completeOnboarding,
+    isLoading,
     skipOnboarding
   } = useOnboarding();
-
-  // Check if the user is logged in
-  useEffect(() => {
-    if (!isLoggedIn) {
-      router.push('/login');
+  
+  // Render the current step content based on step and selected role
+  const renderStepContent = () => {
+    if (currentStep === 'role-selection') {
+      return <RoleConfirmation />;
     }
-  }, [isLoggedIn, router]);
-
-  // Automatically start onboarding if the user is logged in and not already onboarding
-  useEffect(() => {
-    if (isLoggedIn && !isOnboarding && authState.pubkey) {
-      // Use the user's current role as the default
-      startOnboarding(authState.currentRole as any);
+    
+    if (selectedRole === 'viewer') {
+      return <ViewerOnboarding currentStep={currentStep} />;
     }
-  }, [isLoggedIn, isOnboarding, authState.pubkey, authState.currentRole, startOnboarding]);
-
-  // If the user isn't logged in, show nothing while redirecting
-  if (!isLoggedIn) {
-    return null;
-  }
-
-  // Step 1: Role Confirmation
-  if (!isRoleConfirmed) {
+    
+    if (selectedRole === 'publisher') {
+      return <PublisherOnboarding currentStep={currentStep} />;
+    }
+    
+    if (selectedRole === 'advertiser') {
+      return <AdvertiserOnboarding currentStep={currentStep} />;
+    }
+    
+    // Fallback content
     return (
-      <div className="max-w-lg mx-auto p-4">
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-center text-2xl">Welcome to Nostr Ad Marketplace</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <RoleConfirmation
-              selectedRole={role}
-              onRoleSelect={confirmRole}
-              pubkey={authState.pubkey}
-            />
-          </CardContent>
-        </Card>
+      <div className="p-6 text-center">
+        <p className="text-gray-600 dark:text-gray-300">
+          Please select a role to continue.
+        </p>
       </div>
     );
-  }
-
-  // Role-specific onboarding steps
-  const renderOnboardingContent = () => {
-    switch (role) {
-      case 'viewer':
-        return <ViewerOnboarding currentStep={currentStep} />;
-      case 'publisher':
-        return <PublisherOnboarding currentStep={currentStep} />;
-      case 'advertiser':
-        return <AdvertiserOnboarding currentStep={currentStep} />;
-      default:
-        return <ViewerOnboarding currentStep={currentStep} />;
-    }
   };
-
-  // Determine if this is the final step
-  const isFinalStep = currentStep === 'complete';
-
+  
   return (
-    <div className="max-w-4xl mx-auto p-4">
-      <Card className="w-full">
-        <CardHeader>
-          <CardTitle className="text-xl text-center">
-            {role.charAt(0).toUpperCase() + role.slice(1)} Onboarding
-          </CardTitle>
-          <OnboardingProgress progress={progress} />
-        </CardHeader>
-        
-        <CardContent>
-          {renderOnboardingContent()}
-        </CardContent>
-        
-        <CardFooter className="flex justify-between">
-          <Button 
-            variant="outline" 
-            onClick={prevStep}
-            disabled={currentStep === (role === 'viewer' ? 'select-interests' : 
-                      role === 'publisher' ? 'choose-integration' : 'create-campaign')}
+    <div className="bg-white dark:bg-gray-900 rounded-lg shadow-lg max-w-4xl mx-auto overflow-hidden">
+      <div className="p-6 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center">
+        <h1 className="text-xl font-bold text-gray-900 dark:text-white">
+          {isFirstStep ? 'Welcome to Nostr Ads' : (
+            selectedRole ? `${selectedRole.charAt(0).toUpperCase() + selectedRole.slice(1)} Onboarding` : 'Onboarding'
+          )}
+        </h1>
+        <button 
+          onClick={skipOnboarding}
+          className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+          aria-label="Skip onboarding"
+        >
+          <X size={20} />
+        </button>
+      </div>
+      
+      <div className="p-6">
+        <OnboardingProgress />
+        {renderStepContent()}
+      </div>
+      
+      <div className="p-6 border-t border-gray-200 dark:border-gray-700 flex justify-between">
+        {!isFirstStep ? (
+          <button
+            onClick={goToPreviousStep}
+            className="flex items-center px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 transition"
           >
-            Previous
-          </Button>
-          
-          <Button variant="ghost" onClick={skipOnboarding}>
+            <ArrowLeft size={16} className="mr-2" />
+            Back
+          </button>
+        ) : (
+          <div></div> // Empty div to maintain flex spacing
+        )}
+        
+        {isLastStep ? (
+          <button
+            onClick={completeOnboarding}
+            disabled={isLoading}
+            className="flex items-center px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-md transition disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            {isLoading ? 'Completing...' : 'Complete Setup'}
+          </button>
+        ) : (
+          <button
+            onClick={goToNextStep}
+            className="flex items-center px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-md transition"
+          >
+            {isFirstStep ? 'Get Started' : 'Continue'}
+            <ArrowRight size={16} className="ml-2" />
+          </button>
+        )}
+      </div>
+      
+      {!isFirstStep && !isLastStep && (
+        <div className="px-6 pb-6 text-center">
+          <button
+            onClick={skipOnboarding}
+            className="text-sm text-gray-500 hover:text-purple-600 dark:text-gray-400 dark:hover:text-purple-400"
+          >
             Skip for now
-          </Button>
-          
-          <Button 
-            onClick={isFinalStep ? completeOnboarding : nextStep}
-          >
-            {isFinalStep ? 'Complete' : 'Next'}
-          </Button>
-        </CardFooter>
-      </Card>
+          </button>
+        </div>
+      )}
     </div>
   );
 };
