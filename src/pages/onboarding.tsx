@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { NextPage } from 'next';
-import useAuth from '@/hooks/useAuth';
+import { useAuthRefactored } from '@/context/NewRoleContextRefactored';
 import { OnboardingProvider } from '@/context/OnboardingContext';
 import OnboardingWizard from '@/components/onboarding/OnboardingWizard';
 import Layout from '@/components/Layout';
@@ -9,21 +9,20 @@ import Loading from '@/components/Loading';
 
 const OnboardingPage: NextPage = () => {
   const router = useRouter();
-  const { auth } = useAuth();
+  const { authState, isLoading } = useAuthRefactored();
   
-  // Determine loading and login state
-  const loading = auth === null;
-  const isLoggedIn = auth?.isLoggedIn || false;
+  // Determine login state
+  const isLoggedIn = authState?.isLoggedIn || false;
   
   // Redirect to login if not authenticated
   useEffect(() => {
-    if (!loading && !isLoggedIn) {
+    if (!isLoading && !isLoggedIn) {
       router.push('/login?redirect=/onboarding');
     }
-  }, [isLoggedIn, loading, router]);
+  }, [isLoggedIn, isLoading, router]);
   
   // If still loading auth state or not logged in, show loading
-  if (loading || !isLoggedIn) {
+  if (isLoading || !isLoggedIn) {
     return (
       <Layout title="Loading Onboarding...">
         <div className="flex items-center justify-center min-h-screen">
