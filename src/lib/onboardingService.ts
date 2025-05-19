@@ -26,12 +26,10 @@ const onboardingService = {
 
       try {
         // Check if there's an onboarding record for this user and role
-        const onboardingRecord = await prisma.userOnboarding.findUnique({
+        const onboardingRecord = await prisma.userOnboarding.findFirst({
           where: {
-            userPubkey_role: {
-              userPubkey: pubkey,
-              role
-            }
+            userPubkey: pubkey,
+            role: role
           }
         });
 
