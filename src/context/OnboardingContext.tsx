@@ -79,9 +79,10 @@ const OnboardingContext = createContext<OnboardingContextType | undefined>(undef
 
 type OnboardingProviderProps = {
   children: ReactNode;
+  forcePubkey?: string | null;
 };
 
-export const OnboardingProvider: React.FC<OnboardingProviderProps> = ({ children }) => {
+export const OnboardingProvider: React.FC<OnboardingProviderProps> = ({ children, forcePubkey }) => {
   const { authState } = useAuthRefactored();
   const roleContext = useRole();
   const currentRole = roleContext?.currentRole;
@@ -126,12 +127,13 @@ export const OnboardingProvider: React.FC<OnboardingProviderProps> = ({ children
         setSelectedRole(currentRole);
         
         // Check if onboarding was already in progress
-        if (authState?.pubkey) {
+        const pubkeyToUse = forcePubkey || authState?.pubkey;
+        if (pubkeyToUse) {
           try {
-            const isComplete = await onboardingService.isOnboardingComplete(authState.pubkey, currentRole);
-            if (isComplete) {
+            const isComplete = await onboardingService.isOnboardingComplete(pubkeyToUse, currentRole);
+            if (isComplete && !forcePubkey) { // Don't redirect if forcePubkey is provided
               // Redirect to dashboard if onboarding is already complete
-              const redirectUrl = await onboardingService.getPostLoginRedirectUrl(authState.pubkey, currentRole);
+              const redirectUrl = await onboardingService.getPostLoginRedirectUrl(pubkeyToUse, currentRole);
               router.push(redirectUrl);
             }
           } catch (error) {
@@ -142,7 +144,7 @@ export const OnboardingProvider: React.FC<OnboardingProviderProps> = ({ children
     };
     
     initializeOnboarding();
-  }, [selectedRole, currentRole, authState, router]);
+  }, [selectedRole, currentRole, authState, router, forcePubkey]);
   
   // Handle role selection
   const handleRoleSelection = (role: UserRoleType) => {
@@ -169,12 +171,13 @@ export const OnboardingProvider: React.FC<OnboardingProviderProps> = ({ children
   
   // Mark onboarding as complete and redirect to the appropriate dashboard
   const completeOnboarding = async () => {
-    if (authState?.pubkey && selectedRole) {
+    const pubkeyToUse = forcePubkey || authState?.pubkey;
+    if (pubkeyToUse && selectedRole) {
       setIsLoading(true);
       try {
         // Convert UserRoleType to Prisma UserRole string for service methods
-        await onboardingService.markOnboardingComplete(authState.pubkey, selectedRole);
-        const redirectUrl = await onboardingService.getPostLoginRedirectUrl(authState.pubkey, selectedRole);
+        await onboardingService.markOnboardingComplete(pubkeyToUse, selectedRole);
+        const redirectUrl = await onboardingService.getPostLoginRedirectUrl(pubkeyToUse, selectedRole);
         router.push(redirectUrl);
       } catch (error) {
         console.error('Error completing onboarding:', error);
@@ -186,14 +189,15 @@ export const OnboardingProvider: React.FC<OnboardingProviderProps> = ({ children
   
   // Skip onboarding and redirect to the appropriate dashboard
   const skipOnboarding = async () => {
-    if (authState?.pubkey && (selectedRole || currentRole)) {
+    const pubkeyToUse = forcePubkey || authState?.pubkey;
+    if (pubkeyToUse && (selectedRole || currentRole)) {
       setIsLoading(true);
       try {
         const role = selectedRole || currentRole;
         if (role) {
           // Convert UserRoleType to Prisma UserRole string for service methods
-          await onboardingService.markOnboardingComplete(authState.pubkey, role as any);
-          const redirectUrl = await onboardingService.getPostLoginRedirectUrl(authState.pubkey, role as any);
+          await onboardingService.markOnboardingComplete(pubkeyToUse, role as any);
+          const redirectUrl = await onboardingService.getPostLoginRedirectUrl(pubkeyToUse, role as any);
           router.push(redirectUrl);
         }
       } catch (error) {
