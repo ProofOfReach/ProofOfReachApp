@@ -13,10 +13,11 @@ const RoleConfirmation: React.FC<RoleConfirmationProps> = ({ onConfirm }) => {
   const { setSelectedRole } = useOnboarding();
 
   const handleRoleSelection = (role: UserRoleType) => {
+    // First call the context function to update the selected role
     setSelectedRole(role);
     
-    // If onConfirm prop is provided (for tests), call it
-    if (onConfirm) {
+    // Then, if onConfirm prop is provided (for tests), call it
+    if (typeof onConfirm === 'function') {
       onConfirm(role);
     }
   };
@@ -117,6 +118,7 @@ const RoleConfirmation: React.FC<RoleConfirmationProps> = ({ onConfirm }) => {
               
               <button 
                 data-testid={`select-${card.role}`}
+                onClick={() => handleRoleSelection(card.role)}
                 className={`w-full py-2 px-4 rounded-md transition
                   ${card.color === 'blue' ? 
                     'bg-blue-500 hover:bg-blue-600 text-white' : 

@@ -14,9 +14,10 @@ jest.mock('@/components/onboarding/RoleConfirmation', () => ({
 
 jest.mock('@/components/onboarding/ViewerOnboarding', () => ({
   __esModule: true,
-  default: ({ onComplete }: { onComplete: () => void }) => (
+  // Include the currentStep parameter since the actual component expects it
+  default: ({ onComplete, currentStep }: { onComplete: () => void, currentStep: string }) => (
     <div data-testid="viewer-onboarding">
-      Viewer Onboarding
+      Viewer Onboarding - Step: {currentStep}
       <button data-testid="viewer-complete" onClick={onComplete}>Complete Viewer Onboarding</button>
     </div>
   )
@@ -24,12 +25,27 @@ jest.mock('@/components/onboarding/ViewerOnboarding', () => ({
 
 jest.mock('@/components/onboarding/PublisherOnboarding', () => ({
   __esModule: true,
-  default: ({ onComplete }: { onComplete: () => void }) => (
+  default: ({ onComplete, currentStep }: { onComplete: () => void, currentStep: string }) => (
     <div data-testid="publisher-onboarding">
-      Publisher Onboarding
+      Publisher Onboarding - Step: {currentStep}
       <button data-testid="publisher-complete" onClick={onComplete}>Complete Publisher Onboarding</button>
     </div>
   )
+}));
+
+jest.mock('@/components/onboarding/AdvertiserOnboarding', () => ({
+  __esModule: true,
+  default: ({ onComplete, currentStep }: { onComplete: () => void, currentStep: string }) => (
+    <div data-testid="advertiser-onboarding">
+      Advertiser Onboarding - Step: {currentStep}
+      <button data-testid="advertiser-complete" onClick={onComplete}>Complete Advertiser Onboarding</button>
+    </div>
+  )
+}));
+
+jest.mock('@/components/Loading', () => ({
+  __esModule: true,
+  default: () => <div data-testid="loading">Loading...</div>
 }));
 
 describe('OnboardingWizard - Focused Tests', () => {
@@ -88,15 +104,22 @@ describe('OnboardingWizard - Focused Tests', () => {
   });
 
   it('should call onComplete when role-specific component calls it', async () => {
-    // Mock as viewer role
+    // Mock as viewer role with all required properties
     (useOnboarding as jest.Mock).mockReturnValue({
       currentStep: 'role-specific',
       currentRole: 'viewer',
+      selectedRole: 'viewer', // This was missing
       setCurrentStep: mockSetCurrentStep,
       setCurrentRole: mockSetCurrentRole,
+      setSelectedRole: jest.fn(), // This was missing
       completeOnboarding: mockCompleteOnboarding,
       isLoading: false,
-      isComplete: false
+      isComplete: false,
+      goToNextStep: jest.fn(), // This was missing
+      goToPreviousStep: jest.fn(), // This was missing
+      isFirstStep: false, // This was missing
+      isLastStep: true, // This was missing
+      skipOnboarding: jest.fn() // This was missing
     });
     
     render(<OnboardingWizard />);

@@ -5,6 +5,7 @@ import RoleConfirmation from './RoleConfirmation';
 import ViewerOnboarding from './ViewerOnboarding';
 import PublisherOnboarding from './PublisherOnboarding';
 import AdvertiserOnboarding from './AdvertiserOnboarding';
+import Loading from '@/components/Loading';
 import { ArrowLeft, ArrowRight, X } from 'react-feather';
 
 const OnboardingWizard: React.FC = () => {
@@ -36,6 +37,11 @@ const OnboardingWizard: React.FC = () => {
   
   // Render the current step content based on step and selected role
   const renderStepContent = () => {
+    // Show loading indicator when loading
+    if (isLoading) {
+      return <Loading className="py-10" />;
+    }
+    
     if (currentStep === 'role-selection') {
       return <RoleConfirmation />;
     }

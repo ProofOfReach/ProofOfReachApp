@@ -64,20 +64,60 @@ jest.mock('@/components/onboarding/AdvertiserOnboarding', () => ({
 // Mock the role confirmation component
 jest.mock('@/components/onboarding/RoleConfirmation', () => ({
   __esModule: true,
-  default: ({ onConfirm }: RoleConfirmationProps) => (
-    <div data-testid="role-confirmation">
-      Role Confirmation
-      <button data-testid="select-viewer" onClick={() => onConfirm('viewer')}>Select Viewer</button>
-      <button data-testid="select-publisher" onClick={() => onConfirm('publisher')}>Select Publisher</button>
-      <button data-testid="select-advertiser" onClick={() => onConfirm('advertiser')}>Select Advertiser</button>
-    </div>
-  )
+  default: ({ onConfirm }) => {
+    // In the actual component, it uses the setSelectedRole from the OnboardingContext
+    // Here, we get the mocked version from our test's useOnboarding mock
+    const { setSelectedRole } = require('@/context/OnboardingContext').useOnboarding();
+    
+    return (
+      <div data-testid="role-confirmation">
+        Role Confirmation
+        <button 
+          data-testid="select-viewer" 
+          onClick={() => {
+            // This simulates what happens in the real component
+            setSelectedRole('viewer');
+            // Only call onConfirm if it's provided (for backward compatibility)
+            if (typeof onConfirm === 'function') {
+              onConfirm('viewer');
+            }
+          }}
+        >
+          Select Viewer
+        </button>
+        <button 
+          data-testid="select-publisher" 
+          onClick={() => {
+            setSelectedRole('publisher');
+            if (typeof onConfirm === 'function') {
+              onConfirm('publisher');
+            }
+          }}
+        >
+          Select Publisher
+        </button>
+        <button 
+          data-testid="select-advertiser" 
+          onClick={() => {
+            setSelectedRole('advertiser');
+            if (typeof onConfirm === 'function') {
+              onConfirm('advertiser');
+            }
+          }}
+        >
+          Select Advertiser
+        </button>
+      </div>
+    );
+  }
 }));
 
 // Mock the loading component
 jest.mock('@/components/Loading', () => ({
   __esModule: true,
-  default: () => <div data-testid="loading">Loading...</div>
+  default: () => {
+    return <div data-testid="loading-indicator">Loading...</div>;
+  }
 }));
 
 describe('OnboardingWizard', () => {
@@ -125,7 +165,9 @@ describe('OnboardingWizard', () => {
     // Override the mock to simulate loading state
     (useOnboarding as jest.Mock).mockReturnValue({
       currentStep: 'role-selection',
+      currentRole: 'viewer', // Added missing property
       selectedRole: '',
+      setSelectedRole: jest.fn(),
       setCurrentStep: mockSetCurrentStep,
       setCurrentRole: mockSetCurrentRole,
       completeOnboarding: mockCompleteOnboarding,
@@ -141,7 +183,8 @@ describe('OnboardingWizard', () => {
     render(<OnboardingWizard />);
     
     // Should display the loading component
-    expect(screen.getByTestId('loading')).toBeInTheDocument();
+    const loadingElement = screen.queryByTestId('loading-indicator');
+    expect(loadingElement).toBeInTheDocument();
     
     // Should not display any onboarding components
     expect(screen.queryByTestId('role-confirmation')).not.toBeInTheDocument();

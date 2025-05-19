@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { OnboardingStep } from '@/context/OnboardingContext';
 import { 
   CheckCircle, 
@@ -6,7 +6,9 @@ import {
   Filter, 
   Bell, 
   ThumbsUp, 
-  Shield
+  Shield,
+  ChevronRight,
+  ChevronLeft
 } from 'react-feather';
 
 interface ViewerOnboardingProps {
@@ -15,9 +17,141 @@ interface ViewerOnboardingProps {
 }
 
 const ViewerOnboarding: React.FC<ViewerOnboardingProps> = ({ currentStep, onComplete }) => {
+  const [step, setStep] = useState<string>(currentStep === 'role-selection' ? 'welcome' : currentStep as string);
+
+  const handleNext = () => {
+    switch (step) {
+      case 'welcome':
+        setStep('preferences');
+        break;
+      case 'preferences':
+        setStep('discovery');
+        break;
+      case 'discovery': 
+        setStep('complete');
+        break;
+      case 'complete':
+        if (onComplete) onComplete();
+        break;
+      default:
+        setStep('welcome');
+    }
+  };
+
+  const handleBack = () => {
+    switch (step) {
+      case 'preferences':
+        setStep('welcome');
+        break;
+      case 'discovery':
+        setStep('preferences');
+        break;
+      case 'complete':
+        setStep('discovery');
+        break;
+      default:
+        setStep('welcome');
+    }
+  };
+  
+  // Method to render navigation buttons based on current step
+  const renderNavButtons = () => {
+    if (step === 'welcome') {
+      return (
+        <div className="flex justify-end mt-6">
+          <button
+            onClick={handleNext}
+            className="px-4 py-2 bg-purple-600 text-white rounded hover:bg-purple-700"
+          >
+            Next <ChevronRight size={16} className="inline ml-1" />
+          </button>
+        </div>
+      );
+    } else if (step === 'complete') {
+      return (
+        <div className="flex justify-between mt-6">
+          <button
+            onClick={handleBack}
+            className="px-4 py-2 border border-gray-300 rounded hover:bg-gray-50 dark:border-gray-600 dark:hover:bg-gray-800"
+          >
+            <ChevronLeft size={16} className="inline mr-1" /> Back
+          </button>
+          <button
+            onClick={handleNext}
+            className="px-4 py-2 bg-purple-600 text-white rounded hover:bg-purple-700"
+          >
+            Complete
+          </button>
+        </div>
+      );
+    } else {
+      return (
+        <div className="flex justify-between mt-6">
+          <button
+            onClick={handleBack}
+            className="px-4 py-2 border border-gray-300 rounded hover:bg-gray-50 dark:border-gray-600 dark:hover:bg-gray-800"
+          >
+            <ChevronLeft size={16} className="inline mr-1" /> Back
+          </button>
+          <button
+            onClick={handleNext}
+            className="px-4 py-2 bg-purple-600 text-white rounded hover:bg-purple-700"
+          >
+            Next <ChevronRight size={16} className="inline ml-1" />
+          </button>
+        </div>
+      );
+    }
+  };
+
   // Content for each step in the viewer onboarding flow
   const renderStepContent = () => {
-    switch (currentStep) {
+    switch (step) {
+      case 'welcome':
+        return (
+          <div className="space-y-4">
+            <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
+              <CheckCircle className="inline-block mr-2 mb-1" size={20} />
+              Welcome to Nostr Ads
+            </h2>
+            <p className="text-gray-600 dark:text-gray-300">
+              As a viewer, you'll be able to browse content with relevant ads tailored to your interests:
+            </p>
+            
+            <div className="mt-6 space-y-4">
+              <div className="border border-gray-200 dark:border-gray-700 rounded-lg p-4">
+                <h3 className="font-medium text-gray-900 dark:text-white mb-3">Your Viewer Experience</h3>
+                
+                <ul className="space-y-3">
+                  <li className="flex items-start">
+                    <div className="flex-shrink-0 h-5 w-5 text-purple-500">
+                      <CheckCircle size={18} className="mt-0.5" />
+                    </div>
+                    <p className="ml-2 text-gray-600 dark:text-gray-300">
+                      Browse content with personalized ad experiences
+                    </p>
+                  </li>
+                  <li className="flex items-start">
+                    <div className="flex-shrink-0 h-5 w-5 text-purple-500">
+                      <CheckCircle size={18} className="mt-0.5" />
+                    </div>
+                    <p className="ml-2 text-gray-600 dark:text-gray-300">
+                      See only relevant ads based on your interests
+                    </p>
+                  </li>
+                  <li className="flex items-start">
+                    <div className="flex-shrink-0 h-5 w-5 text-purple-500">
+                      <CheckCircle size={18} className="mt-0.5" />
+                    </div>
+                    <p className="ml-2 text-gray-600 dark:text-gray-300">
+                      Control your privacy settings and ad preferences
+                    </p>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        );
       case 'preferences':
         return (
           <div className="space-y-4">
@@ -388,6 +522,52 @@ const ViewerOnboarding: React.FC<ViewerOnboardingProps> = ({ currentStep, onComp
           </div>
         );
       
+      case 'complete':
+        return (
+          <div className="space-y-4">
+            <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
+              <CheckCircle className="inline-block mr-2 mb-1" size={20} />
+              You're All Set!
+            </h2>
+            <p className="text-gray-600 dark:text-gray-300">
+              You've completed the viewer onboarding process. You're now ready to discover personalized content with relevant ads.
+            </p>
+            
+            <div className="mt-6 space-y-4">
+              <div className="border border-gray-200 dark:border-gray-700 rounded-lg p-4">
+                <h3 className="font-medium text-gray-900 dark:text-white mb-3">What's Next?</h3>
+                
+                <ul className="space-y-3">
+                  <li className="flex items-start">
+                    <div className="flex-shrink-0 h-5 w-5 text-purple-500">
+                      <CheckCircle size={18} className="mt-0.5" />
+                    </div>
+                    <p className="ml-2 text-gray-600 dark:text-gray-300">
+                      Browse content with personalized ad experiences
+                    </p>
+                  </li>
+                  <li className="flex items-start">
+                    <div className="flex-shrink-0 h-5 w-5 text-purple-500">
+                      <CheckCircle size={18} className="mt-0.5" />
+                    </div>
+                    <p className="ml-2 text-gray-600 dark:text-gray-300">
+                      Explore and discover new content creators
+                    </p>
+                  </li>
+                  <li className="flex items-start">
+                    <div className="flex-shrink-0 h-5 w-5 text-purple-500">
+                      <CheckCircle size={18} className="mt-0.5" />
+                    </div>
+                    <p className="ml-2 text-gray-600 dark:text-gray-300">
+                      Adjust your preferences anytime in your profile settings
+                    </p>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        );
+        
       case 'feedback':
         return (
           <div className="space-y-4">
@@ -526,6 +706,15 @@ const ViewerOnboarding: React.FC<ViewerOnboardingProps> = ({ currentStep, onComp
           Complete
         </button>
       </div>
+    </div>
+  );
+  };
+
+  // Main render function
+  return (
+    <div className="p-6 bg-white dark:bg-gray-800 rounded-lg shadow-sm">
+      {renderStepContent()}
+      {renderNavButtons()}
     </div>
   );
 };
