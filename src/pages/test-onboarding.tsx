@@ -16,7 +16,26 @@ const TestOnboardingPage: NextPage = () => {
   const [error, setError] = useState<string | null>(null);
   const [onboardingData, setOnboardingData] = useState<any>(null);
   const [pubkey, setPubkey] = useState<string | null>(null);
+  
+  // Force override localStorage keys to ensure the onboarding knows we're logged in
+  useEffect(() => {
+    if (pubkey) {
+      try {
+        localStorage.setItem('nostr_real_pk', pubkey);
+        localStorage.setItem('cachedAuthState', JSON.stringify({
+          isLoggedIn: true,
+          pubkey,
+          isTestMode: false,
+          availableRoles: ['viewer'],
+          currentRole: 'viewer'
+        }));
+      } catch (err) {
+        console.error('Error setting localStorage:', err);
+      }
+    }
+  }, [pubkey]);
 
+  // Check auth and load onboarding data
   useEffect(() => {
     const checkAuth = async () => {
       try {
@@ -87,20 +106,6 @@ const TestOnboardingPage: NextPage = () => {
       </Layout>
     );
   }
-
-  // Force override localStorage keys to ensure the onboarding knows we're logged in
-  useEffect(() => {
-    if (pubkey) {
-      localStorage.setItem('nostr_real_pk', pubkey);
-      localStorage.setItem('cachedAuthState', JSON.stringify({
-        isLoggedIn: true,
-        pubkey,
-        isTestMode: false,
-        availableRoles: ['viewer'],
-        currentRole: 'viewer'
-      }));
-    }
-  }, [pubkey]);
 
   return (
     <Layout 
