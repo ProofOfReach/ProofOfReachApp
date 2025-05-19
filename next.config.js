@@ -1,6 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  reactStrictMode: true,
+  reactStrictMode: false, // Disable strict mode in development to reduce renders
+  swcMinify: true, // Use SWC minifier for better performance
   async headers() {
     return [
       {

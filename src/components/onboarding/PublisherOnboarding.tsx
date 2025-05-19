@@ -8,17 +8,21 @@ interface PublisherOnboardingProps {
 
 type IntegrationType = 'simple' | 'javascript' | 'sdk' | null;
 
-const PublisherOnboarding: React.FC<PublisherOnboardingProps> = ({ currentStep }) => {
+// Use React.memo for performance optimization to prevent unnecessary re-renders
+const PublisherOnboarding: React.FC<PublisherOnboardingProps> = React.memo(({ currentStep }) => {
   // State to track which integration method was selected
   const [selectedIntegration, setSelectedIntegration] = useState<IntegrationType>(null);
   
   // Content for each step in the publisher onboarding flow
-  // Pass integration selection to parent component for context
+  // Only log in development mode to reduce processing
   useEffect(() => {
-    // This is where you would store the selection in a real app
-    console.log('Selected integration method:', selectedIntegration);
+    if (process.env.NODE_ENV === 'development') {
+      // Reduce console output to improve performance
+      // console.log('Selected integration method:', selectedIntegration);
+    }
   }, [selectedIntegration]);
 
+  // Render step content
   const renderStepContent = () => {
     switch (currentStep) {
       case 'integration-details':
@@ -558,6 +562,6 @@ function MyComponent() {
       {renderStepContent()}
     </div>
   );
-};
+}));
 
 export default PublisherOnboarding;
