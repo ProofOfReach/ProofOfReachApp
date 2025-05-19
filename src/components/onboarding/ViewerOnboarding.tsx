@@ -1,7 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { OnboardingStep } from '@/context/OnboardingContext';
 import OnboardingProgress from '@/components/onboarding/OnboardingProgress';
-import { CheckCircle, Search, ChevronRight, ChevronLeft } from 'react-feather';
+import { CheckCircle, Search, ChevronRight, ChevronLeft, Check } from 'react-feather';
+
+interface Publisher {
+  id: string;
+  name: string;
+  description: string;
+  initials: string;
+  colorClass: string;
+  followed: boolean;
+}
 
 interface ViewerOnboardingProps {
   currentStep?: OnboardingStep;
@@ -9,6 +18,33 @@ interface ViewerOnboardingProps {
 }
 
 const ViewerOnboarding: React.FC<ViewerOnboardingProps> = ({ currentStep = 'role-selection', onComplete }) => {
+  // Sample publishers for demonstration
+  const [publishers, setPublishers] = useState<Publisher[]>([
+    {
+      id: '1',
+      name: 'Bitcoin Magazine',
+      description: 'The world\'s first publication dedicated to Bitcoin',
+      initials: 'BTC',
+      colorClass: 'bg-purple-100 dark:bg-purple-900 text-purple-600 dark:text-purple-300',
+      followed: false
+    },
+    {
+      id: '2',
+      name: 'Nostr Talk',
+      description: 'The latest news about the Nostr ecosystem',
+      initials: 'NT',
+      colorClass: 'bg-blue-100 dark:bg-blue-900 text-blue-600 dark:text-blue-300',
+      followed: false
+    }
+  ]);
+  
+  // Handle follow/unfollow publisher
+  const toggleFollow = (publisherId: string) => {
+    setPublishers(publishers.map(pub => 
+      pub.id === publisherId ? { ...pub, followed: !pub.followed } : pub
+    ));
+  };
+  
   // Map from OnboardingContext step names to local step names
   const mapOnboardingStepToLocal = (step: OnboardingStep): string => {
     const stepMap: Record<string, string> = {
@@ -186,39 +222,41 @@ const ViewerOnboarding: React.FC<ViewerOnboardingProps> = ({ currentStep = 'role
                 <h3 className="font-medium text-gray-900 dark:text-white mb-3">Recommended Publishers</h3>
                 
                 <div className="space-y-4">
-                  <div className="flex items-start p-3 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg">
-                    <div className="w-12 h-12 bg-purple-100 dark:bg-purple-900 rounded-full flex items-center justify-center text-purple-600 dark:text-purple-300 mr-3">
-                      BTC
-                    </div>
-                    <div className="flex-1">
-                      <h4 className="font-medium">Bitcoin Magazine</h4>
-                      <p className="text-sm text-gray-600 dark:text-gray-400">
-                        The world's first publication dedicated to Bitcoin
-                      </p>
-                      <div className="mt-2">
-                        <button className="px-3 py-1 bg-purple-100 hover:bg-purple-200 text-purple-700 text-sm rounded-full dark:bg-purple-900/50 dark:hover:bg-purple-900 dark:text-purple-300">
-                          Follow
-                        </button>
+                  {publishers.map(publisher => (
+                    <div 
+                      key={publisher.id}
+                      className="flex items-start p-3 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg transition"
+                    >
+                      <div className={`w-12 h-12 ${publisher.colorClass} rounded-full flex items-center justify-center mr-3`}>
+                        {publisher.initials}
+                      </div>
+                      <div className="flex-1">
+                        <h4 className="font-medium">{publisher.name}</h4>
+                        <p className="text-sm text-gray-600 dark:text-gray-400">
+                          {publisher.description}
+                        </p>
+                        <div className="mt-2">
+                          {publisher.followed ? (
+                            <button 
+                              className="px-3 py-1 bg-green-100 text-green-700 text-sm rounded-full dark:bg-green-900/50 dark:text-green-300 flex items-center"
+                              disabled
+                              data-testid={`followed-${publisher.id}`}
+                            >
+                              <Check size={14} className="mr-1" /> Followed
+                            </button>
+                          ) : (
+                            <button 
+                              onClick={() => toggleFollow(publisher.id)}
+                              className="px-3 py-1 bg-purple-100 hover:bg-purple-200 text-purple-700 text-sm rounded-full dark:bg-purple-900/50 dark:hover:bg-purple-900 dark:text-purple-300"
+                              data-testid={`follow-${publisher.id}`}
+                            >
+                              Follow
+                            </button>
+                          )}
+                        </div>
                       </div>
                     </div>
-                  </div>
-                  
-                  <div className="flex items-start p-3 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg">
-                    <div className="w-12 h-12 bg-blue-100 dark:bg-blue-900 rounded-full flex items-center justify-center text-blue-600 dark:text-blue-300 mr-3">
-                      NT
-                    </div>
-                    <div className="flex-1">
-                      <h4 className="font-medium">Nostr Talk</h4>
-                      <p className="text-sm text-gray-600 dark:text-gray-400">
-                        The latest news about the Nostr ecosystem
-                      </p>
-                      <div className="mt-2">
-                        <button className="px-3 py-1 bg-purple-100 hover:bg-purple-200 text-purple-700 text-sm rounded-full dark:bg-purple-900/50 dark:hover:bg-purple-900 dark:text-purple-300">
-                          Follow
-                        </button>
-                      </div>
-                    </div>
-                  </div>
+                  ))}
                 </div>
               </div>
             </div>
