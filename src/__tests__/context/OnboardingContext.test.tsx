@@ -1,19 +1,20 @@
 import React from 'react';
 import { render, screen, act } from '@testing-library/react';
 import { OnboardingProvider, useOnboarding } from '@/context/OnboardingContext';
+import { useRouter } from 'next/router';
+import * as AuthContext from '@/context/AuthContext';
+import * as RoleContext from '@/context/RoleContext';
+import * as onboardingService from '@/lib/onboardingService';
 
 // Mock dependencies
 jest.mock('next/router', () => ({
-  useRouter: () => ({
-    push: jest.fn(),
-    pathname: '/'
-  })
+  useRouter: jest.fn()
 }));
 
 // Mock auth hook
-jest.mock('@/context/AuthContext', () => ({
-  useAuth: () => ({
-    auth: { pubkey: 'test-pubkey' },
+jest.mock('@/hooks/useAuthRefactored', () => ({
+  useAuthRefactored: () => ({
+    authState: { pubkey: 'test-pubkey' },
     isAuthenticated: true,
     loading: false
   })
@@ -21,18 +22,8 @@ jest.mock('@/context/AuthContext', () => ({
 
 // Mock role hooks
 jest.mock('@/context/RoleContext', () => ({
-  useRole: () => ({
-    currentRole: 'viewer',
-    hasRole: jest.fn().mockReturnValue(true),
-    availableRoles: ['viewer', 'publisher', 'advertiser'],
-    loading: false
-  }),
-  useRoleContext: () => ({
-    currentRole: 'viewer',
-    hasRole: jest.fn().mockReturnValue(true),
-    availableRoles: ['viewer', 'publisher', 'advertiser'],
-    loading: false
-  })
+  useRole: jest.fn(),
+  useRoleContext: jest.fn()
 }));
 
 // Mock onboarding service
@@ -90,22 +81,17 @@ describe('OnboardingContext', () => {
     };
     (useRouter as jest.Mock).mockReturnValue(mockRouter);
     
-    const mockAuth = {
-      auth: { pubkey: 'test-pubkey' },
-      isAuthenticated: true,
-      loading: false
-    };
-    jest.spyOn(AuthContext, 'useAuth').mockReturnValue(mockAuth);
-    
+    // Setup RoleContext mocks
     const mockRole = {
       currentRole: 'viewer',
       hasRole: jest.fn().mockReturnValue(true),
       availableRoles: ['viewer', 'publisher', 'advertiser'],
       loading: false
     };
-    jest.spyOn(RoleContext, 'useRole').mockReturnValue(mockRole);
-    jest.spyOn(RoleContext, 'useRoleContext').mockReturnValue(mockRole);
+    (RoleContext.useRole as jest.Mock).mockReturnValue(mockRole);
+    (RoleContext.useRoleContext as jest.Mock).mockReturnValue(mockRole);
     
+    // Setup onboardingService mocks
     jest.spyOn(onboardingService, 'getOnboardingProgress').mockResolvedValue({
       role: 'viewer',
       completed: false,
@@ -115,6 +101,8 @@ describe('OnboardingContext', () => {
     
     jest.spyOn(onboardingService, 'updateOnboardingProgress').mockResolvedValue(true);
     jest.spyOn(onboardingService, 'isOnboardingComplete').mockResolvedValue(false);
+    jest.spyOn(onboardingService, 'markOnboardingComplete').mockResolvedValue(true);
+    jest.spyOn(onboardingService, 'getPostLoginRedirectUrl').mockResolvedValue('/dashboard');
   });
 
   it('provides the onboarding context to children', async () => {
