@@ -208,10 +208,20 @@ export class UnifiedRoleService {
         return [...this.roleCache[userId]];
       }
       
-      // Get user from database
-      const user = await prisma.user.findFirst({
+      // Get user with their roles from database
+      const user = await prisma.user.findUnique({
         where: {
           id: userId
+        },
+        include: {
+          UserRole: {
+            where: {
+              isActive: true
+            },
+            select: {
+              role: true
+            }
+          }
         }
       });
       
@@ -220,23 +230,25 @@ export class UnifiedRoleService {
         return [this.config.defaultRole];
       }
       
-      // Determine available roles based on user flags
+      // Always include viewer role as a base role
       const roles: UserRoleType[] = ['viewer'];
       
-      if (user.isAdvertiser) {
-        roles.push('advertiser');
+      // Add all active roles from UserRole table
+      if (user.UserRole && user.UserRole.length > 0) {
+        user.UserRole.forEach(roleRecord => {
+          const normalizedRole = normalizeRole(roleRecord.role) as UserRoleType;
+          if (!roles.includes(normalizedRole) && isValidUserRole(normalizedRole)) {
+            roles.push(normalizedRole);
+          }
+        });
       }
       
-      if (user.isPublisher) {
-        roles.push('publisher');
-      }
-      
-      if (user.isAdmin) {
-        roles.push('admin');
-      }
-      
-      if (user.isStakeholder) {
-        roles.push('stakeholder');
+      // Normalize the current role if it's set in the user record
+      if (user.currentRole) {
+        const normalizedCurrentRole = normalizeRole(user.currentRole) as UserRoleType;
+        if (isValidUserRole(normalizedCurrentRole) && !roles.includes(normalizedCurrentRole)) {
+          roles.push(normalizedCurrentRole);
+        }
       }
       
       // Cache the roles in memory for future use
@@ -270,8 +282,14 @@ export class UnifiedRoleService {
    * Check if current user has a specific role (local context version)
    */
   private hasRoleInLocalContext(role: UserRoleType): boolean {
+    // Normalize the role (convert 'user' to 'viewer')
+    const normalizedRole = normalizeRole(role) as UserRoleType;
+    
     const data = this.getRoleData();
-    return data.currentRole === role;
+    // Make sure we normalize the currentRole for comparison as well
+    const normalizedCurrentRole = normalizeRole(data.currentRole) as UserRoleType;
+    
+    return normalizedCurrentRole === normalizedRole;
   }
   
   /**
@@ -282,14 +300,17 @@ export class UnifiedRoleService {
    * @returns Promise resolving to boolean
    */
   private async hasRoleOnServer(userId: string, role: UserRoleType): Promise<boolean> {
+    // Normalize the role (convert 'user' to 'viewer')
+    const normalizedRole = normalizeRole(role) as UserRoleType;
+    
     // Validate role
-    if (!isValidUserRole(role)) {
+    if (!isValidUserRole(normalizedRole)) {
       return false;
     }
     
     // Get available roles (directly check, don't use hasRole to avoid recursion)
     const roles = await this.getUserRoles(userId);
-    return roles.includes(role);
+    return roles.includes(normalizedRole);
   }
   
   /**
@@ -311,8 +332,12 @@ export class UnifiedRoleService {
         return false;
       }
       
-      // Get user
-      const user = await prisma.user.findFirst({
+      // Normalize the roles (convert 'user' to 'viewer')
+      const normalizedAddRoles = addRoles.map(role => normalizeRole(role)) as UserRoleType[];
+      const normalizedRemoveRoles = removeRoles.map(role => normalizeRole(role)) as UserRoleType[];
+      
+      // Check if the user exists
+      const user = await prisma.user.findUnique({
         where: { id: userId }
       });
       
@@ -320,30 +345,65 @@ export class UnifiedRoleService {
         return false;
       }
       
-      // Prepare update data
-      const updateData: Record<string, boolean> = {};
-      
-      // Add roles
-      for (const role of addRoles) {
-        if (role === 'advertiser') updateData.isAdvertiser = true;
-        if (role === 'publisher') updateData.isPublisher = true;
-        if (role === 'admin') updateData.isAdmin = true;
-        if (role === 'stakeholder') updateData.isStakeholder = true;
+      // Add roles - create UserRole entries for each role to add
+      for (const role of normalizedAddRoles) {
+        // Skip if the role is already added
+        const existingRole = await prisma.userRole.findFirst({
+          where: {
+            userId,
+            role: role
+          }
+        });
+        
+        if (existingRole) {
+          // If the role exists but is inactive, reactivate it
+          if (!existingRole.isActive) {
+            await prisma.userRole.update({
+              where: { id: existingRole.id },
+              data: { isActive: true }
+            });
+          }
+        } else {
+          // Create a new role entry
+          await prisma.userRole.create({
+            data: {
+              userId,
+              role: role,
+              isActive: true
+            }
+          });
+        }
       }
       
-      // Remove roles
-      for (const role of removeRoles) {
-        if (role === 'advertiser') updateData.isAdvertiser = false;
-        if (role === 'publisher') updateData.isPublisher = false;
-        if (role === 'admin') updateData.isAdmin = false;
-        if (role === 'stakeholder') updateData.isStakeholder = false;
+      // Remove roles - set isActive to false for each role to remove
+      for (const role of normalizedRemoveRoles) {
+        const existingRole = await prisma.userRole.findFirst({
+          where: {
+            userId,
+            role: role,
+            isActive: true
+          }
+        });
+        
+        if (existingRole) {
+          await prisma.userRole.update({
+            where: { id: existingRole.id },
+            data: { isActive: false }
+          });
+        }
       }
       
-      // Update user
-      await prisma.user.update({
-        where: { id: userId },
-        data: updateData
-      });
+      // Update user's current role if it was removed
+      if (normalizedRemoveRoles.includes(user.currentRole as UserRoleType)) {
+        // Set to default role
+        await prisma.user.update({
+          where: { id: userId },
+          data: { 
+            currentRole: this.config.defaultRole,
+            previousRole: user.currentRole
+          }
+        });
+      }
       
       return true;
     } catch (error) {
@@ -535,7 +595,8 @@ export class UnifiedRoleService {
       if (userId.startsWith('pk_test_') && typeof window !== 'undefined') {
         const testModeRole = localStorage.getItem('userRole');
         if (testModeRole && isValidUserRole(testModeRole as any)) {
-          return testModeRole as UserRoleType;
+          // Normalize the role (convert 'user' to 'viewer')
+          return normalizeRole(testModeRole) as UserRoleType;
         }
       }
       
@@ -545,17 +606,21 @@ export class UnifiedRoleService {
         include: { preferences: true }
       });
       
-      // If user has a preference, return that
+      // If user has a preference, return that (with normalization)
       if (user?.preferences?.currentRole && isValidUserRole(user.preferences.currentRole as any)) {
-        return user.preferences.currentRole as UserRoleType;
+        // Normalize the role (convert 'user' to 'viewer')
+        return normalizeRole(user.preferences.currentRole) as UserRoleType;
       }
       
-      // Otherwise get first available role
+      // Otherwise get first available role (will already be normalized in getUserRoles)
       const roles = await this.getUserRoles(userId);
-      return roles[0] || this.config.defaultRole;
+      
+      // If we still don't have roles, return the default (normalized)
+      return roles[0] || normalizeRole(this.config.defaultRole);
     } catch (error) {
       logger.error('Error getting current role from server:', error);
-      return this.config.defaultRole;
+      // Return normalized default role
+      return normalizeRole(this.config.defaultRole) as UserRoleType;
     }
   }
   
