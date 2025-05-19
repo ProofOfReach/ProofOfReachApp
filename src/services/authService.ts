@@ -237,13 +237,21 @@ export class AuthService {
       }
       
       try {
-        const response = await fetch(`${this.API_BASE_URL}/auth/check`, {
+        // Set a timeout for the fetch request to avoid long-hanging requests
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 5000);
+        
+        // Use a relative URL to avoid cross-origin issues
+        const response = await fetch('/api/auth/check', {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
           },
           credentials: 'include', // Important for cookies
+          signal: controller.signal
         });
+        
+        clearTimeout(timeoutId);
   
         if (!response.ok) {
           return null;
