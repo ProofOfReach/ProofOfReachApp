@@ -1,83 +1,48 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { useRouter } from 'next/router';
-import { GetServerSideProps } from 'next';
-import { useAuthRefactored } from '@/hooks/useAuthRefactored';
-import OnboardingWizard from '@/components/onboarding/OnboardingWizard';
+import { NextPage } from 'next';
+import { useAuth } from '@/context/AuthContext';
 import { OnboardingProvider } from '@/context/OnboardingContext';
-import OnboardingService from '@/lib/onboardingService';
-import { logger } from '@/lib/logger';
-import Loading from '@/components/ui/loading';
+import OnboardingWizard from '@/components/onboarding/OnboardingWizard';
+import Layout from '@/components/Layout';
+import Loading from '@/components/Loading';
 
-// This page handles the onboarding flow for users
-export default function OnboardingPage() {
+const OnboardingPage: NextPage = () => {
   const router = useRouter();
-  const { isLoggedIn, loading, auth } = useAuthRefactored();
-  const [showRoleConfirmation, setShowRoleConfirmation] = useState(false);
-  const [isRedirecting, setIsRedirecting] = useState(false);
-
+  const { auth, loading, isLoggedIn } = useAuth();
+  
+  // Redirect to login if not authenticated
   useEffect(() => {
-    // Handle case when user is not logged in
     if (!loading && !isLoggedIn) {
-      logger.debug('User not logged in, redirecting to login page');
-      router.push('/login');
-      return;
+      router.push('/login?redirect=/onboarding');
     }
-
-    // Check if onboarding is already complete for this role
-    const checkOnboardingStatus = async () => {
-      if (isLoggedIn && auth?.pubkey && auth?.currentRole) {
-        try {
-          const isComplete = await OnboardingService.isOnboardingComplete(
-            auth.pubkey, 
-            auth.currentRole
-          );
-
-          if (isComplete) {
-            logger.debug(`Onboarding already complete for ${auth.currentRole}, redirecting to dashboard`);
-            setIsRedirecting(true);
-            router.push(`/dashboard/${auth.currentRole}`);
-          } else {
-            // Determine if we need to show role confirmation
-            // For now, we'll show it for all users to confirm their role before starting onboarding
-            setShowRoleConfirmation(true);
-          }
-        } catch (error) {
-          logger.error('Error checking onboarding status:', error);
-        }
-      }
-    };
-
-    if (!loading && isLoggedIn) {
-      checkOnboardingStatus();
-    }
-  }, [loading, isLoggedIn, auth, router]);
-
-  // Show loading state while checking auth status
-  if (loading || isRedirecting) {
+  }, [isLoggedIn, loading, router]);
+  
+  // If still loading auth state or not logged in, show loading
+  if (loading || !isLoggedIn) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <Loading size="lg" />
-        <p className="ml-4 text-lg">
-          {isRedirecting ? 'Redirecting to dashboard...' : 'Loading...'}
-        </p>
-      </div>
+      <Layout title="Loading Onboarding...">
+        <div className="flex items-center justify-center min-h-screen">
+          <Loading size="lg" />
+        </div>
+      </Layout>
     );
   }
-
-  // Once logged in, show the onboarding wizard
+  
   return (
-    <OnboardingProvider>
-      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-12">
-        <OnboardingWizard showRoleConfirmation={showRoleConfirmation} />
+    <Layout 
+      title="Nostr Ads Onboarding"
+      hideNavbar 
+      fullWidth
+      className="bg-gray-50 dark:bg-gray-900"
+    >
+      <div className="container mx-auto py-8 px-4">
+        <OnboardingProvider>
+          <OnboardingWizard />
+        </OnboardingProvider>
       </div>
-    </OnboardingProvider>
+    </Layout>
   );
-}
-
-// Server-side props (optional)
-export const getServerSideProps: GetServerSideProps = async (context) => {
-  // You can add server-side logic here if needed
-  return {
-    props: {},
-  };
 };
+
+export default OnboardingPage;

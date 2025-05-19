@@ -1,13 +1,11 @@
-import { prisma } from '@/lib/prisma';
-import { UserRole } from '@/types/auth';
+import { UserRole } from '@prisma/client';
+import prisma from '@/lib/prisma';
 import { logger } from '@/lib/logger';
-import { errorService } from '@/lib/errorService';
-import { ApiError } from '@/utils/apiError';
 
 /**
  * Service for managing onboarding state and redirections
  */
-const OnboardingService = {
+const onboardingService = {
   /**
    * Check if a user has completed onboarding
    * @param pubkey The user's public key
@@ -16,32 +14,34 @@ const OnboardingService = {
    */
   isOnboardingComplete: async (pubkey: string, role: UserRole): Promise<boolean> => {
     try {
-      if (!pubkey) {
-        logger.warn('Cannot check onboarding status: No pubkey provided');
+      // First, find the user by their pubkey
+      const user = await prisma.user.findUnique({
+        where: { nostrPubkey: pubkey }
+      });
+
+      if (!user) {
+        logger.warn(`User with pubkey ${pubkey} not found when checking onboarding status`);
         return false;
       }
 
-      const onboardingStatus = await prisma.userOnboarding.findFirst({
+      // Check if there's an onboarding record for this user and role
+      const onboardingRecord = await prisma.userOnboarding.findUnique({
         where: {
-          userPubkey: pubkey,
-          role: role,
-        },
+          userPubkey_role: {
+            userPubkey: pubkey,
+            role
+          }
+        }
       });
 
-      return !!onboardingStatus?.isComplete;
+      return onboardingRecord?.isComplete || false;
     } catch (error) {
-      errorService.reportError({
-        error,
-        context: {
-          operation: 'isOnboardingComplete',
-          pubkey,
-          role,
-        },
-        message: 'Failed to check onboarding status',
+      logger.error('Error checking onboarding completion status', { 
+        error, 
+        pubkey, 
+        role 
       });
-      
-      // Default to false on error to ensure user can go through onboarding
-      return false;
+      throw new Error(`Failed to check onboarding status: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
   },
 
@@ -52,41 +52,45 @@ const OnboardingService = {
    */
   markOnboardingComplete: async (pubkey: string, role: UserRole): Promise<void> => {
     try {
-      if (!pubkey) {
-        logger.warn('Cannot complete onboarding: No pubkey provided');
-        return;
+      // First, find the user by their pubkey
+      const user = await prisma.user.findUnique({
+        where: { nostrPubkey: pubkey }
+      });
+
+      if (!user) {
+        logger.warn(`User with pubkey ${pubkey} not found when marking onboarding complete`);
+        throw new Error('User not found');
       }
 
+      // Upsert the onboarding record (create if it doesn't exist, update if it does)
       await prisma.userOnboarding.upsert({
         where: {
           userPubkey_role: {
             userPubkey: pubkey,
-            role: role,
-          },
+            role
+          }
         },
         update: {
           isComplete: true,
-          completedAt: new Date(),
+          completedAt: new Date()
         },
         create: {
           userPubkey: pubkey,
-          role: role,
+          role,
           isComplete: true,
           completedAt: new Date(),
-        },
+          userId: user.id
+        }
       });
 
-      logger.debug(`Onboarding completed for user ${pubkey} with role ${role}`);
+      logger.info(`Onboarding marked complete for user ${pubkey} with role ${role}`);
     } catch (error) {
-      errorService.reportError({
-        error,
-        context: {
-          operation: 'markOnboardingComplete',
-          pubkey,
-          role,
-        },
-        message: 'Failed to complete onboarding',
+      logger.error('Error marking onboarding as complete', { 
+        error, 
+        pubkey, 
+        role 
       });
+      throw new Error(`Failed to mark onboarding as complete: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
   },
 
@@ -97,56 +101,102 @@ const OnboardingService = {
    */
   resetOnboardingStatus: async (pubkey: string, role?: UserRole): Promise<void> => {
     try {
-      if (!pubkey) {
-        logger.warn('Cannot reset onboarding: No pubkey provided');
-        return;
+      // First, find the user by their pubkey
+      const user = await prisma.user.findUnique({
+        where: { nostrPubkey: pubkey }
+      });
+
+      if (!user) {
+        logger.warn(`User with pubkey ${pubkey} not found when resetting onboarding status`);
+        throw new Error('User not found');
       }
 
       if (role) {
         // Reset specific role
-        await prisma.userOnboarding.upsert({
+        await prisma.userOnboarding.update({
           where: {
             userPubkey_role: {
               userPubkey: pubkey,
-              role: role,
-            },
-          },
-          update: {
-            isComplete: false,
-            completedAt: null,
-          },
-          create: {
-            userPubkey: pubkey,
-            role: role,
-            isComplete: false,
-          },
-        });
-
-        logger.debug(`Onboarding reset for user ${pubkey} with role ${role}`);
-      } else {
-        // Reset all roles
-        await prisma.userOnboarding.updateMany({
-          where: {
-            userPubkey: pubkey,
+              role
+            }
           },
           data: {
             isComplete: false,
             completedAt: null,
-          },
+            lastStep: null
+          }
         });
-
-        logger.debug(`Onboarding reset for all roles of user ${pubkey}`);
+        logger.info(`Onboarding reset for user ${pubkey} with role ${role}`);
+      } else {
+        // Reset all roles
+        await prisma.userOnboarding.updateMany({
+          where: {
+            userPubkey: pubkey
+          },
+          data: {
+            isComplete: false,
+            completedAt: null,
+            lastStep: null
+          }
+        });
+        logger.info(`Onboarding reset for user ${pubkey} across all roles`);
       }
     } catch (error) {
-      errorService.reportError({
-        error,
-        context: {
-          operation: 'resetOnboardingStatus',
-          pubkey,
-          role,
-        },
-        message: 'Failed to reset onboarding status',
+      logger.error('Error resetting onboarding status', { 
+        error, 
+        pubkey, 
+        role 
       });
+      throw new Error(`Failed to reset onboarding status: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    }
+  },
+
+  /**
+   * Save the current step in the onboarding process
+   * @param pubkey The user's public key
+   * @param role The role being onboarded
+   * @param step The current step in the onboarding process
+   */
+  saveOnboardingStep: async (pubkey: string, role: UserRole, step: string): Promise<void> => {
+    try {
+      // First, find the user by their pubkey
+      const user = await prisma.user.findUnique({
+        where: { nostrPubkey: pubkey }
+      });
+
+      if (!user) {
+        logger.warn(`User with pubkey ${pubkey} not found when saving onboarding step`);
+        throw new Error('User not found');
+      }
+
+      // Upsert the onboarding record
+      await prisma.userOnboarding.upsert({
+        where: {
+          userPubkey_role: {
+            userPubkey: pubkey,
+            role
+          }
+        },
+        update: {
+          lastStep: step
+        },
+        create: {
+          userPubkey: pubkey,
+          role,
+          lastStep: step,
+          isComplete: false,
+          userId: user.id
+        }
+      });
+    } catch (error) {
+      logger.error('Error saving onboarding step', { 
+        error, 
+        pubkey, 
+        role, 
+        step 
+      });
+      // Don't throw here, failing to save the step shouldn't break the onboarding flow
+      logger.warn(`Failed to save onboarding step: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
   },
 
@@ -158,46 +208,37 @@ const OnboardingService = {
    */
   getPostLoginRedirectUrl: async (pubkey: string, role: UserRole): Promise<string> => {
     try {
-      if (!pubkey) {
-        logger.warn('Cannot determine redirect URL: No pubkey provided');
-        return '/dashboard';
-      }
-
-      const onboardingComplete = await OnboardingService.isOnboardingComplete(pubkey, role);
-
-      if (onboardingComplete) {
-        // If onboarding is complete, redirect to the appropriate dashboard
-        switch (role) {
-          case 'viewer':
-            return '/dashboard/viewer';
-          case 'publisher':
-            return '/dashboard/publisher';
-          case 'advertiser':
-            return '/dashboard/advertiser';
-          case 'admin':
-            return '/dashboard/admin';
-          default:
-            return '/dashboard';
-        }
-      } else {
-        // If onboarding is not complete, redirect to the onboarding page
+      // Check if onboarding is complete for this role
+      const isComplete = await onboardingService.isOnboardingComplete(pubkey, role);
+      
+      if (!isComplete) {
+        // If onboarding is not complete, redirect to onboarding
         return '/onboarding';
       }
-    } catch (error) {
-      errorService.reportError({
-        error,
-        context: {
-          operation: 'getPostLoginRedirectUrl',
-          pubkey,
-          role,
-        },
-        message: 'Failed to determine redirect URL',
-      });
       
-      // Default to dashboard on error
-      return '/dashboard';
+      // If onboarding is complete, redirect to the appropriate dashboard
+      switch (role) {
+        case 'viewer':
+          return '/dashboard'; // Generic dashboard for viewers
+        case 'publisher':
+          return '/dashboard/publisher'; // Publisher-specific dashboard
+        case 'advertiser':
+          return '/dashboard/advertiser'; // Advertiser-specific dashboard
+        case 'admin':
+          return '/admin'; // Admin dashboard
+        default:
+          return '/dashboard'; // Default fallback
+      }
+    } catch (error) {
+      logger.error('Error getting post-login redirect URL', { 
+        error, 
+        pubkey, 
+        role 
+      });
+      // If there's an error, default to the onboarding page to be safe
+      return '/onboarding';
     }
   }
 };
 
-export default OnboardingService;
+export default onboardingService;
