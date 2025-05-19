@@ -15,6 +15,7 @@ export type OnboardingStep =
   | 'feedback'
   // Publisher steps
   | 'choose-integration'
+  | 'integration-details'
   | 'ad-slot-config'
   | 'setup-wallet'
   | 'enable-test-mode'
@@ -43,6 +44,7 @@ const viewerSteps: OnboardingStep[] = [
 const publisherSteps: OnboardingStep[] = [
   'role-selection',
   'choose-integration',
+  'integration-details',
   'ad-slot-config',
   'setup-wallet',
   'enable-test-mode',

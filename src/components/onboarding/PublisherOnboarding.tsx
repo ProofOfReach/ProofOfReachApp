@@ -1,15 +1,171 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { OnboardingStep } from '@/context/OnboardingContext';
-import { Code, DollarSign, Layout, Settings, CheckCircle, ToggleRight } from 'react-feather';
+import { Code, DollarSign, Layout, Settings, CheckCircle, ToggleRight, Archive } from 'react-feather';
 
 interface PublisherOnboardingProps {
   currentStep: OnboardingStep;
 }
 
+type IntegrationType = 'simple' | 'javascript' | 'sdk' | null;
+
 const PublisherOnboarding: React.FC<PublisherOnboardingProps> = ({ currentStep }) => {
+  // State to track which integration method was selected
+  const [selectedIntegration, setSelectedIntegration] = useState<IntegrationType>(null);
+  
   // Content for each step in the publisher onboarding flow
+  // Pass integration selection to parent component for context
+  useEffect(() => {
+    // This is where you would store the selection in a real app
+    console.log('Selected integration method:', selectedIntegration);
+  }, [selectedIntegration]);
+
   const renderStepContent = () => {
     switch (currentStep) {
+      case 'integration-details':
+        return (
+          <div className="space-y-4">
+            <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
+              <Code className="inline-block mr-2 mb-1" size={20} />
+              Integration Details
+            </h2>
+            <p className="text-gray-600 dark:text-gray-300 mb-4">
+              Follow these steps to integrate Nostr Ads into your platform:
+            </p>
+            
+            {selectedIntegration === 'simple' && (
+              <div className="space-y-4">
+                <div className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg">
+                  <h3 className="font-medium text-gray-900 dark:text-white mb-2">Step 1: Add the Nostr Ads Script</h3>
+                  <p className="text-sm text-gray-600 dark:text-gray-300 mb-3">
+                    Add this script tag to the &lt;head&gt; section of your HTML:
+                  </p>
+                  <div className="bg-gray-100 dark:bg-gray-800 p-3 rounded text-sm font-mono overflow-x-auto">
+                    {`<script src="https://ads.nostr.com/sdk.js" async></script>`}
+                  </div>
+                </div>
+                
+                <div className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg">
+                  <h3 className="font-medium text-gray-900 dark:text-white mb-2">Step 2: Place Ad Container</h3>
+                  <p className="text-sm text-gray-600 dark:text-gray-300 mb-3">
+                    Add this HTML element wherever you want an ad to appear:
+                  </p>
+                  <div className="bg-gray-100 dark:bg-gray-800 p-3 rounded text-sm font-mono overflow-x-auto">
+                    {`<div class="nostr-ad" data-placement="sidebar"></div>`}
+                  </div>
+                  <p className="text-xs text-gray-500 mt-2">
+                    You can use different placement values: "feed", "sidebar", "banner"
+                  </p>
+                </div>
+              </div>
+            )}
+            
+            {selectedIntegration === 'javascript' && (
+              <div className="space-y-4">
+                <div className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg">
+                  <h3 className="font-medium text-gray-900 dark:text-white mb-2">Step 1: Include the SDK</h3>
+                  <p className="text-sm text-gray-600 dark:text-gray-300 mb-3">
+                    Add the Nostr Ads SDK to your website:
+                  </p>
+                  <div className="bg-gray-100 dark:bg-gray-800 p-3 rounded text-sm font-mono overflow-x-auto">
+                    {`<script src="https://ads.nostr.com/sdk.js"></script>`}
+                  </div>
+                </div>
+                
+                <div className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg">
+                  <h3 className="font-medium text-gray-900 dark:text-white mb-2">Step 2: Initialize the SDK</h3>
+                  <p className="text-sm text-gray-600 dark:text-gray-300 mb-3">
+                    Configure the SDK with your publisher key:
+                  </p>
+                  <div className="bg-gray-100 dark:bg-gray-800 p-3 rounded text-sm font-mono overflow-x-auto">
+                    {`<script>
+NostrAds.init({
+  publisherKey: 'YOUR_PUBLISHER_KEY',
+  defaultPlacement: 'feed'
+});
+</script>`}
+                  </div>
+                </div>
+                
+                <div className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg">
+                  <h3 className="font-medium text-gray-900 dark:text-white mb-2">Step 3: Load Ads Programmatically</h3>
+                  <p className="text-sm text-gray-600 dark:text-gray-300 mb-3">
+                    Add this code to display ads in your content:
+                  </p>
+                  <div className="bg-gray-100 dark:bg-gray-800 p-3 rounded text-sm font-mono overflow-x-auto">
+                    {`<script>
+// Create an ad container element
+const adContainer = document.getElementById('ad-container');
+
+// Load an ad into the container
+NostrAds.loadAd('sidebar', adContainer);
+</script>`}
+                  </div>
+                </div>
+              </div>
+            )}
+            
+            {selectedIntegration === 'sdk' && (
+              <div className="space-y-4">
+                <div className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg">
+                  <h3 className="font-medium text-gray-900 dark:text-white mb-2">Step 1: Install the SDK Package</h3>
+                  <p className="text-sm text-gray-600 dark:text-gray-300 mb-3">
+                    Use npm or yarn to install the SDK:
+                  </p>
+                  <div className="bg-gray-100 dark:bg-gray-800 p-3 rounded text-sm font-mono overflow-x-auto">
+                    npm install @nostr-ads/sdk<br/>
+                    # Or with yarn<br/>
+                    yarn add @nostr-ads/sdk
+                  </div>
+                </div>
+                
+                <div className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg">
+                  <h3 className="font-medium text-gray-900 dark:text-white mb-2">Step 2: Import and Configure</h3>
+                  <p className="text-sm text-gray-600 dark:text-gray-300 mb-3">
+                    In your application code:
+                  </p>
+                  <div className="bg-gray-100 dark:bg-gray-800 p-3 rounded text-sm font-mono overflow-x-auto">
+                    {`import { NostrAdsSDK } from '@nostr-ads/sdk';
+
+// Initialize the SDK
+const adsClient = new NostrAdsSDK({
+  apiKey: 'YOUR_PUBLISHER_API_KEY',
+  pubkey: 'YOUR_NOSTR_PUBKEY'
+});`}
+                  </div>
+                </div>
+                
+                <div className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg">
+                  <h3 className="font-medium text-gray-900 dark:text-white mb-2">Step 3: Use the SDK Components</h3>
+                  <p className="text-sm text-gray-600 dark:text-gray-300 mb-3">
+                    For React applications:
+                  </p>
+                  <div className="bg-gray-100 dark:bg-gray-800 p-3 rounded text-sm font-mono overflow-x-auto">
+                    {`import { AdUnit } from '@nostr-ads/react';
+
+function MyComponent() {
+  return (
+    <div>
+      <h2>My Content</h2>
+      <p>Content here...</p>
+      <AdUnit placement="feed" />
+    </div>
+  );
+}`}
+                  </div>
+                </div>
+              </div>
+            )}
+            
+            {!selectedIntegration && (
+              <div className="p-6 text-center bg-yellow-50 dark:bg-yellow-900/20 rounded-lg border border-yellow-200 dark:border-yellow-800">
+                <p className="text-yellow-700 dark:text-yellow-300">
+                  Please go back and select an integration method first.
+                </p>
+              </div>
+            )}
+          </div>
+        );
+      
       case 'choose-integration':
         return (
           <div className="space-y-4">
@@ -22,33 +178,45 @@ const PublisherOnboarding: React.FC<PublisherOnboardingProps> = ({ currentStep }
             </p>
             
             <div className="space-y-4 mt-4">
-              <div className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg hover:border-purple-500 cursor-pointer">
+              <div 
+                className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg hover:border-purple-500 cursor-pointer"
+                onClick={() => setSelectedIntegration('simple')}
+              >
                 <h3 className="font-medium text-gray-900 dark:text-white mb-2">Simple Embed</h3>
                 <p className="text-sm text-gray-600 dark:text-gray-300">
-                  Add a single line of code to show ads automatically in your content.
+                  Add a single line of code to show ads automatically in your content. 
+                  Perfect for blogs, websites, or any HTML-based platform.
                 </p>
-                <div className="mt-3 bg-gray-100 dark:bg-gray-800 p-2 rounded text-sm font-mono overflow-x-auto">
-                  &lt;div class="nostr-ad" data-slot="sidebar"&gt;&lt;/div&gt;
+                <div className="flex justify-end mt-2">
+                  <span className="text-xs px-2 py-1 bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300 rounded-full">Easiest</span>
                 </div>
               </div>
               
-              <div className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg hover:border-purple-500 cursor-pointer">
-                <h3 className="font-medium text-gray-900 dark:text-white mb-2">Advanced API</h3>
+              <div 
+                className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg hover:border-purple-500 cursor-pointer"
+                onClick={() => setSelectedIntegration('javascript')}
+              >
+                <h3 className="font-medium text-gray-900 dark:text-white mb-2">JavaScript API</h3>
                 <p className="text-sm text-gray-600 dark:text-gray-300">
                   Full control over ad placement and appearance using our JavaScript API.
+                  Ideal for custom implementations and fine-grained control.
                 </p>
-                <div className="mt-3 bg-gray-100 dark:bg-gray-800 p-2 rounded text-sm font-mono overflow-x-auto">
-                  NostrAds.loadAd('sidebar', document.getElementById('ad-container'));
+                <div className="flex justify-end mt-2">
+                  <span className="text-xs px-2 py-1 bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 rounded-full">Advanced</span>
                 </div>
               </div>
               
-              <div className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg hover:border-purple-500 cursor-pointer">
+              <div 
+                className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg hover:border-purple-500 cursor-pointer"
+                onClick={() => setSelectedIntegration('sdk')}
+              >
                 <h3 className="font-medium text-gray-900 dark:text-white mb-2">Client SDK</h3>
                 <p className="text-sm text-gray-600 dark:text-gray-300">
                   Use our SDK for React, Vue, or vanilla JavaScript for the best experience.
+                  Recommended for custom applications and framework-based sites.
                 </p>
-                <div className="mt-3 bg-gray-100 dark:bg-gray-800 p-2 rounded text-sm font-mono overflow-x-auto">
-                  npm install @nostr-ads/react
+                <div className="flex justify-end mt-2">
+                  <span className="text-xs px-2 py-1 bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 rounded-full">Recommended</span>
                 </div>
               </div>
             </div>
