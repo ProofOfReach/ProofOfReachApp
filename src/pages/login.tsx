@@ -177,9 +177,15 @@ const LoginPage: React.FC = () => {
       console.log('Calling login function with pubkey', pubkey);
       await login(pubkey, false);
 
-      // Redirect to dashboard
-      console.log('Login successful, redirecting to dashboard');
-      router.push('/dashboard');
+      // Import OnboardingService at the top of the file
+      // Determine where to redirect based on onboarding status
+      console.log('Login successful, checking onboarding status');
+      const onboardingService = await import('@/lib/onboardingService').then(mod => mod.default);
+      const currentRole = 'viewer'; // Default to viewer for new logins
+      const redirectUrl = await onboardingService.getPostLoginRedirectUrl(pubkey, currentRole);
+      
+      console.log(`Redirecting to ${redirectUrl}`);
+      router.push(redirectUrl);
     } catch (err: any) {
       console.error('Login error:', err);
       setError(err.message || 'Failed to login with Nostr extension');
@@ -251,16 +257,32 @@ const LoginPage: React.FC = () => {
         console.log('Calling login function for the new account');
         await login(publicKey, false);
         
-        // Redirect immediately to dashboard without showing credentials
-        console.log('Account created successfully, redirecting to dashboard');
-        router.push('/dashboard');
+        // Determine where to redirect based on onboarding status
+        console.log('Account created successfully, checking onboarding status');
+        const onboardingService = await import('@/lib/onboardingService').then(mod => mod.default);
+        const currentRole = 'viewer'; // Default to viewer for new accounts
+        const redirectUrl = await onboardingService.getPostLoginRedirectUrl(publicKey, currentRole);
+        
+        console.log(`Redirecting to ${redirectUrl}`);
+        router.push(redirectUrl);
       } catch (apiError: any) {
         console.error('API error during account creation:', apiError);
         
         // Even if API call fails, we've already set cookies and localStorage
-        // We can still redirect to dashboard immediately
-        console.log('Continuing to dashboard despite API error');
-        router.push('/dashboard');
+        // We can still redirect to onboarding or dashboard
+        console.log('API call failed but continuing with redirection');
+        try {
+          const onboardingService = await import('@/lib/onboardingService').then(mod => mod.default);
+          const currentRole = 'viewer'; // Default to viewer for new accounts
+          const redirectUrl = await onboardingService.getPostLoginRedirectUrl(publicKey, currentRole);
+          
+          console.log(`Redirecting to ${redirectUrl} despite API error`);
+          router.push(redirectUrl);
+        } catch (redirectError) {
+          console.error('Error during redirection:', redirectError);
+          // Fallback to dashboard if onboarding redirect fails
+          router.push('/dashboard');
+        }
       }
     } catch (err: any) {
       console.error('Create account error:', err);
@@ -309,10 +331,21 @@ const LoginPage: React.FC = () => {
         console.log('Test login successful:', result);
         
         // Use a small delay to ensure state is updated before navigation
-        setTimeout(() => {
-          // Force a direct window redirect instead of using the router
-          // This is more reliable for test mode login
-          window.location.href = '/dashboard';
+        // Determine where to redirect based on onboarding status
+        // Using setTimeout to ensure state is updated before navigation
+        setTimeout(async () => {
+          try {
+            const onboardingService = await import('@/lib/onboardingService').then(mod => mod.default);
+            const currentRole = 'advertiser'; // Default role for test mode is advertiser
+            const redirectUrl = await onboardingService.getPostLoginRedirectUrl(publicKey, currentRole);
+            
+            console.log(`Test Mode: Redirecting to ${redirectUrl}`);
+            window.location.href = redirectUrl;
+          } catch (error) {
+            console.error('Error getting redirect URL:', error);
+            // Fallback to dashboard on error
+            window.location.href = '/dashboard';
+          }
         }, 200);
       } catch (loginError) {
         console.error('Test login internal error:', loginError);
