@@ -6,6 +6,32 @@ import OnboardingWizard from '@/components/onboarding/OnboardingWizard';
 import { getWithAuth } from '@/lib/api';
 import { useRouter } from 'next/router';
 
+// Create a mock of the RoleContext to override the default values
+// This ensures all roles are available for selection in test mode
+const MockRoleProvider: React.FC<{children: React.ReactNode}> = ({children}) => {
+  // Override the role context values before the component mounts
+  useEffect(() => {
+    try {
+      // Make all roles available in localStorage for testing
+      const mockRoleData = {
+        availableRoles: ['viewer', 'publisher', 'advertiser'],
+        currentRole: 'viewer'
+      };
+      
+      // Store in window for components to access
+      (window as any).mockRoleData = mockRoleData;
+      
+      // Also mock the role-related localStorage settings
+      localStorage.setItem('availableRoles', JSON.stringify(mockRoleData.availableRoles));
+      localStorage.setItem('currentRole', mockRoleData.currentRole);
+    } catch (err) {
+      console.error('Error setting up mock role data:', err);
+    }
+  }, []);
+  
+  return <>{children}</>;
+};
+
 /**
  * Test onboarding page that doesn't require authenticated context
  * This is used for testing the onboarding flow directly
@@ -26,9 +52,15 @@ const TestOnboardingPage: NextPage = () => {
           isLoggedIn: true,
           pubkey,
           isTestMode: false,
-          availableRoles: ['viewer'],
+          availableRoles: ['viewer', 'publisher', 'advertiser'], // Make all roles available
           currentRole: 'viewer'
         }));
+        
+        // Override the useRole hook result for our test page
+        (window as any).testModeRoleOverride = {
+          availableRoles: ['viewer', 'publisher', 'advertiser'],
+          currentRole: 'viewer'
+        };
       } catch (err) {
         console.error('Error setting localStorage:', err);
       }
@@ -123,6 +155,7 @@ const TestOnboardingPage: NextPage = () => {
             <h2 className="font-semibold mb-2">Debug Information:</h2>
             <p><strong>Pubkey:</strong> {pubkey || 'None'}</p>
             <p><strong>Onboarding Status:</strong> {onboardingData ? 'Retrieved' : 'Not available'}</p>
+            <p><strong>Available Roles:</strong> viewer, publisher, advertiser</p>
           </div>
           
           <button
@@ -133,9 +166,11 @@ const TestOnboardingPage: NextPage = () => {
           </button>
         </div>
 
-        <OnboardingProvider forcePubkey={pubkey}>
-          <OnboardingWizard />
-        </OnboardingProvider>
+        <MockRoleProvider>
+          <OnboardingProvider forcePubkey={pubkey}>
+            <OnboardingWizard />
+          </OnboardingProvider>
+        </MockRoleProvider>
       </div>
     </Layout>
   );
