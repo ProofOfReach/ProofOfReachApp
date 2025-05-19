@@ -74,7 +74,7 @@ describe('useAuth Hook', () => {
       });
       
       (UserManager.isTestMode as jest.Mock).mockResolvedValue(false);
-      (UserManager.getUserRoles as jest.Mock).mockResolvedValue(['user' as UserRole]);
+      (UserManager.getUserRoles as jest.Mock).mockResolvedValue(['viewer' as UserRole]);
       (UserManager.getUserProfile as jest.Mock).mockResolvedValue({
         name: 'Test User',
         displayName: 'Test Display',
@@ -94,7 +94,7 @@ describe('useAuth Hook', () => {
       expect(result.current.auth).not.toBe(null);
       expect(result.current.auth?.pubkey).toBe('test-pubkey-123');
       expect(result.current.auth?.isLoggedIn).toBe(true);
-      expect(result.current.auth?.availableRoles).toEqual(['user']);
+      expect(result.current.auth?.availableRoles).toEqual(['viewer']);
       expect(result.current.auth?.profile).toEqual({
         name: 'Test User',
         displayName: 'Test Display',
@@ -110,7 +110,7 @@ describe('useAuth Hook', () => {
         };
       });
       
-      (UserManager.getUserRoles as jest.Mock).mockResolvedValue(['user' as UserRole, 'advertiser' as UserRole]);
+      (UserManager.getUserRoles as jest.Mock).mockResolvedValue(['viewer' as UserRole, 'advertiser' as UserRole]);
       (UserManager.getUserProfile as jest.Mock).mockResolvedValue({
         name: 'Test User',
       });
@@ -125,7 +125,7 @@ describe('useAuth Hook', () => {
       expect(loginResult).toBe(true);
       expect(result.current.auth?.pubkey).toBe('test-pubkey-123');
       expect(result.current.auth?.isLoggedIn).toBe(true);
-      expect(result.current.auth?.availableRoles).toEqual(['user', 'advertiser']);
+      expect(result.current.auth?.availableRoles).toEqual(['viewer', 'advertiser']);
       expect(mockFetch).toHaveBeenCalledWith('/api/auth/login', expect.any(Object));
     });
     
@@ -186,7 +186,7 @@ describe('useAuth Hook', () => {
       
       expect(result.current.auth?.isTestMode).toBe(true);
       // Now includes all roles for test mode
-      expect(result.current.auth?.availableRoles).toEqual(['user', 'advertiser', 'publisher', 'admin', 'stakeholder']);
+      expect(result.current.auth?.availableRoles).toEqual(['viewer', 'advertiser', 'publisher', 'admin', 'stakeholder']);
       expect(UserManager.enableAllRolesForTestUser).toHaveBeenCalledWith('test-pubkey-123');
     });
     
@@ -233,12 +233,12 @@ describe('useAuth Hook', () => {
           pubkey: 'context-test-pubkey',
           isLoggedIn: true,
           isTestMode: false,
-          availableRoles: ['user', 'publisher'] as UserRole[],
+          availableRoles: ['viewer', 'publisher'] as UserRole[],
           profile: null,
         },
         login: jest.fn().mockResolvedValue(true),
         logout: jest.fn().mockResolvedValue(undefined),
-        refreshRoles: jest.fn().mockResolvedValue(['user'] as UserRole[]),
+        refreshRoles: jest.fn().mockResolvedValue(['viewer'] as UserRole[]),
         addRole: jest.fn().mockResolvedValue(true),
         removeRole: jest.fn().mockResolvedValue(true),
       };
@@ -252,7 +252,7 @@ describe('useAuth Hook', () => {
       const { result } = renderHook(() => useAuth(), { wrapper });
       
       expect(result.current.auth?.pubkey).toBe('context-test-pubkey');
-      expect(result.current.auth?.availableRoles).toEqual(['user', 'publisher']);
+      expect(result.current.auth?.availableRoles).toEqual(['viewer', 'publisher']);
     });
   });
   
@@ -386,15 +386,15 @@ describe('useAuth Hook', () => {
         await new Promise(resolve => setTimeout(resolve, 100));
       });
       
-      // Try to remove the user role
+      // Try to remove the viewer role
       let removeResult = true;
       await act(async () => {
-        removeResult = await result.current.removeRole('user');
+        removeResult = await result.current.removeRole('viewer');
       });
       
       expect(removeResult).toBe(false);
       expect(UserManager.removeRoleFromUser).not.toHaveBeenCalled();
-      expect(result.current.auth?.availableRoles).toContain('user');
+      expect(result.current.auth?.availableRoles).toContain('viewer');
     });
   });
 });

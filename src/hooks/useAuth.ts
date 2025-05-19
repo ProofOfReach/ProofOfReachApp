@@ -56,7 +56,7 @@ export const useAuthProvider = () => {
           
           // Convert string[] to UserRole[]
           const availableRoles: UserRole[] = userRoles.filter(
-            (role): role is UserRole => role === 'user' || role === 'advertiser' || role === 'publisher' || 
+            (role): role is UserRole => role === 'viewer' || role === 'advertiser' || role === 'publisher' || 
                                        role === 'admin' || role === 'stakeholder'
           );
           
@@ -79,7 +79,7 @@ export const useAuthProvider = () => {
             pubkey: data.pubkey,
             isLoggedIn: true,
             isTestMode,
-            availableRoles: isTestMode ? ['user', 'advertiser', 'publisher', 'admin', 'stakeholder'] : availableRoles,
+            availableRoles: isTestMode ? ['viewer', 'advertiser', 'publisher', 'admin', 'stakeholder'] : availableRoles,
             profile: profile ? {
               name: profile.name,
               displayName: profile.displayName,
@@ -91,7 +91,7 @@ export const useAuthProvider = () => {
             pubkey: '',
             isLoggedIn: false,
             isTestMode: false,
-            availableRoles: ['user'],
+            availableRoles: ['viewer'],
             profile: null,
           });
         }
@@ -101,7 +101,7 @@ export const useAuthProvider = () => {
           pubkey: '',
           isLoggedIn: false,
           isTestMode: false,
-          availableRoles: ['user'],
+          availableRoles: ['viewer'],
           profile: null,
         });
       }
@@ -152,7 +152,7 @@ export const useAuthProvider = () => {
         pubkey,
         isLoggedIn: true,
         isTestMode: isTest,
-        availableRoles: isTest ? ['user', 'advertiser', 'publisher', 'admin', 'stakeholder'] : availableRoles,
+        availableRoles: isTest ? ['viewer', 'advertiser', 'publisher', 'admin', 'stakeholder'] : availableRoles,
         profile: profile ? {
           name: profile.name,
           displayName: profile.displayName,
@@ -176,14 +176,14 @@ export const useAuthProvider = () => {
       // Clear all auth-related data from localStorage
       localStorage.removeItem('userRole');
       
-      // Reset role to user in database via our new API
+      // Reset role to viewer in database via our new API
       try {
         await fetch('/api/user/role', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({ role: 'user' }),
+          body: JSON.stringify({ role: 'viewer' }),
         });
       } catch (e) {
         console.error('Failed to reset role during logout:', e);
@@ -214,7 +214,7 @@ export const useAuthProvider = () => {
   
   // Refresh roles
   const refreshRoles = async (): Promise<UserRole[]> => {
-    if (!auth || !auth.isLoggedIn) return ['user'];
+    if (!auth || !auth.isLoggedIn) return ['viewer'];
     
     try {
       // For test mode, always enable all roles
@@ -223,7 +223,7 @@ export const useAuthProvider = () => {
         const success = await UserManager.enableAllRolesForTestUser(auth.pubkey);
         console.log("Refresh roles result:", success ? "Success" : "Failed");
         
-        const allRoles: UserRole[] = ['user', 'advertiser', 'publisher', 'admin', 'stakeholder'];
+        const allRoles: UserRole[] = ['viewer', 'advertiser', 'publisher', 'admin', 'stakeholder'];
         
         setAuth({
           ...auth,
@@ -278,8 +278,8 @@ export const useAuthProvider = () => {
   const removeRole = async (role: UserRole): Promise<boolean> => {
     if (!auth || !auth.isLoggedIn) return false;
     
-    // Can't remove the user role
-    if (role === 'user') return false;
+    // Can't remove the viewer role
+    if (role === 'viewer') return false;
     
     // Skip if role doesn't exist
     if (!auth.availableRoles.includes(role)) return true;
