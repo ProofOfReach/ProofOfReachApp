@@ -22,16 +22,6 @@ export class AuthService {
   private readonly API_BASE_URL = '/api';
 
   /**
-   * Check if the public key is a test key
-   * 
-   * @param pubkey - The Nostr public key
-   * @returns Whether the key is a test key
-   */
-  private isTestPublicKey(pubkey: string): boolean {
-    return pubkey.startsWith('pk_test_') || pubkey === 'test-pubkey';
-  }
-
-  /**
    * Login with a Nostr public key and signed message
    * 
    * @param pubkey - The Nostr public key
@@ -73,32 +63,47 @@ export class AuthService {
         };
       }
       
-      // For non-test pubkeys, use the API with our new safeFetch utility
+      // For non-test pubkeys, use the API
       // Only works in browser environment
       if (typeof window === 'undefined') {
         throw new Error('Direct login only supported in browser environment');
       }
       
-      const loginData = await safeJsonFetch<LoginResponse>('/api/auth/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ pubkey, signedMessage }),
-        credentials: 'include', // Important for cookies
-      });
-      
-      // If the request failed or returned null, handle gracefully
-      if (!loginData) {
-        throw new Error('Network error: Could not connect to authentication service. Please check your connection and try again.');
+      try {
+        const response = await fetch(`${this.API_BASE_URL}/auth/login`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ pubkey, signedMessage }),
+          credentials: 'include', // Important for cookies
+        });
+  
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.message || 'Login failed');
+        }
+  
+        const data: LoginResponse = await response.json();
+        
+        return {
+          isLoggedIn: data.isLoggedIn,
+          pubkey: data.pubkey,
+          isTestMode: data.isTestMode,
+          availableRoles: data.availableRoles,
+        };
+      } catch (fetchError) {
+        // Handle specific network errors
+        logger.error('Network error during login:', fetchError);
+        if (fetchError instanceof Error) {
+          // Provide a more descriptive error for network issues
+          if (fetchError.message === 'Failed to fetch') {
+            throw new Error('Network error: Could not connect to authentication service. Please check your connection and try again.');
+          }
+          throw fetchError;
+        }
+        throw new Error('Unknown error during login. Please try again.');
       }
-      
-      return {
-        isLoggedIn: loginData.isLoggedIn,
-        pubkey: loginData.pubkey,
-        isTestMode: loginData.isTestMode || false,
-        availableRoles: loginData.availableRoles || [],
-      };
     } catch (error) {
       logger.error('Auth service login error:', error);
       throw error;
@@ -245,43 +250,52 @@ export class AuthService {
       if (!authData) {
         return null;
       }
-      
-      // If auth data is valid, return the authentication state
-      if (authData.isLoggedIn && authData.pubkey) {
+  
+        if (!response.ok) {
+          return null;
+        }
+  
+        const data: CheckAuthResponse = await response.json();
+        
+        if (!data.isLoggedIn || !data.pubkey) {
+          return null;
+        }
+        
         return {
-          isLoggedIn: authData.isLoggedIn,
-          pubkey: authData.pubkey,
-          isTestMode: authData.isTestMode || false,
-          availableRoles: authData.availableRoles || [],
+          isLoggedIn: data.isLoggedIn,
+          pubkey: data.pubkey,
+          isTestMode: data.isTestMode || false,
+          availableRoles: data.availableRoles || [],
         };
+      } catch (fetchError) {
+        // Handle network errors specifically
+        logger.error('Network error during auth check:', fetchError);
+        
+        // Try localStorage again as a fallback
+        if (typeof window !== 'undefined') {
+          const isTestMode = localStorage.getItem('isTestMode') === 'true';
+          const testPubkey = localStorage.getItem('nostr_test_pk');
+  
+          if (isTestMode && testPubkey) {
+            logger.log('Test mode detected in localStorage after failed API call');
+            
+            // For test mode, provide all roles by default
+            const ALL_ROLES: UserRole[] = ['advertiser', 'publisher', 'admin', 'stakeholder'];
+            
+            return {
+              isLoggedIn: true,
+              pubkey: testPubkey,
+              isTestMode: true,
+              availableRoles: ALL_ROLES,
+            };
+          }
+        }
+        
+        // Return null for auth state, but don't rethrow to prevent app crashes
+        return null;
       }
-      
-      // Otherwise, return null to indicate not authenticated
-      return null;
     } catch (error) {
       logger.error('Auth service check error:', error);
-      
-      // Try localStorage again as a fallback in case of network errors
-      if (typeof window !== 'undefined') {
-        const isTestMode = localStorage.getItem('isTestMode') === 'true';
-        const testPubkey = localStorage.getItem('nostr_test_pk');
-
-        if (isTestMode && testPubkey) {
-          logger.log('Test mode detected in localStorage after failed API call');
-          
-          // For test mode, provide all roles by default
-          const ALL_ROLES: UserRole[] = ['advertiser', 'publisher', 'admin', 'stakeholder'];
-          
-          return {
-            isLoggedIn: true,
-            pubkey: testPubkey,
-            isTestMode: true,
-            availableRoles: ALL_ROLES,
-          };
-        }
-      }
-      
-      // Return null for auth state, but don't rethrow to prevent app crashes
       return null;
     }
   }
@@ -325,17 +339,27 @@ export class AuthService {
         return;
       }
       
-      // If we somehow get here, try the API as a fallback using our safe API utilities
-      const logoutData = await safeJsonFetch<LogoutResponse>('/api/auth/logout', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        credentials: 'include',
-      });
-      
-      if (!logoutData || !logoutData.success) {
-        logger.warn('API logout reported failure, but cookies were cleared');
+      // If we somehow get here, try the API as a fallback
+      try {
+        const response = await fetch(`${this.API_BASE_URL}/auth/logout`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          credentials: 'include',
+        });
+
+        if (!response.ok) {
+          logger.warn('API logout failed, but cookies were cleared');
+        } else {
+          const data: LogoutResponse = await response.json();
+          if (!data.success) {
+            logger.warn('API logout reported failure, but cookies were cleared');
+          }
+        }
+      } catch (error) {
+        // We don't want to throw here since we've already cleared cookies
+        logger.warn('API logout error, but cookies were cleared:', error);
       }
     } catch (error) {
       logger.error('Auth service logout error:', error);
@@ -413,107 +437,115 @@ export class AuthService {
         };
       }
       
-      // Use safe API utilities for network request
-      const refreshData = await safeJsonFetch<RefreshRolesResponse>(`/api/auth/refresh-roles?pubkey=${encodeURIComponent(pubkey)}`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        credentials: 'include',
-      });
-      
-      // If the request failed or returned null, handle gracefully
-      if (!refreshData) {
-        throw new Error('Failed to refresh roles');
-      }
-      
-      if (!refreshData.success) {
-        throw new Error(refreshData.message || 'Failed to refresh roles');
-      }
-      
-      // Cache the roles in localStorage
-      if (typeof window !== 'undefined') {
-        localStorage.setItem('cachedAvailableRoles', JSON.stringify(refreshData.availableRoles));
-        localStorage.setItem('roleCacheTimestamp', Date.now().toString());
-      }
-      
-      return {
-        isLoggedIn: true,
-        pubkey,
-        isTestMode: refreshData.isTestMode || false,
-        availableRoles: refreshData.availableRoles || [],
-      };
-    } catch (error) {
-      logger.error('Auth service refreshRoles error:', error);
-      
-      // For test mode, provide roles directly as fallback
-      if (this.isTestPublicKey(pubkey)) {
-        const ALL_ROLES: UserRole[] = ['advertiser', 'publisher', 'admin', 'stakeholder'];
+      // For non-test users, get roles from the API
+      try {
+        const response = await fetch(`${this.API_BASE_URL}/users/${pubkey}/roles`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+  
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.message || 'Failed to refresh roles');
+        }
+  
+        const data: RefreshRolesResponse = await response.json();
         
         return {
           isLoggedIn: true,
           pubkey,
-          isTestMode: true,
-          availableRoles: ALL_ROLES,
+          isTestMode: false,
+          availableRoles: data.availableRoles,
         };
-      }
-      
-      // Try to use cached roles from localStorage
-      if (typeof window !== 'undefined') {
-        try {
-          const cachedRoles = localStorage.getItem('cachedAvailableRoles');
-          if (cachedRoles) {
-            const availableRoles = JSON.parse(cachedRoles) as UserRole[];
-            logger.log('Using cached roles from localStorage');
-            
-            return {
-              isLoggedIn: true,
-              pubkey,
-              isTestMode: false,
-              availableRoles,
-            };
-          }
-        } catch (e) {
-          logger.error('Error parsing cached roles:', e);
+      } catch (fetchError) {
+        logger.error('Error fetching roles from API:', fetchError);
+        
+        // If API fails but we're in test mode, fall back to providing all roles
+        if (this.isTestPublicKey(pubkey)) {
+          const ALL_ROLES: UserRole[] = ['advertiser', 'publisher', 'admin', 'stakeholder'];
+          return {
+            isLoggedIn: true,
+            pubkey,
+            isTestMode: true,
+            availableRoles: ALL_ROLES,
+          };
         }
+        
+        // Otherwise, rethrow
+        throw fetchError;
       }
-      
-      throw new Error('Failed to refresh roles and no cached roles available');
+    } catch (error) {
+      logger.error('Auth service refresh roles error:', error);
+      throw error;
     }
   }
-
+  
   /**
    * Enable roles for test accounts
    * 
    * @param pubkey - The Nostr public key
    * @returns Whether the operation was successful
    */
-  async enableTestModeRoles(pubkey: string): Promise<boolean> {
-    // This method should only be used for test public keys
+  private async enableTestModeRoles(pubkey: string): Promise<boolean> {
     if (!this.isTestPublicKey(pubkey)) {
-      logger.warn(`Attempted to enable test roles for non-test pubkey: ${pubkey}`);
       return false;
     }
     
     try {
-      const enableData = await safeJsonFetch<{ success: boolean }>('/api/auth/enable-test-roles', {
+      const testModeResponse = await fetch(`${this.API_BASE_URL}/users/check-test-mode?pubkey=${pubkey}`, {
+        method: 'GET',
+      });
+      
+      if (!testModeResponse.ok) {
+        return false;
+      }
+      
+      const isTestMode = await testModeResponse.json();
+      
+      if (!isTestMode) {
+        return false;
+      }
+      
+      logger.log('Detected test mode, enabling all roles...');
+      
+      // Enable all roles for test accounts
+      const enableResponse = await fetch(`${this.API_BASE_URL}/users/flags`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ pubkey }),
-        credentials: 'include',
+        body: JSON.stringify({
+          pubkey,
+          isAdvertiser: true,
+          isPublisher: true,
+          isAdmin: true,
+          isStakeholder: true,
+        }),
       });
       
-      // If the request failed or returned null, handle gracefully
-      if (!enableData) {
+      if (!enableResponse.ok) {
         return false;
       }
       
-      return enableData.success === true;
+      const result = await enableResponse.json();
+      logger.log('Enable all roles result:', result.success ? 'Success' : 'Failed');
+      
+      return result.success;
     } catch (error) {
-      logger.error('Error enabling test roles:', error);
+      logger.error('Error enabling test mode roles:', error);
       return false;
     }
+  }
+  
+  /**
+   * Check if the public key is a test key
+   * 
+   * @param pubkey - The Nostr public key
+   * @returns Whether the key is a test key
+   */
+  private isTestPublicKey(pubkey: string): boolean {
+    return pubkey.startsWith('pk_test_');
   }
 }
