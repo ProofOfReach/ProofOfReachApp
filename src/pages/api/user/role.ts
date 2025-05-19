@@ -2,6 +2,7 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import { authMiddleware } from '../../../lib/authMiddleware';
 import { roleService } from '../../../services/roleService';
 import { UserRole } from '../../../context/NewRoleContext';
+import { normalizeRole, normalizeRoles } from '../../../utils/roleNormalizer';
 
 async function handler(req: NextApiRequest, res: NextApiResponse, auth: any) {
   // Handle GET request to fetch current role and available roles
@@ -21,8 +22,8 @@ async function handler(req: NextApiRequest, res: NextApiResponse, auth: any) {
       const availableRoles = await roleService.getAvailableRoles(userId);
       
       return res.status(200).json({
-        role: role || 'user', // Default to 'user' if not set
-        availableRoles
+        role: normalizeRole(role || 'viewer'), // Normalize role and default to 'viewer' if not set
+        availableRoles: normalizeRoles(availableRoles)
       });
     } catch (error) {
       console.error('Error getting role:', error);
@@ -47,24 +48,27 @@ async function handler(req: NextApiRequest, res: NextApiResponse, auth: any) {
         return res.status(400).json({ error: 'Role is required' });
       }
       
+      // Normalize the role first
+      const normalizedRole = normalizeRole(role);
+      
       // Validate the role
-      const validRoles: UserRole[] = ['user', 'advertiser', 'publisher', 'admin', 'stakeholder'];
-      if (!validRoles.includes(role)) {
+      const validRoles: UserRole[] = ['viewer', 'advertiser', 'publisher', 'admin', 'stakeholder'];
+      if (!validRoles.includes(normalizedRole as UserRole)) {
         return res.status(400).json({ error: 'Invalid role' });
       }
       
       // Check if the role is available for this user
-      const isAvailable = await roleService.isRoleAvailable(userId, role as UserRole);
+      const isAvailable = await roleService.isRoleAvailable(userId, normalizedRole as UserRole);
       
-      if (!isAvailable && role !== 'user') {
+      if (!isAvailable && normalizedRole !== 'viewer') {
         return res.status(403).json({ error: 'Role not available for this user' });
       }
       
-      // Set the role
-      const success = await roleService.setCurrentRole(userId, role as UserRole);
+      // Set the normalized role
+      const success = await roleService.setCurrentRole(userId, normalizedRole as UserRole);
       
       if (success) {
-        return res.status(200).json({ success: true, role });
+        return res.status(200).json({ success: true, role: normalizedRole });
       } else {
         return res.status(500).json({ error: 'Failed to set role' });
       }

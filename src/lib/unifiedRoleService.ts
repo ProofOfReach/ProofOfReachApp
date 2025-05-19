@@ -15,6 +15,7 @@
 import { logger } from './logger';
 import { UserRoleType, isValidUserRole, getDefaultRole } from '../types/role';
 import { prisma } from './prisma';
+import { normalizeRole, normalizeRoles, normalizeRoleData } from '../utils/roleNormalizer';
 
 // Type definitions
 export interface RoleServiceConfig {
@@ -129,15 +130,17 @@ export class UnifiedRoleService {
       throw new Error('Invalid role data: timestamp is not a number');
     }
     
+    // Normalize the current role (convert 'user' to 'viewer')
+    data.currentRole = normalizeRole(data.currentRole);
+    
     // Check if the current role is valid
-    const currentRole = data.currentRole as string;
-    if (!isValidUserRole(currentRole)) {
-      this.debug(`Invalid current role: ${currentRole}, falling back to default`);
+    if (!isValidUserRole(data.currentRole)) {
+      this.debug(`Invalid current role: ${data.currentRole}, falling back to default`);
       data.currentRole = this.config.defaultRole;
     }
     
-    // Filter out any invalid roles from availableRoles
-    data.availableRoles = data.availableRoles.filter((role: string) => 
+    // Normalize and filter roles from availableRoles
+    data.availableRoles = normalizeRoles(data.availableRoles).filter((role: string) => 
       isValidUserRole(role)
     );
     

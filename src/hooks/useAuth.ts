@@ -1,6 +1,7 @@
 import { useState, useEffect, createContext, useContext } from 'react';
 import UserManager from '../models/user';
 import { UserRole } from '../context/RoleContext';
+import { normalizeRole, normalizeRoles } from '../utils/roleNormalizer';
 
 // Auth context state type
 export interface AuthState {
@@ -52,7 +53,10 @@ export const useAuthProvider = () => {
           const isTestMode = await UserManager.isTestMode(data.pubkey);
           
           // Get available roles for this user
-          const userRoles = await UserManager.getUserRoles(data.pubkey);
+          let userRoles = await UserManager.getUserRoles(data.pubkey);
+          
+          // Normalize roles first to convert any 'user' to 'viewer'
+          userRoles = normalizeRoles(userRoles);
           
           // Convert string[] to UserRole[]
           const availableRoles: UserRole[] = userRoles.filter(
@@ -125,7 +129,10 @@ export const useAuthProvider = () => {
       if (!response.ok) return false;
       
       // Get available roles for this user
-      const userRoles = await UserManager.getUserRoles(pubkey);
+      let userRoles = await UserManager.getUserRoles(pubkey);
+      
+      // Normalize roles to convert any 'user' to 'viewer'
+      userRoles = normalizeRoles(userRoles);
       
       // Convert string[] to UserRole[]
       const availableRoles: UserRole[] = userRoles.filter(
@@ -234,7 +241,10 @@ export const useAuthProvider = () => {
       }
       
       // For normal mode, get roles from API
-      const userRoles = await UserManager.getUserRoles(auth.pubkey);
+      let userRoles = await UserManager.getUserRoles(auth.pubkey);
+      
+      // Normalize roles to convert any 'user' to 'viewer'
+      userRoles = normalizeRoles(userRoles);
       
       // Convert string[] to UserRole[]
       const availableRoles: UserRole[] = userRoles.filter(

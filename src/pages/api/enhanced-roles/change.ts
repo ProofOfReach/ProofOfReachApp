@@ -1,6 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { enhancedRoleService, RoleType } from '@/lib/enhancedRoleService';
 import { logger } from '@/lib/logger';
+import { normalizeRole } from '@/utils/roleNormalizer';
 
 /**
  * API endpoint to change a user's role
@@ -30,17 +31,20 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       });
     }
     
+    // Normalize the role (convert 'user' to 'viewer')
+    const normalizedRole = normalizeRole(role);
+    
     // Allow only valid roles
-    const validRoles: (RoleType | 'user')[] = ['user', 'admin', 'advertiser', 'publisher', 'developer', 'stakeholder'];
-    if (!validRoles.includes(role as RoleType | 'user')) {
+    const validRoles: RoleType[] = ['viewer', 'admin', 'advertiser', 'publisher', 'developer', 'stakeholder'];
+    if (!validRoles.includes(normalizedRole as RoleType)) {
       return res.status(400).json({ 
         success: false, 
-        error: `Invalid role: ${role}. Valid roles are: ${validRoles.join(', ')}` 
+        error: `Invalid role: ${normalizedRole}. Valid roles are: ${validRoles.join(', ')}` 
       });
     }
     
     // Change the user's role
-    const userData = await enhancedRoleService.changeUserRole(userId, role as RoleType | 'viewer');
+    const userData = await enhancedRoleService.changeUserRole(userId, normalizedRole as RoleType);
     
     // Return success with updated user data
     return res.status(200).json({ 

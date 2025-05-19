@@ -3,6 +3,7 @@ import { NextApiHandler } from 'next';
 import { UserRole } from '../../../types/auth';
 import { logger } from '../../../lib/logger';
 import { roleService } from '../../../services/roleService';
+import { normalizeRole } from '../../../utils/roleNormalizer';
 
 interface AddRoleRequest {
   pubkey: string;
@@ -70,20 +71,23 @@ async function addRole(req: NextApiRequest, res: NextApiResponse) {
       });
     }
     
+    // Normalize the role (convert 'user' to 'viewer')
+    const normalizedRole = normalizeRole(role);
+    
     // Validate role
-    const validRoles: UserRole[] = ['advertiser', 'publisher', 'admin', 'stakeholder'];
-    if (!validRoles.includes(role as UserRole)) {
+    const validRoles: UserRole[] = ['viewer', 'advertiser', 'publisher', 'admin', 'stakeholder'];
+    if (!validRoles.includes(normalizedRole as UserRole)) {
       return res.status(400).json({ 
         success: false, 
-        message: `Invalid role: ${role}. Valid roles are: ${validRoles.join(', ')}` 
+        message: `Invalid role: ${normalizedRole}. Valid roles are: ${validRoles.join(', ')}` 
       });
     }
     
-    // Add the role using roleService
-    const result = await roleService.addRoleToUser(pubkey, role as UserRole);
+    // Add the normalized role using roleService
+    const result = await roleService.addRoleToUser(pubkey, normalizedRole as UserRole);
     
     if (result) {
-      logger.log(`Role ${role} added to user ${pubkey}`);
+      logger.log(`Role ${normalizedRole} added to user ${pubkey}`);
       return res.status(200).json({ success: true });
     } else {
       return res.status(400).json({ 
@@ -143,20 +147,23 @@ async function removeRole(req: NextApiRequest, res: NextApiResponse) {
       });
     }
     
+    // Normalize the role (convert 'user' to 'viewer')
+    const normalizedRole = normalizeRole(role);
+    
     // Validate role
-    const validRoles: UserRole[] = ['advertiser', 'publisher', 'admin', 'stakeholder'];
-    if (!validRoles.includes(role as UserRole)) {
+    const validRoles: UserRole[] = ['viewer', 'advertiser', 'publisher', 'admin', 'stakeholder'];
+    if (!validRoles.includes(normalizedRole as UserRole)) {
       return res.status(400).json({ 
         success: false, 
-        message: `Invalid role: ${role}. Valid roles are: ${validRoles.join(', ')}` 
+        message: `Invalid role: ${normalizedRole}. Valid roles are: ${validRoles.join(', ')}` 
       });
     }
     
-    // Remove the role using roleService
-    const result = await roleService.removeRoleFromUser(pubkey, role as UserRole);
+    // Remove the normalized role using roleService
+    const result = await roleService.removeRoleFromUser(pubkey, normalizedRole as UserRole);
     
     if (result) {
-      logger.log(`Role ${role} removed from user ${pubkey}`);
+      logger.log(`Role ${normalizedRole} removed from user ${pubkey}`);
       return res.status(200).json({ success: true });
     } else {
       return res.status(400).json({ 
