@@ -27,7 +27,7 @@ export const AuthContext = createContext<{
   auth: null,
   login: async () => false,
   logout: async () => {},
-  refreshRoles: async () => ['user'],
+  refreshRoles: async () => ['viewer'],
   addRole: async () => false,
   removeRole: async () => false,
 });

@@ -29,7 +29,7 @@ const BillingPage: React.FC & { getLayout?: (page: React.ReactElement) => React.
   // Redirect if not in advertiser role
   useEffect(() => {
     if (role !== 'advertiser') {
-      router.push(`/dashboard${role !== 'user' ? `/${role}` : ''}`);
+      router.push(`/dashboard${role !== 'viewer' ? `/${role}` : ''}`);
     }
   }, [role, router]);
   

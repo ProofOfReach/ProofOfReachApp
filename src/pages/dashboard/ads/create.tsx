@@ -24,7 +24,7 @@ const CreateAdPage: NextPageWithLayout = () => {
   // Redirect if not in advertiser role
   useEffect(() => {
     if (role !== 'advertiser') {
-      router.push(`/dashboard${role !== 'user' ? `/${role}` : ''}`);
+      router.push(`/dashboard${role !== 'viewer' ? `/${role}` : ''}`);
     }
   }, [role, router]);
   

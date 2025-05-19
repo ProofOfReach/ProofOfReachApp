@@ -37,7 +37,7 @@ const EnhancedSidebar: React.FC = () => {
     (localStorage.getItem('currentRole') || localStorage.getItem('userRole')) as UserRole;
   const role = localStorageRole || refactoredRole || originalRole;
   
-  // Handle legacy 'user' role if present
+  // Convert any legacy 'user' role to 'viewer'
   const normalizedRole = role === 'user' as any ? 'viewer' : role;
   const setRole = refactoredSetRole || originalSetRole;
   const availableRoles = refactoredAvailableRoles.length > 0 ? refactoredAvailableRoles : originalAvailableRoles;

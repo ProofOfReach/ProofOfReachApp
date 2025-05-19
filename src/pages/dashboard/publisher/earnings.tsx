@@ -61,7 +61,7 @@ const PublisherEarningsPage = () => {
   // Redirect if not in publisher role
   useEffect(() => {
     if (role !== 'publisher') {
-      router.push(`/dashboard${role !== 'user' ? `/${role}` : ''}`);
+      router.push(`/dashboard${role !== 'viewer' ? `/${role}` : ''}`);
     }
   }, [role, router]);
 

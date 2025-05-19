@@ -3,7 +3,7 @@ import { render, RenderOptions } from '@testing-library/react';
 import '@testing-library/jest-dom';
 
 // Import types and interfaces needed
-type UserRole = 'user' | 'advertiser' | 'publisher' | 'admin' | 'stakeholder';
+type UserRole = 'viewer' | 'advertiser' | 'publisher' | 'admin' | 'stakeholder';
 
 // Define options interface for our custom render function
 interface CustomRenderOptions extends Omit<RenderOptions, 'wrapper'> {
@@ -15,9 +15,9 @@ interface CustomRenderOptions extends Omit<RenderOptions, 'wrapper'> {
 jest.mock('../context/RoleContext', () => {
   return {
     useRole: jest.fn().mockReturnValue({
-      role: 'user', // This will be overridden in the render function
+      role: 'viewer', // This will be overridden in the render function
       setRole: jest.fn(),
-      availableRoles: ['user', 'advertiser', 'publisher', 'admin'],
+      availableRoles: ['viewer', 'advertiser', 'publisher', 'admin'],
       isRoleAvailable: jest.fn().mockReturnValue(true),
     }),
     RoleProvider: ({ children }: { children: React.ReactNode }) => <>{children}</>
@@ -65,7 +65,7 @@ jest.mock('../hooks/useAuth', () => ({
       isLoggedIn: true, // This will be overridden in the render function
       user: {
         id: 'test-user-id',
-        role: 'user', // This will be overridden in the render function
+        role: 'viewer', // This will be overridden in the render function
         pubkey: 'test-pubkey',
         name: 'Test User',
         email: 'test@example.com'
@@ -168,7 +168,7 @@ export function renderWithProviders(
   options: CustomRenderOptions = {}
 ) {
   const {
-    initialRole = 'user',
+    initialRole = 'viewer',
     authenticated = true,
     ...renderOptions
   } = options;
@@ -178,7 +178,7 @@ export function renderWithProviders(
   useRoleMock.mockReturnValue({
     role: initialRole,
     setRole: jest.fn(),
-    availableRoles: ['user', 'advertiser', 'publisher', 'admin', 'stakeholder'],
+    availableRoles: ['viewer', 'advertiser', 'publisher', 'admin', 'stakeholder'],
     isRoleAvailable: jest.fn().mockReturnValue(true),
   });
 
@@ -213,7 +213,7 @@ export function renderWithProviders(
       useRoleMock.mockReturnValueOnce({
         role: role,
         setRole: jest.fn(),
-        availableRoles: ['user', 'advertiser', 'publisher', 'admin', 'stakeholder'],
+        availableRoles: ['viewer', 'advertiser', 'publisher', 'admin', 'stakeholder'],
         isRoleAvailable: jest.fn().mockReturnValue(true),
       });
       return true;
@@ -234,7 +234,7 @@ export function renderWithProviders(
 }
 
 // Export a mocked useAuth hook for direct use
-export const mockUseAuth = (authenticated: boolean = true, role: UserRole = 'user') => {
+export const mockUseAuth = (authenticated: boolean = true, role: UserRole = 'viewer') => {
   return {
     auth: { 
       pubkey: 'test-pubkey', 

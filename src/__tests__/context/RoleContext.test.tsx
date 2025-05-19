@@ -161,7 +161,7 @@ const TestComponent = () => {
           <li key={r}>{r}</li>
         ))}
       </ul>
-      <div data-testid="user-available">
+      <div data-testid="viewer-available">
         Viewer available: {checkViewerAvailable() ? 'Yes' : 'No'}
       </div>
       <div data-testid="advertiser-available">
@@ -318,7 +318,7 @@ describe('RoleContext', () => {
     renderTestComponent('viewer' as UserRoleType);
     
     // With our mock, all roles should be available
-    expect(screen.getByTestId('user-available')).toHaveTextContent('Viewer available: Yes');
+    expect(screen.getByTestId('viewer-available')).toHaveTextContent('Viewer available: Yes');
     expect(screen.getByTestId('advertiser-available')).toHaveTextContent('Advertiser available: Yes');
     expect(screen.getByTestId('publisher-available')).toHaveTextContent('Publisher available: Yes');
   });
