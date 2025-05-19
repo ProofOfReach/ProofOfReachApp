@@ -16,6 +16,7 @@ import {
   UserRole
 } from '../types/auth';
 import { logger } from '../lib/logger';
+import { safeFetch, safeJsonFetch } from '../lib/api-utils';
 
 export class AuthService {
   private readonly API_BASE_URL = '/api';
@@ -236,22 +237,19 @@ export class AuthService {
         return null;
       }
       
-      try {
-        // Set a timeout for the fetch request to avoid long-hanging requests
-        const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 5000);
-        
-        // Use a relative URL to avoid cross-origin issues
-        const response = await fetch('/api/auth/check', {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          credentials: 'include', // Important for cookies
-          signal: controller.signal
-        });
-        
-        clearTimeout(timeoutId);
+      // Use safeJsonFetch to get the response directly as JSON and handle errors
+      const authData = await safeJsonFetch<CheckAuthResponse>('/api/auth/check', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include', // Important for cookies
+      });
+      
+      // If the request failed or returned null, handle gracefully
+      if (!authData) {
+        return null;
+      }
   
         if (!response.ok) {
           return null;
