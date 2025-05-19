@@ -270,7 +270,7 @@ describe('useAuth Hook', () => {
       });
       
       (UserManager.isTestMode as jest.Mock).mockResolvedValue(false);
-      (UserManager.getUserRoles as jest.Mock).mockResolvedValue(['user']);
+      (UserManager.getUserRoles as jest.Mock).mockResolvedValue(["viewer"]);
       
       const { result } = renderHook(() => useAuthProvider());
       
@@ -280,7 +280,7 @@ describe('useAuth Hook', () => {
       });
       
       // Setup for refreshRoles
-      (UserManager.getUserRoles as jest.Mock).mockResolvedValueOnce(['user' as UserRole, 'advertiser' as UserRole]);
+      (UserManager.getUserRoles as jest.Mock).mockResolvedValueOnce(['viewer' as UserRole, 'advertiser' as UserRole]);
       
       // Call refreshRoles
       let refreshedRoles: UserRole[] = [];
@@ -305,7 +305,7 @@ describe('useAuth Hook', () => {
       });
       
       (UserManager.isTestMode as jest.Mock).mockResolvedValue(false);
-      (UserManager.getUserRoles as jest.Mock).mockResolvedValue(['user']);
+      (UserManager.getUserRoles as jest.Mock).mockResolvedValue(["viewer"]);
       
       const { result } = renderHook(() => useAuthProvider());
       
@@ -341,7 +341,7 @@ describe('useAuth Hook', () => {
       });
       
       (UserManager.isTestMode as jest.Mock).mockResolvedValue(false);
-      (UserManager.getUserRoles as jest.Mock).mockResolvedValue(['user' as UserRole, 'advertiser' as UserRole, 'publisher' as UserRole]);
+      (UserManager.getUserRoles as jest.Mock).mockResolvedValue([.viewer. as UserRole, 'advertiser' as UserRole, 'publisher' as UserRole]);
       
       const { result } = renderHook(() => useAuthProvider());
       
@@ -377,7 +377,7 @@ describe('useAuth Hook', () => {
       });
       
       (UserManager.isTestMode as jest.Mock).mockResolvedValue(false);
-      (UserManager.getUserRoles as jest.Mock).mockResolvedValue(['user']);
+      (UserManager.getUserRoles as jest.Mock).mockResolvedValue(["viewer"]);
       
       const { result } = renderHook(() => useAuthProvider());
       

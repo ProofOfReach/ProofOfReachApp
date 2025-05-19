@@ -22,14 +22,14 @@ const SimplifiedDashboardLayout: React.FC<SimplifiedDashboardLayoutProps> = ({
   title = 'Dashboard'
 }) => {
   const router = useRouter();
-  const { localRole } = useLocalRole();
+  const { currentRole } = useLocalRole();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   
   // Role transition state
   const [transitionState, setTransitionState] = useState({
     active: false,
-    fromRole: 'user' as UserRole,
-    toRole: 'user' as UserRole
+    fromRole: 'viewer' as UserRole,
+    toRole: 'viewer' as UserRole
   });
   
   // Listen for role transition events
@@ -76,7 +76,7 @@ const SimplifiedDashboardLayout: React.FC<SimplifiedDashboardLayoutProps> = ({
     
     // Role-specific links
     const roleLinks = {
-      user: [
+      viewer: [
         { href: '/dashboard/user/profile', label: 'My Profile', icon: <User className="w-5 h-5" /> }
       ],
       advertiser: [
@@ -94,7 +94,7 @@ const SimplifiedDashboardLayout: React.FC<SimplifiedDashboardLayoutProps> = ({
     };
     
     // Combine common links with role-specific links
-    return [...commonLinks, ...(roleLinks[localRole as UserRole] || [])];
+    return [...commonLinks, ...(roleLinks[currentRole as UserRole] || [])];
   };
   
   return (
@@ -136,7 +136,7 @@ const SimplifiedDashboardLayout: React.FC<SimplifiedDashboardLayoutProps> = ({
             <h3 className="text-xs font-semibold uppercase text-gray-500 dark:text-gray-400 mb-2">
               Active Role
             </h3>
-            <RoleDropdown className="w-full" showLabel={true} />
+            <RoleDropdown className="w-full" />
           </div>
           
           {/* Navigation links */}

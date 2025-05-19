@@ -215,7 +215,7 @@ export class AuthService {
         const testPubkey = localStorage.getItem('nostr_test_pk');
         if (testPubkey) {
           // Parse cached available roles
-          let availableRoles: UserRole[] = ['user' as UserRole];
+          let availableRoles: UserRole[] = ['viewer' as UserRole];
           try {
             const cachedRoles = localStorage.getItem('cachedAvailableRoles');
             if (cachedRoles) {

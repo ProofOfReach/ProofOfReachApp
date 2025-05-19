@@ -129,7 +129,7 @@ export const useAuthProvider = () => {
       
       // Convert string[] to UserRole[]
       const availableRoles: UserRole[] = userRoles.filter(
-        (role): role is UserRole => role === 'user' || role === 'advertiser' || role === 'publisher' || 
+        (role): role is UserRole => role === "viewer" || role === 'advertiser' || role === 'publisher' || 
                                    role === 'admin' || role === 'stakeholder'
       );
       
@@ -238,7 +238,7 @@ export const useAuthProvider = () => {
       
       // Convert string[] to UserRole[]
       const availableRoles: UserRole[] = userRoles.filter(
-        (role): role is UserRole => role === 'user' || role === 'advertiser' || role === 'publisher' || 
+        (role): role is UserRole => role === "viewer" || role === 'advertiser' || role === 'publisher' || 
                                    role === 'admin' || role === 'stakeholder'
       );
       
