@@ -119,11 +119,11 @@ describe('Layout Component Navbar Tests', () => {
     require('next/router').useRouter = originalUseRouter;
   });
   
-  it('renders no duplicate navbars for any page', () => {
-    // Test various routes
-    const routes = ['/', '/faq', '/api-docs', '/dashboard', '/login', '/profile'];
-    
-    routes.forEach((pathname) => {
+  // Split the large test into individual tests for each route
+  const routes = ['/', '/faq', '/api-docs', '/dashboard', '/login', '/profile'];
+  
+  routes.forEach((pathname) => {
+    it(`renders a single navbar for ${pathname} page`, () => {
       // Mock the router for this path
       const originalUseRouter = require('next/router').useRouter;
       require('next/router').useRouter = () => ({
@@ -133,7 +133,7 @@ describe('Layout Component Navbar Tests', () => {
         replace: jest.fn(),
       });
       
-      const { container } = render(
+      const { container, unmount } = render(
         <Layout>
           <div>Content for {pathname}</div>
         </Layout>
@@ -143,14 +143,10 @@ describe('Layout Component Navbar Tests', () => {
       const navElements = container.querySelectorAll('nav');
       expect(navElements.length).toBeLessThanOrEqual(1);
       
-      // Log navigation elements for debugging
-      navElements.forEach((nav, idx) => {
-        console.log(`Navbar ${idx + 1} data-testid:`, nav.getAttribute('data-testid'));
-        console.log(`Navbar ${idx + 1} innerHTML:`, nav.innerHTML.substring(0, 100) + '...');
-      });
-      
-      // Cleanup
+      // Cleanup completely after each test
+      unmount();
       require('next/router').useRouter = originalUseRouter;
+      jest.clearAllMocks();
     });
   });
 });

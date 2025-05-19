@@ -4,13 +4,12 @@ import { ApiError } from '../../utils/apiError';
 import { TransactionType } from '@prisma/client';
 
 // Mock Prisma
-jest.mock('../../lib/db', () => {
+jest.mock('../../lib/prismaClient', () => {
   const userUpdateMock = jest.fn().mockResolvedValue({ id: 'user1', balance: 1000 });
   const transactionCreateMock = jest.fn().mockResolvedValue({ id: 'tx1', amount: 500 });
   
   return {
-    __esModule: true,
-    default: {
+    prisma: {
       user: {
         findUnique: jest.fn(),
         update: jest.fn(),
