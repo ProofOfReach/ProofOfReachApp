@@ -504,6 +504,46 @@ const onboardingService = {
   saveOnboardingStep: async (pubkey: string, role: UserRoleType, step: string): Promise<void> => {
     const correlationId = `onboarding-step-${pubkey}-${role}-${step}`;
     
+    // Client-side implementation for browser environment
+    if (typeof window !== 'undefined') {
+      try {
+        // Call API endpoint to save step
+        const response = await fetch('/api/onboarding/step', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ pubkey, role, step }),
+        });
+        
+        if (!response.ok) {
+          const errorData = await response.json().catch(() => ({ error: response.statusText }));
+          throw new Error(errorData.error || 'Failed to save onboarding step');
+        }
+        
+        return;
+      } catch (error) {
+        // Report client-side error
+        errorService.reportError(
+          error instanceof Error ? error : 'Error saving onboarding step (client-side)',
+          'onboardingService.saveOnboardingStep.clientSide',
+          'api',
+          'warning',
+          {
+            data: { pubkey, role, step },
+            category: ErrorCategory.OPERATIONAL,
+            userFacing: false,
+            correlationId
+          }
+        );
+        
+        logger.warn(`Client-side error saving onboarding step: ${error instanceof Error ? error.message : 'Unknown error'}`);
+        // Don't throw error to avoid disrupting the flow - step saving is non-critical
+        return;
+      }
+    }
+    
+    // Server-side implementation
     try {
       // Try to get the user, but don't block the entire operation if it fails
       let user;
