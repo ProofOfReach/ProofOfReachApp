@@ -1,6 +1,6 @@
-import { UserRole } from '@prisma/client';
 import prisma from '@/lib/prisma';
 import { logger } from '@/lib/logger';
+import { UserRoleType } from '@/types/role';
 
 /**
  * Service for managing onboarding state and redirections
@@ -12,31 +12,39 @@ const onboardingService = {
    * @param role The role to check onboarding status for
    * @returns Promise resolving to true if onboarding is complete, false otherwise
    */
-  isOnboardingComplete: async (pubkey: string, role: UserRole): Promise<boolean> => {
+  isOnboardingComplete: async (pubkey: string, role: UserRoleType): Promise<boolean> => {
     try {
-      // First, find the user by their pubkey
-      const user = await prisma.user.findUnique({
-        where: { nostrPubkey: pubkey }
-      });
+      // First, check if user exists - this check is optional as we'll handle missing 
+      // user cases gracefully later
+      try {
+        const user = await prisma.user.findUnique({
+          where: { nostrPubkey: pubkey }
+        });
 
-      if (!user) {
-        logger.warn(`User with pubkey ${pubkey} not found when checking onboarding status`);
-        return false;
+        if (!user) {
+          logger.debug(`User with pubkey ${pubkey} not found when checking onboarding status, may be a new account`);
+          // New account - don't exit early, continue to check onboarding record
+        }
+      } catch (userError) {
+        // Just log the error but continue
+        logger.debug(`Error checking user existence: ${userError instanceof Error ? userError.message : 'Unknown error'}`);
       }
 
       try {
         // Check if there's an onboarding record for this user and role
-        const onboardingRecord = await prisma.userOnboarding.findFirst({
+        const onboardingRecord = await prisma.userOnboarding.findUnique({
           where: {
-            userPubkey: pubkey,
-            role: role
+            userPubkey_role: {
+              userPubkey: pubkey,
+              role: role
+            }
           }
         });
 
-        return onboardingRecord?.isComplete || false;
+        return !!onboardingRecord?.isComplete;
       } catch (dbError) {
         // If there's an error finding the onboarding record, it probably doesn't exist
-        logger.warn(`Error finding onboarding record for ${pubkey} with role ${role}`, { dbError });
+        logger.debug(`No onboarding record found for ${pubkey} with role ${role}, treating as not complete`);
         return false;
       }
     } catch (error) {
@@ -57,7 +65,7 @@ const onboardingService = {
    * @param pubkey The user's public key
    * @param role The role to mark as complete
    */
-  markOnboardingComplete: async (pubkey: string, role: UserRole): Promise<void> => {
+  markOnboardingComplete: async (pubkey: string, role: UserRoleType): Promise<void> => {
     try {
       // First, find the user by their pubkey
       const user = await prisma.user.findUnique({
@@ -106,7 +114,7 @@ const onboardingService = {
    * @param pubkey The user's public key
    * @param role The role to reset onboarding for (optional - if not provided, resets all roles)
    */
-  resetOnboardingStatus: async (pubkey: string, role?: UserRole): Promise<void> => {
+  resetOnboardingStatus: async (pubkey: string, role?: UserRoleType): Promise<void> => {
     try {
       // First, find the user by their pubkey
       const user = await prisma.user.findUnique({
@@ -174,7 +182,7 @@ const onboardingService = {
    * @param role The role being onboarded
    * @param step The current step in the onboarding process
    */
-  saveOnboardingStep: async (pubkey: string, role: UserRole, step: string): Promise<void> => {
+  saveOnboardingStep: async (pubkey: string, role: UserRoleType, step: string): Promise<void> => {
     try {
       // First, find the user by their pubkey
       const user = await prisma.user.findUnique({
@@ -183,30 +191,36 @@ const onboardingService = {
 
       if (!user) {
         logger.warn(`User with pubkey ${pubkey} not found when saving onboarding step`);
-        return; // Return silently instead of throwing
+        // Try to create the onboarding record anyway, in case the user was just created
+        // and there's a race condition between DB operations
       }
 
-      // Upsert the onboarding record
-      await prisma.userOnboarding.upsert({
-        where: {
-          userPubkey_role: {
+      try {
+        // Upsert the onboarding record
+        await prisma.userOnboarding.upsert({
+          where: {
+            userPubkey_role: {
+              userPubkey: pubkey,
+              role
+            }
+          },
+          update: {
+            lastStep: step
+          },
+          create: {
             userPubkey: pubkey,
-            role
+            role,
+            lastStep: step,
+            isComplete: false,
+            userId: user?.id || '' // Use empty string if user ID not found
           }
-        },
-        update: {
-          lastStep: step
-        },
-        create: {
-          userPubkey: pubkey,
-          role,
-          lastStep: step,
-          isComplete: false,
-          userId: user.id
-        }
-      });
-      
-      logger.info(`Saved onboarding step "${step}" for user ${pubkey} with role ${role}`);
+        });
+        
+        logger.info(`Saved onboarding step "${step}" for user ${pubkey} with role ${role}`);
+      } catch (dbError) {
+        logger.warn(`Error saving onboarding step to database: ${dbError instanceof Error ? dbError.message : 'Unknown error'}`);
+        // Continue execution even if DB operation fails
+      }
     } catch (error) {
       logger.error('Error saving onboarding step', { 
         error, 
@@ -225,7 +239,7 @@ const onboardingService = {
    * @param role The user's current role
    * @returns Promise resolving to the URL to redirect to
    */
-  getPostLoginRedirectUrl: async (pubkey: string, role: UserRole): Promise<string> => {
+  getPostLoginRedirectUrl: async (pubkey: string, role: UserRoleType): Promise<string> => {
     try {
       // Check if onboarding is complete for this role
       const isComplete = await onboardingService.isOnboardingComplete(pubkey, role);
