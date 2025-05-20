@@ -288,11 +288,17 @@ export default async function handler(req, res) {
                   
                   <div className="mb-4">
                     <div className="flex justify-between items-center mb-2">
-                      <h4 className="text-sm font-medium text-gray-900 dark:text-white">Step 2: Add the JavaScript SDK to your site</h4>
+                      <h4 className="text-sm font-medium text-gray-900 dark:text-white">Step 2: Client-Side Implementation</h4>
                     </div>
-                    <div className="bg-gray-100 dark:bg-gray-800 p-3 rounded text-sm font-mono overflow-x-auto">
-                      {`<!-- File: index.html -->
-<!-- Include the Nostr Ads JavaScript SDK -->
+                    
+                    <div className="bg-gray-100 dark:bg-gray-800 p-3 rounded-md text-sm font-mono overflow-x-auto border border-gray-200 dark:border-gray-700 shadow-sm">
+                      <div className="flex items-center justify-between mb-2 text-xs text-gray-500 dark:text-gray-400 border-b border-gray-200 dark:border-gray-700 pb-2">
+                        <span>HTML/JavaScript • Client Implementation</span>
+                        <span className="px-2 py-1 bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 rounded-full text-xs">Working Example</span>
+                      </div>
+                      <code className="block whitespace-pre text-gray-800 dark:text-gray-200">
+{`<!-- File: index.html -->
+<!-- Include the Nostr Ads JavaScript API -->
 <script src="https://cdn.nostrads.org/sdk/v1/nostr-ads.js"></script>
 
 <script>
@@ -309,7 +315,7 @@ document.addEventListener('DOMContentLoaded', async function() {
     
     // Initialize with configuration from your backend
     NostrAds.init({
-      publisherKey: config.apiKey,
+      publisherId: config.publisherId,
       defaultPlacement: config.defaultPlacement
     });
     
@@ -328,18 +334,23 @@ document.addEventListener('DOMContentLoaded', async function() {
 
 <!-- HTML placement for ads -->
 <div id="sidebar-ad" class="nostr-ad-container"></div>`}
+                      </code>
                     </div>
                   </div>
                   
                   <div className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg mb-4">
-                    <h3 className="font-medium text-gray-900 dark:text-white mb-2">Step 3: Track ad interactions</h3>
+                    <h3 className="font-medium text-gray-900 dark:text-white mb-2">Step 3: Secure Server-Side Tracking</h3>
                     <p className="text-sm text-gray-600 dark:text-gray-300 mb-3">
-                      Set up proper click tracking with the JavaScript SDK:
+                      Set up proper click tracking with server-side API:
                     </p>
-                    <div className="bg-gray-100 dark:bg-gray-800 p-3 rounded text-sm font-mono overflow-x-auto">
-                      {`// Create a click tracking endpoint
-// File: /pages/api/publisher/track-click.js
-
+                    
+                    <div className="bg-gray-100 dark:bg-gray-800 p-3 rounded-md text-sm font-mono overflow-x-auto border border-gray-200 dark:border-gray-700 shadow-sm">
+                      <div className="flex items-center justify-between mb-2 text-xs text-gray-500 dark:text-gray-400 border-b border-gray-200 dark:border-gray-700 pb-2">
+                        <span>JavaScript • Server-Side Tracking</span>
+                        <span className="px-2 py-1 bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 rounded-full text-xs">Working Example</span>
+                      </div>
+                      <code className="block whitespace-pre text-gray-800 dark:text-gray-200">
+{`// File: /pages/api/publisher/track-click.js
 export default async function handler(req, res) {
   const { adId } = req.query;
   
@@ -348,32 +359,22 @@ export default async function handler(req, res) {
   }
   
   try {
-    // Load configuration
-    const configResponse = await fetch(\`\${process.env.BASE_URL}/api/publisher/config\`, {
-      headers: {
-        // Include authentication as needed
-        cookie: req.headers.cookie
+    // Securely track clicks server-side
+    // Using environment variables - never expose API keys client-side
+    const trackResponse = await fetch(
+      \`https://api.nostrads.org/v1/ads/\${adId}/click\`, 
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-API-Key': process.env.NOSTR_ADS_API_KEY  // Secure: Uses server environment
+        },
+        body: JSON.stringify({
+          publisherId: process.env.PUBLISHER_ID,
+          timestamp: new Date().toISOString()
+        })
       }
-    });
-    
-    if (!configResponse.ok) {
-      throw new Error('Failed to load publisher configuration');
-    }
-    
-    const config = await configResponse.json();
-    
-    // Track the click using server-side credentials
-    const trackResponse = await fetch(\`https://api.nostrads.org/v1/ads/\${adId}/click\`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'X-API-Key': config.apiKey
-      },
-      body: JSON.stringify({
-        publisherId: config.publisherId,
-        timestamp: new Date().toISOString()
-      })
-    });
+    );
     
     if (!trackResponse.ok) {
       throw new Error('Failed to track click');
@@ -385,6 +386,7 @@ export default async function handler(req, res) {
     return res.status(500).json({ error: 'Failed to track click' });
   }
 }`}
+                      </code>
                     </div>
                   </div>
                 </div>
@@ -414,32 +416,50 @@ NostrAds.loadAd('sidebar', adContainer);
                   <p className="text-sm text-gray-600 dark:text-gray-300 mb-3">
                     Use npm or yarn to install the SDK:
                   </p>
-                  <div className="bg-gray-100 dark:bg-gray-800 p-3 rounded text-sm font-mono overflow-x-auto">
-                    npm install @nostr-ads/sdk<br/>
-                    # Or with yarn<br/>
-                    yarn add @nostr-ads/sdk
+                  <div className="bg-gray-100 dark:bg-gray-800 p-3 rounded-md text-sm font-mono overflow-x-auto border border-gray-200 dark:border-gray-700 shadow-sm">
+                    <div className="flex items-center justify-between mb-2 text-xs text-gray-500 dark:text-gray-400 border-b border-gray-200 dark:border-gray-700 pb-2">
+                      <span>Shell • Package Installation</span>
+                      <span className="px-2 py-1 bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 rounded-full text-xs">Working Example</span>
+                    </div>
+                    <code className="block whitespace-pre text-gray-800 dark:text-gray-200">
+{`npm install @nostr-ads/sdk
+
+# Or with yarn
+yarn add @nostr-ads/sdk`}
+                    </code>
                   </div>
                 </div>
                 
-                <div className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg">
-                  <h3 className="font-medium text-gray-900 dark:text-white mb-2">Step 2: Set up environment configuration</h3>
+                <div className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg mt-4">
+                  <h3 className="font-medium text-gray-900 dark:text-white mb-2">Step 2: Set up Environment Configuration</h3>
                   <p className="text-sm text-gray-600 dark:text-gray-300 mb-3">
                     Create a server-side environment file (.env):
                   </p>
-                  <div className="bg-gray-100 dark:bg-gray-800 p-3 rounded text-sm font-mono overflow-x-auto">
-                    {`# .env (server-side only, keep this out of your repository)
+                  <div className="bg-gray-100 dark:bg-gray-800 p-3 rounded-md text-sm font-mono overflow-x-auto border border-gray-200 dark:border-gray-700 shadow-sm">
+                    <div className="flex items-center justify-between mb-2 text-xs text-gray-500 dark:text-gray-400 border-b border-gray-200 dark:border-gray-700 pb-2">
+                      <span>Environment • Server-Side Configuration</span>
+                      <span className="px-2 py-1 bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 rounded-full text-xs">Working Example</span>
+                    </div>
+                    <code className="block whitespace-pre text-gray-800 dark:text-gray-200">
+{`# .env (server-side only, keep this out of your repository)
 NOSTR_ADS_API_KEY=${apiKeyData.key || "your_api_key_from_dashboard"}
 PUBLISHER_PUBKEY=your_nostr_pubkey`}
+                    </code>
                   </div>
                 </div>
 
-                <div className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg">
-                  <h3 className="font-medium text-gray-900 dark:text-white mb-2">Step 3: Create a configuration service</h3>
+                <div className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg mt-4">
+                  <h3 className="font-medium text-gray-900 dark:text-white mb-2">Step 3: Create a Server-Side Configuration</h3>
                   <p className="text-sm text-gray-600 dark:text-gray-300 mb-3">
-                    Create a server-side service to manage your API configuration:
+                    Set up a secure service to manage your API configuration:
                   </p>
-                  <div className="bg-gray-100 dark:bg-gray-800 p-3 rounded text-sm font-mono overflow-x-auto">
-                    {`// server/services/adsConfig.js
+                  <div className="bg-gray-100 dark:bg-gray-800 p-3 rounded-md text-sm font-mono overflow-x-auto border border-gray-200 dark:border-gray-700 shadow-sm">
+                    <div className="flex items-center justify-between mb-2 text-xs text-gray-500 dark:text-gray-400 border-b border-gray-200 dark:border-gray-700 pb-2">
+                      <span>JavaScript • Server-Side SDK Setup</span>
+                      <span className="px-2 py-1 bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 rounded-full text-xs">Implementation Guide</span>
+                    </div>
+                    <code className="block whitespace-pre text-gray-800 dark:text-gray-200">
+{`// server/services/adsConfig.js
 import { NostrAdsSDK } from '@nostr-ads/sdk';
 import dotenv from 'dotenv';
 
@@ -448,7 +468,7 @@ dotenv.config();
 
 // Create a server-side SDK instance
 export const serverSideAdsClient = new NostrAdsSDK({
-  apiKey: process.env.NOSTR_ADS_API_KEY,
+  apiKey: process.env.NOSTR_ADS_API_KEY,  // Secure: API key stays server-side
   pubkey: process.env.PUBLISHER_PUBKEY
 });
 
@@ -461,18 +481,23 @@ export default function handler(req, res) {
     placements: ['feed', 'sidebar', 'banner']
   });
 }`}
+                    </code>
                   </div>
                 </div>
                 
-                <div className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg">
-                  <h3 className="font-medium text-gray-900 dark:text-white mb-2">Step 4: Create React components</h3>
+                <div className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg mt-4">
+                  <h3 className="font-medium text-gray-900 dark:text-white mb-2">Step 4: Create Client Components</h3>
                   <p className="text-sm text-gray-600 dark:text-gray-300 mb-3">
-                    Create React components using the SDK:
+                    Implement secure React components using the SDK:
                   </p>
-                  <div className="bg-gray-100 dark:bg-gray-800 p-3 rounded text-sm font-mono overflow-x-auto">
-                    {`// components/AdProvider.jsx
+                  <div className="bg-gray-100 dark:bg-gray-800 p-3 rounded-md text-sm font-mono overflow-x-auto border border-gray-200 dark:border-gray-700 shadow-sm">
+                    <div className="flex items-center justify-between mb-2 text-xs text-gray-500 dark:text-gray-400 border-b border-gray-200 dark:border-gray-700 pb-2">
+                      <span>JavaScript/React • Client Components</span>
+                      <span className="px-2 py-1 bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 rounded-full text-xs">Implementation Guide</span>
+                    </div>
+                    <code className="block whitespace-pre text-gray-800 dark:text-gray-200">
+{`// components/AdProvider.jsx
 import { createContext, useState, useEffect } from 'react';
-import { NostrAdsSDK } from '@nostr-ads/sdk';
 
 // Create context for ad configuration
 export const AdContext = createContext(null);
@@ -521,7 +546,11 @@ export function AdUnit({ placement = 'feed' }) {
     
     async function loadAd() {
       try {
-        const response = await fetch(\`/api/ads/serve?placement=\${placement}\`);
+        // Fetch ad through your secure server endpoint
+        const response = await fetch(
+          \`/api/ads/serve?placement=\${placement}\`
+        );
+        
         if (!response.ok) throw new Error('Failed to load ad');
         
         const data = await response.json();
@@ -551,7 +580,7 @@ export function AdUnit({ placement = 'feed' }) {
         href="#" 
         onClick={async (e) => {
           e.preventDefault();
-          // Track click through API
+          // Track click through secure API
           await fetch(\`/api/ads/click?adId=\${ad.id}\`);
           // Open target URL
           window.open(ad.targetUrl, '_blank');
@@ -562,16 +591,22 @@ export function AdUnit({ placement = 'feed' }) {
     </div>
   );
 }`}
+                    </code>
                   </div>
                 </div>
                 
-                <div className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg">
-                  <h3 className="font-medium text-gray-900 dark:text-white mb-2">Step 5: Create API endpoints</h3>
+                <div className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg mt-4">
+                  <h3 className="font-medium text-gray-900 dark:text-white mb-2">Step 5: Implement API Endpoints</h3>
                   <p className="text-sm text-gray-600 dark:text-gray-300 mb-3">
-                    Add backend API endpoints to handle ad serving and tracking:
+                    Create secure backend endpoints for serving ads and tracking interactions:
                   </p>
-                  <div className="bg-gray-100 dark:bg-gray-800 p-3 rounded text-sm font-mono overflow-x-auto">
-                    {`// pages/api/ads/serve.js
+                  <div className="bg-gray-100 dark:bg-gray-800 p-3 rounded-md text-sm font-mono overflow-x-auto border border-gray-200 dark:border-gray-700 shadow-sm">
+                    <div className="flex items-center justify-between mb-2 text-xs text-gray-500 dark:text-gray-400 border-b border-gray-200 dark:border-gray-700 pb-2">
+                      <span>JavaScript • Server API Endpoints</span>
+                      <span className="px-2 py-1 bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 rounded-full text-xs">Implementation Guide</span>
+                    </div>
+                    <code className="block whitespace-pre text-gray-800 dark:text-gray-200">
+{`// pages/api/ads/serve.js
 import { serverSideAdsClient } from '../../../server/services/adsConfig';
 
 export default async function handler(req, res) {
@@ -617,6 +652,7 @@ export default async function handler(req, res) {
     res.status(500).json({ error: 'Failed to track click' });
   }
 }`}
+                    </code>
                   </div>
                 </div>
               </div>
