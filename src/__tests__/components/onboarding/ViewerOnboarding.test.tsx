@@ -12,7 +12,7 @@ jest.mock('@/lib/onboardingService', () => ({
   getOnboardingProgress: jest.fn().mockResolvedValue({
     completed: false,
     currentStep: 1,
-    totalSteps: 3,
+    totalSteps: 3, // Total steps is now 3 (discovery, privacy, complete)
     role: 'viewer',
   }),
   isOnboardingComplete: jest.fn().mockResolvedValue(false),
@@ -181,17 +181,7 @@ describe('ViewerOnboarding', () => {
       expect(screen.getByRole('heading', { name: /privacy settings/i })).toBeInTheDocument();
     });
 
-    // Click to go to feedback step
-    await act(async () => {
-      userEvent.click(screen.getByTestId('continue-button'));
-    });
-
-    // Now we should be on feedback step
-    await waitFor(() => {
-      expect(screen.getByRole('heading', { name: /provide feedback/i })).toBeInTheDocument();
-    });
-
-    // Click to go to complete step
+    // Click to go directly to complete step (feedback step removed)
     await act(async () => {
       userEvent.click(screen.getByTestId('continue-button'));
     });

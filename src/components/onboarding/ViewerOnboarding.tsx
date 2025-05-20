@@ -84,11 +84,10 @@ const ViewerOnboarding: React.FC<ViewerOnboardingProps> = ({
       return 'discovery';
     }
     
-    // Define the sequence of steps in order
+    // Define the sequence of steps in order - feedback step removed
     const stepSequence = [
       'discovery',
       'privacy',
-      'feedback',
       'complete'
     ];
     
@@ -96,10 +95,10 @@ const ViewerOnboarding: React.FC<ViewerOnboardingProps> = ({
     const stepMap: Record<string, string> = {
       'role-selection': 'discovery',
       'preferences': 'discovery',
-      'discovery': 'discovery',
+      'discovery': 'discovery', 
       'notifications': 'privacy', // Map notifications to privacy since we removed notifications step
       'privacy': 'privacy',
-      'feedback': 'feedback',
+      'feedback': 'complete', // Map feedback to complete since we removed feedback step
       'complete': 'complete'
     };
     
@@ -170,10 +169,7 @@ const ViewerOnboarding: React.FC<ViewerOnboardingProps> = ({
         goToNextStep();
         break;
       case 'privacy':
-        setStep('feedback');
-        goToNextStep();
-        break;
-      case 'feedback':
+        // Go directly to complete after privacy (feedback step removed)
         setStep('complete');
         goToNextStep();
         break;
@@ -199,12 +195,9 @@ const ViewerOnboarding: React.FC<ViewerOnboardingProps> = ({
         setStep('discovery');
         goToPreviousStep();
         break;
-      case 'feedback':
-        setStep('privacy');
-        goToPreviousStep();
-        break;
       case 'complete':
-        setStep('feedback');
+        // Go directly back to privacy (feedback step removed)
+        setStep('privacy');
         goToPreviousStep();
         break;
       default:
@@ -418,51 +411,7 @@ const ViewerOnboarding: React.FC<ViewerOnboardingProps> = ({
           </div>
         );
 
-      case 'feedback':
-        return (
-          <div className="space-y-4">
-            <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
-              <CheckCircle className="inline-block mr-2 mb-1" size={20} />
-              Provide Feedback
-            </h2>
-            <p className="text-gray-600 dark:text-gray-300">
-              Help us improve your experience:
-            </p>
-            
-            <div className="mt-6 space-y-4">
-              <div className="border border-gray-200 dark:border-gray-700 rounded-lg p-4">
-                <h3 className="font-medium text-gray-900 dark:text-white mb-3">Your Opinion Matters</h3>
-                
-                <ul className="space-y-3">
-                  <li className="flex items-start">
-                    <div className="flex-shrink-0 h-5 w-5 text-purple-500">
-                      <CheckCircle size={18} className="mt-0.5" />
-                    </div>
-                    <p className="ml-2 text-gray-600 dark:text-gray-300">
-                      Rate content relevance
-                    </p>
-                  </li>
-                  <li className="flex items-start">
-                    <div className="flex-shrink-0 h-5 w-5 text-purple-500">
-                      <CheckCircle size={18} className="mt-0.5" />
-                    </div>
-                    <p className="ml-2 text-gray-600 dark:text-gray-300">
-                      Report any issues with ads
-                    </p>
-                  </li>
-                  <li className="flex items-start">
-                    <div className="flex-shrink-0 h-5 w-5 text-purple-500">
-                      <CheckCircle size={18} className="mt-0.5" />
-                    </div>
-                    <p className="ml-2 text-gray-600 dark:text-gray-300">
-                      Suggest improvements to the platform
-                    </p>
-                  </li>
-                </ul>
-              </div>
-            </div>
-          </div>
-        );
+// Feedback step removed
       
       case 'complete':
         return (

@@ -4,12 +4,11 @@ import ViewerOnboarding from '@/components/onboarding/ViewerOnboarding';
 import Head from 'next/head';
 
 const TestOnboardingPage: React.FC = () => {
-  // Define the steps for standalone testing - welcome step removed
+  // Define the steps for standalone testing - welcome and feedback steps removed
   const viewerSteps = [
     'role-selection', // This is now mapped to discovery in ViewerOnboarding
     'discovery',
     'privacy',
-    'feedback',
     'complete'
   ];
 
@@ -24,8 +23,8 @@ const TestOnboardingPage: React.FC = () => {
         </h1>
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
           <OnboardingProvider initialRole="viewer">
-            {/* Pass in the updated stepSequence.length to force the correct total steps */}
-            <ViewerOnboarding totalSteps={5} />
+            {/* We now have only 3 steps (discovery, privacy, complete) */}
+            <ViewerOnboarding totalSteps={3} />
           </OnboardingProvider>
         </div>
       </div>
