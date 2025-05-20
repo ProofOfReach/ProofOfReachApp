@@ -105,7 +105,7 @@ const PublisherOnboarding: React.FC<PublisherOnboardingProps> = React.memo(({ cu
   
   // Content based on the current step
   switch (currentStep) {
-    case 'start':
+    case 'role-selection':
       return (
         <div className="max-w-2xl mx-auto">
           <div className="text-center mb-8">
@@ -192,7 +192,7 @@ const PublisherOnboarding: React.FC<PublisherOnboardingProps> = React.memo(({ cu
         </div>
       );
       
-    case 'setup':
+    case 'choose-integration':
       return (
         <div className="max-w-2xl mx-auto">
           <div className="mb-8">
@@ -642,6 +642,57 @@ async function loadAd(placementId, targetElement) {
         </div>
       );
       
+    // Handle all other publisher steps with content
+    case 'integration-details':
+    case 'ad-slot-config':
+    case 'setup-wallet':
+    case 'enable-test-mode':
+    case 'go-live':
+      return (
+        <div className="max-w-2xl mx-auto">
+          <div className="mb-8">
+            <h2 className="text-2xl font-semibold text-gray-900 dark:text-white mb-2">
+              {currentStep === 'integration-details' ? 'Integration Details' :
+               currentStep === 'ad-slot-config' ? 'Configure Ad Slots' :
+               currentStep === 'setup-wallet' ? 'Setup Payment Wallet' :
+               currentStep === 'enable-test-mode' ? 'Test Your Integration' :
+               'Go Live with Ads'}
+            </h2>
+            <p className="text-gray-600 dark:text-gray-300">
+              {currentStep === 'integration-details' ? 'Configure the details of your integration method.' :
+               currentStep === 'ad-slot-config' ? 'Define where and how ads will appear on your site.' :
+               currentStep === 'setup-wallet' ? 'Connect a Lightning wallet to receive payments.' :
+               currentStep === 'enable-test-mode' ? 'Test your integration in a safe environment.' :
+               'Final steps to go live with your ad integration.'}
+            </p>
+          </div>
+          
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+            <div className="py-6 text-center">
+              <p className="text-gray-600 dark:text-gray-300">
+                {currentStep === 'integration-details' ? 'In a production implementation, this step would guide you through detailed configuration options.' :
+                 currentStep === 'ad-slot-config' ? 'This step would allow you to define ad slot sizes, positions, and content preferences.' :
+                 currentStep === 'setup-wallet' ? 'Connect your Lightning wallet to receive automatic payments from ad revenue.' :
+                 currentStep === 'enable-test-mode' ? 'Enable test mode to see how ads will appear without charging advertisers.' :
+                 'Finalize your settings and activate your publisher account.'}
+              </p>
+              
+              <div className="mt-8 border-t border-gray-200 dark:border-gray-700 pt-4 flex justify-between">
+                {skipOnboarding && (
+                  <button
+                    type="button"
+                    onClick={skipOnboarding}
+                    className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md"
+                  >
+                    Skip For Now
+                  </button>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+      );
+      
     case 'complete':
       return (
         <div className="max-w-2xl mx-auto">
@@ -760,6 +811,7 @@ async function loadAd(placementId, targetElement) {
       return (
         <div className="text-center p-8">
           <p className="text-gray-600 dark:text-gray-300">Loading onboarding experience...</p>
+          <p className="text-sm text-gray-500 dark:text-gray-400 mt-2">Current step: {currentStep}</p>
         </div>
       );
   }
