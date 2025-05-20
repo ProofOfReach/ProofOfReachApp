@@ -156,7 +156,7 @@ const ViewerOnboarding: React.FC<ViewerOnboardingProps> = ({
   // Calculate the current step number and total for display
   const currentStepIndex = stepSequence.indexOf(step);
   // Use context's totalSteps if available, otherwise use local calculation
-  const totalSteps = contextTotalSteps || stepSequence.length;
+  const calculatedTotalSteps = contextTotalSteps > 0 ? contextTotalSteps : stepSequence.length;
   const currentStepNumber = currentStepIndex + 1;
   
   // The main component will show its own progress indicator when showNavigation is false
@@ -592,7 +592,7 @@ const ViewerOnboarding: React.FC<ViewerOnboardingProps> = ({
         <div className="mb-6">
           <div className="flex justify-between items-center mb-2">
             <span className="text-sm text-gray-600 dark:text-gray-400">
-              Step {currentStepNumber} of {totalSteps}
+              Step {currentStepNumber} of {calculatedTotalSteps}
             </span>
             <span className="text-sm font-medium text-purple-600 dark:text-purple-400">
               {progress}% Complete
@@ -614,13 +614,13 @@ const ViewerOnboarding: React.FC<ViewerOnboardingProps> = ({
               <span className="text-xs text-gray-500 dark:text-gray-400">Start</span>
             )}
             
-            {currentStepIndex > 0 && currentStepIndex < totalSteps - 1 ? (
+            {currentStepIndex > 0 && currentStepIndex < calculatedTotalSteps - 1 ? (
               <span className="text-xs text-purple-600 dark:text-purple-400 font-medium">In Progress</span>
             ) : (
               <span className="text-xs text-gray-500 dark:text-gray-400">In Progress</span>
             )}
             
-            {currentStepIndex === totalSteps - 1 ? (
+            {currentStepIndex === calculatedTotalSteps - 1 ? (
               <span className="text-xs text-purple-600 dark:text-purple-400 font-medium">Complete</span>
             ) : (
               <span className="text-xs text-gray-500 dark:text-gray-400">Complete</span>
