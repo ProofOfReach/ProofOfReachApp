@@ -4,6 +4,16 @@ import ViewerOnboarding from '@/components/onboarding/ViewerOnboarding';
 import Head from 'next/head';
 
 const TestOnboardingPage: React.FC = () => {
+  // Define the steps for standalone testing
+  const viewerSteps = [
+    'role-selection',
+    'welcome',
+    'discovery',
+    'privacy',
+    'feedback',
+    'complete'
+  ];
+
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
       <Head>
@@ -14,8 +24,9 @@ const TestOnboardingPage: React.FC = () => {
           Viewer Onboarding Test
         </h1>
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
-          <OnboardingProvider>
-            <ViewerOnboarding />
+          <OnboardingProvider initialRole="viewer">
+            {/* Pass in the stepSequence.length to force the correct total steps */}
+            <ViewerOnboarding totalSteps={6} />
           </OnboardingProvider>
         </div>
       </div>

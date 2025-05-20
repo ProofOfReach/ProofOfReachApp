@@ -17,12 +17,14 @@ interface ViewerOnboardingProps {
   currentStep?: OnboardingStep;
   onComplete?: () => void;
   showNavigation?: boolean;
+  totalSteps?: number;
 }
 
 const ViewerOnboarding: React.FC<ViewerOnboardingProps> = ({ 
   currentStep = 'role-selection', 
   onComplete,
-  showNavigation = true
+  showNavigation = true,
+  totalSteps: propTotalSteps
 }) => {
   // Get context from OnboardingContext
   const { 
@@ -155,8 +157,8 @@ const ViewerOnboarding: React.FC<ViewerOnboardingProps> = ({
   
   // Calculate the current step number and total for display
   const currentStepIndex = stepSequence.indexOf(step);
-  // Use context's totalSteps if available, otherwise use local calculation
-  const calculatedTotalSteps = contextTotalSteps > 0 ? contextTotalSteps : stepSequence.length;
+  // Use prop totalSteps if provided, or context's totalSteps if available, otherwise use local calculation
+  const calculatedTotalSteps = propTotalSteps || (contextTotalSteps > 0 ? contextTotalSteps : stepSequence.length);
   const currentStepNumber = currentStepIndex + 1;
   
   // The main component will show its own progress indicator when showNavigation is false
