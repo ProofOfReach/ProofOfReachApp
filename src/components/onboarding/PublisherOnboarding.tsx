@@ -590,15 +590,7 @@ document.getElementById('ad-container').innerHTML = ad.html;`}
               {renderStepContent()}
             </div>
             
-            <div className="mt-6 flex justify-end">
-              <button
-                onClick={handleContinue}
-                className="bg-purple-600 hover:bg-purple-700 text-white font-medium py-2 px-4 rounded shadow transition-colors"
-                data-testid="publisher-continue-button"
-              >
-                Continue
-              </button>
-            </div>
+            {/* Navigation controls are handled in the parent OnboardingWizard component */}
           </div>
         </div>
       </div>
