@@ -20,12 +20,12 @@ const HomeNavbar: React.FC = () => {
           <div className="flex-shrink-0 flex items-center">
             <Link href="/" className="hidden sm:flex items-center">
               <span className="text-xl font-bold text-purple-600 dark:text-purple-400 leading-tight">
-                Nostr Ad<br />Marketplace
+                Proof Of<br />Reach
               </span>
             </Link>
             <Link href="/" className="sm:hidden flex items-center">
               <span className="text-xl font-bold text-purple-600 dark:text-purple-400">
-                NostrAds
+                ProofOfReach
               </span>
             </Link>
           </div>

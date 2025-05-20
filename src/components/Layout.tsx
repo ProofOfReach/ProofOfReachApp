@@ -42,7 +42,7 @@ type LayoutProps = {
 
 const Layout: React.FC<LayoutProps> = ({
   children,
-  title = 'Nostr Ad Marketplace',
+  title = 'Proof Of Reach',
   description = 'A decentralized advertising marketplace built on Nostr protocol',
   hideTestBanner = false,
 }) => {

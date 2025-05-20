@@ -1,5 +1,5 @@
 /**
- * Nostr Ad Marketplace JavaScript SDK TypeScript Definitions
+ * Proof Of Reach JavaScript SDK TypeScript Definitions
  */
 
 export interface SDKConfig {
@@ -97,9 +97,9 @@ export interface PublisherStats {
   }[];
 }
 
-export declare class NostrAdMarketplaceSDK {
+export declare class ProofOfReachSDK {
   /**
-   * Creates a new instance of the NostrAdMarketplaceSDK
+   * Creates a new instance of the ProofOfReachSDK
    */
   constructor(config: SDKConfig);
 
@@ -119,4 +119,4 @@ export declare class NostrAdMarketplaceSDK {
   fetchPublisherStats(options?: StatsOptions): Promise<PublisherStats>;
 }
 
-export default NostrAdMarketplaceSDK;
+export default ProofOfReachSDK;

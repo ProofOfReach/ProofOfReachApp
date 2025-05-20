@@ -1,6 +1,42 @@
-# Nostr Ad Marketplace
+# Proof Of Reach
 
 A decentralized ad marketplace built on the Nostr protocol with Bitcoin and Lightning Network payment integration.
+
+## SDK Usage Example
+
+```javascript
+// Import the SDK
+const { ProofOfReachSDK } = require('@proofofreach/sdk');
+
+// Initialize with your API key
+const sdk = new ProofOfReachSDK({
+  apiKey: 'your-api-key',
+  debug: true // Optional
+});
+
+// Serve an ad
+async function displayAd() {
+  const ad = await sdk.serveAd({
+    placement: 'sidebar',
+    pubkey: 'your-nostr-pubkey',
+    interests: ['bitcoin', 'technology']
+  });
+  
+  if (ad) {
+    console.log('Ad received:', ad.title);
+    // Render the ad in your application
+  }
+}
+
+// Track a click
+async function trackAdClick(adId) {
+  await sdk.trackClick({
+    adId: adId,
+    pubkey: 'your-nostr-pubkey',
+    placement: 'sidebar'
+  });
+}
+```
 
 ## Features
 
@@ -21,8 +57,8 @@ A decentralized ad marketplace built on the Nostr protocol with Bitcoin and Ligh
 
 1. Clone the repository
 ```bash
-git clone https://github.com/SuJubilacion/NostrAdsMarket.git
-cd NostrAdsMarket
+git clone https://github.com/SuJubilacion/ProofOfReach.git
+cd ProofOfReach
 ```
 
 2. Install dependencies

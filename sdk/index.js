@@ -1,13 +1,13 @@
 /**
- * Nostr Ad Marketplace JavaScript SDK
+ * Proof Of Reach JavaScript SDK
  * 
- * A lightweight client library for interacting with the Nostr Ad Marketplace API.
+ * A lightweight client library for interacting with the Proof Of Reach API.
  * This SDK makes it easy for publishers to display ads on their platforms.
  */
 
-class NostrAdMarketplaceSDK {
+class ProofOfReachSDK {
   /**
-   * Creates a new instance of the NostrAdMarketplaceSDK
+   * Creates a new instance of the ProofOfReachSDK
    * 
    * @param {Object} config - Configuration options
    * @param {string} config.apiKey - Your API key for authentication
@@ -20,7 +20,7 @@ class NostrAdMarketplaceSDK {
     }
 
     this.apiKey = config.apiKey;
-    this.baseUrl = config.baseUrl || 'https://api.nostradmarketplace.com';
+    this.baseUrl = config.baseUrl || 'https://api.proofofreach.com';
     this.debug = config.debug || false;
 
     // Bind methods
@@ -38,7 +38,7 @@ class NostrAdMarketplaceSDK {
    */
   _log(message, data) {
     if (this.debug) {
-      console.log(`[NostrAdSDK] ${message}`, data || '');
+      console.log(`[ProofOfReachSDK] ${message}`, data || '');
     }
   }
 
@@ -178,15 +178,15 @@ class NostrAdMarketplaceSDK {
 
 // Export for CommonJS environments
 if (typeof module !== 'undefined' && module.exports) {
-  module.exports = NostrAdMarketplaceSDK;
+  module.exports = ProofOfReachSDK;
 }
 
 // Export for ES modules environments
 if (typeof exports !== 'undefined') {
-  exports.NostrAdMarketplaceSDK = NostrAdMarketplaceSDK;
+  exports.ProofOfReachSDK = ProofOfReachSDK;
 }
 
 // Make available in the browser
 if (typeof window !== 'undefined') {
-  window.NostrAdMarketplaceSDK = NostrAdMarketplaceSDK;
+  window.ProofOfReachSDK = ProofOfReachSDK;
 }

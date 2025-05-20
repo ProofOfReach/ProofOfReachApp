@@ -49,11 +49,11 @@ export const getOpenApiSpec = () => {
     definition: {
       openapi: '3.0.0',
       info: {
-        title: 'Nostr Ad Marketplace API',
+        title: 'Proof Of Reach API',
         version: '1.0.0',
         description: `
 # Introduction
-The Nostr Ad Marketplace API provides programmatic access to all features of the platform, allowing you to integrate advertising capabilities into your applications.
+The Proof Of Reach API provides programmatic access to all features of the platform, allowing you to integrate advertising capabilities into your applications.
 
 This API uses standard RESTful conventions with JSON request and response bodies. All requests require authentication either through API keys or Nostr-based authentication.
 
@@ -76,12 +76,12 @@ The API has rate limits to prevent abuse:
 You can configure webhooks in your account settings to receive real-time notifications for specific events.
 
 # Questions?
-If you have any questions, please contact our [support team](mailto:support@nostradmarketplace.com).
+If you have any questions, please contact our [support team](mailto:support@proofofreach.com).
         `,
         contact: {
           name: 'API Support',
-          email: 'support@nostradmarketplace.com',
-          url: 'https://nostradmarketplace.com/contact'
+          email: 'support@proofofreach.com',
+          url: 'https://proofofreach.com/contact'
         },
         license: {
           name: 'MIT',
@@ -94,11 +94,11 @@ If you have any questions, please contact our [support team](mailto:support@nost
           description: 'Current API endpoint'
         },
         {
-          url: 'https://api.nostradmarketplace.com',
+          url: 'https://api.proofofreach.com',
           description: 'Production API server'
         },
         {
-          url: 'https://api-sandbox.nostradmarketplace.com',
+          url: 'https://api-sandbox.proofofreach.com',
           description: 'Sandbox API server'
         }
       ],

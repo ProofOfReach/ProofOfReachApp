@@ -12,12 +12,12 @@ export async function getExtendedOpenApiSpec() {
     definition: {
       openapi: '3.0.0',
       info: {
-        title: 'Nostr Ad Marketplace API',
+        title: 'Proof Of Reach API',
         version: '1.0.0',
-        description: 'API for the Nostr Ad Marketplace platform. This API allows advertisers and publishers to interact with the marketplace programmatically.',
+        description: 'API for the Proof Of Reach platform. This API allows advertisers and publishers to interact with the marketplace programmatically.',
         contact: {
           name: 'API Support',
-          email: 'support@nostradmarketplace.com',
+          email: 'support@proofofreach.com',
         },
       },
       tags: [
