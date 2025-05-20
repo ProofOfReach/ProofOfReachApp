@@ -493,18 +493,22 @@ const ViewerOnboarding: React.FC<ViewerOnboardingProps> = ({
   
   return (
     <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm" data-testid="viewer-onboarding">
-      <div className="flex justify-between items-center px-6 pt-6">
+      <div className="px-6 pt-6">
         {shouldShowProgress && (
-          <OnboardingProgress 
-            customCurrentStep={currentStepNumber}
-            customTotalSteps={calculatedTotalSteps}
-            className="mb-6"
-          />
+          <div className="w-full">
+            <OnboardingProgress 
+              customCurrentStep={currentStepNumber}
+              customTotalSteps={calculatedTotalSteps}
+              className="mb-2"
+            />
+            <div className="flex justify-end mt-1 mb-4">
+              <SkipButton 
+                onSkip={handleSkip}
+                testId="viewer-skip-button"
+              />
+            </div>
+          </div>
         )}
-        <SkipButton 
-          onSkip={handleSkip}
-          testId="viewer-skip-button"
-        />
       </div>
       {renderStepContent()}
       {showNavigation && renderNavButtons()}

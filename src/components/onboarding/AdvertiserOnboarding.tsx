@@ -20,18 +20,13 @@ const AdvertiserOnboarding: React.FC<AdvertiserOnboardingProps> = ({ currentStep
   // Test ID for test selection
   const testId = "advertiser-onboarding";
   
-  // Helper function to render section title with skip button
+  // Helper function to render section title without skip button
   const renderSectionHeader = (icon: React.ReactNode, title: string) => (
-    <div className="flex justify-between items-center mb-6">
+    <div className="flex items-center mb-6">
       <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
         {icon}
         {title}
       </h2>
-      <SkipButton 
-        onSkip={skipOnboarding} 
-        testId={`${testId}-skip-button`}
-        label="Skip"
-      />
     </div>
   );
 
@@ -638,8 +633,21 @@ const AdvertiserOnboarding: React.FC<AdvertiserOnboardingProps> = ({ currentStep
   };
 
   return (
-    <div className="py-4" data-testid={testId}>
-      {renderStepContent()}
+    <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm" data-testid={testId}>
+      <div className="px-6 pt-6">
+        <div className="w-full">
+          {/* Progress bar would go here - can be added in a future update */}
+          <div className="flex justify-end mt-1 mb-4">
+            <SkipButton 
+              onSkip={skipOnboarding}
+              testId={`${testId}-skip-button`}
+            />
+          </div>
+        </div>
+      </div>
+      <div className="px-6 pb-6">
+        {renderStepContent()}
+      </div>
     </div>
   );
 };

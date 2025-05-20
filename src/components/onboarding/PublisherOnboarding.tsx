@@ -567,43 +567,47 @@ document.getElementById('ad-container').innerHTML = ad.html;`}
   };
 
   return (
-    <div className="w-full max-w-4xl mx-auto">
+    <div className="w-full max-w-4xl mx-auto" data-testid="publisher-onboarding">
       <div className="mb-6">
-        <div className="flex items-center justify-between">
-          <div>
-            <h2 className="text-xl font-bold text-gray-900 dark:text-white">
-              Publisher Setup
-            </h2>
-            <p className="text-gray-600 dark:text-gray-300">
-              {currentStep === 'integration-details' ? 'Configure the details of your integration method.' :
-               currentStep === 'ad-slot-config' ? 'Define where and how ads will appear on your site.' :
-               currentStep === 'setup-wallet' ? 'Connect a Lightning wallet to receive payments.' :
-               currentStep === 'enable-test-mode' ? 'Test your integration in a safe environment.' :
-               'Final steps to go live with your ad integration.'}
-            </p>
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm">
+          <div className="px-6 pt-6">
+            <div className="w-full">
+              <h2 className="text-xl font-bold text-gray-900 dark:text-white">
+                Publisher Setup
+              </h2>
+              <p className="text-gray-600 dark:text-gray-300 mt-2">
+                {currentStep === 'integration-details' ? 'Configure the details of your integration method.' :
+                 currentStep === 'ad-slot-config' ? 'Define where and how ads will appear on your site.' :
+                 currentStep === 'setup-wallet' ? 'Connect a Lightning wallet to receive payments.' :
+                 currentStep === 'enable-test-mode' ? 'Test your integration in a safe environment.' :
+                 'Final steps to go live with your ad integration.'}
+              </p>
+              {/* Progress bar would go here - can be added in a future update */}
+              <div className="flex justify-end mt-1 mb-4">
+                {handleSkip && (
+                  <SkipButton 
+                    onSkip={handleSkip}
+                    testId="publisher-skip-button"
+                  />
+                )}
+              </div>
+            </div>
           </div>
-          {handleSkip && (
-            <SkipButton 
-              onSkip={handleSkip}
-              testId="publisher-skip-button"
-            />
-          )}
-        </div>
-        
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
-          <div className="py-6 text-center">
-            {renderStepContent()}
+          <div className="px-6 pb-6">
+            <div className="py-6 text-center">
+              {renderStepContent()}
+            </div>
+            
+            <div className="mt-6 flex justify-end">
+              <button
+                onClick={handleContinue}
+                className="bg-purple-600 hover:bg-purple-700 text-white font-medium py-2 px-4 rounded shadow transition-colors"
+                data-testid="publisher-continue-button"
+              >
+                Continue
+              </button>
+            </div>
           </div>
-        </div>
-        
-        <div className="mt-6 flex justify-end">
-          <button
-            onClick={handleContinue}
-            className="bg-purple-600 hover:bg-purple-700 text-white font-medium py-2 px-4 rounded shadow transition-colors"
-            data-testid="publisher-continue-button"
-          >
-            Continue
-          </button>
         </div>
       </div>
     </div>
