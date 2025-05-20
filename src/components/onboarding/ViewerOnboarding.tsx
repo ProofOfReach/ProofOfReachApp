@@ -120,7 +120,6 @@ const ViewerOnboarding: React.FC<ViewerOnboardingProps> = ({
   const stepSequence = [
     'discovery',
     'privacy',
-    'feedback',
     'complete'
   ];
   
