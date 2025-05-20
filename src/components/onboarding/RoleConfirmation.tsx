@@ -155,22 +155,8 @@ const RoleConfirmation: React.FC<RoleConfirmationProps> = ({ onConfirm }) => {
                 </div>
               </div>
                 
-              {/* Instead of a button, show a prompt to click with a visual indicator */}
-              <div className="mt-auto pt-4 text-center">
-                <div 
-                  data-testid={`select-${card.role}`}
-                  className={`w-full py-2 px-4 rounded-md transition text-sm
-                    ${card.color === 'blue' ? 
-                      'text-blue-700 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/20' : 
-                      card.color === 'green' ? 
-                      'text-green-700 dark:text-green-400 bg-green-50 dark:bg-green-900/20' : 
-                      'text-purple-700 dark:text-purple-400 bg-purple-50 dark:bg-purple-900/20'
-                    }
-                  `}
-                >
-                  Click anywhere on card to select
-                </div>
-              </div>
+              {/* Empty space where the button used to be - for test ID only */}
+              <div data-testid={`select-${card.role}`} className="hidden"></div>
             </div>
           </div>
         ))}
