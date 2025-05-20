@@ -192,15 +192,10 @@ const PublisherOnboarding: React.FC<PublisherOnboardingProps> = React.memo(({ cu
                 Choose an implementation method and get your API key to start displaying ads.
               </p>
             </div>
-            {skipOnboarding && (
-              <button
-                onClick={skipOnboarding}
-                className="px-4 py-2 flex-shrink-0 text-sm font-medium text-gray-700 bg-white dark:text-gray-300 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-md hover:bg-gray-50 dark:hover:bg-gray-700"
-                data-testid="publisher-skip-button"
-              >
-                Skip
-              </button>
-            )}
+            <SkipButton 
+              onSkip={handleSkip}
+              testId="publisher-skip-button"
+            />
           </div>
           
           <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
