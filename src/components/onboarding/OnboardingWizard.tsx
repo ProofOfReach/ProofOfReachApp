@@ -6,6 +6,7 @@ import ViewerOnboarding from './ViewerOnboarding';
 import PublisherOnboarding from './PublisherOnboarding';
 import AdvertiserOnboarding from './AdvertiserOnboarding';
 import Loading from '@/components/Loading';
+import { Button } from '@/components/ui/button';
 import { ArrowLeft, ArrowRight, X } from 'react-feather';
 
 const OnboardingWizard: React.FC = () => {
@@ -94,14 +95,15 @@ const OnboardingWizard: React.FC = () => {
           <div>
             <OnboardingProgress />
             <div className="flex justify-end mt-1 mb-4">
-              <button 
+              <Button 
                 onClick={goToNextStep}
-                className="text-sm text-gray-500 hover:text-purple-600 dark:text-gray-400 dark:hover:text-purple-400"
+                variant="link"
+                size="sm"
                 aria-label="Skip to next step"
                 data-testid="onboarding-skip-button"
               >
                 Skip to next step
-              </button>
+              </Button>
             </div>
           </div>
         )}
