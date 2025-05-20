@@ -47,7 +47,11 @@ const OnboardingWizard: React.FC = () => {
     }
     
     if (selectedRole === 'viewer') {
-      return <ViewerOnboarding currentStep={currentStep} onComplete={completeOnboarding} />;
+      return <ViewerOnboarding 
+        currentStep={currentStep} 
+        onComplete={completeOnboarding}
+        showNavigation={false} 
+      />;
     }
     
     if (selectedRole === 'publisher') {

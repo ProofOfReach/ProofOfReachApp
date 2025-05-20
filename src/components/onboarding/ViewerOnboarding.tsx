@@ -15,9 +15,14 @@ interface Publisher {
 interface ViewerOnboardingProps {
   currentStep?: OnboardingStep;
   onComplete?: () => void;
+  showNavigation?: boolean;
 }
 
-const ViewerOnboarding: React.FC<ViewerOnboardingProps> = ({ currentStep = 'role-selection', onComplete }) => {
+const ViewerOnboarding: React.FC<ViewerOnboardingProps> = ({ 
+  currentStep = 'role-selection', 
+  onComplete,
+  showNavigation = true
+}) => {
   // Sample publishers for demonstration
   const [publishers, setPublishers] = useState<Publisher[]>([
     {
@@ -51,9 +56,9 @@ const ViewerOnboarding: React.FC<ViewerOnboardingProps> = ({ currentStep = 'role
       'role-selection': 'welcome',
       'preferences': 'welcome',
       'discovery': 'discovery',
-      'notifications': 'discovery',
-      'privacy': 'discovery',
-      'feedback': 'complete',
+      'notifications': 'notifications',
+      'privacy': 'privacy',
+      'feedback': 'feedback',
       'complete': 'complete'
     };
     
@@ -79,6 +84,15 @@ const ViewerOnboarding: React.FC<ViewerOnboardingProps> = ({ currentStep = 'role
         setStep('discovery');
         break;
       case 'discovery': 
+        setStep('notifications');
+        break;
+      case 'notifications':
+        setStep('privacy');
+        break;
+      case 'privacy':
+        setStep('feedback');
+        break;
+      case 'feedback':
         setStep('complete');
         break;
       case 'complete':
@@ -94,8 +108,17 @@ const ViewerOnboarding: React.FC<ViewerOnboardingProps> = ({ currentStep = 'role
       case 'discovery':
         setStep('welcome');
         break;
-      case 'complete':
+      case 'notifications':
         setStep('discovery');
+        break;
+      case 'privacy':
+        setStep('notifications');
+        break;
+      case 'feedback':
+        setStep('privacy');
+        break;
+      case 'complete':
+        setStep('feedback');
         break;
       default:
         setStep('welcome');
@@ -334,10 +357,10 @@ const ViewerOnboarding: React.FC<ViewerOnboardingProps> = ({ currentStep = 'role
   };
 
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm">
+    <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm" data-testid="viewer-onboarding">
       {shouldShowProgress && <OnboardingProgress />}
       {renderStepContent()}
-      {renderNavButtons()}
+      {showNavigation && renderNavButtons()}
     </div>
   );
 };

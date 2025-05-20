@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen, act } from '@testing-library/react';
+import { render, screen, act, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import ViewerOnboarding from '@/components/onboarding/ViewerOnboarding';
 import { OnboardingProvider } from '@/context/OnboardingContext';
@@ -57,7 +57,10 @@ describe('ViewerOnboarding', () => {
       <AuthProvider>
         <RoleProvider>
           <OnboardingProvider>
-            <ViewerOnboarding onComplete={mockOnComplete} />
+            <ViewerOnboarding 
+              onComplete={mockOnComplete} 
+              showNavigation={true} 
+            />
           </OnboardingProvider>
         </RoleProvider>
       </AuthProvider>
@@ -70,7 +73,7 @@ describe('ViewerOnboarding', () => {
     expect(screen.getByText(/welcome to nostr ads/i)).toBeInTheDocument();
 
     // Should display navigation buttons
-    expect(screen.getByRole('button', { name: /next/i })).toBeInTheDocument();
+    expect(screen.getByTestId('next-button')).toBeInTheDocument();
   });
 
   it('navigates to the next step when Next button is clicked', async () => {
@@ -78,23 +81,33 @@ describe('ViewerOnboarding', () => {
       <AuthProvider>
         <RoleProvider>
           <OnboardingProvider>
-            <ViewerOnboarding onComplete={mockOnComplete} />
+            <ViewerOnboarding 
+              onComplete={mockOnComplete} 
+              showNavigation={true}
+            />
           </OnboardingProvider>
         </RoleProvider>
       </AuthProvider>
     );
 
-    // Click the Next button
-    await act(async () => {
-      userEvent.click(screen.getByRole('button', { name: /next/i }));
+    // Make sure we're on the first step
+    await waitFor(() => {
+      expect(screen.getByRole('heading', { name: /welcome to nostr ads/i })).toBeInTheDocument();
     });
 
-    // Should now display the second step content
-    expect(screen.getByText(/discover personalized content/i)).toBeInTheDocument();
+    // Click the Next button using data-testid
+    await act(async () => {
+      userEvent.click(screen.getByTestId('next-button'));
+    });
 
-    // Should have Back and Next buttons
-    expect(screen.getByRole('button', { name: /back/i })).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: /next/i })).toBeInTheDocument();
+    // Should now display the second step content - using waitFor for async transitions
+    await waitFor(() => {
+      expect(screen.getByRole('heading', { name: /discover personalized content/i })).toBeInTheDocument();
+    });
+
+    // Should have Back and Continue buttons
+    expect(screen.getByTestId('back-button')).toBeInTheDocument();
+    expect(screen.getByTestId('continue-button')).toBeInTheDocument();
   });
 
   it('navigates back to the previous step when Back button is clicked', async () => {
@@ -102,57 +115,88 @@ describe('ViewerOnboarding', () => {
       <AuthProvider>
         <RoleProvider>
           <OnboardingProvider>
-            <ViewerOnboarding onComplete={mockOnComplete} />
+            <ViewerOnboarding 
+              onComplete={mockOnComplete}
+              showNavigation={true}
+            />
           </OnboardingProvider>
         </RoleProvider>
       </AuthProvider>
     );
 
-    // Navigate to second step
+    // Navigate to second step using data-testid
     await act(async () => {
-      userEvent.click(screen.getByRole('button', { name: /next/i }));
+      userEvent.click(screen.getByTestId('next-button'));
     });
 
-    // Verify we're on the second step
-    expect(screen.getByText(/discover personalized content/i)).toBeInTheDocument();
-
-    // Navigate back to first step
-    await act(async () => {
-      userEvent.click(screen.getByRole('button', { name: /back/i }));
+    // Verify we're on the second step with waitFor to handle async transitions
+    await waitFor(() => {
+      const heading = screen.getByRole('heading', { name: /discover personalized content/i });
+      expect(heading).toBeInTheDocument();
     });
 
-    // Should be back on the first step
-    expect(screen.getByText(/welcome to nostr ads/i)).toBeInTheDocument();
+    // Navigate back to first step using data-testid
+    await act(async () => {
+      userEvent.click(screen.getByTestId('back-button'));
+    });
+
+    // Should be back on the first step - using waitFor for async transitions
+    await waitFor(() => {
+      const heading = screen.getByRole('heading', { name: /welcome to nostr ads/i });
+      expect(heading).toBeInTheDocument();
+    });
   });
 
   it('calls onComplete when finishing the onboarding flow', async () => {
+    // Mock the onComplete callback
+    const mockCompleteCallback = jest.fn();
+    
     render(
       <AuthProvider>
         <RoleProvider>
           <OnboardingProvider>
-            <ViewerOnboarding onComplete={mockOnComplete} />
+            <ViewerOnboarding 
+              onComplete={mockCompleteCallback}
+              showNavigation={true} // Explicitly show navigation for test
+            />
           </OnboardingProvider>
         </RoleProvider>
       </AuthProvider>
     );
 
-    // Navigate to second step
-    await act(async () => {
-      userEvent.click(screen.getByRole('button', { name: /next/i }));
+    // Make sure we're starting at the welcome step
+    await waitFor(() => {
+      expect(screen.getByRole('heading', { name: /welcome to nostr ads/i })).toBeInTheDocument();
     });
 
-    // Navigate to final step
+    // Navigate to second step (discovery) using data-testid
     await act(async () => {
-      userEvent.click(screen.getByRole('button', { name: /next/i }));
+      userEvent.click(screen.getByTestId('next-button'));
+    });
+    
+    // Make sure we're on the discovery step by looking for expected elements
+    await waitFor(() => {
+      const heading = screen.getByRole('heading', { name: /discover personalized content/i });
+      expect(heading).toBeInTheDocument();
+    });
+    
+    // From discovery step, clicking continue button to move to the complete step
+    await act(async () => {
+      userEvent.click(screen.getByTestId('continue-button'));
     });
 
-    // Click Complete button on the final step
+    // Make sure we're on the complete step by looking for the "You're All Set!" heading
+    await waitFor(() => {
+      expect(screen.getByRole('heading', { name: /you're all set/i })).toBeInTheDocument();
+    });
+    
+    // Click Complete button on the final step using data-testid
     await act(async () => {
-      userEvent.click(screen.getByRole('button', { name: /complete/i }));
+      userEvent.click(screen.getByTestId('complete-button'));
     });
 
     // Should call onComplete
-    expect(mockOnComplete).toHaveBeenCalled();
+    expect(mockCompleteCallback).toHaveBeenCalled();
   });
 
   it('displays informative content about being a viewer', () => {
@@ -160,7 +204,10 @@ describe('ViewerOnboarding', () => {
       <AuthProvider>
         <RoleProvider>
           <OnboardingProvider>
-            <ViewerOnboarding onComplete={mockOnComplete} />
+            <ViewerOnboarding 
+              onComplete={mockOnComplete}
+              showNavigation={true}
+            />
           </OnboardingProvider>
         </RoleProvider>
       </AuthProvider>
@@ -169,5 +216,26 @@ describe('ViewerOnboarding', () => {
     // Should mention key viewer features
     expect(screen.getByText(/browse content/i)).toBeInTheDocument();
     expect(screen.getByText(/relevant ads/i)).toBeInTheDocument();
+  });
+  
+  it('renders without navigation buttons when showNavigation is false', () => {
+    render(
+      <AuthProvider>
+        <RoleProvider>
+          <OnboardingProvider>
+            <ViewerOnboarding 
+              onComplete={mockOnComplete}
+              showNavigation={false}
+            />
+          </OnboardingProvider>
+        </RoleProvider>
+      </AuthProvider>
+    );
+
+    // Should still show content
+    expect(screen.getByText(/welcome to nostr ads/i)).toBeInTheDocument();
+    
+    // Should NOT display navigation buttons
+    expect(screen.queryByTestId('next-button')).not.toBeInTheDocument();
   });
 });
