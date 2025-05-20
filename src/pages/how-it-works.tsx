@@ -64,15 +64,15 @@ const HowItWorksPage: React.FC = () => {
   return (
     <>
       <Head>
-        <title>How It Works | Nostr Ad Marketplace</title>
-        <meta name="description" content="Learn how the Nostr Ad Marketplace creates a decentralized advertising ecosystem powered by Bitcoin." />
+        <title>How It Works | Proof Of Reach</title>
+        <meta name="description" content="Learn how Proof Of Reach creates a decentralized advertising ecosystem powered by Bitcoin." />
       </Head>
 
       <Layout>
         {/* Hero */}
         <div className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-20">
           <div className="container mx-auto px-4 text-center">
-            <h1 className="text-4xl md:text-5xl font-bold mb-6">About Nostr Ad Marketplace</h1>
+            <h1 className="text-4xl md:text-5xl font-bold mb-6">About Proof Of Reach</h1>
             <p className="text-xl max-w-3xl mx-auto mb-8">
               A decentralized advertising platform built on Nostr protocol and powered by Bitcoin
             </p>
