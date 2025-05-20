@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { OnboardingStep } from '@/context/OnboardingContext';
 import { Code, DollarSign, Layout, Settings, CheckCircle, ToggleRight, Archive, Copy, RefreshCw } from 'react-feather';
+import CodeSnippet from '@/components/ui/CodeSnippet';
 
 interface PublisherOnboardingProps {
   currentStep: OnboardingStep;
@@ -49,235 +50,286 @@ const PublisherOnboarding: React.FC<PublisherOnboardingProps> = React.memo(({ cu
       // Set a timeout to simulate network request
       setTimeout(() => {
         setApiKeyData({
-          id: 'sample-key-' + Date.now(),
+          id: Math.random().toString(16).slice(2, 10),
           key: generatedKey,
-          name: 'Publisher Integration Key',
+          name: 'Default Publisher Key',
           createdAt: new Date().toISOString(),
-          scopes: 'read,write',
+          scopes: 'publisher',
           isLoading: false,
           error: null
         });
       }, 800);
     } catch (error) {
-      setApiKeyData(prev => ({ 
-        ...prev, 
-        isLoading: false, 
-        error: error instanceof Error ? error.message : 'An unknown error occurred' 
-      }));
+      setApiKeyData(prev => ({ ...prev, isLoading: false, error: 'Failed to generate API key' }));
     }
   };
   
-  // For demo purposes, we'll provide a simulated API key if the real one fails
-  const handleApiKeyFailure = (errorMsg: string) => {
-    // Wait a bit to simulate an attempt to create the key
-    setTimeout(() => {
-      setApiKeyData({
-        id: 'demo-key-id',
-        key: 'ak_' + Math.random().toString(16).slice(2, 10) + Math.random().toString(16).slice(2, 10),
-        name: 'Demo API Key',
-        createdAt: new Date().toISOString(),
-        scopes: 'read,write',
-        isLoading: false,
-        error: null
-      });
-      
-      console.warn('Using simulated API key for demonstration. Error was:', errorMsg);
-    }, 1000);
-  };
-  
-  // Generate API key when component mounts or integration method changes to JavaScript or SDK
+  // Generate API key on initial render
   useEffect(() => {
-    if ((selectedIntegration === 'javascript' || selectedIntegration === 'sdk') && !apiKeyData.key && !apiKeyData.isLoading) {
-      generateApiKey().catch(err => {
-        handleApiKeyFailure(err instanceof Error ? err.message : 'Unknown error');
-      });
+    if (currentStep === 'setup') {
+      generateApiKey();
     }
-  }, [selectedIntegration, apiKeyData.key, apiKeyData.isLoading]);
+  }, [currentStep]);
   
-  // Debug logging in development mode
-  useEffect(() => {
-    if (process.env.NODE_ENV === 'development') {
-      console.log('Selected integration method:', selectedIntegration);
-    }
-  }, [selectedIntegration]);
-
-  // Helper function to render section title with skip button
-  const renderSectionHeader = (icon: React.ReactNode, title: string) => (
-    <>
-      {skipOnboarding && (
-        <div className="flex justify-between items-center mb-6">
-          <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
-            {icon}
-            {title}
-          </h2>
-          <button
-            onClick={skipOnboarding}
-            className="px-4 py-2 flex items-center text-sm font-medium text-gray-700 bg-white dark:text-gray-300 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-md hover:bg-gray-50 dark:hover:bg-gray-700"
-          >
-            Skip For Now
-          </button>
-        </div>
-      )}
-      {!skipOnboarding && (
-        <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
+  // Custom component for different integration options
+  const IntegrationOption = ({ title, icon, description, id }: { 
+    title: string; 
+    icon: React.ReactNode; 
+    description: string;
+    id: IntegrationType;
+  }) => (
+    <div 
+      className={`p-4 border rounded-lg cursor-pointer transition-all ${
+        selectedIntegration === id 
+          ? 'border-purple-500 bg-purple-50 dark:bg-purple-900 dark:bg-opacity-10' 
+          : 'border-gray-200 dark:border-gray-700 hover:border-purple-300 dark:hover:border-purple-700'
+      }`}
+      onClick={() => {
+        console.log('Selected integration method:', id);
+        setSelectedIntegration(id);
+      }}
+    >
+      <div className="flex items-center mb-2">
+        <div className={`w-8 h-8 rounded-full flex items-center justify-center mr-3 ${
+          selectedIntegration === id 
+            ? 'bg-purple-100 text-purple-600 dark:bg-purple-900 dark:bg-opacity-50 dark:text-purple-300' 
+            : 'bg-gray-100 text-gray-500 dark:bg-gray-800 dark:text-gray-400'
+        }`}>
           {icon}
-          {title}
-        </h2>
-      )}
-    </>
+        </div>
+        <h3 className="font-medium text-gray-900 dark:text-white">{title}</h3>
+      </div>
+      <p className="text-sm text-gray-500 dark:text-gray-400 ml-11">{description}</p>
+    </div>
   );
-
-  // Render step content
-  const renderStepContent = () => {
-    switch (currentStep) {
-      case 'integration-details':
-        return (
-          <div className="space-y-4">
-            {renderSectionHeader(<Code className="inline-block mr-2 mb-1" size={20} />, 'Integration Details')}
-            <p className="text-gray-600 dark:text-gray-300 mb-4">
-              Follow these steps to integrate Nostr Ads into your platform:
+  
+  // Content based on the current step
+  switch (currentStep) {
+    case 'start':
+      return (
+        <div className="max-w-2xl mx-auto">
+          <div className="text-center mb-8">
+            <h2 className="text-2xl font-semibold text-gray-900 dark:text-white mb-2">Welcome to the Publisher Onboarding</h2>
+            <p className="text-gray-600 dark:text-gray-300">
+              Get started with monetizing your content through the Nostr Ad Marketplace
             </p>
-            <div className="mb-6 flex space-x-2">
+          </div>
+          
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+            <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-4">What You'll Need:</h3>
+            
+            <ul className="space-y-3 mb-6">
+              <li className="flex items-start">
+                <span className="text-green-500 mr-2 mt-0.5">
+                  <CheckCircle size={18} />
+                </span>
+                <span className="text-gray-700 dark:text-gray-300">A Nostr account (which you already have)</span>
+              </li>
+              <li className="flex items-start">
+                <span className="text-green-500 mr-2 mt-0.5">
+                  <CheckCircle size={18} />
+                </span>
+                <span className="text-gray-700 dark:text-gray-300">Your website or application where you'll display ads</span>
+              </li>
+              <li className="flex items-start">
+                <span className="text-green-500 mr-2 mt-0.5">
+                  <CheckCircle size={18} />
+                </span>
+                <span className="text-gray-700 dark:text-gray-300">A basic understanding of HTML/JavaScript</span>
+              </li>
+            </ul>
+            
+            <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-4">What You'll Be Able To Do:</h3>
+            
+            <ul className="space-y-3">
+              <li className="flex items-start">
+                <span className="text-purple-500 mr-2 mt-0.5">
+                  <DollarSign size={18} />
+                </span>
+                <span className="text-gray-700 dark:text-gray-300">Earn Bitcoin from ad impressions and clicks</span>
+              </li>
+              <li className="flex items-start">
+                <span className="text-purple-500 mr-2 mt-0.5">
+                  <Layout size={18} />
+                </span>
+                <span className="text-gray-700 dark:text-gray-300">Customize ad placements on your website</span>
+              </li>
+              <li className="flex items-start">
+                <span className="text-purple-500 mr-2 mt-0.5">
+                  <Settings size={18} />
+                </span>
+                <span className="text-gray-700 dark:text-gray-300">Configure content-appropriate ads for your audience</span>
+              </li>
+              <li className="flex items-start">
+                <span className="text-purple-500 mr-2 mt-0.5">
+                  <ToggleRight size={18} />
+                </span>
+                <span className="text-gray-700 dark:text-gray-300">Full control over what types of ads are displayed</span>
+              </li>
+            </ul>
+            
+            <div className="mt-8 flex justify-between">
+              {skipOnboarding && (
+                <button
+                  type="button"
+                  onClick={skipOnboarding}
+                  className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md"
+                >
+                  Skip For Now
+                </button>
+              )}
               <button 
-                className={`px-3 py-2 text-sm rounded-md ${selectedIntegration === 'sdk' ? 'bg-green-100 text-green-800 border border-green-300 dark:bg-green-900/30 dark:text-green-300 dark:border-green-700' : 'bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-300'}`}
-                onClick={() => setSelectedIntegration('sdk')}
+                className="ml-auto bg-purple-600 hover:bg-purple-700 text-white font-medium py-2 px-6 rounded-md transition-colors"
+                data-testid="publisher-next-button"
+                onClick={() => {
+                  // Proceed to implementation step
+                }}
               >
-                Client SDK
-              </button>
-              <button 
-                className={`px-3 py-2 text-sm rounded-md ${selectedIntegration === 'simple' ? 'bg-purple-100 text-purple-800 border border-purple-300 dark:bg-purple-900/30 dark:text-purple-300 dark:border-purple-700' : 'bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-300'}`}
-                onClick={() => setSelectedIntegration('simple')}
-              >
-                Simple Embed
-              </button>
-              <button 
-                className={`px-3 py-2 text-sm rounded-md ${selectedIntegration === 'javascript' ? 'bg-blue-100 text-blue-800 border border-blue-300 dark:bg-blue-900/30 dark:text-blue-300 dark:border-blue-700' : 'bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-300'}`}
-                onClick={() => setSelectedIntegration('javascript')}
-              >
-                JavaScript API
+                Let's Get Started →
               </button>
             </div>
-            
-            {selectedIntegration === 'simple' && (
-              <div className="space-y-4">
-                <div className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg">
-                  <h3 className="font-medium text-gray-900 dark:text-white mb-2">Step 1: Add the Nostr Ads Script</h3>
-                  <p className="text-sm text-gray-600 dark:text-gray-300 mb-3">
-                    Add this script tag to the &lt;head&gt; section of your HTML:
-                  </p>
-                  <div className="bg-gray-100 dark:bg-gray-800 p-3 rounded text-sm font-mono overflow-x-auto">
-                    {`<script src="https://ads.nostr.com/sdk.js" async></script>`}
+          </div>
+        </div>
+      );
+      
+    case 'setup':
+      return (
+        <div className="max-w-2xl mx-auto">
+          <div className="mb-8">
+            <h2 className="text-2xl font-semibold text-gray-900 dark:text-white mb-2">Publisher Implementation</h2>
+            <p className="text-gray-600 dark:text-gray-300">
+              Choose an implementation method and get your API key to start displaying ads.
+            </p>
+          </div>
+          
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+            <div className="mb-6">
+              <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-4">Your Publisher API Key</h3>
+              
+              <div className="bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-md p-4 mb-4">
+                {apiKeyData.isLoading ? (
+                  <div className="flex items-center text-sm text-gray-600 dark:text-gray-400">
+                    <span className="animate-spin mr-2"><RefreshCw size={16} /></span>
+                    Generating your API key...
                   </div>
-                </div>
-                
-                <div className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg">
-                  <h3 className="font-medium text-gray-900 dark:text-white mb-2">Step 2: Place Ad Container</h3>
-                  <p className="text-sm text-gray-600 dark:text-gray-300 mb-3">
-                    Add this HTML element wherever you want an ad to appear:
-                  </p>
-                  <div className="bg-gray-100 dark:bg-gray-800 p-3 rounded text-sm font-mono overflow-x-auto">
-                    {`<div class="nostr-ad" data-placement="sidebar"></div>`}
+                ) : apiKeyData.error ? (
+                  <div className="text-red-500 text-sm">
+                    {apiKeyData.error}
+                    <button 
+                      onClick={generateApiKey}
+                      className="ml-2 underline"
+                    >
+                      Try Again
+                    </button>
                   </div>
-                  <p className="text-xs text-gray-500 mt-2">
-                    You can use different placement values: "feed", "sidebar", "banner"
-                  </p>
-                </div>
+                ) : (
+                  <div>
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="text-xs font-medium text-gray-500 dark:text-gray-400">API Key</span>
+                      <button 
+                        onClick={() => {
+                          navigator.clipboard.writeText(apiKeyData.key);
+                        }}
+                        className="text-xs text-purple-600 hover:text-purple-700 dark:text-purple-400 dark:hover:text-purple-300 flex items-center"
+                      >
+                        <Copy size={12} className="mr-1" />
+                        Copy
+                      </button>
+                    </div>
+                    <div className="font-mono text-sm bg-gray-100 dark:bg-gray-800 p-2 rounded border border-gray-200 dark:border-gray-700 break-all">
+                      {apiKeyData.key}
+                    </div>
+                  </div>
+                )}
               </div>
-            )}
+              
+              <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
+                {apiKeyData.key ? 
+                  "Keep this key secure. You can always find and manage your API keys in the Developer section of your dashboard." :
+                  "An API key will be automatically generated for you to use with the JavaScript API."}
+              </p>
+            </div>
             
-            {selectedIntegration === 'javascript' && (
+            <div className="mb-6">
+              <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-4">Choose Your Integration Method</h3>
+              
               <div className="space-y-4">
-                <div className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg">
-                  <h3 className="font-medium text-gray-900 dark:text-white mb-2">Step 1: Include the SDK</h3>
-                  <p className="text-sm text-gray-600 dark:text-gray-300 mb-3">
-                    Add the Nostr Ads SDK to your website:
-                  </p>
-                  <div className="bg-gray-100 dark:bg-gray-800 p-3 rounded text-sm font-mono overflow-x-auto">
-                    {`<script src="https://ads.nostr.com/sdk.js"></script>`}
-                  </div>
-                </div>
+                <IntegrationOption 
+                  id="simple"
+                  title="Simple HTML Embed" 
+                  icon={<Code size={18} />}
+                  description="Just copy and paste HTML code - no programming required." 
+                />
                 
-                <div className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg">
-                  <h3 className="font-medium text-gray-900 dark:text-white mb-2">Step 2: Initialize the SDK</h3>
-                  <p className="text-sm text-gray-600 dark:text-gray-300 mb-3">
-                    Configure the SDK with your publisher API key:
-                  </p>
-                  
-                  {/* API Key Display with Reveal functionality - matches existing developer dashboard */}
-                  <div className="mb-4 p-4 bg-gray-50 dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700 rounded-lg">
-                    <div className="flex justify-between items-center mb-2">
-                      <span className="text-sm font-medium text-gray-900 dark:text-white">Your Publisher API Key</span>
-                      <div className="flex items-center space-x-2">
-                        {apiKeyData.key ? (
-                          <button 
-                            className="text-xs px-2 py-1 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200 rounded hover:bg-gray-300 dark:hover:bg-gray-600 flex items-center"
-                            onClick={() => {
-                              navigator.clipboard.writeText(apiKeyData.key);
-                              alert('API key copied to clipboard');
-                            }}
-                            title="Copy to clipboard"
-                          >
-                            <Copy size={12} className="mr-1" />
-                            Copy Key
-                          </button>
-                        ) : (
-                          <button 
-                            className="text-xs px-2 py-1 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200 rounded hover:bg-gray-300 dark:hover:bg-gray-600 flex items-center"
-                            onClick={generateApiKey}
-                            disabled={apiKeyData.isLoading}
-                            title="Generate a new API key"
-                          >
-                            <RefreshCw size={12} className={`mr-1 ${apiKeyData.isLoading ? 'animate-spin' : ''}`} />
-                            {apiKeyData.isLoading ? 'Generating...' : 'Generate Key'}
-                          </button>
-                        )}
-                      </div>
-                    </div>
-                    
-                    {apiKeyData.error && (
-                      <div className="mb-3 p-2 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded text-sm text-red-700 dark:text-red-300">
-                        Error: {apiKeyData.error}. Please try again.
-                      </div>
-                    )}
-                    
-                    <div className="relative bg-white dark:bg-gray-800 p-3 rounded-md border border-gray-200 dark:border-gray-700 font-mono text-sm overflow-auto break-all">
-                      {apiKeyData.isLoading ? (
-                        <div className="flex items-center justify-center py-1">
-                          <div className="animate-pulse flex space-x-1">
-                            <div className="h-2 w-2 bg-gray-400 dark:bg-gray-600 rounded-full"></div>
-                            <div className="h-2 w-2 bg-gray-400 dark:bg-gray-600 rounded-full"></div>
-                            <div className="h-2 w-2 bg-gray-400 dark:bg-gray-600 rounded-full"></div>
-                          </div>
-                        </div>
-                      ) : apiKeyData.key ? (
-                        apiKeyData.key
-                      ) : (
-                        <span className="text-gray-400 dark:text-gray-500">No API key generated yet</span>
-                      )}
-                    </div>
-                    
-                    <div className="mt-2 flex items-center">
-                      {apiKeyData.key && (
-                        <>
-                          <span className="w-2 h-2 bg-green-500 rounded-full mr-2"></span>
-                          <span className="text-xs text-gray-600 dark:text-gray-400">Active</span>
-                        </>
-                      )}
-                    </div>
-                    
-                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">
-                      {apiKeyData.key ? 
-                        "Keep this key secure. You can always find and manage your API keys in the Developer section of your dashboard." :
-                        "An API key will be automatically generated for you to use with the JavaScript API."}
+                <IntegrationOption 
+                  id="javascript"
+                  title="JavaScript Integration" 
+                  icon={<Code size={18} />}
+                  description="For more control over ad placement and display." 
+                />
+                
+                <IntegrationOption 
+                  id="sdk"
+                  title="SDK Integration" 
+                  icon={<Archive size={18} />}
+                  description="Advanced integration with our SDK for full customization." 
+                />
+              </div>
+            </div>
+            
+            {selectedIntegration && (
+              <div className="border-t border-gray-200 dark:border-gray-700 pt-6">
+                <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-4">
+                  {selectedIntegration === 'simple' ? 'Simple HTML Embed Instructions' :
+                    selectedIntegration === 'javascript' ? 'JavaScript Integration Instructions' :
+                    'SDK Integration Instructions'}
+                </h3>
+                
+                {selectedIntegration === 'simple' && (
+                  <div>
+                    <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
+                      Copy and paste this code snippet where you want the ad to appear:
                     </p>
-                  </div>
-                  
-                  <div className="mb-4">
-                    <div className="flex justify-between items-center mb-2">
-                      <h4 className="text-sm font-medium text-gray-900 dark:text-white">Step 1: Create your backend configuration endpoint</h4>
+                    
+                    <CodeSnippet
+                      language="html"
+                      code={`<!-- Nostr Ad Marketplace Integration -->
+<div id="nostr-ad-container" style="width: 100%; min-height: 250px;"></div>
+<script src="https://cdn.nostrads.org/simple.js"></script>
+<script>
+  window.NostrAds.init({
+    containerSelector: '#nostr-ad-container',
+    publisherKey: '${apiKeyData.key || 'YOUR_PUBLISHER_API_KEY'}',
+    placement: 'content-feed' // Options: content-feed, banner, sidebar
+  });
+</script>`}
+                    />
+                    
+                    <div className="mt-4">
+                      <h4 className="font-medium text-gray-900 dark:text-white mb-2">Placement Options:</h4>
+                      <ul className="text-sm text-gray-600 dark:text-gray-400 list-disc pl-5 space-y-1">
+                        <li><code className="bg-gray-100 dark:bg-gray-800 px-1 rounded">content-feed</code> - Native ads within your content</li>
+                        <li><code className="bg-gray-100 dark:bg-gray-800 px-1 rounded">banner</code> - Horizontal banner ads</li>
+                        <li><code className="bg-gray-100 dark:bg-gray-800 px-1 rounded">sidebar</code> - Vertical ads for sidebars</li>
+                      </ul>
                     </div>
-                    <div className="bg-gray-100 dark:bg-gray-800 p-3 rounded text-sm font-mono overflow-x-auto">
-                      {`// File: /pages/api/publisher/config.js
+                  </div>
+                )}
+                
+                {selectedIntegration === 'javascript' && (
+                  <div>
+                    <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
+                      For more control, use our JavaScript API:
+                    </p>
+                    
+                    <div className="mb-4">
+                      <div className="flex justify-between items-center mb-2">
+                        <h4 className="text-sm font-medium text-gray-900 dark:text-white">Step 1: Create your backend configuration endpoint</h4>
+                      </div>
+                      <CodeSnippet 
+                        language="javascript"
+                        title="Backend Configuration Endpoint"
+                        code={`// File: /pages/api/publisher/config.js
 import { getServerSession } from "next-auth/next";
 import { prisma } from "../../../lib/prismaClient";
 
@@ -308,21 +360,22 @@ export default async function handler(req, res) {
     publisherId: session.user.id
   });
 }`}
-                    </div>
-                  </div>
-                  
-                  <div className="mb-4">
-                    <div className="flex justify-between items-center mb-2">
-                      <h4 className="text-sm font-medium text-gray-900 dark:text-white">Step 2: Client-Side Implementation</h4>
+                      />
                     </div>
                     
-                    <div className="bg-gray-100 dark:bg-gray-800 p-3 rounded-md text-sm font-mono overflow-x-auto border border-gray-200 dark:border-gray-700 shadow-sm">
-                      <div className="flex items-center justify-between mb-2 text-xs text-gray-500 dark:text-gray-400 border-b border-gray-200 dark:border-gray-700 pb-2">
-                        <span>HTML/JavaScript • Client Implementation</span>
-                        <span className="px-2 py-1 bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 rounded-full text-xs">Working Example</span>
+                    <div className="mb-4">
+                      <div className="flex justify-between items-center mb-2">
+                        <h4 className="text-sm font-medium text-gray-900 dark:text-white">Step 2: Client-Side Implementation</h4>
                       </div>
-                      <code className="block whitespace-pre text-gray-800 dark:text-gray-200">
-{`<!-- File: index.html -->
+                      
+                      <div className="mb-2">
+                        <div className="flex items-center justify-between mb-2 text-xs text-gray-500 dark:text-gray-400">
+                          <span>HTML/JavaScript • Client Implementation</span>
+                          <span className="px-2 py-1 bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 rounded-full text-xs">Working Example</span>
+                        </div>
+                        <CodeSnippet
+                          language="html"
+                          code={`<!-- File: index.html -->
 <!-- Include the Nostr Ads JavaScript API -->
 <script src="https://cdn.nostrads.org/sdk/v1/nostr-ads.js"></script>
 
@@ -359,23 +412,24 @@ document.addEventListener('DOMContentLoaded', async function() {
 
 <!-- HTML placement for ads -->
 <div id="sidebar-ad" class="nostr-ad-container"></div>`}
-                      </code>
-                    </div>
-                  </div>
-                  
-                  <div className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg mb-4">
-                    <h3 className="font-medium text-gray-900 dark:text-white mb-2">Step 3: Secure Server-Side Tracking</h3>
-                    <p className="text-sm text-gray-600 dark:text-gray-300 mb-3">
-                      Set up proper click tracking with server-side API:
-                    </p>
-                    
-                    <div className="bg-gray-100 dark:bg-gray-800 p-3 rounded-md text-sm font-mono overflow-x-auto border border-gray-200 dark:border-gray-700 shadow-sm">
-                      <div className="flex items-center justify-between mb-2 text-xs text-gray-500 dark:text-gray-400 border-b border-gray-200 dark:border-gray-700 pb-2">
-                        <span>JavaScript • Server-Side Tracking</span>
-                        <span className="px-2 py-1 bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 rounded-full text-xs">Working Example</span>
+                        />
                       </div>
-                      <code className="block whitespace-pre text-gray-800 dark:text-gray-200">
-{`// File: /pages/api/publisher/track-click.js
+                    </div>
+                    
+                    <div className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg mb-4">
+                      <h3 className="font-medium text-gray-900 dark:text-white mb-2">Step 3: Secure Server-Side Tracking</h3>
+                      <p className="text-sm text-gray-600 dark:text-gray-300 mb-3">
+                        Set up proper click tracking with server-side API:
+                      </p>
+                      
+                      <div className="mb-2">
+                        <div className="flex items-center justify-between mb-2 text-xs text-gray-500 dark:text-gray-400">
+                          <span>JavaScript • Server-Side Tracking</span>
+                          <span className="px-2 py-1 bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 rounded-full text-xs">Working Example</span>
+                        </div>
+                        <CodeSnippet
+                          language="javascript"
+                          code={`// File: /pages/api/publisher/track-click.js
 export default async function handler(req, res) {
   const { adId } = req.query;
   
@@ -411,672 +465,304 @@ export default async function handler(req, res) {
     return res.status(500).json({ error: 'Failed to track click' });
   }
 }`}
-                      </code>
+                        />
+                      </div>
                     </div>
                   </div>
-                </div>
+                )}
                 
-                <div className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg">
-                  <h3 className="font-medium text-gray-900 dark:text-white mb-2">Step 3: Load Ads Programmatically</h3>
-                  <p className="text-sm text-gray-600 dark:text-gray-300 mb-3">
-                    Add this code to display ads in your content:
-                  </p>
-                  <div className="bg-gray-100 dark:bg-gray-800 p-3 rounded text-sm font-mono overflow-x-auto">
-                    {`<script>
-// Create an ad container element
-const adContainer = document.getElementById('ad-container');
+                {selectedIntegration === 'sdk' && (
+                  <div>
+                    <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
+                      For the most flexible integration, use our SDK:
+                    </p>
+                    
+                    <div className="mb-4">
+                      <h4 className="text-sm font-medium text-gray-900 dark:text-white mb-2">Step 1: Install the SDK</h4>
+                      <CodeSnippet
+                        language="bash"
+                        code={`# Using npm
+npm install @nostr/ad-marketplace
 
-// Load an ad into the container
-NostrAds.loadAd('sidebar', adContainer);
-</script>`}
-                  </div>
-                </div>
-              </div>
-            )}
-            
-            {selectedIntegration === 'sdk' && (
-              <div className="space-y-4">
-                <div className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg">
-                  <h3 className="font-medium text-gray-900 dark:text-white mb-2">Step 1: Install the SDK Package</h3>
-                  <p className="text-sm text-gray-600 dark:text-gray-300 mb-3">
-                    Use npm or yarn to install the SDK:
-                  </p>
-                  <div className="bg-gray-100 dark:bg-gray-800 p-3 rounded-md text-sm font-mono overflow-x-auto border border-gray-200 dark:border-gray-700 shadow-sm">
-                    <div className="flex items-center justify-between mb-2 text-xs text-gray-500 dark:text-gray-400 border-b border-gray-200 dark:border-gray-700 pb-2">
-                      <span>Shell • Package Installation</span>
-                      <span className="px-2 py-1 bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 rounded-full text-xs">Working Example</span>
+# Using yarn
+yarn add @nostr/ad-marketplace`}
+                      />
                     </div>
-                    <code className="block whitespace-pre text-gray-800 dark:text-gray-200">
-{`npm install @nostr-ads/sdk
+                    
+                    <div className="mb-4">
+                      <h4 className="text-sm font-medium text-gray-900 dark:text-white mb-2">Step 2: Initialize the SDK</h4>
+                      <CodeSnippet
+                        language="javascript"
+                        code={`// Import the SDK
+import { NostrAdMarketplace } from '@nostr/ad-marketplace';
 
-# Or with yarn
-yarn add @nostr-ads/sdk`}
-                    </code>
-                  </div>
-                </div>
-                
-                <div className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg mt-4">
-                  <h3 className="font-medium text-gray-900 dark:text-white mb-2">Step 2: Set up Environment Configuration</h3>
-                  <p className="text-sm text-gray-600 dark:text-gray-300 mb-3">
-                    Create a server-side environment file (.env):
-                  </p>
-                  <div className="bg-gray-100 dark:bg-gray-800 p-3 rounded-md text-sm font-mono overflow-x-auto border border-gray-200 dark:border-gray-700 shadow-sm">
-                    <div className="flex items-center justify-between mb-2 text-xs text-gray-500 dark:text-gray-400 border-b border-gray-200 dark:border-gray-700 pb-2">
-                      <span>Environment • Server-Side Configuration</span>
-                      <span className="px-2 py-1 bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 rounded-full text-xs">Working Example</span>
-                    </div>
-                    <code className="block whitespace-pre text-gray-800 dark:text-gray-200">
-{`# .env (server-side only, keep this out of your repository)
-NOSTR_ADS_API_KEY=${apiKeyData.key || "your_api_key_from_dashboard"}
-PUBLISHER_PUBKEY=your_nostr_pubkey`}
-                    </code>
-                  </div>
-                </div>
-
-                <div className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg mt-4">
-                  <h3 className="font-medium text-gray-900 dark:text-white mb-2">Step 3: Create a Server-Side Configuration</h3>
-                  <p className="text-sm text-gray-600 dark:text-gray-300 mb-3">
-                    Set up a secure service to manage your API configuration:
-                  </p>
-                  <div className="bg-gray-100 dark:bg-gray-800 p-3 rounded-md text-sm font-mono overflow-x-auto border border-gray-200 dark:border-gray-700 shadow-sm">
-                    <div className="flex items-center justify-between mb-2 text-xs text-gray-500 dark:text-gray-400 border-b border-gray-200 dark:border-gray-700 pb-2">
-                      <span>JavaScript • Server-Side SDK Setup</span>
-                      <span className="px-2 py-1 bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 rounded-full text-xs">Implementation Guide</span>
-                    </div>
-                    <code className="block whitespace-pre text-gray-800 dark:text-gray-200">
-{`// server/services/adsConfig.js
-import { NostrAdsSDK } from '@nostr-ads/sdk';
-import dotenv from 'dotenv';
-
-// Load environment variables
-dotenv.config();
-
-// Create a server-side SDK instance
-export const serverSideAdsClient = new NostrAdsSDK({
-  apiKey: process.env.NOSTR_ADS_API_KEY,  // Secure: API key stays server-side
-  pubkey: process.env.PUBLISHER_PUBKEY
+// Initialize with your publisher key
+const adMarketplace = new NostrAdMarketplace({
+  apiKey: '${apiKeyData.key || 'YOUR_PUBLISHER_API_KEY'}',
+  defaultPlacement: 'content',
+  debug: process.env.NODE_ENV === 'development'
 });
 
-// Create an API endpoint for public config
-// pages/api/ads/config.js
-export default function handler(req, res) {
-  // Return only non-sensitive configuration
-  res.status(200).json({
-    publisherId: process.env.PUBLISHER_PUBKEY,
-    placements: ['feed', 'sidebar', 'banner']
-  });
-}`}
-                    </code>
-                  </div>
-                </div>
-                
-                <div className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg mt-4">
-                  <h3 className="font-medium text-gray-900 dark:text-white mb-2">Step 4: Create Client Components</h3>
-                  <p className="text-sm text-gray-600 dark:text-gray-300 mb-3">
-                    Implement secure React components using the SDK:
-                  </p>
-                  <div className="bg-gray-100 dark:bg-gray-800 p-3 rounded-md text-sm font-mono overflow-x-auto border border-gray-200 dark:border-gray-700 shadow-sm">
-                    <div className="flex items-center justify-between mb-2 text-xs text-gray-500 dark:text-gray-400 border-b border-gray-200 dark:border-gray-700 pb-2">
-                      <span>JavaScript/React • Client Components</span>
-                      <span className="px-2 py-1 bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 rounded-full text-xs">Implementation Guide</span>
-                    </div>
-                    <code className="block whitespace-pre text-gray-800 dark:text-gray-200">
-{`// components/AdProvider.jsx
-import { createContext, useState, useEffect } from 'react';
-
-// Create context for ad configuration
-export const AdContext = createContext(null);
-
-export function AdProvider({ children }) {
-  const [config, setConfig] = useState(null);
-  const [isLoading, setIsLoading] = useState(true);
-  
-  // Load configuration from your secure endpoint
-  useEffect(() => {
-    async function loadConfig() {
-      try {
-        const response = await fetch('/api/ads/config');
-        if (!response.ok) throw new Error('Failed to load configuration');
-        
-        const data = await response.json();
-        setConfig(data);
-      } catch (error) {
-        console.error('Error loading ad configuration:', error);
-      } finally {
-        setIsLoading(false);
-      }
-    }
-    
-    loadConfig();
-  }, []);
-  
-  return (
-    <AdContext.Provider value={{ config, isLoading }}>
-      {children}
-    </AdContext.Provider>
-  );
-}
-
-// components/AdUnit.jsx
-import { useContext, useState, useEffect } from 'react';
-import { AdContext } from './AdProvider';
-
-export function AdUnit({ placement = 'feed' }) {
-  const { config, isLoading } = useContext(AdContext);
-  const [ad, setAd] = useState(null);
-  const [adLoading, setAdLoading] = useState(true);
-  
-  useEffect(() => {
-    if (isLoading || !config) return;
-    
-    async function loadAd() {
-      try {
-        // Fetch ad through your secure server endpoint
-        const response = await fetch(
-          \`/api/ads/serve?placement=\${placement}\`
-        );
-        
-        if (!response.ok) throw new Error('Failed to load ad');
-        
-        const data = await response.json();
-        setAd(data);
-      } catch (error) {
-        console.error('Error loading ad:', error);
-      } finally {
-        setAdLoading(false);
-      }
-    }
-    
-    loadAd();
-  }, [placement, config, isLoading]);
-  
-  if (isLoading || adLoading) {
-    return <div className="ad-placeholder">Loading ad...</div>;
-  }
-  
-  if (!ad) return null;
-  
-  return (
-    <div className="nostr-ad">
-      <h3>{ad.title}</h3>
-      {ad.imageUrl && <img src={ad.imageUrl} alt={ad.title} />}
-      <p>{ad.description}</p>
-      <a 
-        href="#" 
-        onClick={async (e) => {
-          e.preventDefault();
-          // Track click through secure API
-          await fetch(\`/api/ads/click?adId=\${ad.id}\`);
-          // Open target URL
-          window.open(ad.targetUrl, '_blank');
-        }}
-      >
-        Learn More
-      </a>
-    </div>
-  );
-}`}
-                    </code>
-                  </div>
-                </div>
-                
-                <div className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg mt-4">
-                  <h3 className="font-medium text-gray-900 dark:text-white mb-2">Step 5: Implement API Endpoints</h3>
-                  <p className="text-sm text-gray-600 dark:text-gray-300 mb-3">
-                    Create secure backend endpoints for serving ads and tracking interactions:
-                  </p>
-                  <div className="bg-gray-100 dark:bg-gray-800 p-3 rounded-md text-sm font-mono overflow-x-auto border border-gray-200 dark:border-gray-700 shadow-sm">
-                    <div className="flex items-center justify-between mb-2 text-xs text-gray-500 dark:text-gray-400 border-b border-gray-200 dark:border-gray-700 pb-2">
-                      <span>JavaScript • Server API Endpoints</span>
-                      <span className="px-2 py-1 bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 rounded-full text-xs">Implementation Guide</span>
-                    </div>
-                    <code className="block whitespace-pre text-gray-800 dark:text-gray-200">
-{`// pages/api/ads/serve.js
-import { serverSideAdsClient } from '../../../server/services/adsConfig';
-
-export default async function handler(req, res) {
-  const { placement } = req.query;
-  
+// Load an ad
+async function loadAd(placementId, targetElement) {
   try {
-    // Use the server-side SDK to fetch an ad
-    const ad = await serverSideAdsClient.getAd({ placement });
-    
-    // Track impression server-side
-    await serverSideAdsClient.trackImpression({ adId: ad.id });
-    
-    // Return ad data to client (excluding sensitive information)
-    res.status(200).json({
-      id: ad.id,
-      title: ad.title,
-      description: ad.description,
-      imageUrl: ad.imageUrl,
-      targetUrl: ad.targetUrl
+    const ad = await adMarketplace.getAd({
+      placementId,
+      contentCategories: ['technology', 'bitcoin']
     });
+    
+    if (ad) {
+      // Render the ad
+      const adElement = document.createElement('div');
+      adElement.className = 'nostr-ad';
+      adElement.innerHTML = \`
+        <a href="\${ad.targetUrl}" class="nostr-ad-link" data-ad-id="\${ad.id}">
+          <div class="nostr-ad-content">
+            <img src="\${ad.imageUrl}" alt="\${ad.title}" class="nostr-ad-image">
+            <div class="nostr-ad-text">
+              <h3 class="nostr-ad-title">\${ad.title}</h3>
+              <p class="nostr-ad-description">\${ad.description}</p>
+            </div>
+          </div>
+        </a>
+      \`;
+      
+      // Add click tracking
+      adElement.querySelector('.nostr-ad-link').addEventListener('click', (e) => {
+        e.preventDefault();
+        
+        // Track the click
+        adMarketplace.trackClick({
+          adId: ad.id,
+          placementId
+        });
+        
+        // Navigate to the target URL
+        window.open(ad.targetUrl, '_blank');
+      });
+      
+      // Add the ad to the target element
+      targetElement.appendChild(adElement);
+    }
   } catch (error) {
-    console.error('Error serving ad:', error);
-    res.status(500).json({ error: 'Failed to serve ad' });
-  }
-}
-
-// pages/api/ads/click.js
-import { serverSideAdsClient } from '../../../server/services/adsConfig';
-
-export default async function handler(req, res) {
-  const { adId } = req.query;
-  
-  if (!adId) {
-    return res.status(400).json({ error: 'Ad ID is required' });
-  }
-  
-  try {
-    // Track click server-side
-    await serverSideAdsClient.trackClick({ adId });
-    res.status(200).json({ success: true });
-  } catch (error) {
-    console.error('Error tracking click:', error);
-    res.status(500).json({ error: 'Failed to track click' });
+    console.error('Failed to load ad:', error);
   }
 }`}
-                    </code>
+                      />
+                    </div>
+                    
+                    <div className="mb-4">
+                      <h4 className="text-sm font-medium text-gray-900 dark:text-white mb-2">Step 3: Add CSS Styling</h4>
+                      <CodeSnippet
+                        language="css"
+                        code={`.nostr-ad {
+  border: 1px solid #e5e7eb;
+  border-radius: 0.5rem;
+  overflow: hidden;
+  background-color: #f9fafb;
+  transition: all 0.3s ease;
+}
+
+.nostr-ad:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+.nostr-ad-link {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+}
+
+.nostr-ad-content {
+  display: flex;
+  padding: 1rem;
+}
+
+.nostr-ad-image {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 0.25rem;
+  margin-right: 1rem;
+}
+
+.nostr-ad-title {
+  font-size: 1rem;
+  font-weight: 600;
+  margin: 0 0 0.5rem 0;
+}
+
+.nostr-ad-description {
+  font-size: 0.875rem;
+  color: #4b5563;
+  margin: 0;
+}`}
+                      />
+                    </div>
                   </div>
+                )}
+                
+                <div className="mt-6">
+                  <h4 className="font-medium text-gray-900 dark:text-white mb-3">Testing Your Integration</h4>
+                  <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
+                    Once you've implemented the code, you can verify it's working by:
+                  </p>
+                  <ol className="text-sm text-gray-600 dark:text-gray-400 list-decimal pl-5 space-y-2">
+                    <li>Checking your browser console for any errors</li>
+                    <li>Verifying the ad container is visible and properly styled</li>
+                    <li>Testing clicks to ensure they are properly tracked</li>
+                    <li>Viewing your publisher dashboard to see impression and click data</li>
+                  </ol>
                 </div>
               </div>
             )}
             
-            {/* Always show integration details based on selection */}
-          </div>
-        );
-      
-      case 'choose-integration':
-        return (
-          <div className="space-y-4">
-            <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
-              <Code className="inline-block mr-2 mb-1" size={20} />
-              Choose Your Integration
-            </h2>
-            <p className="text-gray-600 dark:text-gray-300">
-              Select how you want to integrate ads into your Nostr content:
-            </p>
-            
-            <div className="space-y-4 mt-4">
-              <div 
-                className={`p-4 border rounded-lg hover:border-purple-500 cursor-pointer ${selectedIntegration === 'sdk' ? 'border-green-500 bg-green-50 dark:bg-green-900/10' : 'border-gray-200 dark:border-gray-700'}`}
-                onClick={() => setSelectedIntegration('sdk')}
-              >
-                <h3 className="font-medium text-gray-900 dark:text-white mb-2">Client SDK</h3>
-                <p className="text-sm text-gray-600 dark:text-gray-300">
-                  Use our SDK for React, Vue, or vanilla JavaScript for the best experience.
-                  Recommended for custom applications and framework-based sites.
-                </p>
-                <div className="flex justify-end mt-2">
-                  <span className="text-xs px-2 py-1 bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 rounded-full">Recommended</span>
-                </div>
-              </div>
-              
-              <div 
-                className={`p-4 border rounded-lg hover:border-purple-500 cursor-pointer ${selectedIntegration === 'simple' ? 'border-purple-500 bg-purple-50 dark:bg-purple-900/10' : 'border-gray-200 dark:border-gray-700'}`}
-                onClick={() => setSelectedIntegration('simple')}
-              >
-                <h3 className="font-medium text-gray-900 dark:text-white mb-2">Simple Embed</h3>
-                <p className="text-sm text-gray-600 dark:text-gray-300">
-                  Add a single line of code to show ads automatically in your content. 
-                  Perfect for blogs, websites, or any HTML-based platform.
-                </p>
-                <div className="flex justify-end mt-2">
-                  <span className="text-xs px-2 py-1 bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300 rounded-full">Easiest</span>
-                </div>
-              </div>
-              
-              <div 
-                className={`p-4 border rounded-lg hover:border-purple-500 cursor-pointer ${selectedIntegration === 'javascript' ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/10' : 'border-gray-200 dark:border-gray-700'}`}
-                onClick={() => setSelectedIntegration('javascript')}
-              >
-                <h3 className="font-medium text-gray-900 dark:text-white mb-2">JavaScript API</h3>
-                <p className="text-sm text-gray-600 dark:text-gray-300">
-                  Full control over ad placement and appearance using our JavaScript API.
-                  Ideal for custom implementations and fine-grained control.
-                </p>
-                <div className="flex justify-end mt-2">
-                  <span className="text-xs px-2 py-1 bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 rounded-full">Advanced</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        );
-      
-      case 'ad-slot-config':
-        return (
-          <div className="space-y-4">
-            {renderSectionHeader(<Layout className="inline-block mr-2 mb-1" size={20} />, 'Configure Ad Slots')}
-            <p className="text-gray-600 dark:text-gray-300">
-              Set up where and how ads will appear in your content:
-            </p>
-            
-            <div className="mt-6 space-y-4">
-              <div className="border border-gray-200 dark:border-gray-700 rounded-lg p-4">
-                <div className="flex justify-between mb-3">
-                  <h3 className="font-medium text-gray-900 dark:text-white">Content Category</h3>
-                </div>
-                <div className="mb-4">
-                  <select 
-                    className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md dark:bg-gray-800"
-                    defaultValue=""
-                  >
-                    <option value="" disabled>Select a category</option>
-                    <option value="technology">Technology</option>
-                    <option value="finance">Finance</option>
-                    <option value="entertainment">Entertainment</option>
-                    <option value="education">Education</option>
-                    <option value="lifestyle">Lifestyle</option>
-                    <option value="crypto">Cryptocurrency</option>
-                    <option value="bitcoin">Bitcoin</option>
-                    <option value="nostr">Nostr</option>
-                  </select>
-                  <p className="text-xs text-gray-500 mt-1">
-                    This helps match relevant ads to your content
-                  </p>
-                </div>
-                
-                <div className="flex justify-between mb-3">
-                  <h3 className="font-medium text-gray-900 dark:text-white">Ad Format</h3>
-                </div>
-                <div className="space-y-2">
-                  <div className="flex items-center">
-                    <input type="radio" id="format-text" name="format" className="mr-2" defaultChecked />
-                    <label htmlFor="format-text">Text & Image (Recommended)</label>
-                  </div>
-                  <div className="flex items-center">
-                    <input type="radio" id="format-image" name="format" className="mr-2" />
-                    <label htmlFor="format-image">Image Only</label>
-                  </div>
-                  <div className="flex items-center">
-                    <input type="radio" id="format-text-only" name="format" className="mr-2" />
-                    <label htmlFor="format-text-only">Text Only</label>
-                  </div>
-                </div>
-              </div>
-              
-              <div className="border border-gray-200 dark:border-gray-700 rounded-lg p-4">
-                <h3 className="font-medium text-gray-900 dark:text-white mb-3">Ad Position</h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                  <div className="border border-gray-300 dark:border-gray-600 p-3 rounded-md hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer">
-                    <div className="flex items-center">
-                      <input type="checkbox" id="pos-top" className="mr-2" defaultChecked />
-                      <label htmlFor="pos-top">Top of Content</label>
-                    </div>
-                  </div>
-                  <div className="border border-gray-300 dark:border-gray-600 p-3 rounded-md hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer">
-                    <div className="flex items-center">
-                      <input type="checkbox" id="pos-bottom" className="mr-2" defaultChecked />
-                      <label htmlFor="pos-bottom">Bottom of Content</label>
-                    </div>
-                  </div>
-                  <div className="border border-gray-300 dark:border-gray-600 p-3 rounded-md hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer">
-                    <div className="flex items-center">
-                      <input type="checkbox" id="pos-inline" className="mr-2" />
-                      <label htmlFor="pos-inline">Inline (Between content)</label>
-                    </div>
-                  </div>
-                  <div className="border border-gray-300 dark:border-gray-600 p-3 rounded-md hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer">
-                    <div className="flex items-center">
-                      <input type="checkbox" id="pos-sidebar" className="mr-2" />
-                      <label htmlFor="pos-sidebar">Sidebar</label>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        );
-      
-      case 'setup-wallet':
-        return (
-          <div className="space-y-4">
-            {renderSectionHeader(<DollarSign className="inline-block mr-2 mb-1" size={20} />, 'Set Up Your Bitcoin Wallet')}
-            <p className="text-gray-600 dark:text-gray-300">
-              Configure how you'll receive payments from ads shown on your content:
-            </p>
-            
-            <div className="mt-6 space-y-4">
-              <div className="border border-gray-200 dark:border-gray-700 rounded-lg p-4">
-                <h3 className="font-medium text-gray-900 dark:text-white mb-3">Lightning Address</h3>
-                <input 
-                  type="text" 
-                  placeholder="your@lightning.address" 
-                  className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md dark:bg-gray-800"
-                />
-                <p className="text-xs text-gray-500 mt-1">
-                  A Lightning Address allows you to receive Bitcoin payments easily
-                </p>
-              </div>
-              
-              <div className="border border-gray-200 dark:border-gray-700 rounded-lg p-4">
-                <h3 className="font-medium text-gray-900 dark:text-white mb-3">Payment Threshold</h3>
-                <div className="flex items-center">
-                  <input 
-                    type="number" 
-                    placeholder="1000" 
-                    defaultValue="1000"
-                    min="1000"
-                    className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md dark:bg-gray-800"
-                  />
-                  <span className="ml-2">sats</span>
-                </div>
-                <p className="text-xs text-gray-500 mt-1">
-                  Payments will be automatically sent when your balance reaches this amount (minimum 1000 sats)
-                </p>
-              </div>
-              
-              <div className="border border-gray-200 dark:border-gray-700 rounded-lg p-4">
-                <h3 className="font-medium text-gray-900 dark:text-white mb-3">Payment Schedule</h3>
-                <select 
-                  className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md dark:bg-gray-800"
-                  defaultValue="weekly"
-                >
-                  <option value="daily">Daily (if above threshold)</option>
-                  <option value="weekly">Weekly (if above threshold)</option>
-                  <option value="monthly">Monthly (regardless of threshold)</option>
-                </select>
-                <p className="text-xs text-gray-500 mt-1">
-                  How often you'd like to receive payments from your ad revenue
-                </p>
-              </div>
-            </div>
-          </div>
-        );
-      
-      case 'enable-test-mode':
-        return (
-          <div className="space-y-4">
-            {renderSectionHeader(<ToggleRight className="inline-block mr-2 mb-1" size={20} />, 'Test Your Ad Implementation')}
-            <p className="text-gray-600 dark:text-gray-300">
-              Before going live, it's important to test your ad implementation:
-            </p>
-            
-            <div className="mt-6 space-y-4">
-              <div className="border border-gray-200 dark:border-gray-700 rounded-lg p-4 bg-purple-50 dark:bg-purple-900/20">
-                <div className="flex items-start">
-                  <div className="mr-3 mt-1">
-                    <ToggleRight className="text-purple-600 dark:text-purple-400" size={24} />
-                  </div>
-                  <div>
-                    <h3 className="font-medium text-gray-900 dark:text-white mb-1">Test Mode is Active</h3>
-                    <p className="text-sm text-gray-600 dark:text-gray-300">
-                      Test ads will be shown on your site but you won't earn real revenue yet.
-                    </p>
-                  </div>
-                </div>
-                
-                <div className="mt-4">
-                  <button className="w-full py-2 px-4 bg-purple-600 hover:bg-purple-700 text-white rounded-md transition">
-                    Copy Test Ad Code
-                  </button>
-                </div>
-              </div>
-              
-              <div className="border border-gray-200 dark:border-gray-700 rounded-lg p-4">
-                <h3 className="font-medium text-gray-900 dark:text-white mb-3">Test Instructions</h3>
-                <ol className="list-decimal pl-5 space-y-2 text-gray-600 dark:text-gray-300">
-                  <li>Copy the code snippet above</li>
-                  <li>Add it to your website or Nostr client</li>
-                  <li>Visit your site to verify ads are showing correctly</li>
-                  <li>Check different devices and screen sizes</li>
-                  <li>If everything looks good, proceed to the next step</li>
-                </ol>
-              </div>
-              
-              <div className="border border-gray-200 dark:border-gray-700 rounded-lg p-4">
-                <h3 className="font-medium text-gray-900 dark:text-white mb-3">Preview</h3>
-                <div className="border border-dashed border-gray-300 dark:border-gray-600 p-4 rounded-md bg-gray-50 dark:bg-gray-800 h-32 flex items-center justify-center">
-                  <div className="text-center text-gray-500">
-                    <p>Test ad will appear here</p>
-                    <p className="text-xs mt-1">300x250 - Rectangle</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        );
-      
-      case 'go-live':
-        return (
-          <div className="space-y-4">
-            {renderSectionHeader(<Settings className="inline-block mr-2 mb-1" size={20} />, 'Ready to Go Live')}
-            <p className="text-gray-600 dark:text-gray-300">
-              Your ad spaces are configured and tested. Complete your setup by finalizing these settings:
-            </p>
-            
-            <div className="mt-6 space-y-4">
-              <div className="border border-gray-200 dark:border-gray-700 rounded-lg p-4">
-                <h3 className="font-medium text-gray-900 dark:text-white mb-3">Ad Content Settings</h3>
-                
-                <div className="mb-4">
-                  <h4 className="text-sm font-medium mb-2">Content Restrictions</h4>
-                  <div className="space-y-2">
-                    <div className="flex items-center">
-                      <input type="checkbox" id="block-adult" className="mr-2" defaultChecked />
-                      <label htmlFor="block-adult" className="text-sm">Block adult content</label>
-                    </div>
-                    <div className="flex items-center">
-                      <input type="checkbox" id="block-gambling" className="mr-2" defaultChecked />
-                      <label htmlFor="block-gambling" className="text-sm">Block gambling</label>
-                    </div>
-                    <div className="flex items-center">
-                      <input type="checkbox" id="block-political" className="mr-2" />
-                      <label htmlFor="block-political" className="text-sm">Block political ads</label>
-                    </div>
-                  </div>
-                </div>
-                
-                <div>
-                  <h4 className="text-sm font-medium mb-2">Blocked Advertisers</h4>
-                  <textarea 
-                    className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md dark:bg-gray-800 text-sm"
-                    placeholder="Enter comma-separated list of blocked advertiser pubkeys"
-                    rows={2}
-                  ></textarea>
-                </div>
-              </div>
-              
-              <div className="border border-gray-200 dark:border-gray-700 rounded-lg p-4">
-                <h3 className="font-medium text-gray-900 dark:text-white mb-3">Minimum Bid Requirements</h3>
-                
-                <div className="grid grid-cols-2 gap-4 mb-4">
-                  <div>
-                    <label className="text-sm block mb-1">Min. Bid per Impression</label>
-                    <div className="flex items-center">
-                      <input 
-                        type="number" 
-                        className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md dark:bg-gray-800"
-                        defaultValue="2"
-                        min="1"
-                      />
-                      <span className="ml-2 text-sm">sats</span>
-                    </div>
-                  </div>
-                  <div>
-                    <label className="text-sm block mb-1">Min. Bid per Click</label>
-                    <div className="flex items-center">
-                      <input 
-                        type="number" 
-                        className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md dark:bg-gray-800"
-                        defaultValue="50"
-                        min="10"
-                      />
-                      <span className="ml-2 text-sm">sats</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              
-              <div className="flex items-center p-3 bg-green-50 dark:bg-green-900/20 text-green-800 dark:text-green-200 rounded-lg">
-                <div className="mr-3">
-                  <CheckCircle size={20} />
-                </div>
-                <p className="text-sm">You're ready to activate your ad spaces and start earning!</p>
-              </div>
-            </div>
-          </div>
-        );
-      
-      case 'complete':
-        return (
-          <div className="space-y-4 text-center">
-            {skipOnboarding && (
-              <div className="flex justify-end mb-2">
+            <div className="mt-8 border-t border-gray-200 dark:border-gray-700 pt-4 flex justify-between">
+              {skipOnboarding && (
                 <button
+                  type="button"
                   onClick={skipOnboarding}
-                  className="px-4 py-2 flex items-center text-sm font-medium text-gray-700 bg-white dark:text-gray-300 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-md hover:bg-gray-50 dark:hover:bg-gray-700"
+                  className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md"
                 >
                   Skip For Now
                 </button>
-              </div>
-            )}
-            <div className="flex justify-center">
-              <CheckCircle size={64} className="text-green-500" />
+              )}
+              <button
+                className="ml-auto bg-purple-600 hover:bg-purple-700 text-white font-medium py-2 px-6 rounded-md transition-colors" 
+                data-testid="publisher-next-button"
+                onClick={() => {
+                  // Proceed to next step
+                }}
+              >
+                Continue →
+              </button>
             </div>
-            <h2 className="text-2xl font-semibold text-gray-900 dark:text-white">
-              Congratulations!
-            </h2>
+          </div>
+        </div>
+      );
+      
+    case 'complete':
+      return (
+        <div className="max-w-2xl mx-auto">
+          <div className="text-center mb-8">
+            <div className="mx-auto w-16 h-16 bg-green-100 dark:bg-green-900 rounded-full flex items-center justify-center text-green-500 mb-4">
+              <CheckCircle size={32} />
+            </div>
+            <h2 className="text-2xl font-semibold text-gray-900 dark:text-white mb-2">Publisher Setup Complete!</h2>
             <p className="text-gray-600 dark:text-gray-300">
-              Your publisher account is now set up and ready to start monetizing your content with ads.
+              You've successfully set up your publisher account and are ready to start monetizing.
             </p>
-            <div className="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg mt-6">
-              <h3 className="font-medium text-gray-900 dark:text-white mb-2">
-                What's next?
-              </h3>
-              <ul className="text-sm text-gray-600 dark:text-gray-300 space-y-2 text-left ml-4 list-disc">
-                <li>Implement the ad code on your website or Nostr client</li>
-                <li>Monitor your earnings in the Publisher Dashboard</li>
-                <li>Optimize ad placements to maximize revenue</li>
-                <li>Receive automatic payments to your Lightning address</li>
-              </ul>
+          </div>
+          
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+            <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-4">Next Steps</h3>
+            
+            <div className="space-y-4 mb-6">
+              <div className="flex items-start">
+                <div className="bg-purple-100 dark:bg-purple-900 dark:bg-opacity-50 p-2 rounded-full text-purple-600 dark:text-purple-300 mr-3">
+                  <Code size={20} />
+                </div>
+                <div>
+                  <h4 className="font-medium text-gray-900 dark:text-white mb-1">Implement Your Ad Placements</h4>
+                  <p className="text-sm text-gray-600 dark:text-gray-400">
+                    Use the code snippets to integrate ads into your website or application.
+                  </p>
+                </div>
+              </div>
+              
+              <div className="flex items-start">
+                <div className="bg-purple-100 dark:bg-purple-900 dark:bg-opacity-50 p-2 rounded-full text-purple-600 dark:text-purple-300 mr-3">
+                  <DollarSign size={20} />
+                </div>
+                <div>
+                  <h4 className="font-medium text-gray-900 dark:text-white mb-1">Set Up Your Payment Wallet</h4>
+                  <p className="text-sm text-gray-600 dark:text-gray-400">
+                    Add a Lightning wallet to receive your earnings automatically.
+                  </p>
+                </div>
+              </div>
+              
+              <div className="flex items-start">
+                <div className="bg-purple-100 dark:bg-purple-900 dark:bg-opacity-50 p-2 rounded-full text-purple-600 dark:text-purple-300 mr-3">
+                  <Settings size={20} />
+                </div>
+                <div>
+                  <h4 className="font-medium text-gray-900 dark:text-white mb-1">Customize Your Ad Settings</h4>
+                  <p className="text-sm text-gray-600 dark:text-gray-400">
+                    Define content categories and ad filtering rules in your dashboard.
+                  </p>
+                </div>
+              </div>
             </div>
             
-            <div className="border border-purple-200 dark:border-purple-800 bg-purple-50 dark:bg-purple-900/20 p-4 rounded-lg mt-4">
-              <p className="text-purple-800 dark:text-purple-200 text-sm">
-                Your onboarding is complete! You'll be redirected to your Publisher Dashboard.
+            <div className="bg-purple-50 dark:bg-purple-900 dark:bg-opacity-20 border border-purple-100 dark:border-purple-800 rounded-md p-4 mb-6">
+              <h4 className="font-medium text-purple-800 dark:text-purple-300 mb-2">
+                Your API Key
+              </h4>
+              <div className="bg-white dark:bg-gray-800 p-2 rounded border border-purple-200 dark:border-purple-700 font-mono text-sm break-all mb-2">
+                {apiKeyData.key || 'API key will appear here'}
+              </div>
+              <p className="text-xs text-purple-700 dark:text-purple-400">
+                Keep this key secure. You can manage your API keys in the Publisher Dashboard.
               </p>
             </div>
+            
+            <div className="border-t border-gray-200 dark:border-gray-700 pt-6 mt-6">
+              <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-4">Resources</h3>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="p-4 border border-gray-200 dark:border-gray-700 rounded-md">
+                  <h4 className="font-medium text-gray-900 dark:text-white mb-2">Publisher Dashboard</h4>
+                  <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">
+                    Track earnings, manage placements, and configure settings
+                  </p>
+                  <a 
+                    href="/dashboard/publisher" 
+                    className="text-purple-600 hover:text-purple-700 dark:text-purple-400 dark:hover:text-purple-300 font-medium text-sm"
+                  >
+                    Go to Dashboard →
+                  </a>
+                </div>
+                
+                <div className="p-4 border border-gray-200 dark:border-gray-700 rounded-md">
+                  <h4 className="font-medium text-gray-900 dark:text-white mb-2">Developer Documentation</h4>
+                  <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">
+                    Detailed guides, API reference, and code examples
+                  </p>
+                  <a 
+                    href="/docs/publisher" 
+                    className="text-purple-600 hover:text-purple-700 dark:text-purple-400 dark:hover:text-purple-300 font-medium text-sm"
+                  >
+                    View Documentation →
+                  </a>
+                </div>
+              </div>
+            </div>
+            
+            <div className="mt-8 text-center">
+              <button
+                className="bg-purple-600 hover:bg-purple-700 text-white font-medium py-2 px-8 rounded-md transition-colors"
+                data-testid="publisher-dashboard-button"
+                onClick={() => {
+                  // Navigate to publisher dashboard
+                  window.location.href = '/dashboard/publisher';
+                }}
+              >
+                Go to Publisher Dashboard
+              </button>
+            </div>
           </div>
-        );
+        </div>
+      );
       
-      default:
-        return (
-          <div className="p-4 bg-yellow-50 border border-yellow-200 rounded-md">
-            <p className="text-yellow-800">
-              Unknown step: {currentStep}. Please go back and try again.
-            </p>
-          </div>
-        );
-    }
-  };
-
-  return (
-    <div className="py-4">
-      {renderStepContent()}
-    </div>
-  );
+    default:
+      return (
+        <div className="text-center p-8">
+          <p className="text-gray-600 dark:text-gray-300">Loading onboarding experience...</p>
+        </div>
+      );
+  }
 });
 
 export default PublisherOnboarding;
