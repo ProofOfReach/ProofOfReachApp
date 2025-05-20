@@ -11,19 +11,37 @@ import {
 
 interface AdvertiserOnboardingProps {
   currentStep: OnboardingStep;
+  onComplete?: () => void;
+  skipOnboarding?: () => void;
 }
 
-const AdvertiserOnboarding: React.FC<AdvertiserOnboardingProps> = ({ currentStep }) => {
+const AdvertiserOnboarding: React.FC<AdvertiserOnboardingProps> = ({ currentStep, skipOnboarding }) => {
   // Content for each step in the advertiser onboarding flow
   const renderStepContent = () => {
     switch (currentStep) {
       case 'create-campaign':
         return (
           <div className="space-y-4">
-            <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
-              <Image className="inline-block mr-2 mb-1" size={20} />
-              Create Your First Campaign
-            </h2>
+            {skipOnboarding && (
+              <div className="flex justify-between items-center mb-6">
+                <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
+                  <Image className="inline-block mr-2 mb-1" size={20} />
+                  Create Your First Campaign
+                </h2>
+                <button
+                  onClick={skipOnboarding}
+                  className="px-4 py-2 flex items-center text-sm font-medium text-gray-700 bg-white dark:text-gray-300 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-md hover:bg-gray-50 dark:hover:bg-gray-700"
+                >
+                  Skip For Now
+                </button>
+              </div>
+            )}
+            {!skipOnboarding && (
+              <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
+                <Image className="inline-block mr-2 mb-1" size={20} />
+                Create Your First Campaign
+              </h2>
+            )}
             <p className="text-gray-600 dark:text-gray-300">
               Let's set up your first advertising campaign on the Nostr network:
             </p>

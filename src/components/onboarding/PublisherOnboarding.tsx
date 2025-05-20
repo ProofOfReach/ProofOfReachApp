@@ -4,6 +4,8 @@ import { Code, DollarSign, Layout, Settings, CheckCircle, ToggleRight, Archive, 
 
 interface PublisherOnboardingProps {
   currentStep: OnboardingStep;
+  onComplete?: () => void;
+  skipOnboarding?: () => void;
 }
 
 type IntegrationType = 'simple' | 'javascript' | 'sdk' | null;
@@ -19,7 +21,7 @@ interface ApiKeyData {
 }
 
 // Use React.memo for performance optimization to prevent unnecessary re-renders
-const PublisherOnboarding: React.FC<PublisherOnboardingProps> = React.memo(({ currentStep }) => {
+const PublisherOnboarding: React.FC<PublisherOnboardingProps> = React.memo(({ currentStep, skipOnboarding }) => {
   // State to track which integration method was selected
   const [selectedIntegration, setSelectedIntegration] = useState<IntegrationType>('sdk');
   
@@ -105,10 +107,26 @@ const PublisherOnboarding: React.FC<PublisherOnboardingProps> = React.memo(({ cu
       case 'integration-details':
         return (
           <div className="space-y-4">
-            <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
-              <Code className="inline-block mr-2 mb-1" size={20} />
-              Integration Details
-            </h2>
+            {skipOnboarding && (
+              <div className="flex justify-between items-center mb-6">
+                <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
+                  <Code className="inline-block mr-2 mb-1" size={20} />
+                  Integration Details
+                </h2>
+                <button
+                  onClick={skipOnboarding}
+                  className="px-4 py-2 flex items-center text-sm font-medium text-gray-700 bg-white dark:text-gray-300 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-md hover:bg-gray-50 dark:hover:bg-gray-700"
+                >
+                  Skip For Now
+                </button>
+              </div>
+            )}
+            {!skipOnboarding && (
+              <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
+                <Code className="inline-block mr-2 mb-1" size={20} />
+                Integration Details
+              </h2>
+            )}
             <p className="text-gray-600 dark:text-gray-300 mb-4">
               Follow these steps to integrate Nostr Ads into your platform:
             </p>
