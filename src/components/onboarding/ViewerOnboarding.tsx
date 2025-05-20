@@ -332,7 +332,7 @@ const ViewerOnboarding: React.FC<ViewerOnboardingProps> = ({
               Privacy Settings
             </h2>
             <p className="text-gray-600 dark:text-gray-300">
-              Control how your data is used:
+              You are in full control of the data shared with advertisers. The more you're willing to share, the more bitcoin you can potentially earn! We've chosen some defaults that will get you earning sats right away.
             </p>
             
             <div className="mt-6 space-y-4">
