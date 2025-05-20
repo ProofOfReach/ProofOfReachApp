@@ -247,37 +247,145 @@ const PublisherOnboarding: React.FC<PublisherOnboardingProps> = React.memo(({ cu
                     </p>
                   </div>
                   
-                  <div className="bg-gray-100 dark:bg-gray-800 p-3 rounded text-sm font-mono overflow-x-auto">
-                    {`<!-- Step 1: Include the Nostr Ads JavaScript SDK -->
-<script src="https://cdn.nostrads.org/sdk/v1/nostr-ads.js"></script>
+                  <div className="mb-4">
+                    <div className="flex justify-between items-center mb-2">
+                      <h4 className="text-sm font-medium text-gray-900 dark:text-white">Step 1: Create your backend configuration endpoint</h4>
+                    </div>
+                    <div className="bg-gray-100 dark:bg-gray-800 p-3 rounded text-sm font-mono overflow-x-auto">
+                      {`// File: /pages/api/publisher/config.js
+import { getServerSession } from "next-auth/next";
+import { prisma } from "../../../lib/prismaClient";
 
-<!-- Step 2: Configure the SDK -->
-<script>
-// SECURITY BEST PRACTICE:
-// Don't include API keys directly in client-side code.
-// Instead, load the key from your server-side backend via an endpoint
-// that only authenticated publishers can access.
-document.addEventListener('DOMContentLoaded', async function() {
-  try {
-    // Example of secure loading (implement this endpoint on your server)
-    const response = await fetch('/api/publisher/config');
-    const config = await response.json();
-    
-    // Initialize with securely loaded key
-    NostrAds.init({
-      publisherKey: config.apiKey,
-      defaultPlacement: 'feed'
-    });
-  } catch (error) {
-    console.error('Failed to initialize NostrAds:', error);
+export default async function handler(req, res) {
+  // Verify the publisher is authenticated
+  const session = await getServerSession(req, res);
+  if (!session || !session.user) {
+    return res.status(401).json({ error: "Unauthorized" });
   }
-});
-</script>`}
+  
+  // Get the publisher's API key from database
+  const apiKey = await prisma.apiKey.findFirst({
+    where: { 
+      userId: session.user.id,
+      isActive: true 
+    },
+    orderBy: { createdAt: 'desc' }
+  });
+  
+  if (!apiKey) {
+    return res.status(404).json({ error: "No API key found" });
+  }
+  
+  // Return publisher configuration
+  return res.status(200).json({
+    apiKey: apiKey.key,
+    defaultPlacement: 'feed',
+    publisherId: session.user.id
+  });
+}`}
+                    </div>
                   </div>
                   
-                  <div className="mt-3 p-3 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded text-sm text-yellow-800 dark:text-yellow-300">
-                    <p className="font-medium">⚠️ Security Note:</p>
-                    <p className="mt-1">Never include API keys directly in client-side JavaScript. Use the server-side approach shown above to prevent key exposure.</p>
+                  <div className="mb-4">
+                    <div className="flex justify-between items-center mb-2">
+                      <h4 className="text-sm font-medium text-gray-900 dark:text-white">Step 2: Add the JavaScript SDK to your site</h4>
+                    </div>
+                    <div className="bg-gray-100 dark:bg-gray-800 p-3 rounded text-sm font-mono overflow-x-auto">
+                      {`<!-- File: index.html -->
+<!-- Include the Nostr Ads JavaScript SDK -->
+<script src="https://cdn.nostrads.org/sdk/v1/nostr-ads.js"></script>
+
+<script>
+document.addEventListener('DOMContentLoaded', async function() {
+  try {
+    // Load configuration from your backend
+    const response = await fetch('/api/publisher/config');
+    
+    if (!response.ok) {
+      throw new Error('Failed to load publisher configuration');
+    }
+    
+    const config = await response.json();
+    
+    // Initialize with configuration from your backend
+    NostrAds.init({
+      publisherKey: config.apiKey,
+      defaultPlacement: config.defaultPlacement
+    });
+    
+    // Create ad placements
+    NostrAds.createAdPlacement('sidebar-ad');
+  } catch (error) {
+    console.error('Failed to initialize Nostr Ads:', error);
+    
+    // Show fallback content
+    document.querySelectorAll('.nostr-ad-container').forEach(container => {
+      container.innerHTML = '<p>Ad content temporarily unavailable</p>';
+    });
+  }
+});
+</script>
+
+<!-- HTML placement for ads -->
+<div id="sidebar-ad" class="nostr-ad-container"></div>`}
+                    </div>
+                  </div>
+                  
+                  <div className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg mb-4">
+                    <h3 className="font-medium text-gray-900 dark:text-white mb-2">Step 3: Track ad interactions</h3>
+                    <p className="text-sm text-gray-600 dark:text-gray-300 mb-3">
+                      Set up proper click tracking with the JavaScript SDK:
+                    </p>
+                    <div className="bg-gray-100 dark:bg-gray-800 p-3 rounded text-sm font-mono overflow-x-auto">
+                      {`// Create a click tracking endpoint
+// File: /pages/api/publisher/track-click.js
+
+export default async function handler(req, res) {
+  const { adId } = req.query;
+  
+  if (!adId) {
+    return res.status(400).json({ error: "Ad ID is required" });
+  }
+  
+  try {
+    // Load configuration
+    const configResponse = await fetch(\`\${process.env.BASE_URL}/api/publisher/config\`, {
+      headers: {
+        // Include authentication as needed
+        cookie: req.headers.cookie
+      }
+    });
+    
+    if (!configResponse.ok) {
+      throw new Error('Failed to load publisher configuration');
+    }
+    
+    const config = await configResponse.json();
+    
+    // Track the click using server-side credentials
+    const trackResponse = await fetch(\`https://api.nostrads.org/v1/ads/\${adId}/click\`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-API-Key': config.apiKey
+      },
+      body: JSON.stringify({
+        publisherId: config.publisherId,
+        timestamp: new Date().toISOString()
+      })
+    });
+    
+    if (!trackResponse.ok) {
+      throw new Error('Failed to track click');
+    }
+    
+    return res.status(200).json({ success: true });
+  } catch (error) {
+    console.error('Error tracking click:', error);
+    return res.status(500).json({ error: 'Failed to track click' });
+  }
+}`}
+                    </div>
                   </div>
                 </div>
                 
@@ -314,37 +422,200 @@ NostrAds.loadAd('sidebar', adContainer);
                 </div>
                 
                 <div className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg">
-                  <h3 className="font-medium text-gray-900 dark:text-white mb-2">Step 2: Import and Configure</h3>
+                  <h3 className="font-medium text-gray-900 dark:text-white mb-2">Step 2: Set up environment configuration</h3>
                   <p className="text-sm text-gray-600 dark:text-gray-300 mb-3">
-                    In your application code:
+                    Create a server-side environment file (.env):
                   </p>
                   <div className="bg-gray-100 dark:bg-gray-800 p-3 rounded text-sm font-mono overflow-x-auto">
-                    {`import { NostrAdsSDK } from '@nostr-ads/sdk';
+                    {`# .env (server-side only, keep this out of your repository)
+NOSTR_ADS_API_KEY=${apiKeyData.key || "your_api_key_from_dashboard"}
+PUBLISHER_PUBKEY=your_nostr_pubkey`}
+                  </div>
+                </div>
 
-// Initialize the SDK
-const adsClient = new NostrAdsSDK({
-  apiKey: 'YOUR_PUBLISHER_API_KEY',
-  pubkey: 'YOUR_NOSTR_PUBKEY'
-});`}
+                <div className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg">
+                  <h3 className="font-medium text-gray-900 dark:text-white mb-2">Step 3: Create a configuration service</h3>
+                  <p className="text-sm text-gray-600 dark:text-gray-300 mb-3">
+                    Create a server-side service to manage your API configuration:
+                  </p>
+                  <div className="bg-gray-100 dark:bg-gray-800 p-3 rounded text-sm font-mono overflow-x-auto">
+                    {`// server/services/adsConfig.js
+import { NostrAdsSDK } from '@nostr-ads/sdk';
+import dotenv from 'dotenv';
+
+// Load environment variables
+dotenv.config();
+
+// Create a server-side SDK instance
+export const serverSideAdsClient = new NostrAdsSDK({
+  apiKey: process.env.NOSTR_ADS_API_KEY,
+  pubkey: process.env.PUBLISHER_PUBKEY
+});
+
+// Create an API endpoint for public config
+// pages/api/ads/config.js
+export default function handler(req, res) {
+  // Return only non-sensitive configuration
+  res.status(200).json({
+    publisherId: process.env.PUBLISHER_PUBKEY,
+    placements: ['feed', 'sidebar', 'banner']
+  });
+}`}
                   </div>
                 </div>
                 
                 <div className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg">
-                  <h3 className="font-medium text-gray-900 dark:text-white mb-2">Step 3: Use the SDK Components</h3>
+                  <h3 className="font-medium text-gray-900 dark:text-white mb-2">Step 4: Create React components</h3>
                   <p className="text-sm text-gray-600 dark:text-gray-300 mb-3">
-                    For React applications:
+                    Create React components using the SDK:
                   </p>
                   <div className="bg-gray-100 dark:bg-gray-800 p-3 rounded text-sm font-mono overflow-x-auto">
-                    {`import { AdUnit } from '@nostr-ads/react';
+                    {`// components/AdProvider.jsx
+import { createContext, useState, useEffect } from 'react';
+import { NostrAdsSDK } from '@nostr-ads/sdk';
 
-function MyComponent() {
+// Create context for ad configuration
+export const AdContext = createContext(null);
+
+export function AdProvider({ children }) {
+  const [config, setConfig] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+  
+  // Load configuration from your secure endpoint
+  useEffect(() => {
+    async function loadConfig() {
+      try {
+        const response = await fetch('/api/ads/config');
+        if (!response.ok) throw new Error('Failed to load configuration');
+        
+        const data = await response.json();
+        setConfig(data);
+      } catch (error) {
+        console.error('Error loading ad configuration:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+    
+    loadConfig();
+  }, []);
+  
   return (
-    <div>
-      <h2>My Content</h2>
-      <p>Content here...</p>
-      <AdUnit placement="feed" />
+    <AdContext.Provider value={{ config, isLoading }}>
+      {children}
+    </AdContext.Provider>
+  );
+}
+
+// components/AdUnit.jsx
+import { useContext, useState, useEffect } from 'react';
+import { AdContext } from './AdProvider';
+
+export function AdUnit({ placement = 'feed' }) {
+  const { config, isLoading } = useContext(AdContext);
+  const [ad, setAd] = useState(null);
+  const [adLoading, setAdLoading] = useState(true);
+  
+  useEffect(() => {
+    if (isLoading || !config) return;
+    
+    async function loadAd() {
+      try {
+        const response = await fetch(\`/api/ads/serve?placement=\${placement}\`);
+        if (!response.ok) throw new Error('Failed to load ad');
+        
+        const data = await response.json();
+        setAd(data);
+      } catch (error) {
+        console.error('Error loading ad:', error);
+      } finally {
+        setAdLoading(false);
+      }
+    }
+    
+    loadAd();
+  }, [placement, config, isLoading]);
+  
+  if (isLoading || adLoading) {
+    return <div className="ad-placeholder">Loading ad...</div>;
+  }
+  
+  if (!ad) return null;
+  
+  return (
+    <div className="nostr-ad">
+      <h3>{ad.title}</h3>
+      {ad.imageUrl && <img src={ad.imageUrl} alt={ad.title} />}
+      <p>{ad.description}</p>
+      <a 
+        href="#" 
+        onClick={async (e) => {
+          e.preventDefault();
+          // Track click through API
+          await fetch(\`/api/ads/click?adId=\${ad.id}\`);
+          // Open target URL
+          window.open(ad.targetUrl, '_blank');
+        }}
+      >
+        Learn More
+      </a>
     </div>
   );
+}`}
+                  </div>
+                </div>
+                
+                <div className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg">
+                  <h3 className="font-medium text-gray-900 dark:text-white mb-2">Step 5: Create API endpoints</h3>
+                  <p className="text-sm text-gray-600 dark:text-gray-300 mb-3">
+                    Add backend API endpoints to handle ad serving and tracking:
+                  </p>
+                  <div className="bg-gray-100 dark:bg-gray-800 p-3 rounded text-sm font-mono overflow-x-auto">
+                    {`// pages/api/ads/serve.js
+import { serverSideAdsClient } from '../../../server/services/adsConfig';
+
+export default async function handler(req, res) {
+  const { placement } = req.query;
+  
+  try {
+    // Use the server-side SDK to fetch an ad
+    const ad = await serverSideAdsClient.getAd({ placement });
+    
+    // Track impression server-side
+    await serverSideAdsClient.trackImpression({ adId: ad.id });
+    
+    // Return ad data to client (excluding sensitive information)
+    res.status(200).json({
+      id: ad.id,
+      title: ad.title,
+      description: ad.description,
+      imageUrl: ad.imageUrl,
+      targetUrl: ad.targetUrl
+    });
+  } catch (error) {
+    console.error('Error serving ad:', error);
+    res.status(500).json({ error: 'Failed to serve ad' });
+  }
+}
+
+// pages/api/ads/click.js
+import { serverSideAdsClient } from '../../../server/services/adsConfig';
+
+export default async function handler(req, res) {
+  const { adId } = req.query;
+  
+  if (!adId) {
+    return res.status(400).json({ error: 'Ad ID is required' });
+  }
+  
+  try {
+    // Track click server-side
+    await serverSideAdsClient.trackClick({ adId });
+    res.status(200).json({ success: true });
+  } catch (error) {
+    console.error('Error tracking click:', error);
+    res.status(500).json({ error: 'Failed to track click' });
+  }
 }`}
                   </div>
                 </div>
