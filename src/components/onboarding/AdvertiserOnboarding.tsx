@@ -16,32 +16,39 @@ interface AdvertiserOnboardingProps {
 }
 
 const AdvertiserOnboarding: React.FC<AdvertiserOnboardingProps> = ({ currentStep, skipOnboarding }) => {
+  // Helper function to render section title with skip button
+  const renderSectionHeader = (icon: React.ReactNode, title: string) => (
+    <>
+      {skipOnboarding && (
+        <div className="flex justify-between items-center mb-6">
+          <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
+            {icon}
+            {title}
+          </h2>
+          <button
+            onClick={skipOnboarding}
+            className="px-4 py-2 flex items-center text-sm font-medium text-gray-700 bg-white dark:text-gray-300 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-md hover:bg-gray-50 dark:hover:bg-gray-700"
+          >
+            Skip For Now
+          </button>
+        </div>
+      )}
+      {!skipOnboarding && (
+        <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
+          {icon}
+          {title}
+        </h2>
+      )}
+    </>
+  );
+
   // Content for each step in the advertiser onboarding flow
   const renderStepContent = () => {
     switch (currentStep) {
       case 'create-campaign':
         return (
           <div className="space-y-4">
-            {skipOnboarding && (
-              <div className="flex justify-between items-center mb-6">
-                <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
-                  <Image className="inline-block mr-2 mb-1" size={20} />
-                  Create Your First Campaign
-                </h2>
-                <button
-                  onClick={skipOnboarding}
-                  className="px-4 py-2 flex items-center text-sm font-medium text-gray-700 bg-white dark:text-gray-300 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-md hover:bg-gray-50 dark:hover:bg-gray-700"
-                >
-                  Skip For Now
-                </button>
-              </div>
-            )}
-            {!skipOnboarding && (
-              <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
-                <Image className="inline-block mr-2 mb-1" size={20} />
-                Create Your First Campaign
-              </h2>
-            )}
+            {renderSectionHeader(<Image className="inline-block mr-2 mb-1" size={20} />, 'Create Your First Campaign')}
             <p className="text-gray-600 dark:text-gray-300">
               Let's set up your first advertising campaign on the Nostr network:
             </p>
@@ -143,10 +150,7 @@ const AdvertiserOnboarding: React.FC<AdvertiserOnboardingProps> = ({ currentStep
       case 'set-targeting':
         return (
           <div className="space-y-4">
-            <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
-              <Target className="inline-block mr-2 mb-1" size={20} />
-              Set Targeting Parameters
-            </h2>
+            {renderSectionHeader(<Target className="inline-block mr-2 mb-1" size={20} />, 'Set Targeting Parameters')}
             <p className="text-gray-600 dark:text-gray-300">
               Define who you want to reach with your advertising campaign:
             </p>
@@ -262,10 +266,7 @@ const AdvertiserOnboarding: React.FC<AdvertiserOnboardingProps> = ({ currentStep
       case 'budget-schedule':
         return (
           <div className="space-y-4">
-            <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
-              <Calendar className="inline-block mr-2 mb-1" size={20} />
-              Set Budget & Schedule
-            </h2>
+            {renderSectionHeader(<Calendar className="inline-block mr-2 mb-1" size={20} />, 'Set Budget & Schedule')}
             <p className="text-gray-600 dark:text-gray-300">
               Define your campaign budget and when it should run:
             </p>
@@ -411,10 +412,7 @@ const AdvertiserOnboarding: React.FC<AdvertiserOnboardingProps> = ({ currentStep
       case 'fund-account':
         return (
           <div className="space-y-4">
-            <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
-              <DollarSign className="inline-block mr-2 mb-1" size={20} />
-              Fund Your Advertising Account
-            </h2>
+            {renderSectionHeader(<DollarSign className="inline-block mr-2 mb-1" size={20} />, 'Fund Your Advertising Account')}
             <p className="text-gray-600 dark:text-gray-300">
               Add funds to your account to start your advertising campaign:
             </p>
@@ -494,10 +492,7 @@ const AdvertiserOnboarding: React.FC<AdvertiserOnboardingProps> = ({ currentStep
       case 'dashboard-intro':
         return (
           <div className="space-y-4">
-            <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
-              <BarChart className="inline-block mr-2 mb-1" size={20} />
-              Your Advertiser Dashboard
-            </h2>
+            {renderSectionHeader(<BarChart className="inline-block mr-2 mb-1" size={20} />, 'Your Advertiser Dashboard')}
             <p className="text-gray-600 dark:text-gray-300">
               Monitor and optimize your campaigns with these powerful tools:
             </p>

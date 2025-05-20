@@ -101,32 +101,39 @@ const PublisherOnboarding: React.FC<PublisherOnboardingProps> = React.memo(({ cu
     }
   }, [selectedIntegration]);
 
+  // Helper function to render section title with skip button
+  const renderSectionHeader = (icon: React.ReactNode, title: string) => (
+    <>
+      {skipOnboarding && (
+        <div className="flex justify-between items-center mb-6">
+          <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
+            {icon}
+            {title}
+          </h2>
+          <button
+            onClick={skipOnboarding}
+            className="px-4 py-2 flex items-center text-sm font-medium text-gray-700 bg-white dark:text-gray-300 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-md hover:bg-gray-50 dark:hover:bg-gray-700"
+          >
+            Skip For Now
+          </button>
+        </div>
+      )}
+      {!skipOnboarding && (
+        <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
+          {icon}
+          {title}
+        </h2>
+      )}
+    </>
+  );
+
   // Render step content
   const renderStepContent = () => {
     switch (currentStep) {
       case 'integration-details':
         return (
           <div className="space-y-4">
-            {skipOnboarding && (
-              <div className="flex justify-between items-center mb-6">
-                <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
-                  <Code className="inline-block mr-2 mb-1" size={20} />
-                  Integration Details
-                </h2>
-                <button
-                  onClick={skipOnboarding}
-                  className="px-4 py-2 flex items-center text-sm font-medium text-gray-700 bg-white dark:text-gray-300 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-md hover:bg-gray-50 dark:hover:bg-gray-700"
-                >
-                  Skip For Now
-                </button>
-              </div>
-            )}
-            {!skipOnboarding && (
-              <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
-                <Code className="inline-block mr-2 mb-1" size={20} />
-                Integration Details
-              </h2>
-            )}
+            {renderSectionHeader(<Code className="inline-block mr-2 mb-1" size={20} />, 'Integration Details')}
             <p className="text-gray-600 dark:text-gray-300 mb-4">
               Follow these steps to integrate Nostr Ads into your platform:
             </p>
@@ -740,10 +747,7 @@ export default async function handler(req, res) {
       case 'ad-slot-config':
         return (
           <div className="space-y-4">
-            <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
-              <Layout className="inline-block mr-2 mb-1" size={20} />
-              Configure Ad Slots
-            </h2>
+            {renderSectionHeader(<Layout className="inline-block mr-2 mb-1" size={20} />, 'Configure Ad Slots')}
             <p className="text-gray-600 dark:text-gray-300">
               Set up where and how ads will appear in your content:
             </p>
@@ -828,10 +832,7 @@ export default async function handler(req, res) {
       case 'setup-wallet':
         return (
           <div className="space-y-4">
-            <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
-              <DollarSign className="inline-block mr-2 mb-1" size={20} />
-              Set Up Your Bitcoin Wallet
-            </h2>
+            {renderSectionHeader(<DollarSign className="inline-block mr-2 mb-1" size={20} />, 'Set Up Your Bitcoin Wallet')}
             <p className="text-gray-600 dark:text-gray-300">
               Configure how you'll receive payments from ads shown on your content:
             </p>
@@ -887,10 +888,7 @@ export default async function handler(req, res) {
       case 'enable-test-mode':
         return (
           <div className="space-y-4">
-            <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
-              <ToggleRight className="inline-block mr-2 mb-1" size={20} />
-              Test Your Ad Implementation
-            </h2>
+            {renderSectionHeader(<ToggleRight className="inline-block mr-2 mb-1" size={20} />, 'Test Your Ad Implementation')}
             <p className="text-gray-600 dark:text-gray-300">
               Before going live, it's important to test your ad implementation:
             </p>
@@ -943,10 +941,7 @@ export default async function handler(req, res) {
       case 'go-live':
         return (
           <div className="space-y-4">
-            <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
-              <Settings className="inline-block mr-2 mb-1" size={20} />
-              Ready to Go Live
-            </h2>
+            {renderSectionHeader(<Settings className="inline-block mr-2 mb-1" size={20} />, 'Ready to Go Live')}
             <p className="text-gray-600 dark:text-gray-300">
               Your ad spaces are configured and tested. Complete your setup by finalizing these settings:
             </p>
@@ -1027,6 +1022,16 @@ export default async function handler(req, res) {
       case 'complete':
         return (
           <div className="space-y-4 text-center">
+            {skipOnboarding && (
+              <div className="flex justify-end mb-2">
+                <button
+                  onClick={skipOnboarding}
+                  className="px-4 py-2 flex items-center text-sm font-medium text-gray-700 bg-white dark:text-gray-300 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-md hover:bg-gray-50 dark:hover:bg-gray-700"
+                >
+                  Skip For Now
+                </button>
+              </div>
+            )}
             <div className="flex justify-center">
               <CheckCircle size={64} className="text-green-500" />
             </div>

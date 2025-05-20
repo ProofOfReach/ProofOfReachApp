@@ -51,11 +51,19 @@ const OnboardingWizard: React.FC = () => {
     }
     
     if (selectedRole === 'publisher') {
-      return <PublisherOnboarding currentStep={currentStep} onComplete={completeOnboarding} />;
+      return <PublisherOnboarding 
+        currentStep={currentStep} 
+        onComplete={completeOnboarding} 
+        skipOnboarding={skipOnboarding} 
+      />;
     }
     
     if (selectedRole === 'advertiser') {
-      return <AdvertiserOnboarding currentStep={currentStep} onComplete={completeOnboarding} />;
+      return <AdvertiserOnboarding 
+        currentStep={currentStep} 
+        onComplete={completeOnboarding} 
+        skipOnboarding={skipOnboarding} 
+      />;
     }
     
     // Fallback content
