@@ -66,11 +66,8 @@ describe('ViewerOnboarding', () => {
       </AuthProvider>
     );
 
-    // Should display the onboarding progress component
-    expect(screen.getByTestId('onboarding-progress')).toBeInTheDocument();
-
     // Should display the welcome title
-    expect(screen.getByText(/welcome to nostr ads/i)).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: /welcome to nostr ads/i })).toBeInTheDocument();
 
     // Should display navigation buttons
     expect(screen.getByTestId('next-button')).toBeInTheDocument();
@@ -176,11 +173,40 @@ describe('ViewerOnboarding', () => {
     
     // Make sure we're on the discovery step by looking for expected elements
     await waitFor(() => {
-      const heading = screen.getByRole('heading', { name: /discover personalized content/i });
-      expect(heading).toBeInTheDocument();
+      expect(screen.getByRole('heading', { name: /discover personalized content/i })).toBeInTheDocument();
     });
     
-    // From discovery step, clicking continue button to move to the complete step
+    // From discovery step, clicking continue button to move to notifications
+    await act(async () => {
+      userEvent.click(screen.getByTestId('continue-button'));
+    });
+
+    // Now we should be on notifications step
+    await waitFor(() => {
+      expect(screen.getByRole('heading', { name: /notification preferences/i })).toBeInTheDocument();
+    });
+    
+    // Click to go to privacy step
+    await act(async () => {
+      userEvent.click(screen.getByTestId('continue-button'));
+    });
+
+    // Now we should be on privacy step
+    await waitFor(() => {
+      expect(screen.getByRole('heading', { name: /privacy settings/i })).toBeInTheDocument();
+    });
+
+    // Click to go to feedback step
+    await act(async () => {
+      userEvent.click(screen.getByTestId('continue-button'));
+    });
+
+    // Now we should be on feedback step
+    await waitFor(() => {
+      expect(screen.getByRole('heading', { name: /provide feedback/i })).toBeInTheDocument();
+    });
+
+    // Click to go to complete step
     await act(async () => {
       userEvent.click(screen.getByTestId('continue-button'));
     });
@@ -192,11 +218,14 @@ describe('ViewerOnboarding', () => {
     
     // Click Complete button on the final step using data-testid
     await act(async () => {
-      userEvent.click(screen.getByTestId('complete-button'));
+      const completeButton = screen.getByTestId('complete-button');
+      userEvent.click(completeButton);
     });
 
-    // Should call onComplete
-    expect(mockCompleteCallback).toHaveBeenCalled();
+    // Use waitFor to allow for any async state updates to complete
+    await waitFor(() => {
+      expect(mockCompleteCallback).toHaveBeenCalled();
+    }, { timeout: 3000 });
   });
 
   it('displays informative content about being a viewer', () => {

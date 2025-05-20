@@ -52,6 +52,23 @@ const ViewerOnboarding: React.FC<ViewerOnboardingProps> = ({
   
   // Map from OnboardingContext step names to local step names
   const mapOnboardingStepToLocal = (step: OnboardingStep): string => {
+    // Always start at welcome when a role is selected
+    if (step === 'role-selection') {
+      console.log("ViewerOnboarding - Mapped incoming step role-selection to welcome");
+      return 'welcome';
+    }
+    
+    // Define the sequence of steps in order
+    const stepSequence = [
+      'welcome',
+      'discovery',
+      'notifications',
+      'privacy',
+      'feedback',
+      'complete'
+    ];
+    
+    // Map context steps to our local steps
     const stepMap: Record<string, string> = {
       'role-selection': 'welcome',
       'preferences': 'welcome',
@@ -96,7 +113,13 @@ const ViewerOnboarding: React.FC<ViewerOnboardingProps> = ({
         setStep('complete');
         break;
       case 'complete':
-        if (onComplete) onComplete();
+        // Use setTimeout to ensure the state update has time to propagate
+        // This helps with test stability and real-world scenarios
+        setTimeout(() => {
+          if (onComplete) {
+            onComplete();
+          }
+        }, 100);
         break;
       default:
         setStep('welcome');
@@ -284,6 +307,144 @@ const ViewerOnboarding: React.FC<ViewerOnboardingProps> = ({
                     </div>
                   ))}
                 </div>
+              </div>
+            </div>
+          </div>
+        );
+
+      case 'notifications':
+        return (
+          <div className="space-y-4">
+            <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
+              <CheckCircle className="inline-block mr-2 mb-1" size={20} />
+              Notification Preferences
+            </h2>
+            <p className="text-gray-600 dark:text-gray-300">
+              Control how you receive updates:
+            </p>
+            
+            <div className="mt-6 space-y-4">
+              <div className="border border-gray-200 dark:border-gray-700 rounded-lg p-4">
+                <h3 className="font-medium text-gray-900 dark:text-white mb-3">Notification Settings</h3>
+                
+                <ul className="space-y-3">
+                  <li className="flex items-start">
+                    <div className="flex-shrink-0 h-5 w-5 text-purple-500">
+                      <CheckCircle size={18} className="mt-0.5" />
+                    </div>
+                    <p className="ml-2 text-gray-600 dark:text-gray-300">
+                      Content from followed publishers
+                    </p>
+                  </li>
+                  <li className="flex items-start">
+                    <div className="flex-shrink-0 h-5 w-5 text-purple-500">
+                      <CheckCircle size={18} className="mt-0.5" />
+                    </div>
+                    <p className="ml-2 text-gray-600 dark:text-gray-300">
+                      Platform announcements
+                    </p>
+                  </li>
+                  <li className="flex items-start">
+                    <div className="flex-shrink-0 h-5 w-5 text-purple-500">
+                      <CheckCircle size={18} className="mt-0.5" />
+                    </div>
+                    <p className="ml-2 text-gray-600 dark:text-gray-300">
+                      Personalized recommendations
+                    </p>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        );
+
+      case 'privacy':
+        return (
+          <div className="space-y-4">
+            <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
+              <CheckCircle className="inline-block mr-2 mb-1" size={20} />
+              Privacy Settings
+            </h2>
+            <p className="text-gray-600 dark:text-gray-300">
+              Control your data and privacy:
+            </p>
+            
+            <div className="mt-6 space-y-4">
+              <div className="border border-gray-200 dark:border-gray-700 rounded-lg p-4">
+                <h3 className="font-medium text-gray-900 dark:text-white mb-3">Your Privacy Control</h3>
+                
+                <ul className="space-y-3">
+                  <li className="flex items-start">
+                    <div className="flex-shrink-0 h-5 w-5 text-purple-500">
+                      <CheckCircle size={18} className="mt-0.5" />
+                    </div>
+                    <p className="ml-2 text-gray-600 dark:text-gray-300">
+                      Control how your data is used for ads
+                    </p>
+                  </li>
+                  <li className="flex items-start">
+                    <div className="flex-shrink-0 h-5 w-5 text-purple-500">
+                      <CheckCircle size={18} className="mt-0.5" />
+                    </div>
+                    <p className="ml-2 text-gray-600 dark:text-gray-300">
+                      Adjust content preferences anytime
+                    </p>
+                  </li>
+                  <li className="flex items-start">
+                    <div className="flex-shrink-0 h-5 w-5 text-purple-500">
+                      <CheckCircle size={18} className="mt-0.5" />
+                    </div>
+                    <p className="ml-2 text-gray-600 dark:text-gray-300">
+                      View your data export options
+                    </p>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        );
+
+      case 'feedback':
+        return (
+          <div className="space-y-4">
+            <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
+              <CheckCircle className="inline-block mr-2 mb-1" size={20} />
+              Provide Feedback
+            </h2>
+            <p className="text-gray-600 dark:text-gray-300">
+              Help us improve your experience:
+            </p>
+            
+            <div className="mt-6 space-y-4">
+              <div className="border border-gray-200 dark:border-gray-700 rounded-lg p-4">
+                <h3 className="font-medium text-gray-900 dark:text-white mb-3">Your Opinion Matters</h3>
+                
+                <ul className="space-y-3">
+                  <li className="flex items-start">
+                    <div className="flex-shrink-0 h-5 w-5 text-purple-500">
+                      <CheckCircle size={18} className="mt-0.5" />
+                    </div>
+                    <p className="ml-2 text-gray-600 dark:text-gray-300">
+                      Rate content relevance
+                    </p>
+                  </li>
+                  <li className="flex items-start">
+                    <div className="flex-shrink-0 h-5 w-5 text-purple-500">
+                      <CheckCircle size={18} className="mt-0.5" />
+                    </div>
+                    <p className="ml-2 text-gray-600 dark:text-gray-300">
+                      Report any issues with ads
+                    </p>
+                  </li>
+                  <li className="flex items-start">
+                    <div className="flex-shrink-0 h-5 w-5 text-purple-500">
+                      <CheckCircle size={18} className="mt-0.5" />
+                    </div>
+                    <p className="ml-2 text-gray-600 dark:text-gray-300">
+                      Suggest improvements to the platform
+                    </p>
+                  </li>
+                </ul>
               </div>
             </div>
           </div>
