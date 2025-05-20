@@ -411,17 +411,22 @@ class NostrHelpers {
    * Clear stored test keys
    */
   public clearStoredTestKeys(): void {
-    if (typeof window === 'undefined') {
-      logger.warn('Cannot clear test keys: window is undefined');
+    if (typeof window === 'undefined' || typeof localStorage === 'undefined') {
+      logger.warn('Cannot clear test keys: window or localStorage is undefined');
       return;
     }
     
     try {
-      // Remove the test keys from localStorage synchronously for compatibility
-      localStorage.removeItem('nostr_test_pk');
-      localStorage.removeItem('nostr_test_sk');
-      localStorage.removeItem('isTestMode');
+      // Define keys to be removed
+      const keysToRemove = ['nostr_test_pk', 'nostr_test_sk', 'isTestMode'];
       
+      // For test environments, use direct localStorage operations
+      // This ensures compatibility with Jest tests
+      for (const key of keysToRemove) {
+        window.localStorage.removeItem(key);
+      }
+      
+      // Log a message
       logger.log('Cleared all test keys and settings');
     } catch (error) {
       logger.warn('Error clearing test keys', { 

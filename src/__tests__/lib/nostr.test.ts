@@ -193,21 +193,17 @@ describe('Nostr Library', () => {
     });
     
     it('clears stored test keys', () => {
-      // First, set some test keys
-      const testPubKey = 'test-pub-key-' + Math.random();
-      const testPrivKey = 'test-priv-key-' + Math.random();
-      
-      // Store the test keys
-      localStorage.setItem('nostr_test_pk', testPubKey);
-      localStorage.setItem('nostr_test_sk', testPrivKey);
+      // Set up test data
+      localStorage.setItem('nostr_test_pk', 'test-pk');
+      localStorage.setItem('nostr_test_sk', 'test-sk');
       localStorage.setItem('isTestMode', 'true');
       
-      // Verify the keys were stored properly
-      expect(localStorage.getItem('nostr_test_pk')).toBe(testPubKey);
-      expect(localStorage.getItem('nostr_test_sk')).toBe(testPrivKey);
+      // Verify our setup worked
+      expect(localStorage.getItem('nostr_test_pk')).toBe('test-pk');
+      expect(localStorage.getItem('nostr_test_sk')).toBe('test-sk');
       expect(localStorage.getItem('isTestMode')).toBe('true');
       
-      // Call the function we're testing
+      // Call the method we're testing
       nostrLib.clearStoredTestKeys();
       
       // Verify the keys were removed
