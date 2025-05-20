@@ -111,7 +111,7 @@ const RoleConfirmation: React.FC<RoleConfirmationProps> = ({ onConfirm }) => {
           Select your role
         </h2>
         <p className="mt-2 text-gray-600 dark:text-gray-300">
-          Select how you'd like to use the Nostr Ad Marketplace platform
+          Select how you'd like to use the Proof Of Reach platform
         </p>
       </div>
 

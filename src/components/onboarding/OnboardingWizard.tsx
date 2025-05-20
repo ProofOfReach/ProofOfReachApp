@@ -84,7 +84,7 @@ const OnboardingWizard: React.FC = () => {
     <div className="bg-white dark:bg-gray-900 rounded-lg shadow-lg max-w-4xl mx-auto overflow-hidden">
       <div className="p-6 border-b border-gray-200 dark:border-gray-700">
         <h1 className="text-xl font-bold text-gray-900 dark:text-white">
-          {isFirstStep ? 'Welcome to Nostr Ads' : (
+          {isFirstStep ? 'Welcome to Proof Of Reach' : (
             selectedRole ? `${selectedRole.charAt(0).toUpperCase() + selectedRole.slice(1)} Onboarding` : 'Onboarding'
           )}
         </h1>

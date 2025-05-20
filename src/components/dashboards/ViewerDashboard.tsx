@@ -146,7 +146,7 @@ const ViewerHomeContent: React.FC = () => {
       {/* Quick Links */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
-          <h2 className="text-lg font-medium mb-2">Welcome to Nostr Ad Marketplace</h2>
+          <h2 className="text-lg font-medium mb-2">Welcome to Proof Of Reach</h2>
           <p className="text-gray-600 dark:text-gray-400">
             This is your personal dashboard. From here you can manage your account and preferences.
           </p>

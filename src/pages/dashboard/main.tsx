@@ -181,7 +181,7 @@ const MainDashboard = () => {
               Viewer Dashboard
             </h3>
             <p className="text-blue-700 dark:text-blue-400 mb-4">
-              Welcome to the Nostr Ad Marketplace. Select a role to see specialized dashboard content.
+              Welcome to Proof Of Reach. Select a role to see specialized dashboard content.
             </p>
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
