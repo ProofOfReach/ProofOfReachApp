@@ -18,7 +18,8 @@ const TestOnboardingPage: React.FC = () => {
             initialRole="viewer" 
             initialStep="discovery"
             totalSteps={3} 
-            initialProgress={33}
+            initialProgress={0}
+            initialCurrentStep={1}
           >
             {/* Using discovery as starting step, with 3 steps total (discovery, privacy, complete) */}
             <ViewerOnboarding 
