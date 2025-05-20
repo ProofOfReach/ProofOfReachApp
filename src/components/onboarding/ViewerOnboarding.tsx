@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { OnboardingStep } from '@/context/OnboardingContext';
 import OnboardingProgress from '@/components/onboarding/OnboardingProgress';
 import { CheckCircle, Search, ChevronRight, ChevronLeft, Check } from 'react-feather';
+import { Switch } from '@/components/ui/switch';
 
 interface Publisher {
   id: string;
@@ -389,20 +390,12 @@ const ViewerOnboarding: React.FC<ViewerOnboardingProps> = ({
                       </label>
                       <p className="text-xs text-gray-500 mt-1">Allow advertisers to use your approximate location</p>
                     </div>
-                    <div className="relative inline-block w-10 mr-2 align-middle select-none">
-                      <input 
-                        type="checkbox" 
-                        id="shareLocation" 
-                        checked={privacySettings.shareLocation} 
-                        onChange={() => handlePrivacySettingChange('shareLocation')}
-                        className="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer"
-                        data-testid="share-location-toggle"
-                      />
-                      <label 
-                        htmlFor="shareLocation" 
-                        className={`toggle-label block overflow-hidden h-6 rounded-full ${privacySettings.shareLocation ? 'bg-green-500' : 'bg-gray-300 dark:bg-gray-600'} cursor-pointer`}
-                      ></label>
-                    </div>
+                    <Switch
+                      id="shareLocation"
+                      checked={privacySettings.shareLocation}
+                      onCheckedChange={() => handlePrivacySettingChange('shareLocation')}
+                      data-testid="share-location-toggle"
+                    />
                   </div>
                   
                   <div className="flex items-center justify-between">
@@ -413,20 +406,12 @@ const ViewerOnboarding: React.FC<ViewerOnboardingProps> = ({
                       </label>
                       <p className="text-xs text-gray-500 mt-1">Allow ads based on your interests and preferences</p>
                     </div>
-                    <div className="relative inline-block w-10 mr-2 align-middle select-none">
-                      <input 
-                        type="checkbox" 
-                        id="shareInterests" 
-                        checked={privacySettings.shareInterests}
-                        onChange={() => handlePrivacySettingChange('shareInterests')}
-                        className="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer"
-                        data-testid="share-interests-toggle"
-                      />
-                      <label 
-                        htmlFor="shareInterests" 
-                        className={`toggle-label block overflow-hidden h-6 rounded-full ${privacySettings.shareInterests ? 'bg-green-500' : 'bg-gray-300 dark:bg-gray-600'} cursor-pointer`}
-                      ></label>
-                    </div>
+                    <Switch
+                      id="shareInterests"
+                      checked={privacySettings.shareInterests}
+                      onCheckedChange={() => handlePrivacySettingChange('shareInterests')}
+                      data-testid="share-interests-toggle"
+                    />
                   </div>
                   
                   <div className="flex items-center justify-between">
@@ -436,20 +421,12 @@ const ViewerOnboarding: React.FC<ViewerOnboardingProps> = ({
                       </label>
                       <p className="text-xs text-gray-500 mt-1">Allow limited tracking of content you view</p>
                     </div>
-                    <div className="relative inline-block w-10 mr-2 align-middle select-none">
-                      <input 
-                        type="checkbox" 
-                        id="shareBrowsing" 
-                        checked={privacySettings.shareBrowsing}
-                        onChange={() => handlePrivacySettingChange('shareBrowsing')}
-                        className="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer"
-                        data-testid="share-browsing-toggle"
-                      />
-                      <label 
-                        htmlFor="shareBrowsing" 
-                        className={`toggle-label block overflow-hidden h-6 rounded-full ${privacySettings.shareBrowsing ? 'bg-green-500' : 'bg-gray-300 dark:bg-gray-600'} cursor-pointer`}
-                      ></label>
-                    </div>
+                    <Switch
+                      id="shareBrowsing"
+                      checked={privacySettings.shareBrowsing}
+                      onCheckedChange={() => handlePrivacySettingChange('shareBrowsing')}
+                      data-testid="share-browsing-toggle"
+                    />
                   </div>
                   
                   <div className="flex items-center justify-between">
@@ -459,20 +436,12 @@ const ViewerOnboarding: React.FC<ViewerOnboardingProps> = ({
                       </label>
                       <p className="text-xs text-gray-500 mt-1">Allow age-appropriate content targeting</p>
                     </div>
-                    <div className="relative inline-block w-10 mr-2 align-middle select-none">
-                      <input 
-                        type="checkbox" 
-                        id="shareAge" 
-                        checked={privacySettings.shareAge}
-                        onChange={() => handlePrivacySettingChange('shareAge')}
-                        className="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer"
-                        data-testid="share-age-toggle"
-                      />
-                      <label 
-                        htmlFor="shareAge" 
-                        className={`toggle-label block overflow-hidden h-6 rounded-full ${privacySettings.shareAge ? 'bg-green-500' : 'bg-gray-300 dark:bg-gray-600'} cursor-pointer`}
-                      ></label>
-                    </div>
+                    <Switch
+                      id="shareAge"
+                      checked={privacySettings.shareAge}
+                      onCheckedChange={() => handlePrivacySettingChange('shareAge')}
+                      data-testid="share-age-toggle"
+                    />
                   </div>
                 </div>
                 
