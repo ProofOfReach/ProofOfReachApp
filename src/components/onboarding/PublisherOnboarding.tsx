@@ -87,6 +87,7 @@ const PublisherOnboarding: React.FC<PublisherOnboardingProps> = React.memo(({ cu
 
   // Render different content based on the current step
   const renderStepContent = () => {
+    console.log('PublisherOnboarding - Current step:', currentStep);
     switch (currentStep) {
       case 'integration-details':
         return (
