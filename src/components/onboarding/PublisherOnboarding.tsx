@@ -680,15 +680,7 @@ async function loadAd(placementId, targetElement) {
             )}
             
             <div className="mt-8 border-t border-gray-200 dark:border-gray-700 pt-4 flex justify-between">
-              {skipOnboarding && (
-                <button
-                  type="button"
-                  onClick={skipOnboarding}
-                  className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md"
-                >
-                  Skip
-                </button>
-              )}
+              {/* Skip button moved to the shared navigation in OnboardingWizard component */}
               <button
                 className="ml-auto bg-purple-600 hover:bg-purple-700 text-white font-medium py-2 px-6 rounded-md transition-colors" 
                 data-testid="publisher-next-button"
@@ -738,17 +730,7 @@ async function loadAd(placementId, targetElement) {
                  'Finalize your settings and activate your publisher account.'}
               </p>
               
-              <div className="mt-8 border-t border-gray-200 dark:border-gray-700 pt-4 flex justify-between">
-                {skipOnboarding && (
-                  <button
-                    type="button"
-                    onClick={skipOnboarding}
-                    className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md"
-                  >
-                    Skip
-                  </button>
-                )}
-              </div>
+              {/* Skip button moved to the shared navigation in OnboardingWizard component */}
             </div>
           </div>
         </div>
