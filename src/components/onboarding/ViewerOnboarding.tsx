@@ -43,11 +43,12 @@ const ViewerOnboarding: React.FC<ViewerOnboardingProps> = ({
     }
   ]);
   
-  // State for privacy settings
+  // State for privacy settings - using the same names as in settings page
   const [privacySettings, setPrivacySettings] = useState({
-    personalizedAds: true,
-    adTracking: true,
-    dataSharing: true
+    shareLocation: false,
+    shareInterests: true,
+    shareBrowsing: false,
+    shareAge: true
   });
   
   // Handle privacy setting changes
@@ -383,70 +384,93 @@ const ViewerOnboarding: React.FC<ViewerOnboardingProps> = ({
                 <div className="space-y-4">
                   <div className="flex items-center justify-between">
                     <div>
-                      <label htmlFor="personalized-ads" className="flex items-center cursor-pointer">
-                        <span className="text-gray-700 dark:text-gray-300">Enable personalized ads</span>
+                      <label htmlFor="shareLocation" className="flex items-center cursor-pointer">
+                        <span className="text-gray-700 dark:text-gray-300">Location Data</span>
+                      </label>
+                      <p className="text-xs text-gray-500 mt-1">Allow advertisers to use your approximate location</p>
+                    </div>
+                    <div className="relative inline-block w-10 mr-2 align-middle select-none">
+                      <input 
+                        type="checkbox" 
+                        id="shareLocation" 
+                        checked={privacySettings.shareLocation} 
+                        onChange={() => handlePrivacySettingChange('shareLocation')}
+                        className="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer"
+                        data-testid="share-location-toggle"
+                      />
+                      <label 
+                        htmlFor="shareLocation" 
+                        className={`toggle-label block overflow-hidden h-6 rounded-full ${privacySettings.shareLocation ? 'bg-green-500' : 'bg-gray-300 dark:bg-gray-600'} cursor-pointer`}
+                      ></label>
+                    </div>
+                  </div>
+                  
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <label htmlFor="shareInterests" className="flex items-center cursor-pointer">
+                        <span className="text-gray-700 dark:text-gray-300">Interest-Based Ads</span>
                         <span className="ml-2 text-xs text-gray-500 dark:text-gray-400">(Recommended)</span>
                       </label>
-                      <p className="text-xs text-gray-500 mt-1">See ads that are relevant to your interests</p>
+                      <p className="text-xs text-gray-500 mt-1">Allow ads based on your interests and preferences</p>
                     </div>
                     <div className="relative inline-block w-10 mr-2 align-middle select-none">
                       <input 
                         type="checkbox" 
-                        id="personalized-ads" 
-                        checked={privacySettings.personalizedAds} 
-                        onChange={() => handlePrivacySettingChange('personalizedAds')}
+                        id="shareInterests" 
+                        checked={privacySettings.shareInterests}
+                        onChange={() => handlePrivacySettingChange('shareInterests')}
                         className="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer"
-                        data-testid="personalized-ads-toggle"
+                        data-testid="share-interests-toggle"
                       />
                       <label 
-                        htmlFor="personalized-ads" 
-                        className="toggle-label block overflow-hidden h-6 rounded-full bg-gray-300 cursor-pointer"
+                        htmlFor="shareInterests" 
+                        className={`toggle-label block overflow-hidden h-6 rounded-full ${privacySettings.shareInterests ? 'bg-green-500' : 'bg-gray-300 dark:bg-gray-600'} cursor-pointer`}
                       ></label>
                     </div>
                   </div>
                   
                   <div className="flex items-center justify-between">
                     <div>
-                      <label htmlFor="ad-tracking" className="flex items-center cursor-pointer">
-                        <span className="text-gray-700 dark:text-gray-300">Allow ad performance tracking</span>
+                      <label htmlFor="shareBrowsing" className="flex items-center cursor-pointer">
+                        <span className="text-gray-700 dark:text-gray-300">Browsing Activity</span>
                       </label>
-                      <p className="text-xs text-gray-500 mt-1">Help advertisers measure ad effectiveness</p>
+                      <p className="text-xs text-gray-500 mt-1">Allow limited tracking of content you view</p>
                     </div>
                     <div className="relative inline-block w-10 mr-2 align-middle select-none">
                       <input 
                         type="checkbox" 
-                        id="ad-tracking" 
-                        checked={privacySettings.adTracking}
-                        onChange={() => handlePrivacySettingChange('adTracking')}
+                        id="shareBrowsing" 
+                        checked={privacySettings.shareBrowsing}
+                        onChange={() => handlePrivacySettingChange('shareBrowsing')}
                         className="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer"
-                        data-testid="ad-tracking-toggle"
+                        data-testid="share-browsing-toggle"
                       />
                       <label 
-                        htmlFor="ad-tracking" 
-                        className="toggle-label block overflow-hidden h-6 rounded-full bg-gray-300 cursor-pointer"
+                        htmlFor="shareBrowsing" 
+                        className={`toggle-label block overflow-hidden h-6 rounded-full ${privacySettings.shareBrowsing ? 'bg-green-500' : 'bg-gray-300 dark:bg-gray-600'} cursor-pointer`}
                       ></label>
                     </div>
                   </div>
                   
                   <div className="flex items-center justify-between">
                     <div>
-                      <label htmlFor="data-sharing" className="flex items-center cursor-pointer">
-                        <span className="text-gray-700 dark:text-gray-300">Share usage data to improve services</span>
+                      <label htmlFor="shareAge" className="flex items-center cursor-pointer">
+                        <span className="text-gray-700 dark:text-gray-300">Age Information</span>
                       </label>
-                      <p className="text-xs text-gray-500 mt-1">Help us enhance the platform and content recommendations</p>
+                      <p className="text-xs text-gray-500 mt-1">Allow age-appropriate content targeting</p>
                     </div>
                     <div className="relative inline-block w-10 mr-2 align-middle select-none">
                       <input 
                         type="checkbox" 
-                        id="data-sharing" 
-                        checked={privacySettings.dataSharing}
-                        onChange={() => handlePrivacySettingChange('dataSharing')}
+                        id="shareAge" 
+                        checked={privacySettings.shareAge}
+                        onChange={() => handlePrivacySettingChange('shareAge')}
                         className="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer"
-                        data-testid="data-sharing-toggle"
+                        data-testid="share-age-toggle"
                       />
                       <label 
-                        htmlFor="data-sharing" 
-                        className="toggle-label block overflow-hidden h-6 rounded-full bg-gray-300 cursor-pointer"
+                        htmlFor="shareAge" 
+                        className={`toggle-label block overflow-hidden h-6 rounded-full ${privacySettings.shareAge ? 'bg-green-500' : 'bg-gray-300 dark:bg-gray-600'} cursor-pointer`}
                       ></label>
                     </div>
                   </div>
