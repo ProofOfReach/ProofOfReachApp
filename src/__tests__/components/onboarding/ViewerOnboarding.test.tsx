@@ -176,24 +176,14 @@ describe('ViewerOnboarding', () => {
       expect(screen.getByRole('heading', { name: /discover personalized content/i })).toBeInTheDocument();
     });
     
-    // From discovery step, clicking continue button to move to notifications
-    await act(async () => {
-      userEvent.click(screen.getByTestId('continue-button'));
-    });
-
-    // Now we should be on notifications step
-    await waitFor(() => {
-      expect(screen.getByRole('heading', { name: /notification preferences/i })).toBeInTheDocument();
-    });
-    
-    // Click to go to privacy step
+    // From discovery step, clicking continue button to move directly to privacy (notifications step removed)
     await act(async () => {
       userEvent.click(screen.getByTestId('continue-button'));
     });
 
     // Now we should be on privacy step
     await waitFor(() => {
-      expect(screen.getByRole('heading', { name: /privacy settings/i })).toBeInTheDocument();
+      expect(screen.getByRole('heading', { name: /privacy information/i })).toBeInTheDocument();
     });
 
     // Click to go to feedback step

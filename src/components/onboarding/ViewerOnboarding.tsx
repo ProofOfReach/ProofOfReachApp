@@ -62,7 +62,6 @@ const ViewerOnboarding: React.FC<ViewerOnboardingProps> = ({
     const stepSequence = [
       'welcome',
       'discovery',
-      'notifications',
       'privacy',
       'feedback',
       'complete'
@@ -73,7 +72,7 @@ const ViewerOnboarding: React.FC<ViewerOnboardingProps> = ({
       'role-selection': 'welcome',
       'preferences': 'welcome',
       'discovery': 'discovery',
-      'notifications': 'notifications',
+      'notifications': 'privacy', // Map notifications to privacy since we removed notifications step
       'privacy': 'privacy',
       'feedback': 'feedback',
       'complete': 'complete'
@@ -93,10 +92,10 @@ const ViewerOnboarding: React.FC<ViewerOnboardingProps> = ({
   }, [currentStep]);
   
   // Initialize current step index and total steps for progress tracking
+  // Notifications step removed as it's not relevant for viewers who will be browsing on other apps
   const stepSequence = [
     'welcome',
     'discovery',
-    'notifications',
     'privacy',
     'feedback',
     'complete'
@@ -116,9 +115,6 @@ const ViewerOnboarding: React.FC<ViewerOnboardingProps> = ({
         setStep('discovery');
         break;
       case 'discovery': 
-        setStep('notifications');
-        break;
-      case 'notifications':
         setStep('privacy');
         break;
       case 'privacy':
@@ -146,11 +142,8 @@ const ViewerOnboarding: React.FC<ViewerOnboardingProps> = ({
       case 'discovery':
         setStep('welcome');
         break;
-      case 'notifications':
-        setStep('discovery');
-        break;
       case 'privacy':
-        setStep('notifications');
+        setStep('discovery');
         break;
       case 'feedback':
         setStep('privacy');
@@ -327,66 +320,22 @@ const ViewerOnboarding: React.FC<ViewerOnboardingProps> = ({
           </div>
         );
 
-      case 'notifications':
-        return (
-          <div className="space-y-4">
-            <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
-              <CheckCircle className="inline-block mr-2 mb-1" size={20} />
-              Notification Preferences
-            </h2>
-            <p className="text-gray-600 dark:text-gray-300">
-              Control how you receive updates:
-            </p>
-            
-            <div className="mt-6 space-y-4">
-              <div className="border border-gray-200 dark:border-gray-700 rounded-lg p-4">
-                <h3 className="font-medium text-gray-900 dark:text-white mb-3">Notification Settings</h3>
-                
-                <ul className="space-y-3">
-                  <li className="flex items-start">
-                    <div className="flex-shrink-0 h-5 w-5 text-purple-500">
-                      <CheckCircle size={18} className="mt-0.5" />
-                    </div>
-                    <p className="ml-2 text-gray-600 dark:text-gray-300">
-                      Content from followed publishers
-                    </p>
-                  </li>
-                  <li className="flex items-start">
-                    <div className="flex-shrink-0 h-5 w-5 text-purple-500">
-                      <CheckCircle size={18} className="mt-0.5" />
-                    </div>
-                    <p className="ml-2 text-gray-600 dark:text-gray-300">
-                      Platform announcements
-                    </p>
-                  </li>
-                  <li className="flex items-start">
-                    <div className="flex-shrink-0 h-5 w-5 text-purple-500">
-                      <CheckCircle size={18} className="mt-0.5" />
-                    </div>
-                    <p className="ml-2 text-gray-600 dark:text-gray-300">
-                      Personalized recommendations
-                    </p>
-                  </li>
-                </ul>
-              </div>
-            </div>
-          </div>
-        );
+      // Notifications step removed as it's not relevant for viewers browsing on third-party apps
 
       case 'privacy':
         return (
           <div className="space-y-4">
             <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
               <CheckCircle className="inline-block mr-2 mb-1" size={20} />
-              Privacy Settings
+              Privacy Information
             </h2>
             <p className="text-gray-600 dark:text-gray-300">
-              Control your data and privacy:
+              Important information about your privacy:
             </p>
             
             <div className="mt-6 space-y-4">
               <div className="border border-gray-200 dark:border-gray-700 rounded-lg p-4">
-                <h3 className="font-medium text-gray-900 dark:text-white mb-3">Your Privacy Control</h3>
+                <h3 className="font-medium text-gray-900 dark:text-white mb-3">How We Protect Your Privacy</h3>
                 
                 <ul className="space-y-3">
                   <li className="flex items-start">
@@ -394,7 +343,7 @@ const ViewerOnboarding: React.FC<ViewerOnboardingProps> = ({
                       <CheckCircle size={18} className="mt-0.5" />
                     </div>
                     <p className="ml-2 text-gray-600 dark:text-gray-300">
-                      Control how your data is used for ads
+                      Apps integrating our SDK will show you contextually relevant ads
                     </p>
                   </li>
                   <li className="flex items-start">
@@ -402,7 +351,7 @@ const ViewerOnboarding: React.FC<ViewerOnboardingProps> = ({
                       <CheckCircle size={18} className="mt-0.5" />
                     </div>
                     <p className="ml-2 text-gray-600 dark:text-gray-300">
-                      Adjust content preferences anytime
+                      Your data is handled according to our privacy policy and the app's terms
                     </p>
                   </li>
                   <li className="flex items-start">
@@ -410,7 +359,7 @@ const ViewerOnboarding: React.FC<ViewerOnboardingProps> = ({
                       <CheckCircle size={18} className="mt-0.5" />
                     </div>
                     <p className="ml-2 text-gray-600 dark:text-gray-300">
-                      View your data export options
+                      You can request a data export from each individual app that integrates our SDK
                     </p>
                   </li>
                 </ul>
