@@ -440,6 +440,86 @@ class NostrHelpers {
 // Create an instance of NostrHelpers
 export const nostr = new NostrHelpers();
 
+/**
+ * Generate a regular (non-test) Nostr account
+ * @returns A TestKeypair object with generated keys
+ */
+export function generateRegularAccount(): TestKeypair {
+  try {
+    // Use similar approach as generateTestKeyPair but with different prefix
+    let publicKey = '';
+    
+    try {
+      // First try to use the browser's crypto API if available
+      if (typeof window !== 'undefined' && window.crypto) {
+        const array = new Uint8Array(32);
+        window.crypto.getRandomValues(array);
+        publicKey = Array.from(array)
+          .map(b => b.toString(16).padStart(2, '0'))
+          .join('')
+          .substring(0, 64);
+      }
+    } catch (cryptoError) {
+      logger.error('Error generating regular keypair', { 
+        error: cryptoError instanceof Error ? cryptoError.message : 'Unknown error' 
+      });
+    }
+    
+    // Fallback to a simpler method if crypto API fails
+    if (!publicKey) {
+      publicKey = uuidv4().replace(/-/g, '') + uuidv4().replace(/-/g, '') + uuidv4().replace(/-/g, '').substring(0, 32);
+      logger.log('Generated fallback regular keypair');
+    }
+    
+    const privateKey = uuidv4().replace(/-/g, '') + uuidv4().replace(/-/g, '') + uuidv4().replace(/-/g, '').substring(0, 32);
+    
+    // Create npub and nsec formatted versions 
+    const npub = `npub1${publicKey.substring(0, 60)}`;
+    const nsec = `nsec1${privateKey.substring(0, 60)}`;
+    
+    return { publicKey, privateKey, npub, nsec };
+  } catch (error) {
+    logger.error('Error in generateRegularAccount', {
+      error: error instanceof Error ? error.message : 'Unknown error'
+    });
+    
+    // Return a fallback account
+    const fallbackPublicKey = 'regular_' + Date.now().toString();
+    const fallbackPrivateKey = 'private_' + Date.now().toString();
+    const npub = `npub1${fallbackPublicKey.substring(8)}`;
+    const nsec = `nsec1${fallbackPrivateKey.substring(8)}`;
+    
+    return { 
+      publicKey: fallbackPublicKey, 
+      privateKey: fallbackPrivateKey,
+      npub,
+      nsec
+    };
+  }
+}
+
+/**
+ * Store regular account keys in localStorage
+ * @param privateKey The private key to store
+ * @param publicKey The public key to store
+ */
+export function storeRegularAccountKeys(privateKey: string, publicKey: string): void {
+  if (typeof window === 'undefined') {
+    logger.warn('Cannot store regular account keys: window is undefined');
+    return;
+  }
+  
+  try {
+    localStorage.setItem('nostr_real_pk', publicKey);
+    localStorage.setItem('nostr_real_sk', privateKey);
+    logger.log('Regular account keys stored');
+  } catch (error) {
+    logger.warn('Error storing regular account keys', { 
+      error: error instanceof Error ? error.message : 'Unknown error' 
+    });
+  }
+}
+
 // Export individual functions for easier use and testing
 export const hasNostrExtension = () => nostr.hasNostrExtension();
 export const getNostrPublicKey = () => nostr.getNostrPublicKey();
