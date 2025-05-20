@@ -1,7 +1,7 @@
 # Nostr Decentralized Ad Marketplace – Product Requirements Document (PRD)
 
-**Version:** 1.3  
-**Last Updated:** 2025-05-15  
+**Version:** 1.4  
+**Last Updated:** 2025-05-20  
 
 ---
 
@@ -61,7 +61,11 @@ Current digital ad systems are centralized and opaque. They extract large rents,
   - **Design System:** Tailwind CSS for utility-first styling and theme customization
   - **Component Patterns:** Follow shadcn/ui best practices for modular, reusable components
   - **Data Visualization:** StandardizedDataTable component with search, sort, and filter capabilities for consistent data presentation
-  - **User Access Management:** Role-based access control system with separate test mode for UI visibility
+  - **User Access Management:** 
+    - Role-based access control system with separate test mode for UI visibility
+    - Unified authentication and onboarding flow with seamless role transitions
+    - Environment-aware authentication with secure session management
+    - Developer tools for testing different user roles and onboarding paths
 - **Backend:** Node.js or Go (simple REST API with WebSocket for real-time zap confirmations)
 - **Database:** SQLite with Prisma ORM for development and testing
   - **IMPORTANT:** Development and testing MUST use SQLite only; PostgreSQL migration is planned for future production deployment but NOT to be used until formal migration
@@ -126,6 +130,7 @@ Current digital ad systems are centralized and opaque. They extract large rents,
 
 ## Changelog
 
+- **v1.4** (2025-05-20): Added unified authentication and onboarding flow requirements, including seamless role transitions and developer tools for testing.
 - **v1.3** (2025-05-15): Added sophisticated role management system specifications, including the UserRole table structure and test mode for UI visibility.
 - **v1.2** (2025-05-12): Added StandardizedDataTable component to the tech stack for consistent data visualization across the application.
 - **v1.1** (2025-05-12): Added shadcn/ui component library requirements and specifications to the tech stack.

@@ -447,6 +447,46 @@
 4. Implement comprehensive error handling for authentication edge cases
 5. Develop strategy for progressive enhancement of auth features
 
+## 2025-05-20 — Authentication & Onboarding Flow Integration Strategy
+
+**Session Goal:** Develop a comprehensive strategy for integrating test authentication and onboarding components into the main production login flow.
+
+**Problem Identified:**
+- Fragmented authentication paths: Separate paths for testing (/test-auth) and production login
+- Disconnected onboarding: Test onboarding (/test-onboarding) not integrated with authentication flow
+- Inconsistent experience: Different flows for testing vs. production environments
+- Poor developer experience: Testing required jumping between different pages
+- Duplication of logic between test and production implementations
+
+**What Was Done:**
+- Created a detailed integration strategy document with specific implementation phases
+- Designed a unified onboarding system that works for both production and testing scenarios
+- Established best practices for Next.js implementation including proper data fetching and state management
+- Developed approach for session management with secure, HTTP-only cookies
+- Created migration plan to gradually transition from separate test routes to unified system
+- Updated visual elements like the Skip button to match the application's purple theme
+- Prioritized seamless role-switching without page reloads for better user experience
+- Planned for clear test mode indicators throughout the application
+
+**Lessons Learned:**
+- Authentication should be centralized with a clean abstraction over providers
+- Clean separation of concerns between authentication, authorization, and onboarding
+- Using Next.js middleware for route protection provides consistent security
+- Custom events allow for seamless UI updates without page reloads
+- Environment-specific configuration can leverage Next.js environment variables
+- Progressive enhancement provides better user experience while maintaining reliability
+- Type safety throughout the authentication flow prevents runtime errors
+- Development tools should be isolated from production code but easily accessible
+
+**Open Questions / Next Steps:**
+1. Implement the unified onboarding page as the first phase of integration
+2. Update the login page to include developer testing options in development environments
+3. Create a proper migration plan for transitioning existing users to the new system
+4. Develop comprehensive tests covering all authentication and onboarding paths
+5. Implement analytics to measure the effectiveness of the onboarding flow
+6. Enhance security with CSRF protection and proper HTTP security headers
+7. Document the new authentication and onboarding architecture for future developers
+
 ## 2025-05-19 — Test Performance Optimization and CPU Usage Reduction
 
 **Session Goal:** Optimize test execution to reduce CPU usage and improve test reliability.
