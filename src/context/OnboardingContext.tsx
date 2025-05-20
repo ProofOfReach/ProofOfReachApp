@@ -15,11 +15,13 @@ export type OnboardingStep =
   | 'feedback'
   // Publisher steps
   | 'choose-integration'
+  | 'create-api-key'
   | 'integration-details'
   | 'ad-slot-config'
   | 'setup-wallet'
   | 'enable-test-mode'
   | 'go-live'
+  | 'setup-complete'
   // Advertiser steps
   | 'create-campaign'
   | 'set-targeting'

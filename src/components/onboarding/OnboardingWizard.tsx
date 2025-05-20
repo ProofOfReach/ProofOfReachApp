@@ -3,7 +3,7 @@ import { useOnboarding } from '@/context/OnboardingContext';
 import OnboardingProgress from './OnboardingProgress';
 import RoleConfirmation from './RoleConfirmation';
 import ViewerOnboarding from './ViewerOnboarding';
-import PublisherOnboarding from './PublisherOnboarding';
+import PublisherOnboarding from './PublisherOnboarding.new';
 import AdvertiserOnboarding from './AdvertiserOnboarding';
 import Loading from '@/components/Loading';
 import { ArrowLeft, ArrowRight, X } from 'react-feather';

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { OnboardingStep } from '@/context/OnboardingContext';
 import { Code, DollarSign, Layout, Settings, CheckCircle, ToggleRight, Archive, Copy, RefreshCw } from 'react-feather';
 import CodeSnippet from '@/components/ui/CodeSnippet';
+import SkipButton from '@/components/ui/SkipButton';
 
 interface PublisherOnboardingProps {
   currentStep: OnboardingStep;
@@ -22,7 +23,9 @@ interface ApiKeyData {
 }
 
 // Use React.memo for performance optimization to prevent unnecessary re-renders
-const PublisherOnboarding: React.FC<PublisherOnboardingProps> = React.memo(({ currentStep, skipOnboarding }) => {
+const PublisherOnboarding: React.FC<PublisherOnboardingProps> = React.memo(({ currentStep, onComplete, skipOnboarding }) => {
+  // Make sure skipOnboarding exists, falling back to onComplete if needed
+  const handleSkip = skipOnboarding || onComplete;
   // State to track which integration method was selected
   const [selectedIntegration, setSelectedIntegration] = useState<IntegrationType>('sdk');
   
@@ -64,9 +67,9 @@ const PublisherOnboarding: React.FC<PublisherOnboardingProps> = React.memo(({ cu
     }
   };
   
-  // Generate API key on initial render
+  // Generate API key on initial render for create-api-key step
   useEffect(() => {
-    if (currentStep === 'setup') {
+    if (currentStep === 'create-api-key') {
       generateApiKey();
     }
   }, [currentStep]);
@@ -115,14 +118,10 @@ const PublisherOnboarding: React.FC<PublisherOnboardingProps> = React.memo(({ cu
                 Get started with monetizing your content through the Nostr Ad Marketplace
               </p>
             </div>
-            {skipOnboarding && (
-              <button
-                onClick={skipOnboarding}
-                className="px-4 py-2 flex-shrink-0 text-sm font-medium text-gray-700 bg-white dark:text-gray-300 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-md hover:bg-gray-50 dark:hover:bg-gray-700"
-              >
-                Skip
-              </button>
-            )}
+            <SkipButton 
+              onSkip={handleSkip}
+              testId="publisher-skip-button"
+            />
           </div>
           
           <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
