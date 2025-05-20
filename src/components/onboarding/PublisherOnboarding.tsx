@@ -89,6 +89,7 @@ const PublisherOnboarding: React.FC<PublisherOnboardingProps> = React.memo(({ cu
   const renderStepContent = () => {
     console.log('PublisherOnboarding - Current step:', currentStep);
     switch (currentStep) {
+      case 'choose-integration':
       case 'integration-details':
         return (
           <div className="space-y-6">
