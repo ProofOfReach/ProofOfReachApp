@@ -66,8 +66,8 @@ describe('ViewerOnboarding', () => {
       </AuthProvider>
     );
 
-    // Should display the welcome title
-    expect(screen.getByRole('heading', { name: /welcome to nostr ads/i })).toBeInTheDocument();
+    // Should display the discovery title as first step (welcome step removed)
+    expect(screen.getByRole('heading', { name: /discover personalized content/i })).toBeInTheDocument();
 
     // Should display navigation buttons
     expect(screen.getByTestId('next-button')).toBeInTheDocument();
@@ -87,9 +87,9 @@ describe('ViewerOnboarding', () => {
       </AuthProvider>
     );
 
-    // Make sure we're on the first step
+    // Make sure we're on the first step (discovery since welcome was removed)
     await waitFor(() => {
-      expect(screen.getByRole('heading', { name: /welcome to nostr ads/i })).toBeInTheDocument();
+      expect(screen.getByRole('heading', { name: /discover personalized content/i })).toBeInTheDocument();
     });
 
     // Click the Next button using data-testid
@@ -99,7 +99,7 @@ describe('ViewerOnboarding', () => {
 
     // Should now display the second step content - using waitFor for async transitions
     await waitFor(() => {
-      expect(screen.getByRole('heading', { name: /discover personalized content/i })).toBeInTheDocument();
+      expect(screen.getByRole('heading', { name: /privacy settings/i })).toBeInTheDocument();
     });
 
     // Should have Back and Continue buttons
@@ -121,14 +121,19 @@ describe('ViewerOnboarding', () => {
       </AuthProvider>
     );
 
-    // Navigate to second step using data-testid
+    // Make sure we're on the first step (discovery)
+    await waitFor(() => {
+      expect(screen.getByRole('heading', { name: /discover personalized content/i })).toBeInTheDocument();
+    });
+
+    // Navigate to second step (privacy) using data-testid
     await act(async () => {
       userEvent.click(screen.getByTestId('next-button'));
     });
 
     // Verify we're on the second step with waitFor to handle async transitions
     await waitFor(() => {
-      const heading = screen.getByRole('heading', { name: /discover personalized content/i });
+      const heading = screen.getByRole('heading', { name: /privacy settings/i });
       expect(heading).toBeInTheDocument();
     });
 
@@ -137,9 +142,9 @@ describe('ViewerOnboarding', () => {
       userEvent.click(screen.getByTestId('back-button'));
     });
 
-    // Should be back on the first step - using waitFor for async transitions
+    // Should be back on the first step (discovery) - using waitFor for async transitions
     await waitFor(() => {
-      const heading = screen.getByRole('heading', { name: /welcome to nostr ads/i });
+      const heading = screen.getByRole('heading', { name: /discover personalized content/i });
       expect(heading).toBeInTheDocument();
     });
   });
@@ -161,24 +166,14 @@ describe('ViewerOnboarding', () => {
       </AuthProvider>
     );
 
-    // Make sure we're starting at the welcome step
-    await waitFor(() => {
-      expect(screen.getByRole('heading', { name: /welcome to nostr ads/i })).toBeInTheDocument();
-    });
-
-    // Navigate to second step (discovery) using data-testid
-    await act(async () => {
-      userEvent.click(screen.getByTestId('next-button'));
-    });
-    
-    // Make sure we're on the discovery step by looking for expected elements
+    // Make sure we're starting at the discovery step (first step now that welcome is removed)
     await waitFor(() => {
       expect(screen.getByRole('heading', { name: /discover personalized content/i })).toBeInTheDocument();
     });
     
-    // From discovery step, clicking continue button to move directly to privacy (notifications step removed)
+    // From discovery step, clicking next button to move to privacy step
     await act(async () => {
-      userEvent.click(screen.getByTestId('continue-button'));
+      userEvent.click(screen.getByTestId('next-button'));
     });
 
     // Now we should be on privacy step
@@ -232,9 +227,9 @@ describe('ViewerOnboarding', () => {
       </AuthProvider>
     );
 
-    // Should mention key viewer features
-    expect(screen.getByText(/browse content/i)).toBeInTheDocument();
-    expect(screen.getByText(/relevant ads/i)).toBeInTheDocument();
+    // Should mention key viewer features in the discovery step
+    expect(screen.getByText(/discover personalized content/i)).toBeInTheDocument();
+    expect(screen.getByText(/follow publishers/i)).toBeInTheDocument();
   });
   
   it('renders without navigation buttons when showNavigation is false', () => {
@@ -251,8 +246,8 @@ describe('ViewerOnboarding', () => {
       </AuthProvider>
     );
 
-    // Should still show content
-    expect(screen.getByText(/welcome to nostr ads/i)).toBeInTheDocument();
+    // Should still show discovery content (first step now)
+    expect(screen.getByText(/discover personalized content/i)).toBeInTheDocument();
     
     // Should NOT display navigation buttons
     expect(screen.queryByTestId('next-button')).not.toBeInTheDocument();

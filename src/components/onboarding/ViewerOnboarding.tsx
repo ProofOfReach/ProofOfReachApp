@@ -78,15 +78,14 @@ const ViewerOnboarding: React.FC<ViewerOnboardingProps> = ({
   
   // Map from OnboardingContext step names to local step names
   const mapOnboardingStepToLocal = (step: OnboardingStep): string => {
-    // Always start at welcome when a role is selected
+    // Start at discovery when a role is selected (welcome step removed)
     if (step === 'role-selection') {
-      console.log("ViewerOnboarding - Mapped incoming step role-selection to welcome");
-      return 'welcome';
+      console.log("ViewerOnboarding - Mapped incoming step role-selection to discovery");
+      return 'discovery';
     }
     
     // Define the sequence of steps in order
     const stepSequence = [
-      'welcome',
       'discovery',
       'privacy',
       'feedback',
@@ -95,8 +94,8 @@ const ViewerOnboarding: React.FC<ViewerOnboardingProps> = ({
     
     // Map context steps to our local steps
     const stepMap: Record<string, string> = {
-      'role-selection': 'welcome',
-      'preferences': 'welcome',
+      'role-selection': 'discovery',
+      'preferences': 'discovery',
       'discovery': 'discovery',
       'notifications': 'privacy', // Map notifications to privacy since we removed notifications step
       'privacy': 'privacy',
@@ -104,7 +103,7 @@ const ViewerOnboarding: React.FC<ViewerOnboardingProps> = ({
       'complete': 'complete'
     };
     
-    return stepMap[step] || 'welcome'; // Default to welcome if step is not recognized
+    return stepMap[step] || 'discovery'; // Default to discovery if step is not recognized
   };
   
   // Initialize step from incoming currentStep prop
@@ -118,9 +117,8 @@ const ViewerOnboarding: React.FC<ViewerOnboardingProps> = ({
   }, [currentStep]);
   
   // Initialize current step index and total steps for progress tracking
-  // Notifications step removed as it's not relevant for viewers who will be browsing on other apps
+  // Welcome and Notifications steps removed as they're not needed
   const stepSequence = [
-    'welcome',
     'discovery',
     'privacy',
     'feedback',
@@ -167,11 +165,6 @@ const ViewerOnboarding: React.FC<ViewerOnboardingProps> = ({
   const handleNext = () => {
     // First update the local step
     switch (step) {
-      case 'welcome':
-        setStep('discovery');
-        // Tell the OnboardingContext to move to next step
-        goToNextStep();
-        break;
       case 'discovery': 
         setStep('privacy');
         goToNextStep();
@@ -196,16 +189,12 @@ const ViewerOnboarding: React.FC<ViewerOnboardingProps> = ({
         }, 100);
         break;
       default:
-        setStep('welcome');
+        setStep('discovery');
     }
   };
 
   const handleBack = () => {
     switch (step) {
-      case 'discovery':
-        setStep('welcome');
-        goToPreviousStep(); // Tell the OnboardingContext to move back
-        break;
       case 'privacy':
         setStep('discovery');
         goToPreviousStep();
@@ -219,12 +208,12 @@ const ViewerOnboarding: React.FC<ViewerOnboardingProps> = ({
         goToPreviousStep();
         break;
       default:
-        setStep('welcome');
+        setStep('discovery');
     }
   };
   
   const renderNavButtons = () => {
-    if (step === 'welcome') {
+    if (step === 'discovery') {
       return (
         <div className="flex justify-end mt-6">
           <button
@@ -284,52 +273,6 @@ const ViewerOnboarding: React.FC<ViewerOnboardingProps> = ({
 
   const renderStepContent = () => {
     switch (step) {
-      case 'welcome':
-        return (
-          <div className="space-y-4">
-            <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
-              <CheckCircle className="inline-block mr-2 mb-1" size={20} />
-              Welcome to Nostr Ads
-            </h2>
-            <p className="text-gray-600 dark:text-gray-300">
-              As a viewer, you'll experience personalized content:
-            </p>
-            
-            <div className="mt-6 space-y-4">
-              <div className="border border-gray-200 dark:border-gray-700 rounded-lg p-4">
-                <h3 className="font-medium text-gray-900 dark:text-white mb-3">Your Viewer Experience</h3>
-                
-                <ul className="space-y-3">
-                  <li className="flex items-start">
-                    <div className="flex-shrink-0 h-5 w-5 text-purple-500">
-                      <CheckCircle size={18} className="mt-0.5" />
-                    </div>
-                    <p className="ml-2 text-gray-600 dark:text-gray-300">
-                      Browse content
-                    </p>
-                  </li>
-                  <li className="flex items-start">
-                    <div className="flex-shrink-0 h-5 w-5 text-purple-500">
-                      <CheckCircle size={18} className="mt-0.5" />
-                    </div>
-                    <p className="ml-2 text-gray-600 dark:text-gray-300">
-                      Relevant ads
-                    </p>
-                  </li>
-                  <li className="flex items-start">
-                    <div className="flex-shrink-0 h-5 w-5 text-purple-500">
-                      <CheckCircle size={18} className="mt-0.5" />
-                    </div>
-                    <p className="ml-2 text-gray-600 dark:text-gray-300">
-                      Control privacy settings
-                    </p>
-                  </li>
-                </ul>
-              </div>
-            </div>
-          </div>
-        );
-      
       case 'discovery':
         return (
           <div className="space-y-4">
