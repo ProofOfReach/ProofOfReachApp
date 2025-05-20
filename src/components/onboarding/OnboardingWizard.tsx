@@ -97,10 +97,11 @@ const OnboardingWizard: React.FC = () => {
             <div className="flex justify-end mt-1 mb-4">
               <Button 
                 onClick={goToNextStep}
-                variant="link"
+                variant="outline"
                 size="sm"
                 aria-label="Skip to next step"
                 data-testid="onboarding-skip-button"
+                className="bg-gray-50 hover:bg-gray-100 dark:bg-gray-800 dark:hover:bg-gray-700"
               >
                 Skip to next step
               </Button>
