@@ -14,14 +14,7 @@ const TestOnboardingPage: React.FC = () => {
           Viewer Onboarding Test
         </h1>
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
-          <OnboardingProvider 
-            initialRole="viewer" 
-            initialStep="discovery"
-            totalSteps={3} 
-            initialProgress={0}
-            initialCurrentStep={1}
-          >
-            {/* Using discovery as starting step, with 3 steps total (discovery, privacy, complete) */}
+          <OnboardingProvider initialRole="viewer">
             <ViewerOnboarding 
               currentStep="discovery" 
               totalSteps={3} 
