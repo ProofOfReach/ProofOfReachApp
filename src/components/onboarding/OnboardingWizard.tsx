@@ -93,6 +93,16 @@ const OnboardingWizard: React.FC = () => {
         {currentStep !== 'role-selection' && (
           <div>
             <OnboardingProgress />
+            <div className="flex justify-end mt-1 mb-4">
+              <button 
+                onClick={skipOnboarding}
+                className="text-sm text-gray-500 hover:text-purple-600 dark:text-gray-400 dark:hover:text-purple-400"
+                aria-label="Skip onboarding"
+                data-testid="onboarding-skip-button"
+              >
+                Skip for now
+              </button>
+            </div>
           </div>
         )}
         {renderStepContent()}

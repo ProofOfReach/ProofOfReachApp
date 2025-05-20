@@ -582,15 +582,7 @@ document.getElementById('ad-container').innerHTML = ad.html;`}
                  currentStep === 'enable-test-mode' ? 'Test your integration in a safe environment.' :
                  'Final steps to go live with your ad integration.'}
               </p>
-              {/* Progress bar would go here - can be added in a future update */}
-              <div className="flex justify-end mt-1 mb-4">
-                {handleSkip && (
-                  <SkipButton 
-                    onSkip={handleSkip}
-                    testId="publisher-skip-button"
-                  />
-                )}
-              </div>
+              {/* Progress bar is rendered in the OnboardingWizard component */}
             </div>
           </div>
           <div className="px-6 pb-6">
