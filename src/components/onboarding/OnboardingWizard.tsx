@@ -98,7 +98,7 @@ const OnboardingWizard: React.FC = () => {
       </div>
       
       <div className="p-6">
-        <OnboardingProgress />
+        {currentStep !== 'role-selection' && <OnboardingProgress />}
         {renderStepContent()}
       </div>
       
