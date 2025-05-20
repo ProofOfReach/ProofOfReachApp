@@ -38,10 +38,10 @@ const ViewerOnboarding: React.FC<ViewerOnboardingProps> = ({
     goToPreviousStep,
     totalSteps: contextTotalSteps
   } = useOnboarding();
-  // Sample publishers for demonstration
+  // Real publishers with their actual Nostr npubs
   const [publishers, setPublishers] = useState<Publisher[]>([
     {
-      id: '1',
+      id: 'npub1sg6plzptd64u62a878hep2kev88swjh3tw00gjsfl8f237lmu63q0uf63m',
       name: 'Bitcoin Magazine',
       description: 'The world\'s first publication dedicated to Bitcoin',
       initials: 'BTC',
@@ -49,11 +49,35 @@ const ViewerOnboarding: React.FC<ViewerOnboardingProps> = ({
       followed: false
     },
     {
-      id: '2',
-      name: 'Nostr Talk',
-      description: 'The latest news about the Nostr ecosystem',
-      initials: 'NT',
+      id: 'npub1g53mukxnjkcmr94fhryzkqutdz2ukq4ks0gvy5af25rgmwsl4ngq43drvk',
+      name: 'Stacker News',
+      description: 'Bitcoin news and discussion with Lightning rewards',
+      initials: 'SN',
       colorClass: 'bg-blue-100 dark:bg-blue-900 text-blue-600 dark:text-blue-300',
+      followed: false
+    },
+    {
+      id: 'npub10awzknjg5r5lajnr53438ndcyjylgqsrnrtq5grs495v42qc6awsj45ws7',
+      name: 'Nostr Watch',
+      description: 'Updates and info about the Nostr protocol and ecosystem',
+      initials: 'NW',
+      colorClass: 'bg-green-100 dark:bg-green-900 text-green-600 dark:text-green-300',
+      followed: false
+    },
+    {
+      id: 'npub1zvvv8fm29hm2hhutwh8gqpvtl4np6j6nprnlu4mh8ctj9bceat9qpfsp5l',
+      name: 'NOSTR.COM',
+      description: 'Official account for NOSTR.COM project and ecosystem',
+      initials: 'NC',
+      colorClass: 'bg-indigo-100 dark:bg-indigo-900 text-indigo-600 dark:text-indigo-300',
+      followed: false
+    },
+    {
+      id: 'npub1nxkpyksvcxpg5rzz4qhr3b87n0czg0rz4qtgnseeelaqgrc665eq2nr6t5',
+      name: 'Current Thing App',
+      description: 'The latest in Bitcoin, tech, and current topics',
+      initials: 'CT',
+      colorClass: 'bg-red-100 dark:bg-red-900 text-red-600 dark:text-red-300',
       followed: false
     }
   ]);
