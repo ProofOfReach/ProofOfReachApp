@@ -24,6 +24,8 @@ interface ApiKeyData {
 
 // Use React.memo for performance optimization to prevent unnecessary re-renders
 const PublisherOnboarding: React.FC<PublisherOnboardingProps> = React.memo(({ currentStep, onComplete, skipOnboarding }) => {
+  // This test ID is added for testing purposes
+  const testId = "publisher-onboarding";
   // Make sure skipOnboarding exists, falling back to onComplete if needed
   const handleSkip = skipOnboarding || onComplete;
   // State to track which integration method was selected
@@ -110,7 +112,7 @@ const PublisherOnboarding: React.FC<PublisherOnboardingProps> = React.memo(({ cu
   switch (currentStep) {
     case 'role-selection':
       return (
-        <div className="max-w-2xl mx-auto">
+        <div className="max-w-2xl mx-auto" data-testid={testId}>
           <div className="flex justify-between items-center mb-4">
             <div className="text-center flex-grow">
               <h2 className="text-2xl font-semibold text-gray-900 dark:text-white mb-2">Welcome to the Publisher Onboarding</h2>

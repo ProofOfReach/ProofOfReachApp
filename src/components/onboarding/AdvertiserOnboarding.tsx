@@ -1,5 +1,6 @@
 import React from 'react';
 import { OnboardingStep } from '@/context/OnboardingContext';
+import SkipButton from '@/components/ui/SkipButton';
 import { 
   CheckCircle, 
   Target, 
@@ -16,30 +17,22 @@ interface AdvertiserOnboardingProps {
 }
 
 const AdvertiserOnboarding: React.FC<AdvertiserOnboardingProps> = ({ currentStep, skipOnboarding }) => {
+  // Test ID for test selection
+  const testId = "advertiser-onboarding";
+  
   // Helper function to render section title with skip button
   const renderSectionHeader = (icon: React.ReactNode, title: string) => (
-    <>
-      {skipOnboarding && (
-        <div className="flex justify-between items-center mb-6">
-          <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
-            {icon}
-            {title}
-          </h2>
-          <button
-            onClick={skipOnboarding}
-            className="px-4 py-2 flex items-center text-sm font-medium text-gray-700 bg-white dark:text-gray-300 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-md hover:bg-gray-50 dark:hover:bg-gray-700"
-          >
-            Skip
-          </button>
-        </div>
-      )}
-      {!skipOnboarding && (
-        <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
-          {icon}
-          {title}
-        </h2>
-      )}
-    </>
+    <div className="flex justify-between items-center mb-6">
+      <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
+        {icon}
+        {title}
+      </h2>
+      <SkipButton 
+        onSkip={skipOnboarding} 
+        testId={`${testId}-skip-button`}
+        label="Skip"
+      />
+    </div>
   );
 
   // Content for each step in the advertiser onboarding flow
@@ -645,7 +638,7 @@ const AdvertiserOnboarding: React.FC<AdvertiserOnboardingProps> = ({ currentStep
   };
 
   return (
-    <div className="py-4">
+    <div className="py-4" data-testid={testId}>
       {renderStepContent()}
     </div>
   );

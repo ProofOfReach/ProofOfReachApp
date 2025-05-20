@@ -3,6 +3,7 @@ import { OnboardingStep, useOnboarding } from '@/context/OnboardingContext';
 import OnboardingProgress from '@/components/onboarding/OnboardingProgress';
 import { CheckCircle, Search, ChevronRight, ChevronLeft, Check } from 'react-feather';
 import { Switch } from '@/components/ui/switch';
+import SkipButton from '@/components/ui/SkipButton';
 
 interface Publisher {
   id: string;
@@ -18,14 +19,18 @@ interface ViewerOnboardingProps {
   onComplete?: () => void;
   showNavigation?: boolean;
   totalSteps?: number;
+  skipOnboarding?: () => void;
 }
 
 const ViewerOnboarding: React.FC<ViewerOnboardingProps> = ({ 
   currentStep = 'role-selection', 
   onComplete,
   showNavigation = true,
-  totalSteps: propTotalSteps
+  totalSteps: propTotalSteps,
+  skipOnboarding
 }) => {
+  // Test ID for component
+  const testId = 'viewer-onboarding';
   // Get context from OnboardingContext
   const { 
     progress, 
@@ -479,15 +484,28 @@ const ViewerOnboarding: React.FC<ViewerOnboardingProps> = ({
     }
   };
 
+  // Handle skip functionality
+  const handleSkip = () => {
+    if (skipOnboarding) {
+      skipOnboarding();
+    }
+  };
+  
   return (
     <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm" data-testid="viewer-onboarding">
-      {shouldShowProgress && (
-        <OnboardingProgress 
-          customCurrentStep={currentStepNumber}
-          customTotalSteps={calculatedTotalSteps}
-          className="mb-6"
+      <div className="flex justify-between items-center px-6 pt-6">
+        {shouldShowProgress && (
+          <OnboardingProgress 
+            customCurrentStep={currentStepNumber}
+            customTotalSteps={calculatedTotalSteps}
+            className="mb-6"
+          />
+        )}
+        <SkipButton 
+          onSkip={handleSkip}
+          testId="viewer-skip-button"
         />
-      )}
+      </div>
       {renderStepContent()}
       {showNavigation && renderNavButtons()}
     </div>
