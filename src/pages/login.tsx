@@ -365,40 +365,53 @@ const LoginPage: React.FC = () => {
         // Explicitly pass true for test mode
         const result = await login(publicKey, true);
         console.log('Test login successful:', result);
-        
-        // Use a small delay to ensure state is updated before navigation
-        // Determine where to redirect based on onboarding status
-        // Using setTimeout to ensure state is updated before navigation
-        setTimeout(async () => {
-          try {
-            const onboardingService = await import('@/lib/onboardingService').then(mod => mod.default);
-            const currentRole = 'advertiser'; // Default role for test mode is advertiser
-            const redirectUrl = await onboardingService.getPostLoginRedirectUrl(publicKey, currentRole);
-            
-            console.log(`Test Mode: Redirecting to ${redirectUrl}`);
-            window.location.href = redirectUrl;
-          } catch (error) {
-            console.error('Error getting redirect URL:', error);
-            // Fallback to dashboard on error
-            window.location.href = '/dashboard';
-          }
-        }, 200);
       } catch (loginError) {
         console.error('Test login internal error:', loginError);
-        
-        // Even if login call fails, we've already set cookies and localStorage
-        // We can still redirect to dashboard
-        console.log('Continuing to dashboard anyway since cookies were set directly');
-        
-        // Use a small delay to ensure state is updated before navigation
-        setTimeout(() => {
-          // Force a direct window redirect for more reliability
-          window.location.href = '/dashboard';
-        }, 200);
+        console.log('Continuing anyway since cookies were set directly');
       }
-    } catch (err: any) {
+
+      // Complete onboarding for test users (regardless of login success)
+      try {
+        // Import onboarding service dynamically
+        const onboardingService = await import('@/lib/onboardingService').then(mod => mod.default);
+        
+        // Mark onboarding as complete for each role
+        const roles = ['advertiser', 'publisher', 'admin', 'viewer'];
+        for (const role of roles) {
+          try {
+            // Call the API to mark onboarding complete
+            const response = await fetch('/api/onboarding/complete', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                pubkey: publicKey,
+                role: role,
+                autoTest: true
+              })
+            });
+            
+            if (response.ok) {
+              console.log(`Marked onboarding as complete for role: ${role}`);
+            } else {
+              console.warn(`Failed to mark onboarding complete for role: ${role}`);
+            }
+          } catch (roleError) {
+            console.error(`Error marking onboarding complete for role ${role}:`, roleError);
+          }
+        }
+      } catch (onboardingError) {
+        console.error('Error setting up test user onboarding:', onboardingError);
+      }
+
+      // Redirect to the dashboard after a short delay
+      console.log('Test Mode: Redirecting to dashboard');
+      setTimeout(() => {
+        window.location.href = '/dashboard';
+      }, 500);
+      
+    } catch (err) {
       console.error('Test mode login error:', err);
-      setError(err.message || 'Failed to create test account');
+      setError(err instanceof Error ? err.message : 'Failed to create test account');
     } finally {
       setIsLoading(false);
     }
