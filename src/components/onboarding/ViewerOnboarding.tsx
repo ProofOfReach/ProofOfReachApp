@@ -154,7 +154,7 @@ const ViewerOnboarding: React.FC<ViewerOnboardingProps> = ({ currentStep = 'role
             aria-label="Next"
             data-testid="next-button"
           >
-            Continue <ChevronRight size={16} className="inline ml-1" />
+            Next <ChevronRight size={16} className="inline ml-1" />
           </button>
         </div>
       );
