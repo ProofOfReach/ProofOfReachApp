@@ -36,13 +36,13 @@ const PublisherOnboarding: React.FC<PublisherOnboardingProps> = ({
   const [copySuccess, setCopySuccess] = useState(false);
   const [isRefreshing, setIsRefreshing] = useState(false);
   
-  // API key data
+  // API key data with initial default fallback values
   const [apiKeyData, setApiKeyData] = useState<ApiKeyData>({
     id: '',
-    key: '',
-    name: '',
-    createdAt: '',
-    scopes: '',
+    key: 'sk_test_publisher_default_placeholder',
+    name: 'Publisher API Key',
+    createdAt: new Date().toISOString(),
+    scopes: 'publisher:read,publisher:write,ad:serve',
     isLoading: true,
     error: null
   });
@@ -97,8 +97,14 @@ const PublisherOnboarding: React.FC<PublisherOnboardingProps> = ({
   const generateRealApiKey = async (pubkey: string) => {
     setApiKeyData(prev => ({ ...prev, isLoading: true, error: null }));
     
+    // Add a timeout to prevent infinite loading
+    const timeoutPromise = new Promise((_, reject) => {
+      setTimeout(() => reject(new Error('API key generation timed out')), 5000);
+    });
+    
     try {
-      const response = await fetch('/api/auth/api-keys', {
+      // Race between the API call and the timeout
+      const fetchPromise = fetch('/api/auth/api-keys', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -108,6 +114,9 @@ const PublisherOnboarding: React.FC<PublisherOnboardingProps> = ({
           scopes: 'publisher:read,publisher:write,ad:serve',
         }),
       });
+      
+      // Use Promise.race to handle potential timeouts
+      const response = await Promise.race([fetchPromise, timeoutPromise]) as Response;
       
       if (!response.ok) {
         throw new Error('Failed to create API key');
@@ -129,6 +138,7 @@ const PublisherOnboarding: React.FC<PublisherOnboardingProps> = ({
       // Fall back to a deterministic key based on the user's pubkey
       const fallbackKey = `sk_${isTestModeActive ? 'test' : 'live'}_publisher_${pubkey.substring(0, 8)}_fallback`;
       
+      // Always provide a fallback key so the UI doesn't get stuck
       setApiKeyData({
         id: `pub_${pubkey.substring(0, 8)}`,
         key: fallbackKey,
@@ -146,7 +156,23 @@ const PublisherOnboarding: React.FC<PublisherOnboardingProps> = ({
     if (currentStep === 'integration-details' && selectedIntegration && currentUserPubkey) {
       generateRealApiKey(currentUserPubkey);
     }
-  }, [currentStep, selectedIntegration, currentUserPubkey]);
+    
+    // If we're on the choose-integration step, immediately generate a fallback key
+    // This ensures that when the user selects an integration type, they don't have to wait
+    if (currentStep === 'choose-integration' && currentUserPubkey && apiKeyData.isLoading) {
+      const fallbackKey = `sk_${isTestModeActive ? 'test' : 'live'}_publisher_${currentUserPubkey.substring(0, 8)}_prefetch`;
+      
+      setApiKeyData({
+        id: `pub_${currentUserPubkey.substring(0, 8)}`,
+        key: fallbackKey,
+        name: 'Publisher API Key',
+        createdAt: new Date().toISOString(),
+        scopes: 'publisher:read,publisher:write,ad:serve',
+        isLoading: false,
+        error: null
+      });
+    }
+  }, [currentStep, selectedIntegration, currentUserPubkey, isTestModeActive, apiKeyData.isLoading]);
 
   // Refresh API key on demand
   const refreshApiKey = async () => {
