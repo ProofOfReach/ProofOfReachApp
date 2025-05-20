@@ -11,14 +11,13 @@ type IntegrationType = 'simple' | 'javascript' | 'sdk' | null;
 // Use React.memo for performance optimization to prevent unnecessary re-renders
 const PublisherOnboarding: React.FC<PublisherOnboardingProps> = React.memo(({ currentStep }) => {
   // State to track which integration method was selected
-  const [selectedIntegration, setSelectedIntegration] = useState<IntegrationType>(null);
+  const [selectedIntegration, setSelectedIntegration] = useState<IntegrationType>('sdk');
   
   // Content for each step in the publisher onboarding flow
   // Only log in development mode to reduce processing
   useEffect(() => {
     if (process.env.NODE_ENV === 'development') {
-      // Reduce console output to improve performance
-      // console.log('Selected integration method:', selectedIntegration);
+      console.log('Selected integration method:', selectedIntegration);
     }
   }, [selectedIntegration]);
 
@@ -35,6 +34,26 @@ const PublisherOnboarding: React.FC<PublisherOnboardingProps> = React.memo(({ cu
             <p className="text-gray-600 dark:text-gray-300 mb-4">
               Follow these steps to integrate Nostr Ads into your platform:
             </p>
+            <div className="mb-6 flex space-x-2">
+              <button 
+                className={`px-3 py-2 text-sm rounded-md ${selectedIntegration === 'sdk' ? 'bg-green-100 text-green-800 border border-green-300 dark:bg-green-900/30 dark:text-green-300 dark:border-green-700' : 'bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-300'}`}
+                onClick={() => setSelectedIntegration('sdk')}
+              >
+                Client SDK
+              </button>
+              <button 
+                className={`px-3 py-2 text-sm rounded-md ${selectedIntegration === 'simple' ? 'bg-purple-100 text-purple-800 border border-purple-300 dark:bg-purple-900/30 dark:text-purple-300 dark:border-purple-700' : 'bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-300'}`}
+                onClick={() => setSelectedIntegration('simple')}
+              >
+                Simple Embed
+              </button>
+              <button 
+                className={`px-3 py-2 text-sm rounded-md ${selectedIntegration === 'javascript' ? 'bg-blue-100 text-blue-800 border border-blue-300 dark:bg-blue-900/30 dark:text-blue-300 dark:border-blue-700' : 'bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-300'}`}
+                onClick={() => setSelectedIntegration('javascript')}
+              >
+                JavaScript API
+              </button>
+            </div>
             
             {selectedIntegration === 'simple' && (
               <div className="space-y-4">
@@ -160,13 +179,7 @@ function MyComponent() {
               </div>
             )}
             
-            {!selectedIntegration && (
-              <div className="p-6 text-center bg-yellow-50 dark:bg-yellow-900/20 rounded-lg border border-yellow-200 dark:border-yellow-800">
-                <p className="text-yellow-700 dark:text-yellow-300">
-                  Please go back and select an integration method first.
-                </p>
-              </div>
-            )}
+            {/* Always show integration details based on selection */}
           </div>
         );
       
@@ -183,7 +196,21 @@ function MyComponent() {
             
             <div className="space-y-4 mt-4">
               <div 
-                className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg hover:border-purple-500 cursor-pointer"
+                className={`p-4 border rounded-lg hover:border-purple-500 cursor-pointer ${selectedIntegration === 'sdk' ? 'border-green-500 bg-green-50 dark:bg-green-900/10' : 'border-gray-200 dark:border-gray-700'}`}
+                onClick={() => setSelectedIntegration('sdk')}
+              >
+                <h3 className="font-medium text-gray-900 dark:text-white mb-2">Client SDK</h3>
+                <p className="text-sm text-gray-600 dark:text-gray-300">
+                  Use our SDK for React, Vue, or vanilla JavaScript for the best experience.
+                  Recommended for custom applications and framework-based sites.
+                </p>
+                <div className="flex justify-end mt-2">
+                  <span className="text-xs px-2 py-1 bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 rounded-full">Recommended</span>
+                </div>
+              </div>
+              
+              <div 
+                className={`p-4 border rounded-lg hover:border-purple-500 cursor-pointer ${selectedIntegration === 'simple' ? 'border-purple-500 bg-purple-50 dark:bg-purple-900/10' : 'border-gray-200 dark:border-gray-700'}`}
                 onClick={() => setSelectedIntegration('simple')}
               >
                 <h3 className="font-medium text-gray-900 dark:text-white mb-2">Simple Embed</h3>
@@ -197,7 +224,7 @@ function MyComponent() {
               </div>
               
               <div 
-                className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg hover:border-purple-500 cursor-pointer"
+                className={`p-4 border rounded-lg hover:border-purple-500 cursor-pointer ${selectedIntegration === 'javascript' ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/10' : 'border-gray-200 dark:border-gray-700'}`}
                 onClick={() => setSelectedIntegration('javascript')}
               >
                 <h3 className="font-medium text-gray-900 dark:text-white mb-2">JavaScript API</h3>
@@ -207,20 +234,6 @@ function MyComponent() {
                 </p>
                 <div className="flex justify-end mt-2">
                   <span className="text-xs px-2 py-1 bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 rounded-full">Advanced</span>
-                </div>
-              </div>
-              
-              <div 
-                className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg hover:border-purple-500 cursor-pointer"
-                onClick={() => setSelectedIntegration('sdk')}
-              >
-                <h3 className="font-medium text-gray-900 dark:text-white mb-2">Client SDK</h3>
-                <p className="text-sm text-gray-600 dark:text-gray-300">
-                  Use our SDK for React, Vue, or vanilla JavaScript for the best experience.
-                  Recommended for custom applications and framework-based sites.
-                </p>
-                <div className="flex justify-end mt-2">
-                  <span className="text-xs px-2 py-1 bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 rounded-full">Recommended</span>
                 </div>
               </div>
             </div>
