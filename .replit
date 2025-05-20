@@ -62,10 +62,6 @@ args = "Test TestModeBanner"
 
 [[workflows.workflow.tasks]]
 task = "workflow.run"
-args = "Dev Server"
-
-[[workflows.workflow.tasks]]
-task = "workflow.run"
 args = "Test Error Service"
 
 [[workflows.workflow.tasks]]
@@ -190,15 +186,6 @@ author = "agent"
 [[workflows.workflow.tasks]]
 task = "shell.exec"
 args = "npx jest src/__tests__/components/TestModeBanner.test.tsx"
-
-[[workflows.workflow]]
-name = "Dev Server"
-author = "agent"
-
-[[workflows.workflow.tasks]]
-task = "shell.exec"
-args = "NODE_OPTIONS='--no-warnings' npx next dev -p 5000 -H 0.0.0.0"
-waitForPort = 5000
 
 [[workflows.workflow]]
 name = "Test Error Service"

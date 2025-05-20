@@ -186,11 +186,22 @@ const PublisherOnboarding: React.FC<PublisherOnboardingProps> = React.memo(({ cu
     case 'choose-integration':
       return (
         <div className="max-w-2xl mx-auto">
-          <div className="mb-8">
-            <h2 className="text-2xl font-semibold text-gray-900 dark:text-white mb-2">Publisher Implementation</h2>
-            <p className="text-gray-600 dark:text-gray-300">
-              Choose an implementation method and get your API key to start displaying ads.
-            </p>
+          <div className="flex justify-between items-center mb-4">
+            <div>
+              <h2 className="text-2xl font-semibold text-gray-900 dark:text-white mb-2">Publisher Implementation</h2>
+              <p className="text-gray-600 dark:text-gray-300">
+                Choose an implementation method and get your API key to start displaying ads.
+              </p>
+            </div>
+            {skipOnboarding && (
+              <button
+                onClick={skipOnboarding}
+                className="px-4 py-2 flex-shrink-0 text-sm font-medium text-gray-700 bg-white dark:text-gray-300 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-md hover:bg-gray-50 dark:hover:bg-gray-700"
+                data-testid="publisher-skip-button"
+              >
+                Skip
+              </button>
+            )}
           </div>
           
           <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
@@ -683,21 +694,32 @@ async function loadAd(placementId, targetElement) {
     case 'go-live':
       return (
         <div className="max-w-2xl mx-auto">
-          <div className="mb-8">
-            <h2 className="text-2xl font-semibold text-gray-900 dark:text-white mb-2">
-              {currentStep === 'integration-details' ? 'Integration Details' :
-               currentStep === 'ad-slot-config' ? 'Configure Ad Slots' :
-               currentStep === 'setup-wallet' ? 'Setup Payment Wallet' :
-               currentStep === 'enable-test-mode' ? 'Test Your Integration' :
-               'Go Live with Ads'}
-            </h2>
-            <p className="text-gray-600 dark:text-gray-300">
-              {currentStep === 'integration-details' ? 'Configure the details of your integration method.' :
-               currentStep === 'ad-slot-config' ? 'Define where and how ads will appear on your site.' :
-               currentStep === 'setup-wallet' ? 'Connect a Lightning wallet to receive payments.' :
-               currentStep === 'enable-test-mode' ? 'Test your integration in a safe environment.' :
-               'Final steps to go live with your ad integration.'}
-            </p>
+          <div className="flex justify-between items-start mb-4">
+            <div>
+              <h2 className="text-2xl font-semibold text-gray-900 dark:text-white mb-2">
+                {currentStep === 'integration-details' ? 'Integration Details' :
+                 currentStep === 'ad-slot-config' ? 'Configure Ad Slots' :
+                 currentStep === 'setup-wallet' ? 'Setup Payment Wallet' :
+                 currentStep === 'enable-test-mode' ? 'Test Your Integration' :
+                 'Go Live with Ads'}
+              </h2>
+              <p className="text-gray-600 dark:text-gray-300">
+                {currentStep === 'integration-details' ? 'Configure the details of your integration method.' :
+                 currentStep === 'ad-slot-config' ? 'Define where and how ads will appear on your site.' :
+                 currentStep === 'setup-wallet' ? 'Connect a Lightning wallet to receive payments.' :
+                 currentStep === 'enable-test-mode' ? 'Test your integration in a safe environment.' :
+                 'Final steps to go live with your ad integration.'}
+              </p>
+            </div>
+            {skipOnboarding && (
+              <button
+                onClick={skipOnboarding}
+                className="px-4 py-2 flex-shrink-0 text-sm font-medium text-gray-700 bg-white dark:text-gray-300 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-md hover:bg-gray-50 dark:hover:bg-gray-700"
+                data-testid="publisher-skip-button"
+              >
+                Skip
+              </button>
+            )}
           </div>
           
           <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
@@ -719,14 +741,25 @@ async function loadAd(placementId, targetElement) {
     case 'complete':
       return (
         <div className="max-w-2xl mx-auto">
-          <div className="text-center mb-8">
-            <div className="mx-auto w-16 h-16 bg-green-100 dark:bg-green-900 rounded-full flex items-center justify-center text-green-500 mb-4">
-              <CheckCircle size={32} />
+          <div className="flex justify-between items-start mb-4">
+            <div className="flex-grow text-center">
+              <div className="mx-auto w-16 h-16 bg-green-100 dark:bg-green-900 rounded-full flex items-center justify-center text-green-500 mb-4">
+                <CheckCircle size={32} />
+              </div>
+              <h2 className="text-2xl font-semibold text-gray-900 dark:text-white mb-2">Publisher Setup Complete!</h2>
+              <p className="text-gray-600 dark:text-gray-300">
+                You've successfully set up your publisher account and are ready to start monetizing.
+              </p>
             </div>
-            <h2 className="text-2xl font-semibold text-gray-900 dark:text-white mb-2">Publisher Setup Complete!</h2>
-            <p className="text-gray-600 dark:text-gray-300">
-              You've successfully set up your publisher account and are ready to start monetizing.
-            </p>
+            {skipOnboarding && (
+              <button
+                onClick={skipOnboarding}
+                className="px-4 py-2 flex-shrink-0 text-sm font-medium text-gray-700 bg-white dark:text-gray-300 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-md hover:bg-gray-50 dark:hover:bg-gray-700"
+                data-testid="publisher-skip-button"
+              >
+                Skip
+              </button>
+            )}
           </div>
           
           <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
