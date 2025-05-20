@@ -108,11 +108,21 @@ const PublisherOnboarding: React.FC<PublisherOnboardingProps> = React.memo(({ cu
     case 'role-selection':
       return (
         <div className="max-w-2xl mx-auto">
-          <div className="text-center mb-8">
-            <h2 className="text-2xl font-semibold text-gray-900 dark:text-white mb-2">Welcome to the Publisher Onboarding</h2>
-            <p className="text-gray-600 dark:text-gray-300">
-              Get started with monetizing your content through the Nostr Ad Marketplace
-            </p>
+          <div className="flex justify-between items-center mb-4">
+            <div className="text-center flex-grow">
+              <h2 className="text-2xl font-semibold text-gray-900 dark:text-white mb-2">Welcome to the Publisher Onboarding</h2>
+              <p className="text-gray-600 dark:text-gray-300">
+                Get started with monetizing your content through the Nostr Ad Marketplace
+              </p>
+            </div>
+            {skipOnboarding && (
+              <button
+                onClick={skipOnboarding}
+                className="px-4 py-2 flex-shrink-0 text-sm font-medium text-gray-700 bg-white dark:text-gray-300 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-md hover:bg-gray-50 dark:hover:bg-gray-700"
+              >
+                Skip
+              </button>
+            )}
           </div>
           
           <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
@@ -168,26 +178,7 @@ const PublisherOnboarding: React.FC<PublisherOnboardingProps> = React.memo(({ cu
               </li>
             </ul>
             
-            <div className="mt-8 flex justify-between">
-              {skipOnboarding && (
-                <button
-                  type="button"
-                  onClick={skipOnboarding}
-                  className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md"
-                >
-                  Skip
-                </button>
-              )}
-              <button 
-                className="ml-auto bg-purple-600 hover:bg-purple-700 text-white font-medium py-2 px-6 rounded-md transition-colors"
-                data-testid="publisher-next-button"
-                onClick={() => {
-                  // Proceed to implementation step
-                }}
-              >
-                Let's Get Started →
-              </button>
-            </div>
+            {/* Navigation buttons are now in the shared OnboardingWizard component */}
           </div>
         </div>
       );
@@ -679,18 +670,7 @@ async function loadAd(placementId, targetElement) {
               </div>
             )}
             
-            <div className="mt-8 border-t border-gray-200 dark:border-gray-700 pt-4 flex justify-between">
-              {/* Skip button moved to the shared navigation in OnboardingWizard component */}
-              <button
-                className="ml-auto bg-purple-600 hover:bg-purple-700 text-white font-medium py-2 px-6 rounded-md transition-colors" 
-                data-testid="publisher-next-button"
-                onClick={() => {
-                  // Proceed to next step
-                }}
-              >
-                Continue →
-              </button>
-            </div>
+            {/* Navigation buttons are now in the shared OnboardingWizard component */}
           </div>
         </div>
       );
@@ -813,9 +793,9 @@ async function loadAd(placementId, targetElement) {
                   </p>
                   <a 
                     href="/dashboard/publisher" 
-                    className="text-purple-600 hover:text-purple-700 dark:text-purple-400 dark:hover:text-purple-300 font-medium text-sm"
+                    className="text-purple-600 hover:text-purple-700 dark:text-purple-400 dark:hover:text-purple-300 font-medium text-sm flex items-center w-fit"
                   >
-                    Go to Dashboard →
+                    Go to Dashboard <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="ml-1"><polyline points="9 18 15 12 9 6"></polyline></svg>
                   </a>
                 </div>
                 
@@ -826,9 +806,9 @@ async function loadAd(placementId, targetElement) {
                   </p>
                   <a 
                     href="/docs/publisher" 
-                    className="text-purple-600 hover:text-purple-700 dark:text-purple-400 dark:hover:text-purple-300 font-medium text-sm"
+                    className="text-purple-600 hover:text-purple-700 dark:text-purple-400 dark:hover:text-purple-300 font-medium text-sm flex items-center w-fit"
                   >
-                    View Documentation →
+                    View Documentation <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="ml-1"><polyline points="9 18 15 12 9 6"></polyline></svg>
                   </a>
                 </div>
               </div>
