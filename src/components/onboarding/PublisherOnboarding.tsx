@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { OnboardingStep } from '@/context/OnboardingContext';
-import { Code, DollarSign, Layout, Settings, CheckCircle, ToggleRight, Archive } from 'react-feather';
+import { Code, DollarSign, Layout, Settings, CheckCircle, ToggleRight, Archive, Copy, RefreshCw } from 'react-feather';
 
 interface PublisherOnboardingProps {
   currentStep: OnboardingStep;
@@ -8,13 +8,80 @@ interface PublisherOnboardingProps {
 
 type IntegrationType = 'simple' | 'javascript' | 'sdk' | null;
 
+interface ApiKeyData {
+  id: string;
+  key: string;
+  name: string;
+  createdAt: string;
+  scopes: string;
+  isLoading: boolean;
+  error: string | null;
+}
+
 // Use React.memo for performance optimization to prevent unnecessary re-renders
 const PublisherOnboarding: React.FC<PublisherOnboardingProps> = React.memo(({ currentStep }) => {
   // State to track which integration method was selected
   const [selectedIntegration, setSelectedIntegration] = useState<IntegrationType>('sdk');
   
-  // Content for each step in the publisher onboarding flow
-  // Only log in development mode to reduce processing
+  // State for API key
+  const [apiKeyData, setApiKeyData] = useState<ApiKeyData>({
+    id: '',
+    key: '',
+    name: '',
+    createdAt: '',
+    scopes: '',
+    isLoading: false,
+    error: null
+  });
+  
+  // Function to generate a new API key
+  const generateApiKey = async () => {
+    setApiKeyData(prev => ({ ...prev, isLoading: true, error: null }));
+    
+    try {
+      const response = await fetch('/api/auth/api-keys', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          name: 'Publisher Integration Key',
+          description: 'Created during publisher onboarding',
+          scopes: 'read,write',
+        }),
+      });
+      
+      if (!response.ok) {
+        throw new Error('Failed to create API key');
+      }
+      
+      const data = await response.json();
+      setApiKeyData({
+        id: data.id,
+        key: data.key,
+        name: data.name,
+        createdAt: data.createdAt,
+        scopes: data.scopes,
+        isLoading: false,
+        error: null
+      });
+    } catch (error) {
+      setApiKeyData(prev => ({ 
+        ...prev, 
+        isLoading: false, 
+        error: error instanceof Error ? error.message : 'An unknown error occurred' 
+      }));
+    }
+  };
+  
+  // Generate API key when component mounts or integration method changes to JavaScript or SDK
+  useEffect(() => {
+    if ((selectedIntegration === 'javascript' || selectedIntegration === 'sdk') && !apiKeyData.key && !apiKeyData.isLoading) {
+      generateApiKey();
+    }
+  }, [selectedIntegration, apiKeyData.key, apiKeyData.isLoading]);
+  
+  // Debug logging in development mode
   useEffect(() => {
     if (process.env.NODE_ENV === 'development') {
       console.log('Selected integration method:', selectedIntegration);
@@ -105,34 +172,74 @@ const PublisherOnboarding: React.FC<PublisherOnboardingProps> = React.memo(({ cu
                     <div className="flex justify-between items-center mb-2">
                       <span className="text-sm font-medium text-gray-900 dark:text-white">Your Publisher API Key</span>
                       <div className="flex items-center space-x-2">
-                        <button 
-                          className="text-xs px-2 py-1 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200 rounded hover:bg-gray-300 dark:hover:bg-gray-600"
-                          onClick={() => {
-                            navigator.clipboard.writeText('pub_key_23a7fb912ee4c9b8');
-                            alert('API key copied to clipboard');
-                          }}
-                          title="Copy to clipboard"
-                        >
-                          Copy Key
-                        </button>
+                        {apiKeyData.key ? (
+                          <button 
+                            className="text-xs px-2 py-1 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200 rounded hover:bg-gray-300 dark:hover:bg-gray-600 flex items-center"
+                            onClick={() => {
+                              navigator.clipboard.writeText(apiKeyData.key);
+                              alert('API key copied to clipboard');
+                            }}
+                            title="Copy to clipboard"
+                          >
+                            <Copy size={12} className="mr-1" />
+                            Copy Key
+                          </button>
+                        ) : (
+                          <button 
+                            className="text-xs px-2 py-1 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200 rounded hover:bg-gray-300 dark:hover:bg-gray-600 flex items-center"
+                            onClick={generateApiKey}
+                            disabled={apiKeyData.isLoading}
+                            title="Generate a new API key"
+                          >
+                            <RefreshCw size={12} className={`mr-1 ${apiKeyData.isLoading ? 'animate-spin' : ''}`} />
+                            {apiKeyData.isLoading ? 'Generating...' : 'Generate Key'}
+                          </button>
+                        )}
                       </div>
                     </div>
+                    
+                    {apiKeyData.error && (
+                      <div className="mb-3 p-2 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded text-sm text-red-700 dark:text-red-300">
+                        Error: {apiKeyData.error}. Please try again.
+                      </div>
+                    )}
+                    
                     <div className="relative bg-white dark:bg-gray-800 p-3 rounded-md border border-gray-200 dark:border-gray-700 font-mono text-sm overflow-auto break-all">
-                      pub_key_23a7fb912ee4c9b8
+                      {apiKeyData.isLoading ? (
+                        <div className="flex items-center justify-center py-1">
+                          <div className="animate-pulse flex space-x-1">
+                            <div className="h-2 w-2 bg-gray-400 dark:bg-gray-600 rounded-full"></div>
+                            <div className="h-2 w-2 bg-gray-400 dark:bg-gray-600 rounded-full"></div>
+                            <div className="h-2 w-2 bg-gray-400 dark:bg-gray-600 rounded-full"></div>
+                          </div>
+                        </div>
+                      ) : apiKeyData.key ? (
+                        apiKeyData.key
+                      ) : (
+                        <span className="text-gray-400 dark:text-gray-500">No API key generated yet</span>
+                      )}
                     </div>
+                    
                     <div className="mt-2 flex items-center">
-                      <span className="w-2 h-2 bg-green-500 rounded-full mr-2"></span>
-                      <span className="text-xs text-gray-600 dark:text-gray-400">Active</span>
+                      {apiKeyData.key && (
+                        <>
+                          <span className="w-2 h-2 bg-green-500 rounded-full mr-2"></span>
+                          <span className="text-xs text-gray-600 dark:text-gray-400">Active</span>
+                        </>
+                      )}
                     </div>
+                    
                     <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">
-                      Keep this key secure. You can always find and manage your API keys in the Developer section of your dashboard.
+                      {apiKeyData.key ? 
+                        "Keep this key secure. You can always find and manage your API keys in the Developer section of your dashboard." :
+                        "An API key will be automatically generated for you to use with the JavaScript API."}
                     </p>
                   </div>
                   
                   <div className="bg-gray-100 dark:bg-gray-800 p-3 rounded text-sm font-mono overflow-x-auto">
                     {`<script>
 NostrAds.init({
-  publisherKey: 'pub_key_23a7fb912ee4c9b8',
+  publisherKey: '${apiKeyData.key || "YOUR_API_KEY_HERE"}',
   defaultPlacement: 'feed'
 });
 </script>`}
