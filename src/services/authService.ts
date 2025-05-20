@@ -1,518 +1,739 @@
-/**
- * Authentication Service
- * 
- * This service handles all authentication-related functionality
- * and separates business logic from UI components.
- */
-
-import { 
-  AuthState,
-  CheckAuthResponse, 
-  LoginResponse, 
-  LogoutResponse, 
-  RefreshRolesResponse,
-  AddRoleResponse,
-  RemoveRoleResponse,
-  UserRole
-} from '../types/auth';
+import { useState, useEffect } from 'react';
+import { UserRole } from '@prisma/client';
+import { v4 as uuidv4 } from 'uuid';
+import { sessionStorage, localStorage } from '../lib/enhancedStorageService';
 import { logger } from '../lib/logger';
-import { safeFetch, safeJsonFetch } from '../lib/api-utils';
+import { nostr } from '../lib/nostr';
+import { errorService, ErrorCategory } from '../lib/errorService';
 
+// Define UserRoleType for use throughout the application
+export type UserRoleType = UserRole | 'viewer' | 'publisher' | 'advertiser' | 'admin' | 'stakeholder';
+
+/**
+ * Authentication State Interface
+ * This defines the shape of the authentication state throughout the application
+ */
+export interface AuthState {
+  isLoggedIn: boolean;
+  pubkey: string;
+  currentRole: UserRoleType;
+  availableRoles: UserRoleType[];
+  isTestMode: boolean;
+}
+
+/**
+ * Authentication Provider Type
+ * Defines the available authentication providers in the system
+ */
+export type AuthProvider = 'nostr' | 'test' | 'api';
+
+/**
+ * AuthService
+ * 
+ * A centralized service for managing authentication state and operations.
+ * This service provides a unified interface for all authentication methods
+ * whether they are Nostr extension-based, test mode, or API key based.
+ */
 export class AuthService {
-  private readonly API_BASE_URL = '/api';
+  private static instance: AuthService;
+  private _authState: AuthState = {
+    isLoggedIn: false,
+    pubkey: '',
+    currentRole: 'viewer',
+    availableRoles: [],
+    isTestMode: false
+  };
+
+  private _isLoading: boolean = false;
+  private _error: Error | null = null;
+  private _provider: AuthProvider = 'nostr';
+  private _listeners: Array<() => void> = [];
 
   /**
-   * Check if the public key is a test key
-   * 
-   * @param pubkey - The Nostr public key
-   * @returns Whether the key is a test key
+   * Get the singleton instance of AuthService
    */
-  private isTestPublicKey(pubkey: string): boolean {
-    return pubkey.startsWith('pk_test_') || pubkey === 'test-pubkey';
+  public static getInstance(): AuthService {
+    if (!AuthService.instance) {
+      AuthService.instance = new AuthService();
+    }
+    return AuthService.instance;
+  }
+
+  private constructor() {
+    // Initialize auth state from stored values
+    this.initializeFromStorage();
   }
 
   /**
-   * Login with a Nostr public key and signed message
-   * 
-   * @param pubkey - The Nostr public key
-   * @param signedMessage - The signed message for verification
-   * @returns The authentication state
+   * Initialize authentication state from stored values
    */
-  async login(pubkey: string, signedMessage: string): Promise<AuthState> {
+  private async initializeFromStorage(): Promise<void> {
     try {
-      // Check if this is a test mode login (from AuthProviderRefactored's indicator)
-      const isTestModeLogin = signedMessage === 'TEST_MODE';
-      
-      // For test pubkeys or explicit test mode logins, we can create a synthetic authState directly
-      // This avoids making a network request for test logins
-      if (this.isTestPublicKey(pubkey) || isTestModeLogin) {
-        logger.log(`Test login for ${pubkey}, bypassing API`);
-        
-        // Determine roles based on the pubkey suffix
-        let availableRoles: UserRole[] = [];
-        
-        if (pubkey === 'pk_test_advertiser') {
-          availableRoles = ['advertiser'];
-        } else if (pubkey === 'pk_test_publisher') {
-          availableRoles = ['publisher'];
-        } else if (pubkey === 'pk_test_admin') {
-          availableRoles = ['admin', 'advertiser', 'publisher', 'stakeholder'];
-        } else {
-          // Default test user gets all roles
-          availableRoles = ['advertiser', 'publisher', 'admin', 'stakeholder'];
-        }
-        
-        // Set cookies directly in browser
-        if (typeof window !== 'undefined') {
-          document.cookie = `nostr_pubkey=${pubkey}; path=/; max-age=86400`;
-          document.cookie = `auth_token=test_token_${pubkey}; path=/; max-age=86400`;
-        }
-        
-        return {
+      // Try to load session data
+      const sessionData = await sessionStorage.getItem('auth');
+      if (sessionData) {
+        const parsedData = JSON.parse(sessionData);
+        this.updateAuthState({
           isLoggedIn: true,
-          pubkey,
-          isTestMode: true,
-          availableRoles,
-        };
+          pubkey: parsedData.pubkey || '',
+          currentRole: parsedData.currentRole || 'viewer',
+          availableRoles: parsedData.availableRoles || ['viewer'],
+          isTestMode: parsedData.isTestMode || false
+        });
+        
+        if (parsedData.provider) {
+          this._provider = parsedData.provider;
+        }
+      } else {
+        // Fall back to localStorage for persistence across tabs
+        const localData = await localStorage.getItem('auth');
+        if (localData) {
+          const parsedData = JSON.parse(localData);
+          this.updateAuthState({
+            isLoggedIn: true,
+            pubkey: parsedData.pubkey || '',
+            currentRole: parsedData.currentRole || 'viewer',
+            availableRoles: parsedData.availableRoles || ['viewer'],
+            isTestMode: parsedData.isTestMode || false
+          });
+          
+          if (parsedData.provider) {
+            this._provider = parsedData.provider;
+          }
+          
+          // Save to session storage for faster access
+          await this.persistToStorage();
+        }
       }
-      
-      // For non-test pubkeys, use the API with our new safeFetch utility
-      // Only works in browser environment
-      if (typeof window === 'undefined') {
-        throw new Error('Direct login only supported in browser environment');
-      }
-      
-      const loginData = await safeJsonFetch<LoginResponse>('/api/auth/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ pubkey, signedMessage }),
-        credentials: 'include', // Important for cookies
-      });
-      
-      // If the request failed or returned null, handle gracefully
-      if (!loginData) {
-        throw new Error('Network error: Could not connect to authentication service. Please check your connection and try again.');
-      }
-      
-      return {
-        isLoggedIn: loginData.isLoggedIn,
-        pubkey: loginData.pubkey,
-        isTestMode: loginData.isTestMode || false,
-        availableRoles: loginData.availableRoles || [],
-      };
     } catch (error) {
-      logger.error('Auth service login error:', error);
-      throw error;
+      errorService.reportError(
+        error instanceof Error ? error : new Error('Failed to initialize auth from storage'),
+        'authService.initializeFromStorage',
+        'auth',
+        'warning',
+        {
+          category: ErrorCategory.OPERATIONAL,
+          userFacing: false
+        }
+      );
+      logger.warn('Failed to initialize auth from storage', { error });
     }
   }
 
   /**
-   * Check the current authentication status
-   * 
-   * @returns The authentication state or null if not authenticated
+   * Persist authentication state to storage
    */
-  async checkAuth(): Promise<AuthState | null> {
+  private async persistToStorage(): Promise<void> {
     try {
-      // Check for special logout flag first - This is now a comprehensive check
-      // that blocks ALL auto-login attempts when present
-      if (typeof window !== 'undefined') {
-        const preventAutoLogin = localStorage.getItem('prevent_auto_login') === 'true';
-        
-        // If prevent_auto_login is set, we should return null and block ALL authentication attempts
-        if (preventAutoLogin) {
-          logger.log('Auth check bypassed due to prevent_auto_login flag');
-          // Make sure no auth cookies exist by clearing them
-          document.cookie = 'nostr_pubkey=; path=/; max-age=0';
-          document.cookie = 'auth_token=; path=/; max-age=0';
-          document.cookie = 'auth_session=; path=/; max-age=0';
-          document.cookie = 'nostr_auth_session=; path=/; max-age=0';
-          return null;
+      const dataToStore = {
+        ...this._authState,
+        provider: this._provider
+      };
+      
+      // Save to session storage for current tab
+      await sessionStorage.setItem('auth', JSON.stringify(dataToStore));
+      
+      // Save to local storage for persistence across tabs
+      await localStorage.setItem('auth', JSON.stringify(dataToStore));
+    } catch (error) {
+      errorService.reportError(
+        error instanceof Error ? error : new Error('Failed to persist auth to storage'),
+        'authService.persistToStorage',
+        'auth',
+        'warning',
+        {
+          category: ErrorCategory.OPERATIONAL,
+          userFacing: false
         }
-        
-        // Only continue with auth checks if prevent_auto_login isn't set
-        // Check for test mode in localStorage
-        const isTestMode = localStorage.getItem('isTestMode') === 'true';
-        const testPubkey = localStorage.getItem('nostr_test_pk');
+      );
+      logger.warn('Failed to persist auth to storage', { error });
+    }
+  }
 
-        if (isTestMode && testPubkey) {
-          logger.log('Test mode detected in localStorage, skipping API call');
-          
-          // For test mode, provide all roles by default
-          const ALL_ROLES: UserRole[] = ['advertiser', 'publisher', 'admin', 'stakeholder'];
-          
-          // Set cookies directly to ensure consistency
-          document.cookie = `nostr_pubkey=${testPubkey}; path=/; max-age=86400`;
-          document.cookie = `auth_token=test_token_${testPubkey}; path=/; max-age=86400`;
-          
-          return {
-            isLoggedIn: true,
-            pubkey: testPubkey,
-            isTestMode: true,
-            availableRoles: ALL_ROLES,
-          };
-        }
+  /**
+   * Update the authentication state and notify listeners
+   */
+  private updateAuthState(newState: Partial<AuthState>): void {
+    this._authState = {
+      ...this._authState,
+      ...newState
+    };
+    
+    // Notify all listeners of the state change
+    this.notifyListeners();
+  }
 
-        // If not in localStorage, check for cookies directly, but only if not prevented
-        // Simple function to get cookie by name
-        const getCookie = (name: string) => {
-          const value = `; ${document.cookie}`;
-          const parts = value.split(`; ${name}=`);
-          if (parts.length === 2) return parts.pop()?.split(';').shift();
-          return undefined;
-        };
+  /**
+   * Notify all listeners of state changes
+   */
+  private notifyListeners(): void {
+    this._listeners.forEach(listener => listener());
+  }
+
+  /**
+   * Get the current authentication state
+   */
+  public get authState(): AuthState {
+    return this._authState;
+  }
+
+  /**
+   * Get the loading state
+   */
+  public get isLoading(): boolean {
+    return this._isLoading;
+  }
+
+  /**
+   * Get the current error
+   */
+  public get error(): Error | null {
+    return this._error;
+  }
+
+  /**
+   * Get the current authentication provider
+   */
+  public get provider(): AuthProvider {
+    return this._provider;
+  }
+
+  /**
+   * Subscribe to auth state changes
+   * @param listener The callback function to invoke on state changes
+   * @returns A function to unsubscribe the listener
+   */
+  public subscribe(listener: () => void): () => void {
+    this._listeners.push(listener);
+    
+    return () => {
+      this._listeners = this._listeners.filter(l => l !== listener);
+    };
+  }
+
+  /**
+   * Login with Nostr
+   * @param options Optional login options
+   * @returns The authentication state after login
+   */
+  public async loginWithNostr(options?: { testMode?: boolean }): Promise<AuthState> {
+    this._isLoading = true;
+    this._error = null;
+    const correlationId = `auth-login-${uuidv4()}`;
+    
+    try {
+      // Determine if we should use test mode
+      const useTestMode = options?.testMode || false;
+      
+      let pubkey = '';
+      if (useTestMode) {
+        // Generate test keys if in test mode
+        const testKeys = await nostr.generateTestKeyPair();
+        pubkey = testKeys.publicKey;
         
-        // Only check for cookies if not prevented by logout flag
-        // This is redundant with the check above, but provides defense in depth
-        if (localStorage.getItem('prevent_auto_login') === 'true') {
-          logger.log('Auth check bypassed due to prevent_auto_login flag (cookie check)');
-          return null;
-        }
-        
-        // Check for test login cookies
-        const testPubkeyFromCookie = getCookie('nostr_pubkey');
-        if (testPubkeyFromCookie && this.isTestPublicKey(testPubkeyFromCookie)) {
-          logger.log('Found test pubkey in cookies:', testPubkeyFromCookie);
-          
-          // For test mode, provide all roles by default
-          const ALL_ROLES: UserRole[] = ['advertiser', 'publisher', 'admin', 'stakeholder'];
-          
-          // Also set the test mode in localStorage for future checks
-          localStorage.setItem('isTestMode', 'true');
-          localStorage.setItem('nostr_test_pk', testPubkeyFromCookie);
-          
-          return {
-            isLoggedIn: true,
-            pubkey: testPubkeyFromCookie,
-            isTestMode: true,
-            availableRoles: ALL_ROLES,
-          };
-        }
+        // Store the test mode flag
+        this._provider = 'test';
+      } else {
+        // Get the public key from Nostr extension
+        pubkey = await nostr.getPublicKey();
+        this._provider = 'nostr';
       }
       
-      // For server-side or when no test cookies found, use the API
-      // Skip API call on server side - cookies should be used directly there
-      if (typeof window === 'undefined') {
-        // On server side, we can't make client-side fetch calls
-        // The API route will handle cookies directly
-        return null;
+      if (!pubkey) {
+        throw new Error('Failed to get public key from Nostr extension');
       }
       
-      // Final check for the prevent_auto_login flag before making API calls
-      // This provides a third layer of defense against auto-login after logout
-      if (typeof window !== 'undefined' && localStorage.getItem('prevent_auto_login') === 'true') {
-        logger.log('Auth check bypassed due to prevent_auto_login flag (before API calls)');
-        return null;
-      }
-      
-      // Check if we should bypass API calls
-      if (typeof window !== 'undefined' && localStorage.getItem('bypass_api_calls') === 'true') {
-        logger.log('Bypassing API call for auth check due to bypass_api_calls flag');
-        
-        // Get test data directly from localStorage
-        const testPubkey = localStorage.getItem('nostr_test_pk');
-        if (testPubkey) {
-          // Parse cached available roles
-          let availableRoles: UserRole[] = ['viewer' as UserRole];
-          try {
-            const cachedRoles = localStorage.getItem('cachedAvailableRoles');
-            if (cachedRoles) {
-              availableRoles = JSON.parse(cachedRoles) as UserRole[];
-            }
-          } catch (e) {
-            logger.error('Error parsing cached roles:', e);
-          }
-          
-          return {
-            isLoggedIn: true,
-            pubkey: testPubkey,
-            isTestMode: true,
-            availableRoles,
-          };
-        }
-        
-        return null;
-      }
-      
-      // Use safeJsonFetch to get the response directly as JSON and handle errors
-      const authData = await safeJsonFetch<CheckAuthResponse>('/api/auth/check', {
-        method: 'GET',
+      // Fetch user data from API
+      const response = await fetch('/api/auth/user', {
+        method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        credentials: 'include', // Important for cookies
+        body: JSON.stringify({ pubkey, provider: this._provider }),
       });
       
-      // If the request failed or returned null, handle gracefully
-      if (!authData) {
-        return null;
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Authentication failed');
       }
       
-      // If auth data is valid, return the authentication state
-      if (authData.isLoggedIn && authData.pubkey) {
-        return {
-          isLoggedIn: authData.isLoggedIn,
-          pubkey: authData.pubkey,
-          isTestMode: authData.isTestMode || false,
-          availableRoles: authData.availableRoles || [],
-        };
-      }
+      const userData = await response.json();
       
-      // Otherwise, return null to indicate not authenticated
-      return null;
+      // Update auth state with user data
+      this.updateAuthState({
+        isLoggedIn: true,
+        pubkey,
+        currentRole: userData.currentRole || 'viewer',
+        availableRoles: userData.availableRoles || ['viewer'],
+        isTestMode: useTestMode
+      });
+      
+      // Persist the updated state
+      await this.persistToStorage();
+      
+      logger.info('User logged in successfully', { 
+        pubkey, 
+        provider: this._provider,
+        testMode: useTestMode 
+      });
+      
+      return this._authState;
     } catch (error) {
-      logger.error('Auth service check error:', error);
+      this._error = error instanceof Error 
+        ? error 
+        : new Error('Login failed for an unknown reason');
       
-      // Try localStorage again as a fallback in case of network errors
-      if (typeof window !== 'undefined') {
-        const isTestMode = localStorage.getItem('isTestMode') === 'true';
-        const testPubkey = localStorage.getItem('nostr_test_pk');
-
-        if (isTestMode && testPubkey) {
-          logger.log('Test mode detected in localStorage after failed API call');
-          
-          // For test mode, provide all roles by default
-          const ALL_ROLES: UserRole[] = ['advertiser', 'publisher', 'admin', 'stakeholder'];
-          
-          return {
-            isLoggedIn: true,
-            pubkey: testPubkey,
-            isTestMode: true,
-            availableRoles: ALL_ROLES,
-          };
+      errorService.reportError(
+        this._error,
+        'authService.loginWithNostr',
+        'auth',
+        'error',
+        {
+          category: ErrorCategory.OPERATIONAL,
+          userFacing: true,
+          correlationId,
+          details: `Provider: ${this._provider}`
         }
+      );
+      
+      logger.error('Login failed', { 
+        error: this._error.message,
+        provider: this._provider,
+        correlationId
+      });
+      
+      throw this._error;
+    } finally {
+      this._isLoading = false;
+    }
+  }
+
+  /**
+   * Login with API key
+   * @param apiKey The API key to authenticate with
+   * @returns The authentication state after login
+   */
+  public async loginWithApiKey(apiKey: string): Promise<AuthState> {
+    this._isLoading = true;
+    this._error = null;
+    const correlationId = `auth-api-login-${uuidv4()}`;
+    
+    try {
+      // Validate the API key through the API
+      const response = await fetch('/api/auth/validate-key', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ apiKey }),
+      });
+      
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'API key authentication failed');
       }
       
-      // Return null for auth state, but don't rethrow to prevent app crashes
-      return null;
+      const userData = await response.json();
+      
+      // Update auth state with user data
+      this.updateAuthState({
+        isLoggedIn: true,
+        pubkey: userData.pubkey || '',
+        currentRole: userData.currentRole || 'publisher', // API keys are typically for publishers
+        availableRoles: userData.availableRoles || ['publisher'],
+        isTestMode: false
+      });
+      
+      this._provider = 'api';
+      
+      // Persist the updated state
+      await this.persistToStorage();
+      
+      logger.info('User logged in with API key successfully', { 
+        pubkey: this._authState.pubkey,
+        provider: 'api'
+      });
+      
+      return this._authState;
+    } catch (error) {
+      this._error = error instanceof Error 
+        ? error 
+        : new Error('API key login failed for an unknown reason');
+      
+      errorService.reportError(
+        this._error,
+        'authService.loginWithApiKey',
+        'auth',
+        'error',
+        {
+          category: ErrorCategory.OPERATIONAL,
+          userFacing: true,
+          correlationId
+        }
+      );
+      
+      logger.error('API key login failed', { 
+        error: this._error.message,
+        correlationId
+      });
+      
+      throw this._error;
+    } finally {
+      this._isLoading = false;
     }
   }
 
   /**
    * Logout the current user
    */
-  async logout(): Promise<void> {
+  public async logout(): Promise<void> {
+    this._isLoading = true;
+    
     try {
-      // For browser environment, clear all authentication data directly
-      if (typeof window !== 'undefined') {
-        // Clear cookies by setting expiration in the past
-        document.cookie = 'nostr_pubkey=; path=/; max-age=0';
-        document.cookie = 'auth_token=; path=/; max-age=0';
-        document.cookie = 'auth_session=; path=/; max-age=0';
-        document.cookie = 'nostr_auth_session=; path=/; max-age=0';
-        
-        // Instead of clearing all localStorage which might remove user preferences,
-        // remove only auth-related items
-        localStorage.removeItem('userRole');
-        localStorage.removeItem('isTestMode');
-        localStorage.removeItem('nostr_test_pk');
-        localStorage.removeItem('nostr_test_npub');
-        localStorage.removeItem('nostr_test_nsec');
-        localStorage.removeItem('cachedAvailableRoles');
-        localStorage.removeItem('roleCacheTimestamp');
-        localStorage.removeItem('force_role_refresh');
-        
-        // Add a special flag to prevent auto-login
-        localStorage.setItem('prevent_auto_login', 'true');
-        
-        logger.log('Cleared auth cookies and localStorage directly');
-        
-        // Redirect to homepage instead of login page
-        window.location.replace('/');
-        return; // Early return to prevent API call
-      }
-      
-      // Server-side logout is a no-op
-      if (typeof window === 'undefined') {
-        return;
-      }
-      
-      // If we somehow get here, try the API as a fallback using our safe API utilities
-      const logoutData = await safeJsonFetch<LogoutResponse>('/api/auth/logout', {
+      // Call the logout API endpoint
+      const response = await fetch('/api/auth/logout', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        credentials: 'include',
       });
       
-      if (!logoutData || !logoutData.success) {
-        logger.warn('API logout reported failure, but cookies were cleared');
+      if (!response.ok) {
+        const errorData = await response.json();
+        logger.warn('Logout API call failed, but proceeding with client-side logout', { 
+          status: response.status,
+          message: errorData.message 
+        });
       }
+      
+      // Clear stored auth data
+      await sessionStorage.removeItem('auth');
+      await localStorage.removeItem('auth');
+      
+      // Reset auth state
+      this.updateAuthState({
+        isLoggedIn: false,
+        pubkey: '',
+        currentRole: 'viewer',
+        availableRoles: [],
+        isTestMode: false
+      });
+      
+      this._provider = 'nostr';
+      
+      logger.info('User logged out successfully');
     } catch (error) {
-      logger.error('Auth service logout error:', error);
-      // Force redirect to login even on error
-      if (typeof window !== 'undefined') {
-        window.location.href = '/login';
-      }
+      errorService.reportError(
+        error instanceof Error ? error : new Error('Logout failed'),
+        'authService.logout',
+        'auth',
+        'warning',
+        {
+          category: ErrorCategory.OPERATIONAL,
+          userFacing: false
+        }
+      );
+      
+      logger.warn('Error during logout', { 
+        error: error instanceof Error ? error.message : 'Unknown error' 
+      });
+      
+      // Even if the API call fails, we should still clear local state
+      await sessionStorage.removeItem('auth');
+      await localStorage.removeItem('auth');
+      
+      // Reset auth state
+      this.updateAuthState({
+        isLoggedIn: false,
+        pubkey: '',
+        currentRole: 'viewer',
+        availableRoles: [],
+        isTestMode: false
+      });
+    } finally {
+      this._isLoading = false;
     }
   }
 
   /**
-   * Refresh the roles for a user
-   * 
-   * @param pubkey - The Nostr public key
-   * @returns The updated authentication state
+   * Check if the current user has a specific role
+   * @param role The role to check
+   * @returns Whether the user has the specified role
    */
-  async refreshRoles(pubkey: string): Promise<AuthState> {
-    try {
-      // Check if API calls should be bypassed
-      if (typeof window !== 'undefined' && localStorage.getItem('bypass_api_calls') === 'true') {
-        logger.log('Bypassing API call for refreshRoles due to bypass_api_calls flag');
-        
-        // Provide all roles for test mode by default
-        const ALL_ROLES: UserRole[] = ['advertiser', 'publisher', 'admin', 'stakeholder'];
-        
-        // Store in localStorage for consistency
-        if (typeof window !== 'undefined') {
-          localStorage.setItem('cachedAvailableRoles', JSON.stringify(ALL_ROLES));
-          localStorage.setItem('roleCacheTimestamp', Date.now().toString());
-          
-          // Set default role if not already set
-          if (!localStorage.getItem('userRole')) {
-            localStorage.setItem('userRole', 'advertiser');
-          }
-        }
-        
-        return {
-          isLoggedIn: true,
-          pubkey,
-          isTestMode: true,
-          availableRoles: ALL_ROLES,
-        };
-      }
-      
-      // Special handling for test mode
-      if (this.isTestPublicKey(pubkey)) {
-        logger.log('Test mode detected in refreshRoles, providing all roles directly');
-        
-        // For test mode, provide all roles by default
-        const ALL_ROLES: UserRole[] = ['advertiser', 'publisher', 'admin', 'stakeholder'];
-        
-        // Also store in localStorage for consistency
-        if (typeof window !== 'undefined') {
-          localStorage.setItem('cachedAvailableRoles', JSON.stringify(ALL_ROLES));
-          localStorage.setItem('roleCacheTimestamp', Date.now().toString());
-          
-          // Store default role if none is set
-          if (!localStorage.getItem('userRole')) {
-            localStorage.setItem('userRole', 'advertiser');
-          }
-        }
-        
-        // Try to enable all roles via API, but don't fail if it doesn't work
-        try {
-          await this.enableTestModeRoles(pubkey);
-        } catch (enableError) {
-          logger.warn('Failed to enable test roles via API, continuing with client-side roles', enableError);
-        }
-        
-        return {
-          isLoggedIn: true,
-          pubkey,
-          isTestMode: true,
-          availableRoles: ALL_ROLES,
-        };
-      }
-      
-      // Use safe API utilities for network request
-      const refreshData = await safeJsonFetch<RefreshRolesResponse>(`/api/auth/refresh-roles?pubkey=${encodeURIComponent(pubkey)}`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        credentials: 'include',
-      });
-      
-      // If the request failed or returned null, handle gracefully
-      if (!refreshData) {
-        throw new Error('Failed to refresh roles');
-      }
-      
-      // Cache the roles in localStorage
-      if (typeof window !== 'undefined') {
-        localStorage.setItem('cachedAvailableRoles', JSON.stringify(refreshData.availableRoles));
-        localStorage.setItem('roleCacheTimestamp', Date.now().toString());
-      }
-      
-      return {
-        isLoggedIn: true,
-        pubkey,
-        isTestMode: false, // Default to false if not provided
-        availableRoles: refreshData.availableRoles || [],
-      };
-    } catch (error) {
-      logger.error('Auth service refreshRoles error:', error);
-      
-      // For test mode, provide roles directly as fallback
-      if (this.isTestPublicKey(pubkey)) {
-        const ALL_ROLES: UserRole[] = ['advertiser', 'publisher', 'admin', 'stakeholder'];
-        
-        return {
-          isLoggedIn: true,
-          pubkey,
-          isTestMode: true,
-          availableRoles: ALL_ROLES,
-        };
-      }
-      
-      // Try to use cached roles from localStorage
-      if (typeof window !== 'undefined') {
-        try {
-          const cachedRoles = localStorage.getItem('cachedAvailableRoles');
-          if (cachedRoles) {
-            const availableRoles = JSON.parse(cachedRoles) as UserRole[];
-            logger.log('Using cached roles from localStorage');
-            
-            return {
-              isLoggedIn: true,
-              pubkey,
-              isTestMode: false,
-              availableRoles,
-            };
-          }
-        } catch (e) {
-          logger.error('Error parsing cached roles:', e);
-        }
-      }
-      
-      throw new Error('Failed to refresh roles and no cached roles available');
+  public hasRole(role: UserRoleType): boolean {
+    if (!this._authState.isLoggedIn) {
+      return false;
     }
+    
+    // Admin role has access to everything
+    if (this._authState.currentRole === 'admin') {
+      return true;
+    }
+    
+    // Check if the user has the specific role
+    return this._authState.availableRoles.includes(role);
   }
 
   /**
-   * Enable roles for test accounts
-   * 
-   * @param pubkey - The Nostr public key
-   * @returns Whether the operation was successful
+   * Switch to a different role
+   * @param role The role to switch to
+   * @returns Whether the role switch was successful
    */
-  async enableTestModeRoles(pubkey: string): Promise<boolean> {
-    // This method should only be used for test public keys
-    if (!this.isTestPublicKey(pubkey)) {
-      logger.warn(`Attempted to enable test roles for non-test pubkey: ${pubkey}`);
+  public async switchRole(role: UserRoleType): Promise<boolean> {
+    if (!this._authState.isLoggedIn) {
+      return false;
+    }
+    
+    if (!this._authState.availableRoles.includes(role)) {
+      this._error = new Error(`User does not have the role: ${role}`);
       return false;
     }
     
     try {
-      const enableData = await safeJsonFetch<{ success: boolean }>('/api/auth/enable-test-roles', {
+      // Update the role in the API
+      const response = await fetch('/api/auth/role', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ pubkey }),
-        credentials: 'include',
+        body: JSON.stringify({ role }),
       });
       
-      // If the request failed or returned null, handle gracefully
-      if (!enableData) {
-        return false;
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || `Failed to switch to role: ${role}`);
       }
       
-      return enableData.success === true;
+      // Update local state
+      this.updateAuthState({
+        currentRole: role
+      });
+      
+      // Persist the updated state
+      await this.persistToStorage();
+      
+      logger.info(`Switched to role: ${role}`, { 
+        pubkey: this._authState.pubkey 
+      });
+      
+      return true;
     } catch (error) {
-      logger.error('Error enabling test roles:', error);
+      this._error = error instanceof Error 
+        ? error 
+        : new Error(`Failed to switch to role: ${role}`);
+      
+      errorService.reportError(
+        this._error,
+        'authService.switchRole',
+        'auth',
+        'error',
+        {
+          category: ErrorCategory.OPERATIONAL,
+          userFacing: true,
+          data: { role }
+        }
+      );
+      
+      logger.error('Role switch failed', { 
+        error: this._error.message,
+        role,
+        pubkey: this._authState.pubkey
+      });
+      
       return false;
     }
   }
+
+  /**
+   * Refresh the user's available roles
+   * @returns The updated available roles
+   */
+  public async refreshRoles(): Promise<UserRoleType[]> {
+    if (!this._authState.isLoggedIn) {
+      return [];
+    }
+    
+    this._isLoading = true;
+    
+    try {
+      // Fetch updated roles from the API
+      const response = await fetch('/api/auth/roles', {
+        method: 'GET'
+      });
+      
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Failed to refresh roles');
+      }
+      
+      const rolesData = await response.json();
+      
+      // Update local state
+      this.updateAuthState({
+        availableRoles: rolesData.roles || []
+      });
+      
+      // Persist the updated state
+      await this.persistToStorage();
+      
+      logger.info('Roles refreshed successfully', { 
+        pubkey: this._authState.pubkey,
+        roles: this._authState.availableRoles
+      });
+      
+      return this._authState.availableRoles;
+    } catch (error) {
+      errorService.reportError(
+        error instanceof Error ? error : new Error('Failed to refresh roles'),
+        'authService.refreshRoles',
+        'auth',
+        'warning',
+        {
+          category: ErrorCategory.OPERATIONAL,
+          userFacing: false
+        }
+      );
+      
+      logger.warn('Error refreshing roles', { 
+        error: error instanceof Error ? error.message : 'Unknown error',
+        pubkey: this._authState.pubkey
+      });
+      
+      return this._authState.availableRoles;
+    } finally {
+      this._isLoading = false;
+    }
+  }
+
+  /**
+   * Enable test mode for development and testing
+   */
+  public async enableTestMode(): Promise<boolean> {
+    try {
+      // Generate test keys
+      const testKeys = await nostr.generateTestKeyPair();
+      
+      // Login with the test keys
+      await this.loginWithNostr({ testMode: true });
+      
+      logger.info('Test mode enabled successfully', { 
+        pubkey: this._authState.pubkey 
+      });
+      
+      return true;
+    } catch (error) {
+      errorService.reportError(
+        error instanceof Error ? error : new Error('Failed to enable test mode'),
+        'authService.enableTestMode',
+        'auth',
+        'error',
+        {
+          category: ErrorCategory.OPERATIONAL,
+          userFacing: true
+        }
+      );
+      
+      logger.error('Failed to enable test mode', { 
+        error: error instanceof Error ? error.message : 'Unknown error' 
+      });
+      
+      return false;
+    }
+  }
+
+  /**
+   * Disable test mode and revert to normal authentication
+   */
+  public async disableTestMode(): Promise<void> {
+    if (!this._authState.isTestMode) {
+      return;
+    }
+    
+    try {
+      // Clear test mode data
+      await nostr.clearStoredTestKeys();
+      
+      // Logout to reset auth state
+      await this.logout();
+      
+      logger.info('Test mode disabled successfully');
+    } catch (error) {
+      errorService.reportError(
+        error instanceof Error ? error : new Error('Failed to disable test mode'),
+        'authService.disableTestMode',
+        'auth',
+        'warning',
+        {
+          category: ErrorCategory.OPERATIONAL,
+          userFacing: false
+        }
+      );
+      
+      logger.warn('Error disabling test mode', { 
+        error: error instanceof Error ? error.message : 'Unknown error' 
+      });
+      
+      // Force reset auth state even if the API call fails
+      this.updateAuthState({
+        isLoggedIn: false,
+        pubkey: '',
+        currentRole: 'viewer',
+        availableRoles: [],
+        isTestMode: false
+      });
+      
+      await sessionStorage.removeItem('auth');
+      await localStorage.removeItem('auth');
+    }
+  }
 }
+
+/**
+ * React Hook for using the AuthService
+ * @returns An object with auth state and methods
+ */
+export const useAuth = () => {
+  const [authState, setAuthState] = useState<AuthState>(AuthService.getInstance().authState);
+  const [isLoading, setIsLoading] = useState<boolean>(AuthService.getInstance().isLoading);
+  const [error, setError] = useState<Error | null>(AuthService.getInstance().error);
+  
+  // Subscribe to auth state changes
+  useEffect(() => {
+    const unsubscribe = AuthService.getInstance().subscribe(() => {
+      setAuthState({ ...AuthService.getInstance().authState });
+      setIsLoading(AuthService.getInstance().isLoading);
+      setError(AuthService.getInstance().error);
+    });
+    
+    return unsubscribe;
+  }, []);
+  
+  return {
+    // Auth state
+    authState,
+    isLoading,
+    error,
+    isLoggedIn: authState.isLoggedIn,
+    pubkey: authState.pubkey,
+    currentRole: authState.currentRole,
+    availableRoles: authState.availableRoles,
+    isTestMode: authState.isTestMode,
+    
+    // Auth methods
+    loginWithNostr: (options?: { testMode?: boolean }) => 
+      AuthService.getInstance().loginWithNostr(options),
+    loginWithApiKey: (apiKey: string) => 
+      AuthService.getInstance().loginWithApiKey(apiKey),
+    logout: () => 
+      AuthService.getInstance().logout(),
+    hasRole: (role: UserRoleType) => 
+      AuthService.getInstance().hasRole(role),
+    switchRole: (role: UserRoleType) => 
+      AuthService.getInstance().switchRole(role),
+    refreshRoles: () => 
+      AuthService.getInstance().refreshRoles(),
+    enableTestMode: () => 
+      AuthService.getInstance().enableTestMode(),
+    disableTestMode: () => 
+      AuthService.getInstance().disableTestMode()
+  };
+};
+
+export default AuthService;

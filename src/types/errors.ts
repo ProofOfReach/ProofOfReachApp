@@ -1,93 +1,78 @@
 /**
- * Error types for the application
+ * Error category enum
+ * Used to categorize errors by their source and nature
  */
-
-// Possible error types
-export type ErrorType = 
-  | 'api'          // API/HTTP errors
-  | 'validation'   // Form validation errors
-  | 'network'      // Network connectivity errors
-  | 'auth'         // Authentication/authorization errors
-  | 'permission'   // Permission denied errors
-  | 'unexpected'   // Unexpected errors 
-  | 'business'     // Business logic errors
-  | 'timeout'      // Timeout errors
-  | 'external'     // External service errors
-  | 'unknown';     // Unknown/unclassified errors
-
-// Error categories for API error handling
 export enum ErrorCategory {
-  USER_INPUT = 'USER_INPUT',           // 400: Validation errors, bad inputs
-  AUTHORIZATION = 'AUTHORIZATION',     // 403: Permission/access denied errors
-  RESOURCE = 'RESOURCE',               // 404: Resource not found
-  OPERATIONAL = 'OPERATIONAL',         // 500: Server errors, database issues
-  PROGRAMMER = 'PROGRAMMER',           // 500: Programming errors, bugs
-  BUSINESS = 'BUSINESS'                // 422: Business logic errors
+  // User-related errors
+  USER_INPUT = 'user_input', // Invalid input, validation errors
+  PERMISSIONS = 'permissions', // Authorization, access control issues
+  
+  // System-related errors  
+  OPERATIONAL = 'operational', // Expected operational errors (e.g., timeouts)
+  TECHNICAL = 'technical', // Internal technical errors (e.g., bugs, crashes)
+  CONFIGURATION = 'configuration', // Configuration issues
+  
+  // External errors
+  EXTERNAL = 'external', // External service/API errors
+  NETWORK = 'network', // Network-related errors
+  
+  // Other
+  UNKNOWN = 'unknown' // Uncategorized errors
 }
 
-// Error severity levels
-export type ErrorSeverity = 
-  | 'info'        // Informational, non-critical
-  | 'warning'     // Warning, potential issue
-  | 'error'       // Error, functionality affected
-  | 'critical'    // Critical, system failure
-  | 'success';    // Success message (for toast compatibility)
+/**
+ * Error type string literal type
+ * Used to categorize errors by their functional domain
+ */
+export type ErrorType = 
+  | 'validation' 
+  | 'api' 
+  | 'auth' 
+  | 'network' 
+  | 'database' 
+  | 'render' 
+  | 'state' 
+  | 'payment'
+  | 'onboarding'
+  | 'unknown';
 
-// Field error for form validation
+/**
+ * Error severity string literal type
+ * Used to indicate the severity/impact of an error
+ */
+export type ErrorSeverity = 'critical' | 'error' | 'warning' | 'info';
+
+/**
+ * Field error interface for validation errors
+ */
 export interface FieldError {
   field: string;
   message: string;
+  code?: string;
+  path?: string[];
 }
 
-// Core error state interface
+/**
+ * Error state interface
+ * Represents the complete state of an error in the system
+ */
 export interface ErrorState {
   // Core properties
-  id: string;                       // Unique identifier for the error
-  message: string;                  // User-friendly error message
-  timestamp: number;                // When the error occurred
+  id: string;
+  message: string;
+  source: string;
+  type: ErrorType;
+  severity: ErrorSeverity;
+  timestamp: string;
+  category: ErrorCategory;
   
-  // Classification
-  type: ErrorType;                  // Type of error
-  severity: ErrorSeverity;          // Error severity
-  source: string;                   // Source of the error (component, function, etc.)
-  category?: ErrorCategory;         // Error category (user input, auth, etc.)
+  // Status
+  active: boolean;
   
   // Additional info
-  details?: string;                 // Detailed error information (optional)
-  code?: string | number;           // Error code (optional)
-  stack?: string;                   // Error stack trace (optional)
-  data?: Record<string, any>;       // Additional error data (optional)
-  retry?: (() => void) | null;      // Retry function if available
-  
-  // State tracking
-  active: boolean;                  // Whether the error is currently active
-  handled: boolean;                 // Whether the error has been handled
-  dismissed?: boolean;              // Whether the error has been dismissed by user
-  retryCount?: number;              // Number of retry attempts (optional)
-  
-  // Recovery and user experience
-  recoverable?: boolean;            // Whether the error can be recovered from
-  retryable?: boolean;              // Whether the operation can be retried
-  userFacing?: boolean;             // Whether the error should be shown to user
-  suggestedAction?: string;         // Suggested action for the user
-  
-  // Correlation and tracing
-  correlationId?: string;           // For tracking related errors
-  
-  // Related errors
-  errors?: FieldError[];            // For validation errors with multiple fields
+  userFacing: boolean;
+  details?: string;
+  stack?: string;
+  data?: Record<string, any>;
+  errors?: FieldError[];
 }
-
-// Context state for error management
-export interface ErrorContextState {
-  errors: ErrorState[];             // All tracked errors
-  globalError: ErrorState | null;   // Current global error
-  toastError: ErrorState | null;    // Current toast error
-}
-
-// Default error state
-export const defaultErrorState: ErrorContextState = {
-  errors: [],
-  globalError: null,
-  toastError: null,
-};

@@ -248,6 +248,6 @@ export function useErrorState() {
     errors: errorContext?.state.errors || [],
     globalError: errorContext?.state.globalError || null,
     toastError: errorContext?.state.toastError || null,
-    hasErrors: errorContext ? errorContext.state.errors.length > 0 : false,
+    hasErrors: errorContext?.state.errors ? errorContext.state.errors.length > 0 : false,
   };
 }

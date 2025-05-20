@@ -1,699 +1,293 @@
+import { v4 as uuidv4 } from 'uuid';
+import { ErrorCategory, ErrorSeverity, ErrorState, ErrorType, FieldError } from '../types/errors';
+import { logger } from './logger';
+
+/**
+ * Maximum number of retries for operations
+ */
+const MAX_RETRIES = 3;
+
+/**
+ * Base exponential backoff time in milliseconds
+ */
+const BASE_BACKOFF_MS = 300;
+
+/**
+ * Error tracking metadata
+ */
+interface ErrorTraceContext {
+  [key: string]: any;
+  lastUpdated: number;
+}
+
 /**
  * Error Service
  * 
- * Centralized service for handling, logging, and tracking errors throughout
- * the application. This service is the core of the error handling infrastructure.
- * 
- * Phase 4 adds:
- * - Specialized error handlers for different error types
- * - Recovery mechanisms including retries with exponential backoff
- * - Automatic error categorization
- * - Better error correlation and context tracking
+ * Centralized service for error handling, reporting, and management.
+ * This service is part of the Phase 1 error handling infrastructure.
  */
-
-/**
- * Format a user-friendly error message from various error types
- * @param error The error object or message
- * @param defaultMessage Fallback message if error cannot be processed
- * @returns A user-friendly error message as a string
- */
-export function formatUserErrorMessage(error: any, defaultMessage: string = 'An error occurred'): string {
-  if (error instanceof Error) {
-    return error.message;
-  }
-  
-  if (typeof error === 'string') {
-    return error;
-  }
-  
-  if (error && typeof error === 'object' && error.message) {
-    return error.message;
-  }
-  
-  return defaultMessage;
-}
-
-import { v4 as uuidv4 } from 'uuid';
-import { 
-  ErrorCategory,
-  ErrorSeverity, 
-  ErrorType, 
-  ErrorState,
-  FieldError
-} from '@/types/errors';
-
-// Default error messages by type
-const DEFAULT_ERROR_MESSAGES: Record<ErrorType, string> = {
-  validation: 'Please check your input and try again.',
-  api: 'An error occurred while communicating with the server.',
-  auth: 'Authentication error. Please log in again.',
-  network: 'Network connection issue. Please check your internet connection.',
-  permission: 'You don\'t have permission to perform this action.',
-  unexpected: 'An unexpected error occurred. Please try again later.',
-  business: 'Unable to complete the requested action.',
-  timeout: 'The operation timed out. Please try again.',
-  external: 'An error occurred with an external service.',
-  unknown: 'An unknown error occurred. Please try again later.'
-};
-
-// Error category mapping
-const ERROR_TYPE_TO_CATEGORY: Record<ErrorType, ErrorCategory> = {
-  validation: ErrorCategory.USER_INPUT,
-  api: ErrorCategory.OPERATIONAL,
-  auth: ErrorCategory.AUTHORIZATION,
-  network: ErrorCategory.OPERATIONAL,
-  permission: ErrorCategory.AUTHORIZATION,
-  unexpected: ErrorCategory.PROGRAMMER,
-  business: ErrorCategory.BUSINESS,
-  timeout: ErrorCategory.RESOURCE,
-  external: ErrorCategory.OPERATIONAL,
-  unknown: ErrorCategory.OPERATIONAL
-};
-
-// For analytics & monitoring
-interface ErrorMetrics {
-  total: number;
-  byType: Record<ErrorType, number>;
-  bySeverity: Record<ErrorSeverity, number>;
-  byCategory: Record<ErrorCategory, number>;
-  recent: ErrorState[];
-  recoveryAttempts: number;
-  successfulRecoveries: number;
-}
-
-// Retry configuration options
-export interface RetryOptions {
-  retries: number;
-  initialDelay: number;
-  maxDelay?: number;
-  backoffFactor?: number;
-  shouldRetry?: (error: any, attemptCount: number) => boolean;
-  onRetry?: (error: any, attemptCount: number) => void;
-}
-
-// Default retry options
-const DEFAULT_RETRY_OPTIONS: RetryOptions = {
-  retries: 3,
-  initialDelay: 1000,
-  maxDelay: 10000,
-  backoffFactor: 2,
-  shouldRetry: (error: any) => true,
-  onRetry: (error: any, attemptCount: number) => console.log(`Retry attempt ${attemptCount} after error:`, error)
-};
-
 export class ErrorService {
   private static instance: ErrorService;
-  private metrics: ErrorMetrics;
-  private readonly MAX_RECENT_ERRORS = 50;
-  private listeners: ((error: ErrorState) => void)[] = [];
-  private clearListeners: ((id: string) => void)[] = [];
-  private globalErrorListeners: ((error: ErrorState | null) => void)[] = [];
-  private recoveryListeners: ((error: ErrorState, success: boolean) => void)[] = [];
-  
-  // Correlation and tracing related properties
-  private correlationMap: Record<string, string[]> = {};
-  private traceContext: Record<string, any> = {};
-  private static readonly CORRELATION_EXPIRY_MS = 30 * 60 * 1000; // 30 minutes
-  private correlationExpiry: Record<string, number> = {};
-  private cleanupTimer: NodeJS.Timeout | null = null;
+  private errors: Record<string, ErrorState> = {};
+  private traceContexts: Record<string, ErrorTraceContext> = {};
+  private listeners: Array<(error: ErrorState) => void> = [];
+  private clearListeners: Array<(errorId: string) => void> = [];
 
-  private constructor() {
-    this.metrics = {
-      total: 0,
-      byType: {
-        validation: 0,
-        api: 0,
-        auth: 0,
-        network: 0,
-        permission: 0,
-        unexpected: 0,
-        business: 0,
-        timeout: 0,
-        external: 0,
-        unknown: 0
-      },
-      bySeverity: {
-        info: 0,
-        warning: 0,
-        error: 0,
-        critical: 0,
-        success: 0
-      },
-      byCategory: {
-        [ErrorCategory.USER_INPUT]: 0,
-        [ErrorCategory.AUTHORIZATION]: 0,
-        [ErrorCategory.RESOURCE]: 0,
-        [ErrorCategory.OPERATIONAL]: 0,
-        [ErrorCategory.PROGRAMMER]: 0,
-        [ErrorCategory.BUSINESS]: 0
-      },
-      recent: [],
-      recoveryAttempts: 0,
-      successfulRecoveries: 0
-    };
-    
-    // Set up periodic cleanup of expired correlation IDs
-    if (typeof window !== 'undefined') {
-      // In browser, clean up correlation IDs every 5 minutes
-      this.cleanupTimer = setInterval(() => this.cleanupExpiredCorrelations(), 5 * 60 * 1000);
-    }
-  }
-  
   /**
-   * Clean up expired correlation IDs to prevent memory leaks
+   * Get the singleton instance of ErrorService
    */
-  private cleanupExpiredCorrelations(): void {
-    const now = Date.now();
-    const expiredIds = Object.keys(this.correlationExpiry).filter(
-      id => this.correlationExpiry[id] < now
-    );
-    
-    expiredIds.forEach(id => {
-      delete this.correlationMap[id];
-      delete this.correlationExpiry[id];
-      delete this.traceContext[id];
-    });
-  }
-
-  // Get singleton instance
   public static getInstance(): ErrorService {
     if (!ErrorService.instance) {
       ErrorService.instance = new ErrorService();
     }
     return ErrorService.instance;
   }
-  
+
   /**
-   * Reset the singleton instance (mainly for testing)
+   * Reset the instance (for testing)
    */
   public static resetInstance(): void {
-    if (ErrorService.instance) {
-      ErrorService.instance.dispose();
-      ErrorService.instance = new ErrorService();
-    }
+    ErrorService.instance = new ErrorService();
   }
-  
-  /**
-   * Dispose of the service and clean up resources
-   * Call this when the service is no longer needed, like when unmounting a component tree
-   */
-  public dispose(): void {
-    // Clean up timer
-    if (this.cleanupTimer) {
-      clearInterval(this.cleanupTimer);
-      this.cleanupTimer = null;
-    }
-    
-    // Clear all memory
-    this.listeners = [];
-    this.clearListeners = [];
-    this.globalErrorListeners = [];
-    this.recoveryListeners = [];
-    this.correlationMap = {};
-    this.correlationExpiry = {};
-    this.traceContext = {};
-    this.resetMetrics();
+
+  private constructor() {
+    // Private constructor to enforce singleton pattern
+    logger.debug('Error service initialized');
   }
 
   /**
-   * Reports an error to the error tracking system
+   * Report an error to the error service
    * 
-   * @param error The error object or message
-   * @param source The source of the error (component, service, etc.)
+   * @param error The error to report
+   * @param source The source of the error (component, module, etc.)
    * @param type The type of error
-   * @param severity The severity level
-   * @param options Additional options
-   * @returns The created error state object
+   * @param severity The severity of the error
+   * @param options Additional options for the error
+   * @returns The created error state
    */
   public reportError(
-    error: Error | string,
-    source: string = 'unknown',
+    error: Error | string | unknown,
+    source: string,
     type: ErrorType = 'unknown',
     severity: ErrorSeverity = 'error',
-    options: {
-      code?: string;
+    options?: {
+      userFacing?: boolean;
       details?: string;
-      data?: any;
+      data?: Record<string, any>;
       errors?: FieldError[];
-      retry?: () => void;
       correlationId?: string;
       category?: ErrorCategory;
-      recoverable?: boolean;
-      retryable?: boolean;
-      userFacing?: boolean;
-      suggestedAction?: string;
-    } = {}
+    }
   ): ErrorState {
-    // Determine the appropriate category based on error type if not provided
-    const category = options.category || ERROR_TYPE_TO_CATEGORY[type];
+    const errorId = uuidv4();
+    const timestamp = new Date().toISOString();
     
-    // Generate a correlation ID if not provided
-    const correlationId = options.correlationId || uuidv4();
+    let message: string;
+    let stack: string | undefined;
     
-    // Create error state object
+    if (error instanceof Error) {
+      message = error.message || 'An unknown error occurred';
+      stack = error.stack;
+    } else if (typeof error === 'string') {
+      message = error;
+    } else {
+      message = 'An unknown error occurred';
+    }
+    
     const errorState: ErrorState = {
-      active: true,
-      message: typeof error === 'string' ? error : error.message || DEFAULT_ERROR_MESSAGES[type],
+      id: errorId,
+      message,
+      source,
       type,
       severity,
-      code: options.code,
-      details: options.details || (error instanceof Error ? error.stack : undefined),
-      timestamp: Date.now(),
-      id: uuidv4(),
-      source: source || '',
-      data: options.data || {},
-      errors: options.errors || [],
-      handled: false,
-      retry: options.retry,
-      correlationId,
-      category,
-      recoverable: options.recoverable !== undefined ? options.recoverable : this.isRecoverableError(error, type),
-      retryable: options.retryable !== undefined ? options.retryable : this.isRetryableError(error, type),
-      userFacing: options.userFacing !== undefined ? options.userFacing : this.shouldShowToUser(error, type, severity),
-      suggestedAction: options.suggestedAction
+      timestamp,
+      category: options?.category || ErrorCategory.UNKNOWN,
+      active: true,
+      userFacing: options?.userFacing || false,
+      details: options?.details,
+      stack,
+      data: options?.data,
+      errors: options?.errors
     };
-
-    // Track correlation ID with expiration
-    if (correlationId) {
-      if (!this.correlationMap[correlationId]) {
-        this.correlationMap[correlationId] = [];
-        // Set expiry time for this correlation ID (30 minutes from now)
-        this.correlationExpiry[correlationId] = Date.now() + ErrorService.CORRELATION_EXPIRY_MS;
-      }
-      this.correlationMap[correlationId].push(errorState.id);
-      
-      // Store additional context for this correlation if provided
-      if (options.data && Object.keys(options.data).length > 0) {
-        this.traceContext[correlationId] = {
-          ...(this.traceContext[correlationId] || {}),
-          lastUpdate: Date.now(),
-          relatedData: options.data
-        };
-      }
-    }
-
-    // Update metrics
-    this.updateMetrics(errorState);
-
-    // Console logging in development
-    if (process.env.NODE_ENV === 'development') {
-      this.logErrorToConsole(errorState);
+    
+    // Store the error
+    this.errors[errorId] = errorState;
+    
+    // Add to trace context if correlation ID is provided
+    if (options?.correlationId) {
+      this.addErrorToTraceContext(options.correlationId, errorState);
     }
     
-    // Log the error to the console for all environments
-    // This ensures that logger.error is called for string errors in tests
-    const { logger } = require('@/lib/logger');
-    if (typeof error === 'string') {
-      logger.error(`[${source}] ${error}`);
-    }
-
+    // Log the error
+    this.logError(errorState);
+    
     // Notify listeners
     this.notifyListeners(errorState);
-
-    // Auto-handle the error based on its type if possible
-    this.autoHandleError(errorState);
-
+    
     return errorState;
   }
 
   /**
-   * Clears an error by ID
+   * Clear an error by ID
    * 
-   * @param id The ID of the error to clear
+   * @param errorId The ID of the error to clear
    */
-  public clearError(id: string): void {
-    // Find the error in the recent errors list and mark it as inactive
-    const errorIndex = this.metrics.recent.findIndex(e => e.id === id);
-    if (errorIndex >= 0) {
-      this.metrics.recent[errorIndex].active = false;
+  public clearError(errorId: string): void {
+    const error = this.errors[errorId];
+    if (error) {
+      error.active = false;
+      logger.debug(`Error ${errorId} cleared`);
+      
+      // Notify clear listeners
+      this.notifyClearListeners(errorId);
+    }
+  }
+
+  /**
+   * Format an error for user display
+   * 
+   * @param error The error to format
+   * @param defaultMessage The default message to use if no error is provided
+   * @returns A user-friendly error message
+   */
+  public formatErrorForUser(
+    error: Error | ErrorState | string | null | undefined,
+    defaultMessage = 'An unexpected error occurred. Please try again.'
+  ): string {
+    if (!error) {
+      return defaultMessage;
     }
     
-    // Notify clear listeners
-    this.clearListeners.forEach(listener => listener(id));
-  }
-
-  /**
-   * Sets the active global error
-   * 
-   * @param error The error state to set as global, or null to clear
-   */
-  public setGlobalError(error: ErrorState | null): void {
-    this.globalErrorListeners.forEach(listener => listener(error));
-  }
-
-  /**
-   * Get error metrics for monitoring
-   */
-  public getMetrics(): ErrorMetrics {
-    return { ...this.metrics };
-  }
-
-  /**
-   * Add listener for new errors
-   * 
-   * @param listener The callback function to call when a new error occurs
-   * @returns A function to remove the listener
-   */
-  public addErrorListener(listener: (error: ErrorState) => void): () => void {
-    this.listeners.push(listener);
-    return () => {
-      this.listeners = this.listeners.filter(l => l !== listener);
-    };
-  }
-
-  /**
-   * Add listener for cleared errors
-   * 
-   * @param listener The callback function to call when an error is cleared
-   * @returns A function to remove the listener
-   */
-  public addClearListener(listener: (id: string) => void): () => void {
-    this.clearListeners.push(listener);
-    return () => {
-      this.clearListeners = this.clearListeners.filter(l => l !== listener);
-    };
-  }
-
-  /**
-   * Add listener for global error changes
-   * 
-   * @param listener The callback function to call when the global error changes
-   * @returns A function to remove the listener
-   */
-  public addGlobalErrorListener(listener: (error: ErrorState | null) => void): () => void {
-    this.globalErrorListeners.push(listener);
-    return () => {
-      this.globalErrorListeners = this.globalErrorListeners.filter(l => l !== listener);
-    };
-  }
-
-  /**
-   * Add listener for recovery attempts
-   * 
-   * @param listener The callback function to call when a recovery is attempted
-   * @returns A function to remove the listener
-   */
-  public addRecoveryListener(listener: (error: ErrorState, success: boolean) => void): () => void {
-    this.recoveryListeners.push(listener);
-    return () => {
-      this.recoveryListeners = this.recoveryListeners.filter(l => l !== listener);
-    };
-  }
-
-  /**
-   * Reset all error metrics
-   */
-  public resetMetrics(): void {
-    this.metrics = {
-      total: 0,
-      byType: {
-        validation: 0,
-        api: 0,
-        auth: 0,
-        network: 0,
-        permission: 0,
-        unexpected: 0,
-        business: 0,
-        timeout: 0,
-        external: 0,
-        unknown: 0
-      },
-      bySeverity: {
-        info: 0,
-        warning: 0,
-        error: 0,
-        critical: 0,
-        success: 0
-      },
-      byCategory: {
-        [ErrorCategory.USER_INPUT]: 0,
-        [ErrorCategory.AUTHORIZATION]: 0,
-        [ErrorCategory.RESOURCE]: 0,
-        [ErrorCategory.OPERATIONAL]: 0,
-        [ErrorCategory.PROGRAMMER]: 0,
-        [ErrorCategory.BUSINESS]: 0
-      },
-      recent: [],
-      recoveryAttempts: 0,
-      successfulRecoveries: 0
-    };
-    
-    this.correlationMap = {};
-  }
-
-  /**
-   * Get related errors by correlation ID
-   * 
-   * @param correlationId The correlation ID to look up
-   * @returns Array of error IDs with the same correlation ID
-   */
-  public getRelatedErrors(correlationId: string): string[] {
-    return this.correlationMap[correlationId] || [];
-  }
-  
-  /**
-   * Get trace context for a specific correlation ID
-   * 
-   * @param correlationId The correlation ID to get context for
-   * @returns The trace context data or null if not found
-   */
-  public getTraceContext(correlationId: string): any {
-    return this.traceContext[correlationId] || null;
-  }
-  
-  /**
-   * Set trace context for distributed tracing
-   * 
-   * @param correlationId The correlation ID to associate with this context
-   * @param context The context data to store
-   */
-  public setTraceContext(correlationId: string, context: any): void {
-    // Create correlation ID entry if it doesn't exist
-    if (!this.correlationMap[correlationId]) {
-      this.correlationMap[correlationId] = [];
-      this.correlationExpiry[correlationId] = Date.now() + ErrorService.CORRELATION_EXPIRY_MS;
+    if (typeof error === 'string') {
+      return error;
     }
     
-    // Store or update the context
-    this.traceContext[correlationId] = {
-      ...context,
-      lastUpdate: Date.now()
-    };
-  }
-  
-  /**
-   * Get all active correlation IDs that haven't expired
-   * 
-   * @returns Array of active correlation IDs
-   */
-  public getActiveCorrelationIds(): string[] {
-    const now = Date.now();
-    return Object.keys(this.correlationExpiry).filter(
-      id => this.correlationExpiry[id] > now
-    );
-  }
-  
-  /**
-   * Manually clean up correlation IDs by IDs
-   * Useful when you know certain operations have completed
-   * 
-   * @param correlationIds Array of correlation IDs to clean up
-   */
-  public cleanupCorrelationIds(correlationIds: string[]): void {
-    correlationIds.forEach(id => {
-      delete this.correlationMap[id];
-      delete this.correlationExpiry[id];
-      delete this.traceContext[id];
-    });
+    if (error instanceof Error) {
+      return error.message || defaultMessage;
+    }
+    
+    // If it's an ErrorState object
+    if ('message' in error && typeof error.message === 'string') {
+      return error.message;
+    }
+    
+    return defaultMessage;
   }
 
   /**
-   * Executes a function with automatic retries on failure
+   * Retry an operation with exponential backoff
    * 
-   * @param fn The function to execute
+   * @param operation The operation to retry
    * @param options Retry options
-   * @returns Promise resolving to the function result
+   * @returns The result of the operation
    */
   public async withRetry<T>(
-    fn: () => Promise<T>, 
-    options: Partial<RetryOptions> = {}
+    operation: () => Promise<T>,
+    options?: {
+      maxRetries?: number;
+      baseBackoffMs?: number;
+      onRetry?: (error: Error, attempt: number) => void;
+      shouldRetry?: (error: Error) => boolean;
+    }
   ): Promise<T> {
-    // Ensure we have default values for shouldRetry and onRetry
-    const config = { 
-      ...DEFAULT_RETRY_OPTIONS, 
-      ...options,
-      shouldRetry: options.shouldRetry || DEFAULT_RETRY_OPTIONS.shouldRetry,
-      onRetry: options.onRetry || DEFAULT_RETRY_OPTIONS.onRetry
-    };
+    const maxRetries = options?.maxRetries || MAX_RETRIES;
+    const baseBackoffMs = options?.baseBackoffMs || BASE_BACKOFF_MS;
     
-    let lastError: any;
-    let delay = config.initialDelay;
-
-    for (let attempt = 1; attempt <= config.retries + 1; attempt++) {
+    let attempt = 0;
+    
+    while (true) {
       try {
-        return await fn();
-      } catch (error) {
-        lastError = error;
+        return await operation();
+      } catch (err) {
+        attempt++;
         
-        // Track recovery attempt
-        this.metrics.recoveryAttempts++;
+        const error = err instanceof Error ? err : new Error(String(err));
         
-        // Last attempt failed
-        if (attempt > config.retries) {
+        // Check if we've reached max retries
+        if (attempt >= maxRetries) {
+          logger.warn(`Max retries (${maxRetries}) reached for operation`, { 
+            error: error.message, 
+            attempt 
+          });
           throw error;
         }
         
-        // Check if we should retry - we know shouldRetry is defined now
-        if (!config.shouldRetry!(error, attempt)) {
+        // Check if we should retry this particular error
+        if (options?.shouldRetry && !options.shouldRetry(error)) {
+          logger.debug(`Not retrying operation due to shouldRetry returning false`, { 
+            error: error.message 
+          });
           throw error;
         }
         
-        // Notify retry callback - we know onRetry is defined now
-        if (config.onRetry) {
-          config.onRetry(error, attempt);
+        // Calculate backoff time with exponential backoff and jitter
+        const backoffTime = baseBackoffMs * Math.pow(2, attempt - 1) * (0.8 + 0.4 * Math.random());
+        
+        logger.debug(`Retrying operation after error (attempt ${attempt}/${maxRetries})`, { 
+          error: error.message, 
+          backoffMs: backoffTime 
+        });
+        
+        // Notify retry callback if provided
+        if (options?.onRetry) {
+          options.onRetry(error, attempt);
         }
         
-        // Add jitter to prevent thundering herd problem (±10%)
-        const jitter = delay * (0.9 + Math.random() * 0.2);
-        
-        // Wait before next attempt
-        await new Promise(resolve => setTimeout(resolve, jitter));
-        
-        // Increase delay for next attempt (with max cap)
-        delay = Math.min(delay * (config.backoffFactor || 1), config.maxDelay || Infinity);
+        // Wait for the backoff time
+        await new Promise(resolve => setTimeout(resolve, backoffTime));
       }
     }
-
-    // Should never reach here, but TypeScript requires a return
-    throw lastError;
   }
 
   /**
-   * Creates a specialized error handler for API errors
+   * Create a handler for API errors
    * 
-   * @param source The source of the error
-   * @param options Additional options
-   * @returns A function to handle API errors
+   * @param component The component reporting the error
+   * @param options Options for the handler
+   * @returns An error handler function
    */
   public createApiErrorHandler(
-    source: string, 
-    options: {
-      retryable?: boolean;
+    component: string,
+    options?: {
       userFacing?: boolean;
       severity?: ErrorSeverity;
-      correlationProvider?: () => string;
-      includeRequestInfo?: boolean;
-    } = {}
-  ): (error: any, endpoint?: string, requestInfo?: any) => ErrorState {
-    return (error: any, endpoint?: string, requestInfo?: any) => {
-      const details = endpoint ? `Endpoint: ${endpoint}` : undefined;
-      const statusCode = error.status || error.statusCode;
-      
-      // Get correlation ID from provider or generate a new one
-      const correlationId = options.correlationProvider ? options.correlationProvider() : undefined;
-      
-      // Determine error category based on status code
-      let category;
-      if (statusCode) {
-        if (statusCode >= 400 && statusCode < 500) {
-          if (statusCode === 401 || statusCode === 403) {
-            category = ErrorCategory.AUTHORIZATION;
-          } else if (statusCode === 404) {
-            category = ErrorCategory.RESOURCE;
-          } else {
-            category = ErrorCategory.USER_INPUT;
-          }
-        } else if (statusCode >= 500) {
-          category = ErrorCategory.OPERATIONAL;
-        }
-      }
-      
-      // Determine if error is retryable based on status code
-      const isRetryable = options.retryable !== undefined 
-        ? options.retryable 
-        : (statusCode ? (statusCode >= 500 || statusCode === 429) : true);
-      
-      // Create data object with available request info if enabled
-      const data: Record<string, any> = { 
-        statusCode, 
-        endpoint,
-        ...(options.includeRequestInfo && requestInfo ? { requestInfo } : {})
-      };
-      
-      // Determine appropriate severity based on status code
-      let severity = options.severity;
-      if (!severity && statusCode) {
-        if (statusCode >= 500) {
-          severity = 'error';
-        } else if (statusCode === 429 || statusCode === 403) {
-          severity = 'warning';
-        } else if (statusCode === 404) {
-          severity = 'info';
-        }
-      }
-      
+      type?: ErrorType;
+      category?: ErrorCategory;
+    }
+  ): (error: Error | string | unknown) => ErrorState {
+    return (error: Error | string | unknown) => {
       return this.reportError(
         error,
-        source,
-        'api',
-        severity || 'error',
+        component,
+        options?.type || 'api',
+        options?.severity || 'error',
         {
-          details,
-          data,
-          correlationId,
-          category,
-          retryable: isRetryable,
-          userFacing: options.userFacing !== undefined ? options.userFacing : true,
-          suggestedAction: this.getSuggestedActionForStatusCode(statusCode)
+          userFacing: options?.userFacing !== undefined ? options.userFacing : true,
+          category: options?.category || ErrorCategory.EXTERNAL
         }
       );
     };
   }
-  
-  /**
-   * Get suggested action based on HTTP status code
-   * This helps guide users on what to do next when encountering API errors
-   */
-  private getSuggestedActionForStatusCode(statusCode?: number): string | undefined {
-    if (!statusCode) return undefined;
-    
-    switch (statusCode) {
-      case 401:
-        return 'Please log in again to continue.';
-      case 403:
-        return 'You do not have permission to perform this action.';
-      case 404:
-        return 'The requested resource could not be found.';
-      case 429:
-        return 'Please wait a moment before trying again.';
-      case 500:
-      case 502:
-      case 503:
-      case 504:
-        return 'Please try again later or contact support if the issue persists.';
-      default:
-        return undefined;
-    }
-  }
 
   /**
-   * Creates a specialized error handler for form validation errors
+   * Create a handler for validation errors
    * 
-   * @param source The source component
-   * @returns A function to handle validation errors
+   * @param component The component reporting the error
+   * @returns A validation error handler function
    */
-  public createValidationErrorHandler(source: string): (message: string, fields?: FieldError[]) => ErrorState {
-    return (message: string, fields?: FieldError[]) => {
+  public createValidationErrorHandler(
+    component: string
+  ): (errors: FieldError[]) => ErrorState {
+    return (errors: FieldError[]) => {
+      const firstError = errors[0];
       return this.reportError(
-        message,
-        source,
+        firstError?.message || 'Validation failed',
+        component,
         'validation',
         'warning',
         {
-          errors: fields || [],
           userFacing: true,
-          retryable: false,
-          recoverable: true,
+          errors,
           category: ErrorCategory.USER_INPUT
         }
       );
@@ -701,395 +295,169 @@ export class ErrorService {
   }
 
   /**
-   * Format an error message for display to users
+   * Set context for error tracing
    * 
-   * @param error The error to format
-   * @param defaultMessage Default message if none available
-   * @returns User-friendly error message
+   * @param correlationId The correlation ID
+   * @param context The context to store
    */
-  public formatErrorForUser(error: unknown, defaultMessage = 'An unexpected error occurred'): string {
-    if (!error) {
-      return defaultMessage;
-    }
-    
-    // If it's our error state object
-    if (this.isErrorState(error)) {
-      return error.message;
-    }
-    
-    // If it's a regular Error
-    if (error instanceof Error) {
-      // In production, we might want to use generic messages
-      if (process.env.NODE_ENV === 'production') {
-        return defaultMessage;
-      }
-      return error.message || defaultMessage;
-    }
-    
-    // If it's a string
-    if (typeof error === 'string') {
-      return error;
-    }
-    
-    // If it has a message property
-    if (typeof error === 'object' && error !== null && 'message' in error) {
-      return String((error as any).message);
-    }
-    
-    return defaultMessage;
+  public setTraceContext(correlationId: string, context: Record<string, any>): void {
+    this.traceContexts[correlationId] = {
+      ...context,
+      lastUpdated: Date.now()
+    };
+    logger.debug(`Trace context set for ${correlationId}`);
   }
 
   /**
-   * Attempt to automatically recover from an error
+   * Get context for error tracing
    * 
-   * @param errorState The error state to recover from
-   * @returns Promise resolving to true if recovery was successful
+   * @param correlationId The correlation ID
+   * @returns The trace context or null if not found
    */
-  public async attemptRecovery(errorState: ErrorState): Promise<boolean> {
-    if (!errorState.recoverable) {
-      return false;
+  public getTraceContext(correlationId: string): Record<string, any> | null {
+    const context = this.traceContexts[correlationId];
+    if (!context) {
+      return null;
     }
+    return { ...context };
+  }
 
-    this.metrics.recoveryAttempts++;
+  /**
+   * Clean up stale trace contexts
+   * 
+   * @param maxAge The maximum age of contexts to keep in milliseconds
+   */
+  public cleanupTraceContexts(maxAge = 3600000): void {
+    const now = Date.now();
     
-    try {
-      if (errorState.retry && typeof errorState.retry === 'function') {
-        await errorState.retry();
-        this.metrics.successfulRecoveries++;
-        
-        // Notify recovery listeners
-        this.recoveryListeners.forEach(listener => listener(errorState, true));
-        
-        return true;
+    for (const correlationId in this.traceContexts) {
+      const context = this.traceContexts[correlationId];
+      if (now - context.lastUpdated > maxAge) {
+        delete this.traceContexts[correlationId];
+        logger.debug(`Cleaned up stale trace context for ${correlationId}`);
       }
-      
-      // For network errors, we can try to refresh the resource
-      if (errorState.type === 'network' && typeof window !== 'undefined') {
-        // Refreshing data automatically
-        const success = await this.attemptNetworkRecovery(errorState);
-        
-        if (success) {
-          this.metrics.successfulRecoveries++;
-          
-          // Notify recovery listeners
-          this.recoveryListeners.forEach(listener => listener(errorState, true));
-          
-          return true;
-        }
-      }
-      
-      return false;
-    } catch (recoveryError) {
-      console.error('Error during recovery attempt:', recoveryError);
-      
-      // Notify recovery listeners
-      this.recoveryListeners.forEach(listener => listener(errorState, false));
-      
-      return false;
     }
   }
 
-  // Private methods
+  /**
+   * Add a listener for new errors
+   * 
+   * @param listener The listener function
+   * @returns A function to remove the listener
+   */
+  public addErrorListener(listener: (error: ErrorState) => void): () => void {
+    this.listeners.push(listener);
+    
+    return () => {
+      this.listeners = this.listeners.filter(l => l !== listener);
+    };
+  }
 
-  private updateMetrics(error: ErrorState): void {
-    this.metrics.total++;
+  /**
+   * Add a listener for cleared errors
+   * 
+   * @param listener The listener function
+   * @returns A function to remove the listener
+   */
+  public addClearListener(listener: (errorId: string) => void): () => void {
+    this.clearListeners.push(listener);
     
-    // Update byType metrics with a default if type is undefined
-    const errorType = error.type || 'unknown';
-    this.metrics.byType[errorType]++;
-    
-    // Update bySeverity metrics with a default if severity is undefined
-    const errorSeverity = error.severity || 'error';
-    this.metrics.bySeverity[errorSeverity]++;
-    
-    // Update byCategory metrics if category is defined
-    if (error.category) {
-      this.metrics.byCategory[error.category]++;
-    } else {
-      // Default to OPERATIONAL if category is undefined
-      this.metrics.byCategory[ErrorCategory.OPERATIONAL]++;
-    }
-    
-    // Add to recent errors, maintaining max size
-    this.metrics.recent.unshift(error);
-    if (this.metrics.recent.length > this.MAX_RECENT_ERRORS) {
-      this.metrics.recent.pop();
+    return () => {
+      this.clearListeners = this.clearListeners.filter(l => l !== listener);
+    };
+  }
+
+  /**
+   * Notify all listeners of a new error
+   * 
+   * @param error The error to notify about
+   */
+  private notifyListeners(error: ErrorState): void {
+    for (const listener of this.listeners) {
+      try {
+        listener(error);
+      } catch (err) {
+        logger.error('Error in error listener', { 
+          error: err instanceof Error ? err.message : 'Unknown error' 
+        });
+      }
     }
   }
 
-  private logErrorToConsole(error: ErrorState): void {
-    const timestamp = new Date(error.timestamp).toISOString();
-    const severity = (error.severity || 'error').toUpperCase();
-    const type = error.type || 'unknown';
-    const source = error.source || 'unknown';
-    const prefix = `[${severity}] [${type}] [${source}]`;
+  /**
+   * Notify all clear listeners of a cleared error
+   * 
+   * @param errorId The ID of the cleared error
+   */
+  private notifyClearListeners(errorId: string): void {
+    for (const listener of this.clearListeners) {
+      try {
+        listener(errorId);
+      } catch (err) {
+        logger.error('Error in clear listener', { 
+          error: err instanceof Error ? err.message : 'Unknown error' 
+        });
+      }
+    }
+  }
+
+  /**
+   * Add an error to a trace context
+   * 
+   * @param correlationId The correlation ID
+   * @param error The error to add
+   */
+  private addErrorToTraceContext(correlationId: string, error: ErrorState): void {
+    const context = this.traceContexts[correlationId] || { lastUpdated: Date.now() };
     
-    console.group(`${prefix} ${timestamp} - ${error.message}`);
-    console.log('Error ID:', error.id);
-    console.log('Category:', error.category || 'OPERATIONAL');
-    console.log('Correlation ID:', error.correlationId || 'none');
-    
-    if (error.code) {
-      console.log('Code:', error.code);
+    if (!context.errors) {
+      context.errors = [];
     }
     
-    if (error.details) {
-      console.log('Details:', error.details);
-    }
-    
-    if (error.errors && error.errors.length > 0) {
-      console.log('Validation Errors:', error.errors);
-    }
-    
-    if (error.data) {
-      console.log('Additional Data:', error.data);
-    }
-    
-    console.log('Recovery Info:', {
-      recoverable: error.recoverable,
-      retryable: error.retryable,
-      userFacing: error.userFacing
+    context.errors.push({
+      id: error.id,
+      message: error.message,
+      timestamp: error.timestamp
     });
     
-    console.groupEnd();
-  }
-
-  private notifyListeners(error: ErrorState): void {
-    this.listeners.forEach(listener => listener(error));
+    context.lastUpdated = Date.now();
+    this.traceContexts[correlationId] = context;
   }
 
   /**
-   * Check if an error is potentially recoverable
+   * Log an error to the console
+   * 
+   * @param error The error to log
    */
-  private isRecoverableError(error: unknown, type: ErrorType): boolean {
-    // By default, most operational errors are recoverable
-    if (
-      type === 'api' ||
-      type === 'network' ||
-      type === 'timeout' ||
-      type === 'external'
-    ) {
-      return true;
-    }
+  private logError(error: ErrorState): void {
+    const logData = {
+      errorId: error.id,
+      source: error.source,
+      type: error.type,
+      category: error.category,
+      details: error.details,
+      data: error.data
+    };
     
-    // Validation errors are recoverable (user can fix input)
-    if (type === 'validation') {
-      return true;
+    switch (error.severity) {
+      case 'critical':
+        logger.error(`[CRITICAL] ${error.message}`, logData);
+        break;
+      case 'error':
+        logger.error(error.message, logData);
+        break;
+      case 'warning':
+        logger.warn(error.message, logData);
+        break;
+      case 'info':
+        logger.info(error.message, logData);
+        break;
     }
-    
-    // Programmer errors usually aren't automatically recoverable
-    if (type === 'unexpected') {
-      return false;
-    }
-    
-    return false;
-  }
-
-  /**
-   * Check if an error can be automatically retried
-   */
-  private isRetryableError(error: unknown, type: ErrorType): boolean {
-    // Network, timeout, and some API errors can be retried
-    if (
-      type === 'network' ||
-      type === 'timeout' ||
-      type === 'external'
-    ) {
-      return true;
-    }
-    
-    // API errors can sometimes be retried depending on status code
-    if (type === 'api') {
-      const statusCode = error && typeof error === 'object' && 'status' in error
-        ? (error as any).status
-        : undefined;
-      
-      // 429 (too many requests), 408 (timeout), and 5xx are retryable
-      if (statusCode) {
-        return statusCode === 429 || statusCode === 408 || statusCode >= 500;
-      }
-      
-      return true;
-    }
-    
-    return false;
-  }
-
-  /**
-   * Check if an error should be shown to the user
-   */
-  private shouldShowToUser(error: unknown, type: ErrorType, severity: ErrorSeverity): boolean {
-    // Validation errors should always be shown
-    if (type === 'validation') {
-      return true;
-    }
-    
-    // Critical and error level should be shown
-    if (severity === 'critical' || severity === 'error') {
-      return true;
-    }
-    
-    // Network errors should be shown
-    if (type === 'network') {
-      return true;
-    }
-    
-    // Auth and permission errors should be shown
-    if (type === 'auth' || type === 'permission') {
-      return true;
-    }
-    
-    // Unexpected errors should be shown in dev but not in prod
-    if (type === 'unexpected') {
-      return process.env.NODE_ENV !== 'production';
-    }
-    
-    return false;
-  }
-
-  /**
-   * Auto-handle error based on type
-   */
-  private autoHandleError(error: ErrorState): void {
-    // Automatically retry network errors if we can detect an online state change
-    if (error.type === 'network' && typeof window !== 'undefined' && 'navigator' in window) {
-      const onlineHandler = () => {
-        // If we're back online, try to recover
-        if (navigator.onLine) {
-          this.attemptRecovery(error)
-            .then(success => {
-              if (success) {
-                window.removeEventListener('online', onlineHandler);
-              }
-            })
-            .catch(err => console.error('Error during auto-recovery:', err));
-        }
-      };
-      
-      window.addEventListener('online', onlineHandler);
-      
-      // Clean up after 5 minutes to avoid memory leaks
-      setTimeout(() => {
-        window.removeEventListener('online', onlineHandler);
-      }, 5 * 60 * 1000);
-    }
-    
-    // Handle timeout errors with automatic retry
-    if (error.type === 'timeout' && error.retryable) {
-      // For timeout errors, we implement exponential backoff
-      const retryTimeout = setTimeout(() => {
-        this.attemptRecovery(error)
-          .catch(err => console.error('Error during timeout recovery:', err));
-      }, 2000); // Wait 2 seconds before retry
-      
-      // Store timeout reference in error data for potential cleanup
-      error.data = {
-        ...error.data,
-        retryTimeout
-      };
-    }
-    
-    // Handle API errors with retry mechanism if they're retryable
-    if (error.type === 'api' && error.retryable) {
-      // For API errors, we use the retry function if provided
-      if (error.retry && typeof error.retry === 'function') {
-        const retryTimeout = setTimeout(() => {
-          this.attemptRecovery(error)
-            .catch(err => console.error('Error during API retry:', err));
-        }, 1000); // Wait 1 second before retry
-        
-        // Store timeout reference
-        error.data = {
-          ...error.data,
-          retryTimeout
-        };
-      }
-    }
-    
-    // Handle auth errors by potentially redirecting to login
-    if (error.type === 'auth' && typeof window !== 'undefined') {
-      // Check if this is an authentication error that should redirect
-      if (error.category === ErrorCategory.AUTHORIZATION && 
-          error.data && error.data.redirectToLogin === true) {
-        // Wait a moment to allow error to be displayed first
-        setTimeout(() => {
-          // We don't use window.location.href directly to avoid hard dependencies
-          // The app should register a handler for this event
-          const authErrorEvent = new CustomEvent('auth:loginRequired', {
-            detail: { 
-              reason: error.message, 
-              redirectAfter: 3000 // Redirect after 3 seconds
-            }
-          });
-          window.dispatchEvent(authErrorEvent);
-        }, 500);
-      }
-    }
-    
-    // Track errors for analytics in production
-    if (process.env.NODE_ENV === 'production') {
-      // This could be replaced with a real analytics service
-      this.trackErrorForAnalytics(error);
-    }
-  }
-  
-  /**
-   * Track error for analytics purposes
-   * (Placeholder for integration with an actual analytics service)
-   */
-  private trackErrorForAnalytics(error: ErrorState): void {
-    // In a real app, this would send to an analytics service
-    // For now, we just log a message when not in test environment
-    if (process.env.NODE_ENV !== 'test') {
-      console.log(
-        `[Analytics] Error tracked: ${error.type}:${error.severity} - ${error.message}`
-      );
-    }
-  }
-
-  /**
-   * Attempt to recover from a network error
-   */
-  private async attemptNetworkRecovery(error: ErrorState): Promise<boolean> {
-    // Check network connectivity
-    if (typeof navigator !== 'undefined' && 'onLine' in navigator) {
-      if (!navigator.onLine) {
-        // Can't recover if offline
-        return false;
-      }
-    }
-    
-    // Attempt to re-fetch resource if URL is provided
-    if (error.data && error.data.url) {
-      try {
-        const response = await fetch(error.data.url, {
-          method: 'GET',
-          cache: 'reload', // Force refresh
-        });
-        
-        return response.ok;
-      } catch (e) {
-        return false;
-      }
-    }
-    
-    return false;
-  }
-
-  /**
-   * Type guard to check if an object is an ErrorState
-   */
-  private isErrorState(obj: any): obj is ErrorState {
-    return (
-      obj && 
-      typeof obj === 'object' && 
-      'id' in obj && 
-      'message' in obj && 
-      'type' in obj && 
-      'severity' in obj
-    );
   }
 }
 
-// Export singleton instance
+// Export a singleton instance
 export const errorService = ErrorService.getInstance();
+
+// Re-export ErrorCategory for convenience
+export { ErrorCategory } from '../types/errors';

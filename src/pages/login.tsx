@@ -2,15 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import Layout from '../components/Layout';
 import { useAuthSwitch } from '../hooks/useAuthSwitch';
-import { 
-  hasNostrExtension, 
-  getNostrPublicKey, 
-  generateTestKeyPair, 
-  storeTestKeys, 
-  getStoredTestKeys,
-  generateRegularAccount,
-  storeRegularAccountKeys
-} from '../lib/nostr';
+import { nostr, hasNostrExtension, getNostrPublicKey, generateTestKeyPair, getStoredTestKeys, storeTestKeys } from '../lib/nostr';
 import { postWithAuth } from '../lib/api';
 import { isPostForcedLogout } from '../lib/resetAuth';
 import { logger } from '@/lib/logger';
