@@ -13,6 +13,8 @@ import {
 } from '../lib/nostr';
 import { postWithAuth } from '../lib/api';
 import { isPostForcedLogout } from '../lib/resetAuth';
+import { logger } from '@/lib/logger';
+import { enhancedStorage } from '@/services/enhancedStorageService';
 
 const LoginPage: React.FC = () => {
   const router = useRouter();
@@ -21,8 +23,12 @@ const LoginPage: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [hasExtension, setHasExtension] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
+  const [showTestOptions, setShowTestOptions] = useState(false);
+  const [authStatus, setAuthStatus] = useState<any>(null);
+  const [testKeysGenerated, setTestKeysGenerated] = useState(false);
+  const [generatedKeys, setGeneratedKeys] = useState<{publicKey: string; privateKey: string} | null>(null);
 
-  // Check if user already has Nostr extension
+  // Check if user already has Nostr extension and test mode status
   useEffect(() => {
     const extensionAvailable = hasNostrExtension();
     console.log('Login page - Nostr extension status:', {
@@ -44,8 +50,46 @@ const LoginPage: React.FC = () => {
         prevent_auto_login: localStorage.getItem('prevent_auto_login'),
         bypass_api_calls: localStorage.getItem('bypass_api_calls')
       });
+      
+      // Check if there are any stored test keys
+      const storedTestKeys = getStoredTestKeys();
+      if (storedTestKeys && storedTestKeys.publicKey) {
+        setTestKeysGenerated(true);
+        setGeneratedKeys(storedTestKeys);
+      }
+      
+      // Check if test mode was previously enabled via localStorage
+      const isTestModeEnabled = enhancedStorage.getItem('showTestOptions', { namespace: 'preferences' }) === 'true';
+      if (isTestModeEnabled) {
+        setShowTestOptions(true);
+        
+        // If we have test mode enabled but no keys, generate them
+        if (!storedTestKeys || !storedTestKeys.publicKey) {
+          const newKeys = generateTestKeyPair();
+          setGeneratedKeys(newKeys);
+          setTestKeysGenerated(true);
+          logger.debug('Generated new test keys because previous keys were missing');
+        }
+      }
     }
   }, []);
+  
+  // Toggle test mode on/off
+  const toggleTestMode = () => {
+    const newValue = !showTestOptions;
+    setShowTestOptions(newValue);
+    
+    // Save preference to localStorage
+    enhancedStorage.setItem('showTestOptions', newValue.toString(), { namespace: 'preferences' });
+    
+    // If turning on test mode and no keys generated yet, generate them
+    if (newValue && !testKeysGenerated) {
+      const keys = generateTestKeyPair();
+      setGeneratedKeys(keys);
+      setTestKeysGenerated(true);
+      logger.debug('Generated test keys when enabling test mode');
+    }
+  };
 
   // Check for forced logout flags in URL
   useEffect(() => {
@@ -422,6 +466,52 @@ const LoginPage: React.FC = () => {
             <p className="text-xs text-gray-600 dark:text-gray-400 text-center">
               Creates a new Nostr account with default user role
             </p>
+            
+            {/* Test Mode Section */}
+            <div className="mt-6 border-t border-gray-300 dark:border-gray-600 pt-4">
+              <div className="flex items-center justify-between mb-3">
+                <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                  Developer Test Mode
+                </span>
+                <label className="relative inline-flex items-center cursor-pointer">
+                  <input 
+                    type="checkbox" 
+                    className="sr-only peer"
+                    checked={showTestOptions}
+                    onChange={toggleTestMode}
+                  />
+                  <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
+                </label>
+              </div>
+              
+              {showTestOptions && (
+                <div className="border border-blue-200 dark:border-blue-900 rounded-lg p-3 bg-blue-50 dark:bg-blue-900/30">
+                  <p className="text-sm text-blue-800 dark:text-blue-200 mb-3">
+                    Test mode allows you to explore the application with simulated data and user roles.
+                  </p>
+                  
+                  {testKeysGenerated && generatedKeys && (
+                    <div className="mb-3 p-2 bg-gray-100 dark:bg-gray-800 rounded text-xs font-mono overflow-x-auto">
+                      <p>Public Key: <span className="text-green-600 dark:text-green-400">{generatedKeys.publicKey.substring(0, 10)}...{generatedKeys.publicKey.substring(generatedKeys.publicKey.length - 5)}</span></p>
+                      <p>Private Key: <span className="text-red-600 dark:text-red-400">{generatedKeys.privateKey.substring(0, 10)}...{generatedKeys.privateKey.substring(generatedKeys.privateKey.length - 5)}</span></p>
+                    </div>
+                  )}
+                  
+                  <button
+                    onClick={handleTestModeLogin}
+                    disabled={isLoading}
+                    className={`w-full py-2 text-center px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-purple-600 hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 ${
+                      isLoading ? 'opacity-50 cursor-not-allowed' : ''
+                    }`}
+                  >
+                    {isLoading ? 'Starting Test Mode...' : 'Enter Test Mode'}
+                  </button>
+                  <p className="text-xs text-blue-600 dark:text-blue-400 text-center mt-1">
+                    Creates a temporary test account with all user roles
+                  </p>
+                </div>
+              )}
+            </div>
 
             {!hasExtension && (
               <p className="text-sm text-yellow-600 dark:text-yellow-400">
