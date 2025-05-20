@@ -58,13 +58,13 @@ const RoleConfirmation: React.FC<RoleConfirmationProps> = ({ onConfirm }) => {
     {
       role: 'viewer' as UserRoleType,
       title: 'Viewer',
-      description: 'Browse ads and content across the Nostr network',
+      description: 'Browse ads, earn Bitcoin, and enjoy content across the Nostr network',
       icon: <Users className="h-8 w-8 text-blue-500" />,
       benefits: [
+        'Earn Bitcoin for viewing ads',
         'Personalized content recommendations',
         'Control over what ads you see',
-        'Support content creators you enjoy',
-        'Seamless browsing experience'
+        'Support content creators you enjoy'
       ],
       buttonText: 'Set Up as Viewer',
       color: 'blue'
