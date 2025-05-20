@@ -343,9 +343,9 @@ const ViewerOnboarding: React.FC<ViewerOnboardingProps> = ({
                   <div className="flex items-center justify-between">
                     <div>
                       <label htmlFor="shareLocation" className="flex items-center cursor-pointer">
-                        <span className="text-gray-700 dark:text-gray-300">Location Data</span>
+                        <span className="text-gray-700 dark:text-gray-300">Country & State Data</span>
                       </label>
-                      <p className="text-xs text-gray-500 mt-1">Allow advertisers to use your approximate location</p>
+                      <p className="text-xs text-gray-500 mt-1">Allow advertisers to target based on your country and state only (no precise location)</p>
                     </div>
                     <Switch
                       id="shareLocation"
