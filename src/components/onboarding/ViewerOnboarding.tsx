@@ -43,6 +43,21 @@ const ViewerOnboarding: React.FC<ViewerOnboardingProps> = ({
     }
   ]);
   
+  // State for privacy settings
+  const [privacySettings, setPrivacySettings] = useState({
+    personalizedAds: true,
+    adTracking: true,
+    dataSharing: true
+  });
+  
+  // Handle privacy setting changes
+  const handlePrivacySettingChange = (setting: keyof typeof privacySettings) => {
+    setPrivacySettings(prev => ({
+      ...prev,
+      [setting]: !prev[setting]
+    }));
+  };
+  
   // Handle follow/unfollow publisher
   const toggleFollow = (publisherId: string) => {
     setPublishers(publishers.map(pub => 
@@ -100,6 +115,34 @@ const ViewerOnboarding: React.FC<ViewerOnboardingProps> = ({
     'feedback',
     'complete'
   ];
+  
+  // Add CSS for toggle switches
+  React.useEffect(() => {
+    // Add CSS for toggle switches if it doesn't exist already
+    if (!document.getElementById('toggle-switch-styles')) {
+      const style = document.createElement('style');
+      style.id = 'toggle-switch-styles';
+      style.innerHTML = `
+        .toggle-checkbox:checked {
+          right: 0;
+          border-color: #68D391;
+        }
+        .toggle-checkbox:checked + .toggle-label {
+          background-color: #68D391;
+        }
+        .toggle-checkbox {
+          right: 0;
+          z-index: 1;
+          border-color: #D1D5DB;
+          transition: all 0.3s;
+        }
+        .toggle-label {
+          transition: background-color 0.3s;
+        }
+      `;
+      document.head.appendChild(style);
+    }
+  }, []);
   
   // Calculate the current step number and total for display
   const currentStepIndex = stepSequence.indexOf(step);
@@ -327,42 +370,91 @@ const ViewerOnboarding: React.FC<ViewerOnboardingProps> = ({
           <div className="space-y-4">
             <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
               <CheckCircle className="inline-block mr-2 mb-1" size={20} />
-              Privacy Information
+              Privacy Settings
             </h2>
             <p className="text-gray-600 dark:text-gray-300">
-              Important information about your privacy:
+              Control how your data is used:
             </p>
             
             <div className="mt-6 space-y-4">
               <div className="border border-gray-200 dark:border-gray-700 rounded-lg p-4">
-                <h3 className="font-medium text-gray-900 dark:text-white mb-3">How We Protect Your Privacy</h3>
+                <h3 className="font-medium text-gray-900 dark:text-white mb-3">Your Privacy Controls</h3>
                 
-                <ul className="space-y-3">
-                  <li className="flex items-start">
-                    <div className="flex-shrink-0 h-5 w-5 text-purple-500">
-                      <CheckCircle size={18} className="mt-0.5" />
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <label htmlFor="personalized-ads" className="flex items-center cursor-pointer">
+                        <span className="text-gray-700 dark:text-gray-300">Enable personalized ads</span>
+                        <span className="ml-2 text-xs text-gray-500 dark:text-gray-400">(Recommended)</span>
+                      </label>
+                      <p className="text-xs text-gray-500 mt-1">See ads that are relevant to your interests</p>
                     </div>
-                    <p className="ml-2 text-gray-600 dark:text-gray-300">
-                      Apps integrating our SDK will show you contextually relevant ads
-                    </p>
-                  </li>
-                  <li className="flex items-start">
-                    <div className="flex-shrink-0 h-5 w-5 text-purple-500">
-                      <CheckCircle size={18} className="mt-0.5" />
+                    <div className="relative inline-block w-10 mr-2 align-middle select-none">
+                      <input 
+                        type="checkbox" 
+                        id="personalized-ads" 
+                        checked={privacySettings.personalizedAds} 
+                        onChange={() => handlePrivacySettingChange('personalizedAds')}
+                        className="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer"
+                        data-testid="personalized-ads-toggle"
+                      />
+                      <label 
+                        htmlFor="personalized-ads" 
+                        className="toggle-label block overflow-hidden h-6 rounded-full bg-gray-300 cursor-pointer"
+                      ></label>
                     </div>
-                    <p className="ml-2 text-gray-600 dark:text-gray-300">
-                      Your data is handled according to our privacy policy and the app's terms
-                    </p>
-                  </li>
-                  <li className="flex items-start">
-                    <div className="flex-shrink-0 h-5 w-5 text-purple-500">
-                      <CheckCircle size={18} className="mt-0.5" />
+                  </div>
+                  
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <label htmlFor="ad-tracking" className="flex items-center cursor-pointer">
+                        <span className="text-gray-700 dark:text-gray-300">Allow ad performance tracking</span>
+                      </label>
+                      <p className="text-xs text-gray-500 mt-1">Help advertisers measure ad effectiveness</p>
                     </div>
-                    <p className="ml-2 text-gray-600 dark:text-gray-300">
-                      You can request a data export from each individual app that integrates our SDK
-                    </p>
-                  </li>
-                </ul>
+                    <div className="relative inline-block w-10 mr-2 align-middle select-none">
+                      <input 
+                        type="checkbox" 
+                        id="ad-tracking" 
+                        checked={privacySettings.adTracking}
+                        onChange={() => handlePrivacySettingChange('adTracking')}
+                        className="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer"
+                        data-testid="ad-tracking-toggle"
+                      />
+                      <label 
+                        htmlFor="ad-tracking" 
+                        className="toggle-label block overflow-hidden h-6 rounded-full bg-gray-300 cursor-pointer"
+                      ></label>
+                    </div>
+                  </div>
+                  
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <label htmlFor="data-sharing" className="flex items-center cursor-pointer">
+                        <span className="text-gray-700 dark:text-gray-300">Share usage data to improve services</span>
+                      </label>
+                      <p className="text-xs text-gray-500 mt-1">Help us enhance the platform and content recommendations</p>
+                    </div>
+                    <div className="relative inline-block w-10 mr-2 align-middle select-none">
+                      <input 
+                        type="checkbox" 
+                        id="data-sharing" 
+                        checked={privacySettings.dataSharing}
+                        onChange={() => handlePrivacySettingChange('dataSharing')}
+                        className="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer"
+                        data-testid="data-sharing-toggle"
+                      />
+                      <label 
+                        htmlFor="data-sharing" 
+                        className="toggle-label block overflow-hidden h-6 rounded-full bg-gray-300 cursor-pointer"
+                      ></label>
+                    </div>
+                  </div>
+                </div>
+                
+                <p className="mt-4 text-sm text-gray-500 dark:text-gray-400">
+                  These settings apply to apps that integrate with our platform. Individual apps may have additional privacy controls.
+                </p>
               </div>
             </div>
           </div>

@@ -183,7 +183,7 @@ describe('ViewerOnboarding', () => {
 
     // Now we should be on privacy step
     await waitFor(() => {
-      expect(screen.getByRole('heading', { name: /privacy information/i })).toBeInTheDocument();
+      expect(screen.getByRole('heading', { name: /privacy settings/i })).toBeInTheDocument();
     });
 
     // Click to go to feedback step
