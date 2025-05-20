@@ -3,7 +3,7 @@ import { useOnboarding } from '@/context/OnboardingContext';
 import OnboardingProgress from './OnboardingProgress';
 import RoleConfirmation from './RoleConfirmation';
 import ViewerOnboarding from './ViewerOnboarding';
-import PublisherOnboarding from './PublisherOnboarding.new';
+import PublisherOnboarding from './PublisherOnboarding';
 import AdvertiserOnboarding from './AdvertiserOnboarding';
 import Loading from '@/components/Loading';
 import { ArrowLeft, ArrowRight, X } from 'react-feather';
@@ -16,7 +16,6 @@ const OnboardingWizard: React.FC = () => {
     isFirstStep, 
     isLastStep,
     selectedRole,
-    setCurrentStep,
     completeOnboarding,
     isLoading,
     skipOnboarding
@@ -30,10 +29,10 @@ const OnboardingWizard: React.FC = () => {
         selectedRole !== 'viewer' && 
         selectedRole !== 'publisher' && 
         selectedRole !== 'advertiser') {
-      // Using the function directly from context
-      setCurrentStep('role-selection');
+      // We'll just use goToNextStep to move to a valid step
+      goToNextStep();
     }
-  }, [currentStep, selectedRole]);
+  }, [currentStep, selectedRole, goToNextStep]);
   
   // Render the current step content based on step and selected role
   const renderStepContent = () => {
@@ -82,23 +81,30 @@ const OnboardingWizard: React.FC = () => {
   
   return (
     <div className="bg-white dark:bg-gray-900 rounded-lg shadow-lg max-w-4xl mx-auto overflow-hidden">
-      <div className="p-6 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center">
+      <div className="p-6 border-b border-gray-200 dark:border-gray-700">
         <h1 className="text-xl font-bold text-gray-900 dark:text-white">
           {isFirstStep ? 'Welcome to Nostr Ads' : (
             selectedRole ? `${selectedRole.charAt(0).toUpperCase() + selectedRole.slice(1)} Onboarding` : 'Onboarding'
           )}
         </h1>
-        <button 
-          onClick={skipOnboarding}
-          className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
-          aria-label="Skip onboarding"
-        >
-          <X size={20} />
-        </button>
       </div>
       
       <div className="p-6">
-        {currentStep !== 'role-selection' && <OnboardingProgress />}
+        {currentStep !== 'role-selection' && (
+          <div>
+            <OnboardingProgress />
+            <div className="flex justify-end mt-1 mb-4">
+              <button 
+                onClick={skipOnboarding}
+                className="text-sm text-gray-500 hover:text-purple-600 dark:text-gray-400 dark:hover:text-purple-400"
+                aria-label="Skip onboarding"
+                data-testid="onboarding-skip-button"
+              >
+                Skip for now
+              </button>
+            </div>
+          </div>
+        )}
         {renderStepContent()}
       </div>
       
