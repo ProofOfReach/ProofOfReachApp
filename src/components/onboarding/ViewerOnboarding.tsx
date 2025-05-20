@@ -209,63 +209,10 @@ const ViewerOnboarding: React.FC<ViewerOnboardingProps> = ({
     }
   };
   
+  // Navigation buttons are now handled by the parent OnboardingWizard component
   const renderNavButtons = () => {
-    if (step === 'discovery') {
-      return (
-        <div className="flex justify-end mt-6">
-          <button
-            onClick={handleNext}
-            className="px-4 py-2 bg-purple-600 text-white rounded hover:bg-purple-700"
-            aria-label="Next"
-            data-testid="next-button"
-          >
-            Next <ChevronRight size={16} className="inline ml-1" />
-          </button>
-        </div>
-      );
-    } else if (step === 'complete') {
-      return (
-        <div className="flex justify-between mt-6">
-          <button
-            onClick={handleBack}
-            className="px-4 py-2 border border-gray-300 rounded hover:bg-gray-50 dark:border-gray-600 dark:hover:bg-gray-800"
-            aria-label="Back"
-            data-testid="back-button"
-          >
-            <ChevronLeft size={16} className="inline mr-1" /> Back
-          </button>
-          <button
-            onClick={handleNext}
-            className="px-4 py-2 bg-purple-600 text-white rounded hover:bg-purple-700"
-            aria-label="Complete"
-            data-testid="complete-button"
-          >
-            Complete
-          </button>
-        </div>
-      );
-    } else {
-      return (
-        <div className="flex justify-between mt-6">
-          <button
-            onClick={handleBack}
-            className="px-4 py-2 border border-gray-300 rounded hover:bg-gray-50 dark:border-gray-600 dark:hover:bg-gray-800"
-            aria-label="Back"
-            data-testid="back-button"
-          >
-            <ChevronLeft size={16} className="inline mr-1" /> Back
-          </button>
-          <button
-            onClick={handleNext}
-            className="px-4 py-2 bg-purple-600 text-white rounded hover:bg-purple-700"
-            aria-label="Continue"
-            data-testid="continue-button"
-          >
-            Continue <ChevronRight size={16} className="inline ml-1" />
-          </button>
-        </div>
-      );
-    }
+    // Return empty div to maintain layout spacing if needed
+    return <div className="mt-6"></div>;
   };
 
   const renderStepContent = () => {
