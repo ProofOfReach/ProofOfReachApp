@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { OnboardingStep } from '@/context/OnboardingContext';
+import { OnboardingStep, useOnboarding } from '@/context/OnboardingContext';
 import OnboardingProgress from '@/components/onboarding/OnboardingProgress';
 import { CheckCircle, Search, ChevronRight, ChevronLeft, Check } from 'react-feather';
 import { Switch } from '@/components/ui/switch';
@@ -24,6 +24,13 @@ const ViewerOnboarding: React.FC<ViewerOnboardingProps> = ({
   onComplete,
   showNavigation = true
 }) => {
+  // Get context from OnboardingContext
+  const { 
+    progress, 
+    goToNextStep, 
+    goToPreviousStep,
+    totalSteps: contextTotalSteps
+  } = useOnboarding();
   // Sample publishers for demonstration
   const [publishers, setPublishers] = useState<Publisher[]>([
     {
@@ -148,30 +155,39 @@ const ViewerOnboarding: React.FC<ViewerOnboardingProps> = ({
   
   // Calculate the current step number and total for display
   const currentStepIndex = stepSequence.indexOf(step);
-  const totalSteps = stepSequence.length;
+  // Use context's totalSteps if available, otherwise use local calculation
+  const totalSteps = contextTotalSteps || stepSequence.length;
   const currentStepNumber = currentStepIndex + 1;
   
   // The main component will show its own progress indicator when showNavigation is false
   const shouldShowProgress = showNavigation;
 
   const handleNext = () => {
+    // First update the local step
     switch (step) {
       case 'welcome':
         setStep('discovery');
+        // Tell the OnboardingContext to move to next step
+        goToNextStep();
         break;
       case 'discovery': 
         setStep('privacy');
+        goToNextStep();
         break;
       case 'privacy':
         setStep('feedback');
+        goToNextStep();
         break;
       case 'feedback':
         setStep('complete');
+        goToNextStep();
         break;
       case 'complete':
         // Use setTimeout to ensure the state update has time to propagate
         // This helps with test stability and real-world scenarios
         setTimeout(() => {
+          // When at the complete step, notify the OnboardingContext
+          goToNextStep();
           if (onComplete) {
             onComplete();
           }
@@ -186,15 +202,19 @@ const ViewerOnboarding: React.FC<ViewerOnboardingProps> = ({
     switch (step) {
       case 'discovery':
         setStep('welcome');
+        goToPreviousStep(); // Tell the OnboardingContext to move back
         break;
       case 'privacy':
         setStep('discovery');
+        goToPreviousStep();
         break;
       case 'feedback':
         setStep('privacy');
+        goToPreviousStep();
         break;
       case 'complete':
         setStep('feedback');
+        goToPreviousStep();
         break;
       default:
         setStep('welcome');
@@ -575,14 +595,14 @@ const ViewerOnboarding: React.FC<ViewerOnboardingProps> = ({
               Step {currentStepNumber} of {totalSteps}
             </span>
             <span className="text-sm font-medium text-purple-600 dark:text-purple-400">
-              {Math.round((currentStepNumber / totalSteps) * 100)}% Complete
+              {progress}% Complete
             </span>
           </div>
           
           <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2.5">
             <div 
               className="bg-purple-600 h-2.5 rounded-full transition-all duration-300 ease-in-out" 
-              style={{ width: `${Math.round((currentStepNumber / totalSteps) * 100)}%` }}
+              style={{ width: `${progress}%` }}
             />
           </div>
           

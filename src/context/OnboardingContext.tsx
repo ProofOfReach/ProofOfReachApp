@@ -35,8 +35,7 @@ const viewerSteps: OnboardingStep[] = [
   'role-selection',
   'preferences',
   'discovery',
-  'notifications',
-  'privacy',
+  'privacy', // Removed 'notifications' step as it's not relevant for viewers using external apps
   'feedback',
   'complete'
 ];
