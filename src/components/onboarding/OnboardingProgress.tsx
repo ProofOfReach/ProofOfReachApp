@@ -47,16 +47,7 @@ const OnboardingProgress: React.FC<OnboardingProgressProps> = ({
       {/* Using the shadcn UI Progress component */}
       <Progress value={calculatedProgress} className="w-full" />
       
-      {/* Step labels - only show in larger screens */}
-      <div className="hidden md:flex justify-between mt-2 px-1">
-        <span className={`text-xs ${isFirstStep ? 'text-purple-600 dark:text-purple-400 font-medium' : 'text-gray-500 dark:text-gray-400'}`}>
-          Start
-        </span>
-        
-        <span className={`text-xs ${isLastStep ? 'text-purple-600 dark:text-purple-400 font-medium' : 'text-gray-500 dark:text-gray-400'}`}>
-          Complete
-        </span>
-      </div>
+      {/* No step labels as per user request */}
     </div>
   );
 };
