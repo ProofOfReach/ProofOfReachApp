@@ -8,6 +8,10 @@ module.exports = {
     '/src/__tests__/__mocks__/',
     '/src/__tests__/test-utils.tsx'
   ],
+  // Limit workers to reduce CPU usage
+  maxWorkers: '50%',
+  // Use serial execution for tests that touch the same resources
+  maxConcurrency: 5,
   // Only run test files and not utility files
   testRegex: '(/__tests__/.*\\.(test|spec))\\.[jt]sx?$',
   collectCoverage: true,
