@@ -248,12 +248,36 @@ const PublisherOnboarding: React.FC<PublisherOnboardingProps> = React.memo(({ cu
                   </div>
                   
                   <div className="bg-gray-100 dark:bg-gray-800 p-3 rounded text-sm font-mono overflow-x-auto">
-                    {`<script>
-NostrAds.init({
-  publisherKey: '${apiKeyData.key || "YOUR_API_KEY_HERE"}',
-  defaultPlacement: 'feed'
+                    {`<!-- Step 1: Include the Nostr Ads JavaScript SDK -->
+<script src="https://cdn.nostrads.org/sdk/v1/nostr-ads.js"></script>
+
+<!-- Step 2: Configure the SDK -->
+<script>
+// SECURITY BEST PRACTICE:
+// Don't include API keys directly in client-side code.
+// Instead, load the key from your server-side backend via an endpoint
+// that only authenticated publishers can access.
+document.addEventListener('DOMContentLoaded', async function() {
+  try {
+    // Example of secure loading (implement this endpoint on your server)
+    const response = await fetch('/api/publisher/config');
+    const config = await response.json();
+    
+    // Initialize with securely loaded key
+    NostrAds.init({
+      publisherKey: config.apiKey,
+      defaultPlacement: 'feed'
+    });
+  } catch (error) {
+    console.error('Failed to initialize NostrAds:', error);
+  }
 });
 </script>`}
+                  </div>
+                  
+                  <div className="mt-3 p-3 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded text-sm text-yellow-800 dark:text-yellow-300">
+                    <p className="font-medium">⚠️ Security Note:</p>
+                    <p className="mt-1">Never include API keys directly in client-side JavaScript. Use the server-side approach shown above to prevent key exposure.</p>
                   </div>
                 </div>
                 
