@@ -92,8 +92,23 @@ const ViewerOnboarding: React.FC<ViewerOnboardingProps> = ({
     console.log('ViewerOnboarding - Mapped incoming step', currentStep, 'to', mappedStep);
   }, [currentStep]);
   
-  // The main component will show its own progress indicator, so we'll hide ours
-  const shouldShowProgress = false;
+  // Initialize current step index and total steps for progress tracking
+  const stepSequence = [
+    'welcome',
+    'discovery',
+    'notifications',
+    'privacy',
+    'feedback',
+    'complete'
+  ];
+  
+  // Calculate the current step number and total for display
+  const currentStepIndex = stepSequence.indexOf(step);
+  const totalSteps = stepSequence.length;
+  const currentStepNumber = currentStepIndex + 1;
+  
+  // The main component will show its own progress indicator when showNavigation is false
+  const shouldShowProgress = showNavigation;
 
   const handleNext = () => {
     switch (step) {
@@ -519,7 +534,46 @@ const ViewerOnboarding: React.FC<ViewerOnboardingProps> = ({
 
   return (
     <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm" data-testid="viewer-onboarding">
-      {shouldShowProgress && <OnboardingProgress />}
+      {shouldShowProgress && (
+        <div className="mb-6">
+          <div className="flex justify-between items-center mb-2">
+            <span className="text-sm text-gray-600 dark:text-gray-400">
+              Step {currentStepNumber} of {totalSteps}
+            </span>
+            <span className="text-sm font-medium text-purple-600 dark:text-purple-400">
+              {Math.round((currentStepNumber / totalSteps) * 100)}% Complete
+            </span>
+          </div>
+          
+          <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2.5">
+            <div 
+              className="bg-purple-600 h-2.5 rounded-full transition-all duration-300 ease-in-out" 
+              style={{ width: `${Math.round((currentStepNumber / totalSteps) * 100)}%` }}
+            />
+          </div>
+          
+          {/* Step labels - only show in larger screens */}
+          <div className="hidden md:flex justify-between mt-2 px-1">
+            {currentStepIndex === 0 ? (
+              <span className="text-xs text-purple-600 dark:text-purple-400 font-medium">Start</span>
+            ) : (
+              <span className="text-xs text-gray-500 dark:text-gray-400">Start</span>
+            )}
+            
+            {currentStepIndex > 0 && currentStepIndex < totalSteps - 1 ? (
+              <span className="text-xs text-purple-600 dark:text-purple-400 font-medium">In Progress</span>
+            ) : (
+              <span className="text-xs text-gray-500 dark:text-gray-400">In Progress</span>
+            )}
+            
+            {currentStepIndex === totalSteps - 1 ? (
+              <span className="text-xs text-purple-600 dark:text-purple-400 font-medium">Complete</span>
+            ) : (
+              <span className="text-xs text-gray-500 dark:text-gray-400">Complete</span>
+            )}
+          </div>
+        </div>
+      )}
       {renderStepContent()}
       {showNavigation && renderNavButtons()}
     </div>
