@@ -155,22 +155,21 @@ const RoleConfirmation: React.FC<RoleConfirmationProps> = ({ onConfirm }) => {
                 </div>
               </div>
                 
-              {/* Button is always at the bottom with flex */}
-              <div className="mt-auto pt-4">
-                <button 
+              {/* Instead of a button, show a prompt to click with a visual indicator */}
+              <div className="mt-auto pt-4 text-center">
+                <div 
                   data-testid={`select-${card.role}`}
-                  onClick={() => handleRoleSelection(card.role)}
-                  className={`w-full py-2 px-4 rounded-md transition
+                  className={`w-full py-2 px-4 rounded-md transition text-sm
                     ${card.color === 'blue' ? 
-                      'bg-blue-500 hover:bg-blue-600 text-white' : 
+                      'text-blue-700 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/20' : 
                       card.color === 'green' ? 
-                      'bg-green-500 hover:bg-green-600 text-white' : 
-                      'bg-purple-500 hover:bg-purple-600 text-white'
+                      'text-green-700 dark:text-green-400 bg-green-50 dark:bg-green-900/20' : 
+                      'text-purple-700 dark:text-purple-400 bg-purple-50 dark:bg-purple-900/20'
                     }
                   `}
                 >
-                  {card.buttonText}
-                </button>
+                  Click anywhere on card to select
+                </div>
               </div>
             </div>
           </div>

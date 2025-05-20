@@ -150,14 +150,7 @@ const AdvertiserOnboarding: React.FC<AdvertiserOnboardingProps> = ({ currentStep
               </div>
             </div>
             
-            <div className="text-right mt-6">
-              <button
-                type="button"
-                className="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-md"
-              >
-                Save and Continue
-              </button>
-            </div>
+            {/* No Save and Continue button needed - information will be saved automatically */}
           </div>
         );
       
