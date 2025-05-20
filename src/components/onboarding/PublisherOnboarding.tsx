@@ -97,12 +97,38 @@ const PublisherOnboarding: React.FC<PublisherOnboardingProps> = React.memo(({ cu
                 <div className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg">
                   <h3 className="font-medium text-gray-900 dark:text-white mb-2">Step 2: Initialize the SDK</h3>
                   <p className="text-sm text-gray-600 dark:text-gray-300 mb-3">
-                    Configure the SDK with your publisher key:
+                    Configure the SDK with your publisher API key:
                   </p>
+                  
+                  {/* API Key Display with Reveal functionality */}
+                  <div className="mb-4 p-3 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-md">
+                    <div className="flex justify-between items-center">
+                      <span className="text-sm font-medium text-yellow-800 dark:text-yellow-300">Your API Key</span>
+                      <button 
+                        className="text-xs px-2 py-1 bg-yellow-200 dark:bg-yellow-800 text-yellow-800 dark:text-yellow-200 rounded hover:bg-yellow-300 dark:hover:bg-yellow-700"
+                        onClick={() => {
+                          // Toggle API key visibility or copy to clipboard would be implemented here
+                          // This is a placeholder for the actual implementation
+                          alert('API key functionality will be implemented with actual key generation')
+                        }}
+                      >
+                        Show/Copy Key
+                      </button>
+                    </div>
+                    <div className="mt-2">
+                      <div className="bg-white dark:bg-gray-800 p-2 rounded border border-yellow-200 dark:border-yellow-700 font-mono text-sm">
+                        <span className="text-gray-500">pub_key_</span>•••••••••••••••••<span className="text-gray-500">abc123</span>
+                      </div>
+                      <p className="text-xs text-yellow-700 dark:text-yellow-400 mt-1">
+                        Keep this key secure. You can always find your API keys in the Publisher Dashboard later.
+                      </p>
+                    </div>
+                  </div>
+                  
                   <div className="bg-gray-100 dark:bg-gray-800 p-3 rounded text-sm font-mono overflow-x-auto">
                     {`<script>
 NostrAds.init({
-  publisherKey: 'YOUR_PUBLISHER_KEY',
+  publisherKey: 'YOUR_API_KEY_HERE',
   defaultPlacement: 'feed'
 });
 </script>`}
