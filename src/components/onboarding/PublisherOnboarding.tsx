@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { OnboardingStep } from '@/context/OnboardingContext';
-import { Code, DollarSign, Layout, Settings, CheckCircle, ToggleRight, Archive, Copy, RefreshCw } from 'react-feather';
+import { Code, DollarSign, Layout, Settings, CheckCircle, ToggleRight, Archive, Copy, RefreshCw, Eye, EyeOff } from 'react-feather';
 import CodeSnippet from '@/components/ui/CodeSnippet';
 import SkipButton from '@/components/ui/SkipButton';
 
@@ -40,41 +40,158 @@ const PublisherOnboarding: React.FC<PublisherOnboardingProps> = React.memo(({ cu
   });
   // State to show/hide the API key
   const [showApiKey, setShowApiKey] = useState(false);
+  // State to track if API key copy was successful
+  const [copySuccess, setCopySuccess] = useState(false);
+  // State to track if API key is being refreshed
+  const [isRefreshing, setIsRefreshing] = useState(false);
   // State to show/hide test mode
   const [enableTestMode, setEnableTestMode] = useState(true);
   // State to track completion of onboarding steps
   const [stepCompleted, setStepCompleted] = useState(false);
 
-  // Fetch a new API key on component mount or integration type change
+  // Get the current user's pubkey for API key generation
+  const [currentUserPubkey, setCurrentUserPubkey] = useState<string>('');
+  const [isTestModeActive, setIsTestModeActive] = useState<boolean>(false);
+
+  // Check if test mode is active
   useEffect(() => {
-    if (currentStep === 'integration-details' && selectedIntegration) {
-      // This would fetch a real API key in a complete implementation
+    // Check localStorage for test mode flag
+    const testMode = localStorage.getItem('isTestMode') === 'true';
+    setIsTestModeActive(testMode);
+    
+    // Get user pubkey (either real or test)
+    const pubkey = testMode 
+      ? localStorage.getItem('nostr_test_pk') 
+      : localStorage.getItem('nostr_real_pk');
+    
+    if (pubkey) {
+      setCurrentUserPubkey(pubkey);
+    }
+  }, []);
+
+  // Function to generate a real API key
+  const generateRealApiKey = async (pubkey: string) => {
+    try {
+      setApiKeyData(prev => ({ ...prev, isLoading: true, error: null }));
+      
+      // Make an API call to create a real API key
+      const response = await fetch('/api/auth/api-keys', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          name: 'Publisher API Key',
+          scopes: 'publisher:read,publisher:write,ad:serve',
+        }),
+      });
+      
+      if (!response.ok) {
+        throw new Error('Failed to create API key');
+      }
+      
+      const apiKey = await response.json();
+      
       setApiKeyData({
-        id: 'pub_key_123456789',
-        key: 'sk_live_admarketplace_demo_key_12345678901234567890',
+        id: apiKey.id || `pub_${pubkey.substring(0, 8)}`,
+        key: apiKey.key || `sk_${isTestModeActive ? 'test' : 'live'}_${pubkey.substring(0, 32)}`,
+        name: apiKey.name || 'Publisher API Key',
+        createdAt: apiKey.createdAt || new Date().toISOString(),
+        scopes: apiKey.scopes || 'publisher:read,publisher:write,ad:serve',
+        isLoading: false,
+        error: null
+      });
+    } catch (error) {
+      console.error('Error generating API key:', error);
+      // Fall back to a deterministic key based on the user's pubkey
+      const fallbackKey = `sk_${isTestModeActive ? 'test' : 'live'}_${pubkey.substring(0, 32)}`;
+      
+      setApiKeyData({
+        id: `pub_${pubkey.substring(0, 8)}`,
+        key: fallbackKey,
         name: 'Publisher API Key',
         createdAt: new Date().toISOString(),
         scopes: 'publisher:read,publisher:write,ad:serve',
         isLoading: false,
-        error: null
+        error: error instanceof Error ? error.message : 'Unknown error'
       });
     }
-  }, [currentStep, selectedIntegration]);
+  };
+
+  // Fetch a new API key on component mount or integration type change
+  useEffect(() => {
+    if (currentStep === 'integration-details' && selectedIntegration && currentUserPubkey) {
+      generateRealApiKey(currentUserPubkey);
+    }
+  }, [currentStep, selectedIntegration, currentUserPubkey]);
 
   // Toggle visibility of the API key
   const toggleApiKeyVisibility = () => {
     setShowApiKey(!showApiKey);
   };
 
-  // Copy API key to clipboard
+  // Copy API key to clipboard with visual feedback
   const copyApiKey = async () => {
     if (apiKeyData.key) {
       try {
         await navigator.clipboard.writeText(apiKeyData.key);
-        // Toast notification would be shown here in a complete implementation
+        // Show success indicator
+        setCopySuccess(true);
+        // Clear success indicator after 2 seconds
+        setTimeout(() => setCopySuccess(false), 2000);
       } catch (err) {
         console.error('Failed to copy API key', err);
       }
+    }
+  };
+  
+  // Refresh API key
+  const refreshApiKey = async () => {
+    if (isRefreshing) return;
+    
+    setIsRefreshing(true);
+    try {
+      // Make an API call to generate a new API key
+      const response = await fetch('/api/auth/api-keys', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          name: 'Publisher API Key',
+          scopes: 'publisher:read,publisher:write,ad:serve',
+        }),
+      });
+      
+      if (!response.ok) {
+        throw new Error('Failed to create new API key');
+      }
+      
+      const apiKey = await response.json();
+      
+      // Update the API key data
+      setApiKeyData({
+        id: apiKey.id || `pub_${currentUserPubkey.substring(0, 8)}`,
+        key: apiKey.key || `sk_${isTestModeActive ? 'test' : 'live'}_${currentUserPubkey.substring(0, 32)}`,
+        name: apiKey.name || 'Publisher API Key',
+        createdAt: apiKey.createdAt || new Date().toISOString(),
+        scopes: apiKey.scopes || 'publisher:read,publisher:write,ad:serve',
+        isLoading: false,
+        error: null
+      });
+
+      // Show the new key
+      setShowApiKey(true);
+      
+    } catch (error) {
+      console.error('Error refreshing API key:', error);
+      // Show the error but keep the old key
+      setApiKeyData(prev => ({
+        ...prev,
+        error: error instanceof Error ? error.message : 'Failed to refresh API key'
+      }));
+    } finally {
+      setIsRefreshing(false);
     }
   };
 
@@ -153,30 +270,158 @@ const PublisherOnboarding: React.FC<PublisherOnboardingProps> = React.memo(({ cu
             {selectedIntegration && (
               <div className="mt-6 space-y-4">
                 <h4 className="font-medium text-gray-900 dark:text-white">Your Publisher API Key</h4>
-                <div className="bg-gray-50 dark:bg-gray-800 rounded p-4 border border-gray-200 dark:border-gray-700">
-                  <div className="flex justify-between items-center">
-                    <span className="text-sm text-gray-500 dark:text-gray-400">API Key</span>
-                    <div className="flex space-x-2">
-                      <button 
-                        onClick={toggleApiKeyVisibility}
-                        className="text-xs text-purple-600 dark:text-purple-400 hover:text-purple-800 dark:hover:text-purple-300"
-                      >
-                        {showApiKey ? 'Hide' : 'Show'}
-                      </button>
-                      <button 
-                        onClick={copyApiKey}
-                        className="text-xs text-purple-600 dark:text-purple-400 hover:text-purple-800 dark:hover:text-purple-300"
-                      >
-                        Copy
-                      </button>
+                {apiKeyData.isLoading ? (
+                  <div className="bg-gray-50 dark:bg-gray-800 rounded p-4 border border-gray-200 dark:border-gray-700">
+                    <div className="flex items-center justify-center space-x-2 py-4">
+                      <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-purple-500"></div>
+                      <p className="text-sm text-gray-600 dark:text-gray-400">Generating your API key...</p>
                     </div>
                   </div>
-                  <div className="mt-1 font-mono text-sm break-all">
-                    {showApiKey 
-                      ? apiKeyData.key 
-                      : apiKeyData.key.replace(/./g, '•').substring(0, 12) + '...' + apiKeyData.key.slice(-4)}
+                ) : apiKeyData.error ? (
+                  <div className="bg-gray-50 dark:bg-gray-800 rounded p-4 border border-gray-200 dark:border-gray-700">
+                    <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-md p-3 text-red-600 dark:text-red-400 text-sm mb-3">
+                      <p>Error generating API key: {apiKeyData.error}</p>
+                      <p className="mt-1">Using a fallback key based on your Nostr public key.</p>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <div className="flex items-center space-x-3">
+                        <span className="text-xs bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300 px-2 py-1 rounded">
+                          Fallback
+                        </span>
+                        <span className="text-xs text-gray-500 dark:text-gray-400">
+                          Created {new Date(apiKeyData.createdAt).toLocaleDateString()}
+                        </span>
+                      </div>
+                      <div className="flex space-x-2">
+                        <button 
+                          onClick={toggleApiKeyVisibility}
+                          className="text-xs text-purple-600 dark:text-purple-400 hover:text-purple-800 dark:hover:text-purple-300 flex items-center"
+                        >
+                          {showApiKey ? (
+                            <>
+                              <Eye size={12} className="mr-1" />
+                              Hide
+                            </>
+                          ) : (
+                            <>
+                              <EyeOff size={12} className="mr-1" />
+                              Show
+                            </>
+                          )}
+                        </button>
+                        <button 
+                          onClick={copyApiKey}
+                          className="text-xs text-purple-600 dark:text-purple-400 hover:text-purple-800 dark:hover:text-purple-300 flex items-center"
+                          disabled={copySuccess}
+                        >
+                          {copySuccess ? (
+                            <>
+                              <CheckCircle size={12} className="mr-1" />
+                              Copied!
+                            </>
+                          ) : (
+                            <>
+                              <Copy size={12} className="mr-1" />
+                              Copy
+                            </>
+                          )}
+                        </button>
+                        <button 
+                          onClick={refreshApiKey}
+                          className="text-xs text-purple-600 dark:text-purple-400 hover:text-purple-800 dark:hover:text-purple-300 flex items-center"
+                          disabled={isRefreshing}
+                        >
+                          {isRefreshing ? (
+                            <>
+                              <div className="animate-spin h-3 w-3 border-b-2 border-purple-500 rounded-full mr-1"></div>
+                              Refreshing...
+                            </>
+                          ) : (
+                            <>
+                              <RefreshCw size={12} className="mr-1" />
+                              Refresh
+                            </>
+                          )}
+                        </button>
+                      </div>
+                    </div>
+                    <div className="mt-1 font-mono text-sm break-all">
+                      {showApiKey 
+                        ? apiKeyData.key 
+                        : apiKeyData.key.replace(/./g, '•').substring(0, 12) + '...' + apiKeyData.key.slice(-4)}
+                    </div>
                   </div>
-                </div>
+                ) : (
+                  <div className="bg-gray-50 dark:bg-gray-800 rounded p-4 border border-gray-200 dark:border-gray-700">
+                    <div className="flex justify-between items-center">
+                      <div className="flex items-center space-x-3">
+                        <span className="text-xs bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300 px-2 py-1 rounded">
+                          Active
+                        </span>
+                        <span className="text-xs text-gray-500 dark:text-gray-400">
+                          Created {new Date(apiKeyData.createdAt).toLocaleDateString()}
+                        </span>
+                      </div>
+                      <div className="flex space-x-2">
+                        <button 
+                          onClick={toggleApiKeyVisibility}
+                          className="text-xs text-purple-600 dark:text-purple-400 hover:text-purple-800 dark:hover:text-purple-300 flex items-center"
+                        >
+                          {showApiKey ? (
+                            <>
+                              <Eye size={12} className="mr-1" />
+                              Hide
+                            </>
+                          ) : (
+                            <>
+                              <EyeOff size={12} className="mr-1" />
+                              Show
+                            </>
+                          )}
+                        </button>
+                        <button 
+                          onClick={copyApiKey}
+                          className="text-xs text-purple-600 dark:text-purple-400 hover:text-purple-800 dark:hover:text-purple-300 flex items-center"
+                          disabled={copySuccess}
+                        >
+                          {copySuccess ? (
+                            <>
+                              <CheckCircle size={12} className="mr-1" />
+                              Copied!
+                            </>
+                          ) : (
+                            <>
+                              <Copy size={12} className="mr-1" />
+                              Copy
+                            </>
+                          )}
+                        </button>
+                        <button 
+                          onClick={refreshApiKey}
+                          className="text-xs text-purple-600 dark:text-purple-400 hover:text-purple-800 dark:hover:text-purple-300 flex items-center"
+                          disabled={isRefreshing}
+                        >
+                          {isRefreshing ? (
+                            <>
+                              <div className="animate-spin h-3 w-3 border-b-2 border-purple-500 rounded-full mr-1"></div>
+                              Refreshing...
+                            </>
+                          ) : (
+                            <>
+                              <RefreshCw size={12} className="mr-1" />
+                              Refresh
+                            </>
+                          )}
+                        </button>
+                      </div>
+                    </div>
+                    <div className="mt-1 font-mono text-sm break-all">
+                      {showApiKey 
+                        ? apiKeyData.key 
+                        : apiKeyData.key.replace(/./g, '•').substring(0, 12) + '...' + apiKeyData.key.slice(-4)}
+                    </div>
+                  </div>
+                )}
                 
                 <div className="mt-6">
                   <h4 className="font-medium text-gray-900 dark:text-white">Integration Code</h4>

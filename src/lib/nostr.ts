@@ -293,21 +293,61 @@ export function getPublicKey(privateKey: string): string {
  * @returns An object containing a private key and public key
  */
 export function generateTestKeyPair() {
-  // In a real implementation, we would generate actual Nostr keys
-  // For testing, we'll generate random strings with fixed prefixes
-  // that our auth system will recognize
-  const randomId = Math.random().toString(36).substring(2, 15);
-  const privateKey = `sk_test_${randomId}`;
-  const publicKey = `pk_test_${randomId}`;
-  
-  // Add npub and nsec values for completeness
-  const npub = `npub1${randomId}`;
-  const nsec = `nsec1${randomId}`;
-  
-  // Make sure we log success for debugging
-  console.log('Generated test keypair:', { publicKey });
-  
-  return { privateKey, publicKey, npub, nsec };
+  try {
+    // Use the proper nostr-tools functions
+    const nostrTools = require('nostr-tools');
+    
+    // Generate a real private key using the proper method
+    const privateKey = nostrTools.generatePrivateKey();
+    
+    // Derive the public key from the private key
+    const publicKey = nostrTools.getPublicKey(privateKey);
+    
+    // Generate real npub and nsec encodings
+    let npub, nsec;
+    
+    try {
+      // For npub/nsec encoding, use the built-in functions
+      npub = nostrTools.nip19.npubEncode(publicKey);
+      nsec = nostrTools.nip19.nsecEncode(privateKey);
+    } catch (error) {
+      console.error('Error encoding keys with NIP-19:', error);
+      // Fall back to simple prefixing if encoding fails
+      npub = `npub1${publicKey.slice(0, 12)}`;
+      nsec = `nsec1${privateKey.slice(0, 12)}`;
+    }
+    
+    // For test mode, we'll add special prefixes to identify these are test keys
+    // but they're still valid Nostr keys underneath
+    const testPrivateKey = `sk_test_${privateKey}`;
+    const testPublicKey = `pk_test_${publicKey}`;
+    
+    // Make sure we log success for debugging
+    console.log('Generated test keypair:', { publicKey: testPublicKey });
+    
+    return { 
+      privateKey: testPrivateKey, 
+      publicKey: testPublicKey,
+      npub, 
+      nsec,
+      // Include the raw keys for debugging or advanced usage
+      rawPrivateKey: privateKey,
+      rawPublicKey: publicKey
+    };
+  } catch (error) {
+    console.error('Error generating test keypair:', error);
+    
+    // If key generation fails, fall back to the previous method
+    const randomId = Math.random().toString(36).substring(2, 15);
+    const privateKey = `sk_test_${randomId}`;
+    const publicKey = `pk_test_${randomId}`;
+    const npub = `npub1${randomId}`;
+    const nsec = `nsec1${randomId}`;
+    
+    console.log('Generated fallback test keypair:', { publicKey });
+    
+    return { privateKey, publicKey, npub, nsec };
+  }
 }
 
 /**
