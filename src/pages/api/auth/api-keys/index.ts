@@ -127,63 +127,69 @@ async function handler(req: NextApiRequest, res: NextApiResponse, userId: string
  * Gets all API keys for a user
  */
 async function getApiKeys(req: NextApiRequest, res: NextApiResponse, userId: string) {
-  // Use raw SQL query since we're getting Prisma schema issues
-  const apiKeys = await prisma.$queryRaw`
-    SELECT id, name, description, "createdAt", "updatedAt", "lastUsed", 
-           "expiresAt", "isActive", scopes, "usageCount"
-    FROM "ApiKey"
-    WHERE "userId" = ${userId}
-    ORDER BY "createdAt" DESC
-  `;
+  // Import our apiKeyService
+  const { getUserApiKeys } = await import('../../../../services/apiKeyService');
   
-  return res.status(200).json(apiKeys);
+  // Use the service to get keys with proper error handling
+  const apiKeysResult = await getUserApiKeys(userId);
+  
+  if (!apiKeysResult.isSuccess) {
+    return res.status(500).json({ 
+      error: 'Failed to retrieve API keys', 
+      details: apiKeysResult.error 
+    });
+  }
+  
+  return res.status(200).json(apiKeysResult.keys);
 }
 
 /**
  * Creates a new API key for a user
  */
 async function createApiKey(req: NextApiRequest, res: NextApiResponse, userId: string) {
-  const { name, description, expiresAt, scopes = 'read' } = req.body;
+  const { name, description, expiresAt, scopes = 'read', type = 'publisher' } = req.body;
   
   // Validation
   if (!name) {
     return res.status(422).json({ error: 'Name is required' });
   }
   
-  // Generate a unique API key
-  const apiKeyValue = `ak_${crypto.randomBytes(16).toString('hex')}`;
+  // Import our apiKeyService
+  const { createApiKey: createKey } = await import('../../../../services/apiKeyService');
   
-  // Create the API key in the database using raw SQL
-  const createdAt = new Date();
-  const expiresAtDate = expiresAt ? new Date(expiresAt) : null;
+  // Use the service to create the key with proper error handling
+  const apiKeyResult = await createKey({
+    name,
+    description,
+    expiresAt: expiresAt ? new Date(expiresAt) : null,
+    scopes,
+    userId,
+    type: type as 'publisher' | 'advertiser' | 'developer'
+  });
   
-  const result = await prisma.$queryRaw`
-    INSERT INTO "ApiKey" (
-      id, key, name, description, "expiresAt", scopes, "userId", 
-      "createdAt", "updatedAt", "isActive", "usageCount"
-    ) VALUES (
-      ${crypto.randomUUID()}, ${apiKeyValue}, ${name}, ${description}, ${expiresAtDate}, 
-      ${scopes}, ${userId}, ${createdAt}, ${createdAt}, true, 0
-    )
-    RETURNING id, key, name, description, "createdAt", "expiresAt", scopes
-  `;
+  // If the creation failed but we have a fallback key, still return it with a warning
+  if (!apiKeyResult.isSuccess && apiKeyResult.key) {
+    return res.status(201).json({
+      ...apiKeyResult,
+      warning: 'Used fallback key generation due to database error. This key will need to be regenerated for production use.'
+    });
+  }
   
-  // The result is an array, get the first (and only) item
-  const apiKey = Array.isArray(result) && result.length > 0 ? result[0] : null;
-  
-  if (!apiKey) {
-    return res.status(500).json({ error: 'Failed to create API key' });
+  // If the creation failed completely
+  if (!apiKeyResult.isSuccess) {
+    return res.status(500).json({ error: 'Failed to create API key', details: apiKeyResult.error });
   }
   
   // Return the newly created API key with the key value (only time it's returned)
   return res.status(201).json({
-    id: apiKey.id,
-    key: apiKey.key, // Include the key in the response (only shown once)
-    name: apiKey.name,
-    description: apiKey.description,
-    createdAt: apiKey.createdAt,
-    expiresAt: apiKey.expiresAt,
-    scopes: apiKey.scopes,
+    id: apiKeyResult.id,
+    key: apiKeyResult.key, // Include the key in the response (only shown once)
+    name: apiKeyResult.name,
+    description: apiKeyResult.description,
+    createdAt: apiKeyResult.createdAt,
+    expiresAt: apiKeyResult.expiresAt,
+    scopes: apiKeyResult.scopes,
+    type: apiKeyResult.type
   });
 }
 

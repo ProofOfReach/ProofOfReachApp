@@ -291,6 +291,9 @@ model ApiKey {
   // Scopes that define what this key can access (comma-separated)
   scopes        String    @default("read")
   
+  // Type of API key (publisher, advertiser, developer)
+  type          String    @default("publisher")
+  
   // Relationships - API key can be associated with a user
   userId        String?
   user          User?     @relation(fields: [userId], references: [id], onDelete: SetNull)
@@ -299,6 +302,7 @@ model ApiKey {
   usageCount    Int       @default(0)
   
   @@index([key])
+  @@index([type])
 }
 
 model UserActivity {

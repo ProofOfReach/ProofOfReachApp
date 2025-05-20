@@ -93,56 +93,82 @@ const PublisherOnboarding: React.FC<PublisherOnboardingProps> = ({
     setIsTestModeActive(checkTestMode());
   }, []);
   
-  // Generate a real API key for the publisher
+  // Generate a real API key for the publisher using the improved apiKeyService
   const generateRealApiKey = async (pubkey: string) => {
     setApiKeyData(prev => ({ ...prev, isLoading: true, error: null }));
     
-    // Add a timeout to prevent infinite loading
+    // Use a longer timeout to prevent infinite loading
     const timeoutPromise = new Promise((_, reject) => {
-      setTimeout(() => reject(new Error('API key generation timed out')), 5000);
+      setTimeout(() => reject(new Error('API key generation timed out')), 12000); // Extended timeout for better reliability
     });
     
-    try {
-      // Race between the API call and the timeout
-      const fetchPromise = fetch('/api/auth/api-keys', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          name: 'Publisher API Key',
-          scopes: 'publisher:read,publisher:write,ad:serve',
-        }),
-      });
+    // Track attempts for retries
+    let attempts = 0;
+    const maxAttempts = 2;
+    
+    const attemptApiKeyGeneration = async (): Promise<any> => {
+      attempts++;
       
-      // Use Promise.race to handle potential timeouts
-      const response = await Promise.race([fetchPromise, timeoutPromise]) as Response;
-      
-      if (!response.ok) {
-        throw new Error('Failed to create API key');
+      try {
+        // Make the API call
+        const fetchPromise = fetch('/api/auth/api-keys', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            name: 'Publisher API Key',
+            description: 'Created during publisher onboarding',
+            scopes: 'publisher:read,publisher:write,ad:serve',
+            type: 'publisher', // Explicitly set type to publisher
+          }),
+        });
+        
+        // Use Promise.race to handle potential timeouts
+        const response = await Promise.race([fetchPromise, timeoutPromise]) as Response;
+        
+        if (!response.ok) {
+          throw new Error(`API responded with status: ${response.status} - ${response.statusText}`);
+        }
+        
+        return await response.json();
+      } catch (error) {
+        // If we have attempts left, retry
+        if (attempts < maxAttempts) {
+          console.log(`Retrying API key generation (attempt ${attempts + 1} of ${maxAttempts})...`);
+          return attemptApiKeyGeneration();
+        }
+        throw error;
       }
+    };
+    
+    try {
+      // Attempt to generate the API key with retries
+      const apiKey = await attemptApiKeyGeneration();
       
-      const apiKey = await response.json();
+      // Check if the API key returned contains a warning about using a fallback key
+      const warning = apiKey.warning || null;
       
       setApiKeyData({
-        id: apiKey.id || `pub_${pubkey.substring(0, 8)}`,
-        key: apiKey.key || `sk_live_publisher_${pubkey.substring(0, 8)}_production`,
+        id: apiKey.id || `fallback_${pubkey.substring(0, 8)}`,
+        key: apiKey.key || `pub_${pubkey.substring(0, 8)}_${Date.now()}`,
         name: apiKey.name || 'Publisher API Key',
         createdAt: apiKey.createdAt || new Date().toISOString(),
         scopes: apiKey.scopes || 'publisher:read,publisher:write,ad:serve',
         isLoading: false,
-        error: null
+        error: warning // If there's a warning, show it as a non-critical error
       });
     } catch (error) {
       console.error('Error generating API key:', error);
-      // Fall back to a deterministic key based on the user's pubkey
-      const fallbackKey = `sk_${isTestModeActive ? 'test' : 'live'}_publisher_${pubkey.substring(0, 8)}_fallback`;
+      
+      // Create a fallback key that follows our naming conventions
+      const fallbackKey = `pub_fallback_${pubkey.substring(0, 8)}_${Date.now()}`;
       
       // Always provide a fallback key so the UI doesn't get stuck
       setApiKeyData({
-        id: `pub_${pubkey.substring(0, 8)}`,
+        id: `fallback_${pubkey.substring(0, 8)}`,
         key: fallbackKey,
-        name: 'Publisher API Key',
+        name: 'Publisher API Key (Fallback)',
         createdAt: new Date().toISOString(),
         scopes: 'publisher:read,publisher:write,ad:serve',
         isLoading: false,
@@ -157,20 +183,27 @@ const PublisherOnboarding: React.FC<PublisherOnboardingProps> = ({
       generateRealApiKey(currentUserPubkey);
     }
     
-    // If we're on the choose-integration step, immediately generate a fallback key
-    // This ensures that when the user selects an integration type, they don't have to wait
-    if (currentStep === 'choose-integration' && currentUserPubkey && apiKeyData.isLoading) {
-      const fallbackKey = `sk_${isTestModeActive ? 'test' : 'live'}_publisher_${currentUserPubkey.substring(0, 8)}_prefetch`;
-      
-      setApiKeyData({
-        id: `pub_${currentUserPubkey.substring(0, 8)}`,
-        key: fallbackKey,
-        name: 'Publisher API Key',
-        createdAt: new Date().toISOString(),
-        scopes: 'publisher:read,publisher:write,ad:serve',
-        isLoading: false,
-        error: null
-      });
+    // If we're on the choose-integration step, immediately try to generate a real API key
+    // This ensures that when the user selects an integration type, they likely already have an API key
+    if (currentStep === 'choose-integration' && currentUserPubkey) {
+      // If we're still loading and haven't tried to get a key yet
+      if (apiKeyData.isLoading) {
+        // Try to generate a real API key in the background
+        generateRealApiKey(currentUserPubkey).catch(() => {
+          // If real API key generation fails, use a fallback immediately
+          const fallbackKey = `pub_prefetch_${currentUserPubkey.substring(0, 8)}_${Date.now()}`;
+          
+          setApiKeyData({
+            id: `fallback_${currentUserPubkey.substring(0, 8)}`,
+            key: fallbackKey,
+            name: 'Publisher API Key (Pending)',
+            createdAt: new Date().toISOString(),
+            scopes: 'publisher:read,publisher:write,ad:serve',
+            isLoading: false,
+            error: null
+          });
+        });
+      }
     }
   }, [currentStep, selectedIntegration, currentUserPubkey, isTestModeActive, apiKeyData.isLoading]);
 
