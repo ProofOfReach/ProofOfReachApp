@@ -48,101 +48,115 @@ const AdvertiserOnboarding: React.FC<AdvertiserOnboardingProps> = ({ currentStep
       case 'create-campaign':
         return (
           <div className="space-y-4">
-            {renderSectionHeader(<Image className="inline-block mr-2 mb-1" size={20} />, 'Create Your First Campaign')}
+            {renderSectionHeader(<Image className="inline-block mr-2 mb-1" size={20} />, 'Advertiser Account Setup')}
             <p className="text-gray-600 dark:text-gray-300">
-              Let's set up your first advertising campaign on the Nostr network:
+              Let's set up your advertising account - these details will help us personalize your experience:
             </p>
             
             <div className="mt-6 space-y-4">
               <div className="border border-gray-200 dark:border-gray-700 rounded-lg p-4">
-                <h3 className="font-medium text-gray-900 dark:text-white mb-3">Campaign Details</h3>
+                <h3 className="font-medium text-gray-900 dark:text-white mb-3">Business Information</h3>
                 
                 <div className="space-y-4">
                   <div>
                     <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                      Campaign Name
+                      Business or Brand Name
                     </label>
                     <input 
                       type="text" 
-                      placeholder="e.g., Summer Bitcoin Campaign" 
-                      className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md dark:bg-gray-800"
-                    />
-                  </div>
-                  
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                      Campaign Description
-                    </label>
-                    <textarea 
-                      placeholder="Describe your campaign's goals and message" 
-                      className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md dark:bg-gray-800"
-                      rows={3}
-                    ></textarea>
-                  </div>
-                </div>
-              </div>
-              
-              <div className="border border-gray-200 dark:border-gray-700 rounded-lg p-4">
-                <h3 className="font-medium text-gray-900 dark:text-white mb-3">Ad Creative</h3>
-                
-                <div className="space-y-4">
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                      Ad Headline
-                    </label>
-                    <input 
-                      type="text" 
-                      placeholder="Attention-grabbing headline" 
+                      placeholder="e.g., Satoshi Solutions" 
                       className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md dark:bg-gray-800"
                     />
                     <p className="text-xs text-gray-500 mt-1">
-                      Keep it short and compelling (max 60 characters)
+                      This will appear on your ads and dashboard
                     </p>
                   </div>
                   
                   <div>
                     <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                      Ad Description
-                    </label>
-                    <textarea 
-                      placeholder="Describe your product or service" 
-                      className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md dark:bg-gray-800"
-                      rows={2}
-                    ></textarea>
-                    <p className="text-xs text-gray-500 mt-1">
-                      Highlight key benefits (max 120 characters)
-                    </p>
-                  </div>
-                  
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                      Destination URL
+                      Business Website
                     </label>
                     <input 
                       type="url" 
-                      placeholder="https://example.com/landing-page" 
+                      placeholder="https://example.com" 
                       className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md dark:bg-gray-800"
                     />
                   </div>
                   
                   <div>
                     <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                      Call to Action
+                      Industry Category
                     </label>
                     <select 
                       className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md dark:bg-gray-800"
                       defaultValue=""
                     >
-                      <option value="" disabled>Select a CTA</option>
-                      <option value="learn-more">Learn More</option>
-                      <option value="sign-up">Sign Up</option>
-                      <option value="buy-now">Buy Now</option>
-                      <option value="get-started">Get Started</option>
-                      <option value="download">Download</option>
+                      <option value="" disabled>Select an industry</option>
+                      <option value="bitcoin">Bitcoin / Lightning</option>
+                      <option value="crypto">Cryptocurrency</option>
+                      <option value="technology">Technology</option>
+                      <option value="finance">Finance</option>
+                      <option value="education">Education</option>
+                      <option value="ecommerce">E-commerce</option>
+                      <option value="software">Software / SaaS</option>
+                      <option value="other">Other</option>
                     </select>
                   </div>
                 </div>
               </div>
+              
+              <div className="border border-gray-200 dark:border-gray-700 rounded-lg p-4">
+                <h3 className="font-medium text-gray-900 dark:text-white mb-3">Advertising Goals</h3>
+                
+                <div className="space-y-4">
+                  <p className="text-sm text-gray-600 dark:text-gray-400">
+                    What are you looking to achieve with your ads? (Select all that apply)
+                  </p>
+                  
+                  <div className="space-y-2">
+                    <div className="flex items-center">
+                      <input type="checkbox" id="goal-awareness" className="mr-2" defaultChecked />
+                      <label htmlFor="goal-awareness">Brand Awareness</label>
+                    </div>
+                    <div className="flex items-center">
+                      <input type="checkbox" id="goal-traffic" className="mr-2" defaultChecked />
+                      <label htmlFor="goal-traffic">Website Traffic</label>
+                    </div>
+                    <div className="flex items-center">
+                      <input type="checkbox" id="goal-leads" className="mr-2" />
+                      <label htmlFor="goal-leads">Lead Generation</label>
+                    </div>
+                    <div className="flex items-center">
+                      <input type="checkbox" id="goal-sales" className="mr-2" />
+                      <label htmlFor="goal-sales">Sales and Conversions</label>
+                    </div>
+                    <div className="flex items-center">
+                      <input type="checkbox" id="goal-community" className="mr-2" />
+                      <label htmlFor="goal-community">Community Building</label>
+                    </div>
+                  </div>
+                  
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                      Target Audience Description
+                    </label>
+                    <textarea 
+                      placeholder="Describe the audience you want to reach" 
+                      className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md dark:bg-gray-800"
+                      rows={2}
+                    ></textarea>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <div className="text-right mt-6">
+              <button
+                type="button"
+                className="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-md"
+              >
+                Save and Continue
+              </button>
             </div>
           </div>
         );
@@ -595,15 +609,17 @@ const AdvertiserOnboarding: React.FC<AdvertiserOnboardingProps> = ({ currentStep
         return (
           <div className="space-y-4 text-center">
             <div className="flex justify-center">
-              <CheckCircle size={64} className="text-green-500" />
+              <div className="w-16 h-16 bg-green-100 dark:bg-green-900 rounded-full flex items-center justify-center text-green-500 mb-4">
+                <CheckCircle size={32} />
+              </div>
             </div>
             <h2 className="text-2xl font-semibold text-gray-900 dark:text-white">
-              You're Ready to Launch!
+              Advertiser Account Setup Complete!
             </h2>
             <p className="text-gray-600 dark:text-gray-300">
-              Your advertiser account is set up and your first campaign is ready to go.
+              Your advertiser account is now set up and ready to go. You can create your first campaign when you're ready.
             </p>
-            <div className="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg mt-6">
+            <div className="bg-gray-50 dark:bg-gray-800 p-6 rounded-lg mt-6 max-w-2xl mx-auto text-left">
               <h3 className="font-medium text-gray-900 dark:text-white mb-2">
                 What's Next?
               </h3>
