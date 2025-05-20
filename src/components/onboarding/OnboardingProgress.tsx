@@ -1,5 +1,6 @@
 import React from 'react';
 import { useOnboarding } from '@/context/OnboardingContext';
+import { Progress } from '@/components/ui/progress';
 
 interface OnboardingProgressProps {
   // These props allow overriding values from the context
@@ -12,8 +13,8 @@ interface OnboardingProgressProps {
 /**
  * OnboardingProgress - Displays a progress bar for multi-step processes
  * 
- * This component can either get progress data from the OnboardingContext
- * or receive it directly through props, making it more flexible and reusable.
+ * This component uses the shadcn UI Progress component and can either get 
+ * progress data from the OnboardingContext or receive it directly through props.
  */
 const OnboardingProgress: React.FC<OnboardingProgressProps> = ({
   customProgress,
@@ -47,16 +48,8 @@ const OnboardingProgress: React.FC<OnboardingProgressProps> = ({
         </span>
       </div>
       
-      <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2.5">
-        <div 
-          className="bg-purple-600 h-2.5 rounded-full transition-all duration-300 ease-in-out" 
-          style={{ width: `${progress}%` }}
-          aria-valuenow={progress}
-          aria-valuemin={0}
-          aria-valuemax={100}
-          role="progressbar"
-        />
-      </div>
+      {/* Using the shadcn UI Progress component */}
+      <Progress value={progress} className="w-full" />
       
       {/* Step labels - only show in larger screens */}
       <div className="hidden md:flex justify-between mt-2 px-1">
