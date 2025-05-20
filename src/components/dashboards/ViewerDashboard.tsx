@@ -156,7 +156,7 @@ const ViewerHomeContent: React.FC = () => {
           <ul className="space-y-2">
             <li>
               <a href="/nostr-feed" className="text-blue-500 dark:text-blue-400 hover:underline">
-                Browse Nostr Feed
+                Browse Content Feed
               </a>
             </li>
             <li>

@@ -58,7 +58,7 @@ const RoleConfirmation: React.FC<RoleConfirmationProps> = ({ onConfirm }) => {
     {
       role: 'viewer' as UserRoleType,
       title: 'Viewer',
-      description: 'Browse ads, earn Bitcoin, and enjoy content across the Nostr network',
+      description: 'Browse ads, earn Bitcoin, and enjoy content across the Proof Of Reach network',
       icon: <Users className="h-8 w-8 text-blue-500" />,
       benefits: [
         'Earn Bitcoin for viewing ads',
@@ -72,7 +72,7 @@ const RoleConfirmation: React.FC<RoleConfirmationProps> = ({ onConfirm }) => {
     {
       role: 'publisher' as UserRoleType,
       title: 'Publisher',
-      description: 'Monetize your content with Bitcoin through the Nostr network',
+      description: 'Monetize your content with Bitcoin through the Proof Of Reach network',
       icon: <Package className="h-8 w-8 text-green-500" />,
       benefits: [
         'Earn Bitcoin for your content',
@@ -86,7 +86,7 @@ const RoleConfirmation: React.FC<RoleConfirmationProps> = ({ onConfirm }) => {
     {
       role: 'advertiser' as UserRoleType,
       title: 'Advertiser',
-      description: 'Promote your products and services on the Nostr network',
+      description: 'Promote your products and services on the Proof Of Reach network',
       icon: <Radio className="h-8 w-8 text-purple-500" />,
       benefits: [
         'Target specific audience interests',
