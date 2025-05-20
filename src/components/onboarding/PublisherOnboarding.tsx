@@ -297,11 +297,19 @@ const PublisherOnboarding: React.FC<PublisherOnboardingProps> = React.memo(({ cu
 <div id="nostr-ad-container" style="width: 100%; min-height: 250px;"></div>
 <script src="https://cdn.nostrads.org/simple.js"></script>
 <script>
-  window.NostrAds.init({
-    containerSelector: '#nostr-ad-container',
-    publisherKey: '${apiKeyData.key || 'YOUR_PUBLISHER_API_KEY'}',
-    placement: 'content-feed' // Options: content-feed, banner, sidebar
-  });
+  // Load config from secure backend endpoint
+  fetch('/api/publisher/config')
+    .then(response => response.json())
+    .then(config => {
+      window.NostrAds.init({
+        containerSelector: '#nostr-ad-container',
+        publisherId: config.publisherId, // Use publisher ID instead of API key
+        placement: 'content-feed' // Options: content-feed, banner, sidebar
+      });
+    })
+    .catch(error => {
+      console.error('Failed to load publisher config:', error);
+    });
 </script>`}
                     />
                     
@@ -430,26 +438,51 @@ document.addEventListener('DOMContentLoaded', async function() {
                         <CodeSnippet
                           language="javascript"
                           code={`// File: /pages/api/publisher/track-click.js
+import { getServerSession } from "next-auth/next";
+import { prisma } from "../../../lib/prismaClient";
+
 export default async function handler(req, res) {
-  const { adId } = req.query;
+  const { adId, placementId } = req.query;
   
   if (!adId) {
     return res.status(400).json({ error: "Ad ID is required" });
   }
   
   try {
+    // Get the current authenticated session
+    const session = await getServerSession(req, res);
+    
+    // Verify user is authenticated (add authorization as needed)
+    if (!session || !session.user) {
+      return res.status(401).json({ error: "Unauthorized" });
+    }
+    
+    // Get the publisher's API key securely from the database
+    const apiKey = await prisma.apiKey.findFirst({
+      where: { 
+        userId: session.user.id,
+        isActive: true 
+      },
+      orderBy: { createdAt: 'desc' }
+    });
+    
+    if (!apiKey) {
+      return res.status(404).json({ error: "No API key found" });
+    }
+    
     // Securely track clicks server-side
-    // Using environment variables - never expose API keys client-side
+    // Using environment variables and API keys loaded from secure storage
     const trackResponse = await fetch(
       \`https://api.nostrads.org/v1/ads/\${adId}/click\`, 
       {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'X-API-Key': process.env.NOSTR_ADS_API_KEY  // Secure: Uses server environment
+          'X-API-Key': apiKey.key  // Secure: Uses key from secure database
         },
         body: JSON.stringify({
-          publisherId: process.env.PUBLISHER_ID,
+          publisherId: session.user.id,
+          placementId: placementId || 'default',
           timestamp: new Date().toISOString()
         })
       }
@@ -458,6 +491,15 @@ export default async function handler(req, res) {
     if (!trackResponse.ok) {
       throw new Error('Failed to track click');
     }
+    
+    // Also log the click in your own database for analytics
+    await prisma.clickEvent.create({
+      data: {
+        adId: adId,
+        userId: session.user.id,
+        placementId: placementId || 'default'
+      }
+    });
     
     return res.status(200).json({ success: true });
   } catch (error) {
@@ -496,16 +538,37 @@ yarn add @nostr/ad-marketplace`}
                         code={`// Import the SDK
 import { NostrAdMarketplace } from '@nostr/ad-marketplace';
 
-// Initialize with your publisher key
-const adMarketplace = new NostrAdMarketplace({
-  apiKey: '${apiKeyData.key || 'YOUR_PUBLISHER_API_KEY'}',
-  defaultPlacement: 'content',
-  debug: process.env.NODE_ENV === 'development'
-});
+// Load configuration securely from your backend
+async function initializeAdMarketplace() {
+  try {
+    // Fetch configuration from a secure backend endpoint that uses environment variables
+    const response = await fetch('/api/publisher/config');
+    
+    if (!response.ok) {
+      throw new Error('Failed to load publisher configuration');
+    }
+    
+    const config = await response.json();
+    
+    // Initialize with configuration from your backend
+    const adMarketplace = new NostrAdMarketplace({
+      publisherId: config.publisherId, // Use publisher ID instead of API key
+      defaultPlacement: config.defaultPlacement || 'content',
+      debug: process.env.NODE_ENV === 'development'
+    });
+    
+    return adMarketplace;
+  } catch (error) {
+    console.error('Failed to initialize ad marketplace:', error);
+    throw error;
+  }
+}
 
 // Load an ad
 async function loadAd(placementId, targetElement) {
   try {
+    const adMarketplace = await initializeAdMarketplace();
+    
     const ad = await adMarketplace.getAd({
       placementId,
       contentCategories: ['technology', 'bitcoin']
@@ -527,15 +590,13 @@ async function loadAd(placementId, targetElement) {
         </a>
       \`;
       
-      // Add click tracking
+      // Add click tracking via server-side endpoint
       adElement.querySelector('.nostr-ad-link').addEventListener('click', (e) => {
         e.preventDefault();
         
-        // Track the click
-        adMarketplace.trackClick({
-          adId: ad.id,
-          placementId
-        });
+        // Track the click using server-side endpoint
+        fetch(\`/api/publisher/track-click?adId=\${ad.id}&placementId=\${placementId}\`)
+          .catch(error => console.error('Error tracking click:', error));
         
         // Navigate to the target URL
         window.open(ad.targetUrl, '_blank');
