@@ -29,10 +29,10 @@ const OnboardingWizard: React.FC = () => {
         selectedRole !== 'viewer' && 
         selectedRole !== 'publisher' && 
         selectedRole !== 'advertiser') {
-      // We'll just use goToNextStep to move to a valid step
-      goToNextStep();
+      // Go back to role selection if we have an invalid role
+      skipOnboarding();
     }
-  }, [currentStep, selectedRole, goToNextStep]);
+  }, [currentStep, selectedRole, skipOnboarding]);
   
   // Render the current step content based on step and selected role
   const renderStepContent = () => {
@@ -93,16 +93,6 @@ const OnboardingWizard: React.FC = () => {
         {currentStep !== 'role-selection' && (
           <div>
             <OnboardingProgress />
-            <div className="flex justify-end mt-1 mb-4">
-              <button 
-                onClick={skipOnboarding}
-                className="text-sm text-gray-500 hover:text-purple-600 dark:text-gray-400 dark:hover:text-purple-400"
-                aria-label="Skip onboarding"
-                data-testid="onboarding-skip-button"
-              >
-                Skip for now
-              </button>
-            </div>
           </div>
         )}
         {renderStepContent()}
@@ -139,17 +129,6 @@ const OnboardingWizard: React.FC = () => {
           </button>
         )}
       </div>
-      
-      {!isFirstStep && !isLastStep && (
-        <div className="px-6 pb-6 text-center">
-          <button
-            onClick={skipOnboarding}
-            className="text-sm text-gray-500 hover:text-purple-600 dark:text-gray-400 dark:hover:text-purple-400"
-          >
-            Skip for now
-          </button>
-        </div>
-      )}
     </div>
   );
 };
