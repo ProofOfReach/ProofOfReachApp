@@ -1,8 +1,19 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import { getCookie, setCookie, deleteCookie } from 'cookies-next';
+import { getCookie, setCookie, deleteCookie, CookieValueTypes } from 'cookies-next';
 import { prisma } from './prismaClient';
 import { User } from '@prisma/client';
 import { logger } from './logger';
+
+// Define custom error types for authentication
+export class AuthenticationError extends Error {
+  statusCode: number;
+  
+  constructor(message: string, statusCode: number = 401) {
+    super(message);
+    this.name = 'AuthenticationError';
+    this.statusCode = statusCode;
+  }
+}
 
 // Define the cookie name for consistency
 export const SESSION_COOKIE_NAME = 'nostr_auth_session';
@@ -61,26 +72,38 @@ export function clearAuthCookie(
 export async function isAuthenticated(
   req: NextApiRequest
 ): Promise<string | null> {
-  // Get the session cookie
-  const pubkey = getCookie(SESSION_COOKIE_NAME, { req });
+  // Get the session cookie - handle both sync and async variants
+  let pubkeyValue;
+  try {
+    const pubkey = getCookie(SESSION_COOKIE_NAME, { req });
+    // Handle if it's a promise
+    pubkeyValue = pubkey instanceof Promise ? await pubkey : pubkey;
+  } catch (err) {
+    logger.error('Error getting auth cookie', err);
+    return null;
+  }
   
-  if (!pubkey || typeof pubkey !== 'string') {
+  if (!pubkeyValue || typeof pubkeyValue !== 'string') {
+    logger.debug('Authentication failed - no valid cookie');
     return null;
   }
   
   try {
     // Verify the pubkey exists in the database
     const user = await prisma.user.findUnique({
-      where: { nostrPubkey: pubkey }
+      where: { nostrPubkey: pubkeyValue },
+      select: { id: true, nostrPubkey: true }  // Only select needed fields
     });
     
     if (!user) {
+      logger.debug(`Authentication failed - user not found for pubkey: ${pubkeyValue}`);
       return null;
     }
     
-    return pubkey;
-  } catch (error) {
-    logger.error('Error verifying authentication:', error);
+    return pubkeyValue;
+  } catch (error: unknown) {
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    logger.error(`Error verifying authentication: ${errorMessage}`);
     return null;
   }
 }
@@ -99,24 +122,45 @@ export function generateAuthToken(user: User): string {
   return user.nostrPubkey;
 }
 
+/**
+ * Get the server session from a request
+ * 
+ * @param req The Next.js request object
+ * @param res The Next.js response object
+ * @returns A user session if authenticated, null otherwise
+ */
 export async function getServerSession(
   req: NextApiRequest, 
   res: NextApiResponse
 ): Promise<UserSession | null> {
   // First check if test mode is enabled
   if (req.cookies.isTestMode === 'true') {
+    logger.debug('Test mode detected in getServerSession');
     return {
       user: {
         id: 'test-user-id',
-        nostrPubkey: 'test-pubkey'
+        nostrPubkey: req.cookies.nostr_pubkey || 'test-pubkey'
       }
     };
   }
   
   // Check for auth token in cookies or headers
-  const authToken = req.cookies[SESSION_COOKIE_NAME] || req.headers.authorization?.replace('Bearer ', '');
+  let authToken: string | undefined;
+  
+  // Get from cookie
+  if (req.cookies[SESSION_COOKIE_NAME]) {
+    authToken = req.cookies[SESSION_COOKIE_NAME] as string;
+  } 
+  // Fall back to authorization header
+  else if (req.headers.authorization) {
+    const authHeader = req.headers.authorization;
+    if (authHeader.startsWith('Bearer ')) {
+      authToken = authHeader.replace('Bearer ', '');
+    }
+  }
   
   if (!authToken || typeof authToken !== 'string') {
+    logger.debug('No auth token found in getServerSession');
     return null;
   }
   
@@ -127,10 +171,15 @@ export async function getServerSession(
       where: {
         // This is just an example and would be replaced by proper token verification
         nostrPubkey: authToken
+      },
+      select: {
+        id: true,
+        nostrPubkey: true
       }
     });
     
     if (!user) {
+      logger.debug(`No user found for auth token in getServerSession: ${authToken.substring(0, 10)}...`);
       return null;
     }
     
@@ -140,8 +189,9 @@ export async function getServerSession(
         nostrPubkey: user.nostrPubkey
       }
     };
-  } catch (error) {
-    logger.error('Error verifying auth token:', error);
+  } catch (error: unknown) {
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    logger.error(`Error verifying auth token: ${errorMessage}`);
     return null;
   }
 }

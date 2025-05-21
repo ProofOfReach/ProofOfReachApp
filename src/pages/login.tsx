@@ -164,62 +164,124 @@ const LoginPage: React.FC = () => {
     setError(null);
 
     try {
-      // Clean up any potentially conflicting localStorage items
+      // Clean up any potentially conflicting localStorage and cookies
       if (typeof window !== 'undefined') {
-        logger.log('Clearing any localStorage keys that might interfere with Nostr extension login');
-        localStorage.removeItem('nostr_real_pk');
-        localStorage.removeItem('nostr_real_sk');
-        localStorage.removeItem('nostr_test_pk');
-        localStorage.removeItem('nostr_test_sk');
-        localStorage.removeItem('isTestMode');
-        localStorage.removeItem('bypass_api_calls');
+        logger.info('Clearing storage items that might interfere with Nostr extension login');
         
-        // Also clear any cookies that might be interfering
-        document.cookie = 'nostr_pubkey=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT';
-        document.cookie = 'auth_token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT';
+        // Clear localStorage items in a more robust way
+        const itemsToClear = [
+          'nostr_real_pk', 
+          'nostr_real_sk', 
+          'nostr_test_pk', 
+          'nostr_test_sk', 
+          'isTestMode',
+          'bypass_api_calls',
+          'current_auth_state',
+          'authPubkey'
+        ];
+        
+        itemsToClear.forEach(key => {
+          try {
+            localStorage.removeItem(key);
+          } catch (e) {
+            logger.warn(`Failed to clear ${key} from localStorage`, e);
+          }
+        });
+        
+        // Clear cookies in a more structured way
+        const cookiesToClear = [
+          'nostr_pubkey',
+          'auth_token',
+          'nostr_auth_session'
+        ];
+        
+        cookiesToClear.forEach(cookieName => {
+          document.cookie = `${cookieName}=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT; SameSite=Lax`;
+        });
+        
+        logger.debug('Storage cleared for clean login attempt');
       }
       
-      // Check for extension availability
-      if (!hasNostrExtension()) {
+      // First, check if we're in a browser
+      if (typeof window === 'undefined') {
+        throw new Error('Cannot access browser environment');
+      }
+      
+      // Check for extension availability with detailed logging
+      const extensionAvailable = hasNostrExtension();
+      logger.info('Nostr extension status check:', { 
+        available: extensionAvailable,
+        windowNostr: Boolean(window.nostr),
+        methods: window.nostr ? Object.keys(window.nostr) : 'none'
+      });
+      
+      if (!extensionAvailable || !window.nostr) {
         throw new Error('Nostr extension not found. Please install a Nostr extension like nos2x or Alby.');
       }
       
       // Add an intentional delay to allow browser extension to fully initialize
+      logger.debug('Waiting for Nostr extension initialization...');
       await new Promise(resolve => setTimeout(resolve, 1000));
       
-      // Directly use the window.nostr API with error handling
-      if (!window.nostr) {
-        throw new Error('Nostr extension not found. Please install a Nostr extension like nos2x or Alby.');
+      // Verify extension is still available after delay
+      if (!window.nostr || !window.nostr.getPublicKey) {
+        throw new Error('Nostr extension API not available. Please refresh the page and try again.');
       }
       
-      // Request public key with proper error handling
-      let pubkey;
+      // Request public key with improved error handling
+      let pubkey: string;
       try {
-        // Directly access the extension's getPublicKey method with timeout
+        logger.debug('Requesting public key from Nostr extension...');
+        
+        // Set up timeout for extension response
+        const timeoutDuration = 5000; // 5 seconds
         const publicKeyPromise = window.nostr.getPublicKey();
-        const timeoutPromise = new Promise((_, reject) => {
-          setTimeout(() => reject(new Error('Timeout waiting for Nostr extension response')), 5000);
+        const timeoutPromise = new Promise<never>((_, reject) => {
+          setTimeout(() => reject(new Error(`Timeout after ${timeoutDuration}ms waiting for Nostr extension`)), timeoutDuration);
         });
         
-        pubkey = await Promise.race([publicKeyPromise, timeoutPromise]);
+        // Add type assertion for proper TypeScript handling
+        const retrievedPubkey = await Promise.race([publicKeyPromise, timeoutPromise]) as string;
+        
+        if (!retrievedPubkey || typeof retrievedPubkey !== 'string' || retrievedPubkey.length < 10) {
+          throw new Error('Invalid public key received from Nostr extension');
+        }
+        
+        pubkey = retrievedPubkey;
+        logger.info('Successfully retrieved pubkey:', { pubkey: pubkey.substring(0, 8) + '...' });
       } catch (extensionError: unknown) {
-        logger.error('Error getting public key from Nostr extension:', extensionError instanceof Error ? extensionError.message : String(extensionError));
-        throw new Error('Error connecting to Nostr extension. Please check permissions and try again.');
+        const errorDetails = extensionError instanceof Error 
+          ? extensionError.message 
+          : String(extensionError);
+          
+        logger.error('Failed to get public key from Nostr extension:', { error: errorDetails });
+        
+        if (errorDetails.includes('denied') || errorDetails.includes('rejected')) {
+          throw new Error('Permission denied by user or Nostr extension. Please approve the request and try again.');
+        } else if (errorDetails.includes('timeout')) {
+          throw new Error('Nostr extension did not respond in time. Please check if it\'s working properly and try again.');
+        } else {
+          throw new Error(`Error connecting to Nostr extension: ${errorDetails}`);
+        }
       }
-      
-      if (!pubkey) {
-        throw new Error('Could not get public key from Nostr extension. Did you deny the permission request?');
-      }
-      
-      logger.log('Successfully retrieved pubkey:', pubkey);
       
       try {
-        // Send login request to API
+        // Log the API request attempt
+        logger.info('Sending login request to API with pubkey:', pubkey.substring(0, 8) + '...');
+        
+        // Send login request to API with better error handling
         const response = await fetch('/api/auth/login', {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          credentials: 'include',
-          body: JSON.stringify({ pubkey, isTest: false })
+          headers: { 
+            'Content-Type': 'application/json',
+            'X-Requested-With': 'XMLHttpRequest' // Help prevent CSRF
+          },
+          credentials: 'include', // Include cookies
+          body: JSON.stringify({ 
+            pubkey,
+            isTest: false,
+            timestamp: Date.now() // Add timestamp for request uniqueness
+          })
         });
         
         // Define a proper interface for the API response
@@ -231,39 +293,60 @@ const LoginPage: React.FC = () => {
           redirectUrl?: string;
           success?: boolean;
           roles?: string[];
+          userId?: string;
         }
         
-        const data: LoginApiResponse = await response.json();
-        
-        logger.log('API login response:', data);
+        // Handle potential JSON parsing errors
+        let data: LoginApiResponse;
+        try {
+          data = await response.json();
+          logger.debug('API login response:', data);
+        } catch (jsonError) {
+          logger.error('Failed to parse API response:', jsonError);
+          throw new Error('Received invalid response from server');
+        }
         
         if (!response.ok) {
-          throw new Error(data.message || data.error || 'Authentication failed');
+          const errorMessage = data.message || data.error || `Authentication failed with status ${response.status}`;
+          logger.error('API login failed:', { status: response.status, error: errorMessage });
+          throw new Error(errorMessage);
         }
         
+        // Set auth state with cookies and localStorage for redundancy
+        logger.debug('Setting authentication state after successful login');
+        
         // Set cookies directly to ensure they're available immediately
-        document.cookie = `nostr_pubkey=${pubkey}; path=/; max-age=86400`;
+        document.cookie = `nostr_pubkey=${pubkey}; path=/; max-age=86400; SameSite=Lax`;
         
         // Set authentication state directly in the auth context
-        await login(pubkey as string, false);
+        await login(pubkey, false);
         
         // Check onboarding status and redirect appropriately
+        logger.debug('Determining redirect destination...');
         const onboardingService = await import('@/lib/onboardingService').then(mod => mod.default);
-        const redirectUrl = await onboardingService.getPostLoginRedirectUrl(pubkey as string, 'viewer');
+        const redirectUrl = await onboardingService.getPostLoginRedirectUrl(pubkey, 'viewer');
         
         // Force a refresh of the app state before redirecting
         window.localStorage.setItem('auth_timestamp', Date.now().toString());
         
-        logger.log(`Redirecting to ${redirectUrl}`);
+        logger.info(`Login successful, redirecting to ${redirectUrl}`);
         router.push(redirectUrl);
       } catch (apiError: unknown) {
-        logger.error('API request failed:', apiError instanceof Error ? apiError.message : String(apiError));
-        throw new Error('Failed to authenticate with the server. Please try again.');
+        const errorDetails = apiError instanceof Error ? apiError.message : String(apiError);
+        logger.error('API authentication failed:', { error: errorDetails });
+        throw new Error(`Failed to authenticate with the server: ${errorDetails}`);
       }
     } catch (err: unknown) {
-      // Properly handle error with type checking
-      const errorMessage = err instanceof Error ? err.message : 'Failed to login with Nostr extension';
-      logger.error('Login error:', errorMessage);
+      // Handle and display user-friendly error message
+      const errorMessage = err instanceof Error 
+        ? err.message 
+        : 'An unexpected error occurred during login';
+        
+      logger.error('Login process failed:', { 
+        error: errorMessage, 
+        details: err instanceof Error ? err.stack : String(err)
+      });
+      
       setError(errorMessage);
     } finally {
       setIsLoading(false);
