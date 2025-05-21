@@ -62,14 +62,18 @@ const Navbar: React.FC = () => {
         <div className="flex justify-between h-16">
           <div className="flex-shrink-0 flex items-center">
             <Link href="/" className="hidden sm:flex items-center">
-              <span className="text-xl font-bold text-purple-600 dark:text-purple-400">
-                Proof Of Reach
-              </span>
+              <img 
+                src="/images/logo_sm_light.png" 
+                alt="Proof Of Reach" 
+                className="h-8" 
+              />
             </Link>
             <Link href="/" className="sm:hidden flex items-center">
-              <span className="text-xl font-bold text-purple-600 dark:text-purple-400">
-                ProofOfReach
-              </span>
+              <img 
+                src="/images/logo_sm_light.png" 
+                alt="Proof Of Reach" 
+                className="h-6" 
+              />
             </Link>
           </div>
 

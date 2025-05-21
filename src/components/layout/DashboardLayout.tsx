@@ -37,7 +37,7 @@ const DashboardInner: React.FC<DashboardLayoutProps> = ({ children, title, role 
   return (
     <>
       <Head>
-        <title>{title ? `${title} - Nostr Ad Marketplace` : 'Nostr Ad Marketplace'}</title>
+        <title>{title ? `${title} - Proof Of Reach` : 'Proof Of Reach'}</title>
       </Head>
       <div className="flex min-h-screen bg-gray-50 dark:bg-gray-900">
         {/* Use the regular sidebar for now */}
@@ -61,7 +61,7 @@ const DashboardInner: React.FC<DashboardLayoutProps> = ({ children, title, role 
           
           <footer className="bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 py-4 px-6">
             <div className="text-center text-sm text-gray-500 dark:text-gray-400">
-              © {new Date().getFullYear()} Nostr Ad Marketplace - Phase 1 MVP
+              © {new Date().getFullYear()} Proof Of Reach - Phase 1 MVP
             </div>
           </footer>
         </div>

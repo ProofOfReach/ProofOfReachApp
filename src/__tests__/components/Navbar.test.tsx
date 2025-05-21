@@ -25,7 +25,7 @@ describe('Navbar Component', () => {
   it('renders navbar with logo', () => {
     render(<Navbar />);
     
-    const logo = screen.getByText('Proof Of Reach');
+    const logo = screen.getByAltText('Proof Of Reach');
     expect(logo).toBeInTheDocument();
     expect(logo.closest('a')).toHaveAttribute('href', '/');
   });
