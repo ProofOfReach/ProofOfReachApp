@@ -108,10 +108,19 @@ const ViewerOnboarding: React.FC<ViewerOnboardingProps> = ({
   
   // Map from OnboardingContext step names to local step names
   const mapOnboardingStepToLocal = (step: OnboardingStep): string => {
-    // Start at discovery when a role is selected (welcome step removed)
-    if (step === 'role-selection') {
-      console.log("ViewerOnboarding - Mapped incoming step role-selection to discovery");
-      return 'discovery';
+    // Check if user has Nostr extension
+    const hasNostrExtension = typeof window !== 'undefined' && window.nostr;
+    
+    // Start at privacy when a role is selected for Nostr extension users
+    // Skip discovery step for users with existing Nostr accounts
+    if (step === 'role-selection' || step === 'preferences') {
+      if (hasNostrExtension) {
+        console.log("ViewerOnboarding - Skipping discovery for Nostr user, going directly to privacy");
+        return 'privacy';
+      } else {
+        console.log("ViewerOnboarding - Mapped incoming step to discovery");
+        return 'discovery';
+      }
     }
     
     // Define the sequence of steps in order - feedback step removed
@@ -123,8 +132,8 @@ const ViewerOnboarding: React.FC<ViewerOnboardingProps> = ({
     
     // Map context steps to our local steps
     const stepMap: Record<string, string> = {
-      'role-selection': 'discovery',
-      'preferences': 'discovery',
+      'role-selection': hasNostrExtension ? 'privacy' : 'discovery',
+      'preferences': hasNostrExtension ? 'privacy' : 'discovery',
       'discovery': 'discovery', 
       'notifications': 'privacy', // Map notifications to privacy since we removed notifications step
       'privacy': 'privacy',
@@ -132,7 +141,7 @@ const ViewerOnboarding: React.FC<ViewerOnboardingProps> = ({
       'complete': 'complete'
     };
     
-    return stepMap[step] || 'discovery'; // Default to discovery if step is not recognized
+    return stepMap[step] || (hasNostrExtension ? 'privacy' : 'discovery'); // Default based on Nostr status
   };
   
   // Initialize step from incoming currentStep prop

@@ -1,5 +1,35 @@
 # Project Learnings
 
+## 2025-05-21 — Enhanced Onboarding Flow for Existing Nostr Users
+
+**Session Goal:** Improve the onboarding experience for users who already have a Nostr account by skipping unnecessary steps.
+
+**Problem Identified:**
+- New users who already have a Nostr extension (existing Nostr users) were being shown the "Discover Personalized Content" step, which is redundant since they already participate in the Nostr ecosystem
+- The initial viewing experience for Nostr users included unnecessary profile recommendations, creating friction in the onboarding process
+- Real Nostr profile images were being displayed but were mismatched with account names due to improper pubkey format handling
+
+**What Was Done:**
+- Updated the `mapOnboardingStepToLocal` function in ViewerOnboarding to detect Nostr extension availability
+- Added conditional logic to skip the discovery step for users with a Nostr extension, taking them directly to privacy settings
+- Fixed the API endpoint for Nostr profile resolution to properly handle both npub and hex format pubkeys
+- Updated the publisher data in ViewerOnboarding with correct Nostr hex pubkeys properly matched to names
+- Improved error handling for invalid Nostr pubkeys in the profile API endpoint
+
+**Lessons Learned:**
+- Contextual onboarding flows provide better UX by respecting users' existing platform knowledge
+- Detecting browser extensions (like Nostr) can help tailor the experience to different user types
+- Real profile images enhance authenticity but require proper API integration with external protocols
+- Pubkey format handling is crucial for correct identity display in decentralized applications
+- Step skipping in onboarding flows should be intentional and based on user context
+
+**Open Questions / Next Steps:**
+1. Consider saving user preferences about followed publishers for future reference
+2. Explore ways to import existing follows from a user's Nostr account to further streamline onboarding
+3. Implement a more comprehensive Nostr integration leveraging the user's existing social graph
+4. Add telemetry to measure onboarding completion rates with the improved flow
+5. Consider expanding the contextualized onboarding to other user types with specific backgrounds
+
 ## 2025-05-19 — Test Suite Reliability Improvements
 
 **Session Goal:** Fix failing tests across components, services, and UI elements to improve test suite reliability and maintain code quality.
