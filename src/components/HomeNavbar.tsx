@@ -21,7 +21,7 @@ const HomeNavbar: React.FC = () => {
           <div className="flex-shrink-0 flex items-center">
             <Link href="/" className="flex items-center">
               <Image 
-                src="/logo_sm_light.png" 
+                src="/logo_big_light.png" 
                 alt="Proof Of Reach Logo" 
                 width={90} 
                 height={30} 
