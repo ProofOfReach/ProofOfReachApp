@@ -32,19 +32,15 @@ const RoleConfirmation: React.FC<RoleConfirmationProps> = ({ onConfirm }) => {
     // Skip during server-side rendering
     if (!isClient) return;
     
-    // In test mode, force all roles to be available
-    if (isTestMode) {
-      setAvailableRoles(['viewer', 'publisher', 'advertiser']);
-    } 
-    // Otherwise use the roles from context if available
-    else if (roleContext && roleContext.availableRoles && roleContext.availableRoles.length > 0) {
-      setAvailableRoles(roleContext.availableRoles);
+    // During onboarding, ALWAYS show all roles regardless of context
+    // This ensures users can select from all possible roles during onboarding
+    setAvailableRoles(['viewer', 'publisher', 'advertiser']);
+    
+    // Log for debugging
+    if (process.env.NODE_ENV !== 'production') {
+      console.log('RoleConfirmation - Forcing all roles to be available for onboarding');
     }
-    // Fallback to ensure at least one role is available
-    else if (!availableRoles.length) {
-      setAvailableRoles(['advertiser']);
-    }
-  }, [roleContext, isTestMode, isClient, availableRoles.length]);
+  }, [isClient]);
   
   // For debugging
   useEffect(() => {
@@ -110,10 +106,8 @@ const RoleConfirmation: React.FC<RoleConfirmationProps> = ({ onConfirm }) => {
     }
   ];
   
-  // In test mode, show all roles, otherwise filter based on available roles
-  const roleCards = isTestMode 
-    ? allRoleCards 
-    : allRoleCards.filter(card => availableRoles.includes(card.role));
+  // Always show all role cards during onboarding
+  const roleCards = allRoleCards;
 
   // For server-side rendering or initial client load, use a placeholder 
   // with a similar structure to prevent hydration mismatch
