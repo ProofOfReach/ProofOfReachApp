@@ -1,13 +1,19 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { NextPage } from 'next';
+import dynamic from 'next/dynamic';
 import { useAuthRefactored } from '@/hooks/useAuthRefactored';
 import { OnboardingProvider } from '@/context/OnboardingContext';
-import OnboardingWizard from '@/components/onboarding/OnboardingWizard';
 import Layout from '@/components/Layout';
 import Loading from '@/components/Loading';
 import { logger } from '@/lib/logger';
 import { UserRoleType } from '@/types/role';
+
+// Import OnboardingWizard dynamically with SSR disabled to avoid hydration errors
+const OnboardingWizard = dynamic(
+  () => import('@/components/onboarding/OnboardingWizard'),
+  { ssr: false, loading: () => <Loading className="py-10" /> }
+);
 
 const OnboardingPage: NextPage = () => {
   const router = useRouter();
