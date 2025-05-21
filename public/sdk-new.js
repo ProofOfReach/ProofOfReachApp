@@ -275,7 +275,6 @@
             viewStartTime = Date.now();
             // Check engagement every second
             engagementTimer = setInterval(checkEngagementEarnings, 1000);
-            console.log("Ad fully visible, started timer");
           }
         } else {
           // Ad is not fully visible, reset timer
@@ -284,7 +283,6 @@
             if (engagementTimer) {
               clearInterval(engagementTimer);
               engagementTimer = null;
-              console.log("Ad not fully visible, timer reset");
             }
           }
         }
