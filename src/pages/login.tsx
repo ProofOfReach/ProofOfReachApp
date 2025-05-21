@@ -151,92 +151,90 @@ const LoginPage: React.FC = () => {
     setError(null);
 
     try {
-      // First, clear any localStorage keys that might interfere with Nostr extension login
+      // Clean up any potentially conflicting localStorage items
       if (typeof window !== 'undefined') {
         console.log('Clearing any localStorage keys that might interfere with Nostr extension login');
         localStorage.removeItem('nostr_real_pk');
         localStorage.removeItem('nostr_real_sk');
         localStorage.removeItem('nostr_test_pk');
         localStorage.removeItem('nostr_test_sk');
+        localStorage.removeItem('isTestMode');
+        localStorage.removeItem('bypass_api_calls');
+        
+        // Also clear any cookies that might be interfering
+        document.cookie = 'nostr_pubkey=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT';
+        document.cookie = 'auth_token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT';
       }
       
-      // Log the Nostr extension detection status before attempting to get the public key
-      const extensionAvailable = hasNostrExtension();
-      console.log('Nostr extension detection before login: ', {
-        hasExtension: extensionAvailable
-      });
-      
-      if (!extensionAvailable) {
+      // Check for extension availability
+      if (!hasNostrExtension()) {
         throw new Error('Nostr extension not found. Please install a Nostr extension like nos2x or Alby.');
       }
       
-      // Add a delay to ensure the extension has time to initialize
-      await new Promise(resolve => setTimeout(resolve, 500));
+      // Add an intentional delay to allow browser extension to fully initialize
+      await new Promise(resolve => setTimeout(resolve, 1000));
       
-      // Try to get the public key
+      // Directly use the window.nostr API with error handling
+      if (!window.nostr) {
+        throw new Error('Nostr extension not found. Please install a Nostr extension like nos2x or Alby.');
+      }
+      
+      // Request public key with proper error handling
       let pubkey;
       try {
-        pubkey = await window.nostr?.getPublicKey();
+        // Directly access the extension's getPublicKey method with timeout
+        const publicKeyPromise = window.nostr.getPublicKey();
+        const timeoutPromise = new Promise((_, reject) => {
+          setTimeout(() => reject(new Error('Timeout waiting for Nostr extension response')), 5000);
+        });
+        
+        pubkey = await Promise.race([publicKeyPromise, timeoutPromise]);
       } catch (extensionError) {
         console.error('Error getting public key from Nostr extension:', extensionError);
-        throw new Error('Error connecting to Nostr extension. Please make sure it\'s enabled and try again.');
+        throw new Error('Error connecting to Nostr extension. Please check permissions and try again.');
       }
       
       if (!pubkey) {
-        console.warn('getNostrPublicKey returned null or empty value');
-        throw new Error('Could not get public key from Nostr extension. Please check permissions and try again.');
+        throw new Error('Could not get public key from Nostr extension. Did you deny the permission request?');
       }
       
-      console.log('Successfully retrieved pubkey: ', pubkey);
-
-      // Send the pubkey to our backend to create/authenticate user
-      console.log('Sending login request to API with pubkey', pubkey);
-      const response = await postWithAuth('/api/auth/login', { 
-        pubkey, 
-        isTest: false 
-      });
-
-      let data;
+      console.log('Successfully retrieved pubkey:', pubkey);
+      
       try {
-        data = await response.json();
-        console.log('API login response:', data);
-      } catch (jsonError) {
-        console.error('Error parsing JSON response:', jsonError);
-        throw new Error('Failed to parse server response');
-      }
-
-      if (!response.ok) {
-        const errorMessage = data && typeof data === 'object' && 'message' in data 
-          ? data.message 
-          : (data && typeof data === 'object' && 'error' in data 
-              ? data.error 
-              : 'Authentication failed');
+        // Send login request to API
+        const response = await fetch('/api/auth/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'include',
+          body: JSON.stringify({ pubkey, isTest: false })
+        });
         
-        console.error('API login failed:', errorMessage);
-        throw new Error(errorMessage);
+        const data = await response.json();
+        console.log('API login response:', data);
+        
+        if (!response.ok) {
+          throw new Error(data.message || data.error || 'Authentication failed');
+        }
+        
+        // Set cookies directly to ensure they're available immediately
+        document.cookie = `nostr_pubkey=${pubkey}; path=/; max-age=86400`;
+        
+        // Set authentication state directly in the auth context
+        await login(pubkey, false);
+        
+        // Check onboarding status and redirect appropriately
+        const onboardingService = await import('@/lib/onboardingService').then(mod => mod.default);
+        const redirectUrl = await onboardingService.getPostLoginRedirectUrl(pubkey, 'viewer');
+        
+        // Force a refresh of the app state before redirecting
+        window.localStorage.setItem('auth_timestamp', Date.now().toString());
+        
+        console.log(`Redirecting to ${redirectUrl}`);
+        router.push(redirectUrl);
+      } catch (apiError) {
+        console.error('API request failed:', apiError);
+        throw new Error('Failed to authenticate with the server. Please try again.');
       }
-
-      // Double-check that we've cleared any fallback keys
-      if (typeof window !== 'undefined') {
-        localStorage.removeItem('nostr_real_pk');
-        localStorage.removeItem('nostr_real_sk');
-        localStorage.removeItem('nostr_test_pk');
-        localStorage.removeItem('nostr_test_sk');
-      }
-
-      // Use the login function from auth context with isTestMode=false
-      console.log('Calling login function with pubkey', pubkey);
-      await login(pubkey, false);
-
-      // Import OnboardingService at the top of the file
-      // Determine where to redirect based on onboarding status
-      console.log('Login successful, checking onboarding status');
-      const onboardingService = await import('@/lib/onboardingService').then(mod => mod.default);
-      const currentRole = 'viewer'; // Default to viewer for new logins
-      const redirectUrl = await onboardingService.getPostLoginRedirectUrl(pubkey, currentRole);
-      
-      console.log(`Redirecting to ${redirectUrl}`);
-      router.push(redirectUrl);
     } catch (err: any) {
       console.error('Login error:', err);
       setError(err.message || 'Failed to login with Nostr extension');
@@ -456,7 +454,7 @@ const LoginPage: React.FC = () => {
             <button
               onClick={handleNip07Login}
               disabled={isLoading || !hasExtension}
-              className={`w-full btn-primary py-3 ${
+              className={`w-full py-3 text-center px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-[#1a73e8] hover:bg-[#1765cc] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#1a73e8] ${
                 (!hasExtension || isLoading) ? 'opacity-50 cursor-not-allowed' : ''
               }`}
             >
