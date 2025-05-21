@@ -1,21 +1,22 @@
 import { useState, useRef } from 'react';
-import { Book, Code, Clipboard, Check, Copy, ExternalLink } from 'react-feather';
+import { Check, Copy, ExternalLink } from 'react-feather';
 import Link from 'next/link';
 import ImprovedDashboardLayout from '@/components/layout/ImprovedDashboardLayout';
-import { Button } from '@/components/ui/button';
-import { Card } from '@/components/ui/Card';
 
 const SDKExamplesPage = () => {
-  const { pubkey } = useAuth();
   const [copiedSection, setCopiedSection] = useState<string | null>(null);
+  const [activeTab, setActiveTab] = useState('html');
   const scriptRef = useRef<HTMLDivElement>(null);
   
-  // SDK code with user's pubkey
+  // Use a default publisher pubkey for the example
+  const pubkey = 'YOUR_NOSTR_PUBKEY';
+  
+  // SDK code with pubkey
   const sdkScript = `<script src="https://cdn.proofofreach.com/sdk/v1.js"></script>
 <script>
   window.addEventListener("load", () => {
     ProofOfReachSDK.renderAd("proof-of-reach-ad", {
-      pubkey: "${pubkey || 'YOUR_NOSTR_PUBKEY'}",
+      pubkey: "${pubkey}",
       testMode: false,
       onPayment: (sats) => {
         console.log(\`Received \${sats} satoshis!\`);
@@ -72,7 +73,7 @@ function ProofOfReachAd({ containerId = "proof-of-reach-ad" }) {
       // Initialize once SDK is loaded
       if (window.ProofOfReachSDK) {
         window.ProofOfReachSDK.renderAd(containerId, {
-          pubkey: "${pubkey || 'YOUR_NOSTR_PUBKEY'}",
+          pubkey: "${pubkey}",
           testMode: false
         });
       }
@@ -120,7 +121,7 @@ function add_proofofreach_sdk() {
       // Find all ad containers
       document.querySelectorAll('.proofofreach-ad').forEach(container => {
         ProofOfReachSDK.renderAd(container.id, {
-          pubkey: "${pubkey || 'YOUR_NOSTR_PUBKEY'}",
+          pubkey: "${pubkey}",
           testMode: false
         });
       });
@@ -144,6 +145,25 @@ add_shortcode('proofofreach_ad', 'proofofreach_ad_shortcode');
 // Usage in posts: [proofofreach_ad]
 ?>`;
 
+  const advancedConfig = `ProofOfReachSDK.renderAd("proof-of-reach-ad", {
+  pubkey: "${pubkey}",  // Your Nostr public key
+  testMode: false,                 // Set to true for testing (no real payments)
+  adType: "standard",              // "standard", "small", or "banner"
+  refreshInterval: 300000,         // Refresh ad every 5 minutes (in ms)
+  defaultStyles: true,             // Apply default container styles
+  
+  // Event callbacks
+  onPayment: (sats) => {           // Called when payment is received
+    console.log(\`Received \${sats} satoshis!\`);
+  },
+  onError: (error) => {            // Called when error occurs
+    console.error(\`Ad error: \${error}\`);
+  },
+  onLoad: () => {                  // Called when ad loads successfully
+    console.log("Ad loaded successfully");
+  }
+});\n`;
+
   const handleCopy = (text: string, section: string) => {
     navigator.clipboard.writeText(text).then(() => {
       setCopiedSection(section);
@@ -155,14 +175,14 @@ add_shortcode('proofofreach_ad', 'proofofreach_ad_shortcode');
     <ImprovedDashboardLayout title="SDK & Code Examples">
       <div className="space-y-6 max-w-4xl">
         <div>
-          <Title level={1}>ProofOfReach SDK</Title>
-          <Paragraph className="text-gray-500 dark:text-gray-400">
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-white">ProofOfReach SDK</h1>
+          <p className="text-gray-500 dark:text-gray-400 mt-2">
             Integrate ProofOfReach ads into your website with our easy-to-use SDK.
             Copy the code snippets below to get started.
-          </Paragraph>
+          </p>
         </div>
 
-        <Card className="overflow-hidden">
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow overflow-hidden">
           <div className="p-6">
             <h2 className="text-xl font-semibold mb-4">Quick Integration Guide</h2>
             <div className="grid gap-6">
@@ -234,29 +254,44 @@ add_shortcode('proofofreach_ad', 'proofofreach_ad_shortcode');
                   </p>
                   <div className="mt-3">
                     <Link href="/sdk-demo.html" target="_blank">
-                      <Button className="flex items-center space-x-2">
+                      <button className="flex items-center space-x-2 px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-md">
                         <span>Try the interactive demo</span>
                         <ExternalLink className="w-4 h-4" />
-                      </Button>
+                      </button>
                     </Link>
                   </div>
                 </div>
               </div>
             </div>
           </div>
-        </Card>
+        </div>
 
-        <Card>
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow">
           <div className="p-6">
             <h2 className="text-xl font-semibold mb-4">Integration Examples</h2>
-            <Tabs defaultValue="html">
-              <TabsList className="mb-4">
-                <TabsTrigger value="html">HTML</TabsTrigger>
-                <TabsTrigger value="react">React</TabsTrigger>
-                <TabsTrigger value="wordpress">WordPress</TabsTrigger>
-              </TabsList>
-              
-              <TabsContent value="html" className="relative">
+            
+            {/* Simple tabs using state */}
+            <div className="border-b border-gray-200 dark:border-gray-700 mb-6">
+              <nav className="flex -mb-px">
+                {['html', 'react', 'wordpress'].map((tab) => (
+                  <button
+                    key={tab}
+                    onClick={() => setActiveTab(tab)}
+                    className={`px-4 py-2 text-sm font-medium ${
+                      activeTab === tab
+                        ? 'border-b-2 border-purple-500 text-purple-600 dark:text-purple-400'
+                        : 'border-b-2 border-transparent text-gray-500 hover:text-gray-700 dark:text-gray-400'
+                    }`}
+                  >
+                    {tab.charAt(0).toUpperCase() + tab.slice(1)}
+                  </button>
+                ))}
+              </nav>
+            </div>
+            
+            {/* HTML Example */}
+            <div className={activeTab === 'html' ? '' : 'hidden'}>
+              <div className="relative">
                 <div className="bg-gray-800 text-gray-200 p-4 rounded-md text-sm overflow-x-auto">
                   <pre className="whitespace-pre-wrap">{htmlExample}</pre>
                 </div>
@@ -270,9 +305,12 @@ add_shortcode('proofofreach_ad', 'proofofreach_ad_shortcode');
                     <Copy className="w-4 h-4 text-gray-300" />
                   )}
                 </button>
-              </TabsContent>
-              
-              <TabsContent value="react" className="relative">
+              </div>
+            </div>
+            
+            {/* React Example */}
+            <div className={activeTab === 'react' ? '' : 'hidden'}>
+              <div className="relative">
                 <div className="bg-gray-800 text-gray-200 p-4 rounded-md text-sm overflow-x-auto">
                   <pre className="whitespace-pre-wrap">{reactExample}</pre>
                 </div>
@@ -286,9 +324,12 @@ add_shortcode('proofofreach_ad', 'proofofreach_ad_shortcode');
                     <Copy className="w-4 h-4 text-gray-300" />
                   )}
                 </button>
-              </TabsContent>
-              
-              <TabsContent value="wordpress" className="relative">
+              </div>
+            </div>
+            
+            {/* WordPress Example */}
+            <div className={activeTab === 'wordpress' ? '' : 'hidden'}>
+              <div className="relative">
                 <div className="bg-gray-800 text-gray-200 p-4 rounded-md text-sm overflow-x-auto">
                   <pre className="whitespace-pre-wrap">{wordpressExample}</pre>
                 </div>
@@ -302,39 +343,22 @@ add_shortcode('proofofreach_ad', 'proofofreach_ad_shortcode');
                     <Copy className="w-4 h-4 text-gray-300" />
                   )}
                 </button>
-              </TabsContent>
-            </Tabs>
+              </div>
+            </div>
           </div>
-        </Card>
+        </div>
 
-        <Card>
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow">
           <div className="p-6">
             <h2 className="text-xl font-semibold mb-4">Advanced Configuration</h2>
             <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">
               The SDK supports additional configuration options for customizing your ad integration.
             </p>
             <div className="bg-gray-800 text-gray-200 p-4 rounded-md text-sm overflow-x-auto">
-              <pre className="whitespace-pre-wrap">{`ProofOfReachSDK.renderAd("proof-of-reach-ad", {
-  pubkey: "${pubkey || 'YOUR_NOSTR_PUBKEY'}",  // Your Nostr public key
-  testMode: false,                 // Set to true for testing (no real payments)
-  adType: "standard",              // "standard", "small", or "banner"
-  refreshInterval: 300000,         // Refresh ad every 5 minutes (in ms)
-  defaultStyles: true,             // Apply default container styles
-  
-  // Event callbacks
-  onPayment: (sats) => {           // Called when payment is received
-    console.log(\`Received \${sats} satoshis!\`);
-  },
-  onError: (error) => {            // Called when error occurs
-    console.error(\`Ad error: \${error}\`);
-  },
-  onLoad: () => {                  // Called when ad loads successfully
-    console.log("Ad loaded successfully");
-  }
-});\n`}</pre>
+              <pre className="whitespace-pre-wrap">{advancedConfig}</pre>
             </div>
           </div>
-        </Card>
+        </div>
       </div>
     </ImprovedDashboardLayout>
   );
