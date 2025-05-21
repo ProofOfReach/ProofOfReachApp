@@ -25,17 +25,24 @@ export default async function handleProfileRequest(req: NextApiRequest, res: Nex
     if (req.query.pubkey) {
       targetPubkey = String(req.query.pubkey);
       
-      // Convert npub to hex if needed
+      // Handle npub format
       if (targetPubkey.startsWith('npub1')) {
         try {
-          const { type, data } = nip19.decode(targetPubkey);
-          if (type === 'npub') {
-            logger.debug('Successfully converted npub to hex:', targetPubkey, 'to', data);
-            targetPubkey = data as string;
+          // Use proper nip19 decoding for npubs
+          const decoded = nip19.decode(targetPubkey);
+          if (decoded && decoded.type === 'npub') {
+            logger.debug('Successfully converted npub to hex:', targetPubkey, 'to', decoded.data);
+            targetPubkey = decoded.data as string;
+          } else {
+            logger.warn('Unexpected decoded type for npub:', decoded);
           }
         } catch (decodeError) {
           logger.error('Failed to decode npub:', targetPubkey, decodeError);
-          // Continue with original format as a fallback
+          // For safety, return a meaningful error since we can't proceed with an invalid key
+          return res.status(400).json({ 
+            error: 'Invalid npub format',
+            message: 'The provided npub could not be decoded'
+          });
         }
       }
     } else if (authenticatedPubkey) {

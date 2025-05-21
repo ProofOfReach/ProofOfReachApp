@@ -39,10 +39,10 @@ const ViewerOnboarding: React.FC<ViewerOnboardingProps> = ({
     goToPreviousStep,
     totalSteps: contextTotalSteps
   } = useOnboarding();
-  // Real publishers with their actual Nostr npubs
+  // Real publishers with their actual Nostr hex pubkeys
   const [publishers, setPublishers] = useState<Publisher[]>([
     {
-      id: 'npub1sg6plzptd64u62a878hep2kev88swjh3tw00gjsfl8f237lmu63q0uf63m',
+      id: '82341f882b6eabcd2ba7f1ef90aad961cf074af15b9ef44a09f9d2a8fbfbe6a2',
       name: 'Bitcoin Magazine',
       description: 'The world\'s first publication dedicated to Bitcoin',
       initials: 'BTC',
@@ -50,7 +50,7 @@ const ViewerOnboarding: React.FC<ViewerOnboardingProps> = ({
       followed: false
     },
     {
-      id: 'npub1g53mukxnjkcmr94fhryzkqutdz2ukq4ks0gvy5af25rgmwsl4ngq43drvk',
+      id: '4523be58d395b1b196a9b8c82b038b6895cb02b683d0c253a955068dba1facd0',
       name: 'Stacker News',
       description: 'Bitcoin news and discussion with Lightning rewards',
       initials: 'SN',
@@ -58,7 +58,7 @@ const ViewerOnboarding: React.FC<ViewerOnboardingProps> = ({
       followed: false
     },
     {
-      id: 'npub10awzknjg5r5lajnr53438ndcyjylgqsrnrtq5grs495v42qc6awsj45ws7',
+      id: '32e1827635450ebb3c5a7d12c1f8e7b2b514439ac10a67eef3d9fd9c5c68e245',
       name: 'Nostr Watch',
       description: 'Updates and info about the Nostr protocol and ecosystem',
       initials: 'NW',
@@ -66,7 +66,7 @@ const ViewerOnboarding: React.FC<ViewerOnboardingProps> = ({
       followed: false
     },
     {
-      id: 'npub1zvvv8fm29hm2hhutwh8gqpvtl4np6j6nprnlu4mh8ctj9bceat9qpfsp5l',
+      id: 'e8ed3798c6ffebfec301ce4fd5b414a1c39640a34c255bbdbc642cfe6c0a959f',
       name: 'NOSTR.COM',
       description: 'Official account for NOSTR.COM project and ecosystem',
       initials: 'NC',
@@ -74,7 +74,7 @@ const ViewerOnboarding: React.FC<ViewerOnboardingProps> = ({
       followed: false
     },
     {
-      id: 'npub1nxkpyksvcxpg5rzz4qhr3b87n0czg0rz4qtgnseeelaqgrc665eq2nr6t5',
+      id: 'fa984bd7dbb282f07e16e7ae87b26a2a7b9b90b7246a44771f0cf5ae58018f52',
       name: 'Current Thing App',
       description: 'The latest in Bitcoin, tech, and current topics',
       initials: 'CT',
