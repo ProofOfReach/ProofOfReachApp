@@ -173,14 +173,6 @@ const RoleConfirmation: React.FC<RoleConfirmationProps> = ({ onConfirm }) => {
   return (
     <div className="py-6">
       <div className="text-center mb-8">
-        <div className="flex justify-center mb-4">
-          <img 
-            src="/logo_big_light.png" 
-            alt="Proof Of Reach" 
-            className="h-12 max-w-full"
-            data-testid="role-selection-logo"
-          />
-        </div>
         <p className="mt-2 text-gray-600 dark:text-gray-300">
           Select how you'd like to use the Proof Of Reach platform
         </p>
