@@ -7,18 +7,31 @@ import OnboardingWizard from '@/components/onboarding/OnboardingWizard';
 import Layout from '@/components/Layout';
 import Loading from '@/components/Loading';
 import { logger } from '@/lib/logger';
+import { UserRoleType } from '@/types/role';
 
 const OnboardingPage: NextPage = () => {
   const router = useRouter();
   const { authState, isLoading } = useAuthRefactored();
   const [checkedStorage, setCheckedStorage] = useState(false);
   const [isRedirecting, setIsRedirecting] = useState(false);
+  const [initialRole, setInitialRole] = useState<UserRoleType | null>(null);
   
   // Destructure query parameters
   const { role, timestamp, forced, pubkey, error } = router.query;
   
   // Determine login state
   const isLoggedIn = authState?.isLoggedIn || false;
+  
+  // Process the role from query parameters when they're available
+  useEffect(() => {
+    if (role && typeof role === 'string') {
+      const normalizedRole = role.toLowerCase() as UserRoleType;
+      if (['viewer', 'publisher', 'advertiser', 'admin'].includes(normalizedRole)) {
+        setInitialRole(normalizedRole);
+        logger.debug('Initialized onboarding with role from URL parameters', { role: normalizedRole });
+      }
+    }
+  }, [role]);
   
   // Check for stored onboarding flags in session/localStorage
   useEffect(() => {
@@ -38,6 +51,11 @@ const OnboardingPage: NextPage = () => {
             pubkey: savedPubkey.substring(0, 8) + '...',
             role: savedRole
           });
+          
+          // Set the role from session storage
+          if (savedRole && ['viewer', 'publisher', 'advertiser', 'admin'].includes(savedRole)) {
+            setInitialRole(savedRole as UserRoleType);
+          }
           
           // Flag that we checked storage
           setCheckedStorage(true);
@@ -97,7 +115,7 @@ const OnboardingPage: NextPage = () => {
       className="bg-gray-50 dark:bg-gray-900"
     >
       <div className="container mx-auto py-8 px-4">
-        <OnboardingProvider initialRole={role as string}>
+        <OnboardingProvider initialRole={initialRole}>
           <OnboardingWizard />
         </OnboardingProvider>
       </div>

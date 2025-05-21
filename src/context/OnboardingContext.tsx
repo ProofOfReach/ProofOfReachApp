@@ -83,16 +83,17 @@ const OnboardingContext = createContext<OnboardingContextType | undefined>(undef
 type OnboardingProviderProps = {
   children: ReactNode;
   forcePubkey?: string | null;
+  initialRole?: UserRoleType | null;
 };
 
-export const OnboardingProvider: React.FC<OnboardingProviderProps> = ({ children, forcePubkey }) => {
+export const OnboardingProvider: React.FC<OnboardingProviderProps> = ({ children, forcePubkey, initialRole }) => {
   const { authState } = useAuthRefactored();
   const roleContext = useRole();
   const currentRole = roleContext?.currentRole;
   const router = useRouter();
   
   const [currentStep, setCurrentStep] = useState<OnboardingStep>('role-selection');
-  const [selectedRole, setSelectedRole] = useState<UserRoleType | null>(null);
+  const [selectedRole, setSelectedRole] = useState<UserRoleType | null>(initialRole || null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   
   // Initialize steps based on the current role or selected role
@@ -119,13 +120,13 @@ export const OnboardingProvider: React.FC<OnboardingProviderProps> = ({ children
   // Initialize onboarding state when the component mounts
   useEffect(() => {
     const initializeOnboarding = async () => {
-      // Only set the role-specific step if we're past role selection
+      // If we have an initial role (from URL params), immediately skip to the first step for that role
       if (selectedRole && currentStep === 'role-selection') {
         const steps = getStepsForRole(selectedRole);
         setCurrentStep(steps[1]); // Skip to the first role-specific step
       }
       
-      // If coming back to onboarding with a current role, initialize with that role
+      // If coming back to onboarding with a current role but no selected role yet, initialize with that role
       if (!selectedRole && currentRole && currentRole !== 'admin') {
         setSelectedRole(currentRole);
         
@@ -147,7 +148,7 @@ export const OnboardingProvider: React.FC<OnboardingProviderProps> = ({ children
     };
     
     initializeOnboarding();
-  }, [selectedRole, currentRole, authState, router, forcePubkey]);
+  }, [selectedRole, currentStep, currentRole, authState, router, forcePubkey]);
   
   // Handle role selection
   const handleRoleSelection = (role: UserRoleType) => {
