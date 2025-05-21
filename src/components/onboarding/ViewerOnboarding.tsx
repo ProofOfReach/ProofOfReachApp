@@ -1,10 +1,15 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { OnboardingStep, useOnboarding } from '@/context/OnboardingContext';
 import OnboardingProgress from '@/components/onboarding/OnboardingProgress';
 import { CheckCircle, Search, ChevronRight, ChevronLeft, Check } from 'react-feather';
 import { Switch } from '@/components/ui/switch';
 import SkipButton from '@/components/ui/SkipButton';
 import ProfileAvatar from '@/components/ProfileAvatar';
+
+// Helper function to check for Nostr extension
+const checkForNostrExtension = (): boolean => {
+  return typeof window !== 'undefined' && !!window.nostr;
+};
 
 interface Publisher {
   id: string;
@@ -106,61 +111,81 @@ const ViewerOnboarding: React.FC<ViewerOnboardingProps> = ({
     ));
   };
   
+  // Get the Nostr extension status once at the component level
+  const hasNostrExtension = useMemo(() => checkForNostrExtension(), []);
+
   // Map from OnboardingContext step names to local step names
-  const mapOnboardingStepToLocal = (step: OnboardingStep): string => {
-    // Check if user has Nostr extension
-    const hasNostrExtension = typeof window !== 'undefined' && window.nostr;
-    
-    // Start at privacy when a role is selected for Nostr extension users
-    // Skip discovery step for users with existing Nostr accounts
-    if (step === 'role-selection' || step === 'preferences') {
+  const mapOnboardingStepToLocal = useMemo(() => {
+    return (step: OnboardingStep): string => {
+      // For Nostr users, map any step from context appropriately to our reduced sequence
       if (hasNostrExtension) {
-        console.log("ViewerOnboarding - Skipping discovery for Nostr user, going directly to privacy");
+        // Start at privacy when a role is selected or preferences for Nostr extension users
+        if (step === 'role-selection' || step === 'preferences' || step === 'discovery') {
+          console.log("ViewerOnboarding - Skipping discovery for Nostr user, going directly to privacy");
+          return 'privacy';
+        }
+        
+        // Map remaining steps as needed
+        if (step === 'privacy' || step === 'notifications') {
+          return 'privacy';
+        }
+        
+        if (step === 'feedback' || step === 'complete') {
+          return 'complete';
+        }
+        
+        // Default to privacy for any other step
         return 'privacy';
       } else {
-        console.log("ViewerOnboarding - Mapped incoming step to discovery");
-        return 'discovery';
+        // For non-Nostr users, use the standard mapping
+        // Start at discovery when a role is selected
+        if (step === 'role-selection' || step === 'preferences') {
+          console.log("ViewerOnboarding - Mapped incoming step to discovery");
+          return 'discovery';
+        }
+        
+        // Map context steps to our local steps
+        const stepMap: Record<string, string> = {
+          'role-selection': 'discovery',
+          'preferences': 'discovery',
+          'discovery': 'discovery', 
+          'notifications': 'privacy', // Map notifications to privacy since we removed notifications step
+          'privacy': 'privacy',
+          'feedback': 'complete', // Map feedback to complete since we removed feedback step
+          'complete': 'complete'
+        };
+        
+        return stepMap[step] || 'discovery'; // Default to discovery if step is not recognized
       }
-    }
-    
-    // Define the sequence of steps in order - feedback step removed
-    const stepSequence = [
-      'discovery',
-      'privacy',
-      'complete'
-    ];
-    
-    // Map context steps to our local steps
-    const stepMap: Record<string, string> = {
-      'role-selection': hasNostrExtension ? 'privacy' : 'discovery',
-      'preferences': hasNostrExtension ? 'privacy' : 'discovery',
-      'discovery': 'discovery', 
-      'notifications': 'privacy', // Map notifications to privacy since we removed notifications step
-      'privacy': 'privacy',
-      'feedback': 'complete', // Map feedback to complete since we removed feedback step
-      'complete': 'complete'
     };
-    
-    return stepMap[step] || (hasNostrExtension ? 'privacy' : 'discovery'); // Default based on Nostr status
-  };
+  }, [hasNostrExtension]);
   
   // Initialize step from incoming currentStep prop
-  const [step, setStep] = useState<string>(mapOnboardingStepToLocal(currentStep));
+  const [step, setStep] = useState<string>(() => mapOnboardingStepToLocal(currentStep));
   
   // Update step if currentStep prop changes
   useEffect(() => {
     const mappedStep = mapOnboardingStepToLocal(currentStep);
     setStep(mappedStep);
     console.log('ViewerOnboarding - Mapped incoming step', currentStep, 'to', mappedStep);
-  }, [currentStep]);
+  }, [currentStep, mapOnboardingStepToLocal]);
   
   // Initialize current step index and total steps for progress tracking
   // Welcome and Notifications steps removed as they're not needed
-  const stepSequence = [
-    'discovery',
-    'privacy',
-    'complete'
-  ];
+  // Create different step sequences based on whether user has Nostr extension
+  const stepSequence = useMemo(() => {
+    // For Nostr users, completely remove discovery from the sequence
+    return hasNostrExtension ? 
+      [
+        'privacy',
+        'complete'
+      ] : 
+      [
+        'discovery',
+        'privacy',
+        'complete'
+      ];
+  }, [hasNostrExtension]);
   
   // Add CSS for toggle switches
   React.useEffect(() => {
@@ -199,23 +224,15 @@ const ViewerOnboarding: React.FC<ViewerOnboardingProps> = ({
   // The main component will show its own progress indicator when showNavigation is false
   const shouldShowProgress = showNavigation;
 
-  // Check if user has Nostr extension
-  const hasNostrExtension = typeof window !== 'undefined' && window.nostr;
-
   const handleNext = () => {
     // First update the local step
     switch (step) {
       case 'discovery': 
         // Skip directly to complete for users with Nostr extension
-        if (hasNostrExtension) {
-          console.log('ViewerOnboarding - User has Nostr extension, skipping to privacy step');
-          setStep('privacy');
-          // Skip through the discovery step in the context
-          goToNextStep();
-        } else {
-          setStep('privacy');
-          goToNextStep();
-        }
+        console.log('ViewerOnboarding - Moving to privacy step');
+        setStep('privacy');
+        // Skip through the discovery step in the context
+        goToNextStep();
         break;
       case 'privacy':
         // Go directly to complete after privacy (feedback step removed)
@@ -248,10 +265,11 @@ const ViewerOnboarding: React.FC<ViewerOnboardingProps> = ({
       case 'privacy':
         // For users with Nostr extension, don't show discovery step
         if (hasNostrExtension) {
-          // Stay on privacy since there's no previous step to go back to
-          console.log('ViewerOnboarding - User has Nostr extension, no previous step available');
-          // We could alternatively send them back to role selection if needed
+          // Go back to role selection since there's no discovery step for Nostr users
+          console.log('ViewerOnboarding - User has Nostr extension, skipping discovery on back navigation');
+          goToPreviousStep();
         } else {
+          // Regular users go back to discovery
           setStep('discovery');
           goToPreviousStep();
         }
@@ -267,6 +285,7 @@ const ViewerOnboarding: React.FC<ViewerOnboardingProps> = ({
         } else {
           setStep('discovery');
         }
+        goToPreviousStep();
     }
   };
   
