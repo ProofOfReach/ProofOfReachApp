@@ -345,9 +345,18 @@ const LoginPage: React.FC = () => {
         // Add a short delay to ensure state is fully updated before redirect
         logger.info(`Login successful, redirecting to ${redirectUrl}`);
         
-        // Use window.location.href for a hard redirect instead of Next.js router
-        // This ensures a fresh page load with the updated authentication state
-        window.location.href = redirectUrl;
+        // Add authentication state marker explicitly to prevent immediate redirect back to login
+        window.localStorage.setItem('auth_initiated', 'true');
+        window.localStorage.setItem('auth_pubkey', pubkey);
+        window.localStorage.setItem('auth_timestamp', Date.now().toString());
+        
+        // Add a small delay to ensure cookies are fully set before redirect
+        setTimeout(() => {
+          // Use window.location.href for a hard redirect instead of Next.js router
+          // This ensures a fresh page load with the updated authentication state
+          logger.debug(`Redirecting to ${redirectUrl} after auth state setup`);
+          window.location.href = redirectUrl;
+        }, 200);
       } catch (apiError: unknown) {
         const errorDetails = apiError instanceof Error ? apiError.message : String(apiError);
         logger.error('API authentication failed:', { error: errorDetails });

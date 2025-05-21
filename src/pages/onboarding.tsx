@@ -132,7 +132,22 @@ const OnboardingPage: NextPage = () => {
   
   // Redirect to login if not authenticated
   useEffect(() => {
-    if (!isLoading && !isLoggedIn && !isRedirecting) {
+    // Check for recent authentication attempt via localStorage markers we set during login
+    const recentAuth = typeof window !== 'undefined' && window.localStorage.getItem('auth_initiated') === 'true';
+    const authTimestamp = parseInt(window.localStorage.getItem('auth_timestamp') || '0', 10);
+    const authPubkey = window.localStorage.getItem('auth_pubkey');
+    
+    // Check if auth was initiated within the last 10 seconds (reasonable grace period)
+    const isRecentAuthAttempt = recentAuth && (Date.now() - authTimestamp < 10000) && authPubkey;
+    
+    // If we're in the middle of a login-to-onboarding transition, don't redirect back to login
+    if (isRecentAuthAttempt) {
+      logger.info('Recent auth attempt detected, allowing onboarding to proceed');
+      return;
+    }
+    
+    // Normal authentication check - only redirect if not in transition period
+    if (!isLoading && !isLoggedIn && !isRedirecting && !isRecentAuthAttempt) {
       setIsRedirecting(true);
       logger.info('Not authenticated, redirecting to login');
       
