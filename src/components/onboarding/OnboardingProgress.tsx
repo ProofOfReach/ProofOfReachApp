@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useOnboarding } from '@/context/OnboardingContext';
 import { Progress } from '@/components/ui/progress';
 import { UserRoleType } from '@/types/role';
 import { OnboardingStep } from '@/context/OnboardingContext';
+import { logger } from '@/lib/logger';
 
 interface OnboardingProgressProps {
   // These props allow overriding values from the context
@@ -10,7 +11,15 @@ interface OnboardingProgressProps {
   customCurrentStep?: number;
   customTotalSteps?: number;
   className?: string;
+  forceNostrMode?: boolean; // For testing and forcing Nostr mode
 }
+
+// Helper to detect Nostr extension
+const checkForNostrExtension = (): boolean => {
+  // Only run in browser environment
+  if (typeof window === 'undefined') return false;
+  return !!window?.nostr;
+};
 
 /**
  * OnboardingProgress - Displays a progress bar for multi-step processes
@@ -23,9 +32,26 @@ const OnboardingProgress: React.FC<OnboardingProgressProps> = ({
   customCurrentStep,
   customTotalSteps,
   className = '',
+  forceNostrMode = false
 }) => {
   // Get values directly from the hook
   const onboarding = useOnboarding();
+  
+  // Check for Nostr extension (client-side only)
+  const [hasNostrExtension, setHasNostrExtension] = useState(false);
+  
+  // Effect to detect Nostr extension on client side
+  useEffect(() => {
+    // Skip on server
+    if (typeof window === 'undefined') return;
+    
+    // Detect Nostr extension or use forced value
+    const hasNostr = forceNostrMode || checkForNostrExtension();
+    setHasNostrExtension(hasNostr);
+    
+    // Log detection result
+    logger.debug(`OnboardingProgress - Nostr extension detected: ${hasNostr}`);
+  }, [forceNostrMode]);
   
   // If custom steps are provided, use them
   let currentStep = 1;
@@ -65,17 +91,34 @@ const OnboardingProgress: React.FC<OnboardingProgressProps> = ({
       default: currentStep = 1;
     }
   } 
-  // For viewer role, use the proper step sequence (6 total steps)
+  // For viewer role, handle Nostr vs standard flow
   else if (onboarding.selectedRole === 'viewer') {
-    totalSteps = customTotalSteps ?? 6;
-    // Map from step name to step number
-    switch (onboarding.currentStep) {
-      case 'preferences': currentStep = 2; break;
-      case 'discovery': currentStep = 3; break;
-      case 'privacy': currentStep = 4; break;
-      case 'feedback': currentStep = 5; break;
-      case 'complete': currentStep = 6; break;
-      default: currentStep = 1;
+    // Special case: For Nostr extension users with viewer role, use a 2-step flow
+    if (hasNostrExtension) {
+      // Nostr users with viewer role get a simplified 2-step flow
+      totalSteps = customTotalSteps ?? 2;
+      
+      // Step mapping for Nostr users (simplified)
+      switch (onboarding.currentStep) {
+        case 'privacy': currentStep = 1; break; // First visible step
+        case 'complete': currentStep = 2; break; // Second visible step
+        default: currentStep = 1; // Default to first step
+      }
+      
+      logger.debug(`OnboardingProgress - Using 2-step Nostr flow (${currentStep}/${totalSteps})`);
+    } else {
+      // Standard viewer flow (3 steps)
+      totalSteps = customTotalSteps ?? 3;
+      
+      // Step mapping for standard viewers (3 steps)
+      switch (onboarding.currentStep) {
+        case 'discovery': currentStep = 1; break;
+        case 'privacy': currentStep = 2; break;
+        case 'complete': currentStep = 3; break;
+        default: currentStep = 1;
+      }
+      
+      logger.debug(`OnboardingProgress - Using 3-step standard flow (${currentStep}/${totalSteps})`);
     }
   }
   
@@ -90,7 +133,7 @@ const OnboardingProgress: React.FC<OnboardingProgressProps> = ({
     (totalSteps <= 1 ? 100 : ((currentStep - 1) / (totalSteps - 1)) * 100);
   
   // Use client-side only rendering for the progress component to avoid hydration issues
-  const [isClient, setIsClient] = React.useState(false);
+  const [isClient, setIsClient] = useState(false);
   
   // Effect to update state when component mounts on client
   React.useEffect(() => {
@@ -110,7 +153,13 @@ const OnboardingProgress: React.FC<OnboardingProgressProps> = ({
         <Progress value={calculatedProgress} className="w-full" />
       ) : (
         // Server-side placeholder with the same basic structure 
-        <div className="relative h-3 overflow-hidden rounded-full bg-gray-200 dark:bg-gray-700 w-full">
+        <div 
+          className="relative h-3 overflow-hidden rounded-full bg-gray-200 dark:bg-gray-700 w-full"
+          role="progressbar"
+          aria-valuemin={0}
+          aria-valuemax={100}
+          aria-valuenow={calculatedProgress}
+        >
           <div 
             className="h-full w-full flex-1 bg-gradient-to-r from-purple-500 to-purple-700 transition-all duration-300 ease-in-out"
             style={{ transform: `translateX(-${100 - calculatedProgress}%)` }}
