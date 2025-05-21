@@ -584,21 +584,59 @@
       
       // Handle code editor functionality
       document.getElementById('apply-code').addEventListener('click', function() {
-        const code = document.getElementById('html-editor').value;
+        const adContainer = document.getElementById('proof-of-reach-ad');
+        adContainer.innerHTML = '<p><em>Loading ad...</em></p>';
         
-        // Create a script element to run the code
-        const scriptElement = document.createElement('script');
-        scriptElement.id = 'dynamic-sdk-script';
-        scriptElement.innerHTML = code;
+        // Load the SDK script
+        const sdkScript = document.createElement('script');
+        sdkScript.src = '/sdk-new.js';
+        sdkScript.id = 'sdk-script';
+        sdkScript.onload = function() {
+          // Once SDK is loaded, execute the initialization code
+          const initCode = `
+            window.addEventListener("load", () => {
+              ProofOfReachSDK.renderAd("proof-of-reach-ad", {
+                pubkey: "npub1demo000000000000000000000000000000000000000000000000000000000",
+                testMode: true,
+                onPayment: (sats) => {
+                  // Update wallet balance when payment is received
+                  const balanceEl = document.getElementById("wallet-balance");
+                  const current = parseInt(balanceEl.textContent, 10);
+                  balanceEl.textContent = current + sats;
+                  
+                  // Animate the sats text
+                  const satoshiAnimation = document.querySelector('.satoshi-animation');
+                  satoshiAnimation.classList.add('bump');
+                  setTimeout(() => {
+                    satoshiAnimation.classList.remove('bump');
+                  }, 500);
+                }
+              });
+            });
+          `;
+          
+          // Create and execute the initialization script
+          const initScript = document.createElement('script');
+          initScript.id = 'init-script';
+          initScript.textContent = initCode;
+          
+          // Remove old init script if it exists
+          const oldInit = document.getElementById('init-script');
+          if (oldInit) {
+            oldInit.remove();
+          }
+          
+          document.body.appendChild(initScript);
+        };
         
-        // Remove any previous script
-        const oldScript = document.getElementById('dynamic-sdk-script');
-        if (oldScript) {
-          oldScript.remove();
+        // Remove old SDK script if it exists
+        const oldSdk = document.getElementById('sdk-script');
+        if (oldSdk) {
+          oldSdk.remove();
         }
         
-        // Add the new script to the page
-        document.body.appendChild(scriptElement);
+        // Add the SDK script to the page
+        document.body.appendChild(sdkScript);
       });
       
       // Reset code editor to original state
