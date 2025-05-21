@@ -221,7 +221,7 @@ const ProofOfReachPage = () => {
           <div className="h-64">
             <PieChart
               data={reachData.geographyData}
-              title="Geography Distribution"
+              title=""
               loading={false}
             />
           </div>
@@ -231,7 +231,7 @@ const ProofOfReachPage = () => {
           <div className="h-64">
             <PieChart
               data={reachData.deviceData}
-              title="Device Distribution"
+              title=""
               loading={false}
             />
           </div>
@@ -241,7 +241,7 @@ const ProofOfReachPage = () => {
           <div className="h-64">
             <BarChart
               data={reachData.timeData}
-              title="Time Distribution"
+              title=""
               xAxisDataKey="name"
               dataKeys={[
                 { key: 'verified', name: 'Verified', color: '#8b5cf6' },
