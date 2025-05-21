@@ -29,10 +29,12 @@ const LightningWalletBalance: React.FC<LightningWalletBalanceProps> = ({
   const { isTestMode } = useTestMode();
   const { balance: testWalletBalance } = useTestWallet();
   
-  // Log balance to debug
+  // Force the component to update when testWalletBalance changes
   useEffect(() => {
-    console.log('TestWalletBalance in LightningWalletBalance:', testWalletBalance);
-  }, [testWalletBalance]);
+    if (isTestMode) {
+      setBalance(testWalletBalance);
+    }
+  }, [testWalletBalance, isTestMode]);
   
   const [balance, setBalance] = useState<number | null>(sats !== undefined ? sats : null);
   const [isLoading, setIsLoading] = useState(externalIsLoading !== undefined ? externalIsLoading : true);

@@ -435,12 +435,49 @@ const SimpleNostrFeed: React.FC<SimpleNostrFeedProps> = ({
         updateTestWalletBalance(newBalance);
         
         // Show a toast notification for earning satoshis
-        // Use a more direct console.group approach for visibility in case the toast system fails
-        console.group("[ERROR] [business] [toast]", new Date().toISOString(), "- Earned", amount, "sats for viewing ad from", advertiserName + "!");
-        console.groupEnd();
+        const message = `Earned ${amount} sats for viewing ad from ${advertiserName}!`;
         
-        // Also use the proper toast system
-        toast.success(`Earned ${amount} sats for viewing ad from ${advertiserName}!`);
+        // Use the direct DOM approach that was working before
+        try {
+          // Create a toast element directly
+          const toastContainer = document.getElementById('toast-container') || (() => {
+            const container = document.createElement('div');
+            container.id = 'toast-container';
+            container.style.position = 'fixed';
+            container.style.top = '20px';
+            container.style.right = '20px';
+            container.style.zIndex = '9999';
+            document.body.appendChild(container);
+            return container;
+          })();
+          
+          const toast = document.createElement('div');
+          toast.className = 'toast-notification bg-green-100 border-l-4 border-green-500 text-green-700 p-4 mb-4 rounded shadow-md';
+          toast.innerHTML = `
+            <div class="flex">
+              <div class="py-1"><svg class="h-6 w-6 text-green-500 mr-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg></div>
+              <div>${message}</div>
+            </div>
+          `;
+          
+          toastContainer.appendChild(toast);
+          
+          // Remove after 3 seconds
+          setTimeout(() => {
+            toast.style.opacity = '0';
+            toast.style.transition = 'opacity 0.5s ease';
+            setTimeout(() => {
+              if (toastContainer.contains(toast)) {
+                toastContainer.removeChild(toast);
+              }
+            }, 500);
+          }, 3000);
+        } catch (e) {
+          console.error('Error showing DOM toast:', e);
+        }
+        
+        // Also use the toast system as a fallback
+        toast.success(message);
         
         logger.debug(`Added ${amount} sats to test wallet balance. New balance: ${newBalance}`);
       } catch (error) {
