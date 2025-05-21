@@ -1,9 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-// Import from both locations to maintain backward compatibility with tests
-// New code should use the hook from hooks directory, but tests are using the context import
-// Import only one implementation of useTestMode to avoid conflicts
-// For tests, the context implementation is mocked in the test file
 import { useTestMode } from '@/hooks/useTestMode';
 import { RoleService } from '@/lib/roleService';
 import { RoleManager } from '@/services/roleManager';
@@ -170,22 +166,17 @@ export default function TestModeBanner() {
       return null;
     }
   } else if (process.env.NODE_ENV !== 'test') {
-    // In development (but not test), check for admin role
-    logger.debug('TestModeBanner in development environment - checking role');
+    // In development (but not test), we will show the test mode banner for any role
+    // once test mode is activated
+    logger.debug('TestModeBanner in development environment - test mode is active, showing banner');
     
-    // 3. Only show test mode banner to admin users in non-test environments
-    // This ensures regular users won't see the debug banner
-    if (currentRole !== 'admin') {
-      logger.debug('TestModeBanner not shown: viewer is not admin');
-      return null;
-    }
+    // Previously, we restricted this to admin roles only, but that prevents role switching
+    // in test mode if you're not an admin. By removing those restrictions, we allow
+    // test mode to work for all roles.
     
-    // 4. Extra safety check with RoleManager in non-test environments
+    // Log the current role for debugging purposes
     const roleManagerCurrentRole = RoleManager.getCurrentRole();
-    if (roleManagerCurrentRole !== 'admin') {
-      logger.debug(`Test mode legacy check denied: ${currentRole} role is not admin`, { currentRole: roleManagerCurrentRole });
-      return null;
-    }
+    logger.debug(`TestModeBanner showing for role: ${currentRole} (RoleManager: ${roleManagerCurrentRole})`);
   } else {
     logger.debug('TestModeBanner in test environment - showing banner');
   }
