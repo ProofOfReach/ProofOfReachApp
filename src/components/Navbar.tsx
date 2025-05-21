@@ -65,14 +65,14 @@ const Navbar: React.FC = () => {
               <img 
                 src="/logo_big_light.png" 
                 alt="Proof Of Reach" 
-                className="h-auto w-[90px]" 
+                className="h-auto w-[120px]" 
               />
             </Link>
             <Link href="/" className="sm:hidden flex items-center">
               <img 
                 src="/logo_big_light.png" 
                 alt="Proof Of Reach" 
-                className="h-auto w-[72px]" 
+                className="h-auto w-[96px]" 
               />
             </Link>
           </div>
