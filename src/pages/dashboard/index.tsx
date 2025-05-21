@@ -148,6 +148,9 @@ const Dashboard = () => {
         
         logger.debug(`Setting role from event to: ${normalizedRole} (original: ${newRole})`);
         
+        // Determine if we're in test mode - client-side only check
+        const isTestMode = typeof window !== 'undefined' && localStorage.getItem('isTestMode') === 'true';
+        
         // Set the normalized role in state
         setCurrentRole(normalizedRole as UserRole);
         
@@ -155,9 +158,21 @@ const Dashboard = () => {
         if (typeof window !== 'undefined') {
           localStorage.setItem('currentRole', normalizedRole);
           
+          // If we're in test mode, directly set test-specific flags to ensure client-side role change
+          if (isTestMode) {
+            localStorage.setItem('testModeRole', normalizedRole);
+            
+            // Also set a timestamp to force updates when role changes
+            localStorage.setItem('lastRoleChange', JSON.stringify({
+              role: normalizedRole,
+              timestamp: Date.now()
+            }));
+          }
+          
           // Log current state after update
           logger.debug(`Updated localStorage role to: ${normalizedRole}`);
           logger.debug(`Current role state is now: ${normalizedRole}`);
+          logger.debug(`Test mode: ${isTestMode ? 'active' : 'inactive'}`);
           
           // Force a dashboard re-render by dispatching another event
           // This ensures the dashboard responds to the role change immediately
@@ -173,6 +188,9 @@ const Dashboard = () => {
     const handleDashboardRoleChange = (event: Event) => {
       logger.debug('Dashboard role change event received');
       
+      // Determine if we're in test mode for client-side only role changes
+      const isTestMode = typeof window !== 'undefined' && localStorage.getItem('isTestMode') === 'true';
+      
       // Try to extract role from the event first
       const customEvent = event as CustomEvent<{
         role?: string;
@@ -183,16 +201,54 @@ const Dashboard = () => {
       if (customEvent.detail?.role) {
         const eventRole = customEvent.detail.role.replace(/['"]/g, '');
         logger.debug(`Dashboard role change event has role: ${eventRole}`);
+        
+        // Update the role in state
         setCurrentRole(eventRole as UserRole);
+        
+        // Update localStorage for role persistence
         localStorage.setItem('currentRole', eventRole);
+        
+        // For test mode, ensure test-specific storage is also updated
+        if (isTestMode) {
+          logger.debug(`Setting test mode specific role: ${eventRole}`);
+          localStorage.setItem('testModeRole', eventRole);
+          
+          // Set timestamps to force re-renders
+          localStorage.setItem('lastRoleChange', JSON.stringify({
+            role: eventRole,
+            timestamp: Date.now()
+          }));
+          
+          // Set test mode dashboard key to force re-renders
+          localStorage.setItem('dashboardRenderKey', `dashboard-${eventRole}-${Date.now()}`);
+        }
       } 
       // Otherwise get from all possible sources
       else {
         const latestRole = getCurrentRoleFromAllSources();
         const normalizedRole = latestRole.replace(/['"]/g, '');
         logger.debug(`Dashboard role change using latest role: ${normalizedRole}`);
+        
+        // Update the role in state
         setCurrentRole(normalizedRole as UserRole);
+        
+        // Update localStorage for role persistence
         localStorage.setItem('currentRole', normalizedRole);
+        
+        // For test mode, ensure test-specific storage is also updated
+        if (isTestMode) {
+          logger.debug(`Setting test mode specific role: ${normalizedRole}`);
+          localStorage.setItem('testModeRole', normalizedRole);
+          
+          // Set timestamps to force re-renders
+          localStorage.setItem('lastRoleChange', JSON.stringify({
+            role: normalizedRole,
+            timestamp: Date.now()
+          }));
+          
+          // Set test mode dashboard key to force re-renders
+          localStorage.setItem('dashboardRenderKey', `dashboard-${normalizedRole}-${Date.now()}`);
+        }
       }
       
       // Force the component to re-render completely
@@ -201,7 +257,9 @@ const Dashboard = () => {
         // Use a force update technique by changing state
         setCurrentRole(prev => {
           // Return the same value but as a new reference to trigger re-render
-          return prev.toString() as UserRole;
+          const currentVal = prev.toString();
+          logger.debug(`Re-render with role: ${currentVal}`);
+          return currentVal as UserRole;
         });
       }, 50);
     };

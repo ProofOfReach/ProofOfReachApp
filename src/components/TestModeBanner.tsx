@@ -275,7 +275,7 @@ export default function TestModeBanner() {
     }
   };
   
-  // Switch role with test-compatible approach
+  // Switch role with test-compatible approach that prioritizes client-side switching
   const handleRoleSwitch = async (role: string) => {
     try {
       logger.log(`TestModeBanner switching to role: ${role}`);
@@ -290,62 +290,111 @@ export default function TestModeBanner() {
       const typedRole = role as UserRoleType;
       const previousRole = currentRole;
       
+      // Test mode confirmation - CRITICAL FIX: In test mode, we should NEVER call the API
+      // Always prefer direct client-side role changes for test mode
+      const isCurrentlyInTestMode = testModeService.isActive();
+      
       // Update local state immediately for responsive UI
       setCurrentRole(typedRole);
       
-      // Phase 6 improvement: First try using the TestModeService directly
+      // Set a success flag
       let success = false;
-      try {
-        success = await testModeService.setCurrentRole(typedRole);
-      } catch (serviceError) {
-        logger.warn(`TestModeService.setCurrentRole failed, falling back to context: ${serviceError}`);
-        success = false;
-      }
       
-      // If direct service call fails, use the context method as fallback
-      // This is necessary because the tests mock and verify this method
-      if (!success) {
+      if (isCurrentlyInTestMode) {
+        logger.debug(`Test mode detected, performing client-side role switch to ${typedRole}`);
+        
+        // Direct client-side storage updates for test mode
         try {
-          success = await contextSetCurrentRole(role);
-        } catch (contextError) {
-          logger.warn(`Context setCurrentRole failed, using legacy methods: ${contextError}`);
-          success = false;
-        }
-      }
-      
-      // If both modern methods fail, use legacy methods
-      if (!success) {
-        try {
-          // Legacy method for backward compatibility - will be removed in future
-          RoleService.changeRole(typedRole);
+          // Update all storage mechanisms for consistency
+          localStorage.setItem('currentRole', typedRole);
+          localStorage.setItem('testModeRole', typedRole);
+          enhancedStorage.setItem(STORAGE_KEYS.CURRENT_ROLE, typedRole);
           
-          // Legacy event - will be removed in future
-          document.dispatchEvent(new CustomEvent('roleSwitched', { 
-            detail: { role: typedRole } 
+          // Record timestamp for dashboard re-rendering
+          localStorage.setItem('lastRoleChange', JSON.stringify({
+            role: typedRole,
+            timestamp: Date.now()
           }));
           
-          // Legacy storage - will be removed in future
-          localStorage.setItem('currentRole', typedRole);
+          // Set dashboard render key for forced re-renders
+          localStorage.setItem('dashboardRenderKey', `dashboard-${typedRole}-${Date.now()}`);
           
-          logger.log(`Role switched to ${role} using legacy fallback methods`);
+          // Update RoleManager
+          RoleManager.setCurrentRole(typedRole);
+          
+          // Dispatch events for hooks to respond to
+          // New event system
+          notifyRoleChanged(
+            previousRole, 
+            typedRole,
+            RoleManager.getAvailableRoles()
+          );
+          
+          // Legacy event system
+          document.dispatchEvent(new CustomEvent('roleSwitched', { 
+            detail: { from: previousRole, to: typedRole, role: typedRole } 
+          }));
+          
+          // Force dashboard re-render
+          document.dispatchEvent(new CustomEvent('dashboard-role-changed', {
+            detail: { role: typedRole }
+          }));
+          
+          logger.log(`Role successfully switched to ${typedRole} in test mode (client-side only)`);
           success = true;
-        } catch (legacyError) {
-          logger.error(`All role switching methods failed for ${role}:`, legacyError);
+        } catch (testModeError) {
+          logger.error(`Error in test mode client-side role switch: ${testModeError}`);
           success = false;
+        }
+      } else {
+        // Only if not in test mode, try API-based methods
+        
+        // Phase 6 improvement: First try using the TestModeService directly
+        try {
+          success = await testModeService.setCurrentRole(typedRole);
+        } catch (serviceError) {
+          logger.warn(`TestModeService.setCurrentRole failed, falling back to context: ${serviceError}`);
+          success = false;
+        }
+        
+        // If direct service call fails, use the context method as fallback
+        // This is necessary because the tests mock and verify this method
+        if (!success) {
+          try {
+            success = await contextSetCurrentRole(role);
+          } catch (contextError) {
+            logger.warn(`Context setCurrentRole failed, using legacy methods: ${contextError}`);
+            success = false;
+          }
+        }
+        
+        // If both modern methods fail, use legacy methods
+        if (!success) {
+          try {
+            // Legacy method for backward compatibility - will be removed in future
+            RoleService.changeRole(typedRole);
+            
+            // Legacy event - will be removed in future
+            document.dispatchEvent(new CustomEvent('roleSwitched', { 
+              detail: { role: typedRole } 
+            }));
+            
+            // Legacy storage - will be removed in future
+            localStorage.setItem('currentRole', typedRole);
+            
+            logger.log(`Role switched to ${role} using legacy fallback methods`);
+            success = true;
+          } catch (legacyError) {
+            logger.error(`All role switching methods failed for ${role}:`, legacyError);
+            success = false;
+          }
         }
       }
       
       if (success) {
-        // Also update RoleManager and new storage system for consistency
+        // Always update RoleManager and new storage system for consistency regardless of method
         RoleManager.setCurrentRole(typedRole);
         enhancedStorage.setItem(STORAGE_KEYS.CURRENT_ROLE, typedRole);
-        
-        // Dispatch the new standardized role changed event
-        notifyRoleChanged(
-          previousRole, 
-          typedRole,
-          RoleManager.getAvailableRoles()
-        );
         
         logger.log(`Role successfully switched to ${role}`);
       } else {
