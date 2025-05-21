@@ -367,12 +367,12 @@ const UserSettingsPage = () => {
         // Simulate API response with a delay
         await new Promise(resolve => setTimeout(resolve, 300));
         
-        // Simulated response data
+        // Simulated response data - using the same defaults as in onboarding
         const data = {
-          shareLocation: false,
-          shareInterests: true,
-          shareBrowsing: false,
-          shareAge: true
+          shareLocation: true,     // Updated to match onboarding default
+          shareInterests: true,    // Recommended option in onboarding
+          shareBrowsing: false,    // Kept as opt-in for privacy
+          shareAge: true           // Most users are OK with this
         };
         
         // Update state with fetched preferences
@@ -809,16 +809,16 @@ const UserSettingsPage = () => {
           
           <div className="space-y-4">
             <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
-              Control what information is shared with advertisers on the Nostr Ad Marketplace. Enabling these options may improve ad relevance.
+              You are in full control of the data shared with advertisers. The more you're willing to share, the more bitcoin you can potentially earn!
             </p>
             
             <div className="flex items-center justify-between">
               <div>
                 <label htmlFor="shareLocation" className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                  Location Data
+                  Country & State Data
                 </label>
                 <p className="text-sm text-gray-500 dark:text-gray-400">
-                  Allow advertisers to use your approximate location
+                  Allow advertisers to target based on your country and state only (no precise location)
                 </p>
               </div>
               <div className="relative inline-block w-12 mr-2 align-middle select-none">
@@ -829,6 +829,7 @@ const UserSettingsPage = () => {
                   checked={shareLocation}
                   onChange={() => setShareLocation(!shareLocation)}
                   aria-label="share location"
+                  data-testid="share-location-toggle"
                 />
                 <label 
                   htmlFor="shareLocation" 
@@ -845,6 +846,7 @@ const UserSettingsPage = () => {
               <div>
                 <label htmlFor="shareInterests" className="text-sm font-medium text-gray-700 dark:text-gray-300">
                   Interest-Based Ads
+                  <span className="ml-2 text-xs text-gray-500 dark:text-gray-400">(Recommended)</span>
                 </label>
                 <p className="text-sm text-gray-500 dark:text-gray-400">
                   Allow ads based on your interests and preferences
@@ -858,6 +860,7 @@ const UserSettingsPage = () => {
                   checked={shareInterests}
                   onChange={() => setShareInterests(!shareInterests)}
                   aria-label="share interests"
+                  data-testid="share-interests-toggle"
                 />
                 <label 
                   htmlFor="shareInterests" 
@@ -876,7 +879,7 @@ const UserSettingsPage = () => {
                   Browsing Activity
                 </label>
                 <p className="text-sm text-gray-500 dark:text-gray-400">
-                  Allow ads based on your content viewing history
+                  Allow limited tracking of content you view
                 </p>
               </div>
               <div className="relative inline-block w-12 mr-2 align-middle select-none">
@@ -887,6 +890,7 @@ const UserSettingsPage = () => {
                   checked={shareBrowsing}
                   onChange={() => setShareBrowsing(!shareBrowsing)}
                   aria-label="share browsing"
+                  data-testid="share-browsing-toggle"
                 />
                 <label 
                   htmlFor="shareBrowsing" 
@@ -902,10 +906,10 @@ const UserSettingsPage = () => {
             <div className="flex items-center justify-between">
               <div>
                 <label htmlFor="shareAge" className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                  Age Group
+                  Age Information
                 </label>
                 <p className="text-sm text-gray-500 dark:text-gray-400">
-                  Allow ads targeted to your age demographic
+                  Allow age-appropriate content targeting
                 </p>
               </div>
               <div className="relative inline-block w-12 mr-2 align-middle select-none">
@@ -916,6 +920,7 @@ const UserSettingsPage = () => {
                   checked={shareAge}
                   onChange={() => setShareAge(!shareAge)}
                   aria-label="share age"
+                  data-testid="share-age-toggle"
                 />
                 <label 
                   htmlFor="shareAge" 
@@ -927,6 +932,10 @@ const UserSettingsPage = () => {
                 </label>
               </div>
             </div>
+            
+            <p className="mt-4 text-sm text-gray-500 dark:text-gray-400">
+              These settings apply to apps that integrate with our platform. Individual apps may have additional privacy controls.
+            </p>
             
             {/* Interests Whitelist/Blacklist Section */}
             <div className="mt-8 border-t border-gray-200 dark:border-gray-700 pt-6">
