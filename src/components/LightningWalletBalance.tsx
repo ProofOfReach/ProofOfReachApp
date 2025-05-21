@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { DollarSign, AlertCircle } from 'react-feather';
 import CurrencyAmount from './CurrencyAmount';
+import { useTestMode } from '@/context/TestModeContext';
+import { useTestWallet } from '@/hooks/useTestWallet';
 
 interface LightningWalletBalanceProps {
   compact?: boolean;
@@ -23,6 +25,10 @@ const LightningWalletBalance: React.FC<LightningWalletBalanceProps> = ({
   isLoading: externalIsLoading,
   skipFetch = false
 }) => {
+  // Get test mode status and wallet balance from our hooks
+  const { isTestMode } = useTestMode();
+  const { balance: testWalletBalance } = useTestWallet();
+  
   const [balance, setBalance] = useState<number | null>(sats !== undefined ? sats : null);
   const [isLoading, setIsLoading] = useState(externalIsLoading !== undefined ? externalIsLoading : true);
   const [error, setError] = useState<string | null>(null);
@@ -38,16 +44,10 @@ const LightningWalletBalance: React.FC<LightningWalletBalanceProps> = ({
     setError(null);
 
     try {
-      // Check for test mode based on localStorage
-      const isTestMode = typeof localStorage !== 'undefined' && 
-        (localStorage.getItem('isTestMode') === 'true' || localStorage.getItem('testMode') === 'true');
-        
+      // Use the test wallet balance if in test mode
       if (isTestMode) {
-        console.log('Test mode detected in LightningWalletBalance, using mock balance');
-        setTimeout(() => {
-          setBalance(100000);
-          setIsLoading(false);
-        }, 500);
+        setBalance(testWalletBalance);
+        setIsLoading(false);
         return;
       }
 
@@ -65,7 +65,8 @@ const LightningWalletBalance: React.FC<LightningWalletBalanceProps> = ({
         if (typeof localStorage !== 'undefined') {
           localStorage.setItem('isTestMode', 'true');
         }
-        setBalance(100000);
+        // Use the testWalletBalance from our hook instead of a hardcoded value
+        setBalance(testWalletBalance);
         setIsLoading(false);
         return;
       }

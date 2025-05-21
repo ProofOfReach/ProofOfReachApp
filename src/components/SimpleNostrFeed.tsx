@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback, memo } from 'react';
 import { useTestMode } from '@/context/TestModeContext';
+import { useTestWallet } from '@/hooks/useTestWallet';
 import { logger } from '@/lib/logger';
 // Simple date formatter function to avoid ESM import issues with date-fns
 function formatDistanceToNow(date: Date): string {
@@ -395,6 +396,9 @@ const SimpleNostrFeed: React.FC<SimpleNostrFeedProps> = ({
   // Get test mode information
   const { isTestMode } = useTestMode();
   
+  // Get test wallet state and update function
+  const { balance: testWalletBalance, updateBalance: updateTestWalletBalance } = useTestWallet();
+  
   // Handle ad viewed event - called by child components
   const handleAdViewed = useCallback((adId: string, advertiserName: string) => {
     // Skip if already viewed
@@ -422,15 +426,12 @@ const SimpleNostrFeed: React.FC<SimpleNostrFeedProps> = ({
     // In test mode, add the satoshis to the viewer's wallet balance
     if (isTestMode && typeof window !== 'undefined') {
       try {
-        // Get current wallet balance from localStorage or use default
-        const storedBalance = localStorage.getItem('testWalletBalance');
-        const currentBalance = storedBalance ? parseInt(storedBalance, 10) : 100000;
+        // Calculate new balance using the current balance from our hook
+        const newBalance = testWalletBalance + amount;
         
-        // Add the satoshis to the balance
-        const newBalance = currentBalance + amount;
-        
-        // Store updated balance in localStorage
-        localStorage.setItem('testWalletBalance', newBalance.toString());
+        // Update the wallet balance using the function from our hook
+        // This updates localStorage AND the state in our component
+        updateTestWalletBalance(newBalance);
         
         logger.debug(`Added ${amount} sats to test wallet balance. New balance: ${newBalance}`);
       } catch (error) {
