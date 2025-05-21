@@ -6,6 +6,22 @@ import { useRole } from '@/context/RoleContext';
 import clientOnboardingService from '@/lib/clientOnboardingService';
 import { logger } from '@/lib/logger';
 
+// Create a safer initial value for SSR hydration
+const defaultContextValue = {
+  currentStep: 'role-selection' as OnboardingStep,
+  progress: 0,
+  totalSteps: 1,
+  isFirstStep: true,
+  isLastStep: false,
+  goToNextStep: () => {},
+  goToPreviousStep: () => {},
+  setSelectedRole: (_role: UserRoleType) => {},
+  selectedRole: null,
+  completeOnboarding: async () => {},
+  isLoading: false,
+  skipOnboarding: async () => {}
+};
+
 // Define the steps for each role's onboarding process
 export type OnboardingStep = 
   // Viewer steps
@@ -79,7 +95,8 @@ type OnboardingContextType = {
   skipOnboarding: () => Promise<void>;
 };
 
-const OnboardingContext = createContext<OnboardingContextType | undefined>(undefined);
+// Using our default context value for better SSR compatibility
+const OnboardingContext = createContext<OnboardingContextType>(defaultContextValue);
 
 type OnboardingProviderProps = {
   children: ReactNode;

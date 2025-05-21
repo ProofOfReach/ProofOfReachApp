@@ -22,20 +22,22 @@ const OnboardingProgress: React.FC<OnboardingProgressProps> = ({
   customTotalSteps,
   className = '',
 }) => {
-  // Try to use the OnboardingContext, but don't crash if it's not available
-  const contextValues = React.useContext(useOnboarding.context);
+  // Get values directly from the hook
+  const onboarding = useOnboarding();
+  
+  // Calculate which step number we're on
+  const stepNumber = typeof onboarding.currentStep === 'string'
+    ? onboarding.progress // Use the numeric progress directly
+    : customCurrentStep || 1;
   
   // Use custom props if provided, otherwise use context values
-  const currentStep = customCurrentStep ?? contextValues?.currentStep ?? 1;
-  const totalSteps = customTotalSteps ?? contextValues?.totalSteps ?? 3; // Default to 3 steps
-  
-  // Derive first/last step status
-  const isFirstStep = currentStep === 1;
-  const isLastStep = currentStep === totalSteps;
+  const currentStep = customCurrentStep ?? stepNumber;
+  const totalSteps = customTotalSteps ?? onboarding.totalSteps ?? 3; // Default to 3 steps
   
   // Calculate progress based on current step (not percentage)
   // Handle edge case of totalSteps === 1 to prevent NaN
-  const calculatedProgress = totalSteps <= 1 ? 100 : ((currentStep - 1) / (totalSteps - 1)) * 100;
+  const calculatedProgress = customProgress ?? 
+    (totalSteps <= 1 ? 100 : ((currentStep - 1) / (totalSteps - 1)) * 100);
   
   // Use client-side only rendering for the progress component to avoid hydration issues
   const [isClient, setIsClient] = React.useState(false);
@@ -68,8 +70,5 @@ const OnboardingProgress: React.FC<OnboardingProgressProps> = ({
     </div>
   );
 };
-
-// Add the context to the component to let it work without crashing outside of provider
-useOnboarding.context = React.createContext(undefined);
 
 export default OnboardingProgress;
