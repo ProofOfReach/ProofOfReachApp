@@ -4,12 +4,17 @@ import userEvent from '@testing-library/user-event';
 import RoleConfirmation from '@/components/onboarding/RoleConfirmation';
 import { UserRoleType } from '@/types/role';
 
+// Create a proper type store for localStorage
+type StorageType = {
+  [key: string]: string;
+};
+
 // Mocks for window.localStorage
 const localStorageMock = (() => {
-  let store = {};
+  let store: StorageType = {};
   return {
-    getItem: jest.fn((key) => store[key] || null),
-    setItem: jest.fn((key, value) => { store[key] = value.toString(); }),
+    getItem: jest.fn((key: string) => store[key] || null),
+    setItem: jest.fn((key: string, value: string) => { store[key] = value.toString(); }),
     clear: jest.fn(() => { store = {}; })
   };
 })();
@@ -102,7 +107,7 @@ describe('RoleConfirmation', () => {
     await userEvent.click(viewerButton);
 
     // Should call onConfirm with "viewer"
-    expect(mockOnConfirm).toHaveBeenCalledWith('viewer');
+    expect(mockOnConfirm).toHaveBeenCalledWith('viewer' as UserRoleType);
   });
 
   it('calls onConfirm with "publisher" when publisher role is selected', async () => {
@@ -113,7 +118,7 @@ describe('RoleConfirmation', () => {
     await userEvent.click(publisherButton);
 
     // Should call onConfirm with "publisher"
-    expect(mockOnConfirm).toHaveBeenCalledWith('publisher');
+    expect(mockOnConfirm).toHaveBeenCalledWith('publisher' as UserRoleType);
   });
 
   it('calls onConfirm with "advertiser" when advertiser role is selected', async () => {
@@ -124,7 +129,7 @@ describe('RoleConfirmation', () => {
     await userEvent.click(advertiserButton);
 
     // Should call onConfirm with "advertiser"
-    expect(mockOnConfirm).toHaveBeenCalledWith('advertiser');
+    expect(mockOnConfirm).toHaveBeenCalledWith('advertiser' as UserRoleType);
   });
 
   it('displays proper icons for each role', () => {
@@ -172,7 +177,7 @@ describe('RoleConfirmation', () => {
     await userEvent.click(publisherButton);
 
     // Verify the onConfirm was called with publisher
-    expect(mockOnConfirm).toHaveBeenCalledWith('publisher');
-    expect(customMockSetSelectedRole).toHaveBeenCalledWith('publisher');
+    expect(mockOnConfirm).toHaveBeenCalledWith('publisher' as UserRoleType);
+    expect(customMockSetSelectedRole).toHaveBeenCalledWith('publisher' as UserRoleType);
   });
 });

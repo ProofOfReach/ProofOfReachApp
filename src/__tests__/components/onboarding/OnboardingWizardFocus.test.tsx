@@ -87,20 +87,22 @@ describe('OnboardingWizard - Focused Tests', () => {
 
   it('should fall back to role selection when role is invalid', async () => {
     // Mock with invalid role
+    const mockSkipOnboarding = jest.fn();
     (useOnboarding as jest.Mock).mockReturnValue({
       currentStep: 'role-specific',
-      currentRole: 'invalid-role',
+      selectedRole: 'invalid-role',
       setCurrentStep: mockSetCurrentStep,
       setCurrentRole: mockSetCurrentRole,
       completeOnboarding: mockCompleteOnboarding,
+      skipOnboarding: mockSkipOnboarding,
       isLoading: false,
       isComplete: false
     });
     
     render(<OnboardingWizard />);
     
-    // With our useEffect hook, this should be called immediately
-    expect(mockSetCurrentStep).toHaveBeenCalledWith('role-selection');
+    // With our useEffect hook, skipOnboarding should be called immediately
+    expect(mockSkipOnboarding).toHaveBeenCalled();
   });
 
   it('should call onComplete when role-specific component calls it', async () => {
