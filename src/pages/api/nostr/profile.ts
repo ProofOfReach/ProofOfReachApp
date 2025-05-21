@@ -3,7 +3,7 @@ import { getServerSession } from '../../../lib/auth';
 import { logger } from '../../../lib/logger';
 
 // Import Nostr tools for relay communication
-import { SimplePool, Filter, Event } from 'nostr-tools';
+import { SimplePool, Filter, Event, nip19 } from 'nostr-tools';
 
 /**
  * API handler for fetching Nostr profile data
@@ -24,6 +24,20 @@ export default async function handleProfileRequest(req: NextApiRequest, res: Nex
     
     if (req.query.pubkey) {
       targetPubkey = String(req.query.pubkey);
+      
+      // Convert npub to hex if needed
+      if (targetPubkey.startsWith('npub1')) {
+        try {
+          const { type, data } = nip19.decode(targetPubkey);
+          if (type === 'npub') {
+            logger.debug('Successfully converted npub to hex:', targetPubkey, 'to', data);
+            targetPubkey = data as string;
+          }
+        } catch (decodeError) {
+          logger.error('Failed to decode npub:', targetPubkey, decodeError);
+          // Continue with original format as a fallback
+        }
+      }
     } else if (authenticatedPubkey) {
       targetPubkey = authenticatedPubkey;
     } else {

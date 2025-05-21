@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { fetchNostrProfile, createDefaultAvatar } from '../lib/nostrProfile';
+import { fetchNostrProfile, createDefaultAvatar, npubToHex } from '../lib/nostrProfile';
 import { User } from 'react-feather';
 
 interface ProfileAvatarProps {
@@ -31,12 +31,23 @@ const ProfileAvatar: React.FC<ProfileAvatarProps> = ({
       setError(false);
 
       try {
-        const profile = await fetchNostrProfile(pubkey);
+        // Convert npub to hex if it's an npub format
+        let pubkeyToUse = pubkey;
+        if (pubkey.startsWith('npub1')) {
+          const hexPubkey = npubToHex(pubkey);
+          if (hexPubkey) {
+            pubkeyToUse = hexPubkey;
+          } else {
+            console.error('Failed to convert npub to hex:', pubkey);
+          }
+        }
+
+        const profile = await fetchNostrProfile(pubkeyToUse);
         if (profile && profile.picture) {
           setAvatarUrl(profile.picture);
         } else {
           // Use default avatar when no profile picture is available
-          setAvatarUrl(createDefaultAvatar(pubkey));
+          setAvatarUrl(createDefaultAvatar(pubkeyToUse));
         }
       } catch (e) {
         console.error('Error loading profile avatar:', e);

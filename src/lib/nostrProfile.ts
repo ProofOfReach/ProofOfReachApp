@@ -33,16 +33,35 @@ export function hexToNpub(hexPubkey: string): string {
 export function npubToHex(npub: string): string {
   try {
     // Add validation to prevent errors with bad input
-    if (!npub || !npub.startsWith('npub1') || npub.length < 60) {
-      console.error('Error converting npub to hex: Invalid npub format');
+    if (!npub) {
+      console.error('Error converting npub to hex: Empty npub');
       return '';
     }
     
-    const { data } = nip19.decode(npub);
-    return data as string;
+    // If already in hex format, just return it
+    if (/^[0-9a-f]{64}$/i.test(npub)) {
+      return npub;
+    }
+    
+    // Handle npub format
+    if (npub.startsWith('npub1')) {
+      try {
+        const decoded = nip19.decode(npub);
+        if (decoded && decoded.data) {
+          return decoded.data as string;
+        }
+      } catch (decodeError) {
+        console.error('Failed to decode npub:', npub, decodeError);
+      }
+    }
+    
+    // If we can't convert, return the original as a fallback
+    // This allows the system to still attempt showing something
+    return npub;
   } catch (error) {
     console.error('Error converting npub to hex:', error);
-    return '';
+    // Return the original as fallback
+    return npub;
   }
 }
 
