@@ -670,8 +670,11 @@ const Dashboard = () => {
     }
   };
   
+  // Create a container key that changes with role to force complete re-render
+  const containerKey = `dashboard-container-${currentRole}-${Date.now()}`;
+  
   return (
-    <DashboardContainer>
+    <DashboardContainer key={containerKey}>
       {currentRole !== 'admin' && currentRole !== 'stakeholder' && (
         <div className="flex items-center space-x-2">
           {getRoleIcon()}
@@ -679,7 +682,7 @@ const Dashboard = () => {
         </div>
       )}
       
-      {/* Render role-specific dashboard content */}
+      {/* Render role-specific dashboard content with forced re-render */}
       {renderDashboard()}
       
       {/* Common dashboard components that show up for all roles */}
