@@ -15,7 +15,7 @@ const SDKExamplesPage = () => {
   const userPubkey = pubkey || 'YOUR_NOSTR_PUBKEY';
   
   // SDK code with pubkey
-  const sdkScript = `<script src="https://cdn.proofofreach.com/sdk/v1.js"></script>
+  const sdkScript = `<script src="/sdk-new.js"></script>
 <script>
   window.addEventListener("load", () => {
     ProofOfReachSDK.renderAd("proof-of-reach-ad", {
@@ -118,7 +118,7 @@ function MyArticle() {
 // Add the SDK to the footer
 function add_proofofreach_sdk() {
   ?>
-  <script src="https://cdn.proofofreach.com/sdk/v1.js"></script>
+  <script src="//proofofreach.xyz/sdk-new.js"></script>
   <script>
     window.addEventListener("load", () => {
       // Find all ad containers
@@ -190,7 +190,7 @@ add_shortcode('proofofreach_ad', 'proofofreach_ad_shortcode');
     {
       title: 'That\'s it!',
       description: 'The SDK will automatically load and display an ad in your container. You\'ll earn satoshis whenever users interact with the ads.',
-      actionLink: '/sdk-demo.html',
+      actionLink: '/paste-sdk-demo.html',
       actionText: 'Try the interactive demo'
     }
   ];
