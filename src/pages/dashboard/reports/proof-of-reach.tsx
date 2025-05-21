@@ -113,7 +113,7 @@ const ProofOfReachPage = () => {
                 title="Cost Per Verified Human"
                 value={`$${reachData.cpvh.toFixed(3)}`}
                 trend={`${reachData.cpvhChange > 0 ? '+' : ''}${reachData.cpvhChange}%`}
-                trendDirection={reachData.cpvhChange > 0 ? 'down' : 'up'}
+                trendDirection={reachData.cpvhChange < 0 ? 'down' : 'up'}
                 icon={<Info className="text-blue-600 dark:text-blue-400" size={20} />}
               >
                 <div className="flex items-center mt-2">
