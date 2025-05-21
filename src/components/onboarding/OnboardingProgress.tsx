@@ -1,6 +1,8 @@
 import React from 'react';
 import { useOnboarding } from '@/context/OnboardingContext';
 import { Progress } from '@/components/ui/progress';
+import { UserRoleType } from '@/types/role';
+import { OnboardingStep } from '@/context/OnboardingContext';
 
 interface OnboardingProgressProps {
   // These props allow overriding values from the context
@@ -25,14 +27,62 @@ const OnboardingProgress: React.FC<OnboardingProgressProps> = ({
   // Get values directly from the hook
   const onboarding = useOnboarding();
   
-  // Calculate which step number we're on
-  const stepNumber = typeof onboarding.currentStep === 'string'
-    ? onboarding.progress // Use the numeric progress directly
-    : customCurrentStep || 1;
+  // If custom steps are provided, use them
+  let currentStep = 1;
+  let totalSteps = customTotalSteps ?? 7; // Default to 7 steps
   
-  // Use custom props if provided, otherwise use context values
-  const currentStep = customCurrentStep ?? stepNumber;
-  const totalSteps = customTotalSteps ?? onboarding.totalSteps ?? 3; // Default to 3 steps
+  // If in role selection, always step 1
+  if (onboarding.currentStep === 'role-selection') {
+    currentStep = 1;
+    totalSteps = customTotalSteps ?? 7; // First step of the process
+  } 
+  // For advertiser role, use the proper step sequence (7 total steps)
+  else if (onboarding.selectedRole === 'advertiser') {
+    totalSteps = customTotalSteps ?? 7;
+    // Map from step name to step number
+    switch (onboarding.currentStep) {
+      case 'create-campaign': currentStep = 2; break;
+      case 'set-targeting': currentStep = 3; break;
+      case 'budget-schedule': currentStep = 4; break;
+      case 'fund-account': currentStep = 5; break;
+      case 'dashboard-intro': currentStep = 6; break;
+      case 'complete': currentStep = 7; break;
+      default: currentStep = 1;
+    }
+  } 
+  // For publisher role, use the proper step sequence (8 total steps)
+  else if (onboarding.selectedRole === 'publisher') {
+    totalSteps = customTotalSteps ?? 8;
+    // Map from step name to step number
+    switch (onboarding.currentStep) {
+      case 'choose-integration': currentStep = 2; break;
+      case 'integration-details': currentStep = 3; break;
+      case 'ad-slot-config': currentStep = 4; break;
+      case 'setup-wallet': currentStep = 5; break;
+      case 'enable-test-mode': currentStep = 6; break;
+      case 'go-live': currentStep = 7; break;
+      case 'complete': currentStep = 8; break;
+      default: currentStep = 1;
+    }
+  } 
+  // For viewer role, use the proper step sequence (6 total steps)
+  else if (onboarding.selectedRole === 'viewer') {
+    totalSteps = customTotalSteps ?? 6;
+    // Map from step name to step number
+    switch (onboarding.currentStep) {
+      case 'preferences': currentStep = 2; break;
+      case 'discovery': currentStep = 3; break;
+      case 'privacy': currentStep = 4; break;
+      case 'feedback': currentStep = 5; break;
+      case 'complete': currentStep = 6; break;
+      default: currentStep = 1;
+    }
+  }
+  
+  // If custom current step is provided, override the calculated value
+  if (customCurrentStep) {
+    currentStep = customCurrentStep;
+  }
   
   // Calculate progress based on current step (not percentage)
   // Handle edge case of totalSteps === 1 to prevent NaN
