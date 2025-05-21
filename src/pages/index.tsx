@@ -298,9 +298,9 @@ const HomePage: NextPageWithLayout = () => {
           Our platform creates value for everyone in the advertising ecosystem
         </p>
         <div className="grid md:grid-cols-3 gap-8">
-          <Card className="border-l-4 border-l-purple-600 hover:shadow-lg transition-all">
+          <Card className="border-l-4 border-l-blue-600 hover:shadow-lg transition-all">
             <CardHeader>
-              <CardTitle className="text-xl text-purple-600">Advertise</CardTitle>
+              <CardTitle className="text-xl text-blue-600">Advertise</CardTitle>
             </CardHeader>
             <CardContent>
               <ul className="text-gray-600 dark:text-gray-300 text-left space-y-2">
@@ -311,15 +311,15 @@ const HomePage: NextPageWithLayout = () => {
               </ul>
             </CardContent>
             <CardFooter>
-              <Link href="/advertiser" className="text-purple-600 hover:text-purple-800 inline-flex items-center font-medium">
+              <Link href="/advertiser" className="text-blue-600 hover:text-blue-700 inline-flex items-center font-medium">
                 Learn more →
               </Link>
             </CardFooter>
           </Card>
           
-          <Card className="border-l-4 border-l-green-600 hover:shadow-lg transition-all">
+          <Card className="border-l-4 border-l-blue-600 hover:shadow-lg transition-all">
             <CardHeader>
-              <CardTitle className="text-xl text-green-600">Monetize</CardTitle>
+              <CardTitle className="text-xl text-blue-600">Monetize</CardTitle>
             </CardHeader>
             <CardContent>
               <ul className="text-gray-600 dark:text-gray-300 text-left space-y-2">
@@ -330,7 +330,7 @@ const HomePage: NextPageWithLayout = () => {
               </ul>
             </CardContent>
             <CardFooter>
-              <Link href="/publisher" className="text-green-600 hover:text-green-800 inline-flex items-center font-medium">
+              <Link href="/publisher" className="text-blue-600 hover:text-blue-700 inline-flex items-center font-medium">
                 Learn more →
               </Link>
             </CardFooter>
