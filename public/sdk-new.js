@@ -159,13 +159,13 @@
      * @private
      */
     _getTestAd: function(options) {
-      // Generate a random test ad
+      // Generate a random test ad with image focus
       const testAds = [
         {
           id: 'test-ad-1',
           title: 'Learn Bitcoin Development',
           description: 'Master Bitcoin and Lightning Network development with our online courses.',
-          imageUrl: '/images/sats_symbol_white.png',
+          imageUrl: 'https://images.unsplash.com/photo-1639152201720-5e536d254d81?auto=format&w=600&h=400&fit=crop',
           targetUrl: 'https://example.com/bitcoin-dev',
           sponsor: 'Bitcoin Academy',
           callToAction: 'Start Learning',
@@ -178,7 +178,7 @@
           id: 'test-ad-2',
           title: 'Bitcoin Hardware Wallet',
           description: 'Secure your Bitcoin with our military-grade hardware wallet.',
-          imageUrl: '/images/sats_symbol_white.png',
+          imageUrl: 'https://images.unsplash.com/photo-1647686996616-a3cdf15feacb?auto=format&w=600&h=400&fit=crop',
           targetUrl: 'https://example.com/hardware-wallet',
           sponsor: 'SecureSats',
           callToAction: 'Shop Now',
@@ -191,7 +191,7 @@
           id: 'test-ad-3',
           title: 'Join the Lightning Network',
           description: 'Start accepting Bitcoin payments instantly with our Lightning solution.',
-          imageUrl: '/images/sats_symbol_white.png',
+          imageUrl: 'https://images.unsplash.com/photo-1625791136497-ab753d8a9250?auto=format&w=600&h=400&fit=crop',
           targetUrl: 'https://example.com/lightning',
           sponsor: 'Lightning Labs',
           callToAction: 'Get Started',
@@ -232,13 +232,17 @@
         });
       }
       
-      // Create ad content HTML
+      // Create ad content HTML with larger image for image-based ads
       adElement.innerHTML = `
         <div style="padding: 18px; position: relative; z-index: 2;">
-          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+          <div style="margin-bottom: 12px;">
             <h3 style="margin: 0; font-size: 18px; font-weight: 600;">${adData.title}</h3>
-            ${adData.imageUrl ? `<img src="${adData.imageUrl}" alt="Ad" style="height: 40px; width: auto; margin-left: 10px;">` : ''}
           </div>
+          ${adData.imageUrl ? 
+            `<div style="margin: 15px 0;">
+              <img src="${adData.imageUrl}" alt="${adData.title}" 
+                style="width: 100%; height: auto; max-height: 200px; object-fit: cover; border-radius: 6px;">
+             </div>` : ''}
           <p style="margin: 8px 0; font-size: 14px;">${adData.description}</p>
           <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 16px;">
             <span style="font-size: 12px;">Sponsored by ${adData.sponsor}</span>
@@ -249,6 +253,60 @@
           </div>
         </div>
       `;
+      
+      // Track user engagement
+      let viewStartTime = Date.now();
+      let engagementTimer = null;
+      let hasEarnedFromEngagement = false;
+      
+      // Function to handle view earnings after 5 seconds
+      const checkEngagementEarnings = () => {
+        const viewDuration = (Date.now() - viewStartTime) / 1000;
+        
+        // Only pay once per ad view if user lingers for > 5 seconds
+        if (viewDuration > 5 && !hasEarnedFromEngagement && options.testMode && typeof options.onPayment === 'function') {
+          // Simulate payment for linger engagement (7-15 sats)
+          const sats = Math.floor(Math.random() * 9) + 7;
+          options.onPayment(sats);
+          
+          this._sendAnalytics('ad_engagement_reward', {
+            adId: adData.id,
+            pubkey: options.pubkey,
+            duration: Math.round(viewDuration),
+            sats: sats
+          });
+          
+          hasEarnedFromEngagement = true;
+          
+          // Show engagement notification
+          const notificationEl = document.createElement('div');
+          notificationEl.style.position = 'absolute';
+          notificationEl.style.top = '10px';
+          notificationEl.style.right = '10px';
+          notificationEl.style.background = 'rgba(0,0,0,0.7)';
+          notificationEl.style.color = 'white';
+          notificationEl.style.padding = '8px 12px';
+          notificationEl.style.borderRadius = '4px';
+          notificationEl.style.fontSize = '12px';
+          notificationEl.style.opacity = '0';
+          notificationEl.style.transition = 'opacity 0.3s ease';
+          notificationEl.textContent = `+${sats} sats earned!`;
+          
+          container.appendChild(notificationEl);
+          
+          // Animate notification
+          setTimeout(() => {
+            notificationEl.style.opacity = '1';
+            setTimeout(() => {
+              notificationEl.style.opacity = '0';
+              setTimeout(() => notificationEl.remove(), 300);
+            }, 2000);
+          }, 10);
+        }
+      };
+      
+      // Set up engagement timer to check every second
+      engagementTimer = setInterval(checkEngagementEarnings, 1000);
       
       // Handle ad click
       adElement.addEventListener('click', (e) => {
@@ -261,11 +319,19 @@
           pubkey: options.pubkey,
         });
         
-        // Process Lightning payment if in test mode
-        if (options.testMode && typeof options.onPayment === 'function') {
-          // Simulate payment for demo purposes (5-20 sats)
-          const sats = Math.floor(Math.random() * 16) + 5;
+        // Process Lightning payment if in test mode & not already earned through engagement
+        if (options.testMode && typeof options.onPayment === 'function' && !hasEarnedFromEngagement) {
+          // Simulate payment for click (5-12 sats)
+          const sats = Math.floor(Math.random() * 8) + 5;
           options.onPayment(sats);
+          
+          // Mark as earned to prevent double payment
+          hasEarnedFromEngagement = true;
+          
+          // Clear engagement timer - no need to check anymore
+          if (engagementTimer) {
+            clearInterval(engagementTimer);
+          }
         }
         
         // Open ad URL in new tab
@@ -273,6 +339,13 @@
           window.open(adData.targetUrl, '_blank');
         }
       });
+      
+      // Handle cleanup when element is removed
+      adInstance.cleanup = () => {
+        if (engagementTimer) {
+          clearInterval(engagementTimer);
+        }
+      };
       
       // Add ad to container
       container.appendChild(adElement);
