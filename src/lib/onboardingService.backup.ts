@@ -391,7 +391,7 @@ const onboardingService = {
               isComplete: false,
               completedAt: null,
               lastStep: null,
-              currentStep: null
+              currentStep: null // Support both field names
             }
           });
           logger.info(`Onboarding reset for user ${pubkey} with role ${role}`);
@@ -465,7 +465,7 @@ const onboardingService = {
               isComplete: false,
               completedAt: null,
               lastStep: null,
-              currentStep: null
+              currentStep: null // Support both field names
             }
           });
           logger.info(`Onboarding reset for user ${pubkey} across all roles`);

@@ -159,8 +159,23 @@ const OnboardingPage: NextPage = () => {
     }
   }, [isLoggedIn, isLoading, router, isRedirecting]);
   
-  // If still loading auth state or storage check, or not logged in, show loading
-  if (isLoading || !isLoggedIn || !checkedStorage) {
+  // Check for authentication transition markers (from our modification above)
+  const recentAuth = typeof window !== 'undefined' && window.localStorage?.getItem('auth_initiated') === 'true';
+  const authTimestamp = typeof window !== 'undefined' ? parseInt(window.localStorage?.getItem('auth_timestamp') || '0', 10) : 0;
+  const authPubkey = typeof window !== 'undefined' ? window.localStorage?.getItem('auth_pubkey') : null;
+  const isRecentAuthAttempt = recentAuth && (Date.now() - authTimestamp < 10000) && authPubkey;
+  
+  // If still loading auth state or storage check, or not logged in AND not in a transition period, show loading
+  if ((isLoading || !isLoggedIn || !checkedStorage) && !isRecentAuthAttempt) {
+    logger.debug('Still loading onboarding', {
+      isLoading,
+      isLoggedIn,
+      checkedStorage,
+      isRecentAuthAttempt,
+      recentAuth,
+      authTimestamp: new Date(authTimestamp).toISOString()
+    });
+    
     return (
       <Layout title="Loading Onboarding...">
         <div className="flex items-center justify-center min-h-screen">

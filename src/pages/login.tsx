@@ -324,7 +324,8 @@ const LoginPage: React.FC = () => {
         // Check onboarding status and redirect appropriately
         logger.debug('Determining redirect destination...');
         const onboardingService = await import('@/lib/onboardingService').then(mod => mod.default);
-        const redirectUrl = await onboardingService.getPostLoginRedirectUrl(pubkey, 'viewer');
+        // No default role - let the onboarding process handle role selection
+        const redirectUrl = await onboardingService.getPostLoginRedirectUrl(pubkey);
         
         // Force a refresh of the app state before redirecting
         window.localStorage.setItem('auth_timestamp', Date.now().toString());
@@ -333,7 +334,7 @@ const LoginPage: React.FC = () => {
         try {
           window.sessionStorage.setItem('pending_onboarding_redirect', 'true');
           window.sessionStorage.setItem('onboarding_pubkey', pubkey);
-          window.sessionStorage.setItem('onboarding_role', 'viewer');
+          // Don't pre-assign a role - let onboarding handle role selection
           window.sessionStorage.setItem('onboarding_timestamp', Date.now().toString());
           logger.debug('Set onboarding redirect flags in session storage');
         } catch (storageError) {
@@ -448,8 +449,8 @@ const LoginPage: React.FC = () => {
         // Determine where to redirect based on onboarding status
         logger.log('Account created successfully, checking onboarding status');
         const onboardingService = await import('@/lib/onboardingService').then(mod => mod.default);
-        const currentRole = 'viewer'; // Default to viewer for new accounts
-        const redirectUrl = await onboardingService.getPostLoginRedirectUrl(publicKey as string, currentRole);
+        // No default role - let the onboarding process handle role selection
+        const redirectUrl = await onboardingService.getPostLoginRedirectUrl(publicKey as string);
         
         logger.log(`Redirecting to ${redirectUrl}`);
         // Use window.location for a hard redirect to ensure state is refreshed
@@ -462,8 +463,8 @@ const LoginPage: React.FC = () => {
         logger.log('API call failed but continuing with redirection');
         try {
           const onboardingService = await import('@/lib/onboardingService').then(mod => mod.default);
-          const currentRole = 'viewer'; // Default to viewer for new accounts
-          const redirectUrl = await onboardingService.getPostLoginRedirectUrl(publicKey || '', currentRole);
+          // No default role - let the onboarding process handle role selection
+          const redirectUrl = await onboardingService.getPostLoginRedirectUrl(publicKey || '');
           
           logger.log(`Redirecting to ${redirectUrl} despite API error`);
           // Use window.location for a hard redirect to ensure state is refreshed
