@@ -61,11 +61,14 @@ const standardViewerSteps: OnboardingStep[] = [
 ];
 
 // Simplified viewer steps for Nostr extension users (just 2 steps)
-// We define these as different step names to ensure proper numbering from 1
+// Important: this array must only have 3 steps for proper step counting:
+// 1. role-selection (hidden in UI)
+// 2. privacy (first visible step - shown as Step 1 of 2)
+// 3. complete (second visible step - shown as Step 2 of 2)
 const nostrViewerSteps: OnboardingStep[] = [
-  'role-selection', // Step 0 (not shown in UI)
-  'preferences',    // Will be Step 1 in UI 
-  'feedback'        // Will be Step 2 in UI
+  'role-selection',
+  'privacy',
+  'complete'
 ];
 
 // We'll determine which to use in getStepsForRole based on Nostr extension detection

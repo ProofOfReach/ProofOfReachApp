@@ -120,16 +120,16 @@ const ViewerOnboarding: React.FC<ViewerOnboardingProps> = ({
   // Map from OnboardingContext step names to local step names
   const mapOnboardingStepToLocal = useMemo(() => {
     return (step: OnboardingStep): LocalStep => {
-      // For Nostr users, we have a 2-step flow: privacy -> complete
+      // For Nostr users, we have a simplified 2-step flow: privacy -> complete
+      // IMPORTANT: We only show 2 steps to the user for Nostr users
       if (hasNostrExtension) {
-        // Most steps map to the first step (privacy) for Nostr users
-        if (step === 'role-selection' || step === 'preferences' || 
-            step === 'discovery' || step === 'notifications' || step === 'privacy') {
+        // Map all initial steps to privacy (step 1 of 2)
+        if (step !== 'complete') {
           console.log("ViewerOnboarding - Simplified 2-step flow (Step 1/2: Privacy) for Nostr user");
           return 'privacy';
         }
         
-        // Last step is complete
+        // Last step is complete (step 2 of 2)
         console.log("ViewerOnboarding - Simplified 2-step flow (Step 2/2: Complete) for Nostr user");
         return 'complete';
       } else {
