@@ -172,11 +172,20 @@ const OnboardingWizard: React.FC = () => {
           {isLastStep ? (
             <button
               onClick={() => {
-                // First try the onboarding context function
+                // First complete the onboarding process on the server
                 if (completeOnboarding) {
-                  completeOnboarding();
+                  completeOnboarding()
+                    .then(() => {
+                      // Then explicitly redirect to dashboard
+                      window.location.href = '/dashboard';
+                    })
+                    .catch(err => {
+                      console.error('Error completing onboarding:', err);
+                      // Still try to navigate to dashboard even if there's an error
+                      window.location.href = '/dashboard';
+                    });
                 } else {
-                  // Fallback for test environments - direct to dashboard
+                  // Direct navigation if completeOnboarding isn't available
                   window.location.href = '/dashboard';
                 }
               }}
@@ -184,7 +193,7 @@ const OnboardingWizard: React.FC = () => {
               className="flex items-center px-4 py-2 bg-[#1a73e8] hover:bg-[#1765cc] text-white rounded-md transition disabled:opacity-50 disabled:cursor-not-allowed"
               data-testid="complete-button"
             >
-              {isLoading ? 'Completing...' : 'Complete Setup'}
+              {isLoading ? 'Redirecting...' : 'Go To Dashboard'}
             </button>
           ) : (
             <button
