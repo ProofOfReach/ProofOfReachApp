@@ -159,13 +159,13 @@
      * @private
      */
     _getTestAd: function(options) {
-      // Generate a random test ad with image focus
+      // Generate a random test ad with image focus, using local images
       const testAds = [
         {
           id: 'test-ad-1',
           title: 'Learn Bitcoin Development',
           description: 'Master Bitcoin and Lightning Network development with our online courses.',
-          imageUrl: 'https://cdn.pixabay.com/photo/2017/05/25/16/28/bitcoin-2343271_1280.jpg',
+          imageUrl: '/images/satoshi-symbol.png',
           targetUrl: 'https://example.com/bitcoin-dev',
           sponsor: 'Bitcoin Academy',
           callToAction: 'Start Learning',
@@ -178,7 +178,7 @@
           id: 'test-ad-2',
           title: 'Bitcoin Hardware Wallet',
           description: 'Secure your Bitcoin with our military-grade hardware wallet.',
-          imageUrl: 'https://cdn.pixabay.com/photo/2018/01/18/10/08/bitcoin-3089728_1280.jpg',
+          imageUrl: '/images/sats_symbol_white.png',
           targetUrl: 'https://example.com/hardware-wallet',
           sponsor: 'SecureSats',
           callToAction: 'Shop Now',
@@ -191,7 +191,7 @@
           id: 'test-ad-3',
           title: 'Join the Lightning Network',
           description: 'Start accepting Bitcoin payments instantly with our Lightning solution.',
-          imageUrl: 'https://cdn.pixabay.com/photo/2019/06/08/04/31/lightning-network-4259578_1280.jpg',
+          imageUrl: '/images/satoshi-symbol-white.png',
           targetUrl: 'https://example.com/lightning',
           sponsor: 'Lightning Labs',
           callToAction: 'Get Started',
@@ -239,9 +239,9 @@
             <h3 style="margin: 0; font-size: 18px; font-weight: 600;">${adData.title}</h3>
           </div>
           ${adData.imageUrl ? 
-            `<div style="margin: 15px 0;">
+            `<div style="margin: 15px 0; text-align: center;">
               <img src="${adData.imageUrl}" alt="${adData.title}" 
-                style="width: 100%; height: auto; max-height: 200px; object-fit: cover; border-radius: 6px;">
+                style="width: auto; height: 120px; border-radius: 6px; display: inline-block;">
              </div>` : ''}
           <p style="margin: 8px 0; font-size: 14px;">${adData.description}</p>
           <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 16px;">

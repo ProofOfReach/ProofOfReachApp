@@ -186,9 +186,9 @@
           <p><em>Your ad will appear here when you paste the SDK code!</em></p>
         </div>
 
-        <!-- Wallet Balance Display -->
-        <div class="wallet-balance" id="wallet-box">
-          <strong>Publisher Wallet Balance:</strong>
+        <!-- Sticky Wallet Balance Display that follows user as they scroll -->
+        <div class="wallet-balance" id="wallet-box" style="position: fixed; top: 20px; right: 20px; z-index: 1000; box-shadow: 0 4px 12px rgba(0,0,0,0.15); max-width: 180px;">
+          <strong>Publisher Balance:</strong>
           <span id="wallet-balance">0</span>
           <span class="satoshi-animation">sats</span> ⚡
         </div>
@@ -227,6 +227,25 @@
           </li>
         </ol>
         <p>That's all it takes to integrate ProofOfReach into your own site!</p>
+        
+        <!-- Second Ad Container -->
+        <div class="ad-container" id="proof-of-reach-ad-2">
+          <p><em>Second ad placement</em></p>
+        </div>
+        
+        <h2>Benefits of Bitcoin-Powered Advertising</h2>
+        <ul>
+          <li>Instant micropayments without traditional payment processors</li>
+          <li>No minimum payout thresholds - earn from your first visitor</li>
+          <li>Privacy-preserving targeting without tracking cookies</li>
+          <li>Global payment system that works across borders</li>
+          <li>Direct publisher-advertiser relationships with reduced fees</li>
+        </ul>
+        
+        <!-- Third Ad Container -->
+        <div class="ad-container" id="proof-of-reach-ad-3">
+          <p><em>Third ad placement</em></p>
+        </div>
       </div>
     </div>
 
@@ -255,7 +274,8 @@
       };
       
       window.addEventListener("load", () => {
-        ProofOfReachSDK.renderAd("proof-of-reach-ad", {
+        // Common configuration for all ad placements
+        const adConfig = {
           pubkey: "demo_publisher",
           testMode: true,  // Enable test mode to see demo ads
           onPayment: (sats) => {
@@ -263,7 +283,12 @@
             // Update wallet balance when payment is received
             updateWalletBalance(sats);
           },
-        });
+        };
+        
+        // Render ads in all three containers
+        ProofOfReachSDK.renderAd("proof-of-reach-ad", adConfig);
+        ProofOfReachSDK.renderAd("proof-of-reach-ad-2", adConfig);
+        ProofOfReachSDK.renderAd("proof-of-reach-ad-3", adConfig);
       });
     </script>
     <!-- END SDK CODE -->
