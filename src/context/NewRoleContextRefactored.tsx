@@ -2,7 +2,7 @@ import React, { createContext, useContext, useState, useEffect, ReactNode } from
 import { useRouter } from 'next/router';
 import { useQuery, useMutation, useQueryClient, QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { useAuthRefactored } from '../hooks/useAuthRefactored';
-import { UserRole } from '../types/auth';
+import { UserRoleType } from '../types/role';
 import { logger } from '../lib/logger';
 
 /**
@@ -10,10 +10,10 @@ import { logger } from '../lib/logger';
  * This provides clear typing for consumers of the context
  */
 interface RoleContextType {
-  role: UserRole;
-  setRole: (role: UserRole, targetPath?: string) => Promise<boolean>;
-  availableRoles: UserRole[];
-  isRoleAvailable: (role: UserRole) => boolean;
+  role: UserRoleType;
+  setRole: (role: UserRoleType, targetPath?: string) => Promise<boolean>;
+  availableRoles: UserRoleType[];
+  isRoleAvailable: (role: UserRoleType) => boolean;
   clearRole: () => void;
   isChangingRole: boolean;
 }
@@ -23,7 +23,7 @@ interface RoleContextType {
  * In a production application, these would come from environment variables
  */
 const isDevEnvironment = process.env.NODE_ENV === 'development'; // Only true in development mode
-const ALL_ROLES: UserRole[] = ['viewer', 'advertiser', 'publisher', 'admin', 'stakeholder'];
+const ALL_ROLES: UserRoleType[] = ['viewer', 'advertiser', 'publisher', 'admin', 'stakeholder', 'developer'];
 
 /**
  * Create the context with sensible default values
@@ -46,7 +46,7 @@ const ROLES_CACHE_TTL = 5 * 60 * 1000; // 5 minutes
  */
 interface RoleProviderProps {
   children: ReactNode;
-  initialRole?: UserRole;
+  initialRole?: UserRoleType;
   queryClient?: QueryClient;
 }
 
@@ -67,8 +67,8 @@ const defaultQueryClient = new QueryClient({
  * Role data interface for consistent data structure
  */
 interface RoleDataType {
-  availableRoles: UserRole[];
-  currentRole: string; // Will be cast to UserRole after validation
+  availableRoles: UserRoleType[];
+  currentRole: string; // Will be cast to UserRoleType after validation
   timestamp: number;
 }
 
@@ -88,17 +88,17 @@ export const RoleProviderRefactored: React.FC<RoleProviderProps> = ({
   const client = useQueryClient();
   
   /**
-   * Validate that a role is a valid UserRole
+   * Validate that a role is a valid UserRoleType
    * Enforces type safety for roles from external sources
    */
-  const isValidRole = (role: string): role is UserRole => {
-    return ALL_ROLES.includes(role as UserRole);
+  const isValidRole = (role: string): role is UserRoleType => {
+    return ALL_ROLES.includes(role as UserRoleType);
   };
 
   /**
    * Ensure a role is valid, or return 'advertiser' as fallback
    */
-  const ensureValidRole = (role: string): UserRole => {
+  const ensureValidRole = (role: string): UserRoleType => {
     return isValidRole(role) ? role : 'advertiser';
   };
   
@@ -142,7 +142,7 @@ export const RoleProviderRefactored: React.FC<RoleProviderProps> = ({
       const storedRole = localStorage.getItem('userRole');
       
       // Ensure the role is both valid and authorized
-      const currentRole = storedRole && isValidRole(storedRole) && availableRoles.includes(storedRole as UserRole)
+      const currentRole = storedRole && isValidRole(storedRole) && availableRoles.includes(storedRole as UserRoleType)
         ? storedRole
         : 'advertiser';
         
@@ -178,7 +178,7 @@ export const RoleProviderRefactored: React.FC<RoleProviderProps> = ({
           const isCacheValid = Date.now() - timestamp < ROLES_CACHE_TTL;
           
           if (cachedRoles && isCacheValid) {
-            const availableRoles = JSON.parse(cachedRoles) as UserRole[];
+            const availableRoles = JSON.parse(cachedRoles) as UserRoleType[];
             
             // Validate the role
             const currentRole = storedRole && isValidRole(storedRole) 
@@ -215,7 +215,7 @@ export const RoleProviderRefactored: React.FC<RoleProviderProps> = ({
       newRole, 
       targetPath = `/dashboard/${newRole}`
     }: { 
-      newRole: UserRole; 
+      newRole: UserRoleType; 
       targetPath?: string;
     }) => {
       logger.log(`Attempting role change to: ${newRole}`);
@@ -247,7 +247,9 @@ export const RoleProviderRefactored: React.FC<RoleProviderProps> = ({
         return;
       }
       
-      const targetRole = data.targetPath.split('/').pop() as UserRole;
+      // Ensure the path segment is a valid role or use current role as fallback
+      const pathSegment = data.targetPath?.split('/').pop();
+      const targetRole = isValidRole(pathSegment || '') ? pathSegment as UserRoleType : getCurrentRole();
       const newPath = data.targetPath;
       
       // Update client cache with new role first
@@ -313,7 +315,7 @@ export const RoleProviderRefactored: React.FC<RoleProviderProps> = ({
         // Update role data in the query cache
         client.setQueryData<RoleDataType>([ROLE_CACHE_KEY], {
           availableRoles: ALL_ROLES,
-          currentRole: currentRole as UserRole,
+          currentRole: currentRole as UserRoleType,
           timestamp: Date.now()
         });
         
@@ -348,7 +350,7 @@ export const RoleProviderRefactored: React.FC<RoleProviderProps> = ({
   /**
    * Public API for changing roles
    */
-  const setRole = async (newRole: UserRole, targetPath?: string): Promise<boolean> => {
+  const setRole = async (newRole: UserRoleType, targetPath?: string): Promise<boolean> => {
     if (ensureValidRole(roleData?.currentRole || '') === newRole) {
       return true; // Already in this role
     }
@@ -368,7 +370,7 @@ export const RoleProviderRefactored: React.FC<RoleProviderProps> = ({
   /**
    * Check if a role is available to the current user
    */
-  const isRoleAvailable = (roleToCheck: UserRole): boolean => {
+  const isRoleAvailable = (roleToCheck: UserRoleType): boolean => {
     // In development or test mode, all roles are available
     if (isDevEnvironment || authState?.isTestMode) {
       return true;
@@ -394,9 +396,9 @@ export const RoleProviderRefactored: React.FC<RoleProviderProps> = ({
   };
   
   /**
-   * Get the current role, ensuring it's a valid UserRole
+   * Get the current role, ensuring it's a valid UserRoleType
    */
-  const getCurrentRole = (): UserRole => {
+  const getCurrentRole = (): UserRoleType => {
     return ensureValidRole(roleData?.currentRole || 'advertiser');
   };
   

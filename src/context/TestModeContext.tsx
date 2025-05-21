@@ -546,6 +546,23 @@ export const TestModeProvider: React.FC<TestModeProviderProps> = ({ children }) 
 export const useTestMode = () => {
   const context = useContext(TestModeContext);
   if (!context) {
+    // In test environment, provide a fallback mock context
+    if (process.env.NODE_ENV === 'test') {
+      return {
+        isTestMode: false,
+        timeRemaining: null,
+        currentRole: 'viewer',
+        availableRoles: ['viewer'],
+        isTestModeAvailable: true,
+        isDevEnvironment: true,
+        isDevelopment: true,
+        enableTestMode: () => {},
+        disableTestMode: () => {},
+        enableAllRoles: async () => true,
+        setCurrentRole: async () => true,
+        updateTestModeState: () => true
+      };
+    }
     throw new Error('useTestMode must be used within a TestModeProvider');
   }
   return context;

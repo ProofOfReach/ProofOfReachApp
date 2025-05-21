@@ -11,8 +11,10 @@
 /**
  * Available user roles in the system
  * This matches the Prisma schema's UserRole enum
+ * 
+ * @note This should be kept in sync with src/lib/roles/types.ts UserRoleType definition
  */
-export type UserRoleType = 'viewer' | 'advertiser' | 'publisher' | 'admin' | 'stakeholder';
+export type UserRoleType = 'viewer' | 'advertiser' | 'publisher' | 'admin' | 'stakeholder' | 'developer';
 
 /**
  * Role data structure for consistent storage and retrieval
