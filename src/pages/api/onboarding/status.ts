@@ -1,70 +1,69 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import { UserRoleType } from '@/types/role';
+import { apiHandler } from '@/utils/apiHandler';
 import onboardingService from '@/lib/onboardingService';
+import { UserRoleType } from '@/types/role';
 import { logger } from '@/lib/logger';
-import { errorService } from '@/lib/errorService';
-import { ErrorCategory } from '@/types/errors';
 
 /**
- * API endpoint to check onboarding status for a user and role
- * 
- * @param req - The Next.js API request
- * @param res - The Next.js API response
+ * @swagger
+ * /api/onboarding/status:
+ *   get:
+ *     description: Get onboarding status for a user and role
+ *     parameters:
+ *       - in: query
+ *         name: pubkey
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The user's Nostr public key
+ *       - in: query
+ *         name: role
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The role to check onboarding status for
+ *     responses:
+ *       200:
+ *         description: Onboarding status retrieved successfully
+ *       400:
+ *         description: Missing required parameters
+ *       500:
+ *         description: Server error
  */
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  // Only allow GET requests
-  if (req.method !== 'GET') {
-    return res.status(405).json({ error: 'Method not allowed' });
-  }
-
+async function handler(req: NextApiRequest, res: NextApiResponse) {
   const { pubkey, role } = req.query;
-  const correlationId = `api-onboarding-status-${Date.now()}`;
   
-  // Validate required parameters
   if (!pubkey || !role) {
     return res.status(400).json({ 
       error: 'Missing required parameters',
-      details: 'Both pubkey and role are required' 
+      details: 'Both pubkey and role are required'
     });
   }
-
+  
   try {
-    // Check onboarding status
+    // Check if onboarding is complete for this user/role
     const isComplete = await onboardingService.isOnboardingComplete(
-      pubkey as string,
+      pubkey as string, 
       role as UserRoleType
     );
-
-    // Return the status
-    return res.status(200).json({ isComplete });
-  } catch (error) {
-    // Log and report the error
-    const errorMessage = error instanceof Error ? error.message : 'Unknown error checking onboarding status';
     
-    logger.error(`API Error: ${errorMessage}`, {
-      pubkey,
-      role,
-      path: req.url
-    });
-
-    // Report to error tracking system
-    errorService.reportError(
-      error instanceof Error ? error : errorMessage,
-      'api.onboarding.status',
-      'api',
-      'error',
-      {
-        data: { pubkey, role },
-        category: ErrorCategory.OPERATIONAL,
-        userFacing: false,
-        correlationId
-      }
-    );
-
-    // Return error response
+    // Create a status object to return to the client
+    const status = {
+      isComplete,
+      currentStep: null, // Simplified for now
+      lastStep: null     // Simplified for now
+    };
+    
+    return res.status(200).json(status);
+  } catch (error) {
+    logger.error('Error getting onboarding status', { error, pubkey, role });
     return res.status(500).json({ 
-      error: 'Failed to check onboarding status',
-      details: process.env.NODE_ENV === 'development' ? errorMessage : undefined
+      error: 'Failed to get onboarding status',
+      details: error instanceof Error ? error.message : 'Unknown error'
     });
   }
 }
+
+export default apiHandler({
+  GET: handler
+});

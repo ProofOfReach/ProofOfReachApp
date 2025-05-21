@@ -6,9 +6,9 @@ import { logger } from '@/lib/logger';
 
 /**
  * @swagger
- * /api/onboarding/complete:
+ * /api/onboarding/progress:
  *   post:
- *     description: Mark onboarding as complete for a user and role
+ *     description: Update onboarding progress for a user and role
  *     requestBody:
  *       required: true
  *       content:
@@ -24,17 +24,23 @@ import { logger } from '@/lib/logger';
  *                 description: The user's Nostr public key
  *               role:
  *                 type: string
- *                 description: The role to mark as complete
+ *                 description: The role to update onboarding progress for
+ *               currentStep:
+ *                 type: string
+ *                 description: The current step in the onboarding process
+ *               lastStep:
+ *                 type: string
+ *                 description: The last completed step in the onboarding process
  *     responses:
  *       200:
- *         description: Onboarding marked as complete successfully
+ *         description: Onboarding progress updated successfully
  *       400:
  *         description: Missing required parameters
  *       500:
  *         description: Server error
  */
 async function handler(req: NextApiRequest, res: NextApiResponse) {
-  const { pubkey, role } = req.body;
+  const { pubkey, role, ...updateData } = req.body;
   
   if (!pubkey || !role) {
     return res.status(400).json({ 
@@ -44,16 +50,28 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
   }
   
   try {
-    const result = await onboardingService.markOnboardingComplete(
+    // Extract the current step to save
+    const { currentStep } = updateData;
+    
+    if (!currentStep) {
+      return res.status(400).json({
+        error: 'Missing currentStep parameter',
+        details: 'The currentStep parameter is required'
+      });
+    }
+    
+    // Save the onboarding step using the server-side method
+    const result = await onboardingService.saveOnboardingStep(
       pubkey as string, 
-      role as UserRoleType
+      role as UserRoleType,
+      currentStep as string
     );
     
-    return res.status(200).json({ success: true, result });
+    return res.status(200).json(result);
   } catch (error) {
-    logger.error('Error marking onboarding as complete', { error, pubkey, role });
+    logger.error('Error updating onboarding progress', { error, pubkey, role });
     return res.status(500).json({ 
-      error: 'Failed to mark onboarding as complete',
+      error: 'Failed to update onboarding progress',
       details: error instanceof Error ? error.message : 'Unknown error'
     });
   }

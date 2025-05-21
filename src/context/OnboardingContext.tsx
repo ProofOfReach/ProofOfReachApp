@@ -3,7 +3,8 @@ import { useRouter } from 'next/router';
 import { useAuthRefactored } from '@/hooks/useAuthRefactored';
 import { UserRoleType } from '@/types/role';
 import { useRole } from '@/context/RoleContext';
-import onboardingService from '@/lib/onboardingService';
+import clientOnboardingService from '@/lib/clientOnboardingService';
+import { logger } from '@/lib/logger';
 
 // Define the steps for each role's onboarding process
 export type OnboardingStep = 
@@ -166,10 +167,12 @@ export const OnboardingProvider: React.FC<OnboardingProviderProps> = ({ children
         const pubkeyToUse = forcePubkey || authState?.pubkey;
         if (pubkeyToUse) {
           try {
-            const isComplete = await onboardingService.isOnboardingComplete(pubkeyToUse, currentRole);
+            const status = await clientOnboardingService.getOnboardingStatus(pubkeyToUse, currentRole);
+            const isComplete = status?.isComplete || false;
+            
             if (isComplete && !forcePubkey && !preventRedirects) { // Don't redirect if forcePubkey is provided or if preventing redirects
               // Redirect to dashboard if onboarding is already complete
-              const redirectUrl = await onboardingService.getPostLoginRedirectUrl(pubkeyToUse, currentRole);
+              const redirectUrl = `/dashboard`;
               
               // Add timestamp to track potential redirect loops
               const redirectWithParam = `${redirectUrl}${redirectUrl.includes('?') ? '&' : '?'}timestamp=${Date.now()}`;
@@ -208,18 +211,31 @@ export const OnboardingProvider: React.FC<OnboardingProviderProps> = ({ children
     }
   };
   
+  // Track and save progress when the current step changes
+  useEffect(() => {
+    const pubkeyToUse = forcePubkey || authState?.pubkey;
+    if (pubkeyToUse && selectedRole && currentStep && !isFirstStep) {
+      // Only save steps after the first step
+      clientOnboardingService.updateOnboardingProgress(pubkeyToUse, selectedRole, {
+        currentStep
+      }).catch(error => {
+        logger.error('Error saving onboarding progress', { error, pubkey: pubkeyToUse, role: selectedRole });
+      });
+    }
+  }, [currentStep, selectedRole, authState, forcePubkey, isFirstStep]);
+
   // Mark onboarding as complete and redirect to the appropriate dashboard
   const completeOnboarding = async () => {
     const pubkeyToUse = forcePubkey || authState?.pubkey;
     if (pubkeyToUse && selectedRole) {
       setIsLoading(true);
       try {
-        // Convert UserRoleType to Prisma UserRole string for service methods
-        await onboardingService.markOnboardingComplete(pubkeyToUse, selectedRole);
-        const redirectUrl = await onboardingService.getPostLoginRedirectUrl(pubkeyToUse, selectedRole);
-        router.push(redirectUrl);
+        // Use client-side service to mark onboarding complete
+        await clientOnboardingService.completeOnboarding(pubkeyToUse, selectedRole);
+        // Redirect to dashboard
+        router.push(`/dashboard?timestamp=${Date.now()}`);
       } catch (error) {
-        console.error('Error completing onboarding:', error);
+        logger.error('Error completing onboarding:', error);
       } finally {
         setIsLoading(false);
       }
@@ -234,13 +250,13 @@ export const OnboardingProvider: React.FC<OnboardingProviderProps> = ({ children
       try {
         const role = selectedRole || currentRole;
         if (role) {
-          // Convert UserRoleType to Prisma UserRole string for service methods
-          await onboardingService.markOnboardingComplete(pubkeyToUse, role as any);
-          const redirectUrl = await onboardingService.getPostLoginRedirectUrl(pubkeyToUse, role as any);
-          router.push(redirectUrl);
+          // Use client-side service to mark onboarding complete
+          await clientOnboardingService.completeOnboarding(pubkeyToUse, role as UserRoleType);
+          // Redirect to dashboard
+          router.push(`/dashboard?timestamp=${Date.now()}`);
         }
       } catch (error) {
-        console.error('Error skipping onboarding:', error);
+        logger.error('Error skipping onboarding:', { error, pubkey: pubkeyToUse });
       } finally {
         setIsLoading(false);
       }
