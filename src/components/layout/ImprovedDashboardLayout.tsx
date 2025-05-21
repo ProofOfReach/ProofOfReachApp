@@ -251,9 +251,13 @@ const ImprovedDashboardLayout: React.FC<ImprovedDashboardLayoutProps> = ({
             
             {/* Logo */}
             <div className="p-4 border-b border-gray-200 dark:border-gray-700">
-              <h1 className="text-xl font-bold text-gray-900 dark:text-white">
-                Nostr Ad Marketplace
-              </h1>
+              <Link href="/dashboard" className="flex items-center">
+                <img 
+                  src="/logo_big_light.png" 
+                  alt="Proof Of Reach" 
+                  className="h-auto w-[145px]" 
+                />
+              </Link>
             </div>
             
             {/* Role dropdown */}
