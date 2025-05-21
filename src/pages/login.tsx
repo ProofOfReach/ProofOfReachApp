@@ -161,15 +161,30 @@ const LoginPage: React.FC = () => {
       }
       
       // Log the Nostr extension detection status before attempting to get the public key
+      const extensionAvailable = hasNostrExtension();
       console.log('Nostr extension detection before login: ', {
-        hasExtension: hasNostrExtension()
+        hasExtension: extensionAvailable
       });
       
-      const pubkey = await getNostrPublicKey();
+      if (!extensionAvailable) {
+        throw new Error('Nostr extension not found. Please install a Nostr extension like nos2x or Alby.');
+      }
+      
+      // Add a delay to ensure the extension has time to initialize
+      await new Promise(resolve => setTimeout(resolve, 500));
+      
+      // Try to get the public key
+      let pubkey;
+      try {
+        pubkey = await window.nostr?.getPublicKey();
+      } catch (extensionError) {
+        console.error('Error getting public key from Nostr extension:', extensionError);
+        throw new Error('Error connecting to Nostr extension. Please make sure it\'s enabled and try again.');
+      }
       
       if (!pubkey) {
         console.warn('getNostrPublicKey returned null or empty value');
-        throw new Error('Could not get public key from Nostr extension');
+        throw new Error('Could not get public key from Nostr extension. Please check permissions and try again.');
       }
       
       console.log('Successfully retrieved pubkey: ', pubkey);
