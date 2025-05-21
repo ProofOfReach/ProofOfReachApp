@@ -32,7 +32,7 @@ const CodeExamplesPage = () => {
           </Link>
           <Title level={1}>SDK & Code Examples</Title>
           <Paragraph className="text-lg">
-            Get started quickly with our JavaScript SDK and code examples for integrating with the Nostr Ad Marketplace.
+            Get started quickly with our JavaScript SDK and code examples for integrating with Proof Of Reach.
           </Paragraph>
         </div>
 
@@ -41,7 +41,7 @@ const CodeExamplesPage = () => {
           <div className="flex items-center justify-between mb-4">
             <Title level={3} className="m-0">JavaScript SDK</Title>
             <a 
-              href="/sdk/nostr-ad-marketplace-sdk.min.js" 
+              href="/sdk/proof-of-reach-sdk.min.js" 
               download
               className="inline-flex items-center px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-md transition-colors"
             >
@@ -50,7 +50,7 @@ const CodeExamplesPage = () => {
             </a>
           </div>
           <Paragraph>
-            Our JavaScript SDK makes it easy to integrate with the Nostr Ad Marketplace. It provides a simple
+            Our JavaScript SDK makes it easy to integrate with the Proof Of Reach. It provides a simple
             interface for fetching ads, tracking clicks, and managing your publisher statistics.
           </Paragraph>
           
@@ -106,9 +106,9 @@ const CodeExamplesPage = () => {
                   <pre className="bg-gray-50 dark:bg-gray-900 p-4 rounded-lg overflow-x-auto text-sm">
                     <code className="language-javascript">
 {`// Initialize the SDK with your API key
-const adSDK = new NostrAdMarketplaceSDK({
+const adSDK = new ProofOfReachSDK({
   apiKey: 'YOUR_API_KEY',
-  baseUrl: 'https://api.nostradmarketplace.com'
+  baseUrl: 'https://api.proofofreachads.com'
 });
 
 // Fetch an ad to display
@@ -153,9 +153,9 @@ displayAd();`}
                   </pre>
                   <button 
                     onClick={() => copyToClipboard(`// Initialize the SDK with your API key
-const adSDK = new NostrAdMarketplaceSDK({
+const adSDK = new ProofOfReachSDK({
   apiKey: 'YOUR_API_KEY',
-  baseUrl: 'https://api.nostradmarketplace.com'
+  baseUrl: 'https://api.proofofreachads.com'
 });
 
 // Fetch an ad to display
@@ -214,12 +214,12 @@ displayAd();`)}
                 <div className="relative mt-4">
                   <pre className="bg-gray-50 dark:bg-gray-900 p-4 rounded-lg overflow-x-auto text-sm">
                     <code className="language-typescript">
-{`import NostrAdMarketplaceSDK, { ServeAdOptions, Ad } from 'nostr-ad-marketplace-sdk';
+{`import ProofOfReachSDK, { ServeAdOptions, Ad } from 'proof-of-reach-sdk';
 
 // Initialize the SDK with your API key
-const adSDK = new NostrAdMarketplaceSDK({
-  apiKey: process.env.NOSTR_AD_API_KEY || '',
-  baseUrl: 'https://api.nostradmarketplace.com'
+const adSDK = new ProofOfReachSDK({
+  apiKey: process.env.PROOF_OF_REACH_API_KEY || '',
+  baseUrl: 'https://api.proofofreachads.com'
 });
 
 // Function to fetch an ad with TypeScript types
@@ -281,12 +281,12 @@ async function displayAd() {
                     </code>
                   </pre>
                   <button 
-                    onClick={() => copyToClipboard(`import NostrAdMarketplaceSDK, { ServeAdOptions, Ad } from 'nostr-ad-marketplace-sdk';
+                    onClick={() => copyToClipboard(`import ProofOfReachSDK, { ServeAdOptions, Ad } from 'proof-of-reach-ad-marketplace-sdk';
 
 // Initialize the SDK with your API key
-const adSDK = new NostrAdMarketplaceSDK({
+const adSDK = new ProofOfReachSDK({
   apiKey: process.env.NOSTR_AD_API_KEY || '',
-  baseUrl: 'https://api.nostradmarketplace.com'
+  baseUrl: 'https://api.proofofreachads.com'
 });
 
 // Function to fetch an ad with TypeScript types
@@ -358,24 +358,24 @@ async function displayAd() {
               <div>
                 <Title level={4}>React Component Example</Title>
                 <Paragraph>
-                  A reusable React component for displaying ads from the Nostr Ad Marketplace.
+                  A reusable React component for displaying ads from Proof Of Reach.
                 </Paragraph>
                 <div className="relative mt-4">
                   <pre className="bg-gray-50 dark:bg-gray-900 p-4 rounded-lg overflow-x-auto text-sm">
                     <code className="language-jsx">
 {`import React, { useEffect, useState } from 'react';
-import NostrAdMarketplaceSDK from 'nostr-ad-marketplace-sdk';
+import ProofOfReachSDK from 'proof-of-reach-sdk';
 
 // Create SDK instance once outside component
-const adSDK = new NostrAdMarketplaceSDK({
-  apiKey: process.env.REACT_APP_NOSTR_AD_API_KEY,
-  baseUrl: process.env.REACT_APP_API_BASE_URL || 'https://api.nostradmarketplace.com'
+const adSDK = new ProofOfReachSDK({
+  apiKey: process.env.REACT_APP_PROOF_OF_REACH_API_KEY,
+  baseUrl: process.env.REACT_APP_API_BASE_URL || 'https://api.proofofreachads.com'
 });
 
 /**
- * NostrAd component that fetches and displays an advertisement
+ * ProofOfReachAd component that fetches and displays an advertisement
  */
-const NostrAd = ({ 
+const ProofOfReachAd = ({ 
   placement = 'sidebar',
   interests = [],
   format = 'text-image',
@@ -448,7 +448,7 @@ const NostrAd = ({
   // Render loading state
   if (loading) {
     return (
-      <div className={\`nostr-ad-loading \${className}\`}>
+      <div className={\`proof-of-reach-ad-loading \${className}\`}>
         <div className="loading-indicator">Loading ad...</div>
       </div>
     );
@@ -457,7 +457,7 @@ const NostrAd = ({
   // Render error state
   if (error) {
     return (
-      <div className={\`nostr-ad-error \${className}\`}>
+      <div className={\`proof-of-reach-ad-error \${className}\`}>
         <p>Ad could not be loaded</p>
       </div>
     );
@@ -470,13 +470,13 @@ const NostrAd = ({
   
   // Render the ad
   return (
-    <div className={\`nostr-ad-container \${className}\`}>
+    <div className={\`proof-of-reach-ad-container \${className}\`}>
       <a 
         href={ad.targetUrl} 
         target="_blank" 
         rel="noopener noreferrer"
         onClick={handleClick}
-        className="nostr-ad"
+        className="proof-of-reach-ad"
       >
         {ad.imageUrl && (
           <img src={ad.imageUrl} alt={ad.title} className="ad-image" />
@@ -505,18 +505,18 @@ export default NostrAd;
                   </pre>
                   <button 
                     onClick={() => copyToClipboard(`import React, { useEffect, useState } from 'react';
-import NostrAdMarketplaceSDK from 'nostr-ad-marketplace-sdk';
+import ProofOfReachSDK from 'proof-of-reach-sdk';
 
 // Create SDK instance once outside component
-const adSDK = new NostrAdMarketplaceSDK({
-  apiKey: process.env.REACT_APP_NOSTR_AD_API_KEY,
-  baseUrl: process.env.REACT_APP_API_BASE_URL || 'https://api.nostradmarketplace.com'
+const adSDK = new ProofOfReachSDK({
+  apiKey: process.env.REACT_APP_PROOF_OF_REACH_API_KEY,
+  baseUrl: process.env.REACT_APP_API_BASE_URL || 'https://api.proofofreachads.com'
 });
 
 /**
- * NostrAd component that fetches and displays an advertisement
+ * ProofOfReachAd component that fetches and displays an advertisement
  */
-const NostrAd = ({ 
+const ProofOfReachAd = ({ 
   placement = 'sidebar',
   interests = [],
   format = 'text-image',
@@ -589,7 +589,7 @@ const NostrAd = ({
   // Render loading state
   if (loading) {
     return (
-      <div className={\`nostr-ad-loading \${className}\`}>
+      <div className={\`proof-of-reach-ad-loading \${className}\`}>
         <div className="loading-indicator">Loading ad...</div>
       </div>
     );
@@ -598,7 +598,7 @@ const NostrAd = ({
   // Render error state
   if (error) {
     return (
-      <div className={\`nostr-ad-error \${className}\`}>
+      <div className={\`proof-of-reach-ad-error \${className}\`}>
         <p>Ad could not be loaded</p>
       </div>
     );
@@ -611,13 +611,13 @@ const NostrAd = ({
   
   // Render the ad
   return (
-    <div className={\`nostr-ad-container \${className}\`}>
+    <div className={\`proof-of-reach-ad-container \${className}\`}>
       <a 
         href={ad.targetUrl} 
         target="_blank" 
         rel="noopener noreferrer"
         onClick={handleClick}
-        className="nostr-ad"
+        className="proof-of-reach-ad"
       >
         {ad.imageUrl && (
           <img src={ad.imageUrl} alt={ad.title} className="ad-image" />
@@ -674,7 +674,7 @@ export default NostrAd;
       margin: 20px 0;
       max-width: 300px;
     }
-    .nostr-ad {
+    .proof-of-reach-ad {
       display: block;
       padding: 15px;
       text-decoration: none;
@@ -729,12 +729,12 @@ export default NostrAd;
     <p>More website content here...</p>
   </div>
 
-  <!-- Load the Nostr Ad Marketplace SDK -->
-  <script src="/sdk/nostr-ad-marketplace-sdk.min.js"></script>
+  <!-- Load the Proof Of Reach SDK -->
+  <script src="/sdk/proof-of-reach-ad-marketplace-sdk.min.js"></script>
   
   <script>
     // Initialize the SDK
-    const adSDK = new NostrAdMarketplaceSDK({
+    const adSDK = new ProofOfReachSDK({
       apiKey: 'YOUR_API_KEY'
     });
     
@@ -751,7 +751,7 @@ export default NostrAd;
         if (ad) {
           adContainer.innerHTML = \`
             <a href="\${ad.targetUrl}" target="_blank" rel="noopener" 
-               class="nostr-ad" onclick="trackAdClick('\${ad.id}')">
+               class="proof-of-reach-ad" onclick="trackAdClick('\${ad.id}')">
               \${ad.imageUrl ? \`<img src="\${ad.imageUrl}" alt="" class="ad-image">\` : ''}
               <h3 class="ad-title">\${ad.title}</h3>
               <p class="ad-description">\${ad.description}</p>
@@ -800,7 +800,7 @@ export default NostrAd;
       margin: 20px 0;
       max-width: 300px;
     }
-    .nostr-ad {
+    .proof-of-reach-ad {
       display: block;
       padding: 15px;
       text-decoration: none;
@@ -855,12 +855,12 @@ export default NostrAd;
     <p>More website content here...</p>
   </div>
 
-  <!-- Load the Nostr Ad Marketplace SDK -->
-  <script src="/sdk/nostr-ad-marketplace-sdk.min.js"></script>
+  <!-- Load the Proof Of Reach SDK -->
+  <script src="/sdk/proof-of-reach-ad-marketplace-sdk.min.js"></script>
   
   <script>
     // Initialize the SDK
-    const adSDK = new NostrAdMarketplaceSDK({
+    const adSDK = new ProofOfReachSDK({
       apiKey: 'YOUR_API_KEY'
     });
     
@@ -877,7 +877,7 @@ export default NostrAd;
         if (ad) {
           adContainer.innerHTML = \`
             <a href="\${ad.targetUrl}" target="_blank" rel="noopener" 
-               class="nostr-ad" onclick="trackAdClick('\${ad.id}')">
+               class="proof-of-reach-ad" onclick="trackAdClick('\${ad.id}')">
               \${ad.imageUrl ? \`<img src="\${ad.imageUrl}" alt="" class="ad-image">\` : ''}
               <h3 class="ad-title">\${ad.title}</h3>
               <p class="ad-description">\${ad.description}</p>
@@ -928,12 +928,12 @@ export default NostrAd;
                   <pre className="bg-gray-50 dark:bg-gray-900 p-4 rounded-lg overflow-x-auto text-sm">
                     <code className="language-javascript">
 {`// Import the SDK
-import NostrAdMarketplaceSDK from 'nostr-ad-marketplace-sdk';
+import ProofOfReachSDK from 'proof-of-reach-ad-marketplace-sdk';
 
 // Initialize SDK once at the application level
-const adSDK = new NostrAdMarketplaceSDK({
+const adSDK = new ProofOfReachSDK({
   apiKey: process.env.NOSTR_AD_API_KEY,
-  baseUrl: process.env.NOSTR_AD_API_URL || 'https://api.nostradmarketplace.com'
+  baseUrl: process.env.NOSTR_AD_API_URL || 'https://api.proofofreachads.com'
 });
 
 // Store recently shown ads to implement frequency capping
@@ -985,7 +985,7 @@ async function renderAdInFeed(feedElement, postIndex) {
     
     // Create ad element
     const adElement = document.createElement('div');
-    adElement.className = 'nostr-ad-container';
+    adElement.className = 'proof-of-reach-ad-container';
     adElement.setAttribute('data-ad-id', ad.id);
     
     // Style to match feed posts but with sponsored indicator
@@ -1043,12 +1043,12 @@ function getUserInterests() {
                   </pre>
                   <button 
                     onClick={() => copyToClipboard(`// Import the SDK
-import NostrAdMarketplaceSDK from 'nostr-ad-marketplace-sdk';
+import ProofOfReachSDK from 'proof-of-reach-ad-marketplace-sdk';
 
 // Initialize SDK once at the application level
-const adSDK = new NostrAdMarketplaceSDK({
+const adSDK = new ProofOfReachSDK({
   apiKey: process.env.NOSTR_AD_API_KEY,
-  baseUrl: process.env.NOSTR_AD_API_URL || 'https://api.nostradmarketplace.com'
+  baseUrl: process.env.NOSTR_AD_API_URL || 'https://api.proofofreachads.com'
 });
 
 // Store recently shown ads to implement frequency capping
@@ -1100,7 +1100,7 @@ async function renderAdInFeed(feedElement, postIndex) {
     
     // Create ad element
     const adElement = document.createElement('div');
-    adElement.className = 'nostr-ad-container';
+    adElement.className = 'proof-of-reach-ad-container';
     adElement.setAttribute('data-ad-id', ad.id);
     
     // Style to match feed posts but with sponsored indicator

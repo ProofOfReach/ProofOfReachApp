@@ -181,7 +181,7 @@ const CampaignsPage: NextPageWithLayout = () => {
             Ready to Start Your First Campaign?
           </h3>
           <p className="text-orange-700 dark:text-orange-300 mb-4 max-w-lg mx-auto">
-            Create a campaign to reach your target audience across the Nostr network with engaging ads that drive results.
+            Create a campaign to reach your target audience across the Proof Of Reach network with engaging ads that drive results.
           </p>
           <Button
             onClick={() => router.push('/dashboard/campaigns/create')}

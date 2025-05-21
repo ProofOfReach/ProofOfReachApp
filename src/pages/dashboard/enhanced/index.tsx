@@ -176,7 +176,7 @@ const EnhancedDashboardPage: React.FC = () => {
   return (
     <>
       <Head>
-        <title>Enhanced Dashboard - Nostr Ad Marketplace</title>
+        <title>Enhanced Dashboard - Proof Of Reach</title>
       </Head>
 
       <RoleBasedLayout title="Enhanced Dashboard">
