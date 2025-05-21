@@ -25,7 +25,7 @@ const WalletPage: NextPageWithLayout = () => {
   const { role } = useRole();
   const { hasPermission } = useRoleAccess();
   const { isTestMode } = useTestMode();
-  const { balance: testWalletBalance } = useTestWallet();
+  const { balance: testWalletBalance, updateBalance: updateTestBalance } = useTestWallet();
   const [isDepositing, setIsDepositing] = useState(false);
   const [isWithdrawing, setIsWithdrawing] = useState(false);
   const [amount, setAmount] = useState('');
@@ -120,7 +120,32 @@ const WalletPage: NextPageWithLayout = () => {
         throw new Error('Please enter a valid amount greater than 0');
       }
       
-      // Check if user has sufficient balance
+      // Special handling for test mode
+      if (isTestMode) {
+        // Check if user has sufficient test balance
+        if (testWalletBalance < amountNumber) {
+          throw new Error('Insufficient test balance for this withdrawal');
+        }
+        
+        // Calculate new balance by subtracting withdrawal amount
+        const newBalance = Math.max(0, testWalletBalance - amountNumber);
+        
+        // Update test wallet balance
+        updateTestBalance(newBalance);
+        
+        // Simulate a short delay for realism
+        setTimeout(() => {
+          // Success - show success message and reset form
+          setSuccess(`Test Mode: Successfully withdrew ${amountNumber} sats from your account`);
+          setAmount('');
+          setIsWithdrawing(false);
+          setProcessing(false);
+        }, 1000);
+        
+        return;
+      }
+      
+      // Regular mode - Check if user has sufficient balance
       if (balanceData && balanceData.balance < amountNumber) {
         throw new Error('Insufficient balance for this withdrawal');
       }

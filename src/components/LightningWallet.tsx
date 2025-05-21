@@ -149,8 +149,16 @@ const LightningWallet: React.FC<LightningWalletProps> = ({
     try {
       // Special handling for test mode
       if (isTestMode) {
-        // Simulate a successful withdrawal in test mode
+        // Simulate a short delay for realism
         setTimeout(() => {
+          // Calculate new balance by subtracting withdrawal amount
+          const newBalance = Math.max(0, (balance || 0) - withdrawAmount);
+          
+          // Update balance in parent component if callback provided
+          if (onBalanceUpdate) {
+            onBalanceUpdate(newBalance);
+          }
+          
           // Reset form
           setWithdrawInvoice('');
           setWithdrawAmount(1000);
@@ -159,7 +167,7 @@ const LightningWallet: React.FC<LightningWalletProps> = ({
           onSuccess(`Test mode: Withdrawn ${withdrawAmount} sats`);
           
           // In test mode we don't automatically reload the page
-          // This allows the user to see the results
+          // This allows the user to see the results of the withdrawal
         }, 1500);
         
         return;
