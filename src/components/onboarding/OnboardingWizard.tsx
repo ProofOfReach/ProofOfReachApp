@@ -7,7 +7,8 @@ import PublisherOnboarding from './PublisherOnboarding';
 import AdvertiserOnboarding from './AdvertiserOnboarding';
 import Loading from '@/components/Loading';
 import { Button } from '@/components/ui/button';
-import { ArrowLeft, ArrowRight, X } from 'react-feather';
+import { ArrowLeft, ArrowRight } from 'react-feather';
+import { UserRoleType } from '@/types/role';
 
 const OnboardingWizard: React.FC = () => {
   const { 
@@ -22,18 +23,26 @@ const OnboardingWizard: React.FC = () => {
     skipOnboarding
   } = useOnboarding();
   
-  // Handle invalid role case
+  // Handle invalid role case - Only when skipOnboarding is available
   React.useEffect(() => {
     // If we have an invalid role and not on role-selection,
     // go back to role selection
     if (currentStep !== 'role-selection' && 
         selectedRole !== 'viewer' && 
         selectedRole !== 'publisher' && 
-        selectedRole !== 'advertiser') {
+        selectedRole !== 'advertiser' &&
+        typeof skipOnboarding === 'function') {
       // Go back to role selection if we have an invalid role
       skipOnboarding();
     }
   }, [currentStep, selectedRole, skipOnboarding]);
+  
+  // Handle role selection from RoleConfirmation
+  const handleRoleSelection = (role: UserRoleType) => {
+    if (typeof goToNextStep === 'function') {
+      goToNextStep();
+    }
+  };
   
   // Render the current step content based on step and selected role
   const renderStepContent = () => {
@@ -43,7 +52,7 @@ const OnboardingWizard: React.FC = () => {
     }
     
     if (currentStep === 'role-selection') {
-      return <RoleConfirmation />;
+      return <RoleConfirmation onConfirm={handleRoleSelection} />;
     }
     
     if (selectedRole === 'viewer') {
@@ -101,7 +110,7 @@ const OnboardingWizard: React.FC = () => {
                 size="sm"
                 aria-label="Skip to next step"
                 data-testid="onboarding-skip-button"
-                className="bg-purple-100 text-purple-700 border border-purple-200 hover:bg-purple-200 dark:bg-purple-900/30 dark:text-purple-300 dark:border-purple-800 dark:hover:bg-purple-900/50"
+                className="bg-blue-100 text-[#1a73e8] border border-blue-200 hover:bg-blue-200 dark:bg-blue-900/30 dark:text-blue-300 dark:border-blue-800 dark:hover:bg-blue-900/50"
               >
                 Skip to next step
               </Button>
@@ -116,6 +125,7 @@ const OnboardingWizard: React.FC = () => {
           <button
             onClick={goToPreviousStep}
             className="flex items-center px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 transition"
+            data-testid="back-button"
           >
             <ArrowLeft size={16} className="mr-2" />
             Back
@@ -136,14 +146,16 @@ const OnboardingWizard: React.FC = () => {
               }
             }}
             disabled={isLoading}
-            className="flex items-center px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-md transition disabled:opacity-50 disabled:cursor-not-allowed"
+            className="flex items-center px-4 py-2 bg-[#1a73e8] hover:bg-[#1765cc] text-white rounded-md transition disabled:opacity-50 disabled:cursor-not-allowed"
+            data-testid="complete-button"
           >
             {isLoading ? 'Completing...' : 'Complete Setup'}
           </button>
         ) : (
           <button
             onClick={goToNextStep}
-            className="flex items-center px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-md transition"
+            className="flex items-center px-4 py-2 bg-[#1a73e8] hover:bg-[#1765cc] text-white rounded-md transition"
+            data-testid="next-button"
           >
             {isFirstStep ? 'Get Started' : 'Continue'}
             <ArrowRight size={16} className="ml-2" />

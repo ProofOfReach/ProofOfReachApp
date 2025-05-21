@@ -10,7 +10,7 @@ type RoleConfirmationProps = {
 
 const RoleConfirmation: React.FC<RoleConfirmationProps> = ({ onConfirm }) => {
   const roleContext = useRole();
-  const { setSelectedRole } = useOnboarding();
+  const { setSelectedRole, selectedRole } = useOnboarding();
   
   // Create a state to hold available roles, with a default that includes all roles
   const [availableRoles, setAvailableRoles] = useState<UserRoleType[]>(['viewer', 'publisher', 'advertiser']);
@@ -37,7 +37,7 @@ const RoleConfirmation: React.FC<RoleConfirmationProps> = ({ onConfirm }) => {
   
   // For debugging
   useEffect(() => {
-    if (typeof window !== 'undefined') {
+    if (typeof window !== 'undefined' && process.env.NODE_ENV !== 'test') {
       console.log('RoleConfirmation - Available roles:', availableRoles);
       console.log('RoleConfirmation - Context roles:', roleContext?.availableRoles || 'None');
       console.log('RoleConfirmation - Is test mode:', isTestMode);
@@ -59,7 +59,7 @@ const RoleConfirmation: React.FC<RoleConfirmationProps> = ({ onConfirm }) => {
       role: 'viewer' as UserRoleType,
       title: 'Viewer',
       description: 'Browse ads, earn Bitcoin, and enjoy content across the Proof Of Reach network',
-      icon: <Users className="h-8 w-8 text-blue-500" />,
+      icon: <Users className="h-8 w-8 text-[#1a73e8]" />,
       benefits: [
         'Earn Bitcoin for viewing ads',
         'Personalized content recommendations',
@@ -87,7 +87,7 @@ const RoleConfirmation: React.FC<RoleConfirmationProps> = ({ onConfirm }) => {
       role: 'advertiser' as UserRoleType,
       title: 'Advertiser',
       description: 'Promote your products and services on the Proof Of Reach network',
-      icon: <Radio className="h-8 w-8 text-purple-500" />,
+      icon: <Radio className="h-8 w-8 text-[#1a73e8]" />,
       benefits: [
         'Target specific audience interests',
         'Pay only for actual engagement',
@@ -95,7 +95,7 @@ const RoleConfirmation: React.FC<RoleConfirmationProps> = ({ onConfirm }) => {
         'Lightning-fast campaign setup'
       ],
       buttonText: 'Set Up as Advertiser',
-      color: 'purple'
+      color: 'blue'
     }
   ];
   
@@ -121,9 +121,10 @@ const RoleConfirmation: React.FC<RoleConfirmationProps> = ({ onConfirm }) => {
             key={card.role}
             data-testid="role-card"
             className={`border rounded-lg p-6 cursor-pointer transition hover:shadow-md flex flex-col h-full
-              ${card.color === 'blue' ? 'hover:border-blue-500' : 
+              ${selectedRole === card.role ? 'border-[#1a73e8] shadow-md' : 'border-gray-200 dark:border-gray-700'}
+              ${card.color === 'blue' ? 'hover:border-[#1a73e8]' : 
                 card.color === 'green' ? 'hover:border-green-500' : 
-                'hover:border-purple-500'
+                'hover:border-[#1a73e8]'
               }
             `}
             onClick={() => handleRoleSelection(card.role)}
@@ -147,16 +148,30 @@ const RoleConfirmation: React.FC<RoleConfirmationProps> = ({ onConfirm }) => {
                   <ul className="space-y-2">
                     {card.benefits.map((benefit, index) => (
                       <li key={index} className="flex items-start text-sm">
-                        <span className={`mr-2 mt-0.5 text-${card.color === 'blue' ? 'blue' : card.color === 'green' ? 'green' : 'purple'}-500`}>•</span>
+                        <span className={`mr-2 mt-0.5 ${card.color === 'green' ? 'text-green-500' : 'text-[#1a73e8]'}`}>•</span>
                         <span className="text-gray-600 dark:text-gray-300">{benefit}</span>
                       </li>
                     ))}
                   </ul>
                 </div>
               </div>
-                
-              {/* Empty space where the button used to be - for test ID only */}
-              <div data-testid={`select-${card.role}`} className="hidden"></div>
+              
+              {/* Add back the button for each role */}
+              <div className="mt-auto">
+                <button
+                  className={`w-full py-2 px-4 rounded-md text-white font-medium
+                    ${card.color === 'green' ? 'bg-green-500 hover:bg-green-600' : 'bg-[#1a73e8] hover:bg-[#1765cc]'}
+                    transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 
+                    ${card.color === 'green' ? 'focus:ring-green-500' : 'focus:ring-[#1a73e8]'}
+                  `}
+                  onClick={() => handleRoleSelection(card.role)}
+                  role="button"
+                  aria-label={card.role}
+                  data-testid={`select-${card.role}`}
+                >
+                  {card.buttonText}
+                </button>
+              </div>
             </div>
           </div>
         ))}

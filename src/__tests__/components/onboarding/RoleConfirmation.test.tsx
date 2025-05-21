@@ -4,6 +4,27 @@ import userEvent from '@testing-library/user-event';
 import RoleConfirmation from '@/components/onboarding/RoleConfirmation';
 import { UserRoleType } from '@/types/role';
 
+// Mocks for window.localStorage
+const localStorageMock = (() => {
+  let store = {};
+  return {
+    getItem: jest.fn((key) => store[key] || null),
+    setItem: jest.fn((key, value) => { store[key] = value.toString(); }),
+    clear: jest.fn(() => { store = {}; })
+  };
+})();
+
+Object.defineProperty(window, 'localStorage', {
+  value: localStorageMock
+});
+
+// Mock process.env.NODE_ENV
+jest.mock('next/config', () => () => ({
+  publicRuntimeConfig: {
+    NODE_ENV: 'test'
+  }
+}));
+
 // Mock the role context hook
 jest.mock('@/context/RoleContext', () => ({
   useRole: () => ({
@@ -16,24 +37,40 @@ jest.mock('@/context/RoleContext', () => ({
 }));
 
 // Mock the onboarding context hook
+const mockSetSelectedRole = jest.fn();
 jest.mock('@/context/OnboardingContext', () => ({
   useOnboarding: () => ({
-    setSelectedRole: jest.fn(),
+    setSelectedRole: mockSetSelectedRole,
     selectedRole: null,
-    onboardingStep: 0,
-    onboardingComplete: false,
-    setOnboardingComplete: jest.fn(),
-    setOnboardingStep: jest.fn(),
-    saveProgress: jest.fn(),
-    loading: false
+    currentStep: 'role-selection',
+    progress: 0,
+    totalSteps: 6,
+    isFirstStep: true,
+    isLastStep: false,
+    goToNextStep: jest.fn(),
+    goToPreviousStep: jest.fn(),
+    completeOnboarding: jest.fn(),
+    isLoading: false,
+    skipOnboarding: jest.fn()
   })
 }));
+
+// Mock console.log to prevent debug output in tests
+const originalConsoleLog = console.log;
+beforeAll(() => {
+  console.log = jest.fn();
+});
+
+afterAll(() => {
+  console.log = originalConsoleLog;
+});
 
 describe('RoleConfirmation', () => {
   const mockOnConfirm = jest.fn();
 
   beforeEach(() => {
     jest.clearAllMocks();
+    localStorageMock.clear();
   });
 
   it('renders all role options', () => {
@@ -60,8 +97,8 @@ describe('RoleConfirmation', () => {
   it('calls onConfirm with "viewer" when viewer role is selected', async () => {
     render(<RoleConfirmation onConfirm={mockOnConfirm} />);
 
-    // Click the viewer role option
-    const viewerButton = screen.getByRole('button', { name: /viewer/i });
+    // Click the viewer role option - use button with exact text
+    const viewerButton = screen.getByText('Set Up as Viewer');
     await userEvent.click(viewerButton);
 
     // Should call onConfirm with "viewer"
@@ -71,8 +108,8 @@ describe('RoleConfirmation', () => {
   it('calls onConfirm with "publisher" when publisher role is selected', async () => {
     render(<RoleConfirmation onConfirm={mockOnConfirm} />);
 
-    // Click the publisher role option
-    const publisherButton = screen.getByRole('button', { name: /publisher/i });
+    // Click the publisher role option - use button with exact text
+    const publisherButton = screen.getByText('Set Up as Publisher');
     await userEvent.click(publisherButton);
 
     // Should call onConfirm with "publisher"
@@ -82,8 +119,8 @@ describe('RoleConfirmation', () => {
   it('calls onConfirm with "advertiser" when advertiser role is selected', async () => {
     render(<RoleConfirmation onConfirm={mockOnConfirm} />);
 
-    // Click the advertiser role option
-    const advertiserButton = screen.getByRole('button', { name: /advertiser/i });
+    // Click the advertiser role option - use button with exact text
+    const advertiserButton = screen.getByText('Set Up as Advertiser');
     await userEvent.click(advertiserButton);
 
     // Should call onConfirm with "advertiser"
@@ -105,33 +142,29 @@ describe('RoleConfirmation', () => {
   });
 
   it('applies active styles to selected role', async () => {
-    // Create a mock implementation that tracks the selected role
-    const mockSetSelectedRole = jest.fn();
-    
-    // Override the default mock for this specific test
+    // Override the default mock for this specific test with mocked selectedRole state
+    const customMockSetSelectedRole = jest.fn();
     jest.spyOn(require('@/context/OnboardingContext'), 'useOnboarding').mockReturnValue({
-      setSelectedRole: mockSetSelectedRole,
+      setSelectedRole: customMockSetSelectedRole,
       selectedRole: null,
-      onboardingStep: 0,
-      onboardingComplete: false,
-      setOnboardingComplete: jest.fn(),
-      setOnboardingStep: jest.fn(),
-      saveProgress: jest.fn(),
-      loading: false
+      currentStep: 'role-selection',
+      progress: 0,
+      totalSteps: 6,
+      isFirstStep: true,
+      isLastStep: false,
+      goToNextStep: jest.fn(),
+      goToPreviousStep: jest.fn(),
+      completeOnboarding: jest.fn(),
+      isLoading: false,
+      skipOnboarding: jest.fn()
     });
 
     render(<RoleConfirmation onConfirm={mockOnConfirm} />);
 
-    // Add data-testid to role cards for testing
-    const roleCards = document.querySelectorAll('.border.rounded-lg');
-    roleCards.forEach(card => {
-      card.setAttribute('data-testid', 'role-card');
-    });
-
-    // Initially, no role should be selected (using a different class for checking)
+    // Initially, no role should be selected
     const initialRoleCards = screen.getAllByTestId('role-card');
     initialRoleCards.forEach(card => {
-      expect(card).not.toHaveClass('border-purple-500');
+      expect(card).not.toHaveClass('border-[#1a73e8] shadow-md');
     });
 
     // Click the publisher role option
@@ -140,6 +173,6 @@ describe('RoleConfirmation', () => {
 
     // Verify the onConfirm was called with publisher
     expect(mockOnConfirm).toHaveBeenCalledWith('publisher');
-    expect(mockSetSelectedRole).toHaveBeenCalledWith('publisher');
+    expect(customMockSetSelectedRole).toHaveBeenCalledWith('publisher');
   });
 });
