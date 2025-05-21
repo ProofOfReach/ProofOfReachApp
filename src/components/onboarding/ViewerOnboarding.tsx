@@ -208,16 +208,23 @@ const ViewerOnboarding: React.FC<ViewerOnboardingProps> = ({
   // Calculate the current step number and total for display
   const currentStepIndex = stepSequence.indexOf(step);
   
-  // THIS IS CRITICAL: Use the appropriate step sequence length based on whether the user has a Nostr extension
-  // For Nostr users: show 2 total steps
-  // For regular users: show 3 total steps or use the prop value if provided
-  const calculatedTotalSteps = propTotalSteps || 
-                             (hasNostrExtension ? 2 : 
-                              (contextTotalSteps > 0 ? contextTotalSteps : stepSequence.length));
-                              
-  const currentStepNumber = currentStepIndex + 1;
+  // For Nostr users with 2-step flow: Privacy(1) → Complete(2)
+  // For standard users with 3-step flow: Discovery(1) → Privacy(2) → Complete(3)
+  const calculatedTotalSteps = hasNostrExtension ? 2 : 3;
   
-  console.log(`ViewerOnboarding - Simplified ${hasNostrExtension ? '2' : '3'}-step flow (Step ${currentStepNumber}/${calculatedTotalSteps}: ${step}) for ${hasNostrExtension ? 'Nostr' : 'regular'} user`);
+  // For Nostr users in privacy step: step 1 of 2 
+  // For Nostr users in complete step: step 2 of 2
+  // For regular users: steps mapped to 1, 2, or 3 of 3
+  let displayStepNumber = 1;
+  if (hasNostrExtension) {
+    // For Nostr users, map step to either 1 or 2
+    displayStepNumber = step === 'complete' ? 2 : 1;
+  } else {
+    // For regular users, map step based on stepSequence
+    displayStepNumber = currentStepIndex + 1;
+  }
+  
+  console.log(`ViewerOnboarding - ${hasNostrExtension ? 'Simplified' : 'Regular'} flow (Step ${displayStepNumber}/${calculatedTotalSteps}: ${step}) for ${hasNostrExtension ? 'Nostr' : 'regular'} user`);
   
   // The main component will show its own progress indicator when showNavigation is false
   const shouldShowProgress = showNavigation;
@@ -535,7 +542,7 @@ const ViewerOnboarding: React.FC<ViewerOnboardingProps> = ({
         {shouldShowProgress && (
           <div className="w-full">
             <OnboardingProgress 
-              customCurrentStep={currentStepNumber}
+              customCurrentStep={displayStepNumber}
               customTotalSteps={calculatedTotalSteps}
               className="mb-2"
             />
