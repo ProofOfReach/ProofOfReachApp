@@ -92,6 +92,7 @@ const Dashboard = () => {
         from?: string;
         to?: string;
         role?: string;
+        detail?: { to?: string; role?: string; }
       }>;
       
       logger.debug('Role switched event received:', customEvent.detail);
@@ -100,16 +101,32 @@ const Dashboard = () => {
       let newRole: string | null = null;
       
       if (customEvent.detail) {
+        // Handle standard format
         if (customEvent.detail.to) {
           newRole = customEvent.detail.to;
-        } else if (customEvent.detail.role) {
+        } 
+        // Handle legacy format
+        else if (customEvent.detail.role) {
           newRole = customEvent.detail.role;
+        }
+        // Handle nested detail format (system events)
+        else if (customEvent.detail.detail && customEvent.detail.detail.to) {
+          newRole = customEvent.detail.detail.to;
+        }
+        else if (customEvent.detail.detail && customEvent.detail.detail.role) {
+          newRole = customEvent.detail.detail.role;
         }
       }
       
+      // If we found a role change, update the current role
       if (newRole) {
         logger.debug(`Setting role from event to: ${newRole}`);
         setCurrentRole(newRole as UserRole);
+        
+        // Also ensure localStorage is consistent
+        if (typeof window !== 'undefined') {
+          localStorage.setItem('currentRole', newRole);
+        }
       }
     };
     
@@ -122,13 +139,34 @@ const Dashboard = () => {
     
     // Storage event handler for direct localStorage changes
     const handleStorageChange = (event: StorageEvent) => {
-      if (event.key === 'userRole' || event.key === 'currentRole') {
+      // Handle all possible role-related keys
+      if (event.key === 'userRole' || event.key === 'currentRole' || 
+          event.key === 'nostr-ads:currentRole' || event.key === 'roleData') {
         if (event.newValue) {
-          logger.debug(`Storage change detected, updating role to: ${event.newValue}`);
-          setCurrentRole(event.newValue as UserRole);
+          // Parse the role from the value (handle both string and JSON formats)
+          let newRole = event.newValue;
+          
+          // Handle the case where the role is stored in JSON format
+          try {
+            const parsedValue = JSON.parse(event.newValue);
+            if (parsedValue && typeof parsedValue === 'object') {
+              if (parsedValue.role) {
+                newRole = parsedValue.role;
+              } else if (parsedValue.currentRole) {
+                newRole = parsedValue.currentRole;
+              }
+            }
+          } catch (e) {
+            // If it's not valid JSON, use the raw value (which could be a simple role string)
+            newRole = event.newValue;
+          }
+          
+          logger.debug(`Storage change detected, updating role to: ${newRole}`);
+          setCurrentRole(newRole as UserRole);
         }
       }
       
+      // Handle test mode changes
       if (event.key === 'isTestMode') {
         setIsTestMode(event.newValue === 'true');
       }
@@ -137,6 +175,8 @@ const Dashboard = () => {
     // Monitor all possible role change events
     document.addEventListener('roleSwitched', handleRoleChange);
     document.addEventListener('role-changed', handleRoleChange);
+    document.addEventListener('system:role-changed', handleRoleChange); // Add system event listener
+    document.addEventListener('test-role-update', handleDashboardRoleChange); // Add test mode event
     window.addEventListener('dashboard-role-changed', handleDashboardRoleChange);
     window.addEventListener('storage', handleStorageChange);
     
@@ -148,6 +188,8 @@ const Dashboard = () => {
     return () => {
       document.removeEventListener('roleSwitched', handleRoleChange);
       document.removeEventListener('role-changed', handleRoleChange);
+      document.removeEventListener('system:role-changed', handleRoleChange);
+      document.removeEventListener('test-role-update', handleDashboardRoleChange);
       window.removeEventListener('dashboard-role-changed', handleDashboardRoleChange);
       window.removeEventListener('storage', handleStorageChange);
     };
