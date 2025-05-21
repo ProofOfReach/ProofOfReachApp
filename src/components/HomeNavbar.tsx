@@ -23,8 +23,8 @@ const HomeNavbar: React.FC = () => {
               <Image 
                 src="/logo_big_light.png" 
                 alt="Proof Of Reach Logo" 
-                width={120} 
-                height={40} 
+                width={150} 
+                height={50} 
                 className="h-auto w-auto"
                 priority
               />
