@@ -47,7 +47,7 @@ describe('DashboardLayout Component', () => {
     expect(screen.getByText('Test Content')).toBeInTheDocument();
     
     // Check if footer is rendered
-    expect(screen.getByText(/Nostr Ad Marketplace/)).toBeInTheDocument();
+    expect(screen.getByText(/Proof Of Reach/)).toBeInTheDocument();
     expect(screen.getByText(new RegExp(`© ${new Date().getFullYear()}`))).toBeInTheDocument();
   });
   
