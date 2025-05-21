@@ -1,652 +1,420 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>ProofOfReach SDK Integration Demo</title>
-    <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap"
-      rel="stylesheet"
-    />
-    <style>
-      body {
-        font-family: "Inter", sans-serif;
-        margin: 0;
-        padding: 0;
-        background-color: #f9fafb;
-        color: #1f2937;
-        line-height: 1.6;
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ProofOfReach SDK Demo</title>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+      line-height: 1.6;
+      color: #333;
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    header {
+      margin-bottom: 30px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid #eaeaea;
+    }
+    h1 {
+      font-size: 2.5rem;
+      margin-bottom: 0.5rem;
+      color: #6d28d9;
+    }
+    h2 {
+      font-size: 1.8rem;
+      margin: 2rem 0 1rem;
+      color: #4c1d95;
+    }
+    .subtitle {
+      font-size: 1.2rem;
+      color: #6b7280;
+      margin-top: 0;
+    }
+    main {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 40px;
+    }
+    @media (max-width: 768px) {
+      main {
+        grid-template-columns: 1fr;
       }
-      header {
-        background-color: #8b5cf6;
-        padding: 1rem 2rem;
-        color: white;
-        font-size: 1.5rem;
-        font-weight: bold;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-      }
-      header .bitcoin-price {
-        font-size: 0.9rem;
-        background-color: rgba(255, 255, 255, 0.2);
-        padding: 0.5rem 1rem;
-        border-radius: 1rem;
-      }
-      .container {
-        max-width: 1000px;
-        margin: 2rem auto;
-        padding: 0 1rem;
-      }
-      h1 {
-        font-size: 2.25rem;
-        margin-bottom: 1rem;
-        line-height: 1.2;
-        color: #111827;
-      }
-      h2 {
-        color: #4f46e5;
-        margin-top: 2rem;
-      }
-      p {
-        margin-bottom: 1.25rem;
-      }
-      .highlight {
-        background-color: rgba(79, 70, 229, 0.1);
-        padding: 0.2rem;
-        border-radius: 0.2rem;
-      }
-      pre {
-        background-color: #1e293b;
-        color: #e2e8f0;
-        padding: 1rem;
-        border-radius: 0.5rem;
-        overflow-x: auto;
-        margin: 1.5rem 0;
-      }
-      code {
-        font-family: 'Menlo', 'Monaco', 'Courier New', monospace;
-        font-size: 0.9rem;
-      }
-      .tabs {
-        display: flex;
-        border-bottom: 1px solid #e5e7eb;
-        margin-bottom: 2rem;
-      }
-      .tab {
-        padding: 0.75rem 1.5rem;
-        cursor: pointer;
-        border-bottom: 2px solid transparent;
-        font-weight: 500;
-      }
-      .tab.active {
-        border-bottom: 2px solid #4f46e5;
-        color: #4f46e5;
-      }
-      .tab-content {
-        display: none;
-      }
-      .tab-content.active {
-        display: block;
-      }
-      .demo-container {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 2rem;
-        margin-bottom: 3rem;
-      }
-      .demo-panel {
-        background-color: white;
-        border-radius: 0.5rem;
-        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-        padding: 1.5rem;
-      }
-      .demo-title {
-        font-size: 1.25rem;
-        font-weight: 600;
-        margin-bottom: 1rem;
-        padding-bottom: 0.5rem;
-        border-bottom: 1px solid #e5e7eb;
-      }
-      .article-container {
-        padding: 1rem;
-      }
-      .article-meta {
-        display: flex;
-        align-items: center;
-        margin-bottom: 1rem;
-        font-size: 0.85rem;
-      }
-      .article-meta img {
-        width: 32px;
-        height: 32px;
-        border-radius: 50%;
-        margin-right: 0.5rem;
-      }
-      .article-title {
-        font-size: 1.25rem;
-        font-weight: 600;
-        margin-bottom: 0.5rem;
-      }
-      .article-content {
-        font-size: 0.9rem;
-      }
-      .ad-placeholder {
-        background-color: #f3f4f6;
-        border: 2px dashed #d1d5db;
-        padding: 2rem;
-        text-align: center;
-        margin: 1.5rem 0;
-        color: #6b7280;
-      }
-      .actions {
-        margin-top: 2rem;
-        display: flex;
-        justify-content: space-between;
-      }
-      .btn {
-        padding: 0.5rem 1rem;
-        border-radius: 0.25rem;
-        font-weight: 500;
-        cursor: pointer;
-        transition: all 0.2s;
-      }
-      .btn-primary {
-        background-color: #4f46e5;
-        color: white;
-        border: none;
-      }
-      .btn-primary:hover {
-        background-color: #4338ca;
-      }
-      .btn-outline {
-        background-color: white;
-        color: #4f46e5;
-        border: 1px solid #4f46e5;
-      }
-      .btn-outline:hover {
-        background-color: #f5f3ff;
-      }
-      .wallet-balance {
-        margin-top: 1rem;
-        padding: 1rem;
-        background-color: #f0fdf4;
-        border-radius: 0.5rem;
-        border: 1px solid #dcfce7;
-        font-size: 0.9rem;
-      }
-      .before-after-indicator {
-        position: absolute;
-        top: -12px;
-        left: 50%;
-        transform: translateX(-50%);
-        background-color: #6366f1;
-        color: white;
-        padding: 0.25rem 0.75rem;
-        border-radius: 1rem;
-        font-size: 0.75rem;
-        font-weight: 600;
-      }
-      .panel-header {
-        position: relative;
-      }
-      footer {
-        text-align: center;
-        padding: 2rem 0;
-        margin-top: 4rem;
-        color: #6b7280;
-        border-top: 1px solid #e5e7eb;
-      }
-      .satoshi-animation {
-        transition: all 0.5s ease;
-        display: inline-block;
-      }
-      .satoshi-animation.bump {
-        transform: scale(1.5);
-        color: #4f46e5;
-      }
-      .copy-btn {
-        position: absolute;
-        top: 0.5rem;
-        right: 0.5rem;
-        background: rgba(255,255,255,0.2);
-        border: none;
-        border-radius: 0.25rem;
-        color: white;
-        padding: 0.25rem 0.5rem;
-        font-size: 0.75rem;
-        cursor: pointer;
-      }
-      .copy-btn:hover {
-        background: rgba(255,255,255,0.3);
-      }
-      @media (max-width: 768px) {
-        .demo-container {
-          grid-template-columns: 1fr;
-        }
-      }
-    </style>
-  </head>
-  <body>
-    <header>
-      <div>ProofOfReach SDK</div>
-      <div class="bitcoin-price">BTC: $79,241</div>
-    </header>
+    }
+    .content {
+      order: 1;
+    }
+    .ad-section {
+      order: 2;
+      position: relative;
+    }
+    .ad-container {
+      background-color: #f9fafb;
+      border: 1px solid #e5e7eb;
+      border-radius: 8px;
+      padding: 15px;
+      margin-bottom: 20px;
+      min-height: 250px;
+    }
+    .code-section {
+      background-color: #1e293b;
+      color: #e2e8f0;
+      padding: 20px;
+      border-radius: 8px;
+      overflow-x: auto;
+      font-family: 'Courier New', Courier, monospace;
+      margin: 20px 0;
+      position: relative;
+    }
+    .code-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+      border-bottom: 1px solid #475569;
+      padding-bottom: 10px;
+    }
+    .copy-button {
+      background-color: #6d28d9;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      padding: 6px 12px;
+      cursor: pointer;
+      font-size: 0.8rem;
+      transition: background-color 0.2s;
+    }
+    .copy-button:hover {
+      background-color: #5b21b6;
+    }
+    .steps {
+      margin: 30px 0;
+    }
+    .step {
+      margin-bottom: 20px;
+      padding-left: 30px;
+      position: relative;
+    }
+    .step-number {
+      position: absolute;
+      left: 0;
+      top: 2px;
+      width: 24px;
+      height: 24px;
+      background-color: #6d28d9;
+      color: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.8rem;
+      font-weight: bold;
+    }
+    .wallet-section {
+      background-color: #f3f4f6;
+      border-radius: 8px;
+      padding: 15px;
+      margin: 20px 0;
+    }
+    .wallet-balance {
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: #4c1d95;
+      margin: 10px 0;
+    }
+    .lightning-icon {
+      color: #f59e0b;
+      margin-right: 5px;
+    }
+    .highlight {
+      background-color: #4c1d95;
+      padding: 1px 4px;
+      border-radius: 3px;
+      color: white;
+    }
+    footer {
+      margin-top: 50px;
+      text-align: center;
+      font-size: 0.9rem;
+      color: #6b7280;
+      padding-top: 20px;
+      border-top: 1px solid #eaeaea;
+    }
+    .btn {
+      background-color: #6d28d9;
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      transition: background-color 0.2s;
+    }
+    .btn:hover {
+      background-color: #5b21b6;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>ProofOfReach SDK Demo</h1>
+    <p class="subtitle">See how easy it is to integrate ads with ProofOfReach</p>
+  </header>
 
-    <div class="container">
-      <h1>ProofOfReach SDK Integration Demo</h1>
-      <p>
-        This demo shows how easy it is to integrate the ProofOfReach SDK into your website.
-        With just <span class="highlight">two lines of code</span>, you can start monetizing your content with Bitcoin's Lightning Network.
-      </p>
+  <main>
+    <div class="content">
+      <section>
+        <h2>About This Demo</h2>
+        <p>
+          This page demonstrates how easy it is to integrate the ProofOfReach SDK into your website. 
+          The ad shown on the right is loaded using our SDK and updates in real-time.
+        </p>
+        <p>
+          The ProofOfReach SDK enables any website to:
+        </p>
+        <ul>
+          <li>Display relevant ads from Nostr-verified advertisers</li>
+          <li>Earn Bitcoin directly through Lightning Network micropayments</li>
+          <li>Maintain user privacy with decentralized technology</li>
+          <li>Verify human engagement with Proof of Reach reports</li>
+        </ul>
+      </section>
 
-      <div class="tabs">
-        <div class="tab active" data-tab="demo">Demo</div>
-        <div class="tab" data-tab="docs">Documentation</div>
-        <div class="tab" data-tab="examples">Examples</div>
-      </div>
-
-      <div class="tab-content active" id="demo-tab">
-        <div class="demo-container">
-          <!-- BEFORE Panel -->
-          <div class="demo-panel">
-            <div class="panel-header">
-              <div class="before-after-indicator">BEFORE</div>
-              <h3 class="demo-title">Without ProofOfReach SDK</h3>
+      <section class="steps">
+        <h2>Integration Steps</h2>
+        
+        <div class="step">
+          <div class="step-number">1</div>
+          <h3>Add the SDK script to your website</h3>
+          <p>Copy and paste this code snippet just before the closing <span class="highlight">&lt;/body&gt;</span> tag in your HTML file:</p>
+          <div class="code-section">
+            <div class="code-header">
+              <span>SDK Script</span>
+              <button class="copy-button" id="copy-sdk">Copy Code</button>
             </div>
-            
-            <div class="article-container">
-              <div class="article-meta">
-                <img src="https://i.pravatar.cc/300?img=12" alt="Sarah Nakamoto">
-                <strong>Sarah Nakamoto</strong>
-              </div>
-              <h4 class="article-title">Nation State Bitcoin Adoption in 2025</h4>
-              <div class="article-content">
-                <p>The global financial landscape is undergoing a historic transformation as more nations adopt Bitcoin as legal tender...</p>
-                
-                <!-- Placeholder where ad would go -->
-                <div class="ad-placeholder">
-                  <p>⚠️ This area could be monetized</p>
-                  <p><small>But without the SDK, it's just empty space</small></p>
-                </div>
-                
-                <p>Tanzania became the most recent country to adopt Bitcoin as legal tender in March 2025, following Ghana and Kenya's implementation...</p>
-              </div>
-              
-              <!-- Publisher wallet display -->
-              <div class="wallet-balance">
-                <strong>Publisher Wallet Balance:</strong>
-                <span id="before-wallet-balance">0</span> sats ⚡
-              </div>
-            </div>
-            
-            <!-- "Before" code -->
-            <div style="margin-top: 1.5rem;">
-              <h4>Page HTML - No Monetization</h4>
-              <pre style="position: relative;">
-<code>&lt;div class="article-content"&gt;
-  &lt;p&gt;The global financial landscape is undergoing a historic transformation...&lt;/p&gt;
-  
-  &lt;!-- Empty space where an ad could go --&gt;
-  &lt;div class="ad-placeholder"&gt;
-    &lt;p&gt;⚠️ This area could be monetized&lt;/p&gt;
-  &lt;/div&gt;
-  
-  &lt;p&gt;Tanzania became the most recent country to adopt Bitcoin...&lt;/p&gt;
-&lt;/div&gt;</code>
-                <button class="copy-btn">Copy</button>
-              </pre>
-            </div>
-          </div>
-
-          <!-- AFTER Panel -->
-          <div class="demo-panel">
-            <div class="panel-header">
-              <div class="before-after-indicator">AFTER</div>
-              <h3 class="demo-title">With ProofOfReach SDK</h3>
-            </div>
-            
-            <div class="article-container">
-              <div class="article-meta">
-                <img src="https://i.pravatar.cc/300?img=12" alt="Sarah Nakamoto">
-                <strong>Sarah Nakamoto</strong>
-              </div>
-              <h4 class="article-title">Nation State Bitcoin Adoption in 2025</h4>
-              <div class="article-content">
-                <p>The global financial landscape is undergoing a historic transformation as more nations adopt Bitcoin as legal tender...</p>
-                
-                <!-- Actual ad from SDK -->
-                <div id="proof-of-reach-ad"></div>
-                
-                <p>Tanzania became the most recent country to adopt Bitcoin as legal tender in March 2025, following Ghana and Kenya's implementation...</p>
-              </div>
-              
-              <!-- Publisher wallet display with actual balance -->
-              <div class="wallet-balance">
-                <strong>Publisher Wallet Balance:</strong>
-                <span id="after-wallet-balance">0</span> <span class="satoshi-animation">sats</span> ⚡
-                <div style="margin-top: 0.5rem; font-size: 0.8rem; color: #6b7280;">
-                  <em>Click on the ad to simulate earning sats through Lightning Network!</em>
-                </div>
-              </div>
-            </div>
-            
-            <!-- "After" code showing the 2 lines added -->
-            <div style="margin-top: 1.5rem;">
-              <h4>Page HTML - With Lightning Monetization</h4>
-              <pre style="position: relative;">
-<code>&lt;div class="article-content"&gt;
-  &lt;p&gt;The global financial landscape is undergoing a historic transformation...&lt;/p&gt;
-  
-  <span style="background-color: #10b981; display: block; padding: 0 4px;">&lt;!-- Added ProofOfReach SDK --&gt;
-  &lt;div id="proof-of-reach-ad"&gt;&lt;/div&gt;</span>
-  
-  &lt;p&gt;Tanzania became the most recent country to adopt Bitcoin...&lt;/p&gt;
-&lt;/div&gt;
-
-<span style="background-color: #10b981; display: block; padding: 0 4px;">&lt;!-- Import the SDK at the end of the body --&gt;
-&lt;script src="https://cdn.proofofreach.com/sdk/v1.js"&gt;&lt;/script&gt;
+            <pre id="sdk-code">&lt;script src="https://cdn.proofofreach.com/sdk/v1.js"&gt;&lt;/script&gt;
 &lt;script&gt;
   window.addEventListener("load", () => {
     ProofOfReachSDK.renderAd("proof-of-reach-ad", {
       pubkey: "YOUR_NOSTR_PUBKEY",
       testMode: true,
       onPayment: (sats) => {
-        // Update wallet balance when payment is received
-        const balanceEl = document.getElementById("wallet-balance");
-        const current = parseInt(balanceEl.textContent, 10);
-        balanceEl.textContent = current + sats;
+        console.log(`Received ${sats} satoshis!`);
+        
+        // You can update UI elements here
+        const balanceEl = document.getElementById('wallet-balance');
+        if (balanceEl) {
+          const currentBalance = parseInt(balanceEl.textContent || '0');
+          balanceEl.textContent = currentBalance + sats;
+        }
       }
     });
   });
-&lt;/script&gt;</span></code>
-                <button class="copy-btn">Copy</button>
-              </pre>
-            </div>
+&lt;/script&gt;</pre>
           </div>
         </div>
-        
-        <div class="actions">
-          <button class="btn btn-primary" id="try-yourself-btn">Try It Yourself</button>
-          <button class="btn btn-outline" id="show-code-btn">View Full Integration Guide</button>
+
+        <div class="step">
+          <div class="step-number">2</div>
+          <h3>Add a container element</h3>
+          <p>Add this div element anywhere you want the ad to appear on your page:</p>
+          <div class="code-section">
+            <div class="code-header">
+              <span>HTML Container</span>
+              <button class="copy-button" id="copy-container">Copy Code</button>
+            </div>
+            <pre id="container-code">&lt;div id="proof-of-reach-ad"&gt;&lt;/div&gt;</pre>
+          </div>
         </div>
-      </div>
 
-      <div class="tab-content" id="docs-tab">
-        <h2>ProofOfReach SDK Documentation</h2>
-        <p>
-          The ProofOfReach SDK provides a simple way to monetize your content with Bitcoin's Lightning Network.
-          It's designed to be easy to integrate while providing powerful features for publishers.
-        </p>
-        
-        <h3>Quick Start</h3>
-        <pre><code>// 1. Add the SDK to your site
-&lt;script src="https://cdn.proofofreach.com/sdk/v1.js"&gt;&lt;/script&gt;
+        <div class="step">
+          <div class="step-number">3</div>
+          <h3>That's it!</h3>
+          <p>You've successfully integrated ProofOfReach ads into your website. Your ad container will now display relevant ads, and you'll earn satoshis whenever users interact with them.</p>
+          <p>For more advanced configurations, check our <a href="/dashboard/developer/sdk-examples">developer documentation</a>.</p>
+        </div>
+      </section>
 
-// 2. Create a container for the ad
-&lt;div id="my-ad-container"&gt;&lt;/div&gt;
-
-// 3. Initialize and render an ad
-&lt;script&gt;
-  window.addEventListener("load", () => {
-    ProofOfReachSDK.renderAd("my-ad-container", {
-      pubkey: "YOUR_NOSTR_PUBKEY", // Your Nostr public key
-      adType: "standard",          // standard, small, or banner
-      testMode: false,             // Set to true for testing
-    });
-  });
-&lt;/script&gt;</code></pre>
-
-        <h3>Configuration Options</h3>
-        <pre><code>ProofOfReachSDK.renderAd("my-ad-container", {
-  // Required parameters
-  pubkey: "YOUR_NOSTR_PUBKEY", // Your Nostr public key
-  
-  // Optional parameters
-  adType: "standard",          // standard, small, or banner
-  testMode: false,             // Enable test mode (no real payments)
-  refreshInterval: 300000,     // Refresh ad every 5 minutes (in ms)
-  defaultStyles: true,         // Apply default container styles
+      <section>
+        <h2>Advanced Features</h2>
+        <p>The SDK supports additional configuration options for a more tailored experience:</p>
+        <div class="code-section">
+          <div class="code-header">
+            <span>Advanced Configuration</span>
+            <button class="copy-button" id="copy-advanced">Copy Code</button>
+          </div>
+          <pre id="advanced-code">ProofOfReachSDK.renderAd("proof-of-reach-ad", {
+  pubkey: "YOUR_NOSTR_PUBKEY",  // Your Nostr public key
+  testMode: true,               // Set to false in production
+  adType: "standard",           // "standard", "small", or "banner"
+  refreshInterval: 300000,      // Refresh ad every 5 minutes (in ms)
+  defaultStyles: true,          // Apply default container styles
   
   // Event callbacks
-  onPayment: (sats) => {       // Called when payment is received
+  onPayment: (sats) => {        // Called when payment is received
     console.log(`Received ${sats} satoshis!`);
   },
-  onError: (error) => {        // Called when error occurs
+  onError: (error) => {         // Called when error occurs
     console.error(`Ad error: ${error}`);
   },
-  onLoad: () => {              // Called when ad loads successfully
+  onLoad: () => {               // Called when ad loads successfully
     console.log("Ad loaded successfully");
   }
-});</code></pre>
-
-        <h3>Advanced Features</h3>
-        <p>
-          The SDK also provides advanced features for publishers:
-        </p>
-        <ul>
-          <li>Audience targeting via Nostr</li>
-          <li>Lightning micropayments</li>
-          <li>Verifiable engagement tracking</li>
-          <li>Customizable ad display</li>
-        </ul>
-        
-        <p>
-          <a href="#" style="color: #4f46e5;">View complete documentation →</a>
-        </p>
-      </div>
-
-      <div class="tab-content" id="examples-tab">
-        <h2>Integration Examples</h2>
-        
-        <h3>WordPress Plugin</h3>
-        <p>
-          Add the following code to your WordPress theme's <code>functions.php</code> file:
-        </p>
-        <pre><code>function add_proof_of_reach_sdk() {
-  echo '&lt;script src="https://cdn.proofofreach.com/sdk/v1.js"&gt;&lt;/script&gt;';
-  echo '&lt;script&gt;
-    window.addEventListener("load", () => {
-      // Add ad to sidebar
-      if (document.getElementById("sidebar")) {
-        ProofOfReachSDK.renderAd("sidebar", {
-          pubkey: "YOUR_NOSTR_PUBKEY",
-          adType: "small"
-        });
-      }
-      
-      // Add ad after first paragraph
-      const paragraphs = document.querySelectorAll(".entry-content p");
-      if (paragraphs.length > 0) {
-        const adContainer = document.createElement("div");
-        adContainer.id = "por-content-ad";
-        paragraphs[0].after(adContainer);
-        
-        ProofOfReachSDK.renderAd("por-content-ad", {
-          pubkey: "YOUR_NOSTR_PUBKEY",
-          adType: "standard"
-        });
-      }
-    });
-  &lt;/script&gt;';
-}
-add_action("wp_footer", "add_proof_of_reach_sdk");</code></pre>
-
-        <h3>React Component</h3>
-        <p>
-          Create a reusable React component for ProofOfReach ads:
-        </p>
-        <pre><code>import { useEffect, useRef } from 'react';
-
-function ProofOfReachAd({ adType = 'standard', className = '' }) {
-  const adRef = useRef(null);
-  const adInstanceRef = useRef(null);
-  
-  useEffect(() => {
-    // Load the SDK script dynamically
-    const script = document.createElement('script');
-    script.src = 'https://cdn.proofofreach.com/sdk/v1.js';
-    script.async = true;
-    
-    script.onload = () => {
-      if (adRef.current && window.ProofOfReachSDK) {
-        // Render the ad
-        adInstanceRef.current = window.ProofOfReachSDK.renderAd(adRef.current.id, {
-          pubkey: process.env.REACT_APP_NOSTR_PUBKEY,
-          adType,
-          testMode: process.env.NODE_ENV !== 'production'
-        });
-      }
-    };
-    
-    document.body.appendChild(script);
-    
-    return () => {
-      // Clean up on unmount
-      if (adInstanceRef.current) {
-        adInstanceRef.current.remove();
-      }
-    };
-  }, [adType]);
-  
-  return (
-    &lt;div 
-      id={`por-ad-${Math.random().toString(36).substring(2, 9)}`} 
-      ref={adRef}
-      className={className}
-    /&gt;
-  );
-}
-
-export default ProofOfReachAd;</code></pre>
-
-        <h3>Next.js Integration</h3>
-        <p>
-          For Next.js sites, create a dynamic component with proper SSR handling:
-        </p>
-        <pre><code>// components/ProofOfReachAd.js
-import { useEffect, useRef } from 'react';
-
-function ProofOfReachAd({ adType = 'standard' }) {
-  const adRef = useRef(null);
-  
-  useEffect(() => {
-    // Load SDK and render ad on client-side only
-    const loadSDK = async () => {
-      if (window.ProofOfReachSDK) return;
-      
-      await new Promise((resolve) => {
-        const script = document.createElement('script');
-        script.src = 'https://cdn.proofofreach.com/sdk/v1.js';
-        script.async = true;
-        script.onload = resolve;
-        document.body.appendChild(script);
-      });
-      
-      if (adRef.current) {
-        window.ProofOfReachSDK.renderAd(adRef.current.id, {
-          pubkey: process.env.NEXT_PUBLIC_NOSTR_PUBKEY,
-          adType,
-          testMode: process.env.NODE_ENV !== 'production'
-        });
-      }
-    };
-    
-    loadSDK();
-  }, [adType]);
-  
-  return (
-    &lt;div
-      id={`por-ad-${Math.random().toString(36).substring(2, 9)}`}
-      ref={adRef}
-      style={{ minHeight: '150px' }}
-    /&gt;
-  );
-}
-
-export default ProofOfReachAd;</code></pre>
-      </div>
+});</pre>
+        </div>
+      </section>
     </div>
 
-    <footer>
-      <p>&copy; 2025 ProofOfReach · Bitcoin-powered ad marketplace</p>
-    </footer>
-
-    <!-- Include the SDK -->
-    <script src="/sdk-new.js"></script>
-
-    <!-- Initialize the demo ad -->
-    <script>
-      // Tab switching functionality
-      document.querySelectorAll('.tab').forEach(tab => {
-        tab.addEventListener('click', () => {
-          // Remove active class from all tabs
-          document.querySelectorAll('.tab').forEach(t => {
-            t.classList.remove('active');
-          });
-          
-          // Add active class to clicked tab
-          tab.classList.add('active');
-          
-          // Hide all tab content
-          document.querySelectorAll('.tab-content').forEach(content => {
-            content.classList.remove('active');
-          });
-          
-          // Show content for active tab
-          const tabId = `${tab.getAttribute('data-tab')}-tab`;
-          document.getElementById(tabId).classList.add('active');
-        });
-      });
+    <div class="ad-section">
+      <h2>Live Ad Demo</h2>
+      <p>This is a live ad loaded from our platform:</p>
       
-      // Copy button functionality
-      document.querySelectorAll('.copy-btn').forEach(button => {
-        button.addEventListener('click', () => {
-          const code = button.previousElementSibling.textContent;
-          navigator.clipboard.writeText(code).then(() => {
-            const originalText = button.textContent;
-            button.textContent = 'Copied!';
-            setTimeout(() => {
-              button.textContent = originalText;
-            }, 2000);
-          });
-        });
-      });
+      <!-- ProofOfReach Ad Container - This is where the ad will be displayed -->
+      <div id="proof-of-reach-ad" class="ad-container"></div>
       
-      // Initialize SDK when page loads
-      window.addEventListener('load', () => {
-        if (window.ProofOfReachSDK) {
-          // Render the ad in the "after" panel
-          ProofOfReachSDK.renderAd("proof-of-reach-ad", {
-            pubkey: "npub1demo000000000000000000000000000000000000000000000000000000000",
-            testMode: true,
-            onPayment: (sats) => {
-              // Update wallet balance when payment is received
-              const balanceEl = document.getElementById("after-wallet-balance");
-              const current = parseInt(balanceEl.textContent, 10);
-              balanceEl.textContent = current + sats;
-              
-              // Animate the sats text
-              const satoshiAnimation = document.querySelector('.satoshi-animation');
-              satoshiAnimation.classList.add('bump');
-              setTimeout(() => {
-                satoshiAnimation.classList.remove('bump');
-              }, 500);
-              
-              console.log(`💰 Simulated payout received: ${sats} sats`);
-            }
-          });
+      <div class="wallet-section">
+        <h3>Your Lightning Wallet</h3>
+        <p>Earnings from ad interactions:</p>
+        <div class="wallet-balance">
+          <span class="lightning-icon">⚡</span> <span id="wallet-balance">0</span> satoshis
+        </div>
+        <button class="btn" id="add-sats">Simulate Interaction (+10 sats)</button>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <p>&copy; 2025 ProofOfReach - A Nostr-based Ad Marketplace</p>
+  </footer>
+
+  <!-- Simulated SDK for demo purposes -->
+  <script>
+    // Mock SDK implementation for demo purposes
+    window.ProofOfReachSDK = {
+      renderAd: function(containerId, options) {
+        const container = document.getElementById(containerId);
+        if (!container) return;
+        
+        // Generate a random ad
+        const adTypes = [
+          {
+            title: "Lightning Network Wallet",
+            description: "Manage your sats with ease. Fast, secure, non-custodial.",
+            cta: "Get Wallet",
+            bg: "linear-gradient(135deg, #6d28d9, #4c1d95)"
+          },
+          {
+            title: "Bitcoin Conference 2025",
+            description: "Join the world's largest Bitcoin event in Miami.",
+            cta: "Register Now",
+            bg: "linear-gradient(135deg, #f59e0b, #d97706)"
+          },
+          {
+            title: "Nostr Social App",
+            description: "Connect with Bitcoiners on the censorship-resistant network.",
+            cta: "Download",
+            bg: "linear-gradient(135deg, #0284c7, #0369a1)"
+          }
+        ];
+        
+        const randomAd = adTypes[Math.floor(Math.random() * adTypes.length)];
+        
+        // Create ad content
+        container.innerHTML = `
+          <div style="
+            background: ${randomAd.bg};
+            color: white;
+            padding: 15px;
+            border-radius: 6px;
+            min-height: 200px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+          ">
+            <div>
+              <h3 style="margin-top: 0; font-size: 18px;">${randomAd.title}</h3>
+              <p style="margin-bottom: 20px;">${randomAd.description}</p>
+            </div>
+            <div>
+              <button style="
+                background: white;
+                color: #4c1d95;
+                border: none;
+                padding: 8px 16px;
+                border-radius: 4px;
+                cursor: pointer;
+                font-weight: bold;
+              ">${randomAd.cta}</button>
+            </div>
+            <div style="
+              font-size: 12px;
+              margin-top: 15px;
+              text-align: right;
+            ">Powered by ProofOfReach</div>
+          </div>
+        `;
+        
+        // Set up click event to simulate payment
+        container.querySelector('button').addEventListener('click', function() {
+          const sats = 10;
+          if (options.onPayment && typeof options.onPayment === 'function') {
+            options.onPayment(sats);
+          }
+        });
+        
+        // Call onLoad callback if provided
+        if (options.onLoad && typeof options.onLoad === 'function') {
+          options.onLoad();
+        }
+      }
+    };
+    
+    // Initialize the demo when the page loads
+    window.addEventListener("load", () => {
+      ProofOfReachSDK.renderAd("proof-of-reach-ad", {
+        pubkey: "demo_pubkey",
+        testMode: true,
+        onPayment: (sats) => {
+          console.log(`Received ${sats} satoshis!`);
+          
+          // Update wallet balance
+          const balanceEl = document.getElementById('wallet-balance');
+          if (balanceEl) {
+            const currentBalance = parseInt(balanceEl.textContent || '0');
+            balanceEl.textContent = currentBalance + sats;
+          }
         }
       });
-      
-      // Button actions
-      document.getElementById('try-yourself-btn').addEventListener('click', () => {
-        window.open('/sdk-interactive-demo.html', '_blank');
+    });
+    
+    // Set up simulated payment button
+    document.getElementById('add-sats').addEventListener('click', function() {
+      const balanceEl = document.getElementById('wallet-balance');
+      if (balanceEl) {
+        const currentBalance = parseInt(balanceEl.textContent || '0');
+        balanceEl.textContent = currentBalance + 10;
+      }
+    });
+    
+    // Set up copy buttons
+    function setupCopyButton(buttonId, codeId) {
+      document.getElementById(buttonId).addEventListener('click', function() {
+        const code = document.getElementById(codeId).textContent;
+        navigator.clipboard.writeText(code).then(() => {
+          const originalText = this.textContent;
+          this.textContent = "Copied!";
+          setTimeout(() => {
+            this.textContent = originalText;
+          }, 2000);
+        });
       });
-      
-      document.getElementById('show-code-btn').addEventListener('click', () => {
-        document.querySelector('.tab[data-tab="docs"]').click();
-      });
-    </script>
-  </body>
+    }
+    
+    setupCopyButton('copy-sdk', 'sdk-code');
+    setupCopyButton('copy-container', 'container-code');
+    setupCopyButton('copy-advanced', 'advanced-code');
+  </script>
+</body>
 </html>

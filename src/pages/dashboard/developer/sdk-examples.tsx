@@ -1,12 +1,13 @@
-import { useState, useRef } from 'react';
+import React, { useState } from 'react';
+import ImprovedDashboardLayout from '@/components/layout/ImprovedDashboardLayout';
+import { Title, Paragraph } from '@/components/ui/Typography';
+import { Card } from '@/components/ui/Card';
 import { Check, Copy, ExternalLink } from 'react-feather';
 import Link from 'next/link';
-import ImprovedDashboardLayout from '@/components/layout/ImprovedDashboardLayout';
 
 const SDKExamplesPage = () => {
   const [copiedSection, setCopiedSection] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState('html');
-  const scriptRef = useRef<HTMLDivElement>(null);
   
   // Use a default publisher pubkey for the example
   const pubkey = 'YOUR_NOSTR_PUBKEY';
@@ -171,122 +172,103 @@ add_shortcode('proofofreach_ad', 'proofofreach_ad_shortcode');
     });
   };
 
+  const integrationSteps = [
+    {
+      title: 'Add the SDK to your website',
+      description: 'Copy the code snippet below and paste it just before the closing </body> tag in your HTML.',
+      code: sdkScript,
+      onCopy: () => handleCopy(sdkScript, 'sdk')
+    },
+    {
+      title: 'Add an ad container',
+      description: 'Create a container element with the ID proof-of-reach-ad where you want the ad to appear.',
+      code: '<div id="proof-of-reach-ad"></div>',
+      onCopy: () => handleCopy('<div id="proof-of-reach-ad"></div>', 'container')
+    },
+    {
+      title: 'That\'s it!',
+      description: 'The SDK will automatically load and display an ad in your container. You\'ll earn satoshis whenever users interact with the ads.',
+      actionLink: '/sdk-demo.html',
+      actionText: 'Try the interactive demo'
+    }
+  ];
+
   return (
     <ImprovedDashboardLayout title="SDK & Code Examples">
-      <div className="space-y-6 max-w-4xl">
+      <div className="space-y-6">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-white">ProofOfReach SDK</h1>
-          <p className="text-gray-500 dark:text-gray-400 mt-2">
+          <Title level={1}>ProofOfReach SDK</Title>
+          <Paragraph className="text-gray-500 dark:text-gray-400">
             Integrate ProofOfReach ads into your website with our easy-to-use SDK.
             Copy the code snippets below to get started.
-          </p>
+          </Paragraph>
         </div>
 
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow overflow-hidden">
+        <Card>
           <div className="p-6">
             <h2 className="text-xl font-semibold mb-4">Quick Integration Guide</h2>
-            <div className="grid gap-6">
-              <div className="flex items-start space-x-4">
-                <div className="flex-shrink-0 w-8 h-8 bg-purple-100 dark:bg-purple-900 rounded-full flex items-center justify-center">
-                  <span className="text-purple-700 dark:text-purple-300 font-bold">1</span>
-                </div>
-                <div>
-                  <h3 className="font-medium">Add the SDK to your website</h3>
-                  <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
-                    Copy the code snippet below and paste it just before the closing <code>&lt;/body&gt;</code> tag in your HTML.
-                  </p>
-                  <div className="mt-3 relative">
-                    <div 
-                      className="bg-gray-800 text-gray-200 p-4 rounded-md text-sm overflow-x-auto"
-                      ref={scriptRef}
-                    >
-                      <pre className="whitespace-pre-wrap">{sdkScript}</pre>
+            <div className="space-y-6">
+              {integrationSteps.map((step, index) => (
+                <div key={index} className="border-b border-gray-200 dark:border-gray-700 pb-6 last:border-0 last:pb-0">
+                  <div className="flex mb-2">
+                    <div className="bg-purple-100 dark:bg-purple-900/30 text-purple-800 dark:text-purple-300 font-medium h-6 w-6 rounded-full flex items-center justify-center text-sm mr-2">
+                      {index + 1}
                     </div>
-                    <button
-                      className="absolute top-3 right-3 p-1.5 bg-gray-700 rounded-md hover:bg-gray-600 transition-colors"
-                      onClick={() => handleCopy(sdkScript, 'sdk')}
-                    >
-                      {copiedSection === 'sdk' ? (
-                        <Check className="w-4 h-4 text-green-400" />
-                      ) : (
-                        <Copy className="w-4 h-4 text-gray-300" />
-                      )}
-                    </button>
+                    <h3 className="text-lg font-medium text-gray-900 dark:text-white">{step.title}</h3>
                   </div>
-                </div>
-              </div>
-
-              <div className="flex items-start space-x-4">
-                <div className="flex-shrink-0 w-8 h-8 bg-purple-100 dark:bg-purple-900 rounded-full flex items-center justify-center">
-                  <span className="text-purple-700 dark:text-purple-300 font-bold">2</span>
-                </div>
-                <div>
-                  <h3 className="font-medium">Add an ad container</h3>
-                  <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
-                    Create a container element with the ID <code>proof-of-reach-ad</code> where you want the ad to appear.
-                  </p>
-                  <div className="mt-3 relative">
-                    <div className="bg-gray-800 text-gray-200 p-4 rounded-md text-sm">
-                      <pre>{`<div id="proof-of-reach-ad"></div>`}</pre>
-                    </div>
-                    <button
-                      className="absolute top-3 right-3 p-1.5 bg-gray-700 rounded-md hover:bg-gray-600 transition-colors"
-                      onClick={() => handleCopy('<div id="proof-of-reach-ad"></div>', 'container')}
-                    >
-                      {copiedSection === 'container' ? (
-                        <Check className="w-4 h-4 text-green-400" />
-                      ) : (
-                        <Copy className="w-4 h-4 text-gray-300" />
-                      )}
-                    </button>
-                  </div>
-                </div>
-              </div>
-
-              <div className="flex items-start space-x-4">
-                <div className="flex-shrink-0 w-8 h-8 bg-purple-100 dark:bg-purple-900 rounded-full flex items-center justify-center">
-                  <span className="text-purple-700 dark:text-purple-300 font-bold">3</span>
-                </div>
-                <div>
-                  <h3 className="font-medium">That's it!</h3>
-                  <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
-                    The SDK will automatically load and display an ad in your container. You'll earn satoshis whenever users interact with the ads.
-                  </p>
-                  <div className="mt-3">
-                    <Link href="/sdk-demo.html" target="_blank">
-                      <button className="flex items-center space-x-2 px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-md">
-                        <span>Try the interactive demo</span>
-                        <ExternalLink className="w-4 h-4" />
+                  <p className="text-gray-600 dark:text-gray-400 mb-2">{step.description}</p>
+                  {step.code && (
+                    <div className="bg-gray-800 text-gray-200 p-4 rounded-md overflow-x-auto text-sm font-mono relative">
+                      <pre>{step.code}</pre>
+                      <button
+                        className="absolute top-3 right-3 p-1.5 bg-gray-700 rounded-md hover:bg-gray-600 transition-colors"
+                        onClick={step.onCopy}
+                      >
+                        {copiedSection === (index === 0 ? 'sdk' : 'container') ? (
+                          <Check className="w-4 h-4 text-green-400" />
+                        ) : (
+                          <Copy className="w-4 h-4 text-gray-300" />
+                        )}
                       </button>
-                    </Link>
-                  </div>
+                    </div>
+                  )}
+                  {step.actionLink && (
+                    <div className="mt-3">
+                      <Link href={step.actionLink} target="_blank">
+                        <button className="flex items-center px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-md">
+                          <span>{step.actionText}</span>
+                          <ExternalLink className="w-4 h-4 ml-2" />
+                        </button>
+                      </Link>
+                    </div>
+                  )}
                 </div>
-              </div>
+              ))}
             </div>
           </div>
-        </div>
+        </Card>
 
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow">
+        <Card>
           <div className="p-6">
             <h2 className="text-xl font-semibold mb-4">Integration Examples</h2>
             
-            {/* Simple tabs using state */}
+            {/* Simple tabs */}
             <div className="border-b border-gray-200 dark:border-gray-700 mb-6">
-              <nav className="flex -mb-px">
+              <div className="flex -mb-px space-x-8">
                 {['html', 'react', 'wordpress'].map((tab) => (
                   <button
                     key={tab}
                     onClick={() => setActiveTab(tab)}
-                    className={`px-4 py-2 text-sm font-medium ${
+                    className={`px-1 py-3 text-sm font-medium border-b-2 ${
                       activeTab === tab
-                        ? 'border-b-2 border-purple-500 text-purple-600 dark:text-purple-400'
-                        : 'border-b-2 border-transparent text-gray-500 hover:text-gray-700 dark:text-gray-400'
+                        ? 'border-purple-500 text-purple-600 dark:text-purple-400'
+                        : 'border-transparent text-gray-500 hover:text-gray-700 dark:text-gray-400'
                     }`}
                   >
                     {tab.charAt(0).toUpperCase() + tab.slice(1)}
                   </button>
                 ))}
-              </nav>
+              </div>
             </div>
             
             {/* HTML Example */}
@@ -346,9 +328,9 @@ add_shortcode('proofofreach_ad', 'proofofreach_ad_shortcode');
               </div>
             </div>
           </div>
-        </div>
+        </Card>
 
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow">
+        <Card>
           <div className="p-6">
             <h2 className="text-xl font-semibold mb-4">Advanced Configuration</h2>
             <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">
@@ -358,7 +340,7 @@ add_shortcode('proofofreach_ad', 'proofofreach_ad_shortcode');
               <pre className="whitespace-pre-wrap">{advancedConfig}</pre>
             </div>
           </div>
-        </div>
+        </Card>
       </div>
     </ImprovedDashboardLayout>
   );
