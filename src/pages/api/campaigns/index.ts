@@ -10,14 +10,43 @@ export default apiHandler({
   GET: async (req: NextApiRequest, res: NextApiResponse) => {
     const user = await authenticateRequest(req);
     
-    // Check for test mode
-    const isTestMode = user.isTestMode || (user.pubkey && user.pubkey.startsWith('pk_test_'));
+    // Use the proper test mode detection that doesn't conflict with secure test mode
+    // This will work with your existing system that's tied to your Nostr key
+    const storageTestMode = req.cookies.testModeState ? JSON.parse(req.cookies.testModeState)?.isActive : false;
+    const isTestMode = user.isTestMode || storageTestMode;
     
     if (isTestMode) {
-      logger.info(`Test mode detected for user ${user.pubkey || user.userId}, serving test campaigns`);
-      // Use the test user ID to get campaigns in test mode
-      const campaigns = await campaignService.getCampaignsByAdvertiser(user.pubkey || user.userId);
-      return res.status(200).json(campaigns);
+      logger.info(`Test mode detected for user ${user.pubkey || user.userId}, serving test campaigns with role ${user.currentRole}`);
+      
+      // For test mode users, we'll provide sample campaign data
+      const testCampaigns = [
+        {
+          id: 'test-campaign-1',
+          name: 'Test Marketing Campaign',
+          startDate: new Date(),
+          endDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
+          budget: 500000, // 500,000 sats
+          dailyBudget: 50000,
+          status: 'active',
+          createdAt: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000),
+          updatedAt: new Date(),
+          advertiserId: user.userId || 'test-user'
+        },
+        {
+          id: 'test-campaign-2',
+          name: 'Brand Awareness Campaign',
+          startDate: new Date(),
+          endDate: new Date(Date.now() + 15 * 24 * 60 * 60 * 1000),
+          budget: 350000,
+          dailyBudget: 25000,
+          status: 'active',
+          createdAt: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000),
+          updatedAt: new Date(),
+          advertiserId: user.userId || 'test-user'
+        }
+      ];
+      
+      return res.status(200).json(testCampaigns);
     }
     
     // For normal operation, check role access
