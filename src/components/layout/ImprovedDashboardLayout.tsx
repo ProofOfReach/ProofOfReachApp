@@ -191,6 +191,7 @@ const ImprovedDashboardLayout: React.FC<ImprovedDashboardLayoutProps> = ({
       advertiser: [
         { role: 'advertiser', label: 'Campaigns', icon: <MegaphoneIcon className="w-5 h-5 mr-3" />, href: '/dashboard/campaigns' },
         { role: 'advertiser', label: 'Analytics', icon: <BarChart2 className="w-5 h-5 mr-3" />, href: '/dashboard/analytics' },
+        { role: 'advertiser', label: 'Proof of Reach', icon: <Shield className="w-5 h-5 mr-3" />, href: '/dashboard/reports/proof-of-reach' },
         { role: 'advertiser', label: 'Billing', icon: <BitcoinIcon className="w-5 h-5 mr-3" />, href: '/dashboard/billing' }
       ],
       publisher: [
