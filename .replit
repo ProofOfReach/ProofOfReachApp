@@ -38,10 +38,6 @@ args = "Prisma Studio"
 
 [[workflows.workflow.tasks]]
 task = "workflow.run"
-args = "Clean Server Start"
-
-[[workflows.workflow.tasks]]
-task = "workflow.run"
 args = "Test API Key Auth"
 
 [[workflows.workflow.tasks]]
@@ -90,11 +86,11 @@ args = "Run Nostr Tests"
 
 [[workflows.workflow.tasks]]
 task = "workflow.run"
-args = "Server"
+args = "Start Clean Server"
 
 [[workflows.workflow.tasks]]
 task = "workflow.run"
-args = "Start Clean Server"
+args = "Server"
 
 [[workflows.workflow]]
 name = "Nostr Ad Marketplace Server"
@@ -144,15 +140,6 @@ author = "agent"
 [[workflows.workflow.tasks]]
 task = "shell.exec"
 args = "npx prisma studio"
-
-[[workflows.workflow]]
-name = "Clean Server Start"
-author = "agent"
-
-[[workflows.workflow.tasks]]
-task = "shell.exec"
-args = "NODE_OPTIONS='--no-warnings' npx next dev -p 5000 -H 0.0.0.0"
-waitForPort = 5000
 
 [[workflows.workflow]]
 name = "Test API Key Auth"
@@ -252,7 +239,7 @@ task = "shell.exec"
 args = "npx jest src/__tests__/lib/nostr.test.ts"
 
 [[workflows.workflow]]
-name = "Server"
+name = "Start Clean Server"
 author = "agent"
 
 [[workflows.workflow.tasks]]
@@ -261,7 +248,7 @@ args = "NODE_OPTIONS='--no-warnings' npx next dev -p 5000 -H 0.0.0.0"
 waitForPort = 5000
 
 [[workflows.workflow]]
-name = "Start Clean Server"
+name = "Server"
 author = "agent"
 
 [[workflows.workflow.tasks]]
