@@ -81,10 +81,10 @@ describe('Dashboard Page', () => {
   it('renders the user dashboard', () => {
     render(<DashboardPage />);
     
-    // Page should show welcome text and dashboard title
+    // Page should show viewer dashboard content
     expect(screen.getByText('Viewer Dashboard')).toBeInTheDocument();
-    expect(screen.getByText('Welcome to Nostr Ad Marketplace')).toBeInTheDocument();
-    expect(screen.getByText('Select a role to get started with the platform:')).toBeInTheDocument();
+    expect(screen.getByText('Welcome to Proof of Reach')).toBeInTheDocument();
+    expect(screen.getByText('As a Viewer, you can browse ads, interact with content, and earn rewards through the Lightning Network.')).toBeInTheDocument();
     
     // The dashboard shows some system status information
     expect(screen.getByText('Test Mode:')).toBeInTheDocument();

@@ -487,6 +487,54 @@ const Dashboard = () => {
     );
   };
   
+  // Create viewer dashboard content
+  const renderViewerDashboard = () => {
+    return (
+      <div className="space-y-6">
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6 border border-gray-200 dark:border-gray-700">
+          <h2 className="text-lg font-medium text-gray-900 dark:text-white mb-4">Welcome to Proof of Reach</h2>
+          <p className="text-gray-600 dark:text-gray-300">
+            As a Viewer, you can browse ads, interact with content, and earn rewards through the Lightning Network.
+          </p>
+          
+          <div className="mt-4">
+            <div className="flex items-center space-x-2 text-gray-700 dark:text-gray-300">
+              <User className="h-5 w-5 text-blue-500" />
+              <p>You're currently using the Viewer role</p>
+            </div>
+          </div>
+        </div>
+        
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
+            <h2 className="text-lg font-medium text-gray-900 dark:text-white mb-4">Your Wallet</h2>
+            <p className="text-2xl font-bold text-gray-900 dark:text-white">
+              <CurrencyAmount sats={10500} />
+            </p>
+            <p className="text-gray-500 dark:text-gray-400 mt-2">Earned from content engagement</p>
+            <Link 
+              href="/dashboard/wallet" 
+              className="text-blue-600 dark:text-blue-400 hover:underline flex items-center text-sm mt-4"
+            >
+              Manage Wallet <ChevronRight className="ml-1 h-4 w-4" />
+            </Link>
+          </div>
+          
+          <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
+            <h2 className="text-lg font-medium text-gray-900 dark:text-white mb-4">Privacy Settings</h2>
+            <p className="text-gray-500 dark:text-gray-400 mb-4">Manage your privacy and content preferences.</p>
+            <Link 
+              href="/dashboard/settings" 
+              className="text-blue-600 dark:text-blue-400 hover:underline flex items-center text-sm"
+            >
+              View Settings <ChevronRight className="ml-1 h-4 w-4" />
+            </Link>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
   // Render the appropriate dashboard based on the current role
   const renderDashboard = () => {
     switch(currentRole) {
@@ -498,6 +546,8 @@ const Dashboard = () => {
         return renderAdminDashboard();
       case 'stakeholder':
         return renderStakeholderDashboard();
+      case 'viewer':
+        return renderViewerDashboard();
       default:
         return renderDefaultDashboard();
     }
