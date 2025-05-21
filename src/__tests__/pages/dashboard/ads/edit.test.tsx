@@ -5,6 +5,7 @@ import EditAdPage from '../../../../pages/dashboard/ads/edit/[id]';
 import { AuthContext, AuthState } from '../../../../hooks/useAuth';
 import { useRouter } from 'next/router';
 import { UserRole } from '../../../../context/RoleContext';
+import { TestModeProvider } from '../../../../context/TestModeContext';
 
 // Mock the useRouter hook
 jest.mock('next/router', () => ({
@@ -89,19 +90,21 @@ Object.defineProperty(window, 'localStorage', {
   value: localStorageMock
 });
 
-// Helper function for creating an AuthContext provider
-const createAuthProvider = (authState: AuthState | null, children: React.ReactNode) => {
+// Helper function for creating providers
+const createProviders = (authState: AuthState | null, children: React.ReactNode) => {
   return (
-    <AuthContext.Provider value={{ 
-      auth: authState,
-      login: jest.fn().mockResolvedValue(true),
-      logout: jest.fn().mockResolvedValue(undefined),
-      refreshRoles: jest.fn().mockResolvedValue(['viewer', 'advertiser'] as UserRole[]),
-      addRole: jest.fn().mockResolvedValue(true),
-      removeRole: jest.fn().mockResolvedValue(true),
-    }}>
-      {children}
-    </AuthContext.Provider>
+    <TestModeProvider>
+      <AuthContext.Provider value={{ 
+        auth: authState,
+        login: jest.fn().mockResolvedValue(true),
+        logout: jest.fn().mockResolvedValue(undefined),
+        refreshRoles: jest.fn().mockResolvedValue(['viewer', 'advertiser'] as UserRole[]),
+        addRole: jest.fn().mockResolvedValue(true),
+        removeRole: jest.fn().mockResolvedValue(true),
+      }}>
+        {children}
+      </AuthContext.Provider>
+    </TestModeProvider>
   );
 };
 
@@ -137,7 +140,7 @@ describe('EditAdPage', () => {
   });
 
   it('redirects to login if user is not authenticated', () => {
-    render(createAuthProvider(null, <EditAdPage />));
+    render(createProviders(null, <EditAdPage />));
 
     expect(screen.getByText('Please login to edit ads.')).toBeInTheDocument();
     expect(screen.getByText('Go to Login')).toBeInTheDocument();
@@ -168,8 +171,8 @@ describe('EditAdPage', () => {
       return mockFetchImplementation(url);
     });
     
-    // Render the component with auth
-    render(createAuthProvider(mockAuth, <EditAdPage />));
+    // Render the component with auth and test mode provider
+    render(createProviders(mockAuth, <EditAdPage />));
     
     // Check if loading indicator appears
     expect(screen.getByTestId('loading-indicator')).toBeInTheDocument();
@@ -192,8 +195,8 @@ describe('EditAdPage', () => {
       return mockFetchImplementation(url);
     });
 
-    // Render the component with auth
-    render(createAuthProvider(mockAuth, <EditAdPage />));
+    // Render the component with auth and test mode provider
+    render(createProviders(mockAuth, <EditAdPage />));
     
     // Wait for the error message to appear
     await waitFor(() => {
@@ -229,8 +232,8 @@ describe('EditAdPage', () => {
       });
     });
     
-    // Render the component with auth
-    render(createAuthProvider(mockAuth, <EditAdPage />));
+    // Render the component with auth and test mode provider
+    render(createProviders(mockAuth, <EditAdPage />));
     
     // Verify localStorage was accessed and cleared
     expect(localStorageMock.getItem).toHaveBeenCalledWith('editAdData');
@@ -289,8 +292,8 @@ describe('EditAdPage', () => {
       return mockFetchImplementation(url);
     });
     
-    // Render the component with auth
-    render(createAuthProvider(mockAuth, <EditAdPage />));
+    // Render the component with auth and test mode provider
+    render(createProviders(mockAuth, <EditAdPage />));
     
     // Wait for the form to be populated with data and validate it
     await waitFor(() => {
