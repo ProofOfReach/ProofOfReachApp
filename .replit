@@ -86,10 +86,6 @@ args = "Run Dashboard Tests Only"
 
 [[workflows.workflow.tasks]]
 task = "workflow.run"
-args = "Start Server"
-
-[[workflows.workflow.tasks]]
-task = "workflow.run"
 args = "Run Nostr Tests"
 
 [[workflows.workflow.tasks]]
@@ -246,15 +242,6 @@ author = "agent"
 [[workflows.workflow.tasks]]
 task = "shell.exec"
 args = "npx jest src/__tests__/pages/dashboard"
-
-[[workflows.workflow]]
-name = "Start Server"
-author = "agent"
-
-[[workflows.workflow.tasks]]
-task = "shell.exec"
-args = "npm run dev"
-waitForPort = 5000
 
 [[workflows.workflow]]
 name = "Run Nostr Tests"

@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef, useCallback, memo } from 'react';
 import { useTestMode } from '@/context/TestModeContext';
 import { useTestWallet } from '@/hooks/useTestWallet';
 import { logger } from '@/lib/logger';
+import { toast } from '@/utils/toast';
 // Simple date formatter function to avoid ESM import issues with date-fns
 function formatDistanceToNow(date: Date): string {
   const now = new Date();
@@ -433,6 +434,14 @@ const SimpleNostrFeed: React.FC<SimpleNostrFeedProps> = ({
         // This updates localStorage AND the state in our component
         updateTestWalletBalance(newBalance);
         
+        // Show a toast notification for earning satoshis
+        // Use a more direct console.group approach for visibility in case the toast system fails
+        console.group("[ERROR] [business] [toast]", new Date().toISOString(), "- Earned", amount, "sats for viewing ad from", advertiserName + "!");
+        console.groupEnd();
+        
+        // Also use the proper toast system
+        toast.success(`Earned ${amount} sats for viewing ad from ${advertiserName}!`);
+        
         logger.debug(`Added ${amount} sats to test wallet balance. New balance: ${newBalance}`);
       } catch (error) {
         logger.error('Error updating test wallet balance:', error);
@@ -443,7 +452,7 @@ const SimpleNostrFeed: React.FC<SimpleNostrFeedProps> = ({
     setTimeout(() => {
       setLatestEarning(null);
     }, 3000);
-  }, [viewedAds]);
+  }, [viewedAds, testWalletBalance, updateTestWalletBalance, isTestMode]);
   
   // Toggle expanded state for a profile
   const toggleProfileExpanded = useCallback((pubkey: string) => {

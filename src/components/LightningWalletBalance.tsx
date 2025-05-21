@@ -29,6 +29,11 @@ const LightningWalletBalance: React.FC<LightningWalletBalanceProps> = ({
   const { isTestMode } = useTestMode();
   const { balance: testWalletBalance } = useTestWallet();
   
+  // Log balance to debug
+  useEffect(() => {
+    console.log('TestWalletBalance in LightningWalletBalance:', testWalletBalance);
+  }, [testWalletBalance]);
+  
   const [balance, setBalance] = useState<number | null>(sats !== undefined ? sats : null);
   const [isLoading, setIsLoading] = useState(externalIsLoading !== undefined ? externalIsLoading : true);
   const [error, setError] = useState<string | null>(null);
@@ -46,7 +51,12 @@ const LightningWalletBalance: React.FC<LightningWalletBalanceProps> = ({
     try {
       // Use the test wallet balance if in test mode
       if (isTestMode) {
-        setBalance(testWalletBalance);
+        // Make sure we're getting the latest value from localStorage
+        const storedBalance = localStorage.getItem('testWalletBalance');
+        const latestBalance = storedBalance ? parseInt(storedBalance, 10) : testWalletBalance;
+        
+        console.log('Test mode active, using wallet balance:', latestBalance);
+        setBalance(latestBalance);
         setIsLoading(false);
         return;
       }
