@@ -92,6 +92,10 @@ args = "Start Server"
 task = "workflow.run"
 args = "Run Nostr Tests"
 
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Server"
+
 [[workflows.workflow]]
 name = "Nostr Ad Marketplace Server"
 author = "agent"
@@ -255,6 +259,15 @@ author = "agent"
 [[workflows.workflow.tasks]]
 task = "shell.exec"
 args = "npx jest src/__tests__/lib/nostr.test.ts"
+
+[[workflows.workflow]]
+name = "Server"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "NODE_OPTIONS='--no-warnings' npx next dev -p 5000 -H 0.0.0.0"
+waitForPort = 5000
 
 [deployment]
 run = ["sh", "-c", "npm install && npx prisma generate && npm run dev"]

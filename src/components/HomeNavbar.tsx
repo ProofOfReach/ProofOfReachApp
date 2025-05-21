@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { Menu, X } from 'react-feather';
 
 const HomeNavbar: React.FC = () => {
@@ -18,15 +19,15 @@ const HomeNavbar: React.FC = () => {
       <div className="container mx-auto px-4">
         <div className="flex justify-between h-16">
           <div className="flex-shrink-0 flex items-center">
-            <Link href="/" className="hidden sm:flex items-center">
-              <span className="text-xl font-bold text-purple-600 dark:text-purple-400 leading-tight">
-                Proof Of<br />Reach
-              </span>
-            </Link>
-            <Link href="/" className="sm:hidden flex items-center">
-              <span className="text-xl font-bold text-purple-600 dark:text-purple-400">
-                ProofOfReach
-              </span>
+            <Link href="/" className="flex items-center">
+              <Image 
+                src="/logo_sm_light.png" 
+                alt="Proof Of Reach Logo" 
+                width={120} 
+                height={40} 
+                className="h-10 w-auto"
+                priority
+              />
             </Link>
           </div>
 
