@@ -96,6 +96,10 @@ args = "Run Nostr Tests"
 task = "workflow.run"
 args = "Server"
 
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Start Clean Server"
+
 [[workflows.workflow]]
 name = "Nostr Ad Marketplace Server"
 author = "agent"
@@ -151,7 +155,7 @@ author = "agent"
 
 [[workflows.workflow.tasks]]
 task = "shell.exec"
-args = "rm -rf node_modules/.cache && npx prisma generate && NODE_OPTIONS='--no-warnings' next dev -p 5000 -H 0.0.0.0"
+args = "NODE_OPTIONS='--no-warnings' npx next dev -p 5000 -H 0.0.0.0"
 waitForPort = 5000
 
 [[workflows.workflow]]
@@ -262,6 +266,15 @@ args = "npx jest src/__tests__/lib/nostr.test.ts"
 
 [[workflows.workflow]]
 name = "Server"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "NODE_OPTIONS='--no-warnings' npx next dev -p 5000 -H 0.0.0.0"
+waitForPort = 5000
+
+[[workflows.workflow]]
+name = "Start Clean Server"
 author = "agent"
 
 [[workflows.workflow.tasks]]

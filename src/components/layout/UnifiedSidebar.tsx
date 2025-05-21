@@ -14,6 +14,8 @@ import ExchangeRateDisplay from '../ExchangeRateDisplay';
 
 // Define a UserRole type to ensure consistency
 export type UserRole = 'viewer' | 'advertiser' | 'publisher' | 'admin' | 'stakeholder';
+// The 'user' role is now deprecated in favor of 'viewer'
+// This type definition is the source of truth for all valid roles
 
 interface UnifiedSidebarProps {
   isTestMode?: boolean;
@@ -21,6 +23,10 @@ interface UnifiedSidebarProps {
 
 /**
  * UnifiedSidebar Component
+ * 
+ * !!! DESIGNATED PRIMARY NAVIGATION COMPONENT !!!
+ * This is the official, primary sidebar component for the application.
+ * All other sidebar implementations are deprecated and should not be used.
  * 
  * A combined sidebar that works in both test mode and regular mode
  * with direct role manipulation for better reliability
@@ -31,7 +37,7 @@ const UnifiedSidebar: React.FC<UnifiedSidebarProps> = ({ isTestMode = false }) =
   const [sidebarExpanded, setSidebarExpanded] = useState(true);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [isLocalChangingRole, setIsLocalChangingRole] = useState(false);
-  const [currentRole, setCurrentRole] = useState<UserRole>('user');
+  const [currentRole, setCurrentRole] = useState<UserRole>('viewer');
   const dropdownRef = useRef<HTMLDivElement>(null);
   
   // Determine current role based on URL (more reliable than context)
@@ -106,6 +112,7 @@ const UnifiedSidebar: React.FC<UnifiedSidebarProps> = ({ isTestMode = false }) =
       { icon: <Home className="w-5 h-5" />, label: 'Dashboard', href: '/dashboard/advertiser' },
       { icon: <MegaphoneIcon className="w-5 h-5" />, label: 'Campaigns', href: '/dashboard/advertiser/campaigns' },
       { icon: <PieChart className="w-5 h-5" />, label: 'Analytics', href: '/dashboard/advertiser/analytics' },
+      { icon: <Shield className="w-5 h-5" />, label: 'Proof of Reach', href: '/dashboard/reports/proof-of-reach' },
       { icon: <SatsIcon className="w-5 h-5" />, label: 'Billing', href: '/dashboard/billing' },
     ],
     publisher: [
@@ -138,7 +145,7 @@ const UnifiedSidebar: React.FC<UnifiedSidebarProps> = ({ isTestMode = false }) =
   
   // Combine core and bottom items
   const menuItems = {
-    user: [...coreMenuItems.user, ...bottomMenuItems],
+    viewer: [...coreMenuItems.viewer, ...bottomMenuItems],
     advertiser: [...coreMenuItems.advertiser, ...bottomMenuItems],
     publisher: [...coreMenuItems.publisher, ...bottomMenuItems],
     admin: [...coreMenuItems.admin, ...bottomMenuItems],
@@ -305,7 +312,7 @@ const UnifiedSidebar: React.FC<UnifiedSidebarProps> = ({ isTestMode = false }) =
     
     // Otherwise, we display a simplified version of role availability
     // In a real app, this would check against auth context, but this is more reliable for testing
-    return auth ? auth.roles?.includes(roleToCheck) : false;
+    return auth ? Boolean(auth.availableRoles?.includes(roleToCheck)) : false;
   };
 
   return (
