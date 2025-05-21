@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback, memo } from 'react';
 import { useTestMode } from '@/context/TestModeContext';
 import { logger } from '@/lib/logger';
-import { toast } from '@/utils/toast';
 // Simple date formatter function to avoid ESM import issues with date-fns
 function formatDistanceToNow(date: Date): string {
   const now = new Date();
@@ -433,14 +432,9 @@ const SimpleNostrFeed: React.FC<SimpleNostrFeedProps> = ({
         // Store updated balance in localStorage
         localStorage.setItem('testWalletBalance', newBalance.toString());
         
-        // Show success toast notification
-        toast.success(`Added ${amount} sats to your wallet! New balance: ${newBalance} sats`);
-        
         logger.debug(`Added ${amount} sats to test wallet balance. New balance: ${newBalance}`);
       } catch (error) {
         logger.error('Error updating test wallet balance:', error);
-        // Show error toast if something went wrong
-        toast.error('Failed to update wallet balance');
       }
     }
     
