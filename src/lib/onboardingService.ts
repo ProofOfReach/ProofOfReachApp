@@ -649,26 +649,53 @@ const onboardingService = {
     const correlationId = `onboarding-redirect-${pubkey}-${role}`;
     
     try {
-      // Check if onboarding is complete for this role - already handles browser/server distinction
-      const isComplete = await onboardingService.isOnboardingComplete(pubkey, role);
-      
-      if (!isComplete) {
-        // If onboarding is not complete, redirect to onboarding
-        return '/onboarding';
+      // Force redirect to onboarding after login for consistent flow
+      if (typeof window !== 'undefined') {
+        logger.info(`Post-login redirect: Directing user ${pubkey.substring(0, 8)}... to onboarding flow`);
+        
+        // Add debug information to help troubleshoot redirect issues
+        if (process.env.NODE_ENV === 'development') {
+          logger.debug('Setting onboarding redirect with params:', {
+            pubkey: pubkey.substring(0, 8) + '...',
+            role,
+            timestamp: Date.now()
+          });
+        }
+        
+        // Add timestamp and role parameters to avoid caching issues
+        return `/onboarding?timestamp=${Date.now()}&role=${role}`;
       }
       
-      // If onboarding is complete, redirect to the appropriate dashboard
-      switch (role) {
-        case 'viewer':
-          return '/dashboard'; // Generic dashboard for viewers
-        case 'publisher':
-          return '/dashboard/publisher'; // Publisher-specific dashboard
-        case 'advertiser':
-          return '/dashboard/advertiser'; // Advertiser-specific dashboard
-        case 'admin':
-          return '/admin'; // Admin dashboard
-        default:
-          return '/dashboard'; // Default fallback
+      // If we're on the server, check onboarding status
+      try {
+        // Check if onboarding is complete for this role
+        const isComplete = await onboardingService.isOnboardingComplete(pubkey, role);
+        
+        if (!isComplete) {
+          logger.info(`Server-side redirect: User ${pubkey.substring(0, 8)}... needs onboarding for role ${role}`);
+          return '/onboarding';
+        }
+        
+        // If onboarding is complete, redirect to the appropriate dashboard
+        logger.info(`Server-side redirect: User ${pubkey.substring(0, 8)}... has completed onboarding for role ${role}`);
+        
+        switch (role) {
+          case 'viewer':
+            return '/dashboard'; // Generic dashboard for viewers
+          case 'publisher':
+            return '/dashboard/publisher'; // Publisher-specific dashboard
+          case 'advertiser':
+            return '/dashboard/advertiser'; // Advertiser-specific dashboard
+          case 'admin':
+            return '/admin'; // Admin dashboard
+          default:
+            return '/dashboard'; // Default fallback
+        }
+      } catch (serverCheckError) {
+        logger.warn('Server-side onboarding check failed, defaulting to onboarding page', {
+          error: serverCheckError instanceof Error ? serverCheckError.message : 'Unknown error'
+        });
+        return '/onboarding';
       }
     } catch (error) {
       // Report error through the central system
