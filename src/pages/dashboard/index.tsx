@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { 
   ChevronRight, 
   ShoppingBag, 
@@ -22,6 +22,7 @@ import type { ReactElement } from 'react';
 import type { NextPageWithLayout } from '../_app';
 import { DashboardContainer, DashboardCard } from '@/components/ui';
 import { getDashboardLayout } from '@/utils/layoutHelpers';
+import { logger } from '@/lib/logger';
 
 /**
  * Main dashboard page - serves content based on the current role
@@ -33,71 +34,98 @@ const Dashboard = () => {
   const [currentRole, setCurrentRole] = useState<UserRole>(roleContext?.role || 'viewer');
   const [isTestMode, setIsTestMode] = useState<boolean>(false);
   
+  // Function to get the current role from all possible sources
+  const getCurrentRoleFromAllSources = useCallback((): UserRole => {
+    // Try to get role from context first (most reliable and up-to-date)
+    if (roleContext && roleContext.role) {
+      logger.debug('Getting role from context:', roleContext.role);
+      return roleContext.role as UserRole;
+    }
+    
+    // If we're in a browser, try localStorage next
+    if (typeof window !== 'undefined') {
+      // Try all known storage locations for role
+      const storedRole = 
+        localStorage.getItem('userRole') ||
+        localStorage.getItem('currentRole') ||
+        sessionStorage.getItem('userRole') ||
+        sessionStorage.getItem('currentRole');
+        
+      if (storedRole) {
+        logger.debug('Getting role from storage:', storedRole);
+        return storedRole as UserRole;
+      }
+    }
+    
+    // Fall back to RoleService
+    const serviceRole = RoleService.getCurrentRole();
+    if (serviceRole) {
+      logger.debug('Getting role from service:', serviceRole);
+      return serviceRole as UserRole;
+    }
+    
+    // Absolute fallback
+    logger.debug('No role found, defaulting to viewer');
+    return 'viewer';
+  }, [roleContext]);
+
   // Initialize and listen for role changes
   useEffect(() => {
     if (typeof window === 'undefined') return;
     
-    // Get initial role state - prefer context role if available
-    const contextRole = roleContext?.role;
-    const storedRole = RoleService.getCurrentRole();
-    const initialRole = contextRole || storedRole || 'viewer';
+    // Get all possible sources for the role 
+    const initialRole = getCurrentRoleFromAllSources();
     
-    // Log for debugging to understand where the role is coming from
-    console.log('Dashboard initializing with role:', {
-      contextRole,
-      storedRole,
-      initialRole
-    });
+    // Log for debugging
+    logger.debug('Dashboard initializing with role:', initialRole);
     
-    // Set the initial role from any available source
-    // Ensuring we update with the latest role from context
-    if (contextRole) {
-      setCurrentRole(contextRole as UserRole);
-    } else {
-      setCurrentRole(initialRole as UserRole);
-    }
+    // Update state with the determined role
+    setCurrentRole(initialRole);
     
     // Check if test mode is active
     const testMode = localStorage.getItem('isTestMode') === 'true';
     setIsTestMode(testMode);
     
-    // Listen for role changes - from both the "roleSwitched" event
-    // and the newer "dashboard-role-changed" event specifically for this component
+    // Event handlers for all role change events
     const handleRoleChange = (event: Event) => {
       const customEvent = event as CustomEvent<{
-        from: string;
-        to: string;
+        from?: string;
+        to?: string;
+        role?: string;
       }>;
-      console.log('Role switched event received:', customEvent.detail);
-      if (customEvent.detail && customEvent.detail.to) {
-        setCurrentRole(customEvent.detail.to as UserRole);
-      }
-    };
-    
-    // Listen for the dashboard-specific role change event
-    const handleDashboardRoleChange = () => {
-      console.log('Dashboard role change event received');
-      // Get the latest role from storage
-      const latestRole = localStorage.getItem('userRole') || 
-                         localStorage.getItem('currentRole');
       
-      if (latestRole) {
-        console.log(`Updating dashboard to role: ${latestRole}`);
-        setCurrentRole(latestRole as UserRole);
+      logger.debug('Role switched event received:', customEvent.detail);
+      
+      // Extract the new role from the event in any format
+      let newRole: string | null = null;
+      
+      if (customEvent.detail) {
+        if (customEvent.detail.to) {
+          newRole = customEvent.detail.to;
+        } else if (customEvent.detail.role) {
+          newRole = customEvent.detail.role;
+        }
+      }
+      
+      if (newRole) {
+        logger.debug(`Setting role from event to: ${newRole}`);
+        setCurrentRole(newRole as UserRole);
       }
     };
-  
     
-    document.addEventListener('roleSwitched', handleRoleChange);
-    window.addEventListener('dashboard-role-changed', handleDashboardRoleChange);
+    // Specific handler for the dashboard-specific event
+    const handleDashboardRoleChange = () => {
+      logger.debug('Dashboard role change event received');
+      const latestRole = getCurrentRoleFromAllSources();
+      setCurrentRole(latestRole);
+    };
     
-    // Direct storage change listener as fallback
+    // Storage event handler for direct localStorage changes
     const handleStorageChange = (event: StorageEvent) => {
       if (event.key === 'userRole' || event.key === 'currentRole') {
-        const newRole = event.newValue;
-        if (newRole) {
-          console.log(`Storage change detected, updating role to: ${newRole}`);
-          setCurrentRole(newRole as UserRole);
+        if (event.newValue) {
+          logger.debug(`Storage change detected, updating role to: ${event.newValue}`);
+          setCurrentRole(event.newValue as UserRole);
         }
       }
       
@@ -106,14 +134,24 @@ const Dashboard = () => {
       }
     };
     
+    // Monitor all possible role change events
+    document.addEventListener('roleSwitched', handleRoleChange);
+    document.addEventListener('role-changed', handleRoleChange);
+    window.addEventListener('dashboard-role-changed', handleDashboardRoleChange);
     window.addEventListener('storage', handleStorageChange);
+    
+    // Force an immediate check of the current role from context
+    if (roleContext && roleContext.role) {
+      setCurrentRole(roleContext.role as UserRole);
+    }
     
     return () => {
       document.removeEventListener('roleSwitched', handleRoleChange);
+      document.removeEventListener('role-changed', handleRoleChange);
       window.removeEventListener('dashboard-role-changed', handleDashboardRoleChange);
       window.removeEventListener('storage', handleStorageChange);
     };
-  }, [roleContext]);
+  }, [roleContext, getCurrentRoleFromAllSources]);
   
   // Determine what icon to show based on role
   const getRoleIcon = () => {
