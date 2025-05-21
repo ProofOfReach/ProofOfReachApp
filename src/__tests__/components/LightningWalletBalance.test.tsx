@@ -15,6 +15,16 @@ jest.mock('../../context/CurrencyContext', () => ({
   useCurrency: () => ({ currency: 'BTC', setCurrency: jest.fn(), toggleCurrency: jest.fn() })
 }));
 
+// Mock TestModeContext
+jest.mock('../../context/TestModeContext', () => ({
+  useTestMode: () => ({ isTestMode: true, setIsTestMode: jest.fn() })
+}));
+
+// Mock useTestWallet hook
+jest.mock('../../hooks/useTestWallet', () => ({
+  useTestWallet: () => ({ balance: 125000, updateBalance: jest.fn() })
+}));
+
 describe('LightningWalletBalance Component', () => {
   beforeEach(() => {
     jest.clearAllMocks();
