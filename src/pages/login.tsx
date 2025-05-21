@@ -520,7 +520,7 @@ const LoginPage: React.FC = () => {
                   <button
                     onClick={handleTestModeLogin}
                     disabled={isLoading}
-                    className={`w-full py-2 text-center px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-purple-600 hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 ${
+                    className={`w-full py-2 text-center px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-[#1a73e8] hover:bg-[#1765cc] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#1a73e8] ${
                       isLoading ? 'opacity-50 cursor-not-allowed' : ''
                     }`}
                   >
