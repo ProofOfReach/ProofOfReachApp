@@ -38,8 +38,34 @@ const OnboardingPage: NextPage = () => {
     // Only run this once
     if (checkedStorage) return;
     
+    // Check for potential redirect loops if we have a timestamp parameter
+    if (timestamp && typeof timestamp === 'string') {
+      const now = Date.now();
+      const paramTimestamp = parseInt(timestamp, 10);
+      
+      // If timestamps are too close together (within 2 seconds), this might be a loop
+      if (now - paramTimestamp < 2000) {
+        logger.warn('Potential redirect loop detected from URL parameters, breaking loop');
+        
+        if (typeof window !== 'undefined') {
+          window.sessionStorage.setItem('preventOnboardingRedirects', 'true');
+          window.sessionStorage.setItem('lastRedirectTime', now.toString());
+          setCheckedStorage(true);
+          return;
+        }
+      }
+    }
+    
     try {
       if (typeof window !== 'undefined') {
+        // Check if redirects are temporarily disabled to prevent loops
+        const preventRedirects = window.sessionStorage.getItem('preventOnboardingRedirects') === 'true';
+        if (preventRedirects) {
+          logger.info('Redirects temporarily disabled to prevent loops');
+          setCheckedStorage(true);
+          return;
+        }
+        
         // Check session storage for forced onboarding redirection
         const hasPendingOnboarding = window.sessionStorage.getItem('pending_onboarding_redirect') === 'true';
         const savedPubkey = window.sessionStorage.getItem('onboarding_pubkey');
@@ -60,8 +86,30 @@ const OnboardingPage: NextPage = () => {
           // Flag that we checked storage
           setCheckedStorage(true);
           
+          // Check for potential redirect loops by tracking redirects
+          const lastRedirectTime = parseInt(window.sessionStorage.getItem('lastRedirectTime') || '0', 10);
+          const now = Date.now();
+          const timeSinceLastRedirect = now - lastRedirectTime;
+          
+          // If redirects are happening too quickly (within 2 seconds), may be a loop
+          if (lastRedirectTime > 0 && timeSinceLastRedirect < 2000) {
+            logger.warn('Potential redirect loop detected, halting further redirects');
+            window.sessionStorage.setItem('preventOnboardingRedirects', 'true');
+            return;
+          }
+          
+          // Store this redirect timestamp
+          window.sessionStorage.setItem('lastRedirectTime', now.toString());
+          
+          // Check if redirects are temporarily disabled
+          const preventRedirects = window.sessionStorage.getItem('preventOnboardingRedirects') === 'true';
+          if (preventRedirects) {
+            logger.info('Redirects temporarily disabled to prevent loops');
+            return;
+          }
+          
           // Redirect to onboarding with preserved parameters
-          window.location.href = `/onboarding?timestamp=${Date.now()}&role=${savedRole}&forced=true`;
+          window.location.href = `/onboarding?timestamp=${now}&role=${savedRole}&forced=true`;
           return;
         }
         

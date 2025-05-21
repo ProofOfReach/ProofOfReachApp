@@ -119,6 +119,38 @@ export const OnboardingProvider: React.FC<OnboardingProviderProps> = ({ children
   
   // Initialize onboarding state when the component mounts
   useEffect(() => {
+    // Detect potential redirect loops
+    const urlParams = new URLSearchParams(typeof window !== 'undefined' ? window.location.search : '');
+    const timestamp = urlParams.get('timestamp');
+    const hasRedirectParams = !!timestamp;
+    
+    // If redirects are happening too frequently, break the loop
+    if (hasRedirectParams) {
+      const now = Date.now();
+      const redirectTime = parseInt(timestamp || '0', 10);
+      const timeSinceRedirect = now - redirectTime;
+      
+      // If multiple redirects within 2 seconds, this might be a loop
+      if (timeSinceRedirect < 2000) {
+        console.log('Potential redirect loop detected, halting further redirects');
+        
+        // Store this decision in session to prevent further redirect attempts
+        if (typeof window !== 'undefined') {
+          window.sessionStorage.setItem('preventOnboardingRedirects', 'true');
+          window.sessionStorage.setItem('lastRedirectTime', now.toString());
+        }
+        return; // Exit early to break the loop
+      }
+    }
+
+    const preventRedirects = typeof window !== 'undefined' && 
+      window.sessionStorage.getItem('preventOnboardingRedirects') === 'true';
+    
+    if (preventRedirects) {
+      console.log('Redirects temporarily disabled to prevent loops');
+      return;
+    }
+
     const initializeOnboarding = async () => {
       // If we have an initial role (from URL params), immediately skip to the first step for that role
       if (selectedRole && currentStep === 'role-selection') {
@@ -135,10 +167,13 @@ export const OnboardingProvider: React.FC<OnboardingProviderProps> = ({ children
         if (pubkeyToUse) {
           try {
             const isComplete = await onboardingService.isOnboardingComplete(pubkeyToUse, currentRole);
-            if (isComplete && !forcePubkey) { // Don't redirect if forcePubkey is provided
+            if (isComplete && !forcePubkey && !preventRedirects) { // Don't redirect if forcePubkey is provided or if preventing redirects
               // Redirect to dashboard if onboarding is already complete
               const redirectUrl = await onboardingService.getPostLoginRedirectUrl(pubkeyToUse, currentRole);
-              router.push(redirectUrl);
+              
+              // Add timestamp to track potential redirect loops
+              const redirectWithParam = `${redirectUrl}${redirectUrl.includes('?') ? '&' : '?'}timestamp=${Date.now()}`;
+              router.push(redirectWithParam);
             }
           } catch (error) {
             console.error('Error checking onboarding status:', error);
