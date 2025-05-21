@@ -40,14 +40,18 @@ export async function authenticateRequest(req: NextApiRequest): Promise<Authenti
     }
     
     const pubkey = cookies.nostr_pubkey;
-    const isTestMode = pubkey.startsWith('pk_test_');
+    // Check all possible test mode indicators
+    const isTestMode = pubkey.startsWith('pk_test_') || 
+                      cookies.isTestMode === 'true' || 
+                      req.cookies.testMode === 'true' ||
+                      req.headers['x-test-mode'] === 'true';
     
     // For test mode, we create a synthetic user with all roles
     if (isTestMode) {
       logger.info(`Test mode authentication for pubkey: ${pubkey}`);
       
       // In test mode, always make all roles available
-      const roles: UserRoleType[] = ['user', 'advertiser', 'publisher', 'admin', 'stakeholder'];
+      const roles: UserRoleType[] = ['viewer', 'advertiser', 'publisher', 'admin', 'stakeholder'];
       
       // Get current role from cookie or default to advertiser
       const currentRole = cookies.userRole && isValidUserRole(cookies.userRole) 
