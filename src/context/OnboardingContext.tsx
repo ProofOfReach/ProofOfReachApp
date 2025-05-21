@@ -50,7 +50,8 @@ export type OnboardingStep =
   | 'complete';
 
 // Define role-specific step sequences
-const viewerSteps: OnboardingStep[] = [
+// Standard viewer steps for regular users
+const standardViewerSteps: OnboardingStep[] = [
   'role-selection',
   'preferences',
   'discovery',
@@ -58,6 +59,16 @@ const viewerSteps: OnboardingStep[] = [
   'feedback',
   'complete'
 ];
+
+// Simplified viewer steps for Nostr extension users (just 2 steps)
+const nostrViewerSteps: OnboardingStep[] = [
+  'role-selection',
+  'privacy',
+  'complete'
+];
+
+// We'll determine which to use in getStepsForRole based on Nostr extension detection
+const viewerSteps: OnboardingStep[] = standardViewerSteps;
 
 const publisherSteps: OnboardingStep[] = [
   'role-selection',
@@ -117,10 +128,24 @@ export const OnboardingProvider: React.FC<OnboardingProviderProps> = ({ children
   const [isLoading, setIsLoading] = useState<boolean>(false);
   
   // Initialize steps based on the current role or selected role
+  // Import hasNostrExtension function to detect Nostr extension
+  const checkForNostrExtension = () => {
+    // Only run in browser environment
+    if (typeof window === 'undefined') return false;
+    return !!window?.nostr;
+  };
+
   const getStepsForRole = (role: UserRoleType | null): OnboardingStep[] => {
     switch (role) {
       case 'viewer':
-        return viewerSteps;
+        // Use the simplified 2-step flow for Nostr extension users
+        const hasNostrExt = checkForNostrExtension();
+        if (hasNostrExt) {
+          logger.debug(`Using simplified 2-step flow for Nostr viewer (hasNostrExtension: ${hasNostrExt})`);
+          return nostrViewerSteps;
+        }
+        logger.debug(`Using standard flow for viewer (hasNostrExtension: ${hasNostrExt})`);
+        return standardViewerSteps;
       case 'publisher':
         return publisherSteps;
       case 'advertiser':
