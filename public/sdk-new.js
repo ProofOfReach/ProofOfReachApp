@@ -252,7 +252,7 @@
           <p style="margin: 6px 0; font-size: 12px; max-height: 36px; overflow: hidden;">${adData.description}</p>
           <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 10px;">
             <span style="font-size: 10px;">By ${adData.sponsor}</span>
-            <button style="background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.3); border-radius: 4px; padding: 4px 10px; font-size: 12px; color: inherit; cursor: pointer;">${adData.callToAction}</button>
+            <button style="background: white; border: none; border-radius: 4px; padding: 6px 12px; font-size: 12px; color: #333; font-weight: 600; cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">${adData.callToAction}</button>
           </div>
           <div style="position: absolute; bottom: 5px; right: 5px; font-size: 9px; opacity: 0.7;">
             ⚡ ProofOfReach
