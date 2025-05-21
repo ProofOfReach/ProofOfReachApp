@@ -14,9 +14,14 @@ interface AdvertiserOnboardingProps {
   currentStep: OnboardingStep;
   onComplete?: () => void;
   skipOnboarding?: () => void;
+  goToPreviousStep?: () => void;
 }
 
-const AdvertiserOnboarding: React.FC<AdvertiserOnboardingProps> = ({ currentStep, skipOnboarding }) => {
+const AdvertiserOnboarding: React.FC<AdvertiserOnboardingProps> = ({ 
+  currentStep, 
+  skipOnboarding,
+  goToPreviousStep
+}) => {
   // Test ID for test selection
   const testId = "advertiser-onboarding";
   
@@ -621,12 +626,85 @@ const AdvertiserOnboarding: React.FC<AdvertiserOnboardingProps> = ({ currentStep
           </div>
         );
       
+      // Handle viewer steps that shouldn't appear in advertiser flow
+      // but might be accidentally called - redirect to proper advertiser step
+      case 'preferences':
+      case 'discovery':
+      case 'notifications':
+      case 'privacy':
+      case 'feedback':
+        return (
+          <div className="space-y-4">
+            {renderSectionHeader(<Image className="inline-block mr-2 mb-1" size={20} />, 'Advertiser Account Setup')}
+            <p className="text-gray-600 dark:text-gray-300">
+              Let's set up your advertising account - these details will help us personalize your experience:
+            </p>
+            
+            <div className="mt-6 space-y-4">
+              <div className="border border-gray-200 dark:border-gray-700 rounded-lg p-4">
+                <h3 className="font-medium text-gray-900 dark:text-white mb-3">Business Information</h3>
+                
+                <div className="space-y-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                      Business or Brand Name
+                    </label>
+                    <input 
+                      type="text" 
+                      placeholder="e.g., Satoshi Solutions" 
+                      className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md dark:bg-gray-800"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        );
+      
+      // Handle publisher steps that shouldn't appear in advertiser flow
+      case 'choose-integration':
+      case 'create-api-key':
+      case 'integration-details':
+      case 'ad-slot-config':
+      case 'setup-wallet':
+      case 'enable-test-mode':
+      case 'go-live':
+      case 'setup-complete':
+        return (
+          <div className="space-y-4">
+            {renderSectionHeader(<Target className="inline-block mr-2 mb-1" size={20} />, 'Campaign Targeting')}
+            <p className="text-gray-600 dark:text-gray-300">
+              Define your target audience to ensure your ads reach the right users:
+            </p>
+            
+            <div className="mt-6 space-y-4">
+              <div className="border border-gray-200 dark:border-gray-700 rounded-lg p-4">
+                <h3 className="font-medium text-gray-900 dark:text-white mb-3">Content Categories</h3>
+                
+                <div className="space-y-2">
+                  <p className="text-sm text-gray-600 dark:text-gray-400">
+                    Select categories relevant to your target audience:
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        );
+          
       default:
         return (
           <div className="p-4 bg-yellow-50 border border-yellow-200 rounded-md">
             <p className="text-yellow-800">
               Unknown step: {currentStep}. Please go back and try again.
             </p>
+            {goToPreviousStep && (
+              <button 
+                onClick={goToPreviousStep}
+                className="mt-2 px-4 py-2 bg-yellow-100 hover:bg-yellow-200 text-yellow-800 rounded-md"
+              >
+                Go Back
+              </button>
+            )}
           </div>
         );
     }

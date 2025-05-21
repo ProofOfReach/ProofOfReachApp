@@ -107,7 +107,8 @@ const OnboardingWizard: React.FC = () => {
       return <AdvertiserOnboarding 
         currentStep={currentStep} 
         onComplete={completeOnboarding} 
-        skipOnboarding={skipOnboarding} 
+        skipOnboarding={skipOnboarding}
+        goToPreviousStep={goToPreviousStep}
       />;
     }
     
