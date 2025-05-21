@@ -262,7 +262,11 @@ const Sidebar: React.FC = () => {
       >
         {/* Logo area */}
         <div className="px-4 py-4 border-b border-gray-200 dark:border-gray-700">
-          <h1 className="text-xl font-bold text-purple-600 dark:text-purple-400">Nostr Ad Market</h1>
+          <img 
+            src="/logo_big_light.png" 
+            alt="Proof Of Reach Logo" 
+            className="h-auto w-[140px] dark:invert" 
+          />
         </div>
         
         {/* Role selector - dropdown */}
