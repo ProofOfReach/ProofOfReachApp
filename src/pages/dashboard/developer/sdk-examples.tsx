@@ -4,20 +4,22 @@ import { Title, Paragraph } from '@/components/ui/Typography';
 import { Card } from '@/components/ui/Card';
 import { Check, Copy, ExternalLink } from 'react-feather';
 import Link from 'next/link';
+import { useAuthSwitch } from '@/hooks/useAuthSwitch';
 
 const SDKExamplesPage = () => {
+  const { pubkey } = useAuthSwitch();
   const [copiedSection, setCopiedSection] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState('html');
   
-  // Use a default publisher pubkey for the example
-  const pubkey = 'YOUR_NOSTR_PUBKEY';
+  // Use the user's pubkey or a placeholder
+  const userPubkey = pubkey || 'YOUR_NOSTR_PUBKEY';
   
   // SDK code with pubkey
   const sdkScript = `<script src="https://cdn.proofofreach.com/sdk/v1.js"></script>
 <script>
   window.addEventListener("load", () => {
     ProofOfReachSDK.renderAd("proof-of-reach-ad", {
-      pubkey: "${pubkey}",
+      pubkey: "${userPubkey}",
       testMode: false,
       onPayment: (sats) => {
         console.log(\`Received \${sats} satoshis!\`);
@@ -74,7 +76,7 @@ function ProofOfReachAd({ containerId = "proof-of-reach-ad" }) {
       // Initialize once SDK is loaded
       if (window.ProofOfReachSDK) {
         window.ProofOfReachSDK.renderAd(containerId, {
-          pubkey: "${pubkey}",
+          pubkey: "${userPubkey}",
           testMode: false
         });
       }
@@ -122,7 +124,7 @@ function add_proofofreach_sdk() {
       // Find all ad containers
       document.querySelectorAll('.proofofreach-ad').forEach(container => {
         ProofOfReachSDK.renderAd(container.id, {
-          pubkey: "${pubkey}",
+          pubkey: "${userPubkey}",
           testMode: false
         });
       });
@@ -147,7 +149,7 @@ add_shortcode('proofofreach_ad', 'proofofreach_ad_shortcode');
 ?>`;
 
   const advancedConfig = `ProofOfReachSDK.renderAd("proof-of-reach-ad", {
-  pubkey: "${pubkey}",  // Your Nostr public key
+  pubkey: "${userPubkey}",  // Your Nostr public key
   testMode: false,                 // Set to true for testing (no real payments)
   adType: "standard",              // "standard", "small", or "banner"
   refreshInterval: 300000,         // Refresh ad every 5 minutes (in ms)

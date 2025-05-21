@@ -33,7 +33,7 @@ const DeveloperDashboardPage = () => {
       title: 'SDK & Code Examples',
       icon: <Code className="w-6 h-6 text-purple-600 dark:text-purple-400" />,
       description: 'Get started quickly with our JavaScript SDK and code examples for integrating with the platform.',
-      link: '/dashboard/developer/examples',
+      link: '/dashboard/developer/sdk-examples',
       buttonText: 'View Examples',
       disabled: false, 
     },
