@@ -30,7 +30,7 @@ import { getDashboardLayout } from '@/utils/layoutHelpers';
 const Dashboard = () => {
   const roleContext = useRole();
   // Get the role from context if available, otherwise use the user role
-  const [currentRole, setCurrentRole] = useState<UserRole>('viewer');
+  const [currentRole, setCurrentRole] = useState<UserRole>(roleContext?.role || 'viewer');
   const [isTestMode, setIsTestMode] = useState<boolean>(false);
   
   // Initialize and listen for role changes
@@ -50,7 +50,12 @@ const Dashboard = () => {
     });
     
     // Set the initial role from any available source
-    setCurrentRole(initialRole as UserRole);
+    // Ensuring we update with the latest role from context
+    if (contextRole) {
+      setCurrentRole(contextRole as UserRole);
+    } else {
+      setCurrentRole(initialRole as UserRole);
+    }
     
     // Check if test mode is active
     const testMode = localStorage.getItem('isTestMode') === 'true';
@@ -81,12 +86,7 @@ const Dashboard = () => {
         setCurrentRole(latestRole as UserRole);
       }
     };
-    
-    // Listen for direct context role changes 
-    if (roleContext && roleContext.role !== currentRole) {
-      console.log('Role context changed, updating role:', roleContext.role);
-      setCurrentRole(roleContext.role as UserRole);
-    }
+  
     
     document.addEventListener('roleSwitched', handleRoleChange);
     window.addEventListener('dashboard-role-changed', handleDashboardRoleChange);
