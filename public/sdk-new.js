@@ -260,13 +260,45 @@
         </div>
       `;
       
-      // Track user engagement
-      let viewStartTime = Date.now();
+      // Track user engagement using Intersection Observer to verify visibility
+      let viewStartTime = null;
       let engagementTimer = null;
       let hasEarnedFromEngagement = false;
       
+      // Create an Intersection Observer to track when ad is visible
+      const intersectionObserver = new IntersectionObserver((entries) => {
+        const entry = entries[0];
+        
+        if (entry.isIntersecting && entry.intersectionRatio >= 0.9) {
+          // Ad is fully visible (90%+), start timer if not already started
+          if (viewStartTime === null) {
+            viewStartTime = Date.now();
+            // Check engagement every second
+            engagementTimer = setInterval(checkEngagementEarnings, 1000);
+            console.log("Ad fully visible, started timer");
+          }
+        } else {
+          // Ad is not fully visible, reset timer
+          if (viewStartTime !== null) {
+            viewStartTime = null;
+            if (engagementTimer) {
+              clearInterval(engagementTimer);
+              engagementTimer = null;
+              console.log("Ad not fully visible, timer reset");
+            }
+          }
+        }
+      }, {
+        threshold: 0.9 // Require 90% visibility before starting timer
+      });
+      
+      // Start observing the ad element
+      intersectionObserver.observe(adElement);
+      
       // Function to handle view earnings after 5 seconds
       const checkEngagementEarnings = () => {
+        if (viewStartTime === null) return;
+        
         const viewDuration = (Date.now() - viewStartTime) / 1000;
         
         // Only pay once per ad view if user lingers for > 5 seconds
@@ -283,6 +315,12 @@
           });
           
           hasEarnedFromEngagement = true;
+          
+          // Clear interval once earned
+          if (engagementTimer) {
+            clearInterval(engagementTimer);
+            engagementTimer = null;
+          }
           
           // Show engagement notification
           const notificationEl = document.createElement('div');
