@@ -228,7 +228,7 @@ const HomePage: NextPageWithLayout = () => {
                           htmlFor="role-user"
                           className="text-sm font-medium text-gray-800 dark:text-gray-200"
                         >
-                          User - Control my data and earn rewards
+                          Viewer - Earn bitcoin and control your own data
                         </label>
                       </div>
                     </div>
