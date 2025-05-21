@@ -115,7 +115,7 @@ const HowItWorksPage: React.FC = () => {
             <div className="text-center mb-12">
               <h2 className="text-3xl font-bold mb-4">Platform Overview</h2>
               <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-                Nostr Ad Marketplace connects advertisers, publishers, and viewers in a trustless ecosystem
+                Proof Of Reach connects advertisers, publishers, and viewers in a trustless ecosystem
               </p>
             </div>
 
@@ -189,7 +189,7 @@ const HowItWorksPage: React.FC = () => {
         {/* FAQ Section */}
         <FAQSection
           title="Frequently Asked Questions"
-          subtitle="Common questions about the Nostr Ad Marketplace"
+          subtitle="Common questions about Proof Of Reach"
           faqs={faqItems}
           maxItems={4}
         />

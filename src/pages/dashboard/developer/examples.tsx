@@ -492,7 +492,7 @@ const ProofOfReachAd = ({
   );
 };
 
-export default NostrAd;
+export default ProofOfReachAd;
 
 // Usage in another component:
 // <NostrAd 
@@ -633,7 +633,7 @@ const ProofOfReachAd = ({
   );
 };
 
-export default NostrAd;
+export default ProofOfReachAd;
 
 // Usage in another component:
 // <NostrAd 
@@ -665,7 +665,7 @@ export default NostrAd;
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Nostr Ad Example</title>
+  <title>Proof Of Reach Example</title>
   <style>
     .ad-container {
       border: 1px solid #ddd;
@@ -791,7 +791,7 @@ export default NostrAd;
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Nostr Ad Example</title>
+  <title>Proof Of Reach Example</title>
   <style>
     .ad-container {
       border: 1px solid #ddd;
