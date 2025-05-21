@@ -1,20 +1,12 @@
-import React, { useState } from 'react';
-import { getDashboardLayout } from '@/utils/layoutHelpers';
+import { useEffect } from 'react';
+import { useRouter } from 'next/router';
 import type { NextPageWithLayout } from '../../_app';
-import DashboardCard from '@/components/ui/DashboardCard';
-import Badge from '@/components/ui/Badge';
-import { Button } from '@/components/ui/button';
-import { Card, CardHeader, CardTitle, CardContent, CardFooter } from '@/components/ui/card';
-import { ArrowUpRight, Shield, User, AlertTriangle, ChevronDown, ChevronUp, Info } from 'react-feather';
-import Link from 'next/link';
-import { BarChart, PieChart } from '@/components/charts';
-import Tooltip from '@/components/ui/Tooltip';
+import { getDashboardLayout } from '@/utils/layoutHelpers';
 
 /**
- * Proof of Reach Report Page
+ * Redirector for Proof of Reach Report Page
  * 
- * A human-verified ad performance dashboard that shows verified real users,
- * not bots or clickfarms, using Lightning Network and Nostr protocol.
+ * This redirects from the old role-based URL structure to the new feature-based URL structure
  */
 const ProofOfReachPage: NextPageWithLayout = () => {
   const [selectedCampaign, setSelectedCampaign] = useState('all');

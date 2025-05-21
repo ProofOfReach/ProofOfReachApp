@@ -71,6 +71,7 @@ const SimplifiedDashboardLayout: React.FC<SimplifiedDashboardLayoutProps> = ({
     // Common links for all roles
     const commonLinks = [
       { href: '/dashboard', label: 'Dashboard', icon: <Home className="w-5 h-5" /> },
+      { href: '/dashboard/reports/proof-of-reach', label: 'Proof of Reach', icon: <Shield className="w-5 h-5" /> },
       { href: '/dashboard/settings', label: 'Settings', icon: <Settings className="w-5 h-5" /> }
     ];
     
@@ -80,8 +81,7 @@ const SimplifiedDashboardLayout: React.FC<SimplifiedDashboardLayoutProps> = ({
         { href: '/dashboard/user/profile', label: 'My Profile', icon: <User className="w-5 h-5" /> }
       ],
       advertiser: [
-        { href: '/dashboard/advertiser/campaigns', label: 'Campaigns', icon: <BarChart2 className="w-5 h-5" /> },
-        { href: '/dashboard/advertiser/proof-of-reach', label: 'Proof of Reach', icon: <Shield className="w-5 h-5" /> }
+        { href: '/dashboard/advertiser/campaigns', label: 'Campaigns', icon: <BarChart2 className="w-5 h-5" /> }
       ],
       publisher: [
         { href: '/dashboard/publisher/spaces', label: 'Ad Spaces', icon: <BarChart2 className="w-5 h-5" /> }
