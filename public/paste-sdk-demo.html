@@ -100,7 +100,7 @@
         border: 1px solid #059669;
         font-size: 0.9rem;
         font-weight: 500;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
       }
       .satoshi-animation {
         transition: all 0.5s ease;
@@ -192,7 +192,18 @@
         </div>
 
         <!-- Sticky Wallet Balance Display that follows user as they scroll -->
-        <div class="wallet-balance" id="wallet-box" style="position: fixed; top: 20px; right: 20px; z-index: 1000; box-shadow: 0 4px 12px rgba(0,0,0,0.15); max-width: 180px;">
+        <div
+          class="wallet-balance"
+          id="wallet-box"
+          style="
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            max-width: 180px;
+          "
+        >
           <strong>Publisher Balance:</strong>
           <span id="wallet-balance">0</span>
           <span class="satoshi-animation">sats</span> ⚡
@@ -232,12 +243,12 @@
           </li>
         </ol>
         <p>That's all it takes to integrate ProofOfReach into your own site!</p>
-        
+
         <!-- Second Ad Container -->
         <div class="ad-container" id="proof-of-reach-ad-2">
           <p><em>Second ad placement</em></p>
         </div>
-        
+
         <h2>Benefits of Bitcoin-Powered Advertising</h2>
         <ul>
           <li>Instant micropayments without traditional payment processors</li>
@@ -246,7 +257,7 @@
           <li>Global payment system that works across borders</li>
           <li>Direct publisher-advertiser relationships with reduced fees</li>
         </ul>
-        
+
         <!-- Third Ad Container -->
         <div class="ad-container" id="proof-of-reach-ad-3">
           <p><em>Third ad placement</em></p>
@@ -265,59 +276,59 @@
       let walletBalance = 0;
       const updateWalletBalance = (amount) => {
         walletBalance += amount;
-        const balanceElement = document.getElementById('wallet-balance');
+        const balanceElement = document.getElementById("wallet-balance");
         if (balanceElement) {
           balanceElement.textContent = walletBalance;
-          
+
           // Add animation effect
-          const satoshiText = document.querySelector('.satoshi-animation');
+          const satoshiText = document.querySelector(".satoshi-animation");
           if (satoshiText) {
-            satoshiText.classList.add('bump');
-            setTimeout(() => satoshiText.classList.remove('bump'), 500);
+            satoshiText.classList.add("bump");
+            setTimeout(() => satoshiText.classList.remove("bump"), 500);
           }
         }
       };
-      
-      // Detect which SDK version is being used
+
+      /* Detect which SDK version is being used*/
       window.addEventListener("load", () => {
         // Determine which SDK object is available
         const SDK = window.ProofOfReachSDK || window.ProofOfReach;
-        
+
         if (!SDK) {
           console.error("ProofOfReach SDK not loaded correctly!");
           return;
         }
-        
+
         // Initialize the SDK first
         if (SDK.init) {
           SDK.init({
-            testMode: true
+            testMode: true,
           });
         }
-        
+
         // Common configuration for all ad placements
         const adConfig = {
           pubkey: "demo_publisher",
-          testMode: true,  // Enable test mode to see demo ads
+          testMode: true, // Enable test mode to see demo ads
           onPayment: (sats) => {
             console.log(`Received ${sats} satoshis!`);
             // Update wallet balance when payment is received
             updateWalletBalance(sats);
           },
         };
-        
+
         // Render ads in all three containers with specific ad indices
         SDK.renderAd("proof-of-reach-ad", {
           ...adConfig,
-          adIndex: 0 // Force first ad
+          adIndex: 0, // Force first ad
         });
         SDK.renderAd("proof-of-reach-ad-2", {
           ...adConfig,
-          adIndex: 1 // Force second ad
+          adIndex: 1, // Force second ad
         });
         SDK.renderAd("proof-of-reach-ad-3", {
           ...adConfig,
-          adIndex: 2 // Force third ad
+          adIndex: 2, // Force third ad
         });
       });
     </script>
