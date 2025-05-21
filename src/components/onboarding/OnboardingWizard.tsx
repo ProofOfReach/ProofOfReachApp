@@ -86,10 +86,13 @@ const OnboardingWizard: React.FC = () => {
     
     // Viewer onboarding steps
     if (selectedRole === 'viewer') {
+      // The ViewerOnboarding component will calculate the correct total steps
+      // based on whether the user has a Nostr extension (2 steps) or not (3 steps)
       return <ViewerOnboarding 
         currentStep={currentStep} 
         onComplete={completeOnboarding}
-        showNavigation={false} 
+        showNavigation={false}
+        // We don't specify totalSteps here - component handles this dynamically
       />;
     }
     

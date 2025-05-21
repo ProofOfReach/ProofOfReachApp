@@ -11,6 +11,9 @@ const checkForNostrExtension = (): boolean => {
   return typeof window !== 'undefined' && !!window.nostr;
 };
 
+// Defining local step types more clearly
+type LocalStep = 'discovery' | 'privacy' | 'complete';
+
 interface Publisher {
   id: string;
   name: string;
@@ -116,52 +119,39 @@ const ViewerOnboarding: React.FC<ViewerOnboardingProps> = ({
 
   // Map from OnboardingContext step names to local step names
   const mapOnboardingStepToLocal = useMemo(() => {
-    return (step: OnboardingStep): string => {
-      // For Nostr users, map any step from context appropriately to our reduced sequence
+    return (step: OnboardingStep): LocalStep => {
+      // For Nostr users, we have a 2-step flow: privacy -> complete
       if (hasNostrExtension) {
-        // Start at privacy when a role is selected or preferences for Nostr extension users
-        if (step === 'role-selection' || step === 'preferences' || step === 'discovery') {
-          console.log("ViewerOnboarding - Skipping discovery for Nostr user, going directly to privacy");
+        // Most steps map to the first step (privacy) for Nostr users
+        if (step === 'role-selection' || step === 'preferences' || 
+            step === 'discovery' || step === 'notifications' || step === 'privacy') {
+          console.log("ViewerOnboarding - Simplified 2-step flow (Step 1/2: Privacy) for Nostr user");
           return 'privacy';
         }
         
-        // Map remaining steps as needed
-        if (step === 'privacy' || step === 'notifications') {
-          return 'privacy';
-        }
-        
-        if (step === 'feedback' || step === 'complete') {
-          return 'complete';
-        }
-        
-        // Default to privacy for any other step
-        return 'privacy';
+        // Last step is complete
+        console.log("ViewerOnboarding - Simplified 2-step flow (Step 2/2: Complete) for Nostr user");
+        return 'complete';
       } else {
-        // For non-Nostr users, use the standard mapping
-        // Start at discovery when a role is selected
-        if (step === 'role-selection' || step === 'preferences') {
-          console.log("ViewerOnboarding - Mapped incoming step to discovery");
+        // Non-Nostr users get the regular 3-step flow: discovery -> privacy -> complete
+        if (step === 'role-selection' || step === 'preferences' || step === 'discovery') {
+          console.log("ViewerOnboarding - Regular 3-step flow (Step 1/3: Discovery)");
           return 'discovery';
         }
         
-        // Map context steps to our local steps
-        const stepMap: Record<string, string> = {
-          'role-selection': 'discovery',
-          'preferences': 'discovery',
-          'discovery': 'discovery', 
-          'notifications': 'privacy', // Map notifications to privacy since we removed notifications step
-          'privacy': 'privacy',
-          'feedback': 'complete', // Map feedback to complete since we removed feedback step
-          'complete': 'complete'
-        };
+        if (step === 'privacy' || step === 'notifications') {
+          console.log("ViewerOnboarding - Regular 3-step flow (Step 2/3: Privacy)");
+          return 'privacy';
+        }
         
-        return stepMap[step] || 'discovery'; // Default to discovery if step is not recognized
+        console.log("ViewerOnboarding - Regular 3-step flow (Step 3/3: Complete)");
+        return 'complete';
       }
     };
   }, [hasNostrExtension]);
   
   // Initialize step from incoming currentStep prop
-  const [step, setStep] = useState<string>(() => mapOnboardingStepToLocal(currentStep));
+  const [step, setStep] = useState<LocalStep>(() => mapOnboardingStepToLocal(currentStep));
   
   // Update step if currentStep prop changes
   useEffect(() => {
@@ -171,19 +161,19 @@ const ViewerOnboarding: React.FC<ViewerOnboardingProps> = ({
   }, [currentStep, mapOnboardingStepToLocal]);
   
   // Initialize current step index and total steps for progress tracking
-  // Welcome and Notifications steps removed as they're not needed
   // Create different step sequences based on whether user has Nostr extension
+  // THIS IS THE KEY FIX: We define exactly 2 steps for Nostr users, 3 steps for regular users
   const stepSequence = useMemo(() => {
-    // For Nostr users, completely remove discovery from the sequence
+    console.log('ViewerOnboarding - Creating step sequence with hasNostrExtension:', hasNostrExtension);
     return hasNostrExtension ? 
       [
-        'privacy',
-        'complete'
+        'privacy',  // Step 1/2 for Nostr users: Privacy Settings
+        'complete'  // Step 2/2 for Nostr users: You're All Set!
       ] : 
       [
-        'discovery',
-        'privacy',
-        'complete'
+        'discovery', // Step 1/3 for regular users: Discover Publishers
+        'privacy',   // Step 2/3 for regular users: Privacy Settings
+        'complete'   // Step 3/3 for regular users: You're All Set!
       ];
   }, [hasNostrExtension]);
   
@@ -217,75 +207,91 @@ const ViewerOnboarding: React.FC<ViewerOnboardingProps> = ({
   
   // Calculate the current step number and total for display
   const currentStepIndex = stepSequence.indexOf(step);
-  // Use prop totalSteps if provided, or context's totalSteps if available, otherwise use local calculation
-  const calculatedTotalSteps = propTotalSteps || (contextTotalSteps > 0 ? contextTotalSteps : stepSequence.length);
+  
+  // THIS IS CRITICAL: Use the appropriate step sequence length based on whether the user has a Nostr extension
+  // For Nostr users: show 2 total steps
+  // For regular users: show 3 total steps or use the prop value if provided
+  const calculatedTotalSteps = propTotalSteps || 
+                             (hasNostrExtension ? 2 : 
+                              (contextTotalSteps > 0 ? contextTotalSteps : stepSequence.length));
+                              
   const currentStepNumber = currentStepIndex + 1;
+  
+  console.log(`ViewerOnboarding - Simplified ${hasNostrExtension ? '2' : '3'}-step flow (Step ${currentStepNumber}/${calculatedTotalSteps}: ${step}) for ${hasNostrExtension ? 'Nostr' : 'regular'} user`);
   
   // The main component will show its own progress indicator when showNavigation is false
   const shouldShowProgress = showNavigation;
 
   const handleNext = () => {
     // First update the local step
+    console.log(`ViewerOnboarding - Handling next from step: ${step} (Nostr: ${hasNostrExtension ? 'yes' : 'no'})`);
+    
     switch (step) {
       case 'discovery': 
-        // Skip directly to complete for users with Nostr extension
-        console.log('ViewerOnboarding - Moving to privacy step');
+        console.log('ViewerOnboarding - Moving from Discovery to Privacy step');
         setStep('privacy');
-        // Skip through the discovery step in the context
         goToNextStep();
         break;
+        
       case 'privacy':
-        // Go directly to complete after privacy (feedback step removed)
+        console.log('ViewerOnboarding - Moving from Privacy to Complete step');
         setStep('complete');
         goToNextStep();
         break;
+        
       case 'complete':
+        console.log('ViewerOnboarding - Completing onboarding process');
         // Use setTimeout to ensure the state update has time to propagate
         // This helps with test stability and real-world scenarios
         setTimeout(() => {
-          // When at the complete step, notify the OnboardingContext
           goToNextStep();
           if (onComplete) {
             onComplete();
           }
         }, 100);
         break;
+        
       default:
         // For users with Nostr extension, always go to privacy instead of discovery
         if (hasNostrExtension) {
+          console.log('ViewerOnboarding - Nostr user: Starting with Privacy step');
           setStep('privacy');
         } else {
+          console.log('ViewerOnboarding - Regular user: Starting with Discovery step');
           setStep('discovery');
         }
     }
   };
 
   const handleBack = () => {
+    console.log('ViewerOnboarding - Handling back navigation from step:', step);
+    
     switch (step) {
       case 'privacy':
-        // For users with Nostr extension, don't show discovery step
         if (hasNostrExtension) {
-          // Go back to role selection since there's no discovery step for Nostr users
-          console.log('ViewerOnboarding - User has Nostr extension, skipping discovery on back navigation');
+          // For Nostr users with a 2-step flow, going back from privacy means 
+          // going back to role selection (outside this component)
+          console.log('ViewerOnboarding - Nostr user going back from Privacy to role selection');
           goToPreviousStep();
         } else {
-          // Regular users go back to discovery
+          // For regular users, go back to discovery
+          console.log('ViewerOnboarding - Regular user going back from Privacy to Discovery');
           setStep('discovery');
           goToPreviousStep();
         }
         break;
+      
       case 'complete':
-        // Go directly back to privacy (feedback step removed)
+        // Go back to privacy step
+        console.log('ViewerOnboarding - Going back from Complete to Privacy');
         setStep('privacy');
         goToPreviousStep();
         break;
+      
       default:
-        if (hasNostrExtension) {
-          setStep('privacy');
-        } else {
-          setStep('discovery');
-        }
-        goToPreviousStep();
+        // Only happens for regular users on discovery step
+        console.log('ViewerOnboarding - Going back from Discovery to role selection');
+        goToPreviousStep(); // Goes back to role selection (outside this component)
     }
   };
   
@@ -506,10 +512,10 @@ const ViewerOnboarding: React.FC<ViewerOnboardingProps> = ({
               Received original step: {currentStep}
             </p>
             <button 
-              onClick={() => setStep('welcome')}
+              onClick={() => setStep('privacy' as LocalStep)}
               className="mt-3 px-3 py-1 bg-yellow-200 text-yellow-800 rounded hover:bg-yellow-300"
             >
-              Go to Welcome
+              Go to Privacy Settings
             </button>
           </div>
         );
