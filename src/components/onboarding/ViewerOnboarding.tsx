@@ -4,6 +4,7 @@ import OnboardingProgress from '@/components/onboarding/OnboardingProgress';
 import { CheckCircle, Search, ChevronRight, ChevronLeft, Check } from 'react-feather';
 import { Switch } from '@/components/ui/switch';
 import SkipButton from '@/components/ui/SkipButton';
+import ProfileAvatar from '@/components/ProfileAvatar';
 
 interface Publisher {
   id: string;
@@ -262,8 +263,13 @@ const ViewerOnboarding: React.FC<ViewerOnboardingProps> = ({
                       key={publisher.id}
                       className="flex items-start p-3 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg transition"
                     >
-                      <div className={`w-12 h-12 ${publisher.colorClass} rounded-full flex items-center justify-center mr-3`}>
-                        {publisher.initials}
+                      {/* Profile avatar replaces colored initials */}
+                      <div className="mr-3">
+                        <ProfileAvatar 
+                          pubkey={publisher.id}
+                          size="lg"
+                          className="border-2 border-white dark:border-gray-800 shadow-sm"
+                        />
                       </div>
                       <div className="flex-1">
                         <h4 className="font-medium">{publisher.name}</h4>

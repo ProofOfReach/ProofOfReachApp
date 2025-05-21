@@ -124,12 +124,23 @@ const OnboardingWizard: React.FC = () => {
   
   return (
     <div className="bg-white dark:bg-gray-900 rounded-lg shadow-lg max-w-4xl mx-auto overflow-hidden">
-      <div className="p-6 border-b border-gray-200 dark:border-gray-700">
-        <h1 className="text-xl font-bold text-gray-900 dark:text-white">
-          {isFirstStep ? 'Welcome to Proof Of Reach' : (
-            selectedRole ? `${selectedRole.charAt(0).toUpperCase() + selectedRole.slice(1)} Onboarding` : 'Onboarding'
-          )}
-        </h1>
+      <div className="p-6 border-b border-gray-200 dark:border-gray-700 flex flex-col items-center">
+        {isFirstStep || !selectedRole ? (
+          // For the first step or fallback, display the logo centered
+          <div className="flex justify-center w-full">
+            <img 
+              src="/logo_big_light.png" 
+              alt="Proof Of Reach" 
+              className="h-12 max-w-full"
+              data-testid="onboarding-logo"
+            />
+          </div>
+        ) : (
+          // For role-specific steps, show the role name
+          <h1 className="text-xl font-bold text-gray-900 dark:text-white">
+            {`${selectedRole.charAt(0).toUpperCase() + selectedRole.slice(1)} Onboarding`}
+          </h1>
+        )}
       </div>
       
       <div className="p-6">
