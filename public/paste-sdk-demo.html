@@ -303,10 +303,19 @@
           },
         };
         
-        // Render ads in all three containers
-        SDK.renderAd("proof-of-reach-ad", adConfig);
-        SDK.renderAd("proof-of-reach-ad-2", adConfig);
-        SDK.renderAd("proof-of-reach-ad-3", adConfig);
+        // Render ads in all three containers with specific ad indices
+        SDK.renderAd("proof-of-reach-ad", {
+          ...adConfig,
+          adIndex: 0 // Force first ad
+        });
+        SDK.renderAd("proof-of-reach-ad-2", {
+          ...adConfig,
+          adIndex: 1 // Force second ad
+        });
+        SDK.renderAd("proof-of-reach-ad-3", {
+          ...adConfig,
+          adIndex: 2 // Force third ad
+        });
       });
     </script>
     <!-- END SDK CODE -->

@@ -159,7 +159,7 @@
      * @private
      */
     _getTestAd: function(options) {
-      // Generate a random test ad with image focus, using proper Bitcoin-themed images
+      // Generate a test ad with image focus, using proper Bitcoin-themed images
       const testAds = [
         {
           id: 'test-ad-1',
@@ -202,7 +202,12 @@
         }
       ];
       
-      // Select a random ad
+      // If adIndex is specified, use that specific ad, otherwise select randomly
+      if (options && typeof options.adIndex === 'number' && options.adIndex >= 0 && options.adIndex < testAds.length) {
+        return testAds[options.adIndex];
+      }
+      
+      // Select a random ad if no specific index is requested
       return testAds[Math.floor(Math.random() * testAds.length)];
     },
     
