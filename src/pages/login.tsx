@@ -124,7 +124,7 @@ const LoginPage: React.FC = () => {
       const clearCacheParam = router.query && router.query.clear_cache === 'true';
       const forceLogoutParam = router.query && router.query.force_logout === 'true';
       
-      console.log('Login page - Authentication status check:', {
+      logger.log('Login page - Authentication status check:', {
         isAuthenticated,
         pubkey,
         preventAutoLogin,
@@ -136,7 +136,7 @@ const LoginPage: React.FC = () => {
       
       if (preventAutoLogin || clearCacheParam || forceLogoutParam) {
         // Log this for debugging
-        console.log('Auto-login prevented due to flags:', { 
+        logger.log('Auto-login prevented due to flags:', { 
           preventAutoLogin, 
           clearCacheParam,
           forceLogoutParam
@@ -151,10 +151,10 @@ const LoginPage: React.FC = () => {
       
       // Normal authentication redirect
       if (isAuthenticated && pubkey) {
-        console.log('Login page - Already authenticated, redirecting to dashboard with pubkey:', pubkey);
+        logger.log('Login page - Already authenticated, redirecting to dashboard with pubkey:', pubkey);
         router.push('/dashboard');
       } else {
-        console.log('Login page - Not authenticated yet or missing pubkey');
+        logger.log('Login page - Not authenticated yet or missing pubkey');
       }
     }
   }, [isAuthenticated, pubkey, router]);
@@ -166,7 +166,7 @@ const LoginPage: React.FC = () => {
     try {
       // Clean up any potentially conflicting localStorage items
       if (typeof window !== 'undefined') {
-        console.log('Clearing any localStorage keys that might interfere with Nostr extension login');
+        logger.log('Clearing any localStorage keys that might interfere with Nostr extension login');
         localStorage.removeItem('nostr_real_pk');
         localStorage.removeItem('nostr_real_sk');
         localStorage.removeItem('nostr_test_pk');
@@ -202,8 +202,8 @@ const LoginPage: React.FC = () => {
         });
         
         pubkey = await Promise.race([publicKeyPromise, timeoutPromise]);
-      } catch (extensionError) {
-        console.error('Error getting public key from Nostr extension:', extensionError);
+      } catch (extensionError: unknown) {
+        logger.error('Error getting public key from Nostr extension:', extensionError instanceof Error ? extensionError.message : String(extensionError));
         throw new Error('Error connecting to Nostr extension. Please check permissions and try again.');
       }
       
@@ -211,7 +211,7 @@ const LoginPage: React.FC = () => {
         throw new Error('Could not get public key from Nostr extension. Did you deny the permission request?');
       }
       
-      console.log('Successfully retrieved pubkey:', pubkey);
+      logger.log('Successfully retrieved pubkey:', pubkey);
       
       try {
         // Send login request to API
@@ -222,13 +222,18 @@ const LoginPage: React.FC = () => {
           body: JSON.stringify({ pubkey, isTest: false })
         });
         
-        const data: { 
-          token?: string; 
-          pubkey?: string; 
-          message?: string; 
+        // Define a proper interface for the API response
+        interface LoginApiResponse {
+          token?: string;
+          pubkey?: string;
+          message?: string;
           error?: string;
           redirectUrl?: string;
-        } = await response.json();
+          success?: boolean;
+          roles?: string[];
+        }
+        
+        const data: LoginApiResponse = await response.json();
         
         logger.log('API login response:', data);
         
@@ -251,7 +256,7 @@ const LoginPage: React.FC = () => {
         
         logger.log(`Redirecting to ${redirectUrl}`);
         router.push(redirectUrl);
-      } catch (apiError) {
+      } catch (apiError: unknown) {
         logger.error('API request failed:', apiError instanceof Error ? apiError.message : String(apiError));
         throw new Error('Failed to authenticate with the server. Please try again.');
       }
@@ -271,7 +276,7 @@ const LoginPage: React.FC = () => {
     
     try {
       // First, remove any potentially conflicting localStorage items
-      console.log('Clearing any existing auth-related localStorage keys before creating account');
+      logger.log('Clearing any existing auth-related localStorage keys before creating account');
       localStorage.removeItem('nostr_real_pk');
       localStorage.removeItem('nostr_real_sk');
       localStorage.removeItem('nostr_test_pk');
@@ -328,16 +333,16 @@ const LoginPage: React.FC = () => {
         }
         
         // Use the login function from auth context with isTestMode=false
-        console.log('Calling login function for the new account');
+        logger.log('Calling login function for the new account');
         await login(publicKey as string, false);
         
         // Determine where to redirect based on onboarding status
-        console.log('Account created successfully, checking onboarding status');
+        logger.log('Account created successfully, checking onboarding status');
         const onboardingService = await import('@/lib/onboardingService').then(mod => mod.default);
         const currentRole = 'viewer'; // Default to viewer for new accounts
         const redirectUrl = await onboardingService.getPostLoginRedirectUrl(publicKey as string, currentRole);
         
-        console.log(`Redirecting to ${redirectUrl}`);
+        logger.log(`Redirecting to ${redirectUrl}`);
         router.push(redirectUrl);
       } catch (apiError: unknown) {
         logger.error('API error during account creation:', apiError instanceof Error ? apiError.message : String(apiError));
@@ -378,7 +383,7 @@ const LoginPage: React.FC = () => {
       // Store the test keys and set all the necessary localStorage items for test mode
       storeTestKeys(privateKey || '', publicKey || '');
 
-      console.log('Starting test mode login flow with', publicKey);
+      logger.log('Starting test mode login flow with', publicKey || '');
       
       // Set test mode cookie directly in case the login function fails
       // Handle the publicKey with proper type checking
@@ -390,11 +395,19 @@ const LoginPage: React.FC = () => {
       localStorage.setItem('isTestMode', 'true');
       localStorage.setItem('bypass_api_calls', 'true');
       
-      // Set roles directly in localStorage
-      const ALL_ROLES = ['advertiser', 'publisher', 'admin', 'stakeholder'];
+      // Define role constants for consistency and type safety
+      type UserRole = 'advertiser' | 'publisher' | 'admin' | 'stakeholder' | 'viewer';
+      
+      const ROLE_ADVERTISER: UserRole = 'advertiser';
+      const ROLE_PUBLISHER: UserRole = 'publisher';
+      const ROLE_ADMIN: UserRole = 'admin';
+      const ROLE_STAKEHOLDER: UserRole = 'stakeholder';
+      
+      // Set roles directly in localStorage with typed array
+      const ALL_ROLES: UserRole[] = [ROLE_ADVERTISER, ROLE_PUBLISHER, ROLE_ADMIN, ROLE_STAKEHOLDER];
       localStorage.setItem('cachedAvailableRoles', JSON.stringify(ALL_ROLES));
       localStorage.setItem('roleCacheTimestamp', Date.now().toString());
-      localStorage.setItem('userRole', 'advertiser'); // Default role
+      localStorage.setItem('userRole', ROLE_ADVERTISER); // Default role
       
       // Enable each role explicitly
       localStorage.setItem('isAdvertiser', 'true');
@@ -405,10 +418,10 @@ const LoginPage: React.FC = () => {
       try {
         // Explicitly pass true for test mode
         const result = await login(publicKey as string, true);
-        console.log('Test login successful:', result);
-      } catch (loginError) {
-        console.error('Test login internal error:', loginError);
-        console.log('Continuing anyway since cookies were set directly');
+        logger.log('Test login successful:', result);
+      } catch (loginError: unknown) {
+        logger.error('Test login internal error:', loginError instanceof Error ? loginError.message : String(loginError));
+        logger.log('Continuing anyway since cookies were set directly');
       }
 
       // Complete onboarding for test users (regardless of login success)
@@ -416,9 +429,28 @@ const LoginPage: React.FC = () => {
         // Import onboarding service dynamically
         const onboardingService = await import('@/lib/onboardingService').then(mod => mod.default);
         
+        // Define proper interface for API request and responses
+        interface OnboardingCompleteRequest {
+          pubkey: string;
+          role: UserRole;
+          autoTest: boolean;
+        }
+        
+        interface OnboardingCompleteResponse {
+          success: boolean;
+          message?: string;
+          error?: string;
+        }
+        
         // Mark onboarding as complete for each role
-        const roles = ['advertiser', 'publisher', 'admin', 'viewer'];
-        for (const role of roles) {
+        const testRoles: UserRole[] = [
+          ROLE_ADVERTISER, 
+          ROLE_PUBLISHER, 
+          ROLE_ADMIN, 
+          'viewer' as UserRole
+        ];
+        
+        for (const role of testRoles) {
           try {
             // Call the API to mark onboarding complete
             const response = await fetch('/api/onboarding/complete', {
@@ -428,30 +460,32 @@ const LoginPage: React.FC = () => {
                 pubkey: publicKey,
                 role: role,
                 autoTest: true
-              })
+              } as OnboardingCompleteRequest)
             });
             
             if (response.ok) {
-              console.log(`Marked onboarding as complete for role: ${role}`);
+              logger.log(`Marked onboarding as complete for role: ${role}`);
             } else {
-              console.warn(`Failed to mark onboarding complete for role: ${role}`);
+              // Parse response to get error details
+              const errorData: OnboardingCompleteResponse = await response.json().catch(() => ({ success: false }));
+              logger.warn(`Failed to mark onboarding complete for role: ${role}`, errorData?.error || 'Unknown error');
             }
-          } catch (roleError) {
-            console.error(`Error marking onboarding complete for role ${role}:`, roleError);
+          } catch (roleError: unknown) {
+            logger.error(`Error marking onboarding complete for role ${role}:`, roleError instanceof Error ? roleError.message : String(roleError));
           }
         }
-      } catch (onboardingError) {
-        console.error('Error setting up test user onboarding:', onboardingError);
+      } catch (onboardingError: unknown) {
+        logger.error('Error setting up test user onboarding:', onboardingError instanceof Error ? onboardingError.message : String(onboardingError));
       }
 
       // Redirect to the dashboard after a short delay
-      console.log('Test Mode: Redirecting to dashboard');
+      logger.log('Test Mode: Redirecting to dashboard');
       setTimeout(() => {
         window.location.href = '/dashboard';
       }, 500);
       
-    } catch (err) {
-      console.error('Test mode login error:', err);
+    } catch (err: unknown) {
+      logger.error('Test mode login error:', err instanceof Error ? err.message : String(err));
       setError(err instanceof Error ? err.message : 'Failed to create test account');
     } finally {
       setIsLoading(false);
