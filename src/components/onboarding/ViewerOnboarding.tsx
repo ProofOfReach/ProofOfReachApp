@@ -39,29 +39,29 @@ const ViewerOnboarding: React.FC<ViewerOnboardingProps> = ({
     goToPreviousStep,
     totalSteps: contextTotalSteps
   } = useOnboarding();
-  // Real publishers with their actual Nostr hex pubkeys
+  // Real publishers with their actual Nostr hex pubkeys, properly matched with names
   const [publishers, setPublishers] = useState<Publisher[]>([
     {
       id: '82341f882b6eabcd2ba7f1ef90aad961cf074af15b9ef44a09f9d2a8fbfbe6a2',
-      name: 'Bitcoin Magazine',
-      description: 'The world\'s first publication dedicated to Bitcoin',
-      initials: 'BTC',
+      name: 'jack',
+      description: 'Bitcoin advocate, no state is the best state',
+      initials: 'JC',
       colorClass: 'bg-purple-100 dark:bg-purple-900 text-purple-600 dark:text-purple-300',
       followed: false
     },
     {
       id: '4523be58d395b1b196a9b8c82b038b6895cb02b683d0c253a955068dba1facd0',
-      name: 'Stacker News',
-      description: 'Bitcoin news and discussion with Lightning rewards',
-      initials: 'SN',
+      name: 'Martti Malmi',
+      description: 'Developing iris.to, Bitcoin and Nostr contributor',
+      initials: 'MM',
       colorClass: 'bg-blue-100 dark:bg-blue-900 text-blue-600 dark:text-blue-300',
       followed: false
     },
     {
       id: '32e1827635450ebb3c5a7d12c1f8e7b2b514439ac10a67eef3d9fd9c5c68e245',
-      name: 'Nostr Watch',
-      description: 'Updates and info about the Nostr protocol and ecosystem',
-      initials: 'NW',
+      name: 'jb55',
+      description: 'Creator of Damus, npubs, and zaps ⚡️',
+      initials: 'JB',
       colorClass: 'bg-green-100 dark:bg-green-900 text-green-600 dark:text-green-300',
       followed: false
     },
@@ -75,9 +75,9 @@ const ViewerOnboarding: React.FC<ViewerOnboardingProps> = ({
     },
     {
       id: 'fa984bd7dbb282f07e16e7ae87b26a2a7b9b90b7246a44771f0cf5ae58018f52',
-      name: 'Current Thing App',
-      description: 'The latest in Bitcoin, tech, and current topics',
-      initials: 'CT',
+      name: 'PABLOF7z',
+      description: 'Magical Other Stuff Maximalist, Nostr developer',
+      initials: 'PF',
       colorClass: 'bg-red-100 dark:bg-red-900 text-red-600 dark:text-red-300',
       followed: false
     }
