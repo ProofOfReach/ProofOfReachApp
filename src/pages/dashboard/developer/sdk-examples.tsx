@@ -18,21 +18,41 @@ const SDKExamplesPage = () => {
   const sdkScript = `<script src="/sdk-new.js"></script>
 <script>
   window.addEventListener("load", () => {
-    ProofOfReachSDK.renderAd("proof-of-reach-ad", {
+    // Determine which SDK object is available
+    const SDK = window.ProofOfReachSDK || window.ProofOfReach;
+    
+    if (!SDK) {
+      console.error("ProofOfReach SDK not loaded correctly!");
+      return;
+    }
+    
+    // Initialize the SDK first (global configuration)
+    if (SDK.init) {
+      SDK.init({
+        testMode: false,
+        defaultStyles: true
+      });
+    }
+    
+    // Define wallet balance update function
+    function updateWalletBalance(sats) {
+      const walletBalance = document.getElementById('wallet-balance');
+      if (walletBalance) {
+        const currentBalance = parseInt(walletBalance.textContent || '0');
+        walletBalance.textContent = (currentBalance + sats).toString();
+      }
+    }
+    
+    // Render the ad
+    SDK.renderAd("proof-of-reach-ad", {
       pubkey: "${userPubkey}",
       testMode: false,
-      defaultStyles: true,
       adType: "standard",
+      adIndex: 0, // Request specific ad (optional)
       onPayment: (sats) => {
         console.log(\`Received \${sats} satoshis!\`);
-        // Update wallet balance or other UI elements here
-        
-        // To display a wallet balance notification, you can do:
-        // const walletBalance = document.getElementById('wallet-balance');
-        // if (walletBalance) {
-        //   const currentBalance = parseInt(walletBalance.textContent || '0');
-        //   walletBalance.textContent = (currentBalance + sats).toString();
-        // }
+        // Update wallet balance when payment is received
+        updateWalletBalance(sats);
       }
     });
   });
@@ -74,7 +94,7 @@ const SDKExamplesPage = () => {
   // React example
   const reactExample = `import { useEffect, useState } from 'react';
 
-function ProofOfReachAd({ containerId = "proof-of-reach-ad" }) {
+function ProofOfReachAd({ containerId = "proof-of-reach-ad", adIndex = 0 }) {
   const [earnings, setEarnings] = useState(0);
 
   useEffect(() => {
@@ -85,19 +105,33 @@ function ProofOfReachAd({ containerId = "proof-of-reach-ad" }) {
     
     script.onload = () => {
       // Initialize once SDK is loaded
-      if (window.ProofOfReachSDK) {
-        window.ProofOfReachSDK.renderAd(containerId, {
-          pubkey: "${userPubkey}",
+      const SDK = window.ProofOfReachSDK || window.ProofOfReach;
+      
+      if (!SDK) {
+        console.error("ProofOfReach SDK not loaded correctly!");
+        return;
+      }
+      
+      // Initialize the SDK first (global configuration)
+      if (SDK.init) {
+        SDK.init({
           testMode: false,
-          defaultStyles: true,
-          adType: "standard",
-          onPayment: (sats) => {
-            console.log(\`Received \${sats} satoshis!\`);
-            // Update component state with new earnings
-            setEarnings(prev => prev + sats);
-          }
+          defaultStyles: true
         });
       }
+      
+      // Render ad with the specified config
+      SDK.renderAd(containerId, {
+        pubkey: "${userPubkey}",
+        testMode: false,
+        adType: "standard",
+        adIndex: adIndex, // Request specific ad
+        onPayment: (sats) => {
+          console.log(\`Received \${sats} satoshis!\`);
+          // Update component state with new earnings
+          setEarnings(prev => prev + sats);
+        }
+      });
     };
     
     document.body.appendChild(script);
@@ -108,7 +142,7 @@ function ProofOfReachAd({ containerId = "proof-of-reach-ad" }) {
         document.body.removeChild(script);
       }
     };
-  }, [containerId]);
+  }, [containerId, adIndex]);
   
   return (
     <div className="relative">
@@ -141,7 +175,7 @@ function MyArticle() {
 /**
  * Plugin Name: ProofOfReach Integration
  * Description: Integrates ProofOfReach ads into your WordPress site with satoshi earnings
- * Version: 1.1
+ * Version: 1.2
  */
 
 // Add the SDK to the footer
@@ -150,6 +184,22 @@ function add_proofofreach_sdk() {
   <script src="//proofofreach.xyz/sdk-new.js"></script>
   <script>
     window.addEventListener("load", () => {
+      // Determine which SDK object is available
+      const SDK = window.ProofOfReachSDK || window.ProofOfReach;
+      
+      if (!SDK) {
+        console.error("ProofOfReach SDK not loaded correctly!");
+        return;
+      }
+      
+      // Initialize the SDK first with global configuration
+      if (SDK.init) {
+        SDK.init({
+          testMode: false,
+          defaultStyles: true
+        });
+      }
+      
       // Track total earnings in this session
       let totalEarnings = 0;
       
@@ -168,21 +218,28 @@ function add_proofofreach_sdk() {
       earningsCounter.innerHTML = '⚡ <span id="por-earnings">0</span> sats earned';
       document.body.appendChild(earningsCounter);
       
-      // Find all ad containers
-      document.querySelectorAll('.proofofreach-ad').forEach(container => {
-        ProofOfReachSDK.renderAd(container.id, {
-          pubkey: "${userPubkey}",
-          testMode: false,
-          defaultStyles: true,
-          adType: "standard",
-          onPayment: (sats) => {
-            // Update total earnings
-            totalEarnings += sats;
-            document.getElementById('por-earnings').textContent = totalEarnings;
-            
-            // Show the earnings counter if not already visible
-            earningsCounter.style.display = 'block';
-          }
+      // Common configuration for all ad placements
+      const adConfig = {
+        pubkey: "${userPubkey}",
+        testMode: false,
+        defaultStyles: true,
+        adType: "standard",
+        onPayment: (sats) => {
+          // Update total earnings
+          totalEarnings += sats;
+          document.getElementById('por-earnings').textContent = totalEarnings;
+          
+          // Show the earnings counter if not already visible
+          earningsCounter.style.display = 'block';
+        }
+      };
+      
+      // Find all ad containers and render ads with specific indices
+      const adContainers = document.querySelectorAll('.proofofreach-ad');
+      adContainers.forEach((container, index) => {
+        SDK.renderAd(container.id, {
+          ...adConfig,
+          adIndex: index % 3 // Cycle through 3 different ad types
         });
       });
     });
@@ -205,14 +262,37 @@ add_shortcode('proofofreach_ad', 'proofofreach_ad_shortcode');
 // Usage in posts: [proofofreach_ad]
 ?>`;
 
-  const advancedConfig = `ProofOfReachSDK.renderAd("proof-of-reach-ad", {
+  const advancedConfig = `// First, handle SDK object detection and initialization
+const SDK = window.ProofOfReachSDK || window.ProofOfReach;
+if (!SDK) {
+  console.error("ProofOfReach SDK not loaded correctly!");
+  return;
+}
+
+// SDK Global Initialization
+if (SDK.init) {
+  SDK.init({
+    testMode: false,
+    defaultStyles: true,
+    analyticsEnabled: true,
+    debug: false                    // Set to true for verbose console logs
+  });
+}
+
+// Render an ad with full configuration options
+SDK.renderAd("proof-of-reach-ad", {
   // Core configuration
   pubkey: "${userPubkey}",         // Your Nostr public key (required)
   testMode: false,                 // Set to true for testing with mock payments
   
+  // Ad selection and targeting
+  adIndex: 0,                      // Request specific ad (0, 1, 2, etc.)
+  tags: ["bitcoin", "lightning"],  // Request ads with specific tags
+  
   // Ad appearance
   adType: "standard",              // "standard" (300×250), "small" (160×600), or "banner" (728×90)
-  defaultStyles: true,             // Apply default container styles 
+  defaultStyles: true,             // Apply default container styles
+  customClasses: "my-custom-ad",   // Add custom CSS classes to ad container
   
   // Visibility tracking
   visibilityThreshold: 0.9,        // Requires 90% of ad to be visible (0.0-1.0)
@@ -221,6 +301,7 @@ add_shortcode('proofofreach_ad', 'proofofreach_ad_shortcode');
   // Performance settings
   refreshInterval: 300000,         // Refresh ad every 5 minutes (in ms)
   analyticsEnabled: true,          // Enable anonymous analytics
+  cacheAds: true,                  // Cache ad content for faster loading
   
   // Event callbacks
   onPayment: (sats) => {           // Called when payment is received after visibility period
@@ -233,14 +314,17 @@ add_shortcode('proofofreach_ad', 'proofofreach_ad_shortcode');
       balance.textContent = (current + sats).toString();
     }
   },
-  onVisibilityChange: (isVisible) => {  // Called when ad visibility changes
-    console.log(\`Ad visibility: \${isVisible ? 'visible' : 'hidden'}\`);
+  onVisibilityChange: (isVisible, visibleRatio) => {  // Called when ad visibility changes
+    console.log(\`Ad visibility: \${isVisible ? 'visible' : 'hidden'} (\${Math.round(visibleRatio * 100)}%)\`);
+  },
+  onImpression: (adId) => {        // Called when ad is first viewed
+    console.log(\`Ad impression recorded: \${adId}\`);
   },
   onError: (error) => {            // Called when error occurs
     console.error(\`Ad error: \${error}\`);
   },
-  onLoad: () => {                  // Called when ad loads successfully
-    console.log("Ad loaded successfully");
+  onLoad: (adData) => {            // Called when ad loads successfully
+    console.log("Ad loaded successfully", adData);
   }
 });\n`;
 
