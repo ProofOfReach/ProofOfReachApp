@@ -760,8 +760,20 @@ const Dashboard = () => {
 
   // Render the appropriate dashboard based on the current role
   const renderDashboard = () => {
+    // In test mode, prioritize localStorage role for consistency
+    let effectiveRole = currentRole;
+    
+    if (isTestMode && typeof window !== 'undefined') {
+      const storedRole = localStorage.getItem('currentRole');
+      if (storedRole) {
+        // Clean up the stored role to handle any quotes
+        effectiveRole = storedRole.replace(/['"]/g, '') as UserRole;
+        logger.debug(`Test mode active: Using localStorage role: ${effectiveRole}`);
+      }
+    }
+    
     // Clean up any string quotes that might be around the role
-    const normalizedRole = currentRole?.toString().replace(/['"]/g, '') || 'viewer';
+    const normalizedRole = effectiveRole?.toString().replace(/['"]/g, '') || 'viewer';
     
     // Add comprehensive logging to help debug role issues
     logger.debug(`Rendering dashboard for role: '${normalizedRole}' (raw: '${currentRole}')`);
@@ -769,7 +781,8 @@ const Dashboard = () => {
     logger.debug(`Local storage role: ${typeof window !== 'undefined' ? localStorage.getItem('currentRole') : 'N/A'}`);
     
     // Force dashboard re-render with a unique key that changes with EVERY render
-    const dashboardKey = `dashboard-${normalizedRole}-${Date.now()}-${Math.random()}`;
+    // Remove random() to prevent excessive re-renders while still ensuring unique key per render
+    const dashboardKey = `dashboard-${normalizedRole}-${Date.now()}`;
 
     // Enhanced switch statement with more explicit case handling
     switch(normalizedRole) {
