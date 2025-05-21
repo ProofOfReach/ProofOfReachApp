@@ -273,7 +273,23 @@
         }
       };
       
+      // Detect which SDK version is being used
       window.addEventListener("load", () => {
+        // Determine which SDK object is available
+        const SDK = window.ProofOfReachSDK || window.ProofOfReach;
+        
+        if (!SDK) {
+          console.error("ProofOfReach SDK not loaded correctly!");
+          return;
+        }
+        
+        // Initialize the SDK first
+        if (SDK.init) {
+          SDK.init({
+            testMode: true
+          });
+        }
+        
         // Common configuration for all ad placements
         const adConfig = {
           pubkey: "demo_publisher",
@@ -286,9 +302,9 @@
         };
         
         // Render ads in all three containers
-        ProofOfReachSDK.renderAd("proof-of-reach-ad", adConfig);
-        ProofOfReachSDK.renderAd("proof-of-reach-ad-2", adConfig);
-        ProofOfReachSDK.renderAd("proof-of-reach-ad-3", adConfig);
+        SDK.renderAd("proof-of-reach-ad", adConfig);
+        SDK.renderAd("proof-of-reach-ad-2", adConfig);
+        SDK.renderAd("proof-of-reach-ad-3", adConfig);
       });
     </script>
     <!-- END SDK CODE -->
