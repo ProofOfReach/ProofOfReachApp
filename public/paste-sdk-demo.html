@@ -59,7 +59,7 @@
       .article-container {
         background-color: white;
         border-radius: 8px;
-        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
         padding: 2rem;
         margin-bottom: 2rem;
       }
@@ -145,72 +145,94 @@
       <h1>ProofOfReach SDK Integration Demo</h1>
       <p>
         This demo shows how to integrate the ProofOfReach SDK into any webpage.
-        Our SDK is pre-included at the bottom of this page - just look for the comments in the HTML.
+        Our SDK is pre-included at the bottom of this page - just look for the
+        comments in the HTML.
       </p>
-
-
 
       <div class="article-container">
         <div class="article-meta">
-          <img src="https://i.pravatar.cc/300?img=12" alt="Sarah Nakamoto">
+          <img src="https://i.pravatar.cc/300?img=12" alt="Sarah Nakamoto" />
           <div>
             <strong>Sarah Nakamoto</strong>
             <div>May 21, 2025 · 8 min read</div>
           </div>
         </div>
-      
-        <h2 class="article-title">Nation State Bitcoin Adoption: The 2025 Revolution</h2>
-        
+
+        <h2 class="article-title">
+          Nation State Bitcoin Adoption: The 2025 Revolution
+        </h2>
+
         <p>
-          The global financial landscape is undergoing a historic transformation as more nations adopt
-          <span class="highlight">Bitcoin</span> as legal tender. Following El Salvador's pioneering move in 2021,
-          countries like Paraguay, Panama, and Tanzania have embraced Bitcoin, with the <span class="highlight">Lightning Network</span>
-          enabling instantaneous cross-border payments and dramatically reducing remittance costs.
+          The global financial landscape is undergoing a historic transformation
+          as more nations adopt
+          <span class="highlight">Bitcoin</span> as legal tender. Following El
+          Salvador's pioneering move in 2021, countries like Paraguay, Panama,
+          and Tanzania have embraced Bitcoin, with the
+          <span class="highlight">Lightning Network</span>
+          enabling instantaneous cross-border payments and dramatically reducing
+          remittance costs.
         </p>
 
         <p>
-          When El Salvador made Bitcoin legal tender in September 2021, skeptics predicted economic disaster. Four years later, 
-          the data tells a different story. Tourism has surged 195%, remittance costs have fallen from an average of 10.2% to 
-          less than 1%, and financial inclusion has reached 83% of the adult population, up from just 30% in 2021.
+          When El Salvador made Bitcoin legal tender in September 2021, skeptics
+          predicted economic disaster. Four years later, the data tells a
+          different story. Tourism has surged 195%, remittance costs have fallen
+          from an average of 10.2% to less than 1%, and financial inclusion has
+          reached 83% of the adult population, up from just 30% in 2021.
         </p>
-        
+
         <!-- Ad Container - Will be filled by the SDK -->
         <div class="ad-container" id="proof-of-reach-ad">
           <p><em>Your ad will appear here when you paste the SDK code!</em></p>
         </div>
-        
+
         <!-- Wallet Balance Display -->
         <div class="wallet-balance" id="wallet-box">
           <strong>Publisher Wallet Balance:</strong>
-          <span id="wallet-balance">0</span> <span class="satoshi-animation">sats</span> ⚡
-          <div style="margin-top: 0.5rem; font-size: 0.8rem; color: #6b7280;">
-            <em>Click on the ad to simulate earning sats through Lightning Network!</em>
+          <span id="wallet-balance">0</span>
+          <span class="satoshi-animation">sats</span> ⚡
+          <div style="margin-top: 0.5rem; font-size: 0.8rem; color: #6b7280">
+            <em
+              >Click on the ad to simulate earning sats through Lightning
+              Network!</em
+            >
           </div>
         </div>
 
         <p>
-          Tanzania became the most recent country to adopt Bitcoin as legal tender in March 2025, following Ghana and Kenya's implementation 
-          last year. The African continent has seen the fastest growth in Bitcoin adoption, driven by a young, tech-savvy population, high mobile 
-          phone penetration, and significant remittance markets.
+          Tanzania became the most recent country to adopt Bitcoin as legal
+          tender in March 2025, following Ghana and Kenya's implementation last
+          year. The African continent has seen the fastest growth in Bitcoin
+          adoption, driven by a young, tech-savvy population, high mobile phone
+          penetration, and significant remittance markets.
         </p>
-        
+
         <p>
-          "We're not just implementing a new currency," said Tanzania's President Samia Hassan. "We're building a new economic paradigm 
-          that empowers our citizens to participate in the global digital economy without intermediaries."
+          "We're not just implementing a new currency," said Tanzania's
+          President Samia Hassan. "We're building a new economic paradigm that
+          empowers our citizens to participate in the global digital economy
+          without intermediaries."
         </p>
       </div>
-      
+
       <div>
         <h2>How to Add ProofOfReach to Your Site</h2>
         <ol>
           <li>Copy the SDK code from your developer settings page</li>
-          <li>Paste it at the bottom of your HTML before the closing <code>&lt;/body&gt;</code> tag</li>
-          <li>Add a container div with a specific ID where you want the ad to appear</li>
-          <li>The SDK automatically handles ad loading and renders the ad in your container</li>
+          <li>
+            Paste it at the bottom of your HTML before the closing
+            <code>&lt;/body&gt;</code> tag
+          </li>
+          <li>
+            Add a container div with a specific ID where you want the ad to
+            appear
+          </li>
+          <li>
+            The SDK automatically handles ad loading and renders the ad in your
+            container
+          </li>
         </ol>
-        <p>
-          That's all it takes to integrate ProofOfReach into your own site!
-        </p>
+        <p>That's all it takes to integrate ProofOfReach into your own site!</p>
       </div>
     </div>
 
@@ -219,7 +241,37 @@
     </footer>
 
     <!-- PASTE YOUR SDK CODE HERE -->
-    
+    <script src="/sdk-new.js"></script>
+    <script>
+      // Set up a demo wallet balance
+      let walletBalance = 0;
+      const updateWalletBalance = (amount) => {
+        walletBalance += amount;
+        const balanceElement = document.getElementById('wallet-balance');
+        if (balanceElement) {
+          balanceElement.textContent = walletBalance;
+          
+          // Add animation effect
+          const satoshiText = document.querySelector('.satoshi-animation');
+          if (satoshiText) {
+            satoshiText.classList.add('bump');
+            setTimeout(() => satoshiText.classList.remove('bump'), 500);
+          }
+        }
+      };
+      
+      window.addEventListener("load", () => {
+        ProofOfReachSDK.renderAd("proof-of-reach-ad", {
+          pubkey: "demo_publisher",
+          testMode: true,  // Enable test mode to see demo ads
+          onPayment: (sats) => {
+            console.log(`Received ${sats} satoshis!`);
+            // Update wallet balance when payment is received
+            updateWalletBalance(sats);
+          },
+        });
+      });
+    </script>
     <!-- END SDK CODE -->
   </body>
 </html>
