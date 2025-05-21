@@ -138,8 +138,8 @@ const HomePage: NextPageWithLayout = () => {
           <span className="block text-purple-600">Create. Reach. Earn.</span>
         </h1>
         <p className="mt-4 text-xl text-gray-600 dark:text-gray-300">
-          A decentralized platform connecting advertisers, publishers, and viewers
-          using the Nostr protocol and Lightning Network payments.
+          Aligning advertisers, publishers, and viewers using Bitcoin Lightning payments 
+          and the NOSTR protocol.
         </p>
         <div className="mt-8 flex justify-center">
           <div className="w-full max-w-md mx-auto">
