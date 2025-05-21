@@ -222,7 +222,8 @@
       adElement.className = 'proof-of-reach-ad';
       adElement.style.cursor = 'pointer';
       adElement.style.position = 'relative';
-      adElement.style.width = '100%';
+      adElement.style.width = '300px';
+      adElement.style.height = '250px';
       adElement.style.boxSizing = 'border-box';
       
       // Apply ad styles if any
@@ -232,24 +233,24 @@
         });
       }
       
-      // Create ad content HTML with larger image for image-based ads
+      // Create ad content HTML formatted for standard 300x250 size
       adElement.innerHTML = `
-        <div style="padding: 18px; position: relative; z-index: 2;">
-          <div style="margin-bottom: 12px;">
-            <h3 style="margin: 0; font-size: 18px; font-weight: 600;">${adData.title}</h3>
+        <div style="padding: 12px; position: relative; z-index: 2; height: 226px; box-sizing: border-box;">
+          <div style="margin-bottom: 8px;">
+            <h3 style="margin: 0; font-size: 16px; font-weight: 600;">${adData.title}</h3>
           </div>
           ${adData.imageUrl ? 
-            `<div style="margin: 15px 0; text-align: center;">
+            `<div style="margin: 8px 0; text-align: center;">
               <img src="${adData.imageUrl}" alt="${adData.title}" 
-                style="width: 100%; max-height: 150px; object-fit: cover; border-radius: 6px; display: block;">
+                style="width: 100%; height: 120px; object-fit: cover; border-radius: 4px; display: block;">
              </div>` : ''}
-          <p style="margin: 8px 0; font-size: 14px;">${adData.description}</p>
-          <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 16px;">
-            <span style="font-size: 12px;">Sponsored by ${adData.sponsor}</span>
-            <button style="background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.3); border-radius: 4px; padding: 6px 12px; font-size: 14px; color: inherit; cursor: pointer;">${adData.callToAction}</button>
+          <p style="margin: 6px 0; font-size: 12px; max-height: 36px; overflow: hidden;">${adData.description}</p>
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 10px;">
+            <span style="font-size: 10px;">By ${adData.sponsor}</span>
+            <button style="background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.3); border-radius: 4px; padding: 4px 10px; font-size: 12px; color: inherit; cursor: pointer;">${adData.callToAction}</button>
           </div>
-          <div style="position: absolute; bottom: 5px; right: 5px; font-size: 10px; opacity: 0.7;">
-            Powered by ProofOfReach
+          <div style="position: absolute; bottom: 5px; right: 5px; font-size: 9px; opacity: 0.7;">
+            ⚡ ProofOfReach
           </div>
         </div>
       `;
