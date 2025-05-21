@@ -90,9 +90,11 @@ type OnboardingProviderProps = {
 export const OnboardingProvider: React.FC<OnboardingProviderProps> = ({ children, forcePubkey, initialRole }) => {
   const { authState } = useAuthRefactored();
   const roleContext = useRole();
-  const currentRole = roleContext?.currentRole;
+  // Safely access currentRole with a fallback to prevent hydration errors
+  const currentRole = roleContext?.currentRole || 'viewer';
   const router = useRouter();
   
+  // For SSR compatibility, use basic initial values
   const [currentStep, setCurrentStep] = useState<OnboardingStep>('role-selection');
   const [selectedRole, setSelectedRole] = useState<UserRoleType | null>(initialRole || null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -111,8 +113,9 @@ export const OnboardingProvider: React.FC<OnboardingProviderProps> = ({ children
     }
   };
   
+  // Define these variables in a way that's safe for server-side rendering
   const roleSpecificSteps = getStepsForRole(selectedRole || currentRole);
-  const currentStepIndex = roleSpecificSteps.indexOf(currentStep);
+  const currentStepIndex = Math.max(0, roleSpecificSteps.indexOf(currentStep));
   const totalSteps = roleSpecificSteps.length;
   const progress = Math.round(((currentStepIndex + 1) / totalSteps) * 100);
   const isFirstStep = currentStepIndex === 0;
@@ -120,8 +123,13 @@ export const OnboardingProvider: React.FC<OnboardingProviderProps> = ({ children
   
   // Initialize onboarding state when the component mounts
   useEffect(() => {
+    // Skip this logic on the server-side
+    if (typeof window === 'undefined') {
+      return;
+    }
+    
     // Detect potential redirect loops
-    const urlParams = new URLSearchParams(typeof window !== 'undefined' ? window.location.search : '');
+    const urlParams = new URLSearchParams(window.location.search);
     const timestamp = urlParams.get('timestamp');
     const hasRedirectParams = !!timestamp;
     
@@ -133,25 +141,24 @@ export const OnboardingProvider: React.FC<OnboardingProviderProps> = ({ children
       
       // If multiple redirects within 2 seconds, this might be a loop
       if (timeSinceRedirect < 2000) {
-        console.log('Potential redirect loop detected, halting further redirects');
+        logger.warn('Potential redirect loop detected, halting further redirects');
         
         // Store this decision in session to prevent further redirect attempts
-        if (typeof window !== 'undefined') {
-          window.sessionStorage.setItem('preventOnboardingRedirects', 'true');
-          window.sessionStorage.setItem('lastRedirectTime', now.toString());
-        }
+        window.sessionStorage.setItem('preventOnboardingRedirects', 'true');
+        window.sessionStorage.setItem('lastRedirectTime', now.toString());
         return; // Exit early to break the loop
       }
     }
 
-    const preventRedirects = typeof window !== 'undefined' && 
-      window.sessionStorage.getItem('preventOnboardingRedirects') === 'true';
+    // Check if redirects are disabled (only in browser)
+    const preventRedirects = window.sessionStorage.getItem('preventOnboardingRedirects') === 'true';
     
     if (preventRedirects) {
-      console.log('Redirects temporarily disabled to prevent loops');
+      logger.info('Redirects temporarily disabled to prevent loops');
       return;
     }
 
+    // Initialize onboarding in browser context only
     const initializeOnboarding = async () => {
       // If we have an initial role (from URL params), immediately skip to the first step for that role
       if (selectedRole && currentStep === 'role-selection') {
@@ -179,7 +186,7 @@ export const OnboardingProvider: React.FC<OnboardingProviderProps> = ({ children
               router.push(redirectWithParam);
             }
           } catch (error) {
-            console.error('Error checking onboarding status:', error);
+            logger.error('Error checking onboarding status:', { error });
           }
         }
       }
@@ -211,8 +218,13 @@ export const OnboardingProvider: React.FC<OnboardingProviderProps> = ({ children
     }
   };
   
-  // Track and save progress when the current step changes
+  // Track and save progress when the current step changes - client-side only
   useEffect(() => {
+    // Skip on server-side rendering
+    if (typeof window === 'undefined') {
+      return;
+    }
+    
     const pubkeyToUse = forcePubkey || authState?.pubkey;
     if (pubkeyToUse && selectedRole && currentStep && !isFirstStep) {
       // Only save steps after the first step

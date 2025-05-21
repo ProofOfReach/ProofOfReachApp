@@ -34,20 +34,37 @@ const OnboardingProgress: React.FC<OnboardingProgressProps> = ({
   const isLastStep = currentStep === totalSteps;
   
   // Calculate progress based on current step (not percentage)
-  const calculatedProgress = ((currentStep - 1) / (totalSteps - 1)) * 100;
+  // Handle edge case of totalSteps === 1 to prevent NaN
+  const calculatedProgress = totalSteps <= 1 ? 100 : ((currentStep - 1) / (totalSteps - 1)) * 100;
+  
+  // Use client-side only rendering for the progress component to avoid hydration issues
+  const [isClient, setIsClient] = React.useState(false);
+  
+  // Effect to update state when component mounts on client
+  React.useEffect(() => {
+    setIsClient(true);
+  }, []);
   
   return (
-    <div className={`mb-6 ${className}`}>
+    <div className={`mb-6 ${className}`} data-testid="onboarding-progress">
       <div className="flex justify-center items-center mb-2">
         <span className="text-sm text-gray-600 dark:text-gray-400">
           Step {currentStep} of {totalSteps}
         </span>
       </div>
       
-      {/* Using the shadcn UI Progress component */}
-      <Progress value={calculatedProgress} className="w-full" />
-      
-      {/* No step labels as per user request */}
+      {/* Only render the Progress component client-side to avoid hydration mismatches */}
+      {isClient ? (
+        <Progress value={calculatedProgress} className="w-full" />
+      ) : (
+        // Server-side placeholder with the same basic structure 
+        <div className="relative h-3 overflow-hidden rounded-full bg-gray-200 dark:bg-gray-700 w-full">
+          <div 
+            className="h-full w-full flex-1 bg-gradient-to-r from-purple-500 to-purple-700 transition-all duration-300 ease-in-out"
+            style={{ transform: `translateX(-${100 - calculatedProgress}%)` }}
+          />
+        </div>
+      )}
     </div>
   );
 };
