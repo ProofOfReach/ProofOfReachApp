@@ -1,4 +1,7 @@
 import React, { useState, useEffect, useRef, useCallback, memo } from 'react';
+import { useTestMode } from '@/context/TestModeContext';
+import { logger } from '@/lib/logger';
+import { toast } from '@/utils/toast';
 // Simple date formatter function to avoid ESM import issues with date-fns
 function formatDistanceToNow(date: Date): string {
   const now = new Date();
@@ -390,6 +393,9 @@ const SimpleNostrFeed: React.FC<SimpleNostrFeedProps> = ({
   const loadMoreRef = useRef<HTMLDivElement>(null);
   const feedRef = useRef<HTMLDivElement>(null);
   
+  // Get test mode information
+  const { isTestMode } = useTestMode();
+  
   // Handle ad viewed event - called by child components
   const handleAdViewed = useCallback((adId: string, advertiserName: string) => {
     // Skip if already viewed
@@ -413,6 +419,30 @@ const SimpleNostrFeed: React.FC<SimpleNostrFeedProps> = ({
       amount,
       advertiser: advertiserName
     });
+    
+    // In test mode, add the satoshis to the viewer's wallet balance
+    if (isTestMode && typeof window !== 'undefined') {
+      try {
+        // Get current wallet balance from localStorage or use default
+        const storedBalance = localStorage.getItem('testWalletBalance');
+        const currentBalance = storedBalance ? parseInt(storedBalance, 10) : 100000;
+        
+        // Add the satoshis to the balance
+        const newBalance = currentBalance + amount;
+        
+        // Store updated balance in localStorage
+        localStorage.setItem('testWalletBalance', newBalance.toString());
+        
+        // Show success toast notification
+        toast.success(`Added ${amount} sats to your wallet! New balance: ${newBalance} sats`);
+        
+        logger.debug(`Added ${amount} sats to test wallet balance. New balance: ${newBalance}`);
+      } catch (error) {
+        logger.error('Error updating test wallet balance:', error);
+        // Show error toast if something went wrong
+        toast.error('Failed to update wallet balance');
+      }
+    }
     
     // Auto-dismiss after 3 seconds
     setTimeout(() => {
