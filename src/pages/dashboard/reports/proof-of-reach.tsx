@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-import { getSimplifiedDashboardLayout } from '@/components/layout/SimplifiedDashboardLayout';
-import type { NextPageWithLayout } from '../../_app';
+import ImprovedDashboardLayout from '@/components/layout/ImprovedDashboardLayout';
 import { DashboardCard } from '@/components/ui';
 import Badge from '@/components/ui/Badge';
 import { Button } from '@/components/ui/button';
@@ -25,7 +24,7 @@ import Tooltip from '@/components/ui/Tooltip';
  * A human-verified ad performance dashboard that shows verified real users,
  * not bots or clickfarms, using Lightning Network and Nostr protocol.
  */
-const ProofOfReachPage: NextPageWithLayout = () => {
+const ProofOfReachPage = () => {
   const [selectedCampaign, setSelectedCampaign] = useState('all');
   const [dateRange, setDateRange] = useState('7d');
   const [comparisonView, setComparisonView] = useState(false);
@@ -294,6 +293,12 @@ const ProofOfReachPage: NextPageWithLayout = () => {
   );
 };
 
-ProofOfReachPage.getLayout = getSimplifiedDashboardLayout;
+const ProofOfReachWithLayout = () => {
+  return (
+    <ImprovedDashboardLayout title="Proof of Reach Report">
+      <ProofOfReachPage />
+    </ImprovedDashboardLayout>
+  );
+};
 
-export default ProofOfReachPage;
+export default ProofOfReachWithLayout;
