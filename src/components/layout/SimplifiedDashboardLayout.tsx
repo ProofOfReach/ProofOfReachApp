@@ -7,7 +7,7 @@ import RoleDropdown from '../role/RoleDropdown';
 import RoleTransitionOverlay from '../loading/RoleTransitionOverlay';
 
 // Import icons
-import { Menu, X, User, Home, BarChart2, Settings } from 'react-feather';
+import { Menu, X, User, Home, BarChart2, Settings, PieChart, Shield } from 'react-feather';
 
 interface SimplifiedDashboardLayoutProps {
   children: ReactNode;
@@ -80,7 +80,8 @@ const SimplifiedDashboardLayout: React.FC<SimplifiedDashboardLayoutProps> = ({
         { href: '/dashboard/user/profile', label: 'My Profile', icon: <User className="w-5 h-5" /> }
       ],
       advertiser: [
-        { href: '/dashboard/advertiser/campaigns', label: 'Campaigns', icon: <BarChart2 className="w-5 h-5" /> }
+        { href: '/dashboard/advertiser/campaigns', label: 'Campaigns', icon: <BarChart2 className="w-5 h-5" /> },
+        { href: '/dashboard/advertiser/proof-of-reach', label: 'Proof of Reach', icon: <Shield className="w-5 h-5" /> }
       ],
       publisher: [
         { href: '/dashboard/publisher/spaces', label: 'Ad Spaces', icon: <BarChart2 className="w-5 h-5" /> }

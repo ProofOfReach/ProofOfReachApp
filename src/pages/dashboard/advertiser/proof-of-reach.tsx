@@ -1,25 +1,14 @@
 import React, { useState } from 'react';
 import { getDashboardLayout } from '@/utils/layoutHelpers';
 import type { NextPageWithLayout } from '../../_app';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { ArrowUpRight, ShieldCheck, UserCheck, Globe, Clock, AlertTriangle, ChevronDown, ChevronUp, Info } from 'react-feather';
+import DashboardCard from '@/components/ui/DashboardCard';
+import Badge from '@/components/ui/Badge';
 import { Button } from '@/components/ui/button';
+import { Card, CardHeader, CardTitle, CardContent, CardFooter } from '@/components/ui/card';
+import { ArrowUpRight, Shield, User, AlertTriangle, ChevronDown, ChevronUp, Info } from 'react-feather';
 import Link from 'next/link';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from '@/components/ui/tooltip';
-import { BarChart, LineChart, PieChart } from '@/components/charts';
+import { BarChart, PieChart } from '@/components/charts';
+import Tooltip from '@/components/ui/Tooltip';
 
 /**
  * Proof of Reach Report Page
@@ -36,19 +25,24 @@ const ProofOfReachPage: NextPageWithLayout = () => {
   const reachData = {
     uniqueNostrUsers: 4823,
     verifiedHumans: 1200,
+    verifiedViews: 5840,
     cpvh: 0.024,
     totalSpend: 28.40,
     suspiciousFiltered: 1900,
+    verifiedHumansChange: 15,
+    verifiedViewsChange: 12,
+    cpvhChange: -8,
+    totalSpendChange: 5,
     geographyData: [
-      { name: 'United States', value: 45 },
-      { name: 'Europe', value: 28 },
-      { name: 'Asia', value: 15 },
-      { name: 'Other', value: 12 },
+      { name: 'United States', value: 45, color: '#9333ea' },
+      { name: 'Europe', value: 28, color: '#a855f7' },
+      { name: 'Asia', value: 15, color: '#c084fc' },
+      { name: 'Other', value: 12, color: '#d8b4fe' },
     ],
     deviceData: [
-      { name: 'Mobile', value: 62 },
-      { name: 'Desktop', value: 32 },
-      { name: 'Tablet', value: 6 },
+      { name: 'Mobile', value: 62, color: '#6366f1' },
+      { name: 'Desktop', value: 32, color: '#818cf8' },
+      { name: 'Tablet', value: 6, color: '#a5b4fc' },
     ],
     timeData: [
       { name: '12am', traditional: 240, verified: 120 },
@@ -70,35 +64,33 @@ const ProofOfReachPage: NextPageWithLayout = () => {
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold tracking-tight">Proof of Reach™ Report</h1>
-          <p className="text-muted-foreground">
+          <p className="text-gray-600 dark:text-gray-400">
             Human-verified ad performance metrics using Lightning Network
           </p>
         </div>
         
         <div className="flex items-center space-x-2">
-          <Select value={selectedCampaign} onValueChange={setSelectedCampaign}>
-            <SelectTrigger className="w-[180px]">
-              <SelectValue placeholder="Select Campaign" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">All Campaigns</SelectItem>
-              <SelectItem value="lightning-wallet">Lightning Wallet Promo</SelectItem>
-              <SelectItem value="hardware-wallet">Hardware Wallet Sale</SelectItem>
-              <SelectItem value="bitcoin-conf">Bitcoin Conference</SelectItem>
-            </SelectContent>
-          </Select>
+          <select 
+            className="px-3 py-2 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm"
+            value={selectedCampaign}
+            onChange={(e) => setSelectedCampaign(e.target.value)}
+          >
+            <option value="all">All Campaigns</option>
+            <option value="lightning-wallet">Lightning Wallet Promo</option>
+            <option value="hardware-wallet">Hardware Wallet Sale</option>
+            <option value="bitcoin-conf">Bitcoin Conference</option>
+          </select>
           
-          <Select value={dateRange} onValueChange={setDateRange}>
-            <SelectTrigger className="w-[150px]">
-              <SelectValue placeholder="Date Range" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="7d">Last 7 days</SelectItem>
-              <SelectItem value="30d">Last 30 days</SelectItem>
-              <SelectItem value="90d">Last 90 days</SelectItem>
-              <SelectItem value="ytd">Year to date</SelectItem>
-            </SelectContent>
-          </Select>
+          <select
+            className="px-3 py-2 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm"
+            value={dateRange}
+            onChange={(e) => setDateRange(e.target.value)}
+          >
+            <option value="7d">Last 7 days</option>
+            <option value="30d">Last 30 days</option>
+            <option value="90d">Last 90 days</option>
+            <option value="ytd">Year to date</option>
+          </select>
         </div>
       </div>
       
