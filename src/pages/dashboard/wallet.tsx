@@ -14,6 +14,8 @@ import { Input } from '@/components/ui/input';
 import { getDashboardLayout } from '@/utils/layoutHelpers';
 import type { NextPageWithLayout } from '../_app';
 import { useRoleAccess } from '@/hooks/useRoleAccess';
+import { useTestMode } from '@/context/TestModeContext';
+import { useTestWallet } from '@/hooks/useTestWallet';
 
 // Fetch balance from the API
 const fetcher = (url: string) => fetch(url).then(res => res.json());
@@ -22,6 +24,8 @@ const WalletPage: NextPageWithLayout = () => {
   const router = useRouter();
   const { role } = useRole();
   const { hasPermission } = useRoleAccess();
+  const { isTestMode } = useTestMode();
+  const { balance: testWalletBalance } = useTestWallet();
   const [isDepositing, setIsDepositing] = useState(false);
   const [isWithdrawing, setIsWithdrawing] = useState(false);
   const [amount, setAmount] = useState('');
@@ -224,17 +228,24 @@ const WalletPage: NextPageWithLayout = () => {
         </div>
         
         <div className="mb-6">
-          {balanceLoading ? (
+          {balanceLoading && !isTestMode ? (
             <div className="h-10 w-40 bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
           ) : (
             <div className="flex items-baseline">
               <span className="text-3xl font-bold text-gray-900 dark:text-white">
-                {balanceData?.balance ? (
+                {isTestMode ? (
+                  <CurrencyAmount sats={testWalletBalance} />
+                ) : balanceData?.balance ? (
                   <CurrencyAmount sats={balanceData.balance} />
                 ) : (
                   '0 sats'
                 )}
               </span>
+              {isTestMode && (
+                <span className="ml-2 text-xs bg-purple-100 text-purple-800 px-2 py-1 rounded-full dark:bg-purple-900 dark:text-purple-200">
+                  Test Mode
+                </span>
+              )}
             </div>
           )}
         </div>
@@ -282,7 +293,12 @@ const WalletPage: NextPageWithLayout = () => {
                 </div>
               </div>
               <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
-                Available balance: {balanceData?.balance ? (
+                Available balance: {isTestMode ? (
+                  <CurrencyAmount 
+                    sats={testWalletBalance} 
+                    showTooltip={false}
+                  />
+                ) : balanceData?.balance ? (
                   <CurrencyAmount 
                     sats={balanceData.balance} 
                     showTooltip={false}
