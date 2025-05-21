@@ -37,12 +37,20 @@ const Dashboard = () => {
   useEffect(() => {
     if (typeof window === 'undefined') return;
     
-    // Get initial role state
-    const role = RoleService.getCurrentRole();
+    // Get initial role state - prefer context role if available
+    const contextRole = roleContext?.role;
+    const storedRole = RoleService.getCurrentRole();
+    const initialRole = contextRole || storedRole || 'viewer';
     
-    if (role) {
-      setCurrentRole(role);
-    }
+    // Log for debugging to understand where the role is coming from
+    console.log('Dashboard initializing with role:', {
+      contextRole,
+      storedRole,
+      initialRole
+    });
+    
+    // Set the initial role from any available source
+    setCurrentRole(initialRole as UserRole);
     
     // Check if test mode is active
     const testMode = localStorage.getItem('isTestMode') === 'true';
@@ -56,7 +64,9 @@ const Dashboard = () => {
         to: string;
       }>;
       console.log('Role switched event received:', customEvent.detail);
-      setCurrentRole(customEvent.detail.to as UserRole);
+      if (customEvent.detail && customEvent.detail.to) {
+        setCurrentRole(customEvent.detail.to as UserRole);
+      }
     };
     
     // Listen for the dashboard-specific role change event
@@ -71,6 +81,12 @@ const Dashboard = () => {
         setCurrentRole(latestRole as UserRole);
       }
     };
+    
+    // Listen for direct context role changes 
+    if (roleContext && roleContext.role !== currentRole) {
+      console.log('Role context changed, updating role:', roleContext.role);
+      setCurrentRole(roleContext.role as UserRole);
+    }
     
     document.addEventListener('roleSwitched', handleRoleChange);
     window.addEventListener('dashboard-role-changed', handleDashboardRoleChange);
@@ -97,7 +113,7 @@ const Dashboard = () => {
       window.removeEventListener('dashboard-role-changed', handleDashboardRoleChange);
       window.removeEventListener('storage', handleStorageChange);
     };
-  }, []);
+  }, [roleContext]);
   
   // Determine what icon to show based on role
   const getRoleIcon = () => {
@@ -537,7 +553,12 @@ const Dashboard = () => {
 
   // Render the appropriate dashboard based on the current role
   const renderDashboard = () => {
-    switch(currentRole) {
+    // Clean up any string quotes that might be around the role
+    const normalizedRole = currentRole?.toString().replace(/['"]/g, '') || 'viewer';
+    
+    console.log(`Rendering dashboard for role: '${normalizedRole}'`);
+    
+    switch(normalizedRole) {
       case 'advertiser':
         return renderAdvertiserDashboard();
       case 'publisher':
@@ -551,7 +572,8 @@ const Dashboard = () => {
       case 'user': // Handle the legacy 'user' role as 'viewer'
         return renderViewerDashboard();
       default:
-        return renderViewerDashboard(); // Default to viewer dashboard instead of the welcome screen
+        console.log(`Unknown role '${normalizedRole}', defaulting to viewer dashboard`);
+        return renderViewerDashboard(); // Default to viewer dashboard instead of welcome screen
     }
   };
   
