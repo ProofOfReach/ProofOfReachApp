@@ -548,8 +548,10 @@ const Dashboard = () => {
         return renderStakeholderDashboard();
       case 'viewer':
         return renderViewerDashboard();
+      case 'user': // Handle the legacy 'user' role as 'viewer'
+        return renderViewerDashboard();
       default:
-        return renderDefaultDashboard();
+        return renderViewerDashboard(); // Default to viewer dashboard instead of the welcome screen
     }
   };
   
