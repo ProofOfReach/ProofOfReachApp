@@ -199,12 +199,23 @@ const ViewerOnboarding: React.FC<ViewerOnboardingProps> = ({
   // The main component will show its own progress indicator when showNavigation is false
   const shouldShowProgress = showNavigation;
 
+  // Check if user has Nostr extension
+  const hasNostrExtension = typeof window !== 'undefined' && window.nostr;
+
   const handleNext = () => {
     // First update the local step
     switch (step) {
       case 'discovery': 
-        setStep('privacy');
-        goToNextStep();
+        // Skip directly to complete for users with Nostr extension
+        if (hasNostrExtension) {
+          console.log('ViewerOnboarding - User has Nostr extension, skipping to privacy step');
+          setStep('privacy');
+          // Skip through the discovery step in the context
+          goToNextStep();
+        } else {
+          setStep('privacy');
+          goToNextStep();
+        }
         break;
       case 'privacy':
         // Go directly to complete after privacy (feedback step removed)
@@ -223,15 +234,27 @@ const ViewerOnboarding: React.FC<ViewerOnboardingProps> = ({
         }, 100);
         break;
       default:
-        setStep('discovery');
+        // For users with Nostr extension, always go to privacy instead of discovery
+        if (hasNostrExtension) {
+          setStep('privacy');
+        } else {
+          setStep('discovery');
+        }
     }
   };
 
   const handleBack = () => {
     switch (step) {
       case 'privacy':
-        setStep('discovery');
-        goToPreviousStep();
+        // For users with Nostr extension, don't show discovery step
+        if (hasNostrExtension) {
+          // Stay on privacy since there's no previous step to go back to
+          console.log('ViewerOnboarding - User has Nostr extension, no previous step available');
+          // We could alternatively send them back to role selection if needed
+        } else {
+          setStep('discovery');
+          goToPreviousStep();
+        }
         break;
       case 'complete':
         // Go directly back to privacy (feedback step removed)
@@ -239,7 +262,11 @@ const ViewerOnboarding: React.FC<ViewerOnboardingProps> = ({
         goToPreviousStep();
         break;
       default:
-        setStep('discovery');
+        if (hasNostrExtension) {
+          setStep('privacy');
+        } else {
+          setStep('discovery');
+        }
     }
   };
   
