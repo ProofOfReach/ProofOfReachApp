@@ -63,16 +63,16 @@ const Navbar: React.FC = () => {
           <div className="flex-shrink-0 flex items-center">
             <Link href="/" className="hidden sm:flex items-center">
               <img 
-                src="/images/logo_sm_light.png" 
+                src="/logo_sm_light.png" 
                 alt="Proof Of Reach" 
-                className="h-8" 
+                className="h-auto w-[90px]" 
               />
             </Link>
             <Link href="/" className="sm:hidden flex items-center">
               <img 
-                src="/images/logo_sm_light.png" 
+                src="/logo_sm_light.png" 
                 alt="Proof Of Reach" 
-                className="h-6" 
+                className="h-auto w-[72px]" 
               />
             </Link>
           </div>

@@ -23,9 +23,9 @@ const HomeNavbar: React.FC = () => {
               <Image 
                 src="/logo_sm_light.png" 
                 alt="Proof Of Reach Logo" 
-                width={120} 
-                height={40} 
-                className="h-10 w-auto"
+                width={90} 
+                height={30} 
+                className="h-auto w-auto"
                 priority
               />
             </Link>
