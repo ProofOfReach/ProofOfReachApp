@@ -1,6 +1,37 @@
 # Project Learnings
 
-## 2025-05-21 — Enhanced Onboarding Flow for Existing Nostr Users
+## 2025-05-21 (Part 2) — Onboarding Step Numbering and UI Refinements
+
+**Session Goal:** Improve the step numbering for Nostr extension users and enhance UI consistency across the platform.
+
+**Problem Identified:**
+- Step numbering for Nostr extension users was incorrect, showing "Step 4 of 6" instead of "Step 1 of 2"
+- The OnboardingProgress component was not detecting Nostr extension users properly
+- The role selection screen had a duplicate Proof Of Reach logo causing visual clutter
+- Dashboard sidebar was using text "Nostr Ad Marketplace" instead of the consistent logo
+
+**What Was Done:**
+- Updated the OnboardingProgress component to properly detect Nostr extension availability
+- Fixed step numbering logic to show "Step 1 of 2" and "Step 2 of 2" for Nostr extension users
+- Removed the duplicate logo from the role selection screen for cleaner UI
+- Replaced the text "Nostr Ad Marketplace" with the actual Proof Of Reach logo in the dashboard sidebar
+- Ensured consistent branding across the platform with the same logo in navigation and sidebar
+
+**Lessons Learned:**
+- Progress indicators should adapt to different user journeys, not just follow a fixed sequence
+- Consistent visual branding across all parts of the platform improves user experience
+- Conditional rendering based on browser extension detection needs client-side state management
+- ARIA attributes are important for accessibility in custom progress components
+- Even small UI consistency improvements create a more professional impression
+
+**Open Questions / Next Steps:**
+1. Consider adding analytics to track onboarding completion rates for different user types
+2. Explore opportunities to further reduce the number of steps for returning users
+3. Test the onboarding flow with real Nostr users to gather feedback
+4. Consider adding personalization based on user's existing Nostr profile
+5. Implement automated visual regression tests to catch UI inconsistencies
+
+## 2025-05-21 (Part 1) — Enhanced Onboarding Flow for Existing Nostr Users
 
 **Session Goal:** Improve the onboarding experience for users who already have a Nostr account by skipping unnecessary steps.
 
