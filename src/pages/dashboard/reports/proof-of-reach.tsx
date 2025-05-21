@@ -41,6 +41,9 @@ const ProofOfReachPage = () => {
     uniqueNostrUsers: 4823,
     verifiedHumans: 1200,
     verifiedViews: 5840,
+    wotLevel: 3,
+    wotMaxLevel: 5,
+    wotFollowers: 532,
     cpvh: 0.024,
     totalSpend: 28.40,
     suspiciousFiltered: 1900,
@@ -215,12 +218,23 @@ const ProofOfReachPage = () => {
                     <div className="mb-2 p-2 bg-green-100 dark:bg-green-900/30 rounded-full">
                       <Shield size={24} className="text-green-600 dark:text-green-400" />
                     </div>
-                    <p className="text-sm font-medium text-center">Lightning Verified</p>
+                    <div className="flex items-center mb-1">
+                      <p className="text-sm font-medium text-center">Lightning Verified</p>
+                      <div className="ml-1 px-1.5 py-0.5 text-xs bg-indigo-100 text-indigo-800 dark:bg-indigo-900/40 dark:text-indigo-300 rounded">
+                        WOT Level {reachData.wotLevel}/{reachData.wotMaxLevel}
+                      </div>
+                    </div>
                     <p className="text-2xl font-bold mt-1">{reachData.verifiedHumans.toLocaleString()}</p>
                     <Badge type="primary" className="mt-2 flex items-center">
                       <Check size={12} className="mr-1" /> 
                       Proof of Humanity
                     </Badge>
+                    <Tooltip text={`Web of Trust (WOT) Level ${reachData.wotLevel} indicates that these accounts are followed by at least ${reachData.wotFollowers} verified users, providing a strong trust signal within the Nostr network.`}>
+                      <div className="flex items-center text-xs text-gray-500 dark:text-gray-400 mt-2">
+                        <HelpCircle size={12} className="mr-1" />
+                        What is WOT Level?
+                      </div>
+                    </Tooltip>
                   </div>
                   
                   <div className="flex flex-col items-center p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
@@ -233,6 +247,12 @@ const ProofOfReachPage = () => {
                       <AlertTriangle size={12} className="mr-1" />
                       Prevented
                     </Badge>
+                    <Tooltip text="Traffic filtered due to: unusual activity patterns, rapid IP changes, automated behavior signatures, missing cryptographic proof of identity, or failing Nostr verification checks.">
+                      <div className="flex items-center text-xs text-gray-500 dark:text-gray-400 mt-2">
+                        <HelpCircle size={12} className="mr-1" />
+                        Why filtered?
+                      </div>
+                    </Tooltip>
                   </div>
                 </div>
               </div>
