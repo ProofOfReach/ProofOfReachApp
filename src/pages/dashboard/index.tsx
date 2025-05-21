@@ -73,6 +73,20 @@ const Dashboard = () => {
   useEffect(() => {
     if (typeof window === 'undefined') return;
     
+    // For test mode, prioritize localStorage role first to ensure consistency with the role selector
+    const testMode = localStorage.getItem('isTestMode') === 'true';
+    setIsTestMode(testMode);
+    
+    if (testMode) {
+      // In test mode, always prioritize localStorage for initial role to fix mismatch
+      const storedRole = localStorage.getItem('currentRole');
+      if (storedRole) {
+        logger.debug(`Test mode active: Using localStorage role: ${storedRole}`);
+        setCurrentRole(storedRole as UserRole);
+        return; // Exit early to avoid overriding with other sources
+      }
+    }
+    
     // Get all possible sources for the role 
     const initialRole = getCurrentRoleFromAllSources();
     
@@ -81,10 +95,6 @@ const Dashboard = () => {
     
     // Update state with the determined role
     setCurrentRole(initialRole);
-    
-    // Check if test mode is active
-    const testMode = localStorage.getItem('isTestMode') === 'true';
-    setIsTestMode(testMode);
     
     // Event handlers for all role change events
     const handleRoleChange = (event: Event) => {
