@@ -133,9 +133,16 @@ const Layout: React.FC<LayoutProps> = ({
           <div className="container mx-auto px-4">
             <div className="flex flex-col md:flex-row justify-between items-center">
               <div className="mb-4 md:mb-0">
-                <p className="text-sm text-gray-600 dark:text-gray-300">
-                  © {new Date().getFullYear()} Nostr Ad Marketplace - Phase 1 MVP
-                </p>
+                <div className="flex items-center">
+                  <img 
+                    src="/logo_big_light.png" 
+                    alt="Proof Of Reach Logo" 
+                    className="h-auto w-[112px] mr-2 dark:invert" 
+                  />
+                  <p className="text-sm text-gray-600 dark:text-gray-300">
+                    © {new Date().getFullYear()} - Phase 1 MVP
+                  </p>
+                </div>
               </div>
               <div className="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-4">
                 <div className="flex space-x-4">
