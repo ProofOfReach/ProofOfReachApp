@@ -2,7 +2,16 @@ import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import Layout from '../components/Layout';
 import { useAuthSwitch } from '../hooks/useAuthSwitch';
-import { nostr, hasNostrExtension, getNostrPublicKey, generateTestKeyPair, getStoredTestKeys, storeTestKeys } from '../lib/nostr';
+import { 
+  nostr, 
+  hasNostrExtension, 
+  getNostrPublicKey, 
+  generateTestKeyPair, 
+  getStoredTestKeys, 
+  storeTestKeys,
+  generateRegularAccount,
+  storeRegularAccountKeys
+} from '../lib/nostr';
 import { postWithAuth } from '../lib/api';
 import { isPostForcedLogout } from '../lib/resetAuth';
 import { logger } from '@/lib/logger';
@@ -16,14 +25,14 @@ const LoginPage: React.FC = () => {
   const [hasExtension, setHasExtension] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
   const [showTestOptions, setShowTestOptions] = useState(false);
-  const [authStatus, setAuthStatus] = useState<any>(null);
+  const [authStatus, setAuthStatus] = useState<{authenticated: boolean; pubkey?: string} | null>(null);
   const [testKeysGenerated, setTestKeysGenerated] = useState(false);
-  const [generatedKeys, setGeneratedKeys] = useState<{publicKey: string; privateKey: string} | null>(null);
+  const [generatedKeys, setGeneratedKeys] = useState<{publicKey: string; privateKey?: string} | null>(null);
 
   // Check if user already has Nostr extension and test mode status
   useEffect(() => {
     const extensionAvailable = hasNostrExtension();
-    console.log('Login page - Nostr extension status:', {
+    logger.log('Login page - Nostr extension status:', {
       hasExtension: extensionAvailable,
       windowNostr: typeof window !== 'undefined' ? Boolean(window.nostr) : false,
       windowNostrMethods: typeof window !== 'undefined' && window.nostr 
@@ -35,7 +44,7 @@ const LoginPage: React.FC = () => {
     
     // Check if there are any localStorage keys that might be interfering with login
     if (typeof window !== 'undefined') {
-      console.log('Login page - LocalStorage keys that might affect login:', {
+      logger.log('Login page - LocalStorage keys that might affect login:', {
         nostr_real_pk: Boolean(localStorage.getItem('nostr_real_pk')),
         nostr_test_pk: Boolean(localStorage.getItem('nostr_test_pk')),
         isTestMode: localStorage.getItem('isTestMode'),
@@ -51,16 +60,18 @@ const LoginPage: React.FC = () => {
       }
       
       // Check if test mode was previously enabled via localStorage
-      const isTestModeEnabled = enhancedStorage.getItem('showTestOptions', { namespace: 'preferences' }) === 'true';
+      const isTestModeEnabled = enhancedStorage.getItem('showTestOptions') === 'true';
       if (isTestModeEnabled) {
         setShowTestOptions(true);
         
         // If we have test mode enabled but no keys, generate them
         if (!storedTestKeys || !storedTestKeys.publicKey) {
           const newKeys = generateTestKeyPair();
-          setGeneratedKeys(newKeys);
-          setTestKeysGenerated(true);
-          logger.debug('Generated new test keys because previous keys were missing');
+          if (newKeys) {
+            setGeneratedKeys(newKeys);
+            setTestKeysGenerated(true);
+            logger.debug('Generated new test keys because previous keys were missing');
+          }
         }
       }
     }
@@ -72,14 +83,16 @@ const LoginPage: React.FC = () => {
     setShowTestOptions(newValue);
     
     // Save preference to localStorage
-    enhancedStorage.setItem('showTestOptions', newValue.toString(), { namespace: 'preferences' });
+    enhancedStorage.setItem('showTestOptions', newValue.toString());
     
     // If turning on test mode and no keys generated yet, generate them
     if (newValue && !testKeysGenerated) {
       const keys = generateTestKeyPair();
-      setGeneratedKeys(keys);
-      setTestKeysGenerated(true);
-      logger.debug('Generated test keys when enabling test mode');
+      if (keys) {
+        setGeneratedKeys(keys);
+        setTestKeysGenerated(true);
+        logger.debug('Generated test keys when enabling test mode');
+      }
     }
   };
 
@@ -209,8 +222,15 @@ const LoginPage: React.FC = () => {
           body: JSON.stringify({ pubkey, isTest: false })
         });
         
-        const data = await response.json();
-        console.log('API login response:', data);
+        const data: { 
+          token?: string; 
+          pubkey?: string; 
+          message?: string; 
+          error?: string;
+          redirectUrl?: string;
+        } = await response.json();
+        
+        logger.log('API login response:', data);
         
         if (!response.ok) {
           throw new Error(data.message || data.error || 'Authentication failed');
@@ -220,24 +240,26 @@ const LoginPage: React.FC = () => {
         document.cookie = `nostr_pubkey=${pubkey}; path=/; max-age=86400`;
         
         // Set authentication state directly in the auth context
-        await login(pubkey, false);
+        await login(pubkey as string, false);
         
         // Check onboarding status and redirect appropriately
         const onboardingService = await import('@/lib/onboardingService').then(mod => mod.default);
-        const redirectUrl = await onboardingService.getPostLoginRedirectUrl(pubkey, 'viewer');
+        const redirectUrl = await onboardingService.getPostLoginRedirectUrl(pubkey as string, 'viewer');
         
         // Force a refresh of the app state before redirecting
         window.localStorage.setItem('auth_timestamp', Date.now().toString());
         
-        console.log(`Redirecting to ${redirectUrl}`);
+        logger.log(`Redirecting to ${redirectUrl}`);
         router.push(redirectUrl);
       } catch (apiError) {
-        console.error('API request failed:', apiError);
+        logger.error('API request failed:', apiError instanceof Error ? apiError.message : String(apiError));
         throw new Error('Failed to authenticate with the server. Please try again.');
       }
-    } catch (err: any) {
-      console.error('Login error:', err);
-      setError(err.message || 'Failed to login with Nostr extension');
+    } catch (err: unknown) {
+      // Properly handle error with type checking
+      const errorMessage = err instanceof Error ? err.message : 'Failed to login with Nostr extension';
+      logger.error('Login error:', errorMessage);
+      setError(errorMessage);
     } finally {
       setIsLoading(false);
     }
@@ -265,17 +287,20 @@ const LoginPage: React.FC = () => {
       // Generate a regular account keypair
       const { privateKey, publicKey, npub, nsec } = generateRegularAccount();
       
-      console.log('Generated new regular account:', {
+      logger.log('Generated new regular account:', {
         publicKey,
         npub,
         // DO NOT log the private key in production!
-        privateKeyFirstChars: privateKey.substring(0, 4) + '...'
+        privateKeyFirstChars: privateKey ? privateKey.substring(0, 4) + '...' : 'undefined'
       });
       
       // Store the keys in localStorage and set up as regular user
-      storeRegularAccountKeys(privateKey, publicKey);
+      if (!privateKey) {
+        throw new Error('Failed to generate private key');
+      }
+      storeRegularAccountKeys(privateKey, publicKey || '');
       
-      console.log('Starting regular account login flow with', publicKey);
+      logger.log('Starting regular account login flow with', publicKey);
       
       // Call the API to register the new user
       try {
@@ -304,38 +329,39 @@ const LoginPage: React.FC = () => {
         
         // Use the login function from auth context with isTestMode=false
         console.log('Calling login function for the new account');
-        await login(publicKey, false);
+        await login(publicKey as string, false);
         
         // Determine where to redirect based on onboarding status
         console.log('Account created successfully, checking onboarding status');
         const onboardingService = await import('@/lib/onboardingService').then(mod => mod.default);
         const currentRole = 'viewer'; // Default to viewer for new accounts
-        const redirectUrl = await onboardingService.getPostLoginRedirectUrl(publicKey, currentRole);
+        const redirectUrl = await onboardingService.getPostLoginRedirectUrl(publicKey as string, currentRole);
         
         console.log(`Redirecting to ${redirectUrl}`);
         router.push(redirectUrl);
-      } catch (apiError: any) {
-        console.error('API error during account creation:', apiError);
+      } catch (apiError: unknown) {
+        logger.error('API error during account creation:', apiError instanceof Error ? apiError.message : String(apiError));
         
         // Even if API call fails, we've already set cookies and localStorage
         // We can still redirect to onboarding or dashboard
-        console.log('API call failed but continuing with redirection');
+        logger.log('API call failed but continuing with redirection');
         try {
           const onboardingService = await import('@/lib/onboardingService').then(mod => mod.default);
           const currentRole = 'viewer'; // Default to viewer for new accounts
-          const redirectUrl = await onboardingService.getPostLoginRedirectUrl(publicKey, currentRole);
+          const redirectUrl = await onboardingService.getPostLoginRedirectUrl(publicKey || '', currentRole);
           
-          console.log(`Redirecting to ${redirectUrl} despite API error`);
+          logger.log(`Redirecting to ${redirectUrl} despite API error`);
           router.push(redirectUrl);
-        } catch (redirectError) {
-          console.error('Error during redirection:', redirectError);
+        } catch (redirectError: unknown) {
+          logger.error('Error during redirection:', redirectError instanceof Error ? redirectError.message : String(redirectError));
           // Fallback to dashboard if onboarding redirect fails
           router.push('/dashboard');
         }
       }
-    } catch (err: any) {
-      console.error('Create account error:', err);
-      setError(err.message || 'Failed to create new account');
+    } catch (err: unknown) {
+      const errorMessage = err instanceof Error ? err.message : 'Failed to create new account';
+      logger.error('Create account error:', errorMessage);
+      setError(errorMessage);
     } finally {
       setIsLoading(false);
     }
@@ -350,13 +376,15 @@ const LoginPage: React.FC = () => {
       const { privateKey, publicKey } = generateTestKeyPair();
 
       // Store the test keys and set all the necessary localStorage items for test mode
-      storeTestKeys(privateKey, publicKey);
+      storeTestKeys(privateKey || '', publicKey || '');
 
       console.log('Starting test mode login flow with', publicKey);
       
       // Set test mode cookie directly in case the login function fails
-      document.cookie = `nostr_pubkey=${publicKey}; path=/; max-age=86400`;
-      document.cookie = `auth_token=test_token_${publicKey}; path=/; max-age=86400`;
+      // Handle the publicKey with proper type checking
+      const pubkeyValue = publicKey || '';
+      document.cookie = `nostr_pubkey=${pubkeyValue}; path=/; max-age=86400`;
+      document.cookie = `auth_token=test_token_${pubkeyValue}; path=/; max-age=86400`;
       
       // Set a flag to preemptively skip the fetch in authService
       localStorage.setItem('isTestMode', 'true');
@@ -376,7 +404,7 @@ const LoginPage: React.FC = () => {
       
       try {
         // Explicitly pass true for test mode
-        const result = await login(publicKey, true);
+        const result = await login(publicKey as string, true);
         console.log('Test login successful:', result);
       } catch (loginError) {
         console.error('Test login internal error:', loginError);
@@ -508,7 +536,7 @@ const LoginPage: React.FC = () => {
                     Test mode allows you to explore the application with simulated data and user roles.
                   </p>
                   
-                  {testKeysGenerated && generatedKeys && (
+                  {testKeysGenerated && generatedKeys && generatedKeys.privateKey && (
                     <div className="mb-3 p-2 bg-gray-100 dark:bg-gray-800 rounded text-xs font-mono overflow-x-auto">
                       <p>Public Key: <span className="text-green-600 dark:text-green-400">{generatedKeys.publicKey.substring(0, 10)}...{generatedKeys.publicKey.substring(generatedKeys.publicKey.length - 5)}</span></p>
                       <p>Private Key: <span className="text-red-600 dark:text-red-400">{generatedKeys.privateKey.substring(0, 10)}...{generatedKeys.privateKey.substring(generatedKeys.privateKey.length - 5)}</span></p>
