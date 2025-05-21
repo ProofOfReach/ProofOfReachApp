@@ -329,8 +329,25 @@ const LoginPage: React.FC = () => {
         // Force a refresh of the app state before redirecting
         window.localStorage.setItem('auth_timestamp', Date.now().toString());
         
+        // Set session storage flag to ensure onboarding redirection works reliably
+        try {
+          window.sessionStorage.setItem('pending_onboarding_redirect', 'true');
+          window.sessionStorage.setItem('onboarding_pubkey', pubkey);
+          window.sessionStorage.setItem('onboarding_role', 'viewer');
+          window.sessionStorage.setItem('onboarding_timestamp', Date.now().toString());
+          logger.debug('Set onboarding redirect flags in session storage');
+        } catch (storageError) {
+          logger.warn('Failed to set session storage for onboarding redirect', {
+            error: storageError instanceof Error ? storageError.message : 'Unknown error'
+          });
+        }
+        
+        // Add a short delay to ensure state is fully updated before redirect
         logger.info(`Login successful, redirecting to ${redirectUrl}`);
-        router.push(redirectUrl);
+        
+        // Use window.location.href for a hard redirect instead of Next.js router
+        // This ensures a fresh page load with the updated authentication state
+        window.location.href = redirectUrl;
       } catch (apiError: unknown) {
         const errorDetails = apiError instanceof Error ? apiError.message : String(apiError);
         logger.error('API authentication failed:', { error: errorDetails });
@@ -426,7 +443,8 @@ const LoginPage: React.FC = () => {
         const redirectUrl = await onboardingService.getPostLoginRedirectUrl(publicKey as string, currentRole);
         
         logger.log(`Redirecting to ${redirectUrl}`);
-        router.push(redirectUrl);
+        // Use window.location for a hard redirect to ensure state is refreshed
+        window.location.href = redirectUrl;
       } catch (apiError: unknown) {
         logger.error('API error during account creation:', apiError instanceof Error ? apiError.message : String(apiError));
         
@@ -439,11 +457,12 @@ const LoginPage: React.FC = () => {
           const redirectUrl = await onboardingService.getPostLoginRedirectUrl(publicKey || '', currentRole);
           
           logger.log(`Redirecting to ${redirectUrl} despite API error`);
-          router.push(redirectUrl);
+          // Use window.location for a hard redirect to ensure state is refreshed
+          window.location.href = redirectUrl;
         } catch (redirectError: unknown) {
           logger.error('Error during redirection:', redirectError instanceof Error ? redirectError.message : String(redirectError));
           // Fallback to dashboard if onboarding redirect fails
-          router.push('/dashboard');
+          window.location.href = '/dashboard';
         }
       }
     } catch (err: unknown) {

@@ -350,6 +350,7 @@ model UserOnboarding {
   isComplete    Boolean   @default(false) // Whether onboarding is complete for this role
   completedAt   DateTime? // When onboarding was completed
   lastStep      String?   // The last step the user was on before leaving
+  currentStep   String?   // The current step in the onboarding process
   
   // Relation back to User
   userId        String

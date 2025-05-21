@@ -161,12 +161,21 @@ export default async function handler(
 
       // Set the auth cookie
       setAuthCookie(pubkey, req, res);
+      
+      // Set special redirect cookie for new users who need onboarding
+      const needsOnboarding = !user.onboardingCompleted;
+      if (needsOnboarding) {
+        // Set a cookie to indicate pending redirect to onboarding
+        res.setHeader('Set-Cookie', `pending_redirect=onboarding; Path=/; Max-Age=300; SameSite=Strict${process.env.NODE_ENV === 'production' ? '; Secure' : ''}`);
+      }
 
-      // Return success response
+      // Return success response with redirect info
       res.status(200).json({
         success: true,
         message: 'Authentication successful',
-        userId: user.id
+        userId: user.id,
+        needsOnboarding: needsOnboarding,
+        redirectUrl: needsOnboarding ? '/onboarding' : '/dashboard'
       });
       return;
     } catch (dbError) {

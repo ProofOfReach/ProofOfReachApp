@@ -649,9 +649,27 @@ const onboardingService = {
     const correlationId = `onboarding-redirect-${pubkey}-${role}`;
     
     try {
-      // Force redirect to onboarding after login for consistent flow
+      // Enhanced client-side handling (browser environment)
       if (typeof window !== 'undefined') {
         logger.info(`Post-login redirect: Directing user ${pubkey.substring(0, 8)}... to onboarding flow`);
+        
+        // Store onboarding redirection state
+        try {
+          // Set session storage flag to ensure redirection works even on page refresh
+          window.sessionStorage.setItem('pending_onboarding_redirect', 'true');
+          window.sessionStorage.setItem('onboarding_pubkey', pubkey);
+          window.sessionStorage.setItem('onboarding_role', role);
+          window.sessionStorage.setItem('onboarding_timestamp', Date.now().toString());
+          
+          // Also set localStorage for cross-tab preservation
+          window.localStorage.setItem('nostr_ads_pending_onboarding', 'true');
+          
+          logger.debug('Set onboarding redirect flags in storage for persistent redirect');
+        } catch (storageError) {
+          logger.warn('Failed to set storage for onboarding redirect - continuing with basic redirect', { 
+            error: storageError instanceof Error ? storageError.message : 'Unknown error'
+          });
+        }
         
         // Add debug information to help troubleshoot redirect issues
         if (process.env.NODE_ENV === 'development') {
@@ -662,18 +680,19 @@ const onboardingService = {
           });
         }
         
-        // Add timestamp and role parameters to avoid caching issues
-        return `/onboarding?timestamp=${Date.now()}&role=${role}`;
+        // Add timestamp, role parameters and a dedicated flag to avoid caching issues
+        return `/onboarding?timestamp=${Date.now()}&role=${role}&forced=true`;
       }
       
-      // If we're on the server, check onboarding status
+      // Server-side handling (Node.js environment)
       try {
         // Check if onboarding is complete for this role
         const isComplete = await onboardingService.isOnboardingComplete(pubkey, role);
         
         if (!isComplete) {
           logger.info(`Server-side redirect: User ${pubkey.substring(0, 8)}... needs onboarding for role ${role}`);
-          return '/onboarding';
+          // Use a URL with parameters to ensure reliable client-side recognition
+          return `/onboarding?pubkey=${encodeURIComponent(pubkey)}&role=${encodeURIComponent(role)}&ts=${Date.now()}`;
         }
         
         // If onboarding is complete, redirect to the appropriate dashboard
@@ -695,7 +714,7 @@ const onboardingService = {
         logger.warn('Server-side onboarding check failed, defaulting to onboarding page', {
           error: serverCheckError instanceof Error ? serverCheckError.message : 'Unknown error'
         });
-        return '/onboarding';
+        return `/onboarding?error=check_failed&ts=${Date.now()}`;
       }
     } catch (error) {
       // Report error through the central system
@@ -720,7 +739,7 @@ const onboardingService = {
       });
       
       // If there's an error, default to the onboarding page to be safe
-      return '/onboarding';
+      return `/onboarding?error=general&ts=${Date.now()}`;
     }
   }
 };
