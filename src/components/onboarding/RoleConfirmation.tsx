@@ -12,15 +12,26 @@ const RoleConfirmation: React.FC<RoleConfirmationProps> = ({ onConfirm }) => {
   const roleContext = useRole();
   const { setSelectedRole, selectedRole } = useOnboarding();
   
+  // Add isClient state to prevent hydration mismatches
+  const [isClient, setIsClient] = useState(false);
+  
   // Create a state to hold available roles, with a default that includes all roles
   const [availableRoles, setAvailableRoles] = useState<UserRoleType[]>(['viewer', 'publisher', 'advertiser']);
   
-  // Check if we're in test mode
-  const isTestMode = typeof window !== 'undefined' && 
+  // Set client-side state after mount
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+  
+  // Check if we're in test mode - Only check localStorage on client-side
+  const isTestMode = isClient && 
     (window.location.pathname.includes('test-onboarding') || 
     localStorage.getItem('isTestMode') === 'true');
   
   useEffect(() => {
+    // Skip during server-side rendering
+    if (!isClient) return;
+    
     // In test mode, force all roles to be available
     if (isTestMode) {
       setAvailableRoles(['viewer', 'publisher', 'advertiser']);
@@ -33,16 +44,16 @@ const RoleConfirmation: React.FC<RoleConfirmationProps> = ({ onConfirm }) => {
     else if (!availableRoles.length) {
       setAvailableRoles(['advertiser']);
     }
-  }, [roleContext, isTestMode]);
+  }, [roleContext, isTestMode, isClient, availableRoles.length]);
   
   // For debugging
   useEffect(() => {
-    if (typeof window !== 'undefined' && process.env.NODE_ENV !== 'test') {
+    if (isClient && process.env.NODE_ENV !== 'test') {
       console.log('RoleConfirmation - Available roles:', availableRoles);
       console.log('RoleConfirmation - Context roles:', roleContext?.availableRoles || 'None');
       console.log('RoleConfirmation - Is test mode:', isTestMode);
     }
-  }, [availableRoles, roleContext, isTestMode]);
+  }, [availableRoles, roleContext, isTestMode, isClient]);
 
   const handleRoleSelection = (role: UserRoleType) => {
     // First call the context function to update the selected role
@@ -104,6 +115,62 @@ const RoleConfirmation: React.FC<RoleConfirmationProps> = ({ onConfirm }) => {
     ? allRoleCards 
     : allRoleCards.filter(card => availableRoles.includes(card.role));
 
+  // For server-side rendering or initial client load, use a placeholder 
+  // with a similar structure to prevent hydration mismatch
+  if (!isClient) {
+    return (
+      <div className="py-6">
+        <div className="text-center mb-8">
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
+            Select your role
+          </h2>
+          <p className="mt-2 text-gray-600 dark:text-gray-300">
+            Select how you'd like to use the Proof Of Reach platform
+          </p>
+        </div>
+
+        {/* Placeholder for role cards */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {[1, 2, 3].map((i) => (
+            <div 
+              key={i}
+              className="border border-gray-200 dark:border-gray-700 rounded-lg p-6 flex flex-col h-full"
+            >
+              <div className="flex flex-col items-center">
+                <div className="w-8 h-8 bg-gray-200 dark:bg-gray-700 rounded-full mb-4"></div>
+                <div className="h-6 w-24 bg-gray-200 dark:bg-gray-700 rounded mb-2"></div>
+                <div className="h-4 w-40 bg-gray-200 dark:bg-gray-700 rounded mb-4"></div>
+                
+                <div className="w-full mb-5 border-t border-gray-200 dark:border-gray-700 pt-4">
+                  <div className="h-4 w-20 bg-gray-200 dark:bg-gray-700 rounded mb-2"></div>
+                  <div className="space-y-2">
+                    {[1, 2, 3, 4].map((j) => (
+                      <div key={j} className="flex items-start">
+                        <div className="w-1 h-1 rounded-full bg-gray-200 dark:bg-gray-700 mr-2 mt-0.5"></div>
+                        <div className="h-4 w-36 bg-gray-200 dark:bg-gray-700 rounded"></div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+              
+              <div className="mt-auto">
+                <div className="w-full h-10 bg-gray-200 dark:bg-gray-700 rounded-md"></div>
+              </div>
+            </div>
+          ))}
+        </div>
+        
+        <div className="mt-8 text-center text-sm text-gray-500 dark:text-gray-400">
+          <p>
+            You can change roles or manage multiple roles after completing onboarding.
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  // Client-side rendering
   return (
     <div className="py-6">
       <div className="text-center mb-8">
