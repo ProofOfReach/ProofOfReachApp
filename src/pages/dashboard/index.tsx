@@ -646,24 +646,27 @@ const Dashboard = () => {
     // Clean up any string quotes that might be around the role
     const normalizedRole = currentRole?.toString().replace(/['"]/g, '') || 'viewer';
     
-    console.log(`Rendering dashboard for role: '${normalizedRole}'`);
+    logger.debug(`Rendering dashboard for role: '${normalizedRole}'`);
     
+    // Force dashboard re-render with a unique key to ensure role changes trigger a new dashboard view
+    const dashboardKey = `dashboard-${normalizedRole}-${Date.now()}`;
+
     switch(normalizedRole) {
       case 'advertiser':
-        return renderAdvertiserDashboard();
+        return <div key={dashboardKey}>{renderAdvertiserDashboard()}</div>;
       case 'publisher':
-        return renderPublisherDashboard();
+        return <div key={dashboardKey}>{renderPublisherDashboard()}</div>;
       case 'admin':
-        return renderAdminDashboard();
+        return <div key={dashboardKey}>{renderAdminDashboard()}</div>;
       case 'stakeholder':
-        return renderStakeholderDashboard();
+        return <div key={dashboardKey}>{renderStakeholderDashboard()}</div>;
       case 'viewer':
-        return renderViewerDashboard();
+        return <div key={dashboardKey}>{renderViewerDashboard()}</div>;
       case 'user': // Handle the legacy 'user' role as 'viewer'
-        return renderViewerDashboard();
+        return <div key={dashboardKey}>{renderViewerDashboard()}</div>;
       default:
-        console.log(`Unknown role '${normalizedRole}', defaulting to viewer dashboard`);
-        return renderViewerDashboard(); // Default to viewer dashboard instead of welcome screen
+        logger.debug(`Unknown role '${normalizedRole}', defaulting to viewer dashboard`);
+        return <div key={dashboardKey}>{renderViewerDashboard()}</div>; // Default to viewer dashboard
     }
   };
   
