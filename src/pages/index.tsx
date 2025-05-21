@@ -112,22 +112,22 @@ const HomePage: NextPageWithLayout = () => {
     {
       title: 'Direct Advertising',
       description: 'Connect directly with publishers without intermediaries',
-      icon: <Target className="h-8 w-8 text-purple-500" />,
+      icon: <Target className="h-8 w-8 text-blue-500" />,
     },
     {
       title: 'Lightning Payments',
       description: 'Instant micropayments with Bitcoin Lightning Network',
-      icon: <Zap className="h-8 w-8 text-purple-500" />,
+      icon: <Zap className="h-8 w-8 text-blue-500" />,
     },
     {
       title: 'User Data Control',
       description: 'Users control what data they share and get paid for it',
-      icon: <User className="h-8 w-8 text-purple-500" />,
+      icon: <User className="h-8 w-8 text-blue-500" />,
     },
     {
       title: 'Transparent Marketplace',
       description: 'Open platform built on Nostr protocol',
-      icon: <LayoutIcon className="h-8 w-8 text-purple-500" />,
+      icon: <LayoutIcon className="h-8 w-8 text-blue-500" />,
     },
   ];
 
@@ -135,7 +135,7 @@ const HomePage: NextPageWithLayout = () => {
     <div className="flex flex-col items-center">
       <div className="w-full max-w-4xl py-12 px-4 sm:px-6 lg:py-16 lg:px-8 text-center">
         <h1 className="text-4xl font-extrabold tracking-tight text-gray-900 dark:text-white sm:text-5xl">
-          <span className="block text-purple-600">Create. Reach. Earn.</span>
+          <span className="block text-blue-600">Create. Reach. Earn.</span>
         </h1>
         <p className="mt-4 text-xl text-gray-600 dark:text-gray-300">
           Aligning advertisers, publishers, and viewers using Bitcoin Lightning payments 
@@ -164,13 +164,13 @@ const HomePage: NextPageWithLayout = () => {
                   <div className="p-4 rounded-lg shadow-md" style={{backgroundColor: '#e5e7eb'}}>                    
                     <div className="relative">
                       <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                        <Mail className="w-5 h-5 text-purple-600" />
+                        <Mail className="w-5 h-5 text-blue-600" />
                       </div>
                       <input
                         id="email"
                         type="email"
                         placeholder="Enter your email to join the waitlist"
-                        className="flex h-10 w-full rounded-md border-2 border-purple-700 pl-10 shadow-md focus:border-purple-800 focus-visible:ring-2 focus-visible:ring-purple-600 text-base placeholder:text-gray-200 px-3 py-2 bg-gray-200"
+                        className="flex h-10 w-full rounded-md border-2 border-blue-700 pl-10 shadow-md focus:border-blue-800 focus-visible:ring-2 focus-visible:ring-blue-600 text-base placeholder:text-gray-200 px-3 py-2 bg-gray-200"
                         {...form.register("email")}
                       />
                     </div>
@@ -185,12 +185,12 @@ const HomePage: NextPageWithLayout = () => {
                     <div className="mb-2 font-medium">
                       I'm interested in (select all that apply):
                     </div>
-                    <div className="space-y-3 p-4 rounded-md border-3 border-purple-500 dark:border-purple-600">
+                    <div className="space-y-3 p-4 rounded-md border-3 border-blue-500 dark:border-blue-600">
                       <div className="flex items-center space-x-2">
                         <input
                           type="checkbox"
                           id="role-advertiser"
-                          className="h-5 w-5 rounded border-purple-600 text-purple-700 focus:ring-purple-500"
+                          className="h-5 w-5 rounded border-blue-600 text-blue-700 focus:ring-blue-500"
                           {...form.register("roles.advertiser")}
                         />
                         <label
@@ -205,7 +205,7 @@ const HomePage: NextPageWithLayout = () => {
                         <input
                           type="checkbox"
                           id="role-publisher"
-                          className="h-5 w-5 rounded border-purple-600 text-purple-700 focus:ring-purple-500"
+                          className="h-5 w-5 rounded border-blue-600 text-blue-700 focus:ring-blue-500"
                           {...form.register("roles.publisher")}
                         />
                         <label
@@ -220,7 +220,7 @@ const HomePage: NextPageWithLayout = () => {
                         <input
                           type="checkbox"
                           id="role-user"
-                          className="h-5 w-5 rounded border-purple-600 text-purple-700 focus:ring-purple-500"
+                          className="h-5 w-5 rounded border-blue-600 text-blue-700 focus:ring-blue-500"
                           {...form.register("roles.user")}
                         />
                         <label
@@ -242,7 +242,7 @@ const HomePage: NextPageWithLayout = () => {
                     <Button
                       type="submit"
                       disabled={isSubmitting}
-                      className="w-full bg-purple-800 hover:bg-purple-900 text-white text-lg h-14 font-bold shadow-lg border-2 border-purple-900 transition-all hover:scale-[1.02]"
+                      className="w-full bg-blue-600 hover:bg-blue-700 text-white text-lg h-14 font-bold shadow-lg border-2 border-blue-700 transition-all hover:scale-[1.02]"
                       size="lg"
                     >
                       {isSubmitting ? 'Submitting...' : 'Get Early Access'} 
@@ -252,10 +252,10 @@ const HomePage: NextPageWithLayout = () => {
                   
                   <div className="mt-4 text-center">
                     <p className="text-xs text-gray-500 dark:text-gray-400">
-                      Already have access? <Link href="/login-new" className="text-purple-600 hover:text-purple-800">Login</Link>
+                      Already have access? <Link href="/login-new" className="text-blue-600 hover:text-blue-700">Login</Link>
                     </p>
                     <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">
-                      <Link href="/admin-fix.html" className="text-purple-600 hover:text-purple-800">Admin Access Tool</Link>
+                      <Link href="/admin-fix.html" className="text-blue-600 hover:text-blue-700">Admin Access Tool</Link>
                     </p>
                   </div>
                 </Form>
