@@ -42,7 +42,15 @@ describe('ErrorContext', () => {
             <div data-testid="error-message">{errorState.message}</div>
             <button 
               data-testid="set-error"
-              onClick={() => setError({ message: 'Test error', type: 'api', severity: 'error' })}
+              onClick={() => setError({ 
+                id: 'test-1',
+                message: 'Test error', 
+                type: 'api', 
+                severity: 'error',
+                source: 'test',
+                timestamp: Date.now(),
+                category: 'validation'
+              })}
             >
               Set Error
             </button>
@@ -136,7 +144,7 @@ describe('ErrorContext', () => {
             </button>
             <button 
               data-testid="success-toast"
-              onClick={() => showErrorToast('Success message', 'success')}
+              onClick={() => showErrorToast('Success message', 'low')}
             >
               Success Toast
             </button>

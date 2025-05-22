@@ -8,7 +8,7 @@ import {
   trackErrorRecovery,
   resetErrorState,
   initializeErrorHandling,
-  ErrorState
+  getErrorState
 } from '@/lib/errorIntegration';
 import { ErrorCategory } from '@/types/errors';
 

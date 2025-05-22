@@ -75,7 +75,7 @@ const getUserRoles = async (req: NextApiRequest, res: NextApiResponse<GetRolesRe
         availableRoles = ['advertiser', 'publisher', 'admin', 'stakeholder'];
       }
       
-      // For backward compatibility, everyone has 'user' role
+      // For backward compatibility, everyone has 'viewer' role
       const roles: UserRole[] = ['viewer', ...availableRoles];
       
       return res.status(200).json({ 

@@ -100,7 +100,7 @@ describe('useErrorState', () => {
     fireEvent.click(screen.getByTestId('set-error'));
     
     // Verify updateErrorState was called with the right params
-    expect(errorIntegration.updateErrorState).toHaveBeenCalledWith({ 
+    expect(errorIntegration.setErrorState).toHaveBeenCalledWith({ 
       message: 'New error', 
       type: 'network', 
       severity: 'warning' 
