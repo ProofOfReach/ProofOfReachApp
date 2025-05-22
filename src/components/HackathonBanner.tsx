@@ -15,25 +15,52 @@ const HackathonBanner: React.FC<HackathonBannerProps> = ({
   const [isVisible, setIsVisible] = useState(false);
   
   useEffect(() => {
-    // Check if we should show the banner based on props, env var, or localStorage
-    const simulateDev = typeof window !== 'undefined' && 
-                        localStorage.getItem('SIMULATE_DEV_DOMAIN') === 'true';
+    if (typeof window === 'undefined') return;
     
+    // Check localStorage explicitly first
+    const simulateDev = localStorage.getItem('SIMULATE_DEV_DOMAIN');
+    
+    // If localStorage explicitly says false, respect that regardless of other settings
+    if (simulateDev === 'false') {
+      setIsVisible(false);
+      console.log('Banner hidden: explicitly set to production mode in localStorage');
+      return;
+    }
+    
+    // Otherwise, check all other conditions
     const shouldShow = isDev || 
                       showBanner || 
-                      simulateDev ||
+                      simulateDev === 'true' ||
                       process.env.NEXT_PUBLIC_ENABLE_DEV_BANNER === 'true';
     
     setIsVisible(shouldShow);
     
     // Log the reason why the banner is visible or not for debugging
-    console.log('Banner visibility:', {
+    console.log('Banner visibility status:', {
       isDev,
       showBanner,
       simulateDev,
       envVar: process.env.NEXT_PUBLIC_ENABLE_DEV_BANNER === 'true',
       isVisible: shouldShow
     });
+  }, [isDev, showBanner]);
+
+  // Listen for changes to the localStorage
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    
+    const handleStorageChange = () => {
+      const simulateDev = localStorage.getItem('SIMULATE_DEV_DOMAIN');
+      if (simulateDev === 'false') {
+        setIsVisible(false);
+      } else {
+        setIsVisible(isDev || showBanner || simulateDev === 'true' || 
+                    process.env.NEXT_PUBLIC_ENABLE_DEV_BANNER === 'true');
+      }
+    };
+    
+    window.addEventListener('storage', handleStorageChange);
+    return () => window.removeEventListener('storage', handleStorageChange);
   }, [isDev, showBanner]);
 
   if (!isVisible) return null;

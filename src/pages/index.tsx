@@ -49,13 +49,23 @@ const HomePage: NextPageWithLayout = () => {
     if (typeof window !== 'undefined') {
       const hostname = window.location.hostname;
       const simulateDev = localStorage.getItem('SIMULATE_DEV_DOMAIN') === 'true';
+      
+      // First check the localStorage setting explicitly
+      if (simulateDev === false) {
+        setIsDev(false);
+        console.log('HomePage - Production mode set from localStorage');
+        return;
+      }
+      
+      // Then check various environment indicators
       const isDevDomain = hostname.startsWith('dev.') || 
                          hostname.includes('replit.dev') ||
                          simulateDev ||
                          process.env.NEXT_PUBLIC_ENABLE_DEV_BANNER === 'true';
       
       setIsDev(isDevDomain);
-      console.log('HomePage - Dev mode check:', isDevDomain);
+      console.log('HomePage - Mode check:', isDevDomain ? 'Development' : 'Production', 
+        {hostname, simulateDev, replit: hostname.includes('replit.dev'), envVar: process.env.NEXT_PUBLIC_ENABLE_DEV_BANNER === 'true'});
     }
   }, []);
 
@@ -273,20 +283,9 @@ const HomePage: NextPageWithLayout = () => {
                   </div>
                   
                   <div className="mt-4 text-center">
-                    {isDev ? (
-                      <>
-                        <p className="text-xs text-gray-500 dark:text-gray-400">
-                          Already have access? <Link href="/login-new" className="text-blue-600 hover:text-blue-700">Login</Link>
-                        </p>
-                        <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">
-                          <Link href="/admin-fix.html" className="text-blue-600 hover:text-blue-700">Admin Access Tool</Link>
-                        </p>
-                      </>
-                    ) : (
-                      <p className="text-xs text-gray-500 dark:text-gray-400">
-                        We'll notify you once access is available
-                      </p>
-                    )}
+                    <p className="text-xs text-gray-500 dark:text-gray-400">
+                      We'll notify you once access is available
+                    </p>
                   </div>
                 </Form>
               </CardContent>
