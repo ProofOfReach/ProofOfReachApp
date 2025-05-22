@@ -1,5 +1,6 @@
-import React, { useState, useEffect, Suspense } from 'react';
+import React, { useState, useEffect } from 'react';
 import Head from 'next/head';
+import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
 import { UserRoleType } from '@/types/role';
 import Layout from '@/components/Layout';
@@ -7,42 +8,21 @@ import { useAuthRefactored } from '@/hooks/useAuthRefactored';
 import { logger } from '@/lib/logger';
 import Loading from '@/components/Loading';
 
-/**
- * Client-Side Rendering Pattern for Authentication-Dependent Components
- * 
- * This pattern prevents hydration mismatches by ensuring components that rely on
- * client-side authentication are only rendered in the browser. It's designed for:
- *  1. Components that need access to client-side authentication state
- *  2. Interactive flows that depend on user-specific data
- *  3. Components that use browser APIs unavailable during server rendering
- *
- * How it works:
- *  - On the server: Renders a minimal placeholder that doesn't depend on auth state
- *  - On the client: Dynamically imports and renders the full interactive component
- *  - Uses React.lazy + Suspense for proper code splitting and loading states
- */
-
-// Define a type that's compatible with both server and client components
-type LazyComponentType = React.ComponentType<any>;
-
-// Component that handles the client-side rendering of authentication-dependent flows
-const ClientSideOnboarding = React.lazy<LazyComponentType>(() => {
-  // When on the server, return a minimal placeholder component
-  if (typeof window === 'undefined') {
-    return Promise.resolve({
-      default: function ServerOnlyPlaceholder() { 
-        return React.createElement('div', { 
-          'data-testid': 'onboarding-server-placeholder',
-          className: 'onboarding-placeholder flex items-center justify-center min-h-[200px]',
-          style: { opacity: 0 }
-        }); 
-      }
-    });
+// Import the client component with SSR disabled
+const OnboardingClient = dynamic(
+  () => import('@/components/onboarding/ClientOnboarding'),
+  { 
+    ssr: false,
+    loading: () => (
+      <div className="flex flex-col items-center justify-center py-20" data-testid="onboarding-loading">
+        <Loading size="lg" />
+        <p className="mt-4 text-gray-600 dark:text-gray-300">
+          Loading onboarding experience...
+        </p>
+      </div>
+    )
   }
-  
-  // On the client, load the full interactive onboarding experience
-  return import('@/components/onboarding/ClientOnboarding');
-});
+);
 
 /**
  * Role-Based Onboarding Page
@@ -157,10 +137,6 @@ const OnboardingPage: React.FC = () => {
           logger.info('Redirects temporarily disabled to prevent loops');
           return;
         }
-        
-        // Redirect to onboarding with preserved parameters
-        window.location.href = `/onboarding?timestamp=${now}&role=${savedRole}&forced=true`;
-        return;
       }
       
       // Clear the flag to prevent loops if we're already on onboarding page with proper params
@@ -230,28 +206,15 @@ const OnboardingPage: React.FC = () => {
   // Extract the role from URL params if available
   const urlRole = typeof router.query.role === 'string' ? router.query.role as UserRoleType : null;
   
-  // Create a simple server-side rendered page with static content
-  // The dynamic content will be loaded ONLY on the client-side
   return (
     <Layout title="Welcome to Proof Of Reach">
       <Head>
         <meta name="description" content="Complete your onboarding to get started with Proof Of Reach" />
       </Head>
       <div className="container mx-auto p-4 py-12 bg-gray-50 dark:bg-gray-900 min-h-screen">
-        {/* Use Suspense to avoid hydration issues completely */}
-        <Suspense fallback={
-          <div className="flex flex-col items-center justify-center py-20" data-testid="server-fallback">
-            <Loading size="lg" />
-            <p className="mt-4 text-gray-600 dark:text-gray-300">
-              Loading onboarding experience...
-            </p>
-          </div>
-        }>
-          {/* This is a pure client-side only component with zero SSR */}
-          <div data-testid="client-only">
-            <ClientSideOnboarding />
-          </div>
-        </Suspense>
+        <div data-testid="client-only">
+          <OnboardingClient />
+        </div>
       </div>
     </Layout>
   );
