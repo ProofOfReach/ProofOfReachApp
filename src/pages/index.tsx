@@ -170,7 +170,7 @@ const HomePage: NextPageWithLayout = () => {
                         id="email"
                         type="email"
                         placeholder="Enter your email to join the waitlist"
-                        className="flex h-9 w-full rounded-md border-2 border-blue-700 pl-10 shadow-md focus:border-blue-800 focus-visible:ring-2 focus-visible:ring-blue-600 text-base placeholder:text-gray-400 px-3 py-0.5 bg-transparent"
+                        className="flex h-10 w-full rounded-md border-2 border-blue-700 pl-10 shadow-md focus:border-blue-800 focus-visible:ring-2 focus-visible:ring-blue-600 text-base placeholder:text-gray-400 px-3 py-0.5 bg-transparent"
                         {...form.register("email")}
                       />
                     </div>
