@@ -17,10 +17,17 @@ const HackathonBanner: React.FC<HackathonBannerProps> = ({
   useEffect(() => {
     if (typeof window === 'undefined') return;
     
-    // Check localStorage explicitly first
+    // First priority: Check for production environment variable
+    if (process.env.NEXT_PUBLIC_IS_PRODUCTION === 'true') {
+      setIsVisible(false);
+      console.log('Banner hidden: production environment detected');
+      return;
+    }
+    
+    // Check localStorage explicitly next
     const simulateDev = localStorage.getItem('SIMULATE_DEV_DOMAIN');
     
-    // If localStorage explicitly says false, respect that regardless of other settings
+    // If localStorage explicitly says false, respect that for local testing
     if (simulateDev === 'false') {
       setIsVisible(false);
       console.log('Banner hidden: explicitly set to production mode in localStorage');

@@ -10,10 +10,17 @@ const HomeNavbar: React.FC = () => {
   // Check if we're in dev mode
   useEffect(() => {
     if (typeof window !== 'undefined') {
+      // First priority: Check for production environment variable
+      if (process.env.NEXT_PUBLIC_IS_PRODUCTION === 'true') {
+        setIsDev(false);
+        return;
+      }
+      
+      // For local development: Check various indicators
       const hostname = window.location.hostname;
       const simulateDev = localStorage.getItem('SIMULATE_DEV_DOMAIN') === 'true';
       
-      // First check the localStorage setting explicitly
+      // Local dev environment toggle takes priority for testing
       if (simulateDev === false) {
         setIsDev(false);
         return;
