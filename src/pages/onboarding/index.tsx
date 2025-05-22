@@ -7,20 +7,41 @@ import { useAuthRefactored } from '@/hooks/useAuthRefactored';
 import { logger } from '@/lib/logger';
 import Loading from '@/components/Loading';
 
+/**
+ * Zero Server-Side Rendering Pattern for Browser Extension Integration
+ * 
+ * This pattern completely avoids hydration mismatches by rendering different content
+ * on the server versus the client. It's specifically designed for components that:
+ *  1. Interact with browser extensions (like Nostr)
+ *  2. Use browser-specific APIs not available during SSR
+ *  3. Need to prevent any hydration mismatches
+ *
+ * How it works:
+ *  - On the server: Renders a minimal placeholder with no extension-dependent markup
+ *  - On the client: Dynamically imports and renders the full interactive component
+ *  - Uses React.lazy + Suspense to handle the async loading gracefully
+ */
+
 // Define a type that's compatible with both server and client components
 type LazyComponentType = React.ComponentType<any>;
 
-// This is the most important trick - load everything on the client side only
-// with NO loading indicator from the server to prevent hydration issues
+// Component that handles the clean client/server rendering separation
 const ClientSideOnboarding = React.lazy<LazyComponentType>(() => {
-  // If we're on the server, return a component that renders nothing
+  // Server-side case
   if (typeof window === 'undefined') {
     return Promise.resolve({
-      // This is a placeholder component that renders nothing on the server
-      default: function EmptyComponent() { return React.createElement('div', null); }
+      // Return a minimal placeholder component that renders a single empty div
+      // This ensures the server and client will never have structural differences
+      default: function ServerPlaceholder() { 
+        return React.createElement('div', { 
+          'data-hydration-placeholder': true, 
+          className: 'onboarding-placeholder' 
+        }); 
+      }
     });
   }
-  // On the client, dynamically import the real component
+  
+  // Client-side case: dynamically import the real interactive component
   return import('@/components/onboarding/ClientOnboarding');
 });
 
