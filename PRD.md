@@ -30,6 +30,15 @@ Current digital ad systems are centralized and opaque. They extract large rents,
 - Grow a network of pub/relays and client devs who opt-in to showing relevant paid messages.
 - Maintain open APIs and optionally implement trust/reputation systems for spam resistance.
 
+## Development Requirements
+
+### Checkpoint Minimization & Efficient Development
+- **Batch commits extensively** to minimize checkpoints and reduce credit costs
+- **Group related changes** into single, comprehensive commits rather than incremental updates
+- **Fix errors in large batches** by category (TypeScript errors, linting issues, etc.)
+- **Combine multiple file changes** in single operations when logically related
+- **Prioritize meaningful progress** over frequent small updates to optimize checkpoint usage
+
 ---
 
 ## Phase 1: MVP (Web App)

@@ -48,12 +48,12 @@ export function error(message: string, err?: unknown): void {
 
   // Format the error for better readability
   const errorInfo = {
-    message: err.message || 'Unknown error',
-    name: err.name,
-    stack: err.stack,
-    code: err.code,
-    status: err.status,
-    details: err.details
+    message: (err as any).message || 'Unknown error',
+    name: (err as any).name,
+    stack: (err as any).stack,
+    code: (err as any).code,
+    status: (err as any).status,
+    details: (err as any).details
   };
 
   console.error(`Error in ${message}:`, errorInfo);

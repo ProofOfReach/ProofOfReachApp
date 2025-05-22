@@ -13,7 +13,7 @@
  */
 
 import { NextApiRequest, NextApiResponse } from 'next';
-import { errorService, RetryOptions } from '@/lib/errorService';
+import { errorService } from '@/lib/errorService';
 import { ErrorSeverity, ErrorCategory } from '@/types/errors';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -39,11 +39,13 @@ export interface ApiErrorResponse {
  */
 const errorTypeToStatusCode: Record<ErrorCategory, number> = {
   [ErrorCategory.USER_INPUT]: 400,
-  [ErrorCategory.AUTHORIZATION]: 403,
-  [ErrorCategory.RESOURCE]: 404,
+  [ErrorCategory.PERMISSIONS]: 403,
+  [ErrorCategory.EXTERNAL]: 404,
   [ErrorCategory.OPERATIONAL]: 500,
-  [ErrorCategory.PROGRAMMER]: 500,
-  [ErrorCategory.BUSINESS]: 422
+  [ErrorCategory.TECHNICAL]: 500,
+  [ErrorCategory.CONFIGURATION]: 422,
+  [ErrorCategory.NETWORK]: 503,
+  [ErrorCategory.UNKNOWN]: 500
 };
 
 /**
