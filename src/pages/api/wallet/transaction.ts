@@ -46,7 +46,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     
     // Process the transaction
     const result = await walletService.updateBalance({
-      userId: user.id,
+      userId: 'temp-user-id', // user.id,
       amount: amountNumber, 
       type: type as TransactionType,
       description

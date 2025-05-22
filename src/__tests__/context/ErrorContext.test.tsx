@@ -48,8 +48,8 @@ describe('ErrorContext', () => {
                 type: 'api', 
                 severity: 'error',
                 source: 'test',
-                timestamp: Date.now(),
-                category: 'validation'
+                timestamp: Date.now().toString(),
+                category: 'API_ERROR'
               })}
             >
               Set Error
@@ -144,7 +144,7 @@ describe('ErrorContext', () => {
             </button>
             <button 
               data-testid="success-toast"
-              onClick={() => showErrorToast('Success message', 'low')}
+              onClick={() => showErrorToast('Success message', 'medium')}
             >
               Success Toast
             </button>
