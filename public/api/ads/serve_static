@@ -1,0 +1,13 @@
+{
+  "id": "served-ad-123",
+  "title": "Launch Your Nostr Project",
+  "description": "Build on the Nostr protocol with our developer-friendly tools and APIs.",
+  "imageUrl": "/sats_symbol_white.png",
+  "targetUrl": "https://example.com/nostr-dev",
+  "sponsor": "Nostr Dev Tools",
+  "callToAction": "Start Building",
+  "styles": {
+    "background": "linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)",
+    "color": "#ffffff"
+  }
+}

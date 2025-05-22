@@ -1,0 +1,275 @@
+import React, { useState, useEffect } from 'react';
+import { useRouter } from 'next/router';
+import DashboardLayout from '../../../../components/layout/DashboardLayout';
+import { useRole } from '../../../../context/RoleContext';
+import { useAuth } from '../../../../hooks/useAuth';
+import { AlertCircle, Save, ArrowLeft } from 'react-feather';
+import Link from 'next/link';
+
+const CreateAdSpacePage = () => {
+  const { role } = useRole();
+  const router = useRouter();
+  const { auth } = useAuth();
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  
+  // Form state
+  const [form, setForm] = useState({
+    name: '',
+    type: 'website',
+    location: '',
+    description: '',
+    minBid: 5,
+    autoApprove: false,
+  });
+
+  // Redirect if not in publisher role
+  useEffect(() => {
+    if (role !== 'publisher') {
+      router.push(`/dashboard${role !== 'user' ? `/${role}` : ''}`);
+    }
+  }, [role, router]);
+
+  // Handle form change
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+    const { name, value, type } = e.target;
+    
+    if (type === 'checkbox') {
+      const checkbox = e.target as HTMLInputElement;
+      setForm({
+        ...form,
+        [name]: checkbox.checked,
+      });
+    } else {
+      setForm({
+        ...form,
+        [name]: value,
+      });
+    }
+  };
+
+  // Handle form submission
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    setError(null);
+    
+    try {
+      // In a real app, this would be an API call
+      console.log('Submitting form data:', form);
+      
+      // Simulate API delay
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      // Redirect to spaces list
+      router.push('/dashboard/publisher/spaces');
+    } catch (err: any) {
+      console.error('Error creating ad space:', err);
+      setError(err.message || 'Failed to create ad space. Please try again.');
+      setIsSubmitting(false);
+    }
+  };
+
+  // Get location field placeholder based on type
+  const getLocationPlaceholder = () => {
+    switch (form.type) {
+      case 'website':
+        return 'https://example.com';
+      case 'nostr-feed':
+        return 'Your Nostr public key (npub1...)';
+      case 'client-integration':
+        return 'Name of client application';
+      default:
+        return 'Location';
+    }
+  };
+
+  // Get location field help text based on type
+  const getLocationHelp = () => {
+    switch (form.type) {
+      case 'website':
+        return 'The URL where this ad space will be shown';
+      case 'nostr-feed':
+        return 'Your Nostr public key where ads will be displayed in your feed';
+      case 'client-integration':
+        return 'Name of the client app where ads will be displayed';
+      default:
+        return '';
+    }
+  };
+
+  return (
+    <div className="space-y-6">
+      <div className="flex items-center justify-between">
+        <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Create Ad Space</h1>
+        <Link
+          href="/dashboard/publisher/spaces"
+          className="inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700"
+        >
+          <ArrowLeft className="w-4 h-4 mr-2" />
+          Back to Spaces
+        </Link>
+      </div>
+
+      {/* Info Card */}
+      <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4 mb-8">
+        <div className="flex items-start">
+          <AlertCircle className="h-5 w-5 text-blue-500 mr-3 mt-0.5" />
+          <div>
+            <h3 className="font-medium text-blue-800 dark:text-blue-300">About Ad Spaces</h3>
+            <p className="text-blue-700 dark:text-blue-400 text-sm mt-1">
+              Ad spaces are locations where ads will be displayed. You can create spaces for your website,
+              Nostr feed, or client integration. Each space can have its own approval rules and minimum bid requirements.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      {/* Error Display */}
+      {error && (
+        <div className="mb-6 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
+          <p className="text-red-700 dark:text-red-300">{error}</p>
+        </div>
+      )}
+
+      {/* Form */}
+      <div className="bg-white dark:bg-gray-800 shadow-sm rounded-lg p-6">
+        <form onSubmit={handleSubmit} className="space-y-6">
+          {/* Name */}
+          <div>
+            <label htmlFor="name" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+              Space Name <span className="text-red-500">*</span>
+            </label>
+            <input
+              type="text"
+              id="name"
+              name="name"
+              value={form.name}
+              onChange={handleChange}
+              required
+              className="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 shadow-sm focus:border-green-500 focus:ring-green-500 dark:bg-gray-700 dark:text-white sm:text-sm"
+              placeholder="My Blog Ad Space"
+            />
+          </div>
+
+          {/* Type */}
+          <div>
+            <label htmlFor="type" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+              Space Type <span className="text-red-500">*</span>
+            </label>
+            <select
+              id="type"
+              name="type"
+              value={form.type}
+              onChange={handleChange}
+              className="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 shadow-sm focus:border-green-500 focus:ring-green-500 dark:bg-gray-700 dark:text-white sm:text-sm"
+            >
+              <option value="website">Website</option>
+              <option value="nostr-feed">Nostr Feed</option>
+              <option value="client-integration">Client Integration</option>
+            </select>
+            <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
+              This determines where your ads will be displayed.
+            </p>
+          </div>
+
+          {/* Location */}
+          <div>
+            <label htmlFor="location" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+              Location <span className="text-red-500">*</span>
+            </label>
+            <input
+              type="text"
+              id="location"
+              name="location"
+              value={form.location}
+              onChange={handleChange}
+              required
+              className="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 shadow-sm focus:border-green-500 focus:ring-green-500 dark:bg-gray-700 dark:text-white sm:text-sm"
+              placeholder={getLocationPlaceholder()}
+            />
+            <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
+              {getLocationHelp()}
+            </p>
+          </div>
+
+          {/* Description */}
+          <div>
+            <label htmlFor="description" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+              Description
+            </label>
+            <textarea
+              id="description"
+              name="description"
+              value={form.description}
+              onChange={handleChange}
+              rows={3}
+              className="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 shadow-sm focus:border-green-500 focus:ring-green-500 dark:bg-gray-700 dark:text-white sm:text-sm"
+              placeholder="Describe your ad space to advertisers"
+            />
+          </div>
+
+          {/* Minimum Bid */}
+          <div>
+            <label htmlFor="minBid" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+              Minimum Bid (sats)
+            </label>
+            <input
+              type="number"
+              id="minBid"
+              name="minBid"
+              value={form.minBid}
+              onChange={handleChange}
+              min={1}
+              className="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 shadow-sm focus:border-green-500 focus:ring-green-500 dark:bg-gray-700 dark:text-white sm:text-sm"
+            />
+            <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
+              The minimum amount of sats an advertiser must bid per impression.
+            </p>
+          </div>
+
+          {/* Auto Approve */}
+          <div className="relative flex items-start">
+            <div className="flex h-5 items-center">
+              <input
+                id="autoApprove"
+                name="autoApprove"
+                type="checkbox"
+                checked={form.autoApprove}
+                onChange={handleChange}
+                className="h-4 w-4 rounded border-gray-300 text-green-600 focus:ring-green-500"
+              />
+            </div>
+            <div className="ml-3 text-sm">
+              <label htmlFor="autoApprove" className="font-medium text-gray-700 dark:text-gray-300">
+                Auto-approve ads
+              </label>
+              <p className="text-gray-500 dark:text-gray-400">
+                When enabled, ads that meet your criteria will be automatically approved without manual review.
+              </p>
+            </div>
+          </div>
+
+          {/* Submit Button */}
+          <div className="flex justify-end">
+            <button
+              type="submit"
+              disabled={isSubmitting}
+              className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 disabled:bg-gray-400 disabled:cursor-not-allowed"
+            >
+              <Save className="w-4 h-4 mr-2" />
+              {isSubmitting ? 'Creating...' : 'Create Ad Space'}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  );
+};
+
+// Wrap the page with our layout
+CreateAdSpacePage.getLayout = (page: React.ReactElement) => {
+  return <DashboardLayout>{page}</DashboardLayout>;
+};
+
+export default CreateAdSpacePage;

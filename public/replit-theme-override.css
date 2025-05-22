@@ -1,0 +1,132 @@
+/**
+ * Replit Theme Override
+ * This file ensures the styling is compatible with Replit's default dark theme
+ */
+
+:root {
+  --bg-primary: #1d2333;
+  --bg-secondary: #171d2c;
+  --bg-tertiary: #141a28;
+  --text-primary: #e2e8f0;
+  --text-secondary: #a0aec0;
+  --border-color: #2d3748;
+  --accent-color: #9333ea;
+  --error-color: #e53e3e;
+  --success-color: #38a169;
+  --warning-color: #dd6b20;
+  --info-color: #3182ce;
+}
+
+/* Force dark mode for Replit compatibility */
+html {
+  background-color: var(--bg-tertiary);
+  color-scheme: dark;
+}
+
+body {
+  background-color: var(--bg-tertiary);
+  color: var(--text-primary);
+}
+
+/* Override light mode component styles */
+.bg-white {
+  background-color: var(--bg-primary) !important;
+}
+
+.text-gray-700, .text-gray-800, .text-gray-900 {
+  color: var(--text-primary) !important;
+}
+
+.text-gray-500, .text-gray-600 {
+  color: var(--text-secondary) !important;
+}
+
+.border-gray-200 {
+  border-color: var(--border-color) !important;
+}
+
+/* Input fields */
+.input-field {
+  background-color: var(--bg-secondary) !important;
+  color: var(--text-primary) !important;
+  border-color: var(--border-color) !important;
+}
+
+/* Cards and containers */
+.shadow-md, .bg-gray-50 {
+  background-color: var(--bg-primary) !important;
+}
+
+/* Buttons */
+.btn-primary {
+  background-color: var(--accent-color) !important;
+  color: white !important;
+}
+
+.btn-secondary {
+  background-color: var(--border-color) !important;
+  color: var(--text-primary) !important;
+}
+
+/* Tables */
+table {
+  background-color: var(--bg-primary) !important;
+  color: var(--text-primary) !important;
+}
+
+th {
+  background-color: var(--bg-secondary) !important;
+  color: var(--text-primary) !important;
+}
+
+tr:nth-child(even) {
+  background-color: var(--bg-tertiary) !important;
+}
+
+/* Fix for dropdown menus */
+.dropdown-menu {
+  background-color: var(--bg-primary) !important;
+  border-color: var(--border-color) !important;
+  color: var(--text-primary) !important;
+}
+
+/* Override Tailwind dark mode to ensure it's always active */
+.dark\:bg-gray-800, .dark\:bg-gray-900 {
+  background-color: var(--bg-primary) !important;
+}
+
+.dark\:text-gray-300, .dark\:text-gray-200, .dark\:text-white {
+  color: var(--text-primary) !important;
+}
+
+.dark\:text-gray-400 {
+  color: var(--text-secondary) !important;
+}
+
+.dark\:border-gray-700 {
+  border-color: var(--border-color) !important;
+}
+
+/* Specific component overrides */
+.dark\:bg-gray-700, .bg-gray-100 {
+  background-color: var(--bg-secondary) !important;
+}
+
+/* Set scrollbar colors */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-tertiary);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border-color);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-secondary);
+}

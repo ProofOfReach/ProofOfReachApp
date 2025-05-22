@@ -1,0 +1,643 @@
+openapi: 3.0.0
+info:
+  title: Proof Of Reach API
+  version: 1.0.0
+  description: |
+    # Introduction
+    The Proof Of Reach API provides programmatic access to all features of the platform, allowing you to integrate advertising capabilities into your applications.
+
+    This API uses standard RESTful conventions with JSON request and response bodies. All requests require authentication either through API keys or Nostr-based authentication.
+
+    # Authentication
+    There are two ways to authenticate with the API:
+
+    ## API Key Authentication
+    Most endpoints require an API key which you can generate in your account settings.
+    Include your API key in the `X-API-Key` header with all requests.
+
+    ## Nostr Authentication
+    Some endpoints support Nostr-based authentication using public keys and signatures.
+
+    # Rate Limits
+    The API has rate limits to prevent abuse:
+    - 100 requests per minute for authenticated users
+    - 20 requests per minute for unauthenticated users
+    - Public endpoints have a limit of 200 requests per minute
+
+    # Webhooks
+    You can configure webhooks in your account settings to receive real-time notifications for specific events.
+
+    # Questions?
+    If you have any questions, please contact our [support team](mailto:support@proofofreach.com).
+  contact:
+    name: API Support
+    email: support@proofofreach.com
+    url: https://proofofreach.com/contact
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+
+servers:
+  - url: /api
+    description: Current API endpoint
+  - url: https://api.nostradmarketplace.com
+    description: Production API server
+  - url: https://api-sandbox.nostradmarketplace.com
+    description: Sandbox API server
+
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: X-API-Key
+      description: API key for authentication (generate in dashboard settings)
+    NostrAuth:
+      type: apiKey
+      in: header
+      name: X-Nostr-Pubkey
+      description: Nostr public key for authentication
+    NostrSignature:
+      type: apiKey
+      in: header
+      name: X-Nostr-Signature
+      description: Signature of the request payload with the Nostr private key
+
+  parameters:
+    pageParam:
+      name: page
+      in: query
+      description: Page number for pagination
+      schema:
+        type: integer
+        default: 1
+        minimum: 1
+    limitParam:
+      name: limit
+      in: query
+      description: Number of items per page
+      schema:
+        type: integer
+        default: 20
+        minimum: 1
+        maximum: 100
+    idParam:
+      name: id
+      in: path
+      required: true
+      description: Unique identifier
+      schema:
+        type: string
+        format: uuid
+    statusParam:
+      name: status
+      in: query
+      description: Filter by status
+      schema:
+        type: string
+        enum: ['ACTIVE', 'PAUSED', 'ENDED', 'DRAFT']
+    dateFromParam:
+      name: dateFrom
+      in: query
+      description: Filter by start date (ISO 8601)
+      schema:
+        type: string
+        format: date-time
+    dateToParam:
+      name: dateTo
+      in: query
+      description: Filter by end date (ISO 8601)
+      schema:
+        type: string
+        format: date-time
+    placementParam:
+      name: placement
+      in: query
+      description: Filter by ad placement type
+      schema:
+        type: string
+        enum: ['feed', 'sidebar', 'banner', 'sponsored', 'native']
+    pubkeyParam:
+      name: pubkey
+      in: query
+      description: Filter by publisher's Nostr public key
+      schema:
+        type: string
+
+  responses:
+    Unauthorized:
+      description: Unauthorized - Authentication credentials are missing or invalid
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            code: 'UNAUTHORIZED'
+            message: 'Invalid or missing API key'
+    Forbidden:
+      description: Forbidden - User does not have permission to access the resource
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            code: 'FORBIDDEN'
+            message: 'You do not have permission to access this resource'
+    NotFound:
+      description: Not Found - The requested resource does not exist
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            code: 'NOT_FOUND'
+            message: 'The requested resource was not found'
+    ValidationError:
+      description: Validation Error - The request contains invalid data
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              code:
+                type: string
+                example: 'VALIDATION_ERROR'
+              message:
+                type: string
+                example: 'Validation failed'
+              errors:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    field:
+                      type: string
+                    message:
+                      type: string
+                example:
+                  - field: 'name'
+                    message: 'Name is required'
+                  - field: 'budget'
+                    message: 'Budget must be a positive number'
+    InternalServerError:
+      description: Internal Server Error - Something went wrong on the server
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            code: 'INTERNAL_SERVER_ERROR'
+            message: 'An unexpected error occurred'
+    TooManyRequests:
+      description: Too Many Requests - Rate limit exceeded
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            code: 'RATE_LIMIT_EXCEEDED'
+            message: 'Rate limit exceeded. Please try again later.'
+            retryAfter: 60
+
+  schemas:
+    Error:
+      type: object
+      required:
+        - code
+        - message
+      properties:
+        code:
+          type: string
+          description: Error code for programmatic handling
+          example: 'INVALID_INPUT'
+        message:
+          type: string
+          description: Human-readable error message
+          example: 'Invalid input provided'
+        retryAfter:
+          type: integer
+          description: Seconds to wait before retrying (only for rate limit errors)
+          example: 60
+
+    # Auth schemas
+    NostrLoginRequest:
+      type: object
+      required:
+        - pubkey
+        - signature
+        - challenge
+      properties:
+        pubkey:
+          type: string
+          description: User's Nostr public key
+          example: 'npub1abcdef0123456789abcdef0123456789abcdef0123456789abcdef01234567'
+        signature:
+          type: string
+          description: Signature of the challenge signed with the user's private key
+          example: 'sig123abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef'
+        challenge:
+          type: string
+          description: Challenge string that was signed
+          example: 'nostr:login:timestamp:1633847451'
+
+    NostrLoginResponse:
+      type: object
+      properties:
+        token:
+          type: string
+          description: Authentication token for subsequent API requests
+          example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...'
+        user:
+          $ref: '#/components/schemas/User'
+
+    # User schemas
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Unique identifier for the user
+          example: '3fa85f64-5717-4562-b3fc-2c963f66afa6'
+        pubkey:
+          type: string
+          description: Nostr public key
+          example: 'npub1abcdef0123456789abcdef0123456789abcdef0123456789abcdef01234567'
+        name:
+          type: string
+          description: Display name
+          example: 'Bitcoin Maximalist'
+        email:
+          type: string
+          format: email
+          nullable: true
+          description: Email address (if provided)
+          example: 'user@example.com'
+        isAdvertiser:
+          type: boolean
+          description: Whether the user is an advertiser
+          example: true
+        isPublisher:
+          type: boolean
+          description: Whether the user is a publisher
+          example: false
+        walletBalance:
+          type: integer
+          description: User wallet balance in satoshis
+          example: 1050000
+        createdAt:
+          type: string
+          format: date-time
+          description: When the user was created
+          example: '2023-01-15T12:00:00Z'
+        updatedAt:
+          type: string
+          format: date-time
+          description: When the user was last updated
+          example: '2023-02-22T14:30:00Z'
+      
+    ApiKey:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Unique identifier for the API key
+          example: '3fa85f64-5717-4562-b3fc-2c963f66afa6'
+        name:
+          type: string
+          description: Name for the API key
+          example: 'My App Integration'
+        key:
+          type: string
+          description: The actual API key value (only shown once on creation)
+          example: 'nam_api_2f7d9be052a0f2c1a8f5b71c5e4be8f0ad3ec8b6'
+        lastUsed:
+          type: string
+          format: date-time
+          nullable: true
+          description: When the key was last used
+          example: '2023-03-10T09:15:32Z'
+        createdAt:
+          type: string
+          format: date-time
+          description: When the key was created
+          example: '2023-01-15T12:00:00Z'
+        expiresAt:
+          type: string
+          format: date-time
+          nullable: true
+          description: When the key expires (null if never)
+          example: '2024-01-15T12:00:00Z'
+      
+    # Campaign schemas
+    Campaign:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Unique identifier for the campaign
+          example: '3fa85f64-5717-4562-b3fc-2c963f66afa6'
+        name:
+          type: string
+          description: Campaign name
+          example: 'Summer Bitcoin Promotion'
+        description:
+          type: string
+          description: Campaign description
+          example: 'Promoting our services during the summer season'
+        budget:
+          type: integer
+          description: Total budget in satoshis
+          example: 10000000
+        dailyBudget:
+          type: integer
+          description: Daily budget in satoshis
+          nullable: true
+          example: 500000
+        startDate:
+          type: string
+          format: date-time
+          description: When the campaign starts
+          example: '2023-06-01T00:00:00Z'
+        endDate:
+          type: string
+          format: date-time
+          nullable: true
+          description: When the campaign ends (null if no end date)
+          example: '2023-08-31T23:59:59Z'
+        status:
+          type: string
+          enum: ['DRAFT', 'ACTIVE', 'PAUSED', 'ENDED', 'SCHEDULED', 'REVIEW']
+          description: Current campaign status
+          example: 'ACTIVE'
+        targetLocation:
+          type: string
+          nullable: true
+          description: Target geographic location
+          example: 'US,CA,UK'
+        targetInterests:
+          type: string
+          nullable: true
+          description: Target interest categories (comma-separated)
+          example: 'bitcoin,cryptocurrency,lightning'
+        targetAge:
+          type: string
+          nullable: true
+          description: Target age range
+          example: '25-45'
+        targetAudience:
+          type: string
+          nullable: true
+          description: Additional targeting parameters
+          example: 'tech-savvy,investors'
+        createdAt:
+          type: string
+          format: date-time
+          description: When the campaign was created
+          example: '2023-05-01T10:30:00Z'
+        updatedAt:
+          type: string
+          format: date-time
+          description: When the campaign was last updated
+          example: '2023-05-15T14:20:00Z'
+      
+    # Ad schemas
+    Ad:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Unique identifier for the ad
+          example: '3fa85f64-5717-4562-b3fc-2c963f66afa6'
+        title:
+          type: string
+          description: Ad title
+          example: 'Stack Sats Every Day'
+        description:
+          type: string
+          description: Ad description/content
+          example: 'Join our platform to stack sats automatically with every purchase.'
+        imageUrl:
+          type: string
+          format: uri
+          nullable: true
+          description: URL to ad image (if applicable)
+          example: 'https://cdn.nostradmarketplace.com/images/ads/stack-sats.jpg'
+        targetUrl:
+          type: string
+          format: uri
+          description: Landing page URL
+          example: 'https://example.com/stack-sats-promo'
+        urlParameters:
+          type: string
+          nullable: true
+          description: Additional URL parameters for tracking
+          example: 'utm_source=nostr&utm_medium=ad&utm_campaign=summer'
+        bidPerImpression:
+          type: integer
+          description: Bid amount per impression in satoshis
+          example: 10
+        bidPerClick:
+          type: integer
+          description: Bid amount per click in satoshis
+          example: 100
+        status:
+          type: string
+          enum: ['PENDING', 'ACTIVE', 'PAUSED', 'COMPLETED', 'REJECTED']
+          description: Current ad status
+          example: 'ACTIVE'
+        freqCapViews:
+          type: integer
+          description: Maximum impressions per user
+          example: 5
+        freqCapHours:
+          type: integer
+          description: Time period for frequency cap (hours)
+          example: 24
+        targetLocation:
+          type: string
+          nullable: true
+          description: Ad-specific geo targeting (overrides campaign)
+          example: 'US,CA'
+        targetInterests:
+          type: string
+          nullable: true
+          description: Ad-specific interest targeting (overrides campaign)
+          example: 'bitcoin,lightning'
+        targetAge:
+          type: string
+          nullable: true
+          description: Ad-specific age targeting (overrides campaign)
+          example: '25-45'
+        campaignId:
+          type: string
+          format: uuid
+          description: Campaign this ad belongs to
+          example: '3fa85f64-5717-4562-b3fc-2c963f66afa6'
+        impressions:
+          type: integer
+          description: Total number of impressions
+          example: 12500
+        clicks:
+          type: integer
+          description: Total number of clicks
+          example: 350
+        ctr:
+          type: number
+          format: float
+          description: Click-through rate (percentage)
+          example: 2.8
+        spend:
+          type: integer
+          description: Total spend in satoshis
+          example: 160000
+        createdAt:
+          type: string
+          format: date-time
+          description: When the ad was created
+          example: '2023-05-20T12:00:00Z'
+        updatedAt:
+          type: string
+          format: date-time
+          description: When the ad was last updated
+          example: '2023-05-22T15:30:00Z'
+
+tags:
+  - name: Authentication
+    description: Authentication and API key operations
+  - name: Users
+    description: User account management
+  - name: Campaigns
+    description: Campaign creation and management
+  - name: Ads
+    description: Individual ad creation and management
+  - name: AdServing
+    description: Ad serving and delivery endpoints
+
+x-tagGroups:
+  - name: Core
+    tags:
+      - Authentication
+      - Users
+  - name: Advertisers
+    tags:
+      - Campaigns
+      - Ads
+  - name: Publishers
+    tags:
+      - AdSpaces
+      - AdPlacements
+  - name: Delivery
+    tags:
+      - AdServing
+
+paths:
+  # Authentication endpoints
+  /auth/nostr-login:
+    post:
+      tags:
+        - Authentication
+      summary: Authenticate with Nostr
+      description: |
+        Authenticates a user using their Nostr public key and a signed challenge.
+        This endpoint simulates the Nostr authentication process for development and testing.
+      operationId: nostrLogin
+      x-rateLimit:
+        limit: 10
+        period: 60
+        description: Maximum 10 login attempts per minute
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NostrLoginRequest'
+      responses:
+        '200':
+          description: Authentication successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NostrLoginResponse'
+              example:
+                token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...'
+                user:
+                  id: '3fa85f64-5717-4562-b3fc-2c963f66afa6'
+                  pubkey: 'npub1abcdef0123456789abcdef0123456789abcdef0123456789abcdef01234567'
+                  name: 'Bitcoin Maximalist'
+                  email: null
+                  isAdvertiser: true
+                  isPublisher: false
+                  walletBalance: 1050000
+                  createdAt: '2023-01-15T12:00:00Z'
+                  updatedAt: '2023-02-22T14:30:00Z'
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '401':
+          description: Authentication failed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                code: 'INVALID_SIGNATURE'
+                message: 'Invalid signature for the provided public key'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+  
+  # Ad serving endpoint
+  /ads/serve:
+    get:
+      tags:
+        - AdServing
+      summary: Serve an ad
+      description: |
+        Returns a single ad object suitable for display. This is a public endpoint that does not require authentication.
+        The response is based on optional query parameters that can help with targeting.
+      operationId: serveAd
+      x-rateLimit:
+        limit: 200
+        period: 60
+        description: Maximum 200 requests per minute
+      parameters:
+        - name: placement
+          in: query
+          description: The ad placement type
+          schema:
+            type: string
+            enum: ['feed', 'sidebar', 'banner', 'sponsored', 'native']
+        - name: pubkey
+          in: query
+          description: The Nostr public key of the publisher requesting the ad
+          schema:
+            type: string
+        - name: interests
+          in: query
+          description: Comma-separated list of content interests
+          schema:
+            type: string
+        - name: format
+          in: query
+          description: Requested ad format
+          schema:
+            type: string
+            enum: ['text', 'image', 'text-image', 'rich']
+            default: 'text-image'
+      responses:
+        '200':
+          description: Successfully retrieved an ad
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Ad'
+        '204':
+          description: No suitable ads found for the given parameters
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+        '500':
+          $ref: '#/components/responses/InternalServerError'

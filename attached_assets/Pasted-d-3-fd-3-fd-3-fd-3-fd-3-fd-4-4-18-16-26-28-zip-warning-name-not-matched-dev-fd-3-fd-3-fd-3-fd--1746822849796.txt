@@ -1,0 +1,58 @@
+d/3/fd/3/fd/3/fd/3/fd/3/fd/4/4/18/16/26/28
+    zip warning: name not matched: dev/fd/3/fd/3/fd/3/fd/3/fd/3/fd/3/fd/3/fd/3/fd/3/fd/3/fd/3/fd/4/4/18/16/26/29
+    zip warning: name not matched: dev/fd/3/fd/3/fd/3/fd/3/fd/3/fd/3/fd/3/fd/3/fd/3/fd/3/fd/3/fd/4/4/18/16/26/30
+    zip warning: name not matched: dev/fd/3/fd/3/fd/3/fd/3/fd/3/fd/3/fd/3/fd/3/fd/3/fd/3/fd/3/fd/4/4/18/16/26/31
+    zip warning: name not matched: dev/fd/3/fd/3/fd/3/fd/3/fd/3/fd/3/fd/3/fd/3/fd/3/fd/3/fd/3/fd/4/4/18/16/27/0
+    zip warning: name not matched: dev/fd/3/fd/3/fd/3/fd/3/fd/3/fd/3/fd/3/fd/3/fd/3/fd/3/fd/3/fd/4/4/18/16/27/1
+    zip warning: name not matched: dev/fd/3/fd/3/fd/3/fd/3/fd/3/fd/3/fd/3/fd/3/fd/3/fd/3/fd/3/fd/4/4/18/16/27/2
+    zip warning: name not matched: dev/fd/3/fd/3/fd/3/fd/3/fd/3/fd/3/fd/3/fd/3/fd/3/fd/3/fd/3/fd/4/4/18/16/27/3
+    zip warning: name not matched: dev/fd/3/fd/3/fd/3/fd/3/fd/3/fd/3/fd/3/fd/3/fd/3/fd/3/fd/3/fd/4/4/18/16/27/4
+    zip warning: name not matched: dev/fd/3/fd/3/fd/3/fd/3/fd/3/fd/3/fd/3/fd/3/fd/3/fd/3/fd/3/fd/4/4/18/16/27/5
+    zip warning: name not matched: dev/fd/3/fd/3/fd/3/fd/3/fd/3/fd/3/fd/3/fd/3/fd/3/fd/3/fd/3/fd/4/4/18/16/27/6
+    zip warning: name not matched: dev/fd/3/fd/3/fd/3/fd/3/fd/3/fd/3/fd/3/fd/3/fd/3/fd/3/fd/3/fd/4/4/18/16/27/7
+    zip warning: name not matched: dev/fd/3/fd/3/fd/3/fd/3/fd/3/fd/3/fd/3/fd/3/fd/3/fd/3/fd/3/fd/4/4/18/16/27/8
+    zip warning: name not matched: dev/fd/3/fd/3/fd/3/fd/3/fd/3/fd/3/fd/3/fd/3/fd/3/fd/3/fd/3/fd/4/4/18/16/27/9
+    zip warning: name not matched: dev/fd/3/fd/3/fd/3/fd/3/fd/3/fd/3/fd/3/fd/3/fd/3/fd/3/fd/3/fd/4/4/18/16/27/10
+    zip warning: name not matched: dev/fd/3/fd/3/fd/3/fd/3/fd/3/fd/3/fd/3/fd/3/fd/3/fd/3/fd/3/fd/4/4/18/16/27/11
+    zip warning: name not matched: dev/fd/3/fd/3/fd/3/fd/3/fd/3/fd/3/fd/3/fd/3/fd/3/fd/3/fd/3/fd/4/4/18/16/27/12
+    zip warning: name not matched: dev/fd/3/fd/3/fd/3/fd/3/fd/3/fd/3/fd/3/fd/3/fd/3/fd/3/fd/3/fd/4/4/18/16/27/13
+    zip warning: name not matched: dev/fd/3/fd/3/fd/3/fd/3/fd/3/fd/3/fd/3/fd/3/fd/3/fd/3/fd/3/fd/4/4/18/16/27/14
+    zip warning: name not matched: dev/fd/3/fd/3/fd/3/fd/3/fd/3/fd/3/fd/3/fd/3/fd/3/fd/3/fd/3/fd/4/4/18/16/27/15
+    zip warning: name not matched: dev/fd/3/fd/3/fd/3/fd/3/fd/3/fd/3/fd/3/fd/3/fd/3/fd/3/fd/3/fd/4/4/18/16/27/16
+    zip warning: name not matched: dev/fd/3/fd/3/fd/3/fd/3/fd/3/fd/3/fd/3/fd/3/fd/3/fd/3/fd/3/fd/4/4/18/16/27/17
+^Z
+[1]+  Stopped                 zip -r "/tmp/zips/${dir}.zip" "$dir"
+Creating zip for configuration files
+    zip warning: name not matched: package.json
+    zip warning: name not matched: package-lock.json
+    zip warning: name not matched: tsconfig.json
+    zip warning: name not matched: next.config.js
+    zip warning: name not matched: babel.config.js
+    zip warning: name not matched: tailwind.config.js
+    zip warning: name not matched: postcss.config.js
+    zip warning: name not matched: jest.config.js
+    zip warning: name not matched: jest.setup.js
+    zip warning: name not matched: jest.env.js
+    zip warning: name not matched: next-env.d.ts
+    zip warning: name not matched: .gitignore
+    zip warning: name not matched: .env.example
+    zip warning: name not matched: README.md
+    zip warning: name not matched: PRD.md
+    zip warning: name not matched: LEARNINGS.md
+    zip warning: name not matched: *.md
+    zip warning: name not matched: *.js
+    zip warning: name not matched: *.json
+    zip warning: name not matched: *.ts
+    zip warning: name not matched: *.yml
+    zip warning: name not matched: *.yaml
+
+zip error: Nothing to do! (/tmp/zips/config-files.zip)
+total 17396
+drwxr-xr-x 1 runner runner       30 May  9 20:33 .
+drwxrwxrwx 1 runner runner      184 May  9 20:33 ..
+-rw-r--r-- 1 runner runner 17809240 May  9 20:33 bin.zip
+-rw-r--r-- 1 runner runner      160 May  9 20:33 boot.zip
+  adding: zips/ (stored 0%)
+  adding: zips/bin.zip (stored 0%)
+  adding: zips/boot.zip (stored 0%)
+All zip files created in /tmp/zips/

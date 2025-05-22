@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="400" height="300" viewBox="0 0 400 300" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background Elements -->
+  <rect x="20" y="50" width="360" height="200" rx="15" fill="#f0f7ff" opacity="0.8"/>
+  
+  <!-- Device Screen -->
+  <rect x="70" y="70" width="180" height="140" rx="8" fill="#ffffff" stroke="#2563eb" stroke-width="3"/>
+  <rect x="80" y="90" width="160" height="20" rx="3" fill="#dbeafe"/>
+  <rect x="80" y="120" width="120" height="20" rx="3" fill="#dbeafe"/>
+  <rect x="80" y="150" width="160" height="20" rx="3" fill="#dbeafe"/>
+  <rect x="80" y="180" width="80" height="20" rx="3" fill="#dbeafe"/>
+  <rect x="80" y="80" width="160" height="5" rx="2" fill="#2563eb"/>
+  
+  <!-- Bitcoin Rewards -->
+  <circle cx="290" cy="105" r="35" fill="#ffffff" stroke="#2563eb" stroke-width="3"/>
+  <text x="290" y="120" font-family="Arial" font-size="30" text-anchor="middle" fill="#f59e0b">₿</text>
+  
+  <!-- Lightning Elements -->
+  <path d="M300 150 L290 180 L310 175 L295 210" stroke="#f59e0b" stroke-width="5" fill="none"/>
+  
+  <!-- Wallet Receiving -->
+  <rect x="260" y="190" width="80" height="50" rx="5" fill="#ffffff" stroke="#2563eb" stroke-width="2"/>
+  <rect x="270" y="200" width="60" height="20" rx="3" fill="#bfdbfe"/>
+  <circle cx="300" cy="230" r="5" fill="#2563eb"/>
+  
+  <!-- Connection Lines -->
+  <path d="M240 105 L260 105" stroke="#2563eb" stroke-width="2" stroke-dasharray="5 3"/>
+  <path d="M260 220 L230 160" stroke="#2563eb" stroke-width="2" stroke-dasharray="5 3"/>
+  
+  <!-- User Symbol -->
+  <circle cx="160" cy="220" r="15" fill="#2563eb"/>
+  <circle cx="160" cy="195" r="10" fill="#2563eb"/>
+</svg>

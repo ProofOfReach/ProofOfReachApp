@@ -1,0 +1,363 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model User {
+  id            String    @id @default(cuid())
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  nostrPubkey   String    @unique
+  balance       Int       @default(0) // In satoshis
+  
+  // Legacy role flags - keep these to maintain compatibility
+  isAdvertiser  Boolean   @default(false)
+  isPublisher   Boolean   @default(false)
+  isAdmin       Boolean   @default(false)
+  isStakeholder Boolean   @default(false)
+  
+  // Role management fields
+  currentRole   String    @default("viewer") // Current active role
+  previousRole  String    @default("viewer") // Previous role before switching
+  isTestUser    Boolean   @default(false)  // Test mode flag
+  isActive      Boolean   @default(true)   // Whether the user account is active
+  lastRoleChange DateTime @default(now())  // When role was last changed
+  
+  // Relationships
+  preferences   UserPreferences?
+  campaigns     Campaign[]
+  ads           Ad[]
+  spaces        AdSpace[]
+  transactions  Transaction[]
+  apiKeys       ApiKey[]
+  activities    UserActivity[]
+  userRoles     UserRole[]
+  onboarding    UserOnboarding[]
+  
+  // Indexes for enhanced role management
+  @@index([isTestUser])
+  @@index([isActive])
+}
+
+model UserPreferences {
+  id            String    @id @default(cuid())
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  
+  // User data sharing preferences
+  shareLocation Boolean   @default(false)
+  shareInterests Boolean  @default(false)
+  shareBrowsing Boolean   @default(false)
+  shareAge      Boolean   @default(false)
+  
+  // Role management
+  currentRole   String    @default("viewer") // Can be 'viewer', 'advertiser', 'publisher', 'admin', 'stakeholder', or 'developer'
+  lastRoleChange DateTime @default(now())
+  
+  // Relationship
+  userId        String    @unique
+  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Campaign {
+  id            String    @id @default(cuid())
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  name          String
+  description   String
+  startDate     DateTime
+  endDate       DateTime?
+  budget        Int       // In satoshis
+  dailyBudget   Int?      // In satoshis, optional
+  status        CampaignStatus @default(DRAFT)
+  
+  // Targeting options that apply to all ads in this campaign
+  targetLocation String?
+  targetInterests String?
+  targetAge      String?
+  targetAudience String?
+
+  // Relationships
+  advertiserId   String
+  advertiser     User     @relation(fields: [advertiserId], references: [id], onDelete: Cascade)
+  ads            Ad[]
+}
+
+model Ad {
+  id            String    @id @default(cuid())
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  title         String
+  description   String
+  imageUrl      String?
+  targetUrl     String
+  urlParameters String?   // URL tracking parameters
+  bidPerImpression Int    // In satoshis
+  bidPerClick   Int       // In satoshis
+  status        AdStatus  @default(PENDING)
+  
+  // Frequency capping
+  freqCapViews  Int       @default(2)  // Maximum number of times a user sees this ad
+  freqCapHours  Int       @default(24) // Time period for frequency cap (in hours)
+  
+  // Ad-specific targeting (overrides campaign targeting if specified)
+  targetLocation String?
+  targetInterests String?
+  targetAge      String?
+  
+  // Relationships
+  campaignId     String
+  campaign       Campaign @relation(fields: [campaignId], references: [id], onDelete: Cascade)
+  advertiserId   String
+  advertiser     User     @relation(fields: [advertiserId], references: [id], onDelete: Cascade)
+  placements     AdPlacement[]
+  viewHistory    AdViewHistory[]
+}
+
+model AdSpace {
+  id            String    @id @default(cuid())
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  name          String
+  description   String
+  website       String
+  minBidPerImpression Int  // In satoshis
+  minBidPerClick Int       // In satoshis
+  dimensions    String    // Format: "WIDTHxHEIGHT"
+  allowedAdTypes String    // Comma-separated list of allowed ad types
+  
+  // Content categorization
+  contentCategory String
+  contentTags     String  // Comma-separated tags
+  
+  // Approval rules
+  domainBlacklist String?  // Comma-separated list of blocked domains
+  keywordBlacklist String? // Comma-separated list of blocked keywords
+  pubkeyBlacklist String?  // Comma-separated list of blocked Nostr pubkeys
+  
+  // Relationships
+  publisherId    String
+  publisher      User     @relation(fields: [publisherId], references: [id], onDelete: Cascade)
+  placements     AdPlacement[]
+  approvalRules  AdApprovalRule[]
+}
+
+model AdPlacement {
+  id            String    @id @default(cuid())
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  
+  // Approval fields
+  approvalStatus ApprovalStatus @default(PENDING)
+  approvedAt     DateTime?
+  rejectionReason String?
+  
+  // Stats
+  impressions   Int       @default(0)
+  clicks        Int       @default(0)
+  
+  // Relationships
+  adId          String
+  ad            Ad        @relation(fields: [adId], references: [id], onDelete: Cascade)
+  spaceId       String
+  space         AdSpace   @relation(fields: [spaceId], references: [id], onDelete: Cascade)
+}
+
+model Transaction {
+  id            String    @id @default(cuid())
+  createdAt     DateTime  @default(now())
+  amount        Int       // In satoshis
+  type          TransactionType
+  status        TransactionStatus @default(COMPLETED)
+  description   String?
+  balanceBefore Int       // Balance before transaction
+  balanceAfter  Int       // Balance after transaction
+  lightningInvoice String?
+  paymentHash   String?
+  
+  // Relationships
+  userId        String
+  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+enum AdStatus {
+  PENDING
+  ACTIVE
+  PAUSED
+  COMPLETED
+  REJECTED
+}
+
+enum TransactionType {
+  DEPOSIT
+  WITHDRAWAL
+  AD_PAYMENT
+  PUBLISHER_EARNING
+  USER_EARNING
+}
+
+enum TransactionStatus {
+  PENDING
+  COMPLETED
+  FAILED
+}
+
+enum ApprovalStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+enum CampaignStatus {
+  DRAFT
+  ACTIVE
+  PAUSED
+  ENDED
+  SCHEDULED
+  REVIEW
+}
+
+enum RuleType {
+  DOMAIN_BLACKLIST
+  KEYWORD_BLACKLIST
+  PUBKEY_BLACKLIST
+  DOMAIN_WHITELIST
+  KEYWORD_WHITELIST
+  PUBKEY_WHITELIST
+}
+
+model AdApprovalRule {
+  id            String    @id @default(cuid())
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  type          RuleType
+  value         String
+  
+  // Relationships
+  spaceId       String
+  space         AdSpace   @relation(fields: [spaceId], references: [id], onDelete: Cascade)
+}
+
+model AdViewHistory {
+  id            String    @id @default(cuid())
+  createdAt     DateTime  @default(now())
+  viewerPubkey  String    // Nostr pubkey of the viewer
+  
+  // Relationships
+  adId          String
+  ad            Ad        @relation(fields: [adId], references: [id], onDelete: Cascade)
+  
+  // Composite unique constraint to prevent duplicate records for the same ad/viewer
+  @@unique([adId, viewerPubkey])
+}
+
+model LaunchEmail {
+  id            String    @id @default(cuid())
+  createdAt     DateTime  @default(now())
+  email         String    @unique
+  interestedRoles String  // Comma-separated roles (publisher, advertiser, user)
+  
+  // Optional metadata
+  name          String?
+  source        String?   // Where they signed up from
+  ipAddress     String?   // For spam prevention
+  notes         String?   // Any additional notes
+  
+  @@index([email])
+}
+
+model ApiKey {
+  id            String    @id @default(cuid())
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  key           String    @unique
+  name          String
+  description   String?
+  lastUsed      DateTime?
+  expiresAt     DateTime?
+  isActive      Boolean   @default(true)
+  
+  // Rate limiting
+  dailyLimit    Int?      // Maximum number of calls per day
+  monthlyLimit  Int?      // Maximum number of calls per month
+  
+  // Scopes that define what this key can access (comma-separated)
+  scopes        String    @default("read")
+  
+  // Type of API key (publisher, advertiser, developer)
+  type          String    @default("publisher")
+  
+  // Relationships - API key can be associated with a user
+  userId        String?
+  user          User?     @relation(fields: [userId], references: [id], onDelete: SetNull)
+  
+  // Usage tracking
+  usageCount    Int       @default(0)
+  
+  @@index([key])
+  @@index([type])
+}
+
+model UserActivity {
+  id            String    @id @default(cuid())
+  createdAt     DateTime  @default(now())
+  timestamp     DateTime  @default(now())
+  userId        String
+  action        String    // Type of activity (e.g., ROLE_CHANGE, LOGIN, LOGOUT, API_ACCESS)
+  roleName      String?   // The role involved in this activity (if applicable)
+  details       String?   // Additional details about the activity
+  ipAddress     String?   // IP address for tracking (optional)
+  
+  // Relationships
+  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@index([userId, action])
+  @@index([timestamp])
+}
+
+// Enhanced role management model
+model UserRole {
+  id            String    @id @default(cuid())
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  userId        String    // The user ID
+  role          String    // The role name: admin, advertiser, publisher, developer, stakeholder
+  isActive      Boolean   @default(true) // Whether this role is currently active
+  isTestRole    Boolean   @default(false) // Whether this role was created for testing
+  
+  // Relation back to User (required for Prisma bidirectional relations)
+  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@index([userId])
+  @@index([userId, role])
+  @@index([userId, isActive])
+}
+
+// Model to track onboarding progress for users in different roles
+model UserOnboarding {
+  id            String    @id @default(cuid())
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  userPubkey    String    // The user's public key
+  role          String    // The role: viewer, advertiser, publisher, admin
+  isComplete    Boolean   @default(false) // Whether onboarding is complete for this role
+  completedAt   DateTime? // When onboarding was completed
+  lastStep      String?   // The last step the user was on before leaving
+  currentStep   String?   // The current step in the onboarding process
+  
+  // Relation back to User
+  userId        String
+  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  // Unique constraint to ensure one record per user per role
+  @@unique([userPubkey, role], name: "userPubkey_role")
+  @@index([userId, role])
+  @@index([isComplete])
+}

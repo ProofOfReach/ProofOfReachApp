@@ -1,0 +1,12 @@
+// Babel config for Jest only - Next.js will use SWC for faster builds
+module.exports = {
+  presets: [
+    ['@babel/preset-env', { targets: { node: 'current' } }],
+    '@babel/preset-typescript',
+    ['@babel/preset-react', { runtime: 'automatic' }],
+  ],
+  plugins: [
+    ['@babel/plugin-transform-modules-commonjs'],
+    ['@babel/plugin-syntax-import-attributes'],
+  ],
+};

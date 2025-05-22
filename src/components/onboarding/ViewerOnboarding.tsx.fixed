@@ -1,0 +1,398 @@
+import React, { useState } from 'react';
+import { OnboardingStep } from '@/context/OnboardingContext';
+import OnboardingProgress from '@/components/onboarding/OnboardingProgress';
+import { 
+  CheckCircle, 
+  Search, 
+  Filter, 
+  Bell, 
+  ThumbsUp, 
+  Shield,
+  ChevronRight,
+  ChevronLeft
+} from 'react-feather';
+
+interface ViewerOnboardingProps {
+  currentStep?: OnboardingStep;
+  onComplete?: () => void;
+}
+
+const ViewerOnboarding: React.FC<ViewerOnboardingProps> = ({ currentStep = 'welcome', onComplete }) => {
+  const [step, setStep] = useState<string>(currentStep === 'role-selection' ? 'welcome' : currentStep as string);
+
+  const handleNext = () => {
+    switch (step) {
+      case 'welcome':
+        setStep('preferences');
+        break;
+      case 'preferences':
+        setStep('discovery');
+        break;
+      case 'discovery': 
+        setStep('complete');
+        break;
+      case 'complete':
+        if (onComplete) onComplete();
+        break;
+      default:
+        setStep('welcome');
+    }
+  };
+
+  const handleBack = () => {
+    switch (step) {
+      case 'preferences':
+        setStep('welcome');
+        break;
+      case 'discovery':
+        setStep('preferences');
+        break;
+      case 'complete':
+        setStep('discovery');
+        break;
+      default:
+        setStep('welcome');
+    }
+  };
+  
+  // Method to render navigation buttons based on current step
+  const renderNavButtons = () => {
+    if (step === 'welcome') {
+      return (
+        <div className="flex justify-end mt-6">
+          <button
+            onClick={handleNext}
+            className="px-4 py-2 bg-purple-600 text-white rounded hover:bg-purple-700"
+          >
+            Next <ChevronRight size={16} className="inline ml-1" />
+          </button>
+        </div>
+      );
+    } else if (step === 'complete') {
+      return (
+        <div className="flex justify-between mt-6">
+          <button
+            onClick={handleBack}
+            className="px-4 py-2 border border-gray-300 rounded hover:bg-gray-50 dark:border-gray-600 dark:hover:bg-gray-800"
+          >
+            <ChevronLeft size={16} className="inline mr-1" /> Back
+          </button>
+          <button
+            onClick={handleNext}
+            className="px-4 py-2 bg-purple-600 text-white rounded hover:bg-purple-700"
+          >
+            Complete
+          </button>
+        </div>
+      );
+    } else {
+      return (
+        <div className="flex justify-between mt-6">
+          <button
+            onClick={handleBack}
+            className="px-4 py-2 border border-gray-300 rounded hover:bg-gray-50 dark:border-gray-600 dark:hover:bg-gray-800"
+          >
+            <ChevronLeft size={16} className="inline mr-1" /> Back
+          </button>
+          <button
+            onClick={handleNext}
+            className="px-4 py-2 bg-purple-600 text-white rounded hover:bg-purple-700"
+          >
+            Next <ChevronRight size={16} className="inline ml-1" />
+          </button>
+        </div>
+      );
+    }
+  };
+
+  // Content for each step in the viewer onboarding flow
+  const renderStepContent = () => {
+    switch (step) {
+      case 'welcome':
+        return (
+          <div className="space-y-4">
+            <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
+              <CheckCircle className="inline-block mr-2 mb-1" size={20} />
+              Welcome to Nostr Ads
+            </h2>
+            <p className="text-gray-600 dark:text-gray-300">
+              As a viewer, you'll be able to browse content with relevant ads tailored to your interests:
+            </p>
+            
+            <div className="mt-6 space-y-4">
+              <div className="border border-gray-200 dark:border-gray-700 rounded-lg p-4">
+                <h3 className="font-medium text-gray-900 dark:text-white mb-3">Your Viewer Experience</h3>
+                
+                <ul className="space-y-3">
+                  <li className="flex items-start">
+                    <div className="flex-shrink-0 h-5 w-5 text-purple-500">
+                      <CheckCircle size={18} className="mt-0.5" />
+                    </div>
+                    <p className="ml-2 text-gray-600 dark:text-gray-300">
+                      Browse content with personalized ad experiences
+                    </p>
+                  </li>
+                  <li className="flex items-start">
+                    <div className="flex-shrink-0 h-5 w-5 text-purple-500">
+                      <CheckCircle size={18} className="mt-0.5" />
+                    </div>
+                    <p className="ml-2 text-gray-600 dark:text-gray-300">
+                      See only relevant ads based on your interests
+                    </p>
+                  </li>
+                  <li className="flex items-start">
+                    <div className="flex-shrink-0 h-5 w-5 text-purple-500">
+                      <CheckCircle size={18} className="mt-0.5" />
+                    </div>
+                    <p className="ml-2 text-gray-600 dark:text-gray-300">
+                      Control your privacy settings and ad preferences
+                    </p>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        );
+      case 'preferences':
+        return (
+          <div className="space-y-4">
+            <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
+              <Filter className="inline-block mr-2 mb-1" size={20} />
+              Set Your Ad Preferences
+            </h2>
+            <p className="text-gray-600 dark:text-gray-300">
+              Tell us what kinds of ads you'd prefer to see across the Nostr network:
+            </p>
+            
+            <div className="mt-6 space-y-4">
+              <div className="border border-gray-200 dark:border-gray-700 rounded-lg p-4">
+                <h3 className="font-medium text-gray-900 dark:text-white mb-3">Interest Categories</h3>
+                
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="flex items-center">
+                    <input type="checkbox" id="interest-bitcoin" className="mr-2" defaultChecked />
+                    <label htmlFor="interest-bitcoin">Bitcoin</label>
+                  </div>
+                  <div className="flex items-center">
+                    <input type="checkbox" id="interest-nostr" className="mr-2" defaultChecked />
+                    <label htmlFor="interest-nostr">Nostr</label>
+                  </div>
+                  <div className="flex items-center">
+                    <input type="checkbox" id="interest-tech" className="mr-2" defaultChecked />
+                    <label htmlFor="interest-tech">Technology</label>
+                  </div>
+                  <div className="flex items-center">
+                    <input type="checkbox" id="interest-privacy" className="mr-2" defaultChecked />
+                    <label htmlFor="interest-privacy">Privacy & Security</label>
+                  </div>
+                  <div className="flex items-center">
+                    <input type="checkbox" id="interest-defi" className="mr-2" />
+                    <label htmlFor="interest-defi">DeFi</label>
+                  </div>
+                  <div className="flex items-center">
+                    <input type="checkbox" id="interest-education" className="mr-2" />
+                    <label htmlFor="interest-education">Education</label>
+                  </div>
+                  <div className="flex items-center">
+                    <input type="checkbox" id="interest-freedom" className="mr-2" />
+                    <label htmlFor="interest-freedom">Freedom Tech</label>
+                  </div>
+                  <div className="flex items-center">
+                    <input type="checkbox" id="interest-art" className="mr-2" />
+                    <label htmlFor="interest-art">Digital Art & NFTs</label>
+                  </div>
+                </div>
+              </div>
+              
+              <div className="border border-gray-200 dark:border-gray-700 rounded-lg p-4">
+                <h3 className="font-medium text-gray-900 dark:text-white mb-3">Content Preferences</h3>
+                
+                <div className="space-y-3">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                      Ad Format Preference
+                    </label>
+                    <select 
+                      className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md dark:bg-gray-800"
+                      defaultValue="text-image"
+                    >
+                      <option value="text-image">Text & Image (Recommended)</option>
+                      <option value="text-only">Text Only</option>
+                      <option value="image-only">Image Only</option>
+                    </select>
+                  </div>
+                  
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                      Preferred Ad Frequency
+                    </label>
+                    <select 
+                      className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md dark:bg-gray-800"
+                      defaultValue="balanced"
+                    >
+                      <option value="minimal">Minimal - See fewer ads</option>
+                      <option value="balanced">Balanced (Recommended)</option>
+                      <option value="standard">Standard</option>
+                    </select>
+                  </div>
+                  
+                  <div className="pt-2">
+                    <div className="flex items-center">
+                      <input type="checkbox" id="pref-relevant" className="mr-2" defaultChecked />
+                      <label htmlFor="pref-relevant">
+                        Only show ads relevant to my interests
+                      </label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        );
+      
+      case 'discovery':
+        return (
+          <div className="space-y-4">
+            <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
+              <Search className="inline-block mr-2 mb-1" size={20} />
+              Discover Personalized Content
+            </h2>
+            <p className="text-gray-600 dark:text-gray-300">
+              Follow publishers who create the content you enjoy:
+            </p>
+            
+            <div className="mt-6 space-y-4">
+              <div className="border border-gray-200 dark:border-gray-700 rounded-lg p-4">
+                <h3 className="font-medium text-gray-900 dark:text-white mb-3">Recommended Publishers</h3>
+                
+                <div className="space-y-4">
+                  <div className="flex items-start p-3 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg">
+                    <div className="w-12 h-12 bg-purple-100 dark:bg-purple-900 rounded-full flex items-center justify-center text-purple-600 dark:text-purple-300 mr-3">
+                      BTC
+                    </div>
+                    <div className="flex-1">
+                      <h4 className="font-medium">Bitcoin Magazine</h4>
+                      <p className="text-sm text-gray-600 dark:text-gray-400">
+                        The world's first and leading publication dedicated to Bitcoin
+                      </p>
+                      <div className="mt-2">
+                        <button className="px-3 py-1 bg-purple-100 hover:bg-purple-200 text-purple-700 text-sm rounded-full dark:bg-purple-900/50 dark:hover:bg-purple-900 dark:text-purple-300">
+                          Follow
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div className="flex items-start p-3 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg">
+                    <div className="w-12 h-12 bg-blue-100 dark:bg-blue-900 rounded-full flex items-center justify-center text-blue-600 dark:text-blue-300 mr-3">
+                      NT
+                    </div>
+                    <div className="flex-1">
+                      <h4 className="font-medium">Nostr Talk</h4>
+                      <p className="text-sm text-gray-600 dark:text-gray-400">
+                        The latest news and updates about the Nostr protocol and ecosystem
+                      </p>
+                      <div className="mt-2">
+                        <button className="px-3 py-1 bg-purple-100 hover:bg-purple-200 text-purple-700 text-sm rounded-full dark:bg-purple-900/50 dark:hover:bg-purple-900 dark:text-purple-300">
+                          Follow
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div className="flex items-start p-3 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg">
+                    <div className="w-12 h-12 bg-green-100 dark:bg-green-900 rounded-full flex items-center justify-center text-green-600 dark:text-green-300 mr-3">
+                      PS
+                    </div>
+                    <div className="flex-1">
+                      <h4 className="font-medium">Privacy Solutions</h4>
+                      <p className="text-sm text-gray-600 dark:text-gray-400">
+                        Tools and strategies for digital privacy and security
+                      </p>
+                      <div className="mt-2">
+                        <button className="px-3 py-1 bg-purple-100 hover:bg-purple-200 text-purple-700 text-sm rounded-full dark:bg-purple-900/50 dark:hover:bg-purple-900 dark:text-purple-300">
+                          Follow
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <div className="border border-gray-200 dark:border-gray-700 rounded-lg p-4">
+                <h3 className="font-medium text-gray-900 dark:text-white mb-3">Search Publishers</h3>
+                
+                <div className="relative">
+                  <input 
+                    type="text" 
+                    placeholder="Search by name or Nostr pubkey" 
+                    className="w-full p-2 pl-9 border border-gray-300 dark:border-gray-600 rounded-md dark:bg-gray-800"
+                  />
+                  <Search className="absolute left-3 top-3 text-gray-400" size={16} />
+                </div>
+              </div>
+            </div>
+          </div>
+        );
+      
+      case 'complete':
+        return (
+          <div className="space-y-4">
+            <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
+              <CheckCircle className="inline-block mr-2 mb-1" size={20} />
+              You're All Set!
+            </h2>
+            <p className="text-gray-600 dark:text-gray-300">
+              You've completed the viewer onboarding process. You're now ready to discover personalized content with relevant ads.
+            </p>
+            
+            <div className="mt-6 space-y-4">
+              <div className="border border-gray-200 dark:border-gray-700 rounded-lg p-4">
+                <h3 className="font-medium text-gray-900 dark:text-white mb-3">What's Next?</h3>
+                
+                <ul className="space-y-3">
+                  <li className="flex items-start">
+                    <div className="flex-shrink-0 h-5 w-5 text-purple-500">
+                      <CheckCircle size={18} className="mt-0.5" />
+                    </div>
+                    <p className="ml-2 text-gray-600 dark:text-gray-300">
+                      Browse content with personalized ad experiences
+                    </p>
+                  </li>
+                  <li className="flex items-start">
+                    <div className="flex-shrink-0 h-5 w-5 text-purple-500">
+                      <CheckCircle size={18} className="mt-0.5" />
+                    </div>
+                    <p className="ml-2 text-gray-600 dark:text-gray-300">
+                      Explore and discover new content creators
+                    </p>
+                  </li>
+                  <li className="flex items-start">
+                    <div className="flex-shrink-0 h-5 w-5 text-purple-500">
+                      <CheckCircle size={18} className="mt-0.5" />
+                    </div>
+                    <p className="ml-2 text-gray-600 dark:text-gray-300">
+                      Adjust your preferences anytime in your profile settings
+                    </p>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        );
+        
+      default:
+        return <div>Unknown step</div>;
+    }
+  };
+
+  return (
+    <div className="p-6 bg-white dark:bg-gray-800 rounded-lg shadow-sm">
+      <OnboardingProgress />
+      {renderStepContent()}
+      {renderNavButtons()}
+    </div>
+  );
+};
+
+export default ViewerOnboarding;

@@ -1,0 +1,23 @@
+# robots.txt for ProofOfReach
+
+User-agent: *
+# Disallow all protected routes on both domains
+Disallow: /dashboard/
+Disallow: /app/
+Disallow: /ads/
+Disallow: /publisher/
+Disallow: /advertiser/
+Disallow: /onboarding/
+
+# Specifically target the dev domain
+Host: dev.proofofreach.xyz
+User-agent: *
+Disallow: /
+
+# Allow indexing of main domain
+Host: proofofreach.xyz
+User-agent: *
+Allow: /$
+Allow: /terms
+Allow: /privacy
+Disallow: /dashboard/
