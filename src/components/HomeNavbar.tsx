@@ -1,10 +1,33 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Menu, X } from 'react-feather';
 
 const HomeNavbar: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isDev, setIsDev] = useState(false);
+  
+  // Check if we're in dev mode
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const hostname = window.location.hostname;
+      const simulateDev = localStorage.getItem('SIMULATE_DEV_DOMAIN') === 'true';
+      
+      // First check the localStorage setting explicitly
+      if (simulateDev === false) {
+        setIsDev(false);
+        return;
+      }
+      
+      // Then check various environment indicators
+      const isDevDomain = hostname.startsWith('dev.') || 
+                         hostname.includes('replit.dev') ||
+                         simulateDev ||
+                         process.env.NEXT_PUBLIC_ENABLE_DEV_BANNER === 'true';
+      
+      setIsDev(isDevDomain);
+    }
+  }, []);
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -72,12 +95,14 @@ const HomeNavbar: React.FC = () => {
             >
               Contact
             </Link>
-            <Link 
-              href="/login" 
-              className="px-4 py-2 bg-purple-600 text-white text-sm lg:text-base rounded-md hover:bg-purple-700 transition-colors"
-            >
-              Get Started
-            </Link>
+            {isDev && (
+              <Link 
+                href="/login" 
+                className="px-4 py-2 bg-purple-600 text-white text-sm lg:text-base rounded-md hover:bg-purple-700 transition-colors"
+              >
+                Get Started
+              </Link>
+            )}
           </div>
 
           {/* Mobile menu button */}
@@ -148,13 +173,15 @@ const HomeNavbar: React.FC = () => {
             >
               Contact
             </Link>
-            <Link 
-              href="/login" 
-              onClick={closeMenu} 
-              className="block px-3 py-2 text-purple-600 hover:text-purple-700 dark:text-purple-400 dark:hover:text-purple-500 font-medium"
-            >
-              Get Started
-            </Link>
+            {isDev && (
+              <Link 
+                href="/login" 
+                onClick={closeMenu} 
+                className="block px-3 py-2 text-purple-600 hover:text-purple-700 dark:text-purple-400 dark:hover:text-purple-500 font-medium"
+              >
+                Get Started
+              </Link>
+            )}
           </div>
         </div>
       )}
