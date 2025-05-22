@@ -5,6 +5,7 @@
  */
 
 import React from 'react';
+import { ErrorCategory } from '../../types/errors';
 import { render, screen, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { ErrorProvider, useError, useErrorReporting, useErrorToast } from '@/context/ErrorContext';
@@ -49,7 +50,9 @@ describe('ErrorContext', () => {
                 severity: 'error',
                 source: 'test',
                 timestamp: Date.now().toString(),
-                category: 'API_ERROR'
+                category: ErrorCategory.EXTERNAL,
+                active: true,
+                userFacing: true
               })}
             >
               Set Error
@@ -144,7 +147,7 @@ describe('ErrorContext', () => {
             </button>
             <button 
               data-testid="success-toast"
-              onClick={() => showErrorToast('Success message', 'medium')}
+              onClick={() => showErrorToast('Success message', 'critical')}
             >
               Success Toast
             </button>
