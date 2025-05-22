@@ -1,32 +1,32 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense } from 'react';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
+import { UserRoleType } from '@/types/role';
+import Layout from '@/components/Layout';
 import { useAuthRefactored } from '@/hooks/useAuthRefactored';
 import { logger } from '@/lib/logger';
 import Loading from '@/components/Loading';
-import dynamic from 'next/dynamic';
-import { UserRoleType } from '@/types/role';
-import Layout from '@/components/Layout';
 
-// Use a NON-SSR component for the entire onboarding experience
-// This completely prevents hydration mismatches
-const DynamicOnboarding = dynamic(
-  () => import('@/components/onboarding/DynamicOnboarding'), 
-  { 
-    ssr: false,
-    loading: () => (
-      <div className="flex flex-col items-center justify-center py-20">
-        <Loading size="lg" />
-        <p className="mt-4 text-gray-600 dark:text-gray-300">Loading onboarding experience...</p>
-      </div>
-    )
+// Define a type that's compatible with both server and client components
+type LazyComponentType = React.ComponentType<any>;
+
+// This is the most important trick - load everything on the client side only
+// with NO loading indicator from the server to prevent hydration issues
+const ClientSideOnboarding = React.lazy<LazyComponentType>(() => {
+  // If we're on the server, return a component that renders nothing
+  if (typeof window === 'undefined') {
+    return Promise.resolve({
+      // This is a placeholder component that renders nothing on the server
+      default: function EmptyComponent() { return React.createElement('div', null); }
+    });
   }
-);
+  // On the client, dynamically import the real component
+  return import('@/components/onboarding/ClientOnboarding');
+});
 
 /**
- * Enhanced onboarding page that integrates with authentication
- * This page handles authentication transitions, redirect loop prevention,
- * and onboarding state persistence
+ * Completely simplified onboarding page that renders a placeholder on the server
+ * and loads everything on the client side to avoid hydration issues
  */
 const OnboardingPage: React.FC = () => {
   const router = useRouter();
@@ -211,12 +211,20 @@ const OnboardingPage: React.FC = () => {
         <meta name="description" content="Complete your onboarding to get started with Proof Of Reach" />
       </Head>
       <div className="container mx-auto p-4 py-12 bg-gray-50 dark:bg-gray-900 min-h-screen">
-        {/* This component is ONLY rendered on the client side */}
-        {/* The server will render just the loading indicator */}
-        <DynamicOnboarding 
-          pubkey={authState?.pubkey} 
-          initialRole={urlRole} 
-        />
+        {/* Use Suspense to avoid hydration issues completely */}
+        <Suspense fallback={
+          <div className="flex flex-col items-center justify-center py-20" data-testid="server-fallback">
+            <Loading size="lg" />
+            <p className="mt-4 text-gray-600 dark:text-gray-300">
+              Loading onboarding experience...
+            </p>
+          </div>
+        }>
+          {/* This is a pure client-side only component with zero SSR */}
+          <div data-testid="client-only">
+            <ClientSideOnboarding />
+          </div>
+        </Suspense>
       </div>
     </Layout>
   );

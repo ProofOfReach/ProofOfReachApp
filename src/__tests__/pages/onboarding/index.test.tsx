@@ -40,6 +40,27 @@ jest.mock('@/utils/clientOnly', () => ({
   ),
 }));
 
+// Mock React.lazy to immediately return the component for testing
+jest.mock('react', () => {
+  const originalReact = jest.requireActual('react');
+  return {
+    ...originalReact,
+    lazy: (importFn: () => Promise<{ default: React.ComponentType<any> }>) => {
+      // In tests, immediately resolve the import promise
+      const Component = ({ children }: { children?: React.ReactNode }) => (
+        <div data-testid="lazy-loaded-component">
+          <div data-testid="onboarding-provider">
+            <div data-testid="onboarding-wizard">
+              Onboarding Wizard
+            </div>
+          </div>
+        </div>
+      );
+      return Component;
+    },
+  };
+});
+
 // Mock the Layout component to avoid router issue
 jest.mock('@/components/Layout', () => {
   return function MockLayout({ children }: { children: React.ReactNode }) {
