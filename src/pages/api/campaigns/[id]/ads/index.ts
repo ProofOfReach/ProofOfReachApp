@@ -1,8 +1,8 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import { adService, CreateAdDto } from '../../../../../services/adService';
-import { apiHandler } from '../../../../../utils/apiHandler';
-import { authenticateRequest } from '../../../../../utils/authMiddleware';
-import { ApiError } from '../../../../../utils/apiError';
+import { adService, CreateAdDto } from '@/services/adService';
+import { apiHandler } from '@/utils/apiHandler';
+import { authenticateRequest } from '@/utils/authMiddleware';
+import { ApiError } from '@/utils/apiError';
 
 export default apiHandler({
   // GET /api/campaigns/[id]/ads - Get all ads for a specific campaign
