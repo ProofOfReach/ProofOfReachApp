@@ -64,11 +64,10 @@ const OnboardingWizard: React.FC = () => {
   
   // Render the current step content based on step and selected role
   const renderStepContent = () => {
-    // For SSR compatibility, use a consistent initial rendering structure
-    // This prevents hydration errors by ensuring server and client render the same initial structure
+    // For SSR compatibility, we need to ensure the server and client render the exact same structure
+    // Using a simple placeholder div for all states during server-side rendering
     
-    // During server-side rendering or initial client render, show a simple loading state
-    // This ensures we have the same structure during hydration
+    // Use a simplified structure for initial render - will be replaced during hydration
     if (!isClient) {
       return (
         <div className="p-6 text-center" data-testid="onboarding-loading-placeholder">
@@ -78,6 +77,8 @@ const OnboardingWizard: React.FC = () => {
         </div>
       );
     }
+    
+    // Client-side rendering (after hydration is complete)
     
     // Show loading indicator when loading
     if (isLoading) {

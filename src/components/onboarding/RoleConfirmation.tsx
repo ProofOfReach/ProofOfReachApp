@@ -151,10 +151,24 @@ const RoleConfirmation: React.FC<RoleConfirmationProps> = ({ onConfirm }) => {
   // Always show all role cards during onboarding
   const roleCards = allRoleCards;
 
-  // For server-side rendering, use a simple minimal structure instead of placeholder skeletons
-  // to avoid hydration mismatches
+  // For server-side rendering, use a simple minimal structure that matches the client structure
+  // This helps avoid hydration mismatches by ensuring consistent DOM structure
   if (!isClient) {
-    return <div className="py-6" data-testid="role-selection-loading">Loading...</div>;
+    return (
+      <div className="py-6" data-testid="role-selection-loading">
+        <div className="text-center mb-8">
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
+            Loading...
+          </h2>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {/* Empty placeholder that matches grid structure */}
+          <div className="border rounded-lg p-6 opacity-0"></div>
+          <div className="border rounded-lg p-6 opacity-0"></div>
+          <div className="border rounded-lg p-6 opacity-0"></div>
+        </div>
+      </div>
+    );
   }
 
   // Client-side rendering
