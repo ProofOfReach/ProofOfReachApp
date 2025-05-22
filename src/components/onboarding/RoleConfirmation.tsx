@@ -146,74 +146,10 @@ const RoleConfirmation: React.FC<RoleConfirmationProps> = ({ onConfirm }) => {
   // Always show all role cards during onboarding
   const roleCards = allRoleCards;
 
-  // For server-side rendering or initial client load, use a placeholder 
-  // with a similar structure to prevent hydration mismatch
+  // For server-side rendering, use a simple minimal structure instead of placeholder skeletons
+  // to avoid hydration mismatches
   if (!isClient) {
-    return (
-      <div className="py-6">
-        <div className="text-center mb-8">
-          <div className="flex justify-center mb-4">
-            <img 
-              src="/logo_big_light.png" 
-              alt="Proof Of Reach" 
-              className="h-12 max-w-full"
-              data-testid="role-selection-logo"
-            />
-          </div>
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
-            Select Your Role
-          </h2>
-          <p className="text-gray-600 dark:text-gray-300">
-            Choose how you'd like to use the Proof Of Reach platform
-          </p>
-          
-          {/* Placeholder for Nostr pubkey display */}
-          <div className="mt-4 inline-flex items-center bg-gray-100 dark:bg-gray-800 rounded-lg p-2">
-            <div className="w-5 h-5 bg-gray-300 dark:bg-gray-600 rounded-full mr-2"></div>
-            <div className="h-5 w-32 bg-gray-300 dark:bg-gray-600 rounded"></div>
-            <div className="ml-2 w-6 h-6 bg-gray-300 dark:bg-gray-600 rounded"></div>
-          </div>
-        </div>
-
-        {/* Placeholder for role cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {[1, 2, 3].map((i) => (
-            <div 
-              key={i}
-              className="border border-gray-200 dark:border-gray-700 rounded-lg p-6 flex flex-col h-full"
-            >
-              <div className="flex flex-col items-center">
-                <div className="w-8 h-8 bg-gray-200 dark:bg-gray-700 rounded-full mb-4"></div>
-                <div className="h-6 w-24 bg-gray-200 dark:bg-gray-700 rounded mb-2"></div>
-                <div className="h-4 w-40 bg-gray-200 dark:bg-gray-700 rounded mb-4"></div>
-                
-                <div className="w-full mb-5 border-t border-gray-200 dark:border-gray-700 pt-4">
-                  <div className="h-4 w-20 bg-gray-200 dark:bg-gray-700 rounded mb-2"></div>
-                  <div className="space-y-2">
-                    {[1, 2, 3, 4].map((j) => (
-                      <div key={j} className="flex items-start">
-                        <div className="w-1 h-1 rounded-full bg-gray-200 dark:bg-gray-700 mr-2 mt-0.5"></div>
-                        <div className="h-4 w-36 bg-gray-200 dark:bg-gray-700 rounded"></div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-              
-              <div className="mt-auto">
-                <div className="w-full h-10 bg-gray-200 dark:bg-gray-700 rounded-md"></div>
-              </div>
-            </div>
-          ))}
-        </div>
-        
-        <div className="mt-8 text-center text-sm text-gray-500 dark:text-gray-400">
-          <p>
-            You can change roles or manage multiple roles after completing onboarding.
-          </p>
-        </div>
-      </div>
-    );
+    return <div className="py-6" data-testid="role-selection-loading">Loading...</div>;
   }
 
   // Client-side rendering
