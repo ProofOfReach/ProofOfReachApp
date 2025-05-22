@@ -135,7 +135,10 @@ const HomePage: NextPageWithLayout = () => {
     <div className="flex flex-col items-center">
       <div className="w-full max-w-4xl py-12 px-4 sm:px-6 lg:py-16 lg:px-8 text-center">
         <h1 className="text-4xl font-extrabold tracking-tight text-gray-900 dark:text-white sm:text-5xl">
-          <span className="block text-blue-600">Create. Reach. Earn.</span>
+          <span className="block">
+            <span className="text-blue-600">Create. Reach. </span>
+            <span className="text-[#F7931A]">Earn.</span>
+          </span>
         </h1>
         <p className="mt-4 text-xl text-gray-600 dark:text-gray-300">
           Aligning advertisers, publishers, and viewers using Bitcoin Lightning payments 
@@ -292,7 +295,8 @@ const HomePage: NextPageWithLayout = () => {
 
       <div className="w-full max-w-4xl py-12 text-center">
         <h2 className="text-3xl font-bold mb-6 text-gray-900 dark:text-white">
-          Create. Reach. Earn.
+          <span className="text-blue-600">Create. Reach. </span>
+          <span className="text-[#F7931A]">Earn.</span>
         </h2>
         <p className="text-xl text-gray-600 dark:text-gray-300 mb-8">
           Our platform creates value for everyone in the advertising ecosystem
