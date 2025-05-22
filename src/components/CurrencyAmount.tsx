@@ -21,52 +21,55 @@ const CurrencyAmount: React.FC<CurrencyAmountProps> = ({
 }) => {
   const { currency, convertSatsToDollars, btcPrice } = useCurrency();
   const [displayValue, setDisplayValue] = useState<React.ReactElement | null>(null);
+  const [forceUpdateCounter, setForceUpdateCounter] = useState(0);
   
   // Use either sats or amount, with sats taking precedence if both are provided
   const value = sats !== undefined ? sats : (amount !== undefined ? amount : 0);
 
-  // Listen for custom currency change events
+  // Listen for ALL possible currency change events
   useEffect(() => {
     const handleCurrencyChange = () => {
-      // Force re-render when currency changes
+      // Force re-render when any currency-related event happens
       setDisplayValue(null);
+      setForceUpdateCounter(prev => prev + 1);
     };
 
-    // Listen for both event types to ensure compatibility
+    // Various events that could indicate a currency change
     window.addEventListener('currency-preference-changed', handleCurrencyChange);
     window.addEventListener('currency-change', handleCurrencyChange);
+    window.addEventListener('currencyUpdated', handleCurrencyChange);
+    window.addEventListener('storage', handleCurrencyChange);
     
     return () => {
       window.removeEventListener('currency-preference-changed', handleCurrencyChange);
       window.removeEventListener('currency-change', handleCurrencyChange);
+      window.removeEventListener('currencyUpdated', handleCurrencyChange);
+      window.removeEventListener('storage', handleCurrencyChange);
     };
   }, []);
 
   // Force refresh on currency context change
   useEffect(() => {
     setDisplayValue(null);
+    setForceUpdateCounter(prev => prev + 1);
   }, [currency]);
 
-  // Regenerate display value whenever currency or value changes
+  // Check localStorage periodically for changes
   useEffect(() => {
-    if (convert && currency === 'USD') {
-      const dollars = convertSatsToDollars(value);
-      setDisplayValue(
-        <span className={className} title={showTooltip ? `${value.toLocaleString()} sats` : undefined}>
-          ${dollars.toFixed(2)}{showCurrency ? ' USD' : ''}
-        </span>
-      );
-    } else {
-      setDisplayValue(
-        <span className={className}>
-          {value.toLocaleString()}{showCurrency ? ' sats' : ''}
-        </span>
-      );
-    }
-  }, [value, currency, convertSatsToDollars, btcPrice, className, showCurrency, showTooltip, convert]);
+    const checkLocalStorage = () => {
+      const savedCurrency = localStorage.getItem('preferredCurrency');
+      if (savedCurrency && (savedCurrency === 'BTC' || savedCurrency === 'USD') && savedCurrency !== currency) {
+        setForceUpdateCounter(prev => prev + 1);
+      }
+    };
+    
+    // Check every second for test mode compatibility
+    const interval = setInterval(checkLocalStorage, 1000);
+    return () => clearInterval(interval);
+  }, [currency]);
 
-  // If display value isn't ready yet, show appropriate placeholder
-  if (!displayValue) {
+  // Direct rendering based on current currency and value
+  const renderCurrentValue = () => {
     if (convert && currency === 'USD') {
       const dollars = convertSatsToDollars(value);
       return (
@@ -74,16 +77,16 @@ const CurrencyAmount: React.FC<CurrencyAmountProps> = ({
           ${dollars.toFixed(2)}{showCurrency ? ' USD' : ''}
         </span>
       );
+    } else {
+      return (
+        <span className={className}>
+          {value.toLocaleString()}{showCurrency ? ' sats' : ''}
+        </span>
+      );
     }
+  };
 
-    return (
-      <span className={className}>
-        {value.toLocaleString()}{showCurrency ? ' sats' : ''}
-      </span>
-    );
-  }
-
-  return displayValue;
+  return renderCurrentValue();
 };
 
 export default CurrencyAmount;
