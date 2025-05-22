@@ -261,4 +261,4 @@ async function deleteApiKey(req: NextApiRequest, res: NextApiResponse, apiKeyId:
   return res.status(204).end();
 }
 
-export default authMiddleware(handler);
+export default authMiddleware(handler as any);

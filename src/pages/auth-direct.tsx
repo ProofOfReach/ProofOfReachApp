@@ -17,7 +17,7 @@ const AuthDirectPage = () => {
   const [loginStatus, setLoginStatus] = useState<string>('');
   
   // Create our own auth service
-  const authService = new AuthService();
+  const authService = AuthService.getInstance();
   
   // Check auth on mount
   useEffect(() => {

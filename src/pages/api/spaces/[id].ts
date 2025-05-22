@@ -141,7 +141,7 @@ async function deleteAdSpace(req: NextApiRequest, res: NextApiResponse, id: stri
     // Delete all placements associated with this ad space first
     await prisma.adPlacement.deleteMany({
       where: {
-        adSpaceId: id,
+        spaceId: id,
       },
     });
 

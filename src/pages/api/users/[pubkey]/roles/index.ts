@@ -1,9 +1,9 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { UserRole } from '../../../../../types/auth';
 import { logger } from '../../../../../lib/logger';
-import { RoleService } from '../../../../../services/roleService';
+import { roleService } from '../../../../../services/roleService';
 import prisma from '../../../../../lib/prisma';
-import { createApiHandler } from '../../../../../utils/apiHandler';
+// import { createApiHandler } from '../../../../../utils/apiHandler';
 
 type GetRolesResponseData = {
   roles: UserRole[];
@@ -76,7 +76,7 @@ const getUserRoles = async (req: NextApiRequest, res: NextApiResponse<GetRolesRe
       }
       
       // For backward compatibility, everyone has 'user' role
-      const roles: UserRole[] = ['user', ...availableRoles];
+      const roles: UserRole[] = ['viewer', ...availableRoles];
       
       return res.status(200).json({ 
         success: true, 

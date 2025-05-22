@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import { getUserFromRequest } from '../../../lib/auth';
+// import { getUserFromRequest } from '../../../lib/auth';
 import { walletService } from '../../../services/walletService';
 import { ApiError } from '../../../utils/apiError';
 import { TransactionType } from '@prisma/client';

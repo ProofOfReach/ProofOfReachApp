@@ -32,7 +32,7 @@ async function handlePlacements(req: NextApiRequest, res: NextApiResponse, pubke
 
     // Get all placements for this space
     const placements = await prisma.adPlacement.findMany({
-      where: { adSpaceId: id },
+      where: { spaceId: id },
       include: {
         ad: {
           select: {
