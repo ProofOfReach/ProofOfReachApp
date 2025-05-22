@@ -1,28 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import Head from 'next/head';
-import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
 import { UserRoleType } from '@/types/role';
 import Layout from '@/components/Layout';
 import { useAuthRefactored } from '@/hooks/useAuthRefactored';
 import { logger } from '@/lib/logger';
 import Loading from '@/components/Loading';
-
-// Import the client component with SSR disabled
-const OnboardingClient = dynamic(
-  () => import('@/components/onboarding/ClientOnboarding'),
-  { 
-    ssr: false,
-    loading: () => (
-      <div className="flex flex-col items-center justify-center py-20" data-testid="onboarding-loading">
-        <Loading size="lg" />
-        <p className="mt-4 text-gray-600 dark:text-gray-300">
-          Loading onboarding experience...
-        </p>
-      </div>
-    )
-  }
-);
+import { useHydration } from '@/hooks/useHydration';
 
 /**
  * Role-Based Onboarding Page
@@ -32,8 +16,8 @@ const OnboardingClient = dynamic(
  * - Publishers: Set up ad spaces and integration
  * - Advertisers: Create campaigns and set budgets
  * 
- * It uses client-side rendering to ensure authentication state is properly handled,
- * preventing any hydration mismatches between server and client.
+ * It uses a hydration-safe approach to ensure consistent rendering between
+ * server and client.
  */
 const OnboardingPage: React.FC = () => {
   const router = useRouter();
@@ -42,6 +26,9 @@ const OnboardingPage: React.FC = () => {
   const [checkedStorage, setCheckedStorage] = useState(false);
   const [isRedirecting, setIsRedirecting] = useState(false);
   const [initialRole, setInitialRole] = useState<UserRoleType | null>(null);
+  
+  // Use hydration hook to safely handle client-only rendering
+  const isHydrated = useHydration();
   
   // Destructure query parameters
   const { role, timestamp, forced, pubkey, error } = router.query;
@@ -60,12 +47,15 @@ const OnboardingPage: React.FC = () => {
     }
   }, [role]);
   
+  // Mark as mounted on the client side
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+  
   // Check for stored onboarding flags and detect redirect loops
   useEffect(() => {
-    // Skip during SSR
-    if (typeof window === 'undefined') return;
-    
-    setMounted(true);
+    // Skip during SSR or before hydration is complete
+    if (!isHydrated) return;
     
     // Only run this once
     if (checkedStorage) return;
@@ -153,11 +143,12 @@ const OnboardingPage: React.FC = () => {
     
     // Mark storage as checked
     setCheckedStorage(true);
-  }, [checkedStorage, forced, timestamp]);
+  }, [checkedStorage, forced, timestamp, isHydrated]);
   
   // Redirect to login if not authenticated
   useEffect(() => {
-    if (typeof window === 'undefined') return;
+    // Skip during SSR or before hydration is complete
+    if (!isHydrated) return;
     
     // Check for recent authentication attempt via localStorage markers we set during login
     const recentAuth = window.localStorage.getItem('auth_initiated') === 'true';
@@ -184,36 +175,46 @@ const OnboardingPage: React.FC = () => {
       // Redirect to login with this page as the return destination
       router.push(`/login?redirect=${encodeURIComponent(currentUrl)}`);
     }
-  }, [isLoggedIn, authLoading, router, isRedirecting]);
+  }, [isLoggedIn, authLoading, router, isRedirecting, isHydrated]);
+  
+  // Common loading state that will be the same on both server and client
+  const loadingView = (
+    <Layout title="Loading Onboarding...">
+      <div className="flex items-center justify-center min-h-screen">
+        <Loading size="lg" />
+      </div>
+    </Layout>
+  );
+  
+  // Always render the loading state for server-side rendering
+  // This ensures consistent markup between server and client
+  if (!isHydrated) {
+    return loadingView;
+  }
   
   // Check for authentication transition markers
-  const recentAuth = typeof window !== 'undefined' && window.localStorage?.getItem('auth_initiated') === 'true';
-  const authTimestamp = typeof window !== 'undefined' ? parseInt(window.localStorage?.getItem('auth_timestamp') || '0', 10) : 0;
-  const authPubkey = typeof window !== 'undefined' ? window.localStorage?.getItem('auth_pubkey') : null;
+  const recentAuth = window.localStorage?.getItem('auth_initiated') === 'true';
+  const authTimestamp = parseInt(window.localStorage?.getItem('auth_timestamp') || '0', 10);
+  const authPubkey = window.localStorage?.getItem('auth_pubkey');
   const isRecentAuthAttempt = recentAuth && (Date.now() - authTimestamp < 10000) && authPubkey;
   
   // If still loading auth state or storage check, or not logged in AND not in a transition period, show loading
   if ((!mounted || authLoading || !isLoggedIn || !checkedStorage) && !isRecentAuthAttempt) {
-    return (
-      <Layout title="Loading Onboarding...">
-        <div className="flex items-center justify-center min-h-screen">
-          <Loading size="lg" />
-        </div>
-      </Layout>
-    );
+    return loadingView;
   }
   
   // Extract the role from URL params if available
   const urlRole = typeof router.query.role === 'string' ? router.query.role as UserRoleType : null;
   
+  // Dynamically import the client-side component
+  // This is safe because we've already hydrated at this point
+  const ClientOnboarding = require('@/components/onboarding/ClientOnboarding').default;
+  
   return (
     <Layout title="Welcome to Proof Of Reach">
-      <Head>
-        <meta name="description" content="Complete your onboarding to get started with Proof Of Reach" />
-      </Head>
       <div className="container mx-auto p-4 py-12 bg-gray-50 dark:bg-gray-900 min-h-screen">
         <div data-testid="client-only">
-          <OnboardingClient />
+          <ClientOnboarding />
         </div>
       </div>
     </Layout>
