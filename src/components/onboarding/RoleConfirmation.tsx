@@ -156,14 +156,6 @@ const RoleConfirmation: React.FC<RoleConfirmationProps> = ({ onConfirm }) => {
   return (
     <div className="py-6">
       <div className="text-center mb-8">
-        <div className="flex justify-center mb-4">
-          <img 
-            src="/logo_big_light.png" 
-            alt="Proof Of Reach" 
-            className="h-12 max-w-full"
-            data-testid="role-selection-logo"
-          />
-        </div>
         <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2" data-testid="role-selection-title">
           Select Your Role
         </h2>

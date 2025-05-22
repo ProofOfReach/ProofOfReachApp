@@ -805,9 +805,7 @@ const LoginPageContainer: React.FC = () => {
     <Layout title="Login - Nostr Ad Marketplace">
       <div className="flex justify-center items-center min-h-[80vh]">
         <div className="w-full max-w-md p-8 bg-white shadow-lg rounded-lg dark:bg-gray-800">
-          <h1 className="text-2xl font-bold text-center mb-6 text-gray-900 dark:text-white">
-            Login to Nostr Ad Marketplace
-          </h1>
+          {/* Heading is moved inside the ClientLoginPage component to avoid duplication */}
           <ClientLoginPage />
         </div>
       </div>
