@@ -4,7 +4,7 @@ import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer
 } from 'recharts';
 import { Title, Paragraph } from '@/components/ui/Typography';
-import { Card } from '@/components/ui/Card';
+import { Card } from '@/components/ui/card';
 
 // Sample data for demonstration
 const monthlySummary = [

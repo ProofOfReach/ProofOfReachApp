@@ -3,7 +3,8 @@ import { Book, Code, Clipboard, Check, Copy, ExternalLink } from 'react-feather'
 import Link from 'next/link';
 import ImprovedDashboardLayout from '@/components/layout/ImprovedDashboardLayout';
 import { Button } from '@/components/ui/button';
-import { Card } from '@/components/ui/Card';
+import { Card } from '@/components/ui/card';
+import { useAuth } from '@/hooks/useAuth';
 
 const SDKExamplesPage = () => {
   const { pubkey } = useAuth();
