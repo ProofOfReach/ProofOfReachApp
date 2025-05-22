@@ -74,8 +74,11 @@ export const Text: React.FC<TextProps> = ({ children, className = '' }) => {
   );
 };
 
-export default {
+// Export everything individually and also as a default object
+const Typography = {
   Title,
   Paragraph,
   Text
 };
+
+export default Typography;
