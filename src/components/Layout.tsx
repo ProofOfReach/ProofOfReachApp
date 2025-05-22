@@ -6,6 +6,7 @@ import AuthStatusBar from './auth/AuthStatusBar';
 import DebugRoleEnabler from './DebugRoleEnabler';
 import TestModeBanner from './TestModeBanner';
 import HackathonBanner from './HackathonBanner';
+import DomainToggleButton from './DomainToggleButton';
 import { useRouter } from 'next/router';
 
 /**
@@ -123,6 +124,9 @@ const Layout: React.FC<LayoutProps> = ({
 
       {/* TestModeBanner should only show on authenticated/protected pages */}
       {!hideTestBanner && !isPublicPage && <TestModeBanner />}
+      
+      {/* Domain toggle button for testing in Replit */}
+      {process.env.NODE_ENV !== 'production' && <DomainToggleButton />}
 
       {/* Skip layout elements for test pages */}
       {!isTestPage && (

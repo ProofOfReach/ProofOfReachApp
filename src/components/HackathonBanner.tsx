@@ -15,9 +15,13 @@ const HackathonBanner: React.FC<HackathonBannerProps> = ({
   const [isVisible, setIsVisible] = useState(false);
   
   useEffect(() => {
-    // Check if we should show the banner based on props or env var
+    // Check if we should show the banner based on props, env var, or localStorage
+    const simulateDev = typeof window !== 'undefined' && 
+                        localStorage.getItem('SIMULATE_DEV_DOMAIN') === 'true';
+    
     const shouldShow = isDev || 
                       showBanner || 
+                      simulateDev ||
                       process.env.NEXT_PUBLIC_ENABLE_DEV_BANNER === 'true';
     
     setIsVisible(shouldShow);
@@ -26,9 +30,9 @@ const HackathonBanner: React.FC<HackathonBannerProps> = ({
   if (!isVisible) return null;
 
   return (
-    <div className="bg-amber-100 border-b border-amber-300 py-1 px-4 text-center text-amber-800">
+    <div className="bg-amber-100 border-b border-amber-300 py-2 px-4 text-center text-amber-800">
       <p className="text-sm font-medium">
-        🚧 Hackathon Test Mode – Not Production 🚧
+        🚧 Hackathon Test Mode – This is dev.proofofreach.xyz – Not Production 🚧
       </p>
     </div>
   );
