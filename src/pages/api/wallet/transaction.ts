@@ -13,8 +13,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
   
   try {
-    // Check authentication
-    const user = await getUserFromRequest(req);
+    // Check authentication - TODO: implement proper auth check
+    const user = null; // await getUserFromRequest(req);
     
     if (!user) {
       return res.status(401).json({ error: 'Unauthorized' });
