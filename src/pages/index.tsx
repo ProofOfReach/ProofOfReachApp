@@ -270,17 +270,19 @@ const HomePage: NextPageWithLayout = () => {
                     )}
                   </div>
                 
-                  <div className="flex items-center mt-6">
-                    <Button
-                      type="submit"
-                      disabled={isSubmitting}
-                      className="w-full bg-blue-600 hover:bg-blue-700 text-white text-lg h-14 font-bold shadow-lg border-2 border-blue-700 transition-all hover:scale-[1.02]"
-                      size="lg"
-                    >
-                      {isSubmitting ? 'Submitting...' : 'Get Early Access'} 
-                      <ArrowRight className="ml-2 h-5 w-5" />
-                    </Button>
-                  </div>
+                  {isDev ? (
+                    <div className="flex items-center mt-6">
+                      <Button
+                        type="submit"
+                        disabled={isSubmitting}
+                        className="w-full bg-blue-600 hover:bg-blue-700 text-white text-lg h-14 font-bold shadow-lg border-2 border-blue-700 transition-all hover:scale-[1.02]"
+                        size="lg"
+                      >
+                        {isSubmitting ? 'Submitting...' : 'Get Early Access'} 
+                        <ArrowRight className="ml-2 h-5 w-5" />
+                      </Button>
+                    </div>
+                  ) : null}
                   
                   <div className="mt-4 text-center">
                     <p className="text-xs text-gray-500 dark:text-gray-400">
