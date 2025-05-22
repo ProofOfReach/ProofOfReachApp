@@ -118,28 +118,53 @@ export const CurrencyProvider: React.FC<CurrencyProviderProps> = ({ children }) 
     }
   }, []);
 
-  // Direct currency setter with event dispatch
+  // Direct currency setter with event dispatch and force re-render
   const setCurrencyValue = useCallback((newCurrency: CurrencyType) => {
     console.log(`Setting currency to ${newCurrency}`);
+    
+    // Update state
     setCurrency(newCurrency);
+    
+    // Save to localStorage
     localStorage.setItem('preferredCurrency', newCurrency);
     
-    // Dispatch a custom event to notify all components of the currency change
+    // Generate a unique timestamp for this change
+    const timestamp = Date.now();
+    
+    // Dispatch events to notify all components of the currency change
     if (typeof window !== 'undefined') {
-      // Use both event types for maximum compatibility
+      // Legacy event for backward compatibility
       const legacyEvent = new CustomEvent(CURRENCY_CHANGE_EVENT, { 
-        detail: { currency: newCurrency }
+        detail: { currency: newCurrency, timestamp }
       });
       window.dispatchEvent(legacyEvent);
       
-      // Also dispatch with the newer event name that components are listening for
+      // Modern event format
       const modernEvent = new CustomEvent('currency-change', { 
-        detail: { currency: newCurrency }
+        detail: { currency: newCurrency, timestamp }
       });
       window.dispatchEvent(modernEvent);
       
-      // Force a refresh of the UI by modifying a timestamp in localStorage
-      localStorage.setItem('currencyLastChanged', Date.now().toString());
+      // Direct event to force global re-renders
+      window.dispatchEvent(new Event('storage'));
+      
+      // Add timestamp to localStorage for components not listening to events
+      localStorage.setItem('currencyLastChanged', timestamp.toString());
+      
+      // Force page-wide render by updating multiple elements
+      document.body.dataset.currency = newCurrency;
+      document.documentElement.style.setProperty('--currency-type', newCurrency);
+      
+      // For test mode compatibility
+      if (localStorage.getItem('testModeActive') === 'true') {
+        console.log('Applying test mode currency update for:', newCurrency);
+        localStorage.setItem('testModeCurrency', newCurrency);
+      }
+      
+      // Force all React components to notice the change
+      setTimeout(() => {
+        window.dispatchEvent(new Event('currencyUpdated'));
+      }, 0);
     }
   }, []);
 

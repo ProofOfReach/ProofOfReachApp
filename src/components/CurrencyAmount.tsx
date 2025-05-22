@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { useCurrency } from '@/context/CurrencyContext';
 
 interface CurrencyAmountProps {
@@ -11,6 +11,10 @@ interface CurrencyAmountProps {
   convert?: boolean;
 }
 
+/**
+ * A component that displays currency amounts and handles conversion between BTC and USD
+ * This is a completely rewritten version that directly renders the current amount based on context
+ */
 const CurrencyAmount: React.FC<CurrencyAmountProps> = ({ 
   sats, 
   amount,
@@ -19,74 +23,29 @@ const CurrencyAmount: React.FC<CurrencyAmountProps> = ({
   className = '',
   convert = true
 }) => {
-  const { currency, convertSatsToDollars, btcPrice } = useCurrency();
-  const [displayValue, setDisplayValue] = useState<React.ReactElement | null>(null);
-  const [forceUpdateCounter, setForceUpdateCounter] = useState(0);
+  // Get the currency and conversion function from context
+  const { currency, convertSatsToDollars } = useCurrency();
   
   // Use either sats or amount, with sats taking precedence if both are provided
   const value = sats !== undefined ? sats : (amount !== undefined ? amount : 0);
 
-  // Listen for ALL possible currency change events
-  useEffect(() => {
-    const handleCurrencyChange = () => {
-      // Force re-render when any currency-related event happens
-      setDisplayValue(null);
-      setForceUpdateCounter(prev => prev + 1);
-    };
-
-    // Various events that could indicate a currency change
-    window.addEventListener('currency-preference-changed', handleCurrencyChange);
-    window.addEventListener('currency-change', handleCurrencyChange);
-    window.addEventListener('currencyUpdated', handleCurrencyChange);
-    window.addEventListener('storage', handleCurrencyChange);
-    
-    return () => {
-      window.removeEventListener('currency-preference-changed', handleCurrencyChange);
-      window.removeEventListener('currency-change', handleCurrencyChange);
-      window.removeEventListener('currencyUpdated', handleCurrencyChange);
-      window.removeEventListener('storage', handleCurrencyChange);
-    };
-  }, []);
-
-  // Force refresh on currency context change
-  useEffect(() => {
-    setDisplayValue(null);
-    setForceUpdateCounter(prev => prev + 1);
-  }, [currency]);
-
-  // Check localStorage periodically for changes
-  useEffect(() => {
-    const checkLocalStorage = () => {
-      const savedCurrency = localStorage.getItem('preferredCurrency');
-      if (savedCurrency && (savedCurrency === 'BTC' || savedCurrency === 'USD') && savedCurrency !== currency) {
-        setForceUpdateCounter(prev => prev + 1);
-      }
-    };
-    
-    // Check every second for test mode compatibility
-    const interval = setInterval(checkLocalStorage, 1000);
-    return () => clearInterval(interval);
-  }, [currency]);
-
-  // Direct rendering based on current currency and value
-  const renderCurrentValue = () => {
-    if (convert && currency === 'USD') {
-      const dollars = convertSatsToDollars(value);
-      return (
-        <span className={className} title={showTooltip ? `${value.toLocaleString()} sats` : undefined}>
-          ${dollars.toFixed(2)}{showCurrency ? ' USD' : ''}
-        </span>
-      );
-    } else {
-      return (
-        <span className={className}>
-          {value.toLocaleString()}{showCurrency ? ' sats' : ''}
-        </span>
-      );
-    }
-  };
-
-  return renderCurrentValue();
+  // Directly render based on the current currency
+  if (convert && currency === 'USD') {
+    // Convert to USD
+    const dollars = convertSatsToDollars(value);
+    return (
+      <span className={className} title={showTooltip ? `${value.toLocaleString()} sats` : undefined}>
+        ${dollars.toFixed(2)}{showCurrency ? ' USD' : ''}
+      </span>
+    );
+  } else {
+    // Show as BTC (satoshis)
+    return (
+      <span className={className}>
+        {value.toLocaleString()}{showCurrency ? ' sats' : ''}
+      </span>
+    );
+  }
 };
 
 export default CurrencyAmount;
