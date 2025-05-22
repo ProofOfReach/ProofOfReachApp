@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
-import OnboardingWizard from '@/components/onboarding/OnboardingWizard';
-import { OnboardingProvider } from '@/context/OnboardingContext';
 import { useAuthRefactored } from '@/hooks/useAuthRefactored';
 import { logger } from '@/lib/logger';
 import Loading from '@/components/Loading';
@@ -10,10 +8,19 @@ import dynamic from 'next/dynamic';
 import { UserRoleType } from '@/types/role';
 import Layout from '@/components/Layout';
 
-// Create a client-only wrapper to avoid hydration issues
-const ClientOnlyOnboarding = dynamic(
-  () => Promise.resolve(({ children }: { children: React.ReactNode }) => <>{children}</>), 
-  { ssr: false }
+// Use a NON-SSR component for the entire onboarding experience
+// This completely prevents hydration mismatches
+const DynamicOnboarding = dynamic(
+  () => import('@/components/onboarding/DynamicOnboarding'), 
+  { 
+    ssr: false,
+    loading: () => (
+      <div className="flex flex-col items-center justify-center py-20">
+        <Loading size="lg" />
+        <p className="mt-4 text-gray-600 dark:text-gray-300">Loading onboarding experience...</p>
+      </div>
+    )
+  }
 );
 
 /**
@@ -193,20 +200,23 @@ const OnboardingPage: React.FC = () => {
     );
   }
   
-  // Extract the role from URL params if available and not already processed
-  const urlRole = typeof router.query.role === 'string' && !initialRole ? router.query.role as UserRoleType : initialRole;
+  // Extract the role from URL params if available
+  const urlRole = typeof router.query.role === 'string' ? router.query.role as UserRoleType : null;
   
+  // Create a simple server-side rendered page with static content
+  // The dynamic content will be loaded ONLY on the client-side
   return (
     <Layout title="Welcome to Proof Of Reach">
       <Head>
         <meta name="description" content="Complete your onboarding to get started with Proof Of Reach" />
       </Head>
       <div className="container mx-auto p-4 py-12 bg-gray-50 dark:bg-gray-900 min-h-screen">
-        <ClientOnlyOnboarding>
-          <OnboardingProvider forcePubkey={authState?.pubkey} initialRole={urlRole}>
-            <OnboardingWizard />
-          </OnboardingProvider>
-        </ClientOnlyOnboarding>
+        {/* This component is ONLY rendered on the client side */}
+        {/* The server will render just the loading indicator */}
+        <DynamicOnboarding 
+          pubkey={authState?.pubkey} 
+          initialRole={urlRole} 
+        />
       </div>
     </Layout>
   );
