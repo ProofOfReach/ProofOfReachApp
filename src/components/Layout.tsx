@@ -5,6 +5,7 @@ import HomeNavbar from './HomeNavbar';
 import AuthStatusBar from './auth/AuthStatusBar';
 import DebugRoleEnabler from './DebugRoleEnabler';
 import TestModeBanner from './TestModeBanner';
+import HackathonBanner from './HackathonBanner';
 import { useRouter } from 'next/router';
 
 /**
@@ -94,6 +95,19 @@ const Layout: React.FC<LayoutProps> = ({
   // Check if this is one of the test pages where we should skip layout elements
   const isTestPage = router.pathname === '/auth-test-simple' || 
                     router.pathname === '/auth-refactored-test';
+  
+  // Detect if we're on dev domain
+  const [isDev, setIsDev] = React.useState(false);
+  
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const hostname = window.location.hostname;
+      const isDevDomain = hostname.startsWith('dev.') || 
+                          hostname.includes('replit.dev') || 
+                          process.env.NEXT_PUBLIC_ENABLE_DEV_BANNER === 'true';
+      setIsDev(isDevDomain);
+    }
+  }, []);
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -103,6 +117,9 @@ const Layout: React.FC<LayoutProps> = ({
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
+      
+      {/* Hackathon Banner should show on all pages when on dev domain */}
+      {isDev && <HackathonBanner isDev={true} />}
 
       {/* TestModeBanner should only show on authenticated/protected pages */}
       {!hideTestBanner && !isPublicPage && <TestModeBanner />}
