@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useCurrency } from '@/context/CurrencyContext';
 
 interface CurrencyAmountProps {
@@ -19,26 +19,62 @@ const CurrencyAmount: React.FC<CurrencyAmountProps> = ({
   className = '',
   convert = true
 }) => {
-  const { currency, convertSatsToDollars } = useCurrency();
+  const { currency, convertSatsToDollars, btcPrice } = useCurrency();
+  const [displayValue, setDisplayValue] = useState<JSX.Element | null>(null);
   
   // Use either sats or amount, with sats taking precedence if both are provided
   const value = sats !== undefined ? sats : (amount !== undefined ? amount : 0);
 
-  // Allow disabling currency conversion even if global setting is USD
-  if (convert && currency === 'USD') {
-    const dollars = convertSatsToDollars(value);
+  // Listen for custom currency change events
+  useEffect(() => {
+    const handleCurrencyChange = () => {
+      // Force re-render when currency changes
+      setDisplayValue(null);
+    };
+
+    window.addEventListener('currency-preference-changed', handleCurrencyChange);
+    return () => {
+      window.removeEventListener('currency-preference-changed', handleCurrencyChange);
+    };
+  }, []);
+
+  // Regenerate display value whenever currency or value changes
+  useEffect(() => {
+    if (convert && currency === 'USD') {
+      const dollars = convertSatsToDollars(value);
+      setDisplayValue(
+        <span className={className} title={showTooltip ? `${value.toLocaleString()} sats` : undefined}>
+          ${dollars.toFixed(2)}{showCurrency ? ' USD' : ''}
+        </span>
+      );
+    } else {
+      setDisplayValue(
+        <span className={className}>
+          {value.toLocaleString()}{showCurrency ? ' sats' : ''}
+        </span>
+      );
+    }
+  }, [value, currency, convertSatsToDollars, btcPrice, className, showCurrency, showTooltip, convert]);
+
+  // If display value isn't ready yet, show appropriate placeholder
+  if (!displayValue) {
+    if (convert && currency === 'USD') {
+      const dollars = convertSatsToDollars(value);
+      return (
+        <span className={className} title={showTooltip ? `${value.toLocaleString()} sats` : undefined}>
+          ${dollars.toFixed(2)}{showCurrency ? ' USD' : ''}
+        </span>
+      );
+    }
+
     return (
-      <span className={className} title={showTooltip ? `${value.toLocaleString()} sats` : undefined}>
-        ${dollars.toFixed(2)}{showCurrency ? ' USD' : ''}
+      <span className={className}>
+        {value.toLocaleString()}{showCurrency ? ' sats' : ''}
       </span>
     );
   }
 
-  return (
-    <span className={className}>
-      {value.toLocaleString()}{showCurrency ? ' sats' : ''}
-    </span>
-  );
+  return displayValue;
 };
 
 export default CurrencyAmount;

@@ -1,6 +1,9 @@
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import React, { createContext, useContext, useState, useEffect, ReactNode, useCallback } from 'react';
 
 export type CurrencyType = 'BTC' | 'USD';
+
+// Custom event for currency changes
+const CURRENCY_CHANGE_EVENT = 'currency-preference-changed';
 
 interface CurrencyContextType {
   currency: CurrencyType;
@@ -9,6 +12,7 @@ interface CurrencyContextType {
   btcPrice: number | null;
   loading: boolean;
   convertSatsToDollars: (sats: number) => number;
+  convertDollarsToSats: (dollars: number) => number;
 }
 
 const defaultContext: CurrencyContextType = {
@@ -18,6 +22,7 @@ const defaultContext: CurrencyContextType = {
   btcPrice: null,
   loading: true,
   convertSatsToDollars: (sats: number) => 0,
+  convertDollarsToSats: (dollars: number) => 0,
 };
 
 const CurrencyContext = createContext<CurrencyContextType>(defaultContext);
@@ -90,6 +95,21 @@ export const CurrencyProvider: React.FC<CurrencyProviderProps> = ({ children }) 
     return () => clearInterval(interval);
   }, []);
 
+  // Listen for currency change events (for cross-tab synchronization)
+  useEffect(() => {
+    const handleStorageChange = (e: StorageEvent) => {
+      if (e.key === 'preferredCurrency' && e.newValue) {
+        if (e.newValue === 'BTC' || e.newValue === 'USD') {
+          console.log(`Currency changed in another tab to ${e.newValue}`);
+          setCurrency(e.newValue as CurrencyType);
+        }
+      }
+    };
+
+    window.addEventListener('storage', handleStorageChange);
+    return () => window.removeEventListener('storage', handleStorageChange);
+  }, []);
+
   // Load preferred currency from localStorage on mount
   useEffect(() => {
     const savedCurrency = localStorage.getItem('preferredCurrency');
@@ -98,29 +118,45 @@ export const CurrencyProvider: React.FC<CurrencyProviderProps> = ({ children }) 
     }
   }, []);
 
-  // Direct currency setter
-  const setCurrencyValue = (newCurrency: CurrencyType) => {
+  // Direct currency setter with event dispatch
+  const setCurrencyValue = useCallback((newCurrency: CurrencyType) => {
     console.log(`Setting currency to ${newCurrency}`);
     setCurrency(newCurrency);
     localStorage.setItem('preferredCurrency', newCurrency);
-  };
+    
+    // Dispatch a custom event to notify all components of the currency change
+    if (typeof window !== 'undefined') {
+      const event = new CustomEvent(CURRENCY_CHANGE_EVENT, { 
+        detail: { currency: newCurrency }
+      });
+      window.dispatchEvent(event);
+    }
+  }, []);
 
   // Toggle between BTC and USD
-  const toggleCurrency = () => {
+  const toggleCurrency = useCallback(() => {
     const newCurrency = currency === 'BTC' ? 'USD' : 'BTC';
     console.log(`Toggling currency from ${currency} to ${newCurrency}`);
-    setCurrency(newCurrency);
-    localStorage.setItem('preferredCurrency', newCurrency);
-  };
+    setCurrencyValue(newCurrency);
+  }, [currency, setCurrencyValue]);
 
   // Convert satoshis to USD
-  const convertSatsToDollars = (sats: number): number => {
-    if (!btcPrice) return 0;
+  const convertSatsToDollars = useCallback((sats: number): number => {
+    if (!btcPrice || !sats) return 0;
     
     // 1 BTC = 100,000,000 sats
     const btc = sats / 100000000;
     return btc * btcPrice;
-  };
+  }, [btcPrice]);
+
+  // Convert USD to satoshis
+  const convertDollarsToSats = useCallback((dollars: number): number => {
+    if (!btcPrice || !dollars) return 0;
+    
+    // Convert USD to BTC, then to sats
+    const btc = dollars / btcPrice;
+    return Math.round(btc * 100000000);
+  }, [btcPrice]);
 
   return (
     <CurrencyContext.Provider
@@ -131,11 +167,19 @@ export const CurrencyProvider: React.FC<CurrencyProviderProps> = ({ children }) 
         btcPrice,
         loading,
         convertSatsToDollars,
+        convertDollarsToSats,
       }}
     >
       {children}
     </CurrencyContext.Provider>
   );
 };
+
+// Add a global listener for currency changes
+if (typeof window !== 'undefined') {
+  window.addEventListener(CURRENCY_CHANGE_EVENT, (e: Event) => {
+    console.log('Currency changed globally:', (e as CustomEvent).detail);
+  });
+}
 
 export default CurrencyContext;
