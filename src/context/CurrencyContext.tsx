@@ -126,10 +126,20 @@ export const CurrencyProvider: React.FC<CurrencyProviderProps> = ({ children }) 
     
     // Dispatch a custom event to notify all components of the currency change
     if (typeof window !== 'undefined') {
-      const event = new CustomEvent(CURRENCY_CHANGE_EVENT, { 
+      // Use both event types for maximum compatibility
+      const legacyEvent = new CustomEvent(CURRENCY_CHANGE_EVENT, { 
         detail: { currency: newCurrency }
       });
-      window.dispatchEvent(event);
+      window.dispatchEvent(legacyEvent);
+      
+      // Also dispatch with the newer event name that components are listening for
+      const modernEvent = new CustomEvent('currency-change', { 
+        detail: { currency: newCurrency }
+      });
+      window.dispatchEvent(modernEvent);
+      
+      // Force a refresh of the UI by modifying a timestamp in localStorage
+      localStorage.setItem('currencyLastChanged', Date.now().toString());
     }
   }, []);
 
