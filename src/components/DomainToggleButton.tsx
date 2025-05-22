@@ -17,8 +17,11 @@ const DomainToggleButton: React.FC = () => {
     const newValue = !isDev;
     setIsDev(newValue);
     
-    // Store the setting in localStorage
+    // Store the setting in localStorage for client-side components
     localStorage.setItem('SIMULATE_DEV_DOMAIN', String(newValue));
+    
+    // Also set a cookie for the middleware
+    document.cookie = `SIMULATE_DEV_DOMAIN=${String(newValue)}; path=/; max-age=86400`;
     
     // Force a page reload to apply the changes
     window.location.reload();

@@ -25,6 +25,15 @@ const HackathonBanner: React.FC<HackathonBannerProps> = ({
                       process.env.NEXT_PUBLIC_ENABLE_DEV_BANNER === 'true';
     
     setIsVisible(shouldShow);
+    
+    // Log the reason why the banner is visible or not for debugging
+    console.log('Banner visibility:', {
+      isDev,
+      showBanner,
+      simulateDev,
+      envVar: process.env.NEXT_PUBLIC_ENABLE_DEV_BANNER === 'true',
+      isVisible: shouldShow
+    });
   }, [isDev, showBanner]);
 
   if (!isVisible) return null;

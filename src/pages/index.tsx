@@ -3,6 +3,7 @@ import { useRouter } from 'next/router';
 import Layout from '../components/Layout';
 import { useAuthSwitch } from '../hooks/useAuthSwitch';
 import Link from 'next/link';
+import { useCallback } from 'react';
 import { Layout as LayoutIcon, User, Target, Zap, Check, AlertCircle, ArrowRight, Mail } from 'react-feather';
 import SatoshiIcon from '../components/SatoshiIcon';
 import { NextPageWithLayout } from './_app';
@@ -39,6 +40,24 @@ const HomePage: NextPageWithLayout = () => {
     success?: boolean;
     message?: string;
   }>({});
+  
+  // Add state to track dev/production mode
+  const [isDev, setIsDev] = useState(false);
+  
+  // Check if we're in dev mode
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const hostname = window.location.hostname;
+      const simulateDev = localStorage.getItem('SIMULATE_DEV_DOMAIN') === 'true';
+      const isDevDomain = hostname.startsWith('dev.') || 
+                         hostname.includes('replit.dev') ||
+                         simulateDev ||
+                         process.env.NEXT_PUBLIC_ENABLE_DEV_BANNER === 'true';
+      
+      setIsDev(isDevDomain);
+      console.log('HomePage - Dev mode check:', isDevDomain);
+    }
+  }, []);
 
   // Define form
   const form = useForm<WaitlistFormValues>({
@@ -254,12 +273,20 @@ const HomePage: NextPageWithLayout = () => {
                   </div>
                   
                   <div className="mt-4 text-center">
-                    <p className="text-xs text-gray-500 dark:text-gray-400">
-                      Already have access? <Link href="/login-new" className="text-blue-600 hover:text-blue-700">Login</Link>
-                    </p>
-                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">
-                      <Link href="/admin-fix.html" className="text-blue-600 hover:text-blue-700">Admin Access Tool</Link>
-                    </p>
+                    {isDev ? (
+                      <>
+                        <p className="text-xs text-gray-500 dark:text-gray-400">
+                          Already have access? <Link href="/login-new" className="text-blue-600 hover:text-blue-700">Login</Link>
+                        </p>
+                        <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">
+                          <Link href="/admin-fix.html" className="text-blue-600 hover:text-blue-700">Admin Access Tool</Link>
+                        </p>
+                      </>
+                    ) : (
+                      <p className="text-xs text-gray-500 dark:text-gray-400">
+                        We'll notify you once access is available
+                      </p>
+                    )}
                   </div>
                 </Form>
               </CardContent>
@@ -315,9 +342,13 @@ const HomePage: NextPageWithLayout = () => {
               </ul>
             </CardContent>
             <CardFooter>
-              <Link href="/advertiser" className="text-blue-600 hover:text-blue-700 inline-flex items-center font-medium">
-                Learn more →
-              </Link>
+              {isDev ? (
+                <Link href="/advertiser" className="text-blue-600 hover:text-blue-700 inline-flex items-center font-medium">
+                  Learn more →
+                </Link>
+              ) : (
+                <span className="text-gray-400 cursor-not-allowed">Coming Soon</span>
+              )}
             </CardFooter>
           </Card>
           
@@ -334,9 +365,13 @@ const HomePage: NextPageWithLayout = () => {
               </ul>
             </CardContent>
             <CardFooter>
-              <Link href="/publisher" className="text-blue-600 hover:text-blue-700 inline-flex items-center font-medium">
-                Learn more →
-              </Link>
+              {isDev ? (
+                <Link href="/publisher" className="text-blue-600 hover:text-blue-700 inline-flex items-center font-medium">
+                  Learn more →
+                </Link>
+              ) : (
+                <span className="text-gray-400 cursor-not-allowed">Coming Soon</span>
+              )}
             </CardFooter>
           </Card>
           
@@ -352,9 +387,13 @@ const HomePage: NextPageWithLayout = () => {
               </ul>
             </CardContent>
             <CardFooter>
-              <Link href="/viewer" className="text-blue-600 hover:text-blue-800 inline-flex items-center font-medium">
-                Learn more →
-              </Link>
+              {isDev ? (
+                <Link href="/viewer" className="text-blue-600 hover:text-blue-800 inline-flex items-center font-medium">
+                  Learn more →
+                </Link>
+              ) : (
+                <span className="text-gray-400 cursor-not-allowed">Coming Soon</span>
+              )}
             </CardFooter>
           </Card>
         </div>

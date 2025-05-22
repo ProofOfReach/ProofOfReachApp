@@ -47,10 +47,15 @@ export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
   const hostname = request.headers.get('host') || '';
   
+  // Check for simulation setting in localStorage
+  // Note: localStorage is not accessible in middleware, so we use cookies
+  const simulatedDomain = request.cookies.get('SIMULATE_DEV_DOMAIN')?.value;
+  
   // Domain-based access control
   const isDev = hostname.startsWith('dev.') || 
                 process.env.ENABLE_FULL_ACCESS === 'true' ||
-                hostname.includes('replit.dev');
+                hostname.includes('replit.dev') ||
+                simulatedDomain === 'true';
   
   // If this is the production domain (not dev)
   if (!isDev) {
