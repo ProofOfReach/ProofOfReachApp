@@ -16,6 +16,7 @@ import { useRole } from '@/context/RoleContext';
 import ImprovedDashboardLayout from '@/components/layout/ImprovedDashboardLayout';
 import StatCard from '@/components/ui/StatCard';
 import CurrencyAmount from '@/components/CurrencyAmount';
+import CurrencyWrapper from '@/components/CurrencyWrapper';
 import { RoleService } from '@/lib/roleService';
 import type { UserRole } from '@/context/RoleContext';
 import type { ReactElement } from 'react';
@@ -355,7 +356,9 @@ const Dashboard = () => {
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6 border border-gray-200 dark:border-gray-700">
           <h2 className="text-lg font-medium text-gray-900 dark:text-white mb-4">Wallet Balance</h2>
           <p className="text-2xl font-bold text-gray-900 dark:text-white">
-            <CurrencyAmount sats={42500} />
+            <CurrencyWrapper>
+              <CurrencyAmount sats={42500} />
+            </CurrencyWrapper>
           </p>
           <p className="text-gray-500 dark:text-gray-400 mt-2">Available for campaigns</p>
         </div>
