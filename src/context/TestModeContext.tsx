@@ -6,7 +6,7 @@ import {
   TEST_MODE_EVENTS, 
   addTestModeEventListener 
 } from '@/lib/testModeEvents';
-import { UserRole } from '@/context/RoleContext';
+import { UserRoleType } from '@/types/role';
 import { RoleManager } from '@/services/roleManager';
 
 /**
@@ -17,14 +17,14 @@ interface TestModeContextType {
   // Core test mode state
   isTestMode: boolean;
   timeRemaining: number | null;
-  currentRole: UserRole;
-  availableRoles: UserRole[];
+  currentRole: UserRoleType;
+  availableRoles: UserRoleType[];
   
   // Actions
   enableTestMode: () => void;
   disableTestMode: () => void;
   enableAllRoles: () => Promise<boolean>;
-  setCurrentRole: (role: UserRole) => Promise<boolean>;
+  setCurrentRole: (role: UserRoleType) => Promise<boolean>;
   
   // State information
   isTestModeAvailable: boolean;
@@ -55,8 +55,8 @@ export const TestModeProvider: React.FC<TestModeProviderProps> = ({ children }) 
   // Core state
   const [isTestMode, setIsTestMode] = useState(false);
   const [timeRemaining, setTimeRemaining] = useState<number | null>(null);
-  const [currentRole, setCurrentRole] = useState<UserRole>('user');
-  const [availableRoles, setAvailableRoles] = useState<UserRole[]>(['user']);
+  const [currentRole, setCurrentRole] = useState<UserRoleType>('viewer');
+  const [availableRoles, setAvailableRoles] = useState<UserRoleType[]>(['viewer']);
   
   /**
    * Helper function to update the full test mode state
@@ -221,8 +221,8 @@ export const TestModeProvider: React.FC<TestModeProviderProps> = ({ children }) 
             const newState: TestModeState = {
               isActive: true,
               expiryTime,
-              currentRole: 'user',
-              availableRoles: ['user', 'advertiser', 'publisher', 'admin', 'stakeholder'],
+              currentRole: 'viewer',
+              availableRoles: ['viewer', 'advertiser', 'publisher', 'admin', 'stakeholder'],
               lastUpdated: Date.now()
             };
             
@@ -232,8 +232,8 @@ export const TestModeProvider: React.FC<TestModeProviderProps> = ({ children }) 
             // Update local state
             setIsTestMode(true);
             setTimeRemaining(240); // 4 hours in minutes
-            setCurrentRole('user');
-            setAvailableRoles(['user', 'advertiser', 'publisher', 'admin', 'stakeholder']);
+            setCurrentRole('viewer');
+            setAvailableRoles(['viewer', 'advertiser', 'publisher', 'admin', 'stakeholder']);
             
             // Set compatibility flag
             localStorage.setItem(STORAGE_KEYS.BYPASS_API_CALLS, 'true');
@@ -282,7 +282,7 @@ export const TestModeProvider: React.FC<TestModeProviderProps> = ({ children }) 
       
       const { to } = event.detail;
       if (to) {
-        setCurrentRole(to as UserRole);
+        setCurrentRole(to as UserRoleType);
       }
     };
     
@@ -292,8 +292,8 @@ export const TestModeProvider: React.FC<TestModeProviderProps> = ({ children }) 
       const newState: TestModeState = {
         isActive: true,
         expiryTime,
-        currentRole: currentRole || 'user',
-        availableRoles: availableRoles.length ? availableRoles : ['user'],
+        currentRole: currentRole || 'viewer',
+        availableRoles: availableRoles.length ? availableRoles : ['viewer'],
         lastUpdated: Date.now()
       };
       
@@ -367,8 +367,8 @@ export const TestModeProvider: React.FC<TestModeProviderProps> = ({ children }) 
         isActive: true,
         expiryTime,
         // Use the current state value directly, not from the dependency
-        currentRole: 'user', // Default to 'user' for simplicity
-        availableRoles: ['user', 'advertiser', 'publisher', 'admin', 'stakeholder'],
+        currentRole: 'viewer', // Default to 'viewer' for consistency with role types
+        availableRoles: ['viewer', 'advertiser', 'publisher', 'admin', 'stakeholder'],
         lastUpdated: Date.now()
       };
       
@@ -382,7 +382,7 @@ export const TestModeProvider: React.FC<TestModeProviderProps> = ({ children }) 
         // Dispatch standardized activation event
         dispatchTestModeEvent(TEST_MODE_EVENTS.ACTIVATED, { 
           expiryTime, 
-          initialRole: 'user' // Default to 'user' for simplicity
+          initialRole: 'viewer' // Default to 'viewer' for consistency with role types
         });
         
         logger.log('Test mode enabled successfully');
@@ -470,7 +470,7 @@ export const TestModeProvider: React.FC<TestModeProviderProps> = ({ children }) 
    * Set current role in test mode
    * Fully delegated to RoleManager service
    */
-  const setCurrentRoleAction = useCallback(async (role: UserRole): Promise<boolean> => {
+  const setCurrentRoleAction = useCallback(async (role: UserRoleType): Promise<boolean> => {
     // Check if test mode is active
     const checkTestMode = () => StorageService.isTestModeActive();
     
