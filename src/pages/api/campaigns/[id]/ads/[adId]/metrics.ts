@@ -1,8 +1,8 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import { adService } from '../../../../../../../services/adService';
-import { apiHandler } from '../../../../../../../utils/apiHandler';
-import { authenticateRequest } from '../../../../../../../utils/authMiddleware';
-import { ApiError } from '../../../../../../../utils/apiError';
+import { adService } from '@/services/adService';
+import { apiHandler } from '@/utils/apiHandler';
+import { authenticateRequest } from '@/utils/authMiddleware';
+import { ApiError } from '@/utils/apiError';
 
 export default apiHandler({
   // GET /api/campaigns/[id]/ads/[adId]/metrics - Get metrics for a specific ad
