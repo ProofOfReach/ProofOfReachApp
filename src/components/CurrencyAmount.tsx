@@ -20,7 +20,7 @@ const CurrencyAmount: React.FC<CurrencyAmountProps> = ({
   convert = true
 }) => {
   const { currency, convertSatsToDollars, btcPrice } = useCurrency();
-  const [displayValue, setDisplayValue] = useState<JSX.Element | null>(null);
+  const [displayValue, setDisplayValue] = useState<React.ReactElement | null>(null);
   
   // Use either sats or amount, with sats taking precedence if both are provided
   const value = sats !== undefined ? sats : (amount !== undefined ? amount : 0);
@@ -32,11 +32,20 @@ const CurrencyAmount: React.FC<CurrencyAmountProps> = ({
       setDisplayValue(null);
     };
 
+    // Listen for both event types to ensure compatibility
     window.addEventListener('currency-preference-changed', handleCurrencyChange);
+    window.addEventListener('currency-change', handleCurrencyChange);
+    
     return () => {
       window.removeEventListener('currency-preference-changed', handleCurrencyChange);
+      window.removeEventListener('currency-change', handleCurrencyChange);
     };
   }, []);
+
+  // Force refresh on currency context change
+  useEffect(() => {
+    setDisplayValue(null);
+  }, [currency]);
 
   // Regenerate display value whenever currency or value changes
   useEffect(() => {

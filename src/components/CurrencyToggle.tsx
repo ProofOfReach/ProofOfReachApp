@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import { useCurrency, CurrencyType } from '../context/CurrencyContext';
 
 interface CurrencyToggleProps {
@@ -8,20 +8,44 @@ interface CurrencyToggleProps {
 const CurrencyToggle: React.FC<CurrencyToggleProps> = ({ className = '' }) => {
   const { currency, setCurrency } = useCurrency();
   
-  // Direct currency setter functions
-  const setBTC = () => {
+  // Direct currency setter functions with memoization
+  const setBTC = useCallback(() => {
     if (currency !== 'BTC') {
       console.log('Setting currency directly to BTC');
+      // Force an update by using localStorage directly too
+      localStorage.setItem('preferredCurrency', 'BTC');
+      // Then use the context function
       setCurrency('BTC');
+      
+      // Force refresh for components that might not be listening
+      if (typeof window !== 'undefined') {
+        // Dispatch a custom event to notify all components
+        const event = new CustomEvent('currency-change', { 
+          detail: { currency: 'BTC' }
+        });
+        window.dispatchEvent(event);
+      }
     }
-  };
+  }, [currency, setCurrency]);
   
-  const setUSD = () => {
+  const setUSD = useCallback(() => {
     if (currency !== 'USD') {
       console.log('Setting currency directly to USD');
+      // Force an update by using localStorage directly too
+      localStorage.setItem('preferredCurrency', 'USD');
+      // Then use the context function
       setCurrency('USD');
+      
+      // Force refresh for components that might not be listening
+      if (typeof window !== 'undefined') {
+        // Dispatch a custom event to notify all components
+        const event = new CustomEvent('currency-change', { 
+          detail: { currency: 'USD' }
+        });
+        window.dispatchEvent(event);
+      }
     }
-  };
+  }, [currency, setCurrency]);
   
   return (
     <div className={`${className}`}>
