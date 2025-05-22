@@ -7,7 +7,7 @@ import { NextApiRequest, NextApiResponse } from 'next';
  * @returns A wrapped handler function with error handling
  */
 export function withErrorHandling(
-  handler: (req: NextApiRequest, res: NextApiResponse) => Promise<void | any>
+  handler: (req: NextApiRequest, res: NextApiResponse) => Promise<void>
 ) {
   return async (req: NextApiRequest, res: NextApiResponse): Promise<void> => {
     try {

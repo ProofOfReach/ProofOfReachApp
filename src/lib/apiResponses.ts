@@ -3,7 +3,7 @@ import { NextApiResponse } from 'next';
 /**
  * Standard success response
  */
-export function success(res: NextApiResponse, data: any = {}, status: number = 200) {
+export function success(res: NextApiResponse, data: Record<string, unknown> = {}, status: number = 200) {
   res.status(status).json(data);
 }
 

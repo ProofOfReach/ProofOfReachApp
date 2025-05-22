@@ -40,7 +40,7 @@ declare global {
 /**
  * Log error to the console or monitoring service with proper context
  */
-export function error(message: string, err?: any): void {
+export function error(message: string, err?: unknown): void {
   if (!err) {
     console.error(`Error in ${message}`);
     return;
@@ -79,7 +79,7 @@ export function createErrorResponse(
 /**
  * Map JavaScript errors to application errors with improved error detection
  */
-export function mapError(err: any): AppError {
+export function mapError(err: unknown): AppError {
   // Handle native Error object with our custom properties
   if (err instanceof Error) {
     // Handle prisma errors - keep existing behavior
@@ -198,7 +198,7 @@ export function handleError(
 /**
  * Create a validation error with 400 status code
  */
-export function validationError(message: string, details?: any): AppError {
+export function validationError(message: string, details?: Record<string, unknown>): AppError {
   return createErrorResponse(ErrorType.Validation, message, 400, details);
 }
 
@@ -226,7 +226,7 @@ export function notFoundError(message = 'Resource not found'): AppError {
 /**
  * Create a database error with 500 status code
  */
-export function databaseError(message = 'Database operation failed', details?: any): AppError {
+export function databaseError(message = 'Database operation failed', details?: Record<string, unknown>): AppError {
   return createErrorResponse(ErrorType.Database, message, 500, details);
 }
 
