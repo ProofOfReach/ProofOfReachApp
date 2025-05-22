@@ -1,8 +1,8 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import { adService, UpdateAdDto } from '../../../../../../services/adService';
-import { apiHandler } from '../../../../../../utils/apiHandler';
-import { authenticateRequest } from '../../../../../../utils/authMiddleware';
-import { ApiError } from '../../../../../../utils/apiError';
+import { adService, UpdateAdDto } from '@/services/adService';
+import { apiHandler } from '@/utils/apiHandler';
+import { authenticateRequest } from '@/utils/authMiddleware';
+import { ApiError } from '@/utils/apiError';
 import { AdStatus } from '@prisma/client';
 
 export default apiHandler({

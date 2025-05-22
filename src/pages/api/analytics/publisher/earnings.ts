@@ -2,7 +2,7 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import { requireAuth } from '@/lib/auth';
 import { generateChartData } from '@/utils/chartHelpers';
 import { DailyMetrics } from '@/services/analyticsService';
-import { differenceInDays } from 'date-fns';
+import differenceInDays from 'date-fns/differenceInDays';
 
 // API handler for fetching publisher earnings data
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
