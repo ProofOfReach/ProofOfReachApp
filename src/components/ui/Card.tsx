@@ -1,19 +1,15 @@
-import React from 'react';
+// This file is a re-export from card.tsx to resolve case sensitivity issues
+// when building on case-sensitive file systems.
+// Import and re-export the shadcn/ui Card components from the lowercase version
+import { 
+  Card, 
+  CardHeader, 
+  CardFooter, 
+  CardTitle, 
+  CardDescription, 
+  CardContent 
+} from '@/components/ui/card';
 
-interface CardProps {
-  children: React.ReactNode;
-  className?: string;
-}
-
-/**
- * Card component for displaying content in a boxed container
- */
-export const Card: React.FC<CardProps> = ({ children, className = '' }) => {
-  return (
-    <div className={`bg-white dark:bg-gray-800 shadow-sm rounded-lg border border-gray-200 dark:border-gray-700 ${className}`}>
-      {children}
-    </div>
-  );
-};
-
+// Re-export with both default and named exports to maintain compatibility
+export { Card, CardHeader, CardFooter, CardTitle, CardDescription, CardContent };
 export default Card;
