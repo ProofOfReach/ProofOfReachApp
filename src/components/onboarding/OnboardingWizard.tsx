@@ -26,9 +26,14 @@ const OnboardingWizard: React.FC = () => {
     skipOnboarding
   } = useOnboarding();
   
-  // Set client-side state after mount
+  // Set client-side state after mount with a slight delay to ensure DOM is ready
   useEffect(() => {
-    setIsClient(true);
+    // Delay state update to ensure DOM is fully loaded
+    const timer = setTimeout(() => {
+      setIsClient(true);
+    }, 10);
+    
+    return () => clearTimeout(timer);
   }, []);
   
   // Handle invalid role case - Only when skipOnboarding is available

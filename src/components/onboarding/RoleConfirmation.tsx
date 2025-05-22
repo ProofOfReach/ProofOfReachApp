@@ -25,9 +25,14 @@ const RoleConfirmation: React.FC<RoleConfirmationProps> = ({ onConfirm }) => {
   // State for tracking if pubkey was copied
   const [pubkeyCopied, setPubkeyCopied] = useState(false);
   
-  // Set client-side state after mount
+  // Set client-side state after mount with a slight delay to ensure DOM is fully ready
   useEffect(() => {
-    setIsClient(true);
+    // Delay state update to ensure DOM is fully loaded and Nostr extension is ready
+    const timer = setTimeout(() => {
+      setIsClient(true);
+    }, 10);
+    
+    return () => clearTimeout(timer);
   }, []);
   
   // Check if we're in test mode - Only check localStorage on client-side
