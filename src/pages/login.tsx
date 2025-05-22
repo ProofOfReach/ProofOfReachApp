@@ -17,7 +17,31 @@ import { isPostForcedLogout } from '../lib/resetAuth';
 import { logger } from '@/lib/logger';
 import { enhancedStorage } from '@/services/enhancedStorageService';
 
+// Create a client-side only wrapper component to avoid hydration issues
+import dynamic from 'next/dynamic';
+
 const LoginPage: React.FC = () => {
+  // Use a placeholder during server-side rendering
+  return (
+    <Layout title="Login - Nostr Ad Marketplace">
+      <div className="flex justify-center items-center min-h-[80vh]">
+        <div className="w-full max-w-md p-8 bg-white shadow-lg rounded-lg dark:bg-gray-800">
+          <h1 className="text-2xl font-bold text-center mb-6 text-gray-900 dark:text-white">
+            Login to Nostr Ad Marketplace
+          </h1>
+          <div className="animate-pulse space-y-6">
+            <div className="h-10 bg-gray-200 dark:bg-gray-700 rounded"></div>
+            <div className="h-10 bg-gray-200 dark:bg-gray-700 rounded"></div>
+            <div className="h-10 bg-gray-200 dark:bg-gray-700 rounded"></div>
+          </div>
+        </div>
+      </div>
+    </Layout>
+  );
+};
+
+// Client-side only component - all interactive login functionality goes here
+const LoginPageClient: React.FC = () => {
   const router = useRouter();
   const { isAuthenticated, pubkey, login } = useAuthSwitch();
   const [isLoading, setIsLoading] = useState(false);
@@ -604,6 +628,15 @@ const LoginPage: React.FC = () => {
     }
   };
 
+  // We need to add client-side only rendering to avoid hydration issues
+  const [isMounted, setIsMounted] = useState(false);
+  
+  // Set mounted state after component mounts on client
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+  
+  // Handle prerendering (server-side) vs client-side rendering
   return (
     <Layout title="Login - Nostr Ad Marketplace">
       <div className="flex justify-center items-center min-h-[80vh]">
@@ -612,16 +645,24 @@ const LoginPage: React.FC = () => {
             Login to Nostr Ad Marketplace
           </h1>
 
-          {message && (
-            <div className="mb-4 p-3 bg-green-100 text-green-700 rounded-md">
-              {message}
-            </div>
-          )}
-          
-          {error && (
-            <div className="mb-4 p-3 bg-red-100 text-red-700 rounded-md">
-              {error}
-            </div>
+          {/* Only render dynamic content when mounted (client-side) */}
+          {isMounted ? (
+            <>
+              {message && (
+                <div className="mb-4 p-3 bg-green-100 text-green-700 rounded-md">
+                  {message}
+                </div>
+              )}
+              
+              {error && (
+                <div className="mb-4 p-3 bg-red-100 text-red-700 rounded-md">
+                  {error}
+                </div>
+              )}
+            </>
+          ) : (
+            // Static placeholder when server rendering to prevent hydration mismatch
+            <div className="mb-4 h-[60px]"></div>
           )}
 
           <div className="space-y-4">
@@ -746,4 +787,33 @@ const LoginPage: React.FC = () => {
   );
 };
 
-export default LoginPage;
+// Use dynamic import with { ssr: false } to create client-only component with improved hydration
+const ClientLoginPage = dynamic(() => Promise.resolve(LoginPageClient), {
+  ssr: false, // This prevents server-side rendering entirely
+  loading: () => (
+    <div className="animate-pulse space-y-6">
+      <div className="h-10 bg-gray-200 dark:bg-gray-700 rounded"></div>
+      <div className="h-10 bg-gray-200 dark:bg-gray-700 rounded"></div>
+      <div className="h-10 bg-gray-200 dark:bg-gray-700 rounded"></div>
+    </div>
+  ),
+});
+
+// Define a new component that uses the client component within our SSR layout
+const LoginPageContainer: React.FC = () => {
+  return (
+    <Layout title="Login - Nostr Ad Marketplace">
+      <div className="flex justify-center items-center min-h-[80vh]">
+        <div className="w-full max-w-md p-8 bg-white shadow-lg rounded-lg dark:bg-gray-800">
+          <h1 className="text-2xl font-bold text-center mb-6 text-gray-900 dark:text-white">
+            Login to Nostr Ad Marketplace
+          </h1>
+          <ClientLoginPage />
+        </div>
+      </div>
+    </Layout>
+  );
+};
+
+// Export the container component instead of the placeholder
+export default LoginPageContainer;

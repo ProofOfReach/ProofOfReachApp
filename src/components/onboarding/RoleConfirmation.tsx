@@ -2,7 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { UserRoleType } from '@/types/role';
 import { useRole } from '@/context/RoleContext';
 import { useOnboarding } from '@/context/OnboardingContext';
-import { Users, Radio, Package } from 'react-feather';
+import useAuth from '@/hooks/useAuth';
+import { Users, Radio, Package, Shield, Key } from 'react-feather';
+import { logger } from '@/lib/logger';
+import { hexToNpub } from '@/lib/nostrProfile';
 
 type RoleConfirmationProps = {
   onConfirm?: (role: UserRoleType) => void;
@@ -11,12 +14,16 @@ type RoleConfirmationProps = {
 const RoleConfirmation: React.FC<RoleConfirmationProps> = ({ onConfirm }) => {
   const roleContext = useRole();
   const { setSelectedRole, selectedRole } = useOnboarding();
+  const { auth } = useAuth();
   
   // Add isClient state to prevent hydration mismatches
   const [isClient, setIsClient] = useState(false);
   
   // Create a state to hold available roles, with a default that includes all roles
   const [availableRoles, setAvailableRoles] = useState<UserRoleType[]>(['viewer', 'publisher', 'advertiser']);
+  
+  // State for tracking if pubkey was copied
+  const [pubkeyCopied, setPubkeyCopied] = useState(false);
   
   // Set client-side state after mount
   useEffect(() => {
@@ -38,16 +45,16 @@ const RoleConfirmation: React.FC<RoleConfirmationProps> = ({ onConfirm }) => {
     
     // Log for debugging
     if (process.env.NODE_ENV !== 'production') {
-      console.log('RoleConfirmation - Forcing all roles to be available for onboarding');
+      logger.debug('RoleConfirmation - Forcing all roles to be available for onboarding');
     }
   }, [isClient]);
   
   // For debugging
   useEffect(() => {
     if (isClient && process.env.NODE_ENV !== 'test') {
-      console.log('RoleConfirmation - Available roles:', availableRoles);
-      console.log('RoleConfirmation - Context roles:', roleContext?.availableRoles || 'None');
-      console.log('RoleConfirmation - Is test mode:', isTestMode);
+      logger.debug(`RoleConfirmation - Available roles: ${availableRoles.join(', ')}`);
+      logger.debug(`RoleConfirmation - Context roles: ${roleContext?.availableRoles?.join(', ') || 'None'}`);
+      logger.debug(`RoleConfirmation - Is test mode: ${isTestMode ? 'Yes' : 'No'}`);
     }
   }, [availableRoles, roleContext, isTestMode, isClient]);
 
@@ -61,11 +68,41 @@ const RoleConfirmation: React.FC<RoleConfirmationProps> = ({ onConfirm }) => {
     }
   };
 
+  const copyPubkeyToClipboard = () => {
+    if (!isClient || !auth || !auth.pubkey) return;
+    
+    // Convert hex to npub if possible
+    const npubKey = hexToNpub(auth.pubkey) || auth.pubkey;
+    
+    navigator.clipboard.writeText(npubKey)
+      .then(() => {
+        setPubkeyCopied(true);
+        setTimeout(() => setPubkeyCopied(false), 2000);
+      })
+      .catch(err => {
+        logger.error('Failed to copy pubkey to clipboard', err);
+      });
+  };
+
+  // Format pubkey for display (truncate in the middle)
+  const formatPubkey = (pubkey: string): string => {
+    if (!pubkey) return '';
+    
+    // Check if it's already an npub
+    const displayKey = pubkey.startsWith('npub') ? pubkey : hexToNpub(pubkey) || pubkey;
+    
+    // If key is less than 16 chars, don't truncate
+    if (displayKey.length <= 16) return displayKey;
+    
+    // Otherwise, truncate in the middle
+    return `${displayKey.substring(0, 8)}...${displayKey.substring(displayKey.length - 8)}`;
+  };
+
   const allRoleCards = [
     {
       role: 'viewer' as UserRoleType,
       title: 'Viewer',
-      description: 'Browse ads, earn Bitcoin, and enjoy content across the Proof Of Reach network',
+      description: 'Browse ads and content across the Proof Of Reach network',
       icon: <Users className="h-8 w-8 text-[#1a73e8]" />,
       benefits: [
         'Earn Bitcoin for viewing ads',
@@ -79,7 +116,7 @@ const RoleConfirmation: React.FC<RoleConfirmationProps> = ({ onConfirm }) => {
     {
       role: 'publisher' as UserRoleType,
       title: 'Publisher',
-      description: 'Monetize your content with Bitcoin through the Proof Of Reach network',
+      description: 'Monetize your content through the Proof Of Reach network',
       icon: <Package className="h-8 w-8 text-green-500" />,
       benefits: [
         'Earn Bitcoin for your content',
@@ -93,8 +130,8 @@ const RoleConfirmation: React.FC<RoleConfirmationProps> = ({ onConfirm }) => {
     {
       role: 'advertiser' as UserRoleType,
       title: 'Advertiser',
-      description: 'Promote your products and services on the Proof Of Reach network',
-      icon: <Radio className="h-8 w-8 text-[#1a73e8]" />,
+      description: 'Promote your products on the Proof Of Reach network',
+      icon: <Radio className="h-8 w-8 text-purple-500" />,
       benefits: [
         'Target specific audience interests',
         'Pay only for actual engagement',
@@ -102,7 +139,7 @@ const RoleConfirmation: React.FC<RoleConfirmationProps> = ({ onConfirm }) => {
         'Lightning-fast campaign setup'
       ],
       buttonText: 'Set Up as Advertiser',
-      color: 'blue'
+      color: 'purple'
     }
   ];
   
@@ -123,9 +160,19 @@ const RoleConfirmation: React.FC<RoleConfirmationProps> = ({ onConfirm }) => {
               data-testid="role-selection-logo"
             />
           </div>
-          <p className="mt-2 text-gray-600 dark:text-gray-300">
-            Select how you'd like to use the Proof Of Reach platform
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
+            Select Your Role
+          </h2>
+          <p className="text-gray-600 dark:text-gray-300">
+            Choose how you'd like to use the Proof Of Reach platform
           </p>
+          
+          {/* Placeholder for Nostr pubkey display */}
+          <div className="mt-4 inline-flex items-center bg-gray-100 dark:bg-gray-800 rounded-lg p-2">
+            <div className="w-5 h-5 bg-gray-300 dark:bg-gray-600 rounded-full mr-2"></div>
+            <div className="h-5 w-32 bg-gray-300 dark:bg-gray-600 rounded"></div>
+            <div className="ml-2 w-6 h-6 bg-gray-300 dark:bg-gray-600 rounded"></div>
+          </div>
         </div>
 
         {/* Placeholder for role cards */}
@@ -173,9 +220,44 @@ const RoleConfirmation: React.FC<RoleConfirmationProps> = ({ onConfirm }) => {
   return (
     <div className="py-6">
       <div className="text-center mb-8">
-        <p className="mt-2 text-gray-600 dark:text-gray-300">
-          Select how you'd like to use the Proof Of Reach platform
+        <div className="flex justify-center mb-4">
+          <img 
+            src="/logo_big_light.png" 
+            alt="Proof Of Reach" 
+            className="h-12 max-w-full"
+            data-testid="role-selection-logo"
+          />
+        </div>
+        <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2" data-testid="role-selection-title">
+          Select Your Role
+        </h2>
+        <p className="text-gray-600 dark:text-gray-300">
+          Choose how you'd like to use the Proof Of Reach platform
         </p>
+        
+        {/* Nostr pubkey display */}
+        {auth && auth.pubkey && (
+          <div className="mt-4 inline-flex items-center bg-gray-100 dark:bg-gray-800 rounded-lg p-2">
+            <Key className="h-5 w-5 text-gray-500 dark:text-gray-400 mr-2" />
+            <span className="text-sm font-mono text-gray-700 dark:text-gray-300" data-testid="user-pubkey">
+              {formatPubkey(auth.pubkey)}
+            </span>
+            <button 
+              onClick={copyPubkeyToClipboard}
+              className="ml-2 p-1 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 transition-colors"
+              title="Copy your Nostr public key"
+              data-testid="copy-pubkey-button"
+            >
+              {pubkeyCopied ? (
+                <Shield className="h-4 w-4 text-green-500" />
+              ) : (
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                </svg>
+              )}
+            </button>
+          </div>
+        )}
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -184,9 +266,13 @@ const RoleConfirmation: React.FC<RoleConfirmationProps> = ({ onConfirm }) => {
             key={card.role}
             data-testid="role-card"
             className={`border rounded-lg p-6 cursor-pointer transition hover:shadow-md flex flex-col h-full
-              ${selectedRole === card.role ? 'border-[#1a73e8] shadow-md' : 'border-gray-200 dark:border-gray-700'}
-              ${card.color === 'blue' ? 'hover:border-[#1a73e8]' : 
-                card.color === 'green' ? 'hover:border-green-500' : 
+              ${selectedRole === card.role ? 
+                card.color === 'green' ? 'border-green-500 shadow-md' : 
+                card.color === 'purple' ? 'border-purple-500 shadow-md' :
+                'border-[#1a73e8] shadow-md' 
+              : 'border-gray-200 dark:border-gray-700'}
+              ${card.color === 'green' ? 'hover:border-green-500' : 
+                card.color === 'purple' ? 'hover:border-purple-500' : 
                 'hover:border-[#1a73e8]'
               }
             `}
@@ -211,7 +297,11 @@ const RoleConfirmation: React.FC<RoleConfirmationProps> = ({ onConfirm }) => {
                   <ul className="space-y-2">
                     {card.benefits.map((benefit, index) => (
                       <li key={index} className="flex items-start text-sm">
-                        <span className={`mr-2 mt-0.5 ${card.color === 'green' ? 'text-green-500' : 'text-[#1a73e8]'}`}>•</span>
+                        <span className={`mr-2 mt-0.5 ${
+                          card.color === 'green' ? 'text-green-500' : 
+                          card.color === 'purple' ? 'text-purple-500' :
+                          'text-[#1a73e8]'
+                        }`}>•</span>
                         <span className="text-gray-600 dark:text-gray-300">{benefit}</span>
                       </li>
                     ))}
@@ -219,13 +309,19 @@ const RoleConfirmation: React.FC<RoleConfirmationProps> = ({ onConfirm }) => {
                 </div>
               </div>
               
-              {/* Add back the button for each role */}
+              {/* Button for each role */}
               <div className="mt-auto">
                 <button
                   className={`w-full py-2 px-4 rounded-md text-white font-medium
-                    ${card.color === 'green' ? 'bg-green-500 hover:bg-green-600' : 'bg-[#1a73e8] hover:bg-[#1765cc]'}
+                    ${card.color === 'green' ? 'bg-green-500 hover:bg-green-600' : 
+                      card.color === 'purple' ? 'bg-purple-500 hover:bg-purple-600' : 
+                      'bg-[#1a73e8] hover:bg-[#1765cc]'
+                    }
                     transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 
-                    ${card.color === 'green' ? 'focus:ring-green-500' : 'focus:ring-[#1a73e8]'}
+                    ${card.color === 'green' ? 'focus:ring-green-500' : 
+                      card.color === 'purple' ? 'focus:ring-purple-500' :
+                      'focus:ring-[#1a73e8]'
+                    }
                   `}
                   onClick={() => handleRoleSelection(card.role)}
                   role="button"
@@ -253,6 +349,7 @@ const RoleConfirmation: React.FC<RoleConfirmationProps> = ({ onConfirm }) => {
             <p className="font-mono">Available roles: {availableRoles.join(', ') || 'None'}</p>
             <p className="font-mono">Context roles: {roleContext?.availableRoles?.join(', ') || 'None'}</p>
             <p className="font-mono">Showing roles: {roleCards.map(r => r.role).join(', ')}</p>
+            <p className="font-mono">User pubkey: {auth && auth.pubkey ? auth.pubkey : 'Not available'}</p>
           </div>
         )}
       </div>
