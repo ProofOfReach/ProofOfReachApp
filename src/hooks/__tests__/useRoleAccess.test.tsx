@@ -1,143 +1,175 @@
-/**
- * Direct unit tests for useRoleAccess hook without rendering
- * This avoids JSDOM issues with renderHook
- */
+import { renderHook, act } from '@testing-library/react';
+import { useRouter } from 'next/router';
+import useRoleAccess from '../useRoleAccess';
+import { RoleManager } from '@/services/roleManager';
 
-import { useRoleAccess } from '../useRoleAccess';
-import { unifiedRoleService } from '../../lib/unifiedRoleService';
-import { 
-  checkPermission, 
-  checkRouteAccess, 
-  getRoleCapabilities
-} from '../../lib/accessControl';
-
-// Mock dependencies
+// Mock Next.js router
 jest.mock('next/router', () => ({
-  useRouter: jest.fn().mockReturnValue({
+  useRouter: jest.fn(),
+}));
+
+// Mock RoleManager service
+jest.mock('@/services/roleManager', () => ({
+  RoleManager: {
+    getCurrentRole: jest.fn(),
+    getAvailableRoles: jest.fn(),
+    setCurrentRole: jest.fn(),
+  },
+}));
+
+describe('useRoleAccess', () => {
+  // Setup mock router
+  const mockRouter = {
     pathname: '/dashboard',
-    push: jest.fn()
-  })
-}));
-
-jest.mock('../../lib/unifiedRoleService', () => ({
-  unifiedRoleService: {
-    getCurrentRoleFromLocalContext: jest.fn().mockReturnValue('user'),
-    getAvailableRoles: jest.fn().mockReturnValue(['user', 'advertiser']),
-    setCurrentRoleInLocalContext: jest.fn()
-  }
-}));
-
-jest.mock('../../lib/accessControl', () => ({
-  checkPermission: jest.fn().mockReturnValue(true),
-  checkRouteAccess: jest.fn().mockReturnValue(true),
-  getRoleCapabilities: jest.fn().mockReturnValue({
-    VIEW_ANALYTICS: true,
-    CREATE_ADS: false,
-    MANAGE_CAMPAIGNS: false,
-    MANAGE_AD_PLACEMENTS: false,
-    MANAGE_USERS: false,
-    VIEW_PUBLISHER_STATS: false
-  }),
-  accessControl: {
-    permissions: {},
-    routes: {}
-  }
-}));
-
-// Mock React hook functions directly instead of trying to test them
-jest.mock('react', () => {
-  const actualReact = jest.requireActual('react');
-  return {
-    ...actualReact,
-    useState: jest.fn().mockImplementation(initialValue => [initialValue, jest.fn()]),
-    useEffect: jest.fn().mockImplementation(cb => cb()),
-    useCallback: jest.fn().mockImplementation(cb => cb),
-    useMemo: jest.fn().mockImplementation(cb => cb())
+    push: jest.fn(),
   };
-});
 
-describe('useRoleAccess Hook', () => {
   beforeEach(() => {
     jest.clearAllMocks();
+    
+    // Default router setup
+    (useRouter as jest.Mock).mockReturnValue(mockRouter);
+    
+    // Default RoleManager setup
+    (RoleManager.getCurrentRole as jest.Mock).mockReturnValue('viewer');
+    (RoleManager.getAvailableRoles as jest.Mock).mockReturnValue(['viewer', 'advertiser', 'publisher']);
+    (RoleManager.setCurrentRole as jest.Mock).mockResolvedValue(true);
+    
+    // Mock document events
+    document.addEventListener = jest.fn();
+    document.removeEventListener = jest.fn();
   });
-  
-  // Test direct function calls instead of hook rendering
-  describe('Direct function tests', () => {
-    it('should get current role from unifiedRoleService', () => {
-      // Call the hook
-      const hook = useRoleAccess();
-      
-      // Verify service was called
-      expect(unifiedRoleService.getCurrentRoleFromLocalContext).toHaveBeenCalled();
-      expect(hook.currentRole).toBe('user');
+
+  it('initializes with the current role from RoleManager', () => {
+    (RoleManager.getCurrentRole as jest.Mock).mockReturnValue('publisher');
+    
+    const { result } = renderHook(() => useRoleAccess());
+    
+    expect(result.current.currentRole).toBe('publisher');
+    expect(RoleManager.getCurrentRole).toHaveBeenCalled();
+  });
+
+  it('provides a list of available roles', () => {
+    const mockRoles = ['viewer', 'advertiser', 'publisher', 'admin'];
+    (RoleManager.getAvailableRoles as jest.Mock).mockReturnValue(mockRoles);
+    
+    const { result } = renderHook(() => useRoleAccess());
+    
+    expect(result.current.availableRoles).toEqual(mockRoles);
+    expect(RoleManager.getAvailableRoles).toHaveBeenCalled();
+  });
+
+  it('checks capability based on current role', () => {
+    (RoleManager.getCurrentRole as jest.Mock).mockReturnValue('advertiser');
+    
+    const { result } = renderHook(() => useRoleAccess());
+    
+    // Advertiser capabilities
+    expect(result.current.hasCapability('viewContent')).toBe(true);
+    expect(result.current.hasCapability('createCampaign')).toBe(true);
+    
+    // Admin-only capabilities
+    expect(result.current.hasCapability('manageUsers')).toBe(false);
+    expect(result.current.hasCapability('editAnyCampaign')).toBe(false);
+  });
+
+  it('validates role access levels correctly', () => {
+    (RoleManager.getCurrentRole as jest.Mock).mockReturnValue('admin');
+    
+    const { result } = renderHook(() => useRoleAccess());
+    
+    // Admin can access all roles
+    expect(result.current.checkRole('viewer').isAllowed).toBe(true);
+    expect(result.current.checkRole('advertiser').isAllowed).toBe(true);
+    expect(result.current.checkRole('publisher').isAllowed).toBe(true);
+    expect(result.current.checkRole('admin').isAllowed).toBe(true);
+    
+    // Even admin can't access developer role
+    expect(result.current.checkRole('developer').isAllowed).toBe(false);
+  });
+
+  it('checks route access based on role permissions', () => {
+    // First test with viewer role
+    (RoleManager.getCurrentRole as jest.Mock).mockReturnValue('viewer');
+    mockRouter.pathname = '/dashboard/admin';
+    
+    const { result, rerender } = renderHook(() => useRoleAccess());
+    
+    // Viewer can't access admin routes
+    expect(result.current.checkRouteAccess().isAllowed).toBe(false);
+    
+    // Now test with admin role
+    (RoleManager.getCurrentRole as jest.Mock).mockReturnValue('admin');
+    rerender();
+    
+    // Admin can access admin routes
+    expect(result.current.checkRouteAccess().isAllowed).toBe(true);
+  });
+
+  it('enforces route access with redirects', () => {
+    (RoleManager.getCurrentRole as jest.Mock).mockReturnValue('viewer');
+    mockRouter.pathname = '/dashboard/admin/settings';
+    
+    const { result } = renderHook(() => useRoleAccess());
+    
+    // Should redirect and return false
+    expect(result.current.enforceRouteAccess()).toBe(false);
+    expect(mockRouter.push).toHaveBeenCalledWith('/dashboard');
+    
+    // Reset and try with admin
+    jest.clearAllMocks();
+    (RoleManager.getCurrentRole as jest.Mock).mockReturnValue('admin');
+    const { result: adminResult } = renderHook(() => useRoleAccess());
+    
+    // Should not redirect and return true
+    expect(adminResult.current.enforceRouteAccess()).toBe(true);
+    expect(mockRouter.push).not.toHaveBeenCalled();
+  });
+
+  it('updates role when setRole is called', async () => {
+    const { result } = renderHook(() => useRoleAccess());
+    
+    await act(async () => {
+      const success = await result.current.setRole('publisher');
+      expect(success).toBe(true);
     });
     
-    it('should get available roles from unifiedRoleService', () => {
-      const hook = useRoleAccess();
-      
-      expect(unifiedRoleService.getAvailableRoles).toHaveBeenCalled();
-      expect(hook.availableRoles).toEqual(['user', 'advertiser']);
+    expect(RoleManager.setCurrentRole).toHaveBeenCalledWith('publisher');
+    expect(result.current.currentRole).toBe('publisher');
+  });
+
+  it('handles role change events', () => {
+    // Capture the event listener
+    let roleChangeHandler: EventListener;
+    (document.addEventListener as jest.Mock).mockImplementation((event, handler) => {
+      if (event === 'roleSwitched') {
+        roleChangeHandler = handler;
+      }
     });
     
-    it('should provide permission checking through can() method', () => {
-      const hook = useRoleAccess();
-      const result = hook.can('VIEW_ANALYTICS');
-      
-      expect(checkPermission).toHaveBeenCalledWith('VIEW_ANALYTICS', 'user');
-      expect(result).toBe(true);
+    const { result } = renderHook(() => useRoleAccess());
+    expect(document.addEventListener).toHaveBeenCalledWith('roleSwitched', expect.any(Function));
+    
+    // Initial role is viewer
+    expect(result.current.currentRole).toBe('viewer');
+    
+    // Simulate role change event
+    act(() => {
+      const customEvent = new CustomEvent('roleSwitched', { 
+        detail: { from: 'viewer', to: 'admin' } 
+      });
+      roleChangeHandler(customEvent);
     });
     
-    it('should provide route access checking', () => {
-      const hook = useRoleAccess();
-      const result = hook.canAccess('/dashboard');
-      
-      expect(checkRouteAccess).toHaveBeenCalledWith('/dashboard', 'user');
-      expect(result).toBe(true);
-    });
+    // Role should be updated
+    expect(result.current.currentRole).toBe('admin');
+  });
+
+  it('cleans up event listeners on unmount', () => {
+    const { unmount } = renderHook(() => useRoleAccess());
     
-    it('should check current route access', () => {
-      const hook = useRoleAccess();
-      
-      expect(hook.canAccessCurrentRoute).toBe(true);
-      expect(checkRouteAccess).toHaveBeenCalledWith('/dashboard', 'user');
-    });
+    unmount();
     
-    it('should get role capabilities', () => {
-      const hook = useRoleAccess();
-      const capabilities = hook.capabilities;
-      
-      expect(getRoleCapabilities).toHaveBeenCalledWith('user');
-      expect(capabilities.VIEW_ANALYTICS).toBe(true);
-      expect(capabilities.MANAGE_USERS).toBe(false);
-    });
-    
-    it('should provide a hasRole method to check specific roles', () => {
-      const hook = useRoleAccess();
-      
-      expect(hook.hasRole('user')).toBe(true);
-      expect(hook.hasRole('admin')).toBe(false);
-    });
-    
-    it('should provide role-specific boolean flags', () => {
-      // Test with user role
-      (unifiedRoleService.getCurrentRoleFromLocalContext as jest.Mock).mockReturnValue('user');
-      const userHook = useRoleAccess();
-      
-      expect(userHook.isUser).toBe(true);
-      expect(userHook.isAdmin).toBe(false);
-      expect(userHook.isAdvertiser).toBe(false);
-      expect(userHook.isPublisher).toBe(false);
-      expect(userHook.isStakeholder).toBe(false);
-      
-      // Test with admin role
-      (unifiedRoleService.getCurrentRoleFromLocalContext as jest.Mock).mockReturnValue('admin');
-      const adminHook = useRoleAccess();
-      
-      expect(adminHook.isUser).toBe(false);
-      expect(adminHook.isAdmin).toBe(true);
-      expect(adminHook.isAdvertiser).toBe(false);
-      expect(adminHook.isPublisher).toBe(false);
-      expect(adminHook.isStakeholder).toBe(false);
-    });
+    expect(document.removeEventListener).toHaveBeenCalledWith('roleSwitched', expect.any(Function));
   });
 });
