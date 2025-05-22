@@ -6,22 +6,18 @@ import { OnboardingProvider } from '@/context/OnboardingContext';
 import Loading from '@/components/Loading';
 import { UserRoleType } from '@/types/role';
 import { logger } from '@/lib/logger';
-import { hasNostrExtension } from '@/lib/nostr';
 
 /**
- * Pure Client-Side Onboarding Component
+ * Client-Side Onboarding Component
  * 
- * This component is designed to completely avoid SSR hydration issues by:
- * 1. Only rendering substantial content on the client side
- * 2. Safely detecting browser-specific features like Nostr extensions
- * 3. Providing a clear loading state during initialization
- * 
- * It pairs with the lazy-loading technique in the parent page to create
- * a seamless experience that never causes hydration mismatches.
+ * This component handles the onboarding flow with the following features:
+ * 1. Client-side rendering for consistent user experience
+ * 2. Role-based flow selection based on URL parameters or user selection
+ * 3. Integration with our authentication system
+ * 4. Proper state management for onboarding progress
  */
 const ClientOnboarding: React.FC = () => {
   const [isReady, setIsReady] = useState(false);
-  const [nostrDetected, setNostrDetected] = useState<boolean | null>(null);
   const router = useRouter();
   const { authState, isLoading: authLoading } = useAuthRefactored();
   
@@ -37,19 +33,9 @@ const ClientOnboarding: React.FC = () => {
     }
   }, [urlRole]);
   
-  // Check for Nostr extension once we're on the client
+  // Initialize client-side state and SDK integration
   useEffect(() => {
-    // Safely detect the Nostr extension
-    try {
-      const extensionDetected = hasNostrExtension();
-      setNostrDetected(extensionDetected);
-      logger.debug('Nostr extension detection result', { detected: extensionDetected });
-    } catch (error) {
-      logger.error('Error detecting Nostr extension', { error });
-      setNostrDetected(false);
-    }
-
-    // Set ready state after ensuring all client-side checks are complete
+    // Set ready state after client-side initialization
     const timer = setTimeout(() => {
       setIsReady(true);
     }, 100);
@@ -72,9 +58,8 @@ const ClientOnboarding: React.FC = () => {
   // Render the full onboarding experience with proper context
   return (
     <OnboardingProvider 
-      forcePubkey={authState?.pubkey} 
-      initialRole={urlRole} 
-      hasNostrExtension={nostrDetected ?? false}
+      forcePubkey={authState?.pubkey}
+      initialRole={urlRole}
       data-testid="onboarding-provider"
     >
       <div data-testid="onboarding-wizard">

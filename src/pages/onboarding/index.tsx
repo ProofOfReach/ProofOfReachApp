@@ -8,46 +8,52 @@ import { logger } from '@/lib/logger';
 import Loading from '@/components/Loading';
 
 /**
- * Zero Server-Side Rendering Pattern for Browser Extension Integration
+ * Client-Side Rendering Pattern for Authentication-Dependent Components
  * 
- * This pattern completely avoids hydration mismatches by rendering different content
- * on the server versus the client. It's specifically designed for components that:
- *  1. Interact with browser extensions (like Nostr)
- *  2. Use browser-specific APIs not available during SSR
- *  3. Need to prevent any hydration mismatches
+ * This pattern prevents hydration mismatches by ensuring components that rely on
+ * client-side authentication are only rendered in the browser. It's designed for:
+ *  1. Components that need access to client-side authentication state
+ *  2. Interactive flows that depend on user-specific data
+ *  3. Components that use browser APIs unavailable during server rendering
  *
  * How it works:
- *  - On the server: Renders a minimal placeholder with no extension-dependent markup
+ *  - On the server: Renders a minimal placeholder that doesn't depend on auth state
  *  - On the client: Dynamically imports and renders the full interactive component
- *  - Uses React.lazy + Suspense to handle the async loading gracefully
+ *  - Uses React.lazy + Suspense for proper code splitting and loading states
  */
 
 // Define a type that's compatible with both server and client components
 type LazyComponentType = React.ComponentType<any>;
 
-// Component that handles the clean client/server rendering separation
+// Component that handles the client-side rendering of authentication-dependent flows
 const ClientSideOnboarding = React.lazy<LazyComponentType>(() => {
-  // Server-side case
+  // When on the server, return a minimal placeholder component
   if (typeof window === 'undefined') {
     return Promise.resolve({
-      // Return a minimal placeholder component that renders a single empty div
-      // This ensures the server and client will never have structural differences
-      default: function ServerPlaceholder() { 
+      default: function ServerOnlyPlaceholder() { 
         return React.createElement('div', { 
-          'data-hydration-placeholder': true, 
-          className: 'onboarding-placeholder' 
+          'data-testid': 'onboarding-server-placeholder',
+          className: 'onboarding-placeholder flex items-center justify-center min-h-[200px]',
+          style: { opacity: 0 }
         }); 
       }
     });
   }
   
-  // Client-side case: dynamically import the real interactive component
+  // On the client, load the full interactive onboarding experience
   return import('@/components/onboarding/ClientOnboarding');
 });
 
 /**
- * Completely simplified onboarding page that renders a placeholder on the server
- * and loads everything on the client side to avoid hydration issues
+ * Role-Based Onboarding Page
+ * 
+ * This page handles the user onboarding experience with role-specific flows for:
+ * - Viewers: Browse content and personalize preferences
+ * - Publishers: Set up ad spaces and integration
+ * - Advertisers: Create campaigns and set budgets
+ * 
+ * It uses client-side rendering to ensure authentication state is properly handled,
+ * preventing any hydration mismatches between server and client.
  */
 const OnboardingPage: React.FC = () => {
   const router = useRouter();
