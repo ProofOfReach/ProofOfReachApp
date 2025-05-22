@@ -2,7 +2,8 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import { requireAuth } from '@/lib/auth';
 import { generateChartData } from '@/utils/chartHelpers';
 import { DailyMetrics } from '@/services/analyticsService';
-import differenceInDays from 'date-fns/differenceInDays';
+// Import from utils wrapper to avoid ESM compatibility issues
+import { getDaysDifference } from '@/utils/dateUtils';
 
 // API handler for fetching publisher earnings data
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
@@ -20,7 +21,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       const endDate = end ? new Date(end as string) : today;
       
       // Calculate number of days in the range
-      const daysDiff = differenceInDays(endDate, startDate) + 1;
+      const daysDiff = getDaysDifference(endDate, startDate) + 1;
       
       // In a real implementation, this would fetch data from the database
       // For now, generate sample data

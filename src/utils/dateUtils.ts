@@ -68,3 +68,14 @@ export function formatLocaleDate(
   const dateObj = date instanceof Date ? date : new Date(date);
   return dateObj.toLocaleDateString(locales, options);
 }
+
+/**
+ * Get the difference in days between two dates
+ * @param endDate The end date
+ * @param startDate The start date
+ * @returns Number of days between the dates
+ */
+export function getDaysDifference(endDate: Date, startDate: Date): number {
+  const diffTime = Math.abs(endDate.getTime() - startDate.getTime());
+  return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+}

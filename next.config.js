@@ -1,7 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: false, // Disable strict mode in development to reduce renders
-  swcMinify: true, // Use SWC minifier for better performance
+  // Note: swcMinify is now the default in Next.js 15+
   async headers() {
     return [
       {
