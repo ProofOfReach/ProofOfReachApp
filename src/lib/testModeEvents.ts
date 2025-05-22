@@ -1,20 +1,20 @@
 /**
- * Test Mode Event System (Legacy)
+ * Modernized Test Mode Event System
  * 
- * DEPRECATED: Use the new event system from @/lib/events instead.
- * 
- * This file is kept for backward compatibility with existing code,
- * but new code should use the unified event system instead.
+ * This file serves as a compatibility layer between the legacy test mode event system
+ * and the new unified event system. It directly uses the modern event system internally
+ * while maintaining the original API for backward compatibility.
  */
 
 import { logger } from './logger';
 import {
-  TEST_MODE_EVENTS as NEW_TEST_MODE_EVENTS,
-  ROLE_EVENTS,
-  TestModeEventPayloads as NewTestModeEventPayloads,
+  dispatchRoleEvent,
   dispatchTestModeEvent as newDispatchTestModeEvent,
   dispatchAppEvent,
-  addAppEventListener
+  addAppEventListener,
+  TEST_MODE_EVENTS as NEW_TEST_MODE_EVENTS,
+  ROLE_EVENTS,
+  TestModeEventPayloads as NewTestModeEventPayloads
 } from './events';
 import { UserRole } from '@/context/RoleContext';
 import { TestModeState } from '@/services/storageService';
@@ -22,10 +22,10 @@ import { TestModeState } from '@/services/storageService';
 // Re-export the new event names with the old naming for backward compatibility
 export const TEST_MODE_EVENTS = {
   STATE_CHANGED: NEW_TEST_MODE_EVENTS.STATE_CHANGED,
-  ROLE_CHANGED: ROLE_EVENTS.ROLE_CHANGED, // This changed in the new system
+  ROLE_CHANGED: ROLE_EVENTS.ROLE_CHANGED,
   ACTIVATED: NEW_TEST_MODE_EVENTS.ACTIVATED,
   DEACTIVATED: NEW_TEST_MODE_EVENTS.DEACTIVATED,
-  ROLES_UPDATED: ROLE_EVENTS.ROLES_UPDATED, // This changed in the new system
+  ROLES_UPDATED: ROLE_EVENTS.ROLES_UPDATED,
 } as const;
 
 // Define the type for event names
@@ -52,7 +52,7 @@ export type TestModeEventPayloads = {
 
 /**
  * Dispatch a test mode event with type-safe payload
- * DEPRECATED: Use the new event system from @/lib/events instead.
+ * This implementation now directly uses the modern event system
  */
 export const dispatchTestModeEvent = <T extends TestModeEventType>(
   eventType: T, 
@@ -61,28 +61,22 @@ export const dispatchTestModeEvent = <T extends TestModeEventType>(
   try {
     if (typeof window === 'undefined') return;
     
-    // Log deprecation warning in development
-    if (process.env.NODE_ENV === 'development') {
-      logger.warn(`DEPRECATED: Using old testModeEvents.ts is deprecated. Use the new event system from @/lib/events instead.`);
-    }
-    
-    // Map to the new event system using the new imported dispatcher directly
+    // Directly use the modern event system
     switch (eventType) {
       case TEST_MODE_EVENTS.STATE_CHANGED:
-        // Use the appropriate dispatcher from new event system
-        dispatchAppEvent(NEW_TEST_MODE_EVENTS.STATE_CHANGED, payload as any);
+        newDispatchTestModeEvent(NEW_TEST_MODE_EVENTS.STATE_CHANGED, payload as any);
         break;
       case TEST_MODE_EVENTS.ROLE_CHANGED:
-        dispatchAppEvent(ROLE_EVENTS.ROLE_CHANGED, payload as any);
+        dispatchRoleEvent(ROLE_EVENTS.ROLE_CHANGED, payload as any);
         break;
       case TEST_MODE_EVENTS.ACTIVATED:
-        dispatchAppEvent(NEW_TEST_MODE_EVENTS.ACTIVATED, payload as any);
+        newDispatchTestModeEvent(NEW_TEST_MODE_EVENTS.ACTIVATED, payload as any);
         break;
       case TEST_MODE_EVENTS.DEACTIVATED:
-        dispatchAppEvent(NEW_TEST_MODE_EVENTS.DEACTIVATED, payload as any);
+        newDispatchTestModeEvent(NEW_TEST_MODE_EVENTS.DEACTIVATED, payload as any);
         break;
       case TEST_MODE_EVENTS.ROLES_UPDATED:
-        dispatchAppEvent(ROLE_EVENTS.ROLES_UPDATED, payload as any);
+        dispatchRoleEvent(ROLE_EVENTS.ROLES_UPDATED, payload as any);
         break;
       default:
         logger.error(`Unknown event type: ${eventType}`);
@@ -94,17 +88,12 @@ export const dispatchTestModeEvent = <T extends TestModeEventType>(
 
 /**
  * Add an event listener for a test mode event
- * DEPRECATED: Use the new event system from @/lib/events instead.
+ * This implementation now directly uses the modern event system
  */
 export const addTestModeEventListener = <T extends TestModeEventType>(
   eventType: T,
   handler: (payload: T extends keyof TestModeEventPayloads ? TestModeEventPayloads[T] : never) => void
 ): () => void => {
-  // Log deprecation warning in development
-  if (process.env.NODE_ENV === 'development') {
-    logger.warn(`DEPRECATED: Using old testModeEvents.ts is deprecated. Use the new event system from @/lib/events instead.`);
-  }
-  
   // Map to the corresponding event in the new system
   switch (eventType) {
     case TEST_MODE_EVENTS.STATE_CHANGED:
@@ -125,7 +114,6 @@ export const addTestModeEventListener = <T extends TestModeEventType>(
 
 /**
  * Check if a string is a valid TestModeEventType
- * DEPRECATED: Use the new event system from @/lib/events instead.
  */
 export const isTestModeEventType = (eventType: string): eventType is TestModeEventType => {
   return Object.values(TEST_MODE_EVENTS).includes(eventType as TestModeEventType);
