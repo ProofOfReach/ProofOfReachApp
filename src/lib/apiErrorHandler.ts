@@ -140,7 +140,7 @@ export function handleApiRouteError(
     }
     // Handle not found errors
     else if (error.name === 'NotFoundError') {
-      category = ErrorCategory.RESOURCE;
+      category = ErrorCategory.EXTERNAL;
       statusCode = 404;
       userMessage = error.message;
       errorCode = ErrorCode.NOT_FOUND;
@@ -236,8 +236,7 @@ export function handleApiRouteError(
     'api',
     category === ErrorCategory.OPERATIONAL ? 'error' : 'warning',
     {
-      code: errorCode,
-      correlationId,
+      correlationId: correlationId as string,
       category,
       retryable,
       recoverable,
@@ -265,7 +264,7 @@ export function handleApiRouteError(
       code: errorCode,
       status: statusCode,
       requestId: requestId as string,
-      correlationId,
+      correlationId: correlationId as string,
       retryable,
       suggestedAction,
       details: Object.keys(errorDetails).length > 0 ? errorDetails : undefined
@@ -328,7 +327,7 @@ export function createNotFoundError(
 ): Error {
   const error = new Error(message);
   error.name = 'NotFoundError';
-  (error as any).category = ErrorCategory.RESOURCE;
+  (error as any).category = ErrorCategory.EXTERNAL;
   (error as any).userFacing = true;
   (error as any).code = ErrorCode.NOT_FOUND;
   (error as any).retryable = false;
@@ -549,7 +548,7 @@ export function sanitizeRequestBody(body: any): any {
  */
 export async function withRetry<T>(
   fn: () => Promise<T>,
-  options?: Partial<RetryOptions>
+  options?: any
 ): Promise<T> {
   return errorService.withRetry(fn, options);
 }

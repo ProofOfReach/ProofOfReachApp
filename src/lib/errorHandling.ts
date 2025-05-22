@@ -119,10 +119,10 @@ export function mapError(err: unknown): AppError {
 
   // Handle non-Error objects or unrecognized types
   return createErrorResponse(
-    err.name || ErrorType.Internal,
-    err.message || 'An unexpected error occurred',
-    err.status || 500,
-    err.details
+    (err as any).name || 'Internal',
+    (err as any).message || 'An unexpected error occurred',
+    (err as any).status || 500,
+    (err as any).details
   );
 }
 
