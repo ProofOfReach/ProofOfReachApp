@@ -1,5 +1,39 @@
 # Project Learnings
 
+## 2025-05-22 — Currency Switcher and Format Conversion Systems
+
+**Session Goal:** Fix issues with the currency switcher in the sidebar not properly responding to user clicks and update currency display throughout the application.
+
+**Problem Identified:**
+- The currency switcher buttons in the sidebar weren't changing the currency display when clicked
+- Currency amount displays throughout the app weren't properly converting between BTC (satoshis) and USD
+- Complex state management and event handling in currency components made debugging difficult
+- Currency context events weren't consistently propagating to all components that display monetary values
+- React rendering lifecycle wasn't properly triggered when currency preferences changed
+
+**What Was Done:**
+- Simplified the CurrencyAmount component to directly use the currency context without complex state
+- Enhanced the CurrencyContext with more robust event handling and state management
+- Streamlined the CurrencyToggle component to use direct button handlers
+- Removed complex state management that was causing issues with currency switching
+- Improved event dispatching for currency changes across the application
+- Added a CurrencyWrapper component to force re-renders when currency changes
+
+**Lessons Learned:**
+- Context-based state management works best when components directly use context values without intermediate state
+- Event-based systems need careful design to ensure proper propagation to all related components
+- Currency conversions should be handled at the display level, not stored in intermediate state
+- React's rendering lifecycle can be difficult to debug when multiple components share state
+- Testing real-time UI interactions is crucial for systems like currency switching
+- The proper pattern for currency-aware components is to directly read from context without caching
+
+**Open Questions / Next Steps:**
+1. Consider a more comprehensive refactor of the currency system with simpler architecture
+2. Add better diagnostics to track when currency changes occur but don't propagate
+3. Implement visual indicators when currency is changing to provide user feedback
+4. Add unit tests specifically for currency switching functionality
+5. Evaluate potential performance implications of frequent currency toggle operations
+
 ## 2025-05-21 (Part 2) — Onboarding Step Numbering and UI Refinements
 
 **Session Goal:** Improve the step numbering for Nostr extension users and enhance UI consistency across the platform.
