@@ -150,7 +150,7 @@ export function handleApiRouteError(
     }
     // Handle authentication/authorization errors
     else if (error.name === 'UnauthorizedError') {
-      category = ErrorCategory.AUTHORIZATION;
+      category = ErrorCategory.PERMISSIONS;
       statusCode = 401;
       userMessage = 'Authentication required';
       errorCode = ErrorCode.UNAUTHORIZED;
@@ -159,7 +159,7 @@ export function handleApiRouteError(
       retryable = false;   // Automatic retry won't help
     }
     else if (error.name === 'ForbiddenError') {
-      category = ErrorCategory.AUTHORIZATION;
+      category = ErrorCategory.PERMISSIONS;
       statusCode = 403;
       userMessage = 'You do not have permission to perform this action';
       errorCode = ErrorCode.FORBIDDEN;
@@ -238,17 +238,12 @@ export function handleApiRouteError(
     {
       correlationId: correlationId as string,
       category,
-      retryable,
-      recoverable,
       userFacing: true,
-      suggestedAction,
-      retry: retryFunction,
       data: {
         statusCode,
         route,
         method: req.method,
         query: req.query,
-        // Don't log request body in production to avoid sensitive data exposure
         body: process.env.NODE_ENV !== 'production' ? sanitizeRequestBody(req.body) : '[REDACTED]',
         headers: sanitizeHeaders(req.headers),
         requestId
@@ -354,7 +349,7 @@ export function createUnauthorizedError(
 ): Error {
   const error = new Error(message);
   error.name = 'UnauthorizedError';
-  (error as any).category = ErrorCategory.AUTHORIZATION;
+  (error as any).category = ErrorCategory.PERMISSIONS;
   (error as any).userFacing = true;
   (error as any).code = ErrorCode.UNAUTHORIZED;
   (error as any).retryable = false;
@@ -375,7 +370,7 @@ export function createForbiddenError(
 ): Error {
   const error = new Error(message);
   error.name = 'ForbiddenError';
-  (error as any).category = ErrorCategory.AUTHORIZATION;
+  (error as any).category = ErrorCategory.PERMISSIONS;
   (error as any).userFacing = true;
   (error as any).code = ErrorCode.FORBIDDEN;
   (error as any).retryable = false;
