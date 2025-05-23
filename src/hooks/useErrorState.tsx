@@ -159,7 +159,7 @@ export function useErrorState() {
         severity: (error.severity as ErrorSeverity) || 'error'
       };
       
-      errorContext.log(errorObj);
+      errorContext.setGlobalError(errorObj);
     }
   }, [isTest, errorContext]);
   
@@ -186,7 +186,7 @@ export function useErrorState() {
       }
     } else if (errorContext) {
       // In real environment
-      errorContext.log();
+      errorContext.clearAllErrors();
     }
   }, [isTest, errorContext]);
   
@@ -234,7 +234,7 @@ export function useErrorState() {
         severity
       };
       
-      errorContext.log(errorState);
+      errorContext.addError(errorState);
     }
   }, [isTest, errorContext]);
   
@@ -252,9 +252,9 @@ export function useErrorState() {
     logError,
     
     // Current error state from context (or empty values in test)
-    errors: errorContext?.state.logs || [],
+    errors: errorContext?.state.errors || [],
     globalError: errorContext?.state.globalError || null,
     toastError: errorContext?.state.toastError || null,
-    hasErrors: errorContext?.state.logs ? errorContext.state.logs.length > 0 : false,
+    hasErrors: errorContext?.state.errors ? errorContext.state.errors.length > 0 : false,
   };
 }

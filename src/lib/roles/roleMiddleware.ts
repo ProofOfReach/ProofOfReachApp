@@ -145,12 +145,7 @@ export function requirePermission(permissions: Array<keyof RolePermissions>) {
         logger.warn(`Permission denied for user ${userId} - missing: ${missingPermissions.join(', ')}`);
         return res.status(403).json({
           log: false,
-          error: null as any // TODO: implement roleService.formatError(
-            RoleErrorType.PERMISSION_DENIED, 
-            'You do not have all required permissions',
-            403,
-            { requiredPermissions: permissions, missingPermissions }
-          )
+          error: null as any // TODO: implement roleService.formatError
         });
       }
       
