@@ -29,7 +29,7 @@ export default async function handler(
     const users = await prisma.user.findMany({
       select: {
         id: true,
-        pubkey: true,
+        // pubkey: true, // TODO: add pubkey field to User model
         name: true,
         createdAt: true,
         updatedAt: true,
