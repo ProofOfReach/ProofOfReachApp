@@ -5,9 +5,11 @@
  * to provide role-based access control.
  */
 import { NextApiRequest, NextApiResponse } from 'next';
-import { getSessionFromToken } from '../auth';
+import { getSessionFromRequest } from '../auth';
 import { getRoleCapabilities } from '../accessControl';
-import { errorService } from '../errorService';
+import { ErrorService } from '../errorService';
+
+const errorService = new ErrorService();
 
 type UserRole = 'viewer' | 'advertiser' | 'publisher' | 'admin' | 'stakeholder';
 
