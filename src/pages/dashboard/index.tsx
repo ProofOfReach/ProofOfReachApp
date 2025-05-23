@@ -17,7 +17,7 @@ import '@/components/layout/ImprovedDashboardLayout';
 import '@/components/ui/StatCard';
 import CurrencyAmount from '@/components/CurrencyAmount';
 import DashboardCard from '@/components/ui/DashboardCard';
-import '@/components/CurrencyWrapper';
+import CurrencyWrapper from '@/components/CurrencyWrapper';
 import '@/lib/roleService';
 import { getDashboardLayout } from '@/utils/layoutHelpers';
 import { useRole } from '@/context/RoleContext';
