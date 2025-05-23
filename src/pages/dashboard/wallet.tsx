@@ -17,6 +17,7 @@ import { getDashboardLayout } from '@/utils/layoutHelpers';
 import type { NextPageWithLayout } from '../_app';
 import { defaultUseRoleAccess } from '@/hooks/useRoleAccess';
 import { useTestMode } from '@/context/TestModeContext';
+import { useTestWallet } from '@/hooks/useTestWallet';
 
 // Fetch balance from the API
 const fetcher = (url: string) => fetch(url).then(res => res.json());
