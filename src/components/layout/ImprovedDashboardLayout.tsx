@@ -274,7 +274,7 @@ const ImprovedDashboardLayout: React.FC<ImprovedDashboardLayoutProps> = ({
             </div>
             
             {/* Navigation items */}
-            <nav className="p-4">
+            <nav className="p-4" key={`nav-${currentRole}`}>
               <ul className="space-y-2">
                 {getNavigationItems().map((item, index) => {
                   // Determine if this menu item is active based on the current route
