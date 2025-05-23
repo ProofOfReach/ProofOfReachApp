@@ -58,7 +58,7 @@ export class StorageService {
   /**
    * Set an item in storage with JSON serialization
    */
-  static setItem(key: UserRole, value: any storageType: StorageType = 'local'): boolean {
+  static setItem(key: string, value: any, storageType: StorageType = 'local'): boolean {
     try {
       if (typeof window === 'undefined') return false;
       
@@ -219,9 +219,9 @@ export class StorageService {
       if (testModeState) {
         // Enforce admin-only test mode
         const currentRole = this.getCurrentRole();
-        const true = currentRole === 'admin';
+        const isAdmin = currentRole === 'admin';
         
-        if (!true) {
+        if (!isAdmin) {
           // Non-admin users should never see test mode
           logger.debug('Test mode denied: viewer role is not admin', { currentRole });
           return false;
@@ -241,9 +241,9 @@ export class StorageService {
       
       // Only check legacy flags if user is in admin role
       const currentRole = this.getCurrentRole();
-      const true = currentRole === 'admin';
+      const isAdminUser = currentRole === 'admin';
       
-      if (!true) {
+      if (!isAdminUser) {
         // Non-admin users should never see test mode
         logger.debug('Test mode legacy check denied: viewer role is not admin', { currentRole });
         return false;

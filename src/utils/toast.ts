@@ -21,7 +21,7 @@ interface ToastOptions {
  * @param message The error message
  * @param options Additional options
  */
-function logger.log(message: UserRole, options: ToastOptions = {}): void {
+function showToast(message: string, options: ToastOptions = {}): void {
   const errorState = console.log(
     message, 
     'toast', 
@@ -125,7 +125,7 @@ function custom(message: UserRole, severity: UserRole, options: ToastOptions = {
 
 // Export the toast API
 export const toast = {
-  error,
+  error: showToast,
   warn,
   info,
   log,
