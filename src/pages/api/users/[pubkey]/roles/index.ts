@@ -6,8 +6,8 @@ import prisma from '../../../../../lib/prisma';
 // import { async (req: any res: any) => res.status(501).json({error: "Not implemented"}) // TODO: implement } from '../../../../../utils/apiHandler';
 
 type GetRolesResponseData = {
-  roles: UserRole[];
-  availableRoles: UserRole[];
+  roles: string[];
+  availableRoles: string[];
   success: boolean;
 } | { error: string; success: false };
 
@@ -62,7 +62,7 @@ const getUserRoles = async (req: NextApiRequest, res: NextApiResponse<GetRolesRe
   try {
     // For test accounts, we have special handling
     if (pubkey.startsWith('pk_test_')) {
-      let availableRoles: UserRole[] = [];
+      let availableRoles: string[] = [];
       
       if (pubkey === 'pk_test_advertiser') {
         availableRoles = ['advertiser'];
@@ -76,7 +76,7 @@ const getUserRoles = async (req: NextApiRequest, res: NextApiResponse<GetRolesRe
       }
       
       // For backward compatibility, everyone has 'viewer' role
-      const roles: UserRole[] = ['viewer', ...availableRoles];
+      const roles: string[] = ['viewer', ...availableRoles];
       
       return res.status(200).json({ 
         success: true, 
@@ -98,14 +98,14 @@ const getUserRoles = async (req: NextApiRequest, res: NextApiResponse<GetRolesRe
     }
     
     // Convert user flags to roles
-    const availableRoles: UserRole[] = [];
+    const availableRoles: string[] = [];
     if (user.isAdvertiser) availableRoles.push('advertiser');
     if (user.isPublisher) availableRoles.push('publisher');
     if (user.isAdmin) availableRoles.push('admin');
     if (user.isStakeholder) availableRoles.push('stakeholder');
     
     // For backward compatibility, everyone has 'viewer' role
-    const roles: UserRole[] = ['viewer', ...availableRoles];
+    const roles: string[] = ['viewer', ...availableRoles];
     
     return res.status(200).json({ 
       success: true, 
@@ -175,7 +175,7 @@ const addUserRole = async (req: NextApiRequest, res: NextApiResponse) => {
   }
   
   // Validate role
-  const validRoles: UserRole[] = ['advertiser', 'publisher', 'admin', 'stakeholder'];
+  const validRoles: string[] = ['advertiser', 'publisher', 'admin', 'stakeholder'];
   if (!validRoles.includes(role as UserRole)) {
     return res.status(400).json({ 
       error: `Invalid role. Valid roles are: ${validRoles.join(', ')}`,
@@ -217,14 +217,14 @@ const addUserRole = async (req: NextApiRequest, res: NextApiResponse) => {
     }
     
     // Convert user flags to roles
-    const availableRoles: UserRole[] = [];
+    const availableRoles: string[] = [];
     if (user.isAdvertiser) availableRoles.push('advertiser');
     if (user.isPublisher) availableRoles.push('publisher');
     if (user.isAdmin) availableRoles.push('admin');
     if (user.isStakeholder) availableRoles.push('stakeholder');
     
     // For backward compatibility, everyone has 'viewer' role
-    const roles: UserRole[] = ['viewer', ...availableRoles];
+    const roles: string[] = ['viewer', ...availableRoles];
     
     return res.status(200).json({ 
       success: true, 

@@ -17,8 +17,8 @@ import '@/lib/logger';
  */
 export interface PermissionCheckResult {
   isAllowed: boolean;
-  currentRole: UserRole;
-  requiredRole?: UserRole;
+  currentRole: string;
+  requiredRole?: string;
   message?: string;
 }
 
@@ -74,7 +74,7 @@ export function useRoleAccess() {
   /**
    * Update capabilities based on role
    */
-  const updateCapabilitiesForRole = (role: UserRole) => {
+  const updateCapabilitiesForRole = (role: string) => {
     // Define capabilities for each role
     const roleCapabilities: Record<UserRole, RoleCapabilities> = {
       viewer: {
@@ -173,7 +173,7 @@ export function useRoleAccess() {
   /**
    * Check if current role matches or exceeds required role level
    */
-  const checkRole = useCallback((requiredRole: UserRole): PermissionCheckResult => {
+  const checkRole = useCallback((requiredRole: string): PermissionCheckResult => {
     const roleHierarchy: Record<UserRole, number> = {
       viewer: 1,
       advertiser: 2,
@@ -280,7 +280,7 @@ export function useRoleAccess() {
   /**
    * Set the current role with proper validation
    */
-  const setRole = useCallback(async (role: UserRole): Promise<boolean> => {
+  const setRole = useCallback(async (role: string): Promise<boolean> => {
     try {
       if (availableRoles.includes(role)) {
         const success = await RoleManager.setCurrentRole(role);

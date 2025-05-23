@@ -22,18 +22,18 @@ export interface UseTestModeResult {
   // State
   isActive: boolean;
   timeRemaining: number | null;
-  currentRole: UserRole;
-  availableRoles: UserRole[];
+  currentRole: string;
+  availableRoles: string[];
   isDevEnvironment: boolean;
   
   // Actions
-  enableTestMode: (duration?: number, initialRole?: UserRole, debug?: boolean) => boolean;
+  enableTestMode: (duration?: number, initialRole?: string, debug?: boolean) => boolean;
   disableTestMode: () => boolean;
-  setCurrentRole: (role: UserRole) => Promise<boolean>;
+  setCurrentRole: (role: string) => Promise<boolean>;
   enableAllRoles: () => boolean;
   
   // Utility functions
-  createTimeLimitedSession: (minutes: number, role?: UserRole) => boolean;
+  createTimeLimitedSession: (minutes: number, role?: string) => boolean;
   createTestScenario: (scenario: 'admin' | 'publisher' | 'advertiser' | 'stakeholder') => boolean;
   setDebugMode: (enabled: boolean) => void;
   
@@ -123,7 +123,7 @@ export function useTestMode(): UseTestModeResult {
   // Actions
   const enableTestMode = useCallback((
     duration?: number,
-    initialRole?: UserRole,
+    initialRole?: string,
     debug?: boolean
   ): boolean => {
     return testModeService.enableTestMode(duration, initialRole, debug);
@@ -133,7 +133,7 @@ export function useTestMode(): UseTestModeResult {
     return testModeService.disableTestMode();
   }, []);
   
-  const switchRole = useCallback(async (role: UserRole): Promise<boolean> => {
+  const switchRole = useCallback(async (role: string): Promise<boolean> => {
     return testModeService.setCurrentRole(role);
   }, []);
   
@@ -144,7 +144,7 @@ export function useTestMode(): UseTestModeResult {
   // Utility functions
   const createTimeLimitedSession = useCallback((
     minutes: number,
-    role?: UserRole
+    role?: string
   ): boolean => {
     return testModeService.createTimeLimitedSession(minutes, role);
   }, []);

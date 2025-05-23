@@ -15,7 +15,7 @@ const defaultContextValue = {
   isLastStep: false,
   goToNextStep: () => {},
   goToPreviousStep: () => {},
-  setSelectedRole: (_role: UserRole) => {},
+  setSelectedRole: (_role: string) => {},
   selectedRole: null,
   completeOnboarding: async () => {},
   isLoading: false,
@@ -103,8 +103,8 @@ type OnboardingContextType = {
   isLastStep: boolean;
   goToNextStep: () => void;
   goToPreviousStep: () => void;
-  setSelectedRole: (role: UserRole) => void;
-  selectedRole: UserRole | null;
+  setSelectedRole: (role: string) => void;
+  selectedRole: string | null;
   completeOnboarding: () => Promise<void>;
   isLoading: boolean;
   skipOnboarding: () => Promise<void>;
@@ -116,7 +116,7 @@ const OnboardingContext = createContext<OnboardingContextType>(defaultContextVal
 type OnboardingProviderProps = {
   children: ReactNode;
   forcePubkey?: string | null;
-  initialRole?: UserRole | null;
+  initialRole?: string | null;
 };
 
 export const OnboardingProvider: React.FC<OnboardingProviderProps> = ({ children, forcePubkey, initialRole }) => {
@@ -139,7 +139,7 @@ export const OnboardingProvider: React.FC<OnboardingProviderProps> = ({ children
     return !!window?.nostr;
   };
 
-  const getStepsForRole = (role: UserRole | null): OnboardingStep[] => {
+  const getStepsForRole = (role: string | null): OnboardingStep[] => {
     switch (role) {
       case 'viewer':
         // Use the simplified 2-step flow for Nostr extension users
@@ -242,7 +242,7 @@ export const OnboardingProvider: React.FC<OnboardingProviderProps> = ({ children
   }, [selectedRole, currentStep, currentRole, authState, router, forcePubkey]);
   
   // Handle role selection
-  const handleRoleSelection = (role: UserRole) => {
+  const handleRoleSelection = (role: string) => {
     setSelectedRole(role);
     const steps = getStepsForRole(role);
     setCurrentStep(steps[1]); // Skip to the first step after role selection

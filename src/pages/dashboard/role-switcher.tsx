@@ -65,7 +65,7 @@ const RoleSwitcherPage: NextPageWithLayout = () => {
   }, []);
   
   // Handle role change
-  const handleRoleChange = async (role: UserRole) => {
+  const handleRoleChange = async (role: string) => {
     if (currentRole === role) return;
     
     const success = await RoleService.changeRole(role);

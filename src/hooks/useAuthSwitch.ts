@@ -6,7 +6,7 @@ import { logger } from '../lib/logger';
 let useRole = () => ({
   role: null,
   availableRoles: [],
-  isRoleAvailable: (role: UserRole) => false,
+  isRoleAvailable: (role: string) => false,
   isChangingRole: false,
   setRole: async () => {},
   clearRole: () => {},
@@ -92,7 +92,7 @@ export function useAuthSwitch() {
             localStorage.setItem('isTestMode', 'true');
             
             // Directly set role information for test mode
-            const ALL_ROLES: UserRole[] = ['advertiser', 'publisher', 'admin', 'stakeholder'] as UserRole[];
+            const ALL_ROLES: string[] = ['advertiser', 'publisher', 'admin', 'stakeholder'] as UserRole[];
             localStorage.setItem('cachedAvailableRoles', JSON.stringify(ALL_ROLES));
             localStorage.setItem('roleCacheTimestamp', Date.now().toString());
             localStorage.setItem('userRole', 'advertiser' as UserRole); // Default role
@@ -186,7 +186,7 @@ export function useAuthSwitch() {
       // Role state
       currentRole: refactoredRole?.role || null,
       availableRoles: refactoredRole?.availableRoles || [],
-      isRoleAvailable: (role: UserRole) => refactoredRole?.isRoleAvailable?.(role) || false,
+      isRoleAvailable: (role: string) => refactoredRole?.isRoleAvailable?.(role) || false,
       isChangingRole: refactoredRole?.isChangingRole || false,
       
       // Role methods
@@ -194,7 +194,7 @@ export function useAuthSwitch() {
       clearRole: createSafeRoleFunction(refactoredRole, 'clearRole'),
       
       // Role check methods
-      hasRole: (role: UserRole) => refactoredAuth?.hasRole?.(role) || false,
+      hasRole: (role: string) => refactoredAuth?.hasRole?.(role) || false,
       
       // Loading state
       isLoading: refactoredAuth?.isLoading || false,
@@ -222,7 +222,7 @@ export function useAuthSwitch() {
       clearRole: legacyRole.clearRole,
       
       // Role check methods
-      hasRole: (role: UserRole) => {
+      hasRole: (role: string) => {
         // Use the legacyRole context's implementation for consistency
         return legacyRole.isRoleAvailable(role);
       },

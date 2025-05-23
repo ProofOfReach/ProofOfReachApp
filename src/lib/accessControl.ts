@@ -36,7 +36,7 @@ export enum PermissionCategory {
 // Define the permission structure with optional properties
 export interface PermissionConfig {
   /** Roles allowed to perform this action */
-  allowedRoles: UserRole[];
+  allowedRoles: string[];
   /** Description of what this permission allows */
   description: string;
   /** Category for grouping related permissions */
@@ -328,7 +328,7 @@ export interface PermissionContext {
  */
 export function checkPermission(
   permission: keyof typeof PERMISSIONS, 
-  role: UserRole | string,
+  role: string | string,
   context: PermissionContext = {}
 ): boolean {
   // Validate role
@@ -388,7 +388,7 @@ export function checkPermission(
  * @param role The role to check
  * @returns True if the role can access the route, false otherwise
  */
-export function checkRouteAccess(route: string, role: UserRole | string): boolean {
+export function checkRouteAccess(route: string, role: string | string): boolean {
   if (!isValidUserRole(role)) {
     logger.warn(`Invalid role provided to checkRouteAccess: ${role}`);
     return false;
@@ -479,7 +479,7 @@ function getPermissionProperty<T>(
  * @returns Record of permission names mapped to capability information
  */
 export function getRoleCapabilities(
-  role: UserRole | string, 
+  role: string | string, 
   includeMetadata: boolean = false
 ): EnhancedCapabilityMap | Record<string, boolean> {
   if (!isValidUserRole(role)) {
@@ -617,7 +617,7 @@ export function getRoleCapabilities(
  * @param availableRoles List of roles available to the user
  * @returns True if the role is available, false otherwise
  */
-export function isRoleAvailable(role: UserRole | string, availableRoles: UserRole[]): boolean {
+export function isRoleAvailable(role: string | string, availableRoles: string[]): boolean {
   if (!isValidUserRole(role)) {
     logger.warn(`Invalid role provided to isRoleAvailable: ${role}`);
     return false;
@@ -632,7 +632,7 @@ export function isRoleAvailable(role: UserRole | string, availableRoles: UserRol
  * @param role The role to get the dashboard path for
  * @returns The default dashboard path for the role
  */
-export function getRoleDashboardPath(role: UserRole | string): string {
+export function getRoleDashboardPath(role: string | string): string {
   if (!isValidUserRole(role)) {
     logger.warn(`Invalid role provided to getRoleDashboardPath: ${role}`);
     return '/dashboard';
@@ -666,7 +666,7 @@ export const ROLES = {
  * Get all available roles in the system
  * @returns Array of all role types
  */
-export function getAllRoles(): UserRole[] {
+export function getAllRoles(): string[] {
   return ['viewer', 'advertiser', 'publisher', 'admin', 'stakeholder'];
 }
 

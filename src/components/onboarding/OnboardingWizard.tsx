@@ -56,7 +56,7 @@ const OnboardingWizard: React.FC = () => {
   }, [currentStep, selectedRole, skipOnboarding, isClient]);
   
   // Handle role selection from RoleConfirmation
-  const handleRoleSelection = (role: UserRole) => {
+  const handleRoleSelection = (role: string) => {
     if (typeof goToNextStep === 'function') {
       goToNextStep();
     }

@@ -60,7 +60,7 @@ const DropdownSidebar: React.FC = () => {
       
       // Force availability of all roles in the context immediately
       if (setAvailableRoles) {
-        const allRoles: UserRole[] = ['viewer', 'advertiser', 'publisher', 'admin', 'stakeholder'];
+        const allRoles: string[] = ['viewer', 'advertiser', 'publisher', 'admin', 'stakeholder'];
         console.log('Forcing available roles in dropdown to:', allRoles);
         setAvailableRoles(allRoles);
       }
@@ -83,7 +83,7 @@ const DropdownSidebar: React.FC = () => {
             console.log('All roles enabled in database');
             // Force availability of all roles in the context again after API call
             if (setAvailableRoles) {
-              const allRoles: UserRole[] = ['viewer', 'advertiser', 'publisher', 'admin', 'stakeholder'];
+              const allRoles: string[] = ['viewer', 'advertiser', 'publisher', 'admin', 'stakeholder'];
               setAvailableRoles(allRoles);
             }
           } else {
@@ -220,7 +220,7 @@ const DropdownSidebar: React.FC = () => {
   };
 
   // Change role handler
-  const handleRoleChange = async (newRole: UserRole) => {
+  const handleRoleChange = async (newRole: string) => {
     // Check if the role is available using our override function
     if (!isRoleAvailableOverride(newRole)) {
       console.warn(`Role ${newRole} is not available for this user. Skipping role change.`);
@@ -321,7 +321,7 @@ const DropdownSidebar: React.FC = () => {
   
   // Override isRoleAvailable for the test-dropdown page
   const originalIsRoleAvailable = isRoleAvailable;
-  const isRoleAvailableOverride = (roleToCheck: UserRole): boolean => {
+  const isRoleAvailableOverride = (roleToCheck: string): boolean => {
     // On test-dropdown page, force all roles to be available
     if (router.pathname === '/test-dropdown') {
       return true;
@@ -332,7 +332,7 @@ const DropdownSidebar: React.FC = () => {
   };
 
   // Get background color based on current role
-  const getRoleBackgroundColor = (checkRole: UserRole) => {
+  const getRoleBackgroundColor = (checkRole: string) => {
     switch(checkRole) {
       case 'viewer': return 'bg-blue-100 dark:bg-blue-900/20';
       case 'advertiser': return 'bg-orange-100 dark:bg-orange-900/20';
@@ -343,7 +343,7 @@ const DropdownSidebar: React.FC = () => {
   };
 
   // Get text color based on current role
-  const getRoleTextColor = (checkRole: UserRole) => {
+  const getRoleTextColor = (checkRole: string) => {
     switch(checkRole) {
       case 'viewer': return 'text-blue-700 dark:text-blue-300';
       case 'advertiser': return 'text-orange-700 dark:text-orange-300';

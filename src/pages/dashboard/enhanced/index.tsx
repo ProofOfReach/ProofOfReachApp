@@ -224,7 +224,7 @@ const EnhancedDashboardPage: React.FC = () => {
 
 // Role card component
 const RoleCard: React.FC<{
-  role: UserRole;
+  role: string;
   isActive: boolean;
   onSelect: () => void;
 }> = ({ role, isActive, onSelect }) => {

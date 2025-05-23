@@ -133,7 +133,7 @@ describe('Access Control System', () => {
         '/dashboard/settings'
       ];
       
-      const roles: UserRole[] = ['admin', 'advertiser', 'publisher', 'stakeholder', 'viewer'];
+      const roles: string[] = ['admin', 'advertiser', 'publisher', 'stakeholder', 'viewer'];
       
       for (const route of publicRoutes) {
         for (const role of roles) {

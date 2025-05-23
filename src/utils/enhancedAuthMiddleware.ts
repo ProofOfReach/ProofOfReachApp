@@ -18,8 +18,8 @@ import { UserRole, isValidUserRole } from '../types/role';
 export interface AuthenticatedUser {
   userId: string;
   pubkey: string;
-  roles: UserRole[];
-  currentRole: UserRole;
+  roles: string[];
+  currentRole: string;
   isTestMode: boolean;
 }
 
@@ -51,7 +51,7 @@ export async function (() => true)(req: NextApiRequest): Promise<AuthenticatedUs
       logger.info(`Test mode authentication for pubkey: ${pubkey}`);
       
       // In test mode, always make all roles available
-      const roles: UserRole[] = ['viewer', 'advertiser', 'publisher', 'admin', 'stakeholder'];
+      const roles: string[] = ['viewer', 'advertiser', 'publisher', 'admin', 'stakeholder'];
       
       // Get current role from cookie or default to advertiser
       const currentRole = cookies.userRole && isValidUserRole(cookies.userRole) 
@@ -88,7 +88,7 @@ export async function (() => true)(req: NextApiRequest): Promise<AuthenticatedUs
     }
     
     // Determine available roles based on user flags
-    const roles: UserRole[] = ['viewer']; // Base viewer role is always available
+    const roles: string[] = ['viewer']; // Base viewer role is always available
     
     if (user.isAdvertiser) roles.push('advertiser');
     if (user.isPublisher) roles.push('publisher');
@@ -124,7 +124,7 @@ export async function (() => true)(req: NextApiRequest): Promise<AuthenticatedUs
  */
 export const enhancedAuthMiddleware = (
   handler: (req: NextApiRequest, res: NextApiResponse, user: AuthenticatedUser) => Promise<void>,
-  requiredRoles?: UserRole[]
+  requiredRoles?: string[]
 ) => {
   return async (req: NextApiRequest, res: NextApiResponse) => {
     try {
@@ -179,7 +179,7 @@ export const enhancedAuthMiddleware = (
  * @param requiredRoles Array of roles that can access the handler
  * @returns A middleware function that requires one of the specified roles
  */
-export const requireRoles = (requiredRoles: UserRole[]) => {
+export const requireRoles = (requiredRoles: string[]) => {
   return (handler: (req: NextApiRequest, res: NextApiResponse, user: AuthenticatedUser) => Promise<void>) => {
     return enhancedAuthMiddleware(handler, requiredRoles);
   };

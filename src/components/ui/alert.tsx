@@ -12,7 +12,7 @@ const Alert = React.forwardRef<
 
   return (
     <div
-      ref={ref}
+      ref={ref as any}
       role="alert"
       className={cn(
         "relative w-full rounded-lg border p-4 [&>svg~*]:pl-7 [&>svg+div]:translate-y-[-3px] [&>svg]:absolute [&>svg]:left-4 [&>svg]:top-4 [&>svg]:text-foreground",
@@ -30,7 +30,7 @@ const AlertTitle = React.forwardRef<
   React.HTMLAttributes<HTMLHeadingElement>
 >(({ className, ...props }, ref) => (
   <h5
-    ref={ref}
+    ref={ref as any}
     className={cn("mb-1 font-medium leading-none tracking-tight", className)}
     {...props}
   />
@@ -42,7 +42,7 @@ const AlertDescription = React.forwardRef<
   React.HTMLAttributes<HTMLParagraphElement>
 >(({ className, ...props }, ref) => (
   <div
-    ref={ref}
+    ref={ref as any}
     className={cn("text-sm [&_p]:leading-relaxed", className)}
     {...props}
   />

@@ -534,13 +534,13 @@ const LoginPageClient: React.FC = () => {
       // Define role constants for consistency and type safety
       type UserRole = 'advertiser' | 'publisher' | 'admin' | 'stakeholder' | 'viewer';
       
-      const ROLE_ADVERTISER: UserRole = 'advertiser';
-      const ROLE_PUBLISHER: UserRole = 'publisher';
-      const ROLE_ADMIN: UserRole = 'admin';
-      const ROLE_STAKEHOLDER: UserRole = 'stakeholder';
+      const ROLE_ADVERTISER: string = 'advertiser';
+      const ROLE_PUBLISHER: string = 'publisher';
+      const ROLE_ADMIN: string = 'admin';
+      const ROLE_STAKEHOLDER: string = 'stakeholder';
       
       // Set roles directly in localStorage with typed array
-      const ALL_ROLES: UserRole[] = [ROLE_ADVERTISER, ROLE_PUBLISHER, ROLE_ADMIN, ROLE_STAKEHOLDER];
+      const ALL_ROLES: string[] = [ROLE_ADVERTISER, ROLE_PUBLISHER, ROLE_ADMIN, ROLE_STAKEHOLDER];
       localStorage.setItem('cachedAvailableRoles', JSON.stringify(ALL_ROLES));
       localStorage.setItem('roleCacheTimestamp', Date.now().toString());
       localStorage.setItem('userRole', ROLE_ADVERTISER); // Default role
@@ -568,7 +568,7 @@ const LoginPageClient: React.FC = () => {
         // Define proper interface for API request and responses
         interface OnboardingCompleteRequest {
           pubkey: string;
-          role: UserRole;
+          role: string;
           autoTest: boolean;
         }
         
@@ -579,7 +579,7 @@ const LoginPageClient: React.FC = () => {
         }
         
         // Mark onboarding as complete for each role
-        const testRoles: UserRole[] = [
+        const testRoles: string[] = [
           ROLE_ADVERTISER, 
           ROLE_PUBLISHER, 
           ROLE_ADMIN, 

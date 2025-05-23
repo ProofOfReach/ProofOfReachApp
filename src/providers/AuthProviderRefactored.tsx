@@ -24,7 +24,7 @@ export const AuthProviderRefactored: React.FC<AuthProviderProps> = ({ children }
   /**
    * Function to check if the user has a specific role
    */
-  const hasRole = useCallback((role: UserRole): boolean => {
+  const hasRole = useCallback((role: string): boolean => {
     if (!authState || !authState.isLoggedIn) {
       return false;
     }
@@ -119,7 +119,7 @@ export const AuthProviderRefactored: React.FC<AuthProviderProps> = ({ children }
   /**
    * Function to add a role to the user
    */
-  const addRole = useCallback(async (pubkey: string, role: UserRole): Promise<boolean> => {
+  const addRole = useCallback(async (pubkey: string, role: string): Promise<boolean> => {
     // Skip if no auth state or not the current user
     if (!authState || !authState.isLoggedIn || authState.pubkey !== pubkey) {
       return false;
@@ -178,7 +178,7 @@ export const AuthProviderRefactored: React.FC<AuthProviderProps> = ({ children }
   /**
    * Function to remove a role from the user
    */
-  const removeRole = useCallback(async (pubkey: string, role: UserRole): Promise<boolean> => {
+  const removeRole = useCallback(async (pubkey: string, role: string): Promise<boolean> => {
     // Skip if no auth state or not the current user
     if (!authState || !authState.isLoggedIn || authState.pubkey !== pubkey) {
       return false;

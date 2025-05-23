@@ -63,7 +63,7 @@ export const useAuthRefactored = (): AuthStateContext => {
  * @param role - The role to check
  * @returns Whether the user has the role
  */
-export const useHasRole = (role: UserRole): boolean => {
+export const useHasRole = (role: string): boolean => {
   const { hasRole } = useAuthRefactored() as any;
   return hasRole(role);
 };
@@ -103,7 +103,7 @@ export const useIsTestMode = (): boolean => {
  * 
  * @returns The user's available roles or empty array if not authenticated
  */
-export const useAvailableRoles = (): UserRole[] => {
+export const useAvailableRoles = (): string[] => {
   const { authState } = useAuthRefactored() as any;
   return authState?.isLoggedIn ? authState.availableRoles : [];
 };

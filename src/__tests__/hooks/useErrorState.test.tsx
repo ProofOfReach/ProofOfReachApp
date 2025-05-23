@@ -147,14 +147,14 @@ describe('useErrorState', () => {
     expect(errorIntegration.resetErrorState).toHaveBeenCalled();
   });
   
-  it('should provide a handleError function that reports errors', () => {
+  it('should provide a error function that reports errors', () => {
     const TestComponent = () => {
-      const { handleError } = useErrorState();
+      const { error } = useErrorState();
       
       return (
         <button 
           data-testid="handle-error"
-          onClick={() => handleError(new Error('Test error'), 'test-component', 'validation')}
+          onClick={() => error(new Error('Test error'), 'test-component', 'validation')}
         >
           Handle Error
         </button>

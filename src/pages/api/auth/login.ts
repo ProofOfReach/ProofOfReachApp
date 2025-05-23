@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { prisma } from '../../../lib/prismaClient';
 import { setAuthCookie } from '../../../lib/auth';
-import { handleError, throwValidationError } from '../../../lib/errorHandling';
+import { error, throwValidationError } from '../../../lib/errorHandling';
 import { logger } from '../../../lib/logger';
 
 /**
@@ -213,7 +213,7 @@ export default async function handler(
     }
   } catch (error) {
     logger.error('Login error:', error);
-    handleError(error, req, res);
+    error(error, req, res);
     return;
   }
 }

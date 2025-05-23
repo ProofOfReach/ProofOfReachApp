@@ -32,7 +32,7 @@ export interface AuthState {
   /**
    * Available roles for the user
    */
-  availableRoles: UserRole[];
+  availableRoles: string[];
 }
 
 /**
@@ -57,7 +57,7 @@ export interface AuthStateContext {
   /**
    * Function to check if the user has a specific role
    */
-  hasRole: (role: UserRole) => boolean;
+  hasRole: (role: string) => boolean;
   
   /**
    * Function to refresh the user's roles
@@ -67,12 +67,12 @@ export interface AuthStateContext {
   /**
    * Function to add a role to the user
    */
-  addRole: (pubkey: string, role: UserRole) => Promise<boolean>;
+  addRole: (pubkey: string, role: string) => Promise<boolean>;
   
   /**
    * Function to remove a role from the user
    */
-  removeRole: (pubkey: string, role: UserRole) => Promise<boolean>;
+  removeRole: (pubkey: string, role: string) => Promise<boolean>;
   
   /**
    * Whether authentication is being checked
@@ -88,7 +88,7 @@ export interface LoginResponse {
   isLoggedIn: boolean;
   pubkey: string;
   isTestMode: boolean;
-  availableRoles: UserRole[];
+  availableRoles: string[];
 }
 
 /**
@@ -98,7 +98,7 @@ export interface CheckAuthResponse {
   isLoggedIn: boolean;
   pubkey?: string;
   isTestMode?: boolean;
-  availableRoles?: UserRole[];
+  availableRoles?: string[];
 }
 
 /**
@@ -115,7 +115,7 @@ export interface LogoutResponse {
 export interface RefreshRolesResponse {
   success: boolean;
   message?: string;
-  availableRoles: UserRole[];
+  availableRoles: string[];
   isTestMode?: boolean;
 }
 

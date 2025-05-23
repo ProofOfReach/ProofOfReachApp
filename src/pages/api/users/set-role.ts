@@ -5,7 +5,7 @@ import type { UserRole } from '../../../context/RoleContext';
 
 type ResponseData = {
   success: boolean;
-  roles?: UserRole[];
+  roles?: string[];
   error?: string;
 }
 
@@ -121,7 +121,7 @@ async function handleSetRole(req: NextApiRequest, res: NextApiResponse<ResponseD
     });
 
     // Map to role names
-    const roles: UserRole[] = userRoles.map(role => role.role as UserRole);
+    const roles: string[] = userRoles.map(role => role.role as UserRole);
     
     // Always include the 'viewer' role
     if (!roles.includes('viewer')) {

@@ -21,7 +21,7 @@ export class RoleService {
   /**
    * Get the current user role from localStorage
    */
-  public static getCurrentRole(): UserRole | null {
+  public static getCurrentRole(): string | null {
     if (typeof window === 'undefined') return null;
     
     const role = localStorage.getItem(this.ROLE_KEY);
@@ -55,7 +55,7 @@ export class RoleService {
    * @returns Promise that resolves to true if successful
    */
   public static async changeRole(
-    role: UserRole, 
+    role: string, 
     skipSave: boolean = false
   ): Promise<boolean> {
     if (typeof window === 'undefined') return false;
@@ -185,7 +185,7 @@ export class RoleService {
   /**
    * Check if a user has a specific role
    */
-  public static hasRole(role: UserRole): boolean {
+  public static hasRole(role: string): boolean {
     if (typeof window === 'undefined') return false;
     
     // In test mode, check localStorage directly

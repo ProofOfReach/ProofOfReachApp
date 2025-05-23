@@ -126,7 +126,7 @@ const StaticClientSidebar: React.FC = () => {
   };
   
   // Direct role change handler - the key method for switching roles
-  const handleDirectRoleChange = (newRole: UserRole) => {
+  const handleDirectRoleChange = (newRole: string) => {
     // Close dropdown
     setDropdownOpen(false);
     
@@ -187,7 +187,7 @@ const StaticClientSidebar: React.FC = () => {
   };
   
   // Get background color based on current role
-  const getRoleBackgroundColor = (role: UserRole) => {
+  const getRoleBackgroundColor = (role: string) => {
     if (role === currentRole) {
       switch(role) {
         case 'viewer': return 'bg-blue-100 dark:bg-blue-900/20';
@@ -201,7 +201,7 @@ const StaticClientSidebar: React.FC = () => {
   };
   
   // Get text color based on role
-  const getRoleTextColor = (role: UserRole) => {
+  const getRoleTextColor = (role: string) => {
     if (role === currentRole) {
       switch(role) {
         case 'viewer': return 'text-blue-700 dark:text-blue-300';

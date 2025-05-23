@@ -18,8 +18,8 @@ export const ROLE_EVENTS = {
 
 // Role data structure for storage
 export interface RoleData {
-  currentRole: UserRole;
-  availableRoles: UserRole[];
+  currentRole: string;
+  availableRoles: string[];
   timestamp: number;
 }
 
@@ -31,7 +31,7 @@ export class RoleManager {
   /**
    * Get the current user role from storage
    */
-  static getCurrentRole(): UserRole {
+  static getCurrentRole(): string {
     // First check the dedicated current role storage
     const storedRole = StorageService.getItem<UserRole>(STORAGE_KEYS.CURRENT_ROLE);
     if (storedRole) {
@@ -53,7 +53,7 @@ export class RoleManager {
   /**
    * Set the current user role
    */
-  static setCurrentRole(role: UserRole): boolean {
+  static setCurrentRole(role: string): boolean {
     if (!isValidUserRole(role)) {
       logger.warn(`Attempted to set invalid role: ${role}`);
       return false;
@@ -107,7 +107,7 @@ export class RoleManager {
   /**
    * Get the available roles for the current user
    */
-  static getAvailableRoles(): UserRole[] {
+  static getAvailableRoles(): string[] {
     const storedRoles = StorageService.getItem<UserRole[]>(STORAGE_KEYS.AVAILABLE_ROLES);
     if (storedRoles && Array.isArray(storedRoles)) {
       return storedRoles.filter(role => isValidUserRole(role));
@@ -135,7 +135,7 @@ export class RoleManager {
   /**
    * Set the available roles for the current user
    */
-  static setAvailableRoles(roles: UserRole[]): boolean {
+  static setAvailableRoles(roles: string[]): boolean {
     if (!Array.isArray(roles)) {
       logger.warn('Attempted to set available roles with a non-array value');
       return false;
@@ -188,7 +188,7 @@ export class RoleManager {
   /**
    * Check if a given role is available to the current user
    */
-  static isRoleAvailable(role: UserRole): boolean {
+  static isRoleAvailable(role: string): boolean {
     const availableRoles = this.getAvailableRoles();
     return availableRoles.includes(role);
   }
@@ -197,14 +197,14 @@ export class RoleManager {
    * Enable all roles for the current user (typically used in test mode)
    */
   static enableAllRoles(): boolean {
-    const allRoles: UserRole[] = ['viewer', 'advertiser', 'publisher', 'admin', 'stakeholder'];
+    const allRoles: string[] = ['viewer', 'advertiser', 'publisher', 'admin', 'stakeholder'];
     return this.setAvailableRoles(allRoles);
   }
   
   /**
    * Add a role to the available roles if not already present
    */
-  static addRole(role: UserRole): boolean {
+  static addRole(role: string): boolean {
     if (!isValidUserRole(role)) {
       return false;
     }
@@ -220,7 +220,7 @@ export class RoleManager {
   /**
    * Remove a role from the available roles
    */
-  static removeRole(role: UserRole): boolean {
+  static removeRole(role: string): boolean {
     if (!isValidUserRole(role)) {
       return false;
     }

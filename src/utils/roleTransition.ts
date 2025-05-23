@@ -18,8 +18,8 @@ import { accessControl } from '../lib/accessControl';
  * Custom event for role switching
  */
 export interface RoleSwitchedEvent {
-  from: UserRole;
-  to: UserRole;
+  from: string;
+  to: string;
   timestamp: string;
   path?: string;
 }
@@ -29,8 +29,8 @@ export interface RoleSwitchedEvent {
  */
 export interface RoleTransitionState {
   transitioning: boolean;
-  fromRole: UserRole | null;
-  toRole: UserRole | null;
+  fromRole: string | null;
+  toRole: string | null;
   startTime: string;
   targetPath?: string;
   completed: boolean;
@@ -50,7 +50,7 @@ const ROLE_PREFERENCES_KEY = 'role_preferences';
  * @param to New role
  * @param path Optional URL path that was navigated to
  */
-export function dispatchRoleSwitchedEvent(from: UserRole, to: UserRole, path?: string): void {
+export function dispatchRoleSwitchedEvent(from: string, to: string, path?: string): void {
   if (typeof window === 'undefined') {
     return; // Server-side rendering, no events
   }
@@ -82,9 +82,9 @@ export function dispatchRoleSwitchedEvent(from: UserRole, to: UserRole, path?: s
  * @returns True if transition is allowed, false otherwise
  */
 export function isRoleTransitionAllowed(
-  currentRole: UserRole,
-  targetRole: UserRole,
-  availableRoles: UserRole[]
+  currentRole: string,
+  targetRole: string,
+  availableRoles: string[]
 ): boolean {
   // Same role is always allowed (no-op)
   if (currentRole === targetRole) {
@@ -111,7 +111,7 @@ export function isRoleTransitionAllowed(
  * @param role User role
  * @returns Dashboard path for that role
  */
-export function getRoleDashboardPath(role: UserRole): string {
+export function getRoleDashboardPath(role: string): string {
   return accessControl.getRoleDashboardPath(role);
 }
 
@@ -124,8 +124,8 @@ export function getRoleDashboardPath(role: UserRole): string {
  * @returns Promise resolving to success status
  */
 export async function transitionToRole(
-  currentRole: UserRole,
-  newRole: UserRole,
+  currentRole: string,
+  newRole: string,
   preservePath = false
 ): Promise<boolean> {
   try {
@@ -336,7 +336,7 @@ export function isRoleTransitioning(): boolean {
  * @param role User role
  * @param preferences Preferences object
  */
-export function saveRolePreferences(role: UserRole, preferences: Record<string, any>): void {
+export function saveRolePreferences(role: string, preferences: Record<string, any>): void {
   if (typeof window === 'undefined') {
     return;
   }
@@ -364,7 +364,7 @@ export function saveRolePreferences(role: UserRole, preferences: Record<string, 
  * @param role User role
  * @returns Preferences object for the role
  */
-export function getRolePreferences(role: UserRole): Record<string, any> {
+export function getRolePreferences(role: string): Record<string, any> {
   if (typeof window === 'undefined') {
     return {};
   }
@@ -407,7 +407,7 @@ export function getRolePreferencesForAllRoles(): Record<UserRole, Record<string,
  * @param route Current route path
  * @returns True if route is allowed for role
  */
-export function isRouteAllowedForRole(role: UserRole, route: string): boolean {
+export function isRouteAllowedForRole(role: string, route: string): boolean {
   return accessControl.checkRouteAccess(route, role);
 }
 

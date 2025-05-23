@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { requireAuth } from '../../../../lib/auth';
 import { prisma } from '../../../../lib/prismaClient';
-import { handleError } from '../../../../lib/errorHandling';
+import { error } from '../../../../lib/errorHandling';
 
 /**
  * @swagger
@@ -92,7 +92,7 @@ async function handleApiKeyVerify(req: NextApiRequest, res: NextApiResponse, pub
       userId: apiKeyData.userId,
     });
   } catch (error) {
-    return handleError(error, req, res);
+    return error(error, req, res);
   }
 }
 

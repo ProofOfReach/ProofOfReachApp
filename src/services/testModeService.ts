@@ -20,15 +20,15 @@ import '@/services/roleManager';
 
 // Define the RoleEvent interface for the event payload
 interface RoleEvent {
-  from: UserRole;
-  to: UserRole;
-  availableRoles: UserRole[];
+  from: string;
+  to: string;
+  availableRoles: string[];
 }
 
 // Type definitions for test mode settings
 interface TestModeSession {
   expiryTime: number;
-  initialRole: UserRole;
+  initialRole: string;
   activated: boolean;
   debug: boolean;
 }
@@ -79,7 +79,7 @@ export class TestModeService {
       // Use StorageService directly
       return StorageService.isTestModeActive();
     } catch (error) {
-      this.handleError('Error checking if test mode is active', error);
+      this.error('Error checking if test mode is active', error);
       return false;
     }
   }
@@ -125,7 +125,7 @@ export class TestModeService {
       
       return null;
     } catch (error) {
-      this.handleError('Error getting time remaining in test mode', error);
+      this.error('Error getting time remaining in test mode', error);
       return null;
     }
   }
@@ -133,7 +133,7 @@ export class TestModeService {
   /**
    * Get the current role in test mode
    */
-  public getCurrentRole(): UserRole {
+  public getCurrentRole(): string {
     try {
       // Server-side rendering check
       if (typeof window === 'undefined') {
@@ -163,7 +163,7 @@ export class TestModeService {
       // Default fallback
       return 'viewer' as UserRole;
     } catch (error) {
-      this.handleError('Error getting current role in test mode', error);
+      this.error('Error getting current role in test mode', error);
       return 'viewer' as UserRole;
     }
   }
@@ -171,7 +171,7 @@ export class TestModeService {
   /**
    * Get available roles in test mode
    */
-  public getAvailableRoles(): UserRole[] {
+  public getAvailableRoles(): string[] {
     try {
       // Server-side rendering check
       if (typeof window === 'undefined') {
@@ -201,7 +201,7 @@ export class TestModeService {
       // Default to just the user role
       return ['viewer'] as UserRole[];
     } catch (error) {
-      this.handleError('Error getting available roles in test mode', error);
+      this.error('Error getting available roles in test mode', error);
       return ['viewer'] as UserRole[];
     }
   }
@@ -222,7 +222,7 @@ export class TestModeService {
    */
   public enableTestMode(
     duration: number = DEFAULT_SESSION_DURATION,
-    initialRole: UserRole = DEFAULT_ROLE,
+    initialRole: string = DEFAULT_ROLE,
     debug: boolean = false
   ): boolean {
     try {
@@ -239,12 +239,12 @@ export class TestModeService {
       
       // Input validation with defensive programming
       if (duration <= 0) {
-        this.handleError('Invalid test mode duration', new Error('Duration must be positive'), { duration });
+        this.error('Invalid test mode duration', new Error('Duration must be positive'), { duration });
         return false;
       }
       
       if (!this.isRoleValid(initialRole)) {
-        this.handleError('Invalid initial role', new Error('Role not recognized'), { initialRole });
+        this.error('Invalid initial role', new Error('Role not recognized'), { initialRole });
         return false;
       }
       
@@ -287,7 +287,7 @@ export class TestModeService {
           return true;
         } catch (storageError) {
           // Handle specific storage errors separately
-          this.handleError('Error setting compatibility flags', storageError, {
+          this.error('Error setting compatibility flags', storageError, {
             phase: 'compatibility-flags',
             expiryTime
           });
@@ -302,7 +302,7 @@ export class TestModeService {
           return true;
         }
       } else {
-        this.handleError(
+        this.error(
           'Failed to persist test mode state', 
           new Error('Storage service returned failure'), 
           { newState }
@@ -310,7 +310,7 @@ export class TestModeService {
         return false;
       }
     } catch (error) {
-      this.handleError('Error enabling test mode', error, {
+      this.error('Error enabling test mode', error, {
         duration,
         initialRole,
         debugMode: debug
@@ -341,7 +341,7 @@ export class TestModeService {
       logger.log('Test mode disabled successfully via TestModeService');
       return true;
     } catch (error) {
-      this.handleError('Error disabling test mode', error);
+      this.error('Error disabling test mode', error);
       return false;
     }
   }
@@ -350,7 +350,7 @@ export class TestModeService {
    * Set the current role in test mode
    * @param role The role to set
    */
-  public async setCurrentRole(role: UserRole): Promise<boolean> {
+  public async setCurrentRole(role: string): Promise<boolean> {
     try {
       this.debugLog(`Setting current role: ${role}`);
       
@@ -418,7 +418,7 @@ export class TestModeService {
       logger.error(`Failed to change role to ${role}`);
       return false;
     } catch (error) {
-      this.handleError(`Error setting current role to ${role}`, error);
+      this.error(`Error setting current role to ${role}`, error);
       return false;
     }
   }
@@ -437,7 +437,7 @@ export class TestModeService {
       }
       
       // All potential roles
-      const allRoles: UserRole[] = ['viewer', 'advertiser', 'publisher', 'admin', 'stakeholder'];
+      const allRoles: string[] = ['viewer', 'advertiser', 'publisher', 'admin', 'stakeholder'];
       
       // First try using RoleManager (but don't depend on it)
       let success = true;
@@ -496,7 +496,7 @@ export class TestModeService {
         }
       }
     } catch (error) {
-      this.handleError('Error enabling all roles', error);
+      this.error('Error enabling all roles', error);
       return false;
     }
   }
@@ -531,7 +531,7 @@ export class TestModeService {
    * @param duration Session duration in minutes
    * @param role Initial role for the session
    */
-  public createTimeLimitedSession(duration: number, role: UserRole = 'viewer'): boolean {
+  public createTimeLimitedSession(duration: number, role: string = 'viewer'): boolean {
     // Convert minutes to milliseconds
     const durationMs = duration * 60 * 1000;
     return this.enableTestMode(durationMs, role);
@@ -562,7 +562,7 @@ export class TestModeService {
    * @param role The role to validate
    */
   private isRoleValid(role: string): boolean {
-    const validRoles: UserRole[] = ['viewer', 'advertiser', 'publisher', 'admin', 'stakeholder'];
+    const validRoles: string[] = ['viewer', 'advertiser', 'publisher', 'admin', 'stakeholder'];
     return validRoles.includes(role as UserRole);
   }
   
@@ -588,7 +588,7 @@ export class TestModeService {
       // Check older localStorage format
       return localStorage?.getItem('isTestMode') === 'true';
     } catch (error) {
-      this.handleError('Error checking legacy test mode', error);
+      this.error('Error checking legacy test mode', error);
       return false;
     }
   }
@@ -596,7 +596,7 @@ export class TestModeService {
   /**
    * Dispatch test mode activated event
    */
-  private dispatchTestModeActivated(expiryTime: number, initialRole: UserRole): void {
+  private dispatchTestModeActivated(expiryTime: number, initialRole: string): void {
     // New event system
     dispatchAppEvent(TEST_MODE_EVENTS.ACTIVATED, { 
       expiryTime, 
@@ -627,7 +627,7 @@ export class TestModeService {
   /**
    * Dispatch role changed event
    */
-  private dispatchRoleChanged(from: UserRole, to: UserRole): void {
+  private dispatchRoleChanged(from: string, to: string): void {
     // New event system
     dispatchAppEvent(ROLE_EVENTS.ROLE_CHANGED, { 
       from, 
@@ -650,7 +650,7 @@ export class TestModeService {
   /**
    * Dispatch roles updated event
    */
-  private dispatchRolesUpdated(availableRoles: UserRole[], currentRole: UserRole): void {
+  private dispatchRolesUpdated(availableRoles: string[], currentRole: string): void {
     // New event system
     dispatchAppEvent(ROLE_EVENTS.ROLES_UPDATED, { 
       availableRoles, 
@@ -683,7 +683,7 @@ export class TestModeService {
    * @param error The error object or value that was caught
    * @param context Optional additional context data for debugging
    */
-  private handleError(message: string, error: unknown, context: Record<string, unknown> = {}): void {
+  private error(message: string, error: unknown, context: Record<string, unknown> = {}): void {
     // Safe extraction of error details with type narrowing
     const errorMessage = error instanceof Error 
       ? `${error.message} ${error.stack ? `\n${error.stack}` : ''}`

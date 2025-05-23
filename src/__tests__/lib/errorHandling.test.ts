@@ -7,7 +7,7 @@ import {
   databaseError,
   error,
   externalError,
-  handleError,
+  error,
   mapError,
   notFoundError,
   nostrError,
@@ -101,7 +101,7 @@ describe('Error Handling', () => {
     });
   });
 
-  describe('handleError', () => {
+  describe('error', () => {
     it('should send appropriate response for API errors', () => {
       const { req, res } = createMocks({
         method: 'GET',
@@ -111,7 +111,7 @@ describe('Error Handling', () => {
       const jsonSpy = jest.spyOn(res, 'json');
       const statusSpy = jest.spyOn(res, 'status');
       
-      handleError(new Error('Test error'), req as unknown as NextApiRequest, res as unknown as NextApiResponse);
+      error(new Error('Test error'), req as unknown as NextApiRequest, res as unknown as NextApiResponse);
       
       expect(statusSpy).toHaveBeenCalledWith(500);
       expect(jsonSpy).toHaveBeenCalled();

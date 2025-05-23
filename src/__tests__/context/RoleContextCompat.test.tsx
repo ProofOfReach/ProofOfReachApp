@@ -13,9 +13,9 @@ import type { UserRole } from '../../types/role';
 // Direct import/test method to avoid React component rendering issues in tests
 describe('RoleContext Compatibility Layer', () => {
   // Define test constants
-  const advertiserRole: UserRole = 'advertiser';
-  const adminRole: UserRole = 'admin';
-  const publisherRole: UserRole = 'publisher';
+  const advertiserRole: string = 'advertiser';
+  const adminRole: string = 'admin';
+  const publisherRole: string = 'publisher';
   
   it('uses the correct ROLES constants', () => {
     expect(ROLES.VIEWER).toBe('viewer');

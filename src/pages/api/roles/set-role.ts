@@ -29,7 +29,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
 
     // Get the role from the request body
-    const { role } = req.body as { role: UserRole };
+    const { role } = req.body as { role: string };
     if (!role) {
       return res.status(400).json({ error: 'Role is required' });
     }

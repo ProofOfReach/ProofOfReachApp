@@ -14,7 +14,7 @@ import type { UserRole } from '../types/role';
  * @param role The role string to normalize
  * @returns Normalized role string (UserRole)
  */
-export function normalizeRole(role: string): UserRole {
+export function normalizeRole(role: string): string {
   // Convert legacy 'viewer' role to 'viewer'
   if (role === 'viewer') {
     return 'viewer';
@@ -30,7 +30,7 @@ export function normalizeRole(role: string): UserRole {
  * @param roles Array of role strings to normalize
  * @returns Normalized array of roles
  */
-export function normalizeRoles(roles: string[]): UserRole[] {
+export function normalizeRoles(roles: string[]): string[] {
   return roles.map(normalizeRole);
 }
 

@@ -26,7 +26,7 @@ const RoleManagementPage: NextPage = () => {
   const [error, setError] = useState<string | null>(null);
   
   // Handle role switch with proper loading and error states
-  const handleRoleSwitch = useCallback(async (role: UserRole) => {
+  const handleRoleSwitch = useCallback(async (role: string) => {
     if (role === currentRole) return;
     
     setError(null);

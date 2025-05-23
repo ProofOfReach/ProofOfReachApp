@@ -178,7 +178,7 @@ const TestComponent = () => {
 };
 
 // Helper function to create the test component wrapper
-const renderTestComponent = (initialRole: UserRole = VIEWER_ROLE) => {
+const renderTestComponent = (initialRole: string = VIEWER_ROLE) => {
   const queryClient = new QueryClient();
   
   // Create a wrapper component with both old and new providers

@@ -119,7 +119,7 @@ const EnhancedSidebar: React.FC = () => {
   };
 
   // Change role handler
-  const handleRoleChange = async (newRole: UserRole) => {
+  const handleRoleChange = async (newRole: string) => {
     // First check if the role is available
     if (!isRoleAvailable(newRole)) {
       console.warn(`Role ${newRole} is not available for this user. Skipping role change.`);
@@ -169,7 +169,7 @@ const EnhancedSidebar: React.FC = () => {
   };
 
   // Get background color based on current role
-  const getRoleBackgroundColor = (checkRole: UserRole) => {
+  const getRoleBackgroundColor = (checkRole: string) => {
     switch(checkRole) {
       case 'viewer': return 'bg-blue-100 dark:bg-blue-900/20';
       case 'advertiser': return 'bg-orange-100 dark:bg-orange-900/20';
@@ -180,7 +180,7 @@ const EnhancedSidebar: React.FC = () => {
   };
 
   // Get text color based on current role
-  const getRoleTextColor = (checkRole: UserRole) => {
+  const getRoleTextColor = (checkRole: string) => {
     switch(checkRole) {
       case 'viewer': return 'text-blue-700 dark:text-blue-300';
       case 'advertiser': return 'text-orange-700 dark:text-orange-300';

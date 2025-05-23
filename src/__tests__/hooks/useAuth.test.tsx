@@ -283,7 +283,7 @@ describe('useAuth Hook', () => {
       (UserManager.getUserRoles as jest.Mock).mockResolvedValueOnce(['viewer' as UserRole, 'advertiser' as UserRole]);
       
       // Call refreshRoles
-      let refreshedRoles: UserRole[] = [];
+      let refreshedRoles: string[] = [];
       await act(async () => {
         refreshedRoles = await result.current.refreshRoles();
       });

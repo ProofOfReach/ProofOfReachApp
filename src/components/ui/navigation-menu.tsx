@@ -112,7 +112,7 @@ const NavigationMenuContent = ({
             "absolute left-0 top-full mt-1 w-full p-2 data-[motion=from-start]:animate-enterFromLeft data-[motion=from-end]:animate-enterFromRight data-[motion=to-start]:animate-exitToLeft data-[motion=to-end]:animate-exitToRight sm:w-auto",
             className
           )}
-          ref={ref}
+          ref={ref as any}
           {...props}
         >
           {children}
@@ -127,7 +127,7 @@ const NavigationMenuLink = React.forwardRef<
   React.AnchorHTMLAttributes<HTMLAnchorElement> & { active?: boolean }
 >(({ className, active, children, ...props }, ref) => (
   <a
-    ref={ref}
+    ref={ref as any}
     className={cn(
       "block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-gray-100 hover:text-gray-900 focus:bg-gray-100 focus:text-gray-900 dark:hover:bg-gray-800 dark:hover:text-gray-50 dark:focus:bg-gray-800 dark:focus:text-gray-50",
       active && "bg-gray-100 text-gray-900 dark:bg-gray-800 dark:text-gray-50",

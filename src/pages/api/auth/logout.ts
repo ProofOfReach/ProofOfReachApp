@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { clearAuthCookie } from '../../../lib/auth';
-import { handleError, throwValidationError } from '../../../lib/errorHandling';
+import { error, throwValidationError } from '../../../lib/errorHandling';
 import { logger } from '../../../lib/logger';
 
 /**
@@ -38,7 +38,7 @@ export default async function handler(
     return;
   } catch (error) {
     logger.error('Logout error:', error);
-    handleError(error, req, res);
+    error(error, req, res);
     return;
   }
 }

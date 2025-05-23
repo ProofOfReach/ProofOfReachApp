@@ -24,7 +24,7 @@ export type OnboardingStep =
 export interface OnboardingState {
   status: OnboardingStatus;
   currentStep: OnboardingStep;
-  selectedRole: UserRole | null;
+  selectedRole: string | null;
   steps: {
     [key in OnboardingStep]?: {
       completed: boolean;
@@ -183,7 +183,7 @@ export class AuthOnboardingIntegration {
    * Set the selected role for onboarding
    * @param role The selected role
    */
-  public setSelectedRole(role: UserRole): void {
+  public setSelectedRole(role: string): void {
     this.flowState.onboardingState.selectedRole = role;
     
     // Mark the role selection step as completed

@@ -74,7 +74,7 @@ const createTestQueryClient = () => new QueryClient({
 // Wrapper component that provides all necessary context providers
 const AllProvidersWrapper: React.FC<{ 
   children: React.ReactNode; 
-  initialRole?: UserRole;
+  initialRole?: string;
 }> = ({ 
   children, 
   initialRole = 'viewer' 

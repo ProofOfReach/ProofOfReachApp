@@ -10,7 +10,7 @@ jest.mock('@/lib/console', () => ({
     // Static methods that don't belong on the service instance
     isRecoverable: jest.fn((error) => true),
     formatErrorForUser: jest.fn(error => error.message || 'Unknown error'),
-    handleError: jest.fn(),
+    error: jest.fn(),
     
     // Core error methods
     reportError: jest.fn().mockReturnValue({
@@ -127,16 +127,16 @@ describe('ErrorBoundary', () => {
   });
   
   it('calls onError handler when an error occurs', () => {
-    const handleError = jest.fn();
+    const error = jest.fn();
     
     render(
-      <ErrorBoundary onError={handleError}>
+      <ErrorBoundary onError={error}>
         <ErrorThrowingComponent />
       </ErrorBoundary>
     );
     
-    expect(handleError).toHaveBeenCalledTimes(1);
-    expect(handleError).toHaveBeenCalledWith(
+    expect(error).toHaveBeenCalledTimes(1);
+    expect(error).toHaveBeenCalledWith(
       expect.any(Error),
       expect.objectContaining({ componentStack: expect.any(String) })
     );

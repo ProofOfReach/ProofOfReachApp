@@ -22,7 +22,7 @@ jest.mock('../../../../lib/prismaClient', () => ({
 }));
 
 jest.mock('../../../../lib/errorHandling', () => ({
-  handleError: jest.fn((err, req, res) => {
+  error: jest.fn((err, req, res) => {
     // Make sure we set the status code to 500 for error responses
     res.status(500).json({ error: err.message || 'Unknown error' });
   }),
@@ -48,7 +48,7 @@ jest.mock('../../../../lib/logger', () => ({
 import handler from '../../../../pages/api/auth/login';
 import { setAuthCookie } from '../../../../lib/auth';
 import { prisma } from '../../../../lib/prismaClient';
-import { handleError, throwValidationError } from '../../../../lib/errorHandling';
+import { error, throwValidationError } from '../../../../lib/errorHandling';
 import { logger } from '../../../../lib/logger';
 
 // Define response type for testing
@@ -74,7 +74,7 @@ describe('Login API', () => {
     } catch (error) {
       // Error is expected here
       // We need to manually set the status code since the error prevents the handler 
-      // from completing and the handleError mock from being called
+      // from completing and the error mock from being called
       res.status(500).json({ error: 'Method not allowed' });
     }
 
@@ -189,7 +189,7 @@ describe('Login API', () => {
     await handler(req, res);
 
     expect(logger.error).toHaveBeenCalled();
-    expect(handleError).toHaveBeenCalled();
+    expect(error).toHaveBeenCalled();
     expect(res._getStatusCode()).toBe(500);
   });
 });

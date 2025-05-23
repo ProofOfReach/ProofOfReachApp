@@ -11,7 +11,7 @@ const Form = React.forwardRef<
   React.FormHTMLAttributes<HTMLFormElement>
 >(({ className, ...props }, ref) => (
   <form
-    ref={ref}
+    ref={ref as any}
     className={cn("space-y-6", className)}
     {...props}
   />
@@ -23,7 +23,7 @@ const FormField = React.forwardRef<
   React.HTMLAttributes<HTMLDivElement>
 >(({ className, ...props }, ref) => (
   <div
-    ref={ref}
+    ref={ref as any}
     className={cn("space-y-2", className)}
     {...props}
   />
@@ -35,7 +35,7 @@ const FormItem = React.forwardRef<
   React.HTMLAttributes<HTMLDivElement>
 >(({ className, ...props }, ref) => (
   <div
-    ref={ref}
+    ref={ref as any}
     className={cn("space-y-1", className)}
     {...props}
   />
@@ -47,7 +47,7 @@ const FormLabel = React.forwardRef<
   React.LabelHTMLAttributes<HTMLLabelElement> & { required?: boolean }
 >(({ className, required, ...props }, ref) => (
   <label
-    ref={ref}
+    ref={ref as any}
     className={cn(
       "text-sm font-medium text-gray-700 dark:text-gray-300",
       className
@@ -65,7 +65,7 @@ const FormDescription = React.forwardRef<
   React.HTMLAttributes<HTMLParagraphElement>
 >(({ className, ...props }, ref) => (
   <p
-    ref={ref}
+    ref={ref as any}
     className={cn("text-xs text-gray-500 dark:text-gray-400", className)}
     {...props}
   />
@@ -77,7 +77,7 @@ const FormMessage = React.forwardRef<
   React.HTMLAttributes<HTMLParagraphElement> & { error?: boolean }
 >(({ className, error = true, ...props }, ref) => (
   <p
-    ref={ref}
+    ref={ref as any}
     className={cn(
       "text-sm font-medium",
       error ? "text-red-600 dark:text-red-400" : "text-green-600 dark:text-green-400",

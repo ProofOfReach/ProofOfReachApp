@@ -99,7 +99,7 @@ class ErrorMonitoringService {
         this.captureError(event.error || new Error(event.message), {
           component: 'window.onerror',
           category: string.EXTERNAL,
-          severity: string.ERROR
+          severity: "error"
         });
         
         // Don't prevent default handling
@@ -111,7 +111,7 @@ class ErrorMonitoringService {
         this.captureError(event.reason || new Error('Unhandled Promise rejection'), {
           component: 'unhandledrejection',
           category: string.EXTERNAL,
-          severity: string.ERROR
+          severity: "error"
         });
         
         // Don't prevent default handling
@@ -159,10 +159,10 @@ class ErrorMonitoringService {
     
     try {
       // Process the error using our central error service
-      console.handleError(error, {
+      console.error(error, {
         component: context.component || 'errorMonitoring',
         category: context.category || string.EXTERNAL,
-        severity: context.severity || string.ERROR,
+        severity: context.severity || "error",
         data: context.data
       });
       

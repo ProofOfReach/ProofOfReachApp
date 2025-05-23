@@ -9,7 +9,7 @@
 import React, { createContext, useState, useEffect, useMemo, useCallback, useContext } from 'react';
 import '@/types/errors';
 import '@/lib/errorIntegration';
-import '@/lib/console';
+import { logger } from '@/lib/logger';
 import '@/utils/toast';
 
 // Create the context with a default value

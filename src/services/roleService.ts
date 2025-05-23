@@ -92,7 +92,7 @@ class RoleService {
    * @param role The role to set
    * @returns Whether the operation was successful
    */
-  async setCurrentRole(userId: string, role: UserRole): Promise<boolean> {
+  async setCurrentRole(userId: string, role: string): Promise<boolean> {
     try {
       await prisma.userPreferences.upsert({
         where: { userId },
@@ -125,7 +125,7 @@ class RoleService {
         return [];
       }
       
-      const roles: UserRole[] = [];
+      const roles: string[] = [];
       
       // Add roles based on user flags
       if (user.isAdvertiser) roles.push('advertiser');
@@ -146,7 +146,7 @@ class RoleService {
    * @param role The role to check
    * @returns Whether the role is available
    */
-  async isRoleAvailable(userId: string, role: UserRole): Promise<boolean> {
+  async isRoleAvailable(userId: string, role: string): Promise<boolean> {
     try {
       const roles = await this.getAvailableRoles(userId);
       return roles.includes(role);
@@ -162,7 +162,7 @@ class RoleService {
    * @param role The role to add
    * @returns Whether the operation was successful
    */
-  async addRole(userId: string, role: UserRole): Promise<boolean> {
+  async addRole(userId: string, role: string): Promise<boolean> {
     try {
       const updateData: Record<string, boolean> = {};
       
@@ -330,7 +330,7 @@ class RoleService {
    * @param role The role to add
    * @returns Whether the operation was successful
    */
-  async addRoleToUser(pubkey: string, role: UserRole): Promise<boolean> {
+  async addRoleToUser(pubkey: string, role: string): Promise<boolean> {
     try {
       if (!pubkey || !role) {
         logger.error('Cannot add role: Missing pubkey or role');
@@ -394,7 +394,7 @@ class RoleService {
    * @param role The role to remove
    * @returns Whether the operation was successful
    */
-  async removeRoleFromUser(pubkey: string, role: UserRole): Promise<boolean> {
+  async removeRoleFromUser(pubkey: string, role: string): Promise<boolean> {
     try {
       if (!pubkey || !role) {
         logger.error('Cannot remove role: Missing pubkey or role');

@@ -52,7 +52,7 @@ export function isValidRole(role: string): role is UserRole {
  * Check if a role has a specific permission
  * @deprecated Use accessControl.checkPermission or useRoleAccess hook instead
  */
-export function hasPermission(role: UserRole, permission: string): boolean {
+export function hasPermission(role: string, permission: string): boolean {
   return accessControl.checkPermission(permission as any, role);
 }
 
@@ -60,7 +60,7 @@ export function hasPermission(role: UserRole, permission: string): boolean {
  * Check if a role can access a specific route
  * @deprecated Use accessControl.checkRouteAccess or useRoleAccess hook instead
  */
-export function canAccessRoute(role: UserRole, route: string): boolean {
+export function canAccessRoute(role: string, route: string): boolean {
   return accessControl.checkRouteAccess(route, role);
 }
 
@@ -68,7 +68,7 @@ export function canAccessRoute(role: UserRole, route: string): boolean {
  * Get all capabilities for a specific role
  * @deprecated Use accessControl.getRoleCapabilities or useRoleAccess hook instead
  */
-export function getRoleCapabilities(role: UserRole): RoleCapabilities {
+export function getRoleCapabilities(role: string): RoleCapabilities {
   // Convert the object returned by accessControl to the expected RoleCapabilities type
   const capabilities = accessControl.getRoleCapabilities(role) as Record<string, boolean>;
   
@@ -87,21 +87,21 @@ export function getRoleCapabilities(role: UserRole): RoleCapabilities {
 /**
  * @deprecated Use accessControl.isRoleAvailable from src/lib/accessControl.ts instead
  */
-export function isRoleAvailable(role: UserRole, availableRoles: UserRole[]): boolean {
+export function isRoleAvailable(role: string, availableRoles: string[]): boolean {
   return accessControl.isRoleAvailable(role, availableRoles);
 }
 
 /**
  * @deprecated Use accessControl.getRoleDashboardPath from src/lib/accessControl.ts instead
  */
-export function getRoleDashboardPath(role: UserRole): string {
+export function getRoleDashboardPath(role: string): string {
   return accessControl.getRoleDashboardPath(role);
 }
 
 /**
  * @deprecated Use accessControl.getAllRoles from src/lib/accessControl.ts instead
  */
-export function getAllRoles(): UserRole[] {
+export function getAllRoles(): string[] {
   return accessControl.getAllRoles();
 }
 

@@ -66,7 +66,7 @@ const UnifiedSidebar: React.FC<UnifiedSidebarProps> = ({ isTestMode = false }) =
   }, []);
   
   // Determine the current role from URL path
-  const determineCurrentRoleFromURL = (): UserRole => {
+  const determineCurrentRoleFromURL = (): string => {
     const path = router.pathname;
     
     if (path.includes('/dashboard/advertiser')) return 'advertiser';
@@ -153,7 +153,7 @@ const UnifiedSidebar: React.FC<UnifiedSidebarProps> = ({ isTestMode = false }) =
   };
 
   // Simplified role change handler that works in both modes
-  const handleRoleChange = async (newRole: UserRole) => {
+  const handleRoleChange = async (newRole: string) => {
     setIsLocalChangingRole(true);
     setDropdownOpen(false);
     
@@ -206,7 +206,7 @@ const UnifiedSidebar: React.FC<UnifiedSidebarProps> = ({ isTestMode = false }) =
   };
   
   // Check if a role is available or not (in test mode all are available)
-  const isRoleAvailable = (roleToCheck: UserRole): boolean => {
+  const isRoleAvailable = (roleToCheck: string): boolean => {
     if (isTestMode) return true;
     
     const path = router.pathname;
@@ -227,7 +227,7 @@ const UnifiedSidebar: React.FC<UnifiedSidebarProps> = ({ isTestMode = false }) =
   };
 
   // Get background color based on current role
-  const getRoleBackgroundColor = (checkRole: UserRole) => {
+  const getRoleBackgroundColor = (checkRole: string) => {
     switch(checkRole) {
       case 'viewer': return 'bg-blue-100 dark:bg-blue-900/20';
       case 'advertiser': return 'bg-orange-100 dark:bg-orange-900/20';
@@ -239,7 +239,7 @@ const UnifiedSidebar: React.FC<UnifiedSidebarProps> = ({ isTestMode = false }) =
   };
 
   // Get text color based on current role
-  const getRoleTextColor = (checkRole: UserRole) => {
+  const getRoleTextColor = (checkRole: string) => {
     switch(checkRole) {
       case 'viewer': return 'text-blue-700 dark:text-blue-300';
       case 'advertiser': return 'text-orange-700 dark:text-orange-300';
@@ -306,7 +306,7 @@ const UnifiedSidebar: React.FC<UnifiedSidebarProps> = ({ isTestMode = false }) =
    * Check if a role should be available (unlocked) for the user
    * This is a critical function that determines the lock icons in the UI
    */
-  const isRoleAlwaysAvailable = (roleToCheck: UserRole): boolean => {
+  const isRoleAlwaysAvailable = (roleToCheck: string): boolean => {
     // In test mode, all roles are available
     if (isTestMode) return true;
     

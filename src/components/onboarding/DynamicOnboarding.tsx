@@ -6,7 +6,7 @@ import '@/components/Loading';
 
 interface DynamicOnboardingProps {
   pubkey?: string;
-  initialRole?: UserRole;
+  initialRole?: string;
 }
 
 /**

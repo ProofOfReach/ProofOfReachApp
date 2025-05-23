@@ -30,11 +30,11 @@ const mockContext = createContext<any>({
  */
 export const RoleProviderRefactored: React.FC<{ 
   children: ReactNode; 
-  initialRole?: UserRole;
+  initialRole?: string;
 }> = ({ children, initialRole = 'advertiser' }) => {
   const [role, setRole] = React.useState<UserRole>(initialRole);
   
-  const mockSetRole = jest.fn().mockImplementation((newRole: UserRole) => {
+  const mockSetRole = jest.fn().mockImplementation((newRole: string) => {
     setRole(newRole);
     // Update localStorage to mimic the real implementation
     localStorage.setItem('userRole', newRole);

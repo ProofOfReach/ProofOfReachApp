@@ -21,9 +21,9 @@ export type UserRole = 'viewer' | 'advertiser' | 'publisher' | 'admin' | 'stakeh
  */
 export interface RoleData {
   /** The currently active role for the user */
-  currentRole: UserRole;
+  currentRole: string;
   /** All roles available to this user */
-  availableRoles: UserRole[];
+  availableRoles: string[];
   /** Timestamp of when this data was last updated */
   timestamp: number;
 }
@@ -59,14 +59,14 @@ export function isValidUserRole(role: string): role is UserRole {
 /**
  * Filter a list of roles to only include valid roles
  */
-export function filterValidRoles(roles: string[]): UserRole[] {
+export function filterValidRoles(roles: string[]): string[] {
   return roles.filter(isValidUserRole);
 }
 
 /**
  * Get a safe default role if the provided role is invalid
  */
-export function getDefaultRole(): UserRole {
+export function getDefaultRole(): string {
   return 'viewer';
 }
 

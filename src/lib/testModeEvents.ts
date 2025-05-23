@@ -35,18 +35,18 @@ export type TestModeEventType = typeof TEST_MODE_EVENTS[keyof typeof TEST_MODE_E
 export type TestModeEventPayloads = {
   [TEST_MODE_EVENTS.STATE_CHANGED]: { state: TestModeState };
   [TEST_MODE_EVENTS.ROLE_CHANGED]: { 
-    from: UserRole; 
-    to: UserRole;
-    availableRoles: UserRole[];
+    from: string; 
+    to: string;
+    availableRoles: string[];
   };
   [TEST_MODE_EVENTS.ACTIVATED]: { 
     expiryTime: number;
-    initialRole: UserRole;
+    initialRole: string;
   };
   [TEST_MODE_EVENTS.DEACTIVATED]: undefined;
   [TEST_MODE_EVENTS.ROLES_UPDATED]: {
-    availableRoles: UserRole[];
-    currentRole: UserRole;
+    availableRoles: string[];
+    currentRole: string;
   };
 };
 

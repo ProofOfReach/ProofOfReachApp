@@ -17,12 +17,12 @@ import '@/context/RoleContext';
 import { testModeStorage } from './testModeStorageService';
 
 // Default role to use when none is set
-const DEFAULT_ROLE: UserRole = 'viewer';
+const DEFAULT_ROLE: string = 'viewer';
 
 // Define role-related storage types
 export interface RoleStorage {
-  currentRole: UserRole;
-  availableRoles: UserRole[];
+  currentRole: string;
+  availableRoles: string[];
   lastModified: number;
 }
 
@@ -47,7 +47,7 @@ export class RoleStorageService {
    * @param checkTestMode Whether to check test mode for role override
    * @returns The current user role
    */
-  getCurrentRole(checkTestMode: boolean = true): UserRole {
+  getCurrentRole(checkTestMode: boolean = true): string {
     try {
       // If test mode is enabled, check for role in test mode state
       if (checkTestMode && testModeStorage.isTestModeEnabled()) {
@@ -78,7 +78,7 @@ export class RoleStorageService {
    * @param checkTestMode Whether to check test mode for available roles
    * @returns Array of available roles
    */
-  getAvailableRoles(checkTestMode: boolean = true): UserRole[] {
+  getAvailableRoles(checkTestMode: boolean = true): string[] {
     try {
       // If test mode is enabled, return all roles
       if (checkTestMode && testModeStorage.isTestModeEnabled()) {
@@ -115,7 +115,7 @@ export class RoleStorageService {
    * @param availableRoles Optional updated list of available roles
    * @returns boolean indicating success
    */
-  setCurrentRole(role: UserRole, availableRoles?: UserRole[]): boolean {
+  setCurrentRole(role: string, availableRoles?: string[]): boolean {
     try {
       const oldRole = this.getCurrentRole();
       
@@ -165,7 +165,7 @@ export class RoleStorageService {
    * @param roles Array of available roles
    * @returns boolean indicating success
    */
-  setAvailableRoles(roles: UserRole[]): boolean {
+  setAvailableRoles(roles: string[]): boolean {
     try {
       if (!roles.length) {
         logger.warn('Attempted to set empty available roles array');
@@ -216,7 +216,7 @@ export class RoleStorageService {
    * @param checkTestMode Whether to check test mode for role availability
    * @returns boolean indicating if the role is available
    */
-  isRoleAvailable(role: UserRole, checkTestMode: boolean = true): boolean {
+  isRoleAvailable(role: string, checkTestMode: boolean = true): boolean {
     return this.getAvailableRoles(checkTestMode).includes(role);
   }
   

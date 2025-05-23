@@ -100,7 +100,7 @@ const ImprovedDashboardLayout: React.FC<ImprovedDashboardLayoutProps> = ({
   }, []);
   
   // Manually handle role changes without reloading the page
-  const handleRoleChange = async (newRole: UserRole) => {
+  const handleRoleChange = async (newRole: string) => {
     if (currentRole === newRole) return;
     
     console.log(`Switching to role: ${newRole}`);
@@ -162,7 +162,7 @@ const ImprovedDashboardLayout: React.FC<ImprovedDashboardLayoutProps> = ({
   
   // Define the type for navigation items
   type NavigationItem = {
-    role: UserRole;
+    role: string;
     label: string;
     icon: React.ReactNode;
     href: string;

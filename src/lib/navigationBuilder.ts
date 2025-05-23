@@ -41,7 +41,7 @@ export interface NavSection {
  * @param currentPath Current active path
  * @returns Array of navigation sections
  */
-export function buildNavigation(role: UserRole, currentPath: string): NavSection[] {
+export function buildNavigation(role: string, currentPath: string): NavSection[] {
   // Common navigation items available to all roles
   const commonItems: NavItemWithIconName[] = [
     {
@@ -204,7 +204,7 @@ export function createLogoutItem(onLogout: () => void): NavItemWithIconName {
  * @param role User role
  * @returns Object containing icon name and color classes
  */
-export function getRoleIconAndColor(role: UserRole): { 
+export function getRoleIconAndColor(role: string): { 
   iconName: IconName; 
   bgColor: string; 
   textColor: string; 

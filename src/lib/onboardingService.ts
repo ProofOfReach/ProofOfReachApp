@@ -14,7 +14,7 @@ const onboardingService = {
    * @param role The role to check onboarding status for (optional)
    * @returns Promise resolving to true if onboarding is complete, false otherwise
    */
-  isOnboardingComplete: async (pubkey: string, role?: UserRole): Promise<boolean> => {
+  isOnboardingComplete: async (pubkey: string, role?: string): Promise<boolean> => {
     // If we're running in the browser, we need to call the API instead of accessing Prisma directly
     if (typeof window !== 'undefined') {
       try {
@@ -108,7 +108,7 @@ const onboardingService = {
    * @param pubkey The user's public key
    * @param role The role to mark as complete
    */
-  markOnboardingComplete: async (pubkey: string, role: UserRole): Promise<void> => {
+  markOnboardingComplete: async (pubkey: string, role: string): Promise<void> => {
     const correlationId = `onboarding-completion-${pubkey}-${role}`;
     
     // If we're running in the browser, use the API instead
@@ -297,7 +297,7 @@ const onboardingService = {
    * @param pubkey The user's public key
    * @param role The role to reset onboarding for (optional - if not provided, resets all roles)
    */
-  resetOnboardingStatus: async (pubkey: string, role?: UserRole): Promise<void> => {
+  resetOnboardingStatus: async (pubkey: string, role?: string): Promise<void> => {
     const correlationId = `onboarding-reset-${pubkey}-${role || 'all'}`;
     
     // Handle client-side scenario
@@ -519,7 +519,7 @@ const onboardingService = {
    * @param role The role being onboarded
    * @param step The current step in the onboarding process
    */
-  saveOnboardingStep: async (pubkey: string, role: UserRole, step: string): Promise<void> => {
+  saveOnboardingStep: async (pubkey: string, role: string, step: string): Promise<void> => {
     const correlationId = `onboarding-step-${pubkey}-${role}-${step}`;
     
     // Client-side implementation for browser environment
@@ -663,7 +663,7 @@ const onboardingService = {
    * @param role The user's current role
    * @returns Promise resolving to the URL to redirect to
    */
-  getPostLoginRedirectUrl: async (pubkey: string, role?: UserRole): Promise<string> => {
+  getPostLoginRedirectUrl: async (pubkey: string, role?: string): Promise<string> => {
     const correlationId = `onboarding-redirect-${pubkey}-${role || 'no-role'}`;
     
     try {

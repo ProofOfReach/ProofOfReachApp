@@ -152,7 +152,7 @@ jest.mock('next/router', () => ({
 // Define custom options type
 type CustomRenderOptions = {
   skipRoleProvider?: boolean;
-  initialRole?: UserRole;
+  initialRole?: string;
 } & Omit<RenderOptions, 'wrapper'>;
 
 // Create a fresh QueryClient for each test to avoid shared state

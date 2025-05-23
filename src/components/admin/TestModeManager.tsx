@@ -41,7 +41,7 @@ const TestModeManager: React.FC = () => {
   ];
   
   // Role options
-  const roleOptions: UserRole[] = ['viewer', 'advertiser', 'publisher', 'admin', 'stakeholder'];
+  const roleOptions: string[] = ['viewer', 'advertiser', 'publisher', 'admin', 'stakeholder'];
   
   // Handle enabling test mode with selected duration
   const handleEnableTestMode = async () => {
@@ -72,7 +72,7 @@ const TestModeManager: React.FC = () => {
   };
   
   // Handle role change
-  const handleRoleChange = async (role: UserRole) => {
+  const handleRoleChange = async (role: string) => {
     try {
       await setCurrentRole(role);
     } catch (err: any) {

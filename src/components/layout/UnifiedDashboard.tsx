@@ -22,7 +22,7 @@ const DashboardLoading: React.FC = () => (
 );
 
 interface UnifiedDashboardProps {
-  initialRole?: UserRole;
+  initialRole?: string;
 }
 
 const UnifiedDashboard: React.FC<UnifiedDashboardProps> = ({ initialRole }) => {

@@ -83,33 +83,33 @@ export type TestModeEventPayloads = {
   [TEST_MODE_EVENTS.STATE_CHANGED]: { state: TestModeState };
   [TEST_MODE_EVENTS.ACTIVATED]: { 
     expiryTime: number;
-    initialRole: UserRole;
+    initialRole: string;
   };
   [TEST_MODE_EVENTS.DEACTIVATED]: undefined;
 };
 
 export type RoleEventPayloads = {
   [ROLE_EVENTS.ROLE_CHANGED]: { 
-    from: UserRole; 
-    to: UserRole;
-    availableRoles: UserRole[];
+    from: string; 
+    to: string;
+    availableRoles: string[];
   };
   [ROLE_EVENTS.ROLES_UPDATED]: {
-    availableRoles: UserRole[];
-    currentRole: UserRole;
+    availableRoles: string[];
+    currentRole: string;
   };
   [ROLE_EVENTS.PERMISSION_CHANGED]: {
-    role: UserRole;
+    role: string;
     permission: string;
     granted: boolean;
   };
   [ROLE_EVENTS.ROLE_ERROR]: {
     message: string;
-    role?: UserRole;
+    role?: string;
   };
   [ROLE_EVENTS.PERMISSION_DENIED]: {
     permission: string;
-    role: UserRole;
+    role: string;
   };
 };
 

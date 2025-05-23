@@ -27,7 +27,7 @@ import {
 interface RoleDropdownProps {
   skipNavigation?: boolean;
   className?: string;
-  onRoleChange?: (role: UserRole) => void;
+  onRoleChange?: (role: string) => void;
 }
 
 /**
@@ -133,7 +133,7 @@ const RoleDropdown: React.FC<RoleDropdownProps> = ({
       logger.log('Test mode detected in fetchRolesFromCache with currentRole:', currentRoleValue);
       
       // Show all roles and highlight the current one using all valid roles
-      const allRoles: UserRole[] = ['viewer', 'advertiser', 'publisher', 'admin', 'stakeholder']; 
+      const allRoles: string[] = ['viewer', 'advertiser', 'publisher', 'admin', 'stakeholder']; 
       setAvailableRoles(allRoles);
       
       // Broadcast the current state for other components
@@ -155,7 +155,7 @@ const RoleDropdown: React.FC<RoleDropdownProps> = ({
         let parsedRoles = typeof cachedRoles === 'string' ? JSON.parse(cachedRoles) : cachedRoles;
         
         // Ensure we only use valid UserRole values through the RoleManager
-        const validRoles: UserRole[] = Array.isArray(parsedRoles) 
+        const validRoles: string[] = Array.isArray(parsedRoles) 
           ? parsedRoles.filter(isUserRole)
           : ['viewer'];
         
@@ -182,7 +182,7 @@ const RoleDropdown: React.FC<RoleDropdownProps> = ({
     setIsLoading(true);
     try {
       // Get current role using RoleManager (source of truth)
-      let currentRoleValue: UserRole;
+      let currentRoleValue: string;
       
       try {
         // Try to get from enhanced storage first
@@ -204,7 +204,7 @@ const RoleDropdown: React.FC<RoleDropdownProps> = ({
       // In test mode, we show all roles but still highlight the current one
       if (isTestModeActive) {
         logger.log('Test mode active in fetchRolesFromAPI - currentRole:', currentRoleValue);
-        const allRoles: UserRole[] = ['viewer', 'advertiser', 'publisher', 'admin', 'stakeholder'];
+        const allRoles: string[] = ['viewer', 'advertiser', 'publisher', 'admin', 'stakeholder'];
         
         // Use the enhancedStorage to save roles consistently
         try {
@@ -258,7 +258,7 @@ const RoleDropdown: React.FC<RoleDropdownProps> = ({
           let parsedRoles = typeof cachedRoles === 'string' ? JSON.parse(cachedRoles) : cachedRoles;
           
           // Ensure we only use valid UserRole values
-          const validRoles: UserRole[] = Array.isArray(parsedRoles) 
+          const validRoles: string[] = Array.isArray(parsedRoles) 
             ? parsedRoles.filter(isUserRole)
             : ['viewer'];
             
@@ -285,7 +285,7 @@ const RoleDropdown: React.FC<RoleDropdownProps> = ({
           logger.debug('Roles from API:', fetchedRoles);
           
           // Filter to ensure we only use valid UserRole values
-          const validRoles: UserRole[] = Array.isArray(fetchedRoles) 
+          const validRoles: string[] = Array.isArray(fetchedRoles) 
             ? fetchedRoles.filter(isUserRole)
             : ['viewer'];
           

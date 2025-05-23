@@ -8,7 +8,7 @@ export interface AuthState {
   pubkey: string;
   isLoggedIn: boolean;
   isTestMode: boolean;
-  availableRoles: UserRole[];
+  availableRoles: string[];
   profile: {
     name?: string;
     displayName?: string;
@@ -22,8 +22,8 @@ export const AuthContext = createContext<{
   login: (pubkey: string, isTest?: boolean) => Promise<boolean>;
   logout: () => Promise<void>;
   refreshRoles: () => Promise<UserRole[]>;
-  addRole: (role: UserRole) => Promise<boolean>;
-  removeRole: (role: UserRole) => Promise<boolean>;
+  addRole: (role: string) => Promise<boolean>;
+  removeRole: (role: string) => Promise<boolean>;
 }>({
   auth: null,
   login: async () => false,
@@ -59,7 +59,7 @@ export const useAuthProvider = () => {
           userRoles = normalizeRoles(userRoles);
           
           // Convert string[] to UserRole[]
-          const availableRoles: UserRole[] = userRoles.filter(
+          const availableRoles: string[] = userRoles.filter(
             (role): role is UserRole => role === 'viewer' || role === 'advertiser' || role === 'publisher' || 
                                        role === 'admin' || role === 'stakeholder'
           );
@@ -135,7 +135,7 @@ export const useAuthProvider = () => {
       userRoles = normalizeRoles(userRoles);
       
       // Convert string[] to UserRole[]
-      const availableRoles: UserRole[] = userRoles.filter(
+      const availableRoles: string[] = userRoles.filter(
         (role): role is UserRole => role === "viewer" || role === 'advertiser' || role === 'publisher' || 
                                    role === 'admin' || role === 'stakeholder'
       );
@@ -230,7 +230,7 @@ export const useAuthProvider = () => {
         const success = await UserManager.enableAllRolesForTestUser(auth.pubkey);
         console.log("Refresh roles result:", success ? "Success" : "Failed");
         
-        const allRoles: UserRole[] = ['viewer', 'advertiser', 'publisher', 'admin', 'stakeholder'];
+        const allRoles: string[] = ['viewer', 'advertiser', 'publisher', 'admin', 'stakeholder'];
         
         setAuth({
           ...auth,
@@ -247,7 +247,7 @@ export const useAuthProvider = () => {
       userRoles = normalizeRoles(userRoles);
       
       // Convert string[] to UserRole[]
-      const availableRoles: UserRole[] = userRoles.filter(
+      const availableRoles: string[] = userRoles.filter(
         (role): role is UserRole => role === "viewer" || role === 'advertiser' || role === 'publisher' || 
                                    role === 'admin' || role === 'stakeholder'
       );
@@ -265,7 +265,7 @@ export const useAuthProvider = () => {
   };
   
   // Add role
-  const addRole = async (role: UserRole): Promise<boolean> => {
+  const addRole = async (role: string): Promise<boolean> => {
     if (!auth || !auth.isLoggedIn) return false;
     
     // Skip if role already exists
@@ -285,7 +285,7 @@ export const useAuthProvider = () => {
   };
   
   // Remove role
-  const removeRole = async (role: UserRole): Promise<boolean> => {
+  const removeRole = async (role: string): Promise<boolean> => {
     if (!auth || !auth.isLoggedIn) return false;
     
     // Can't remove the viewer role

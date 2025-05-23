@@ -7,7 +7,7 @@ interface RoleGuardProps {
    * The role required to view the content. 
    * If not provided, capability will be used instead.
    */
-  requiredRole?: UserRole;
+  requiredRole?: string;
   
   /** 
    * The capability required to view the content.

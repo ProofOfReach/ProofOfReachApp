@@ -64,7 +64,7 @@ const WorkingDashboard = () => {
   }, []);
   
   // Handle role change directly
-  const handleRoleChange = (newRole: UserRole) => {
+  const handleRoleChange = (newRole: string) => {
     if (currentRole === newRole) return;
     
     // Store previous role for event

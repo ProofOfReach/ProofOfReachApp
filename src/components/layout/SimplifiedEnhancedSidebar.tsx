@@ -51,13 +51,13 @@ const SimplifiedEnhancedSidebar: React.FC = () => {
   };
 
   // Simple role change handler for demo
-  const handleRoleChange = (newRole: UserRole) => {
+  const handleRoleChange = (newRole: string) => {
     setCurrentRole(newRole);
     setRoleDropdownOpen(false);
   };
   
   // Get filtered role options (all roles except current one)
-  const getFilteredRoleOptions = (): UserRole[] => {
+  const getFilteredRoleOptions = (): string[] => {
     return (['viewer', 'advertiser', 'publisher', 'admin', 'stakeholder'] as UserRole[])
       .filter(roleOption => roleOption !== currentRole);
   };

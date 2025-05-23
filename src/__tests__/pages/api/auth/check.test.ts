@@ -14,8 +14,8 @@ jest.mock('../../../../lib/errorHandling', () => {
   const originalModule = jest.requireActual('../../../../lib/errorHandling');
   return {
     ...originalModule,
-    handleError: jest.fn((err, req, res) => {
-      // Simple implementation that mimics the real handleError function
+    error: jest.fn((err, req, res) => {
+      // Simple implementation that mimics the real error function
       res.status(err.status || 500).json({
         error: err.name || 'Error',
         message: err.message || 'Unknown error',

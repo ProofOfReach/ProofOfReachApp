@@ -158,7 +158,7 @@ function getDefaultMessageForErrorType(type: ErrorType): string {
 /**
  * Standard error handler for API routes
  */
-export function handleError(
+export function error(
   err: any
   req: NextApiRequest,
   res: NextApiResponse
@@ -270,35 +270,35 @@ function throwTypedError(type: ErrorType, message: string, status?: number, deta
 }
 
 /**
- * Throw a validation error that will be caught by handleError
+ * Throw a validation error that will be caught by error
  */
 export function throwValidationError(message: string, details?: any): never {
   return throwTypedError(ErrorType.Validation, message, 400, details);
 }
 
 /**
- * Throw an authentication error that will be caught by handleError
+ * Throw an authentication error that will be caught by error
  */
 export function throwAuthenticationError(message = 'Not authenticated'): never {
   return throwTypedError(ErrorType.Authentication, message, 401);
 }
 
 /**
- * Throw an authorization error that will be caught by handleError
+ * Throw an authorization error that will be caught by error
  */
 export function throwAuthorizationError(message = 'Not authorized'): never {
   return throwTypedError(ErrorType.Authorization, message, 403);
 }
 
 /**
- * Throw a not found error that will be caught by handleError
+ * Throw a not found error that will be caught by error
  */
 export function throwNotFoundError(message = 'Resource not found'): never {
   return throwTypedError(ErrorType.NotFound, message, 404);
 }
 
 /**
- * Throw a database error that will be caught by handleError
+ * Throw a database error that will be caught by error
  */
 export function throwDatabaseError(message = 'Database operation failed', details?: any): never {
   return throwTypedError(ErrorType.Database, message, 500, details);

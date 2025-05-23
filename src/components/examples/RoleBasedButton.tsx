@@ -15,7 +15,7 @@ import { logger } from '../../lib/logger';
 
 interface RoleBasedButtonProps {
   /** The role required to see this button */
-  requiredRole?: UserRole;
+  requiredRole?: string;
   /** Button label text */
   label: string;
   /** Click handler function */
@@ -23,7 +23,7 @@ interface RoleBasedButtonProps {
   /** Optional custom styles */
   className?: string;
   /** Allow multiple roles to access this button */
-  allowedRoles?: UserRole[];
+  allowedRoles?: string[];
   /** Optional icon to display before the label */
   icon?: ReactNode;
   /** Whether the button is disabled */

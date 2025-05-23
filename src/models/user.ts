@@ -20,7 +20,7 @@ export interface UserProfile {
 export interface UserRolePermission {
   id: string;
   userId: string;
-  role: UserRole;
+  role: string;
   enabled: boolean;
   createdAt: Date;
   updatedAt: Date;
@@ -118,7 +118,7 @@ export class UserManager {
     return false;
   }
   
-  static async addRoleToUser(pubkey: string, role: UserRole): Promise<boolean> {
+  static async addRoleToUser(pubkey: string, role: string): Promise<boolean> {
     // This will be replaced with an actual API call
     try {
       // Call to API endpoint to add role to user
@@ -137,7 +137,7 @@ export class UserManager {
     }
   }
   
-  static async removeRoleFromUser(pubkey: string, role: UserRole): Promise<boolean> {
+  static async removeRoleFromUser(pubkey: string, role: string): Promise<boolean> {
     // This will be replaced with an actual API call
     try {
       // Call to API endpoint to remove role from user

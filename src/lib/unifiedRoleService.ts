@@ -24,16 +24,16 @@ export interface RoleServiceConfig {
   /** Enable debug logging */
   debug?: boolean;
   /** Default role if none is set */
-  defaultRole?: UserRole;
+  defaultRole?: string;
   /** Storage key for local storage */
   storageKey?: string;
 }
 
 export interface RoleData {
   /** Currently active role */
-  currentRole: UserRole;
+  currentRole: string;
   /** Roles available to this user */
-  availableRoles: UserRole[];
+  availableRoles: string[];
   /** Timestamp of when this data was last updated */
   timestamp: number;
 }
@@ -231,7 +231,7 @@ export class UnifiedRoleService {
       }
       
       // Always include viewer role as a base role
-      const roles: UserRole[] = ['viewer'];
+      const roles: string[] = ['viewer'];
       
       // Add all active roles from UserRole table
       if (user.UserRole && user.UserRole.length > 0) {
@@ -268,7 +268,7 @@ export class UnifiedRoleService {
    * @param roleParam If provided, check if userId has this role on the server
    * @returns Boolean (sync) or Promise<boolean> (async) depending on context
    */
-  public hasRole(roleOrUserId: string, roleParam?: UserRole): boolean | Promise<boolean> {
+  public hasRole(roleOrUserId: string, roleParam?: string): boolean | Promise<boolean> {
     // If the second parameter is provided, this is the server version
     if (roleParam) {
       return this.hasRoleOnServer(roleOrUserId, roleParam);
@@ -281,7 +281,7 @@ export class UnifiedRoleService {
   /**
    * Check if current user has a specific role (local context version)
    */
-  private hasRoleInLocalContext(role: UserRole): boolean {
+  private hasRoleInLocalContext(role: string): boolean {
     // Normalize the role (convert 'viewer' to 'viewer')
     const normalizedRole = normalizeRole(role) as UserRole;
     
@@ -299,7 +299,7 @@ export class UnifiedRoleService {
    * @param role Role to check
    * @returns Promise resolving to boolean
    */
-  private async hasRoleOnServer(userId: string, role: UserRole): Promise<boolean> {
+  private async hasRoleOnServer(userId: string, role: string): Promise<boolean> {
     // Normalize the role (convert 'viewer' to 'viewer')
     const normalizedRole = normalizeRole(role) as UserRole;
     
@@ -323,8 +323,8 @@ export class UnifiedRoleService {
    */
   public async updateUserRoles(
     userId: string,
-    addRoles: UserRole[] = [],
-    removeRoles: UserRole[] = []
+    addRoles: string[] = [],
+    removeRoles: string[] = []
   ): Promise<boolean> {
     try {
       // Validate input
@@ -418,7 +418,7 @@ export class UnifiedRoleService {
    * @param roleParam If provided, set this role as current for the userId on the server
    * @returns Boolean (sync) or Promise<boolean> (async) depending on context
    */
-  public setCurrentRole(userIdOrRole: string, roleParam?: UserRole): boolean | Promise<boolean> {
+  public setCurrentRole(userIdOrRole: string, roleParam?: string): boolean | Promise<boolean> {
     // If second parameter is provided, this is the async server version
     if (roleParam) {
       return this.setCurrentRoleOnServer(userIdOrRole, roleParam);
@@ -435,7 +435,7 @@ export class UnifiedRoleService {
    * @param role Role to set as current
    * @returns Promise resolving to success status
    */
-  private async setCurrentRoleOnServer(userId: string, role: UserRole): Promise<boolean> {
+  private async setCurrentRoleOnServer(userId: string, role: string): Promise<boolean> {
     try {
       // Normalize the role (convert 'viewer' to 'viewer')
       const normalizedRole = normalizeRole(role);
@@ -498,7 +498,7 @@ export class UnifiedRoleService {
   /**
    * Update just the current role for the local context
    */
-  public setCurrentRoleInLocalContext(role: UserRole): boolean {
+  public setCurrentRoleInLocalContext(role: string): boolean {
     try {
       // Normalize the role (convert 'viewer' to 'viewer')
       const normalizedRole = normalizeRole(role);
@@ -528,7 +528,7 @@ export class UnifiedRoleService {
   /**
    * Update the available roles
    */
-  public setAvailableRoles(roles: UserRole[]): void {
+  public setAvailableRoles(roles: string[]): void {
     try {
       const currentData = this.getRoleData();
       const newData = {
@@ -552,7 +552,7 @@ export class UnifiedRoleService {
   /**
    * Check if a specific role is available for the current user
    */
-  public isRoleAvailable(role: UserRole): boolean {
+  public isRoleAvailable(role: string): boolean {
     const data = this.getRoleData();
     return data.availableRoles.includes(role);
   }
@@ -560,7 +560,7 @@ export class UnifiedRoleService {
   /**
    * Check if the user has any of the specified roles
    */
-  public hasAnyRole(roles: UserRole[]): boolean {
+  public hasAnyRole(roles: string[]): boolean {
     const data = this.getRoleData();
     return roles.includes(data.currentRole);
   }
@@ -570,7 +570,7 @@ export class UnifiedRoleService {
    * @param userId Optional user ID to get role from server, if not provided uses local context
    * @returns UserRole (sync) or Promise<UserRole> (async) depending on context
    */
-  public getCurrentRole(userId?: string): UserRole | Promise<UserRole> {
+  public getCurrentRole(userId?: string): string | Promise<UserRole> {
     if (userId) {
       return this.getCurrentRoleFromServer(userId);
     }
@@ -581,7 +581,7 @@ export class UnifiedRoleService {
   /**
    * Get the current active role from local context
    */
-  public getCurrentRoleFromLocalContext(): UserRole {
+  public getCurrentRoleFromLocalContext(): string {
     const data = this.getRoleData();
     return data.currentRole;
   }
@@ -627,7 +627,7 @@ export class UnifiedRoleService {
   /**
    * Get all roles available to the current user
    */
-  public getAvailableRoles(): UserRole[] {
+  public getAvailableRoles(): string[] {
     const data = this.getRoleData();
     return [...data.availableRoles];
   }
@@ -707,7 +707,7 @@ export class UnifiedRoleService {
   /**
    * Update the server with the current role selection
    */
-  public async updateServerRole(role: UserRole): Promise<boolean> {
+  public async updateServerRole(role: string): Promise<boolean> {
     try {
       const response = await fetch(`${this.config.apiUrl}/set-role`, {
         method: 'POST',

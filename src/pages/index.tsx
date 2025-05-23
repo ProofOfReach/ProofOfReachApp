@@ -16,7 +16,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { Form } from "@/components/ui/form";
-import { Separator as Divider } from "@/components/ui/separator";
+const Divider = ({ className }: { className?: string }) => <div className={`border-t ${className}`} />;
 
 // Define the form schema
 const waitlistFormSchema = z.object({

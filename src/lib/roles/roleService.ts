@@ -134,7 +134,7 @@ const ROLE_DEFINITIONS: Record<UserRole, RoleInfo> = {
 };
 
 // Default role when none is specified
-const DEFAULT_ROLE: UserRole = 'viewer';
+const DEFAULT_ROLE: string = 'viewer';
 
 /**
  * Role Service for comprehensive role management
@@ -162,7 +162,7 @@ export class RoleService {
   /**
    * Get role definition by role ID
    */
-  public getRoleDefinition(roleId: UserRole): RoleInfo {
+  public getRoleDefinition(roleId: string): RoleInfo {
     return ROLE_DEFINITIONS[roleId] || ROLE_DEFINITIONS[DEFAULT_ROLE];
   }
 
@@ -176,7 +176,7 @@ export class RoleService {
   /**
    * Check if a role has a specific permission
    */
-  public roleHasPermission(role: UserRole, permission: keyof RolePermissions): boolean {
+  public roleHasPermission(role: string, permission: keyof RolePermissions): boolean {
     const roleInfo = this.getRoleDefinition(role);
     return roleInfo.permissions[permission] || false;
   }
@@ -205,7 +205,7 @@ export class RoleService {
       });
 
       // Start with viewer role (everyone has it)
-      const roles: UserRole[] = ['viewer']; 
+      const roles: string[] = ['viewer']; 
 
       // Add all active role records
       for (const userRole of userRoles) {
@@ -263,7 +263,7 @@ export class RoleService {
   /**
    * Set a user's current role
    */
-  public async setCurrentRole(userId: string, role: UserRole): Promise<boolean> {
+  public async setCurrentRole(userId: string, role: string): Promise<boolean> {
     try {
       // Validate the requested role
       if (!Object.keys(ROLE_DEFINITIONS).includes(role)) {
@@ -342,7 +342,7 @@ export class RoleService {
   /**
    * Check if a user has a specific role
    */
-  public async hasRole(userId: string, role: UserRole): Promise<boolean> {
+  public async hasRole(userId: string, role: string): Promise<boolean> {
     try {
       const roles = await this.getUserRoles(userId);
       return roles.includes(role);
@@ -395,7 +395,7 @@ export class RoleService {
    */
   public async assignRole(
     userId: string, 
-    role: UserRole, 
+    role: string, 
     options: { 
       isActive?: boolean, 
       isTestRole?: boolean
@@ -460,7 +460,7 @@ export class RoleService {
   /**
    * Remove a role from a user
    */
-  public async removeRole(userId: string, role: UserRole): Promise<boolean> {
+  public async removeRole(userId: string, role: string): Promise<boolean> {
     return this.assignRole(userId, role, { isActive: false });
   }
 
@@ -585,8 +585,8 @@ export class RoleService {
    * This is a convenience method for API endpoints
    */
   public async getRolesByPubkey(pubkey: string): Promise<{
-    availableRoles: UserRole[];
-    currentRole: UserRole;
+    availableRoles: string[];
+    currentRole: string;
   }> {
     try {
       // Find the user by pubkey
@@ -623,7 +623,7 @@ export class RoleService {
    * Update current role by nostrPubkey
    * This is a convenience method for API endpoints
    */
-  public async updateRoleByPubkey(pubkey: string, role: UserRole): Promise<boolean> {
+  public async updateRoleByPubkey(pubkey: string, role: string): Promise<boolean> {
     try {
       // Find the user by pubkey
       const user = await prisma.user.findUnique({

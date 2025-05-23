@@ -39,7 +39,7 @@ const AuthDirectPage = () => {
   }, []);
   
   // Function to check for roles
-  const hasRole = (role: UserRole): boolean => {
+  const hasRole = (role: string): boolean => {
     if (!authState || !authState.isLoggedIn) {
       return false;
     }

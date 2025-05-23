@@ -26,8 +26,8 @@ export const STORAGE_KEYS = {
 export type TestModeState = {
   isActive: boolean;
   expiryTime: number | null;
-  currentRole: UserRole;
-  availableRoles: UserRole[];
+  currentRole: string;
+  availableRoles: string[];
   lastUpdated: number;
 };
 
@@ -154,7 +154,7 @@ export class StorageService {
    * Check if test mode is currently active
    * This checks both the new state object and legacy flags for backward compatibility
    */
-  static getCurrentRole(): UserRole {
+  static getCurrentRole(): string {
     // Server-side rendering check
     if (typeof window === 'undefined') return 'viewer';
     

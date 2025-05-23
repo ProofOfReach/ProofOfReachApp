@@ -12,7 +12,7 @@ interface ProtectedRouteOptions {
    * The required role(s) to access this route.
    * If multiple roles are provided, the user must have at least one of them.
    */
-  requiredRoles?: UserRole | UserRole[];
+  requiredRoles?: string | UserRole[];
   
   /**
    * Where to redirect if authentication fails.

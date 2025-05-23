@@ -25,7 +25,7 @@ const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
           "border-gray-300 focus-visible:ring-purple-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white",
           className
         )}
-        ref={ref}
+        ref={ref as any}
         {...props}
       />
     )

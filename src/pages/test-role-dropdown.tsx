@@ -12,7 +12,7 @@ import '@/utils/roleEvents';
 const TestRoleDropdownPage: React.FC = () => {
   const [selectedRole, setSelectedRole] = React.useState<UserRole>('viewer');
 
-  const handleRoleChange = (role: UserRole) => {
+  const handleRoleChange = (role: string) => {
     console.log('Role changed to:', role);
     setSelectedRole(role);
   };

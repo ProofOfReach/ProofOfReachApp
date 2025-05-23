@@ -19,7 +19,7 @@ const roleTextColors = {
 };
 
 interface RoleTransitionProps {
-  role: UserRole;
+  role: string;
   isVisible: boolean;
 }
 

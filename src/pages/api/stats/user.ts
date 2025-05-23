@@ -92,7 +92,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse, user: Authenti
     logger.debug(`Returning user stats: ${JSON.stringify(stats)}`);
     return res.status(200).json(stats);
   } catch (error) {
-    return handleError(error, req, res);
+    return error(error, req, res);
   }
 }
 

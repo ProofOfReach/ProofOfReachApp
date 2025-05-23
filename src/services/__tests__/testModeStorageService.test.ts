@@ -60,7 +60,7 @@ describe('TestModeStorageService', () => {
   });
 
   describe('enableTestMode', () => {
-    const initialRole: UserRole = 'admin';
+    const initialRole: string = 'admin';
     
     it('successfully enables test mode with default duration', () => {
       const now = Date.now();
@@ -519,7 +519,7 @@ describe('TestModeStorageService', () => {
       
       mockStorage.getSecureItem.mockReturnValueOnce(testMode);
       
-      const newRole: UserRole = 'publisher';
+      const newRole: string = 'publisher';
       const result = service.updateTestModeInitialRole(newRole);
       
       expect(result).toBe(true);

@@ -17,14 +17,14 @@ interface TestModeContextType {
   // Core test mode state
   isTestMode: boolean;
   timeRemaining: number | null;
-  currentRole: UserRole;
-  availableRoles: UserRole[];
+  currentRole: string;
+  availableRoles: string[];
   
   // Actions
   enableTestMode: () => void;
   disableTestMode: () => void;
   enableAllRoles: () => Promise<boolean>;
-  setCurrentRole: (role: UserRole) => Promise<boolean>;
+  setCurrentRole: (role: string) => Promise<boolean>;
   
   // State information
   isTestModeAvailable: boolean;
@@ -470,7 +470,7 @@ export const TestModeProvider: React.FC<TestModeProviderProps> = ({ children }) 
    * Set current role in test mode
    * Fully delegated to RoleManager service
    */
-  const setCurrentRoleAction = useCallback(async (role: UserRole): Promise<boolean> => {
+  const setCurrentRoleAction = useCallback(async (role: string): Promise<boolean> => {
     // Check if test mode is active
     const checkTestMode = () => StorageService.isTestModeActive();
     

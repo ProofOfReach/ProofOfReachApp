@@ -175,7 +175,7 @@ export default function TestModeBanner() {
   const handleEnableAllRoles = async () => {
     setIsLoading(true);
     try {
-      const allRoles: UserRole[] = ['viewer', 'advertiser', 'publisher', 'admin', 'stakeholder'];
+      const allRoles: string[] = ['viewer', 'advertiser', 'publisher', 'admin', 'stakeholder'];
       
       // In test mode, use direct client-side updates
       if (testModeService.isActive()) {

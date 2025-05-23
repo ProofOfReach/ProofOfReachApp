@@ -43,7 +43,7 @@ export function useLocalRole() {
   }, []);
   
   // Change role function
-  const changeRole = useCallback(async (role: UserRole) => {
+  const changeRole = useCallback(async (role: string) => {
     if (currentRole === role) return;
     
     const success = await RoleService.changeRole(role);
@@ -57,7 +57,7 @@ export function useLocalRole() {
   }, [currentRole]);
   
   // Check if role is available (simplified, always returns true in test mode)
-  const isRoleAvailable = useCallback((role: UserRole) => {
+  const isRoleAvailable = useCallback((role: string) => {
     if (isTestMode) return true;
     
     // In a real implementation, we would check with the server

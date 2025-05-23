@@ -7,7 +7,7 @@ import type { UserRole } from '../types/auth';
  * @param role The role to check for
  * @returns Boolean indicating if the user has the role
  */
-export function useHasRole(role: UserRole): boolean {
+export function useHasRole(role: string): boolean {
   const { hasRole } = useAuthSwitch();
   return hasRole(role);
 }

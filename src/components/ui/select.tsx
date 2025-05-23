@@ -19,7 +19,7 @@ const Select = React.forwardRef<HTMLSelectElement, SelectProps>(
           error && "border-red-500 focus:ring-red-500",
           className
         )}
-        ref={ref}
+        ref={ref as any}
         {...props}
       >
         {children}
@@ -35,7 +35,7 @@ const SelectGroup = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <optgroup
     className={cn("", className)}
-    ref={ref}
+    ref={ref as any}
     {...props}
   />
 ))
@@ -47,7 +47,7 @@ const SelectOption = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <option
     className={cn("", className)}
-    ref={ref}
+    ref={ref as any}
     {...props}
   />
 ))

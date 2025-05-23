@@ -22,7 +22,7 @@ const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>(
             error && "border-red-500 focus:ring-red-500",
             className
           )}
-          ref={ref}
+          ref={ref as any}
           {...props}
         />
         {label && (

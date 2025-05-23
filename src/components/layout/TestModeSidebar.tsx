@@ -29,7 +29,7 @@ const TestModeSidebar: React.FC = () => {
   const dropdownRef = useRef<HTMLDivElement>(null);
   
   // Determine current role from URL
-  const determineCurrentRoleFromURL = (): UserRole => {
+  const determineCurrentRoleFromURL = (): string => {
     if (typeof window === 'undefined') return 'viewer';
     
     const path = window.location.pathname;
@@ -135,7 +135,7 @@ const TestModeSidebar: React.FC = () => {
   };
   
   // Direct role change handler
-  const handleDirectRoleChange = (newRole: UserRole) => {
+  const handleDirectRoleChange = (newRole: string) => {
     // Close dropdown
     setDropdownOpen(false);
     
@@ -177,7 +177,7 @@ const TestModeSidebar: React.FC = () => {
   };
   
   // Get background color based on current role
-  const getRoleBackgroundColor = (role: UserRole) => {
+  const getRoleBackgroundColor = (role: string) => {
     if (role === currentRole) {
       switch(role) {
         case 'viewer': return 'bg-blue-100 dark:bg-blue-900/20';
@@ -191,7 +191,7 @@ const TestModeSidebar: React.FC = () => {
   };
   
   // Get text color based on role
-  const getRoleTextColor = (role: UserRole) => {
+  const getRoleTextColor = (role: string) => {
     if (role === currentRole) {
       switch(role) {
         case 'viewer': return 'text-blue-700 dark:text-blue-300';

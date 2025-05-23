@@ -52,7 +52,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse, auth: any) {
       const normalizedRole = normalizeRole(role);
       
       // Validate the role
-      const validRoles: UserRole[] = ['viewer', 'advertiser', 'publisher', 'admin', 'stakeholder'];
+      const validRoles: string[] = ['viewer', 'advertiser', 'publisher', 'admin', 'stakeholder'];
       if (!validRoles.includes(normalizedRole as UserRole)) {
         return res.status(400).json({ error: 'Invalid role' });
       }

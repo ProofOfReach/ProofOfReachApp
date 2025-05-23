@@ -112,7 +112,7 @@ export const useUnifiedRole = () => {
    * @returns Promise resolving to success status
    */
   const changeRole = useCallback(
-    async (newRole: UserRole, preservePath = false): Promise<boolean> => {
+    async (newRole: string, preservePath = false): Promise<boolean> => {
       // Validate the role
       if (!isValidRole(newRole)) {
         logger.warn(`Attempted to set invalid role: ${newRole}`);
@@ -157,7 +157,7 @@ export const useUnifiedRole = () => {
    * @returns Whether the role is available
    */
   const isRoleAvailable = useCallback(
-    (role: UserRole): boolean => {
+    (role: string): boolean => {
       return availableRoles.includes(role);
     },
     [availableRoles]

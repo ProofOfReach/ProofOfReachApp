@@ -47,6 +47,6 @@ export default async function handler(
       isTestMode
     });
   } catch (error) {
-    handleError(error, req, res);
+    error(error, req, res);
   }
 }

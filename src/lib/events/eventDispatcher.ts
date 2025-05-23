@@ -214,7 +214,7 @@ export const dispatchStorageMigrated = (
  */
 export const notifyTestModeActivated = (
   expiryTime: number,
-  initialRole: UserRole
+  initialRole: string
 ): void => {
   dispatchTestModeEvent(TEST_MODE_EVENTS.ACTIVATED, {
     expiryTime,
@@ -233,9 +233,9 @@ export const notifyTestModeDeactivated = (): void => {
  * Dispatch a notification that a role has changed
  */
 export const notifyRoleChanged = (
-  from: UserRole, 
-  to: UserRole,
-  availableRoles: UserRole[] = []
+  from: string, 
+  to: string,
+  availableRoles: string[] = []
 ): void => {
   dispatchRoleEvent(ROLE_EVENTS.ROLE_CHANGED, {
     from,
@@ -248,8 +248,8 @@ export const notifyRoleChanged = (
  * Dispatch a notification that available roles have been updated
  */
 export const notifyRolesUpdated = (
-  availableRoles: UserRole[],
-  currentRole: UserRole
+  availableRoles: string[],
+  currentRole: string
 ): void => {
   dispatchRoleEvent(ROLE_EVENTS.ROLES_UPDATED, {
     availableRoles,

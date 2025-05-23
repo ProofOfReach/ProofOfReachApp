@@ -8,21 +8,21 @@ import { useLocalRole } from '../hooks/useLocalRole';
  */
 interface EnhancedRoleContextType {
   /** Current active role */
-  role: UserRole;
+  role: string;
   /** Function to change the role */
-  setRole: (newRole: UserRole, redirectPath?: string) => Promise<void>;
+  setRole: (newRole: string, redirectPath?: string) => Promise<void>;
   /** Role transition in progress */
   isTransitioning: boolean;
   /** Last transition event details */
   lastTransition: {
-    from: UserRole;
-    to: UserRole;
+    from: string;
+    to: string;
     timestamp: string;
   } | null;
   /** Available roles for the user */
-  availableRoles: UserRole[];
+  availableRoles: string[];
   /** Function to check if a specific role is available */
-  isRoleAvailable: (role: UserRole) => boolean;
+  isRoleAvailable: (role: string) => boolean;
 }
 
 /**
@@ -44,7 +44,7 @@ interface EnhancedRoleProviderProps {
   /** Child components to render within the provider */
   children: ReactNode;
   /** Initial role (from server rendering) */
-  initialRole?: UserRole;
+  initialRole?: string;
   /** Mock for testing - forces all roles to be available */
   testMode?: boolean;
 }
@@ -62,8 +62,8 @@ export const EnhancedRoleProvider: React.FC<EnhancedRoleProviderProps> = ({
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [availableRoles, setAvailableRoles] = useState<UserRole[]>([initialRole]);
   const [lastTransition, setLastTransition] = useState<{
-    from: UserRole;
-    to: UserRole;
+    from: string;
+    to: string;
     timestamp: string;
   } | null>(null);
   
@@ -80,8 +80,8 @@ export const EnhancedRoleProvider: React.FC<EnhancedRoleProviderProps> = ({
     // Listen for role transition events
     const handleRoleTransition = (event: Event) => {
       const customEvent = event as CustomEvent<{
-        from: UserRole;
-        to: UserRole;
+        from: string;
+        to: string;
         timestamp: string;
       }>;
       
@@ -123,7 +123,7 @@ export const EnhancedRoleProvider: React.FC<EnhancedRoleProviderProps> = ({
   /**
    * Check if a role is available for the current user
    */
-  const isRoleAvailable = (roleToCheck: UserRole): boolean => {
+  const isRoleAvailable = (roleToCheck: string): boolean => {
     if (testMode || typeof window !== 'undefined' && 
         (localStorage.getItem('isTestMode') === 'true' || 
          localStorage.getItem('force_all_roles_available') === 'true' ||
@@ -138,7 +138,7 @@ export const EnhancedRoleProvider: React.FC<EnhancedRoleProviderProps> = ({
   /**
    * Change the active role
    */
-  const setRole = async (newRole: UserRole, redirectPath?: string): Promise<void> => {
+  const setRole = async (newRole: string, redirectPath?: string): Promise<void> => {
     // Check if role is available
     if (!isRoleAvailable(newRole)) {
       console.warn(`Role ${newRole} is not available.`);

@@ -10,7 +10,7 @@ const Command = React.forwardRef<HTMLDivElement, CommandProps>(
   ({ className, ...props }, ref) => {
     return (
       <div
-        ref={ref}
+        ref={ref as any}
         className={cn(
           "flex h-full w-full flex-col overflow-hidden rounded-md bg-white dark:bg-gray-800 shadow-md",
           className
@@ -48,7 +48,7 @@ const CommandInput = React.forwardRef<
     <div className="flex items-center border-b px-3" cmdk-input-wrapper="">
       <Search className="mr-2 h-4 w-4 shrink-0 opacity-50" />
       <input
-        ref={ref}
+        ref={ref as any}
         className={cn(
           "flex h-11 w-full rounded-md bg-transparent py-3 text-sm outline-none placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50",
           className
@@ -66,7 +66,7 @@ const CommandList = React.forwardRef<HTMLDivElement, CommandListProps>(
   ({ className, ...props }, ref) => {
     return (
       <div
-        ref={ref}
+        ref={ref as any}
         className={cn("max-h-[300px] overflow-y-auto overflow-x-hidden", className)}
         {...props}
       />
@@ -81,7 +81,7 @@ const CommandEmpty = React.forwardRef<HTMLDivElement, CommandEmptyProps>(
   ({ className, ...props }, ref) => {
     return (
       <div
-        ref={ref}
+        ref={ref as any}
         className={cn(
           "py-6 text-center text-sm text-muted-foreground",
           className
@@ -101,7 +101,7 @@ const CommandGroup = React.forwardRef<HTMLDivElement, CommandGroupProps>(
   ({ className, heading, children, ...props }, ref) => {
     return (
       <div
-        ref={ref}
+        ref={ref as any}
         className={cn("overflow-hidden p-1 text-foreground", className)}
         {...props}
       >
@@ -123,7 +123,7 @@ const CommandItem = React.forwardRef<HTMLDivElement, CommandItemProps>(
   ({ className, selected, ...props }, ref) => {
     return (
       <div
-        ref={ref}
+        ref={ref as any}
         role="option"
         aria-selected={selected}
         className={cn(
@@ -146,7 +146,7 @@ const CommandSeparator = React.forwardRef<
   CommandSeparatorProps
 >(({ className, ...props }, ref) => (
   <div
-    ref={ref}
+    ref={ref as any}
     className={cn("mx-1 h-px bg-gray-200 dark:bg-gray-700", className)}
     {...props}
   />

@@ -53,7 +53,7 @@ const ErrorInitializer: React.FC<ErrorInitializerProps> = ({
     const handleGlobalError = (event: ErrorEvent): void => {
       event.preventDefault();
       
-      errorState.handleError(
+      errorState.error(
         event.error || new Error(event.message),
         'window.onerror',
         'unknown', 
@@ -73,7 +73,7 @@ const ErrorInitializer: React.FC<ErrorInitializerProps> = ({
         ? event.reason 
         : new Error(String(event.reason));
       
-      errorState.handleError(
+      errorState.error(
         error,
         'unhandledrejection',
         'unknown',

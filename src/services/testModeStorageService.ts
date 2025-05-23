@@ -22,7 +22,7 @@ const TEST_MODE_EXPIRY_DURATION = 60 * 60 * 1000; // 1 hour in milliseconds
 export interface TestModeState {
   enabled: boolean;
   expiryTime: number;
-  initialRole: UserRole;
+  initialRole: string;
   activatedAt: number;
 }
 
@@ -48,7 +48,7 @@ export class TestModeStorageService {
    * @param duration Optional custom duration in milliseconds
    * @returns boolean indicating success
    */
-  enableTestMode(initialRole: UserRole, duration: number = TEST_MODE_EXPIRY_DURATION): boolean {
+  enableTestMode(initialRole: string, duration: number = TEST_MODE_EXPIRY_DURATION): boolean {
     try {
       const now = Date.now();
       const expiryTime = now + duration;
@@ -224,7 +224,7 @@ export class TestModeStorageService {
    * @param newInitialRole The new initial role
    * @returns boolean indicating success
    */
-  updateTestModeInitialRole(newInitialRole: UserRole): boolean {
+  updateTestModeInitialRole(newInitialRole: string): boolean {
     try {
       const testMode = this.getTestModeState();
       

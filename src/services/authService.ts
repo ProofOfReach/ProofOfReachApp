@@ -16,8 +16,8 @@ export type UserRole = UserRole | 'viewer' | 'publisher' | 'advertiser' | 'admin
 export interface AuthState {
   isLoggedIn: boolean;
   pubkey: string;
-  currentRole: UserRole;
-  availableRoles: UserRole[];
+  currentRole: string;
+  availableRoles: string[];
   isTestMode: boolean;
 }
 
@@ -457,7 +457,7 @@ export class AuthService {
    * @param role The role to check
    * @returns Whether the user has the specified role
    */
-  public hasRole(role: UserRole): boolean {
+  public hasRole(role: string): boolean {
     if (!this._authState.isLoggedIn) {
       return false;
     }
@@ -476,7 +476,7 @@ export class AuthService {
    * @param role The role to switch to
    * @returns Whether the role switch was successful
    */
-  public async switchRole(role: UserRole): Promise<boolean> {
+  public async switchRole(role: string): Promise<boolean> {
     if (!this._authState.isLoggedIn) {
       return false;
     }
@@ -723,9 +723,9 @@ export const useAuth = () => {
       AuthService.getInstance().loginWithApiKey(apiKey),
     logout: () => 
       AuthService.getInstance().logout(),
-    hasRole: (role: UserRole) => 
+    hasRole: (role: string) => 
       AuthService.getInstance().hasRole(role),
-    switchRole: (role: UserRole) => 
+    switchRole: (role: string) => 
       AuthService.getInstance().switchRole(role),
     refreshRoles: () => 
       AuthService.getInstance().refreshRoles(),

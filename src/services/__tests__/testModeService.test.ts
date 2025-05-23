@@ -287,7 +287,7 @@ describe('TestModeService', () => {
       });
       
       const duration = 30 * 60 * 1000; // 30 minutes
-      const initialRole: UserRole = 'admin';
+      const initialRole: string = 'admin';
       const debug = true;
       
       const result = testModeService.enableTestMode(duration, initialRole, debug);

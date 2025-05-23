@@ -8,7 +8,7 @@ import '@/lib/logger';
 import '@/lib/nostrProfile';
 
 type RoleConfirmationProps = {
-  onConfirm?: (role: UserRole) => void;
+  onConfirm?: (role: string) => void;
 };
 
 const RoleConfirmation: React.FC<RoleConfirmationProps> = ({ onConfirm }) => {
@@ -63,7 +63,7 @@ const RoleConfirmation: React.FC<RoleConfirmationProps> = ({ onConfirm }) => {
     }
   }, [availableRoles, roleContext, isTestMode, isClient]);
 
-  const handleRoleSelection = (role: UserRole) => {
+  const handleRoleSelection = (role: string) => {
     // First call the context function to update the selected role
     setSelectedRole(role);
     

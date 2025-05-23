@@ -103,7 +103,7 @@ const DirectRoleSwitcher: React.FC = () => {
   }, []);
   
   // Direct navigation handler with database update
-  const handleDirectNavigation = async (role: UserRole) => {
+  const handleDirectNavigation = async (role: string) => {
     // Close dropdown
     setDropdownOpen(false);
     
@@ -148,7 +148,7 @@ const DirectRoleSwitcher: React.FC = () => {
   };
   
   // Get background color based on current role
-  const getRoleBackgroundColor = (checkRole: UserRole) => {
+  const getRoleBackgroundColor = (checkRole: string) => {
     if (currentRole === checkRole) {
       switch(checkRole) {
         case 'viewer': return 'bg-blue-100 dark:bg-blue-900/20';
@@ -162,7 +162,7 @@ const DirectRoleSwitcher: React.FC = () => {
   };
 
   // Get text color based on current role
-  const getRoleTextColor = (checkRole: UserRole) => {
+  const getRoleTextColor = (checkRole: string) => {
     if (currentRole === checkRole) {
       switch(checkRole) {
         case 'viewer': return 'text-blue-700 dark:text-blue-300';

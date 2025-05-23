@@ -74,7 +74,7 @@ export function useErrorState() {
         }
         
         // Set up event listener for error state changes
-        const handleErrorStateChange = () => {
+        const errorStateChange = () => {
           try {
             const updatedState = errorIntegration.getErrorState();
             if (updatedState && typeof updatedState === 'object' && 'hasError' in updatedState) {
@@ -97,11 +97,11 @@ export function useErrorState() {
         };
         
         // Listen for error state changes - this is expected by tests
-        window.addEventListener('error-state-changed', handleErrorStateChange);
+        window.addEventListener('error-state-changed', errorStateChange);
         
         // Clean up the event listener
         return () => {
-          window.removeEventListener('error-state-changed', handleErrorStateChange);
+          window.removeEventListener('error-state-changed', errorStateChange);
         };
       } catch (err) {
         console.error('Error initializing error state:', err);
@@ -186,7 +186,7 @@ export function useErrorState() {
   /**
    * Handle an error
    */
-  const handleError = useCallback((
+  const error = useCallback((
     error: Error | string,
     component?: string,
     errorType?: string,
@@ -213,7 +213,7 @@ export function useErrorState() {
           severity
         }));
       } catch (err) {
-        console.error('Error in handleError:', err);
+        console.error('Error in error:', err);
       }
     } else if (errorContext) {
       // In real environment
@@ -242,7 +242,7 @@ export function useErrorState() {
     // Error management functions
     setError,
     clearError,
-    handleError,
+    error,
     
     // Current error state from context (or empty values in test)
     errors: errorContext?.state.errors || [],

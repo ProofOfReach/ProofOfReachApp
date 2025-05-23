@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { prisma } from '../../../../lib/prismaClient';
 import { authMiddleware } from '../../../../utils/authMiddleware';
-import { handleError } from '../../../../lib/errorHandling';
+import { error } from '../../../../lib/errorHandling';
 import crypto from 'crypto';
 
 /**
@@ -119,7 +119,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse, userId: string
         return res.status(405).json({ error: 'Method not allowed' });
     }
   } catch (error) {
-    return handleError(error, req, res);
+    return error(error, req, res);
   }
 }
 

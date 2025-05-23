@@ -30,9 +30,9 @@ import '@/context/RoleContext';
  * Convenience function to dispatch a role changed event
  */
 export const notifyRoleChanged = (
-  from: UserRole,
-  to: UserRole,
-  availableRoles: UserRole[] = []
+  from: string,
+  to: string,
+  availableRoles: string[] = []
 ) => {
   dispatchRoleEvent(ROLE_EVENTS.ROLE_CHANGED, {
     from,
@@ -45,8 +45,8 @@ export const notifyRoleChanged = (
  * Convenience function to dispatch a roles updated event
  */
 export const notifyRolesUpdated = (
-  availableRoles: UserRole[],
-  currentRole: UserRole
+  availableRoles: string[],
+  currentRole: string
 ) => {
   dispatchRoleEvent(ROLE_EVENTS.ROLES_UPDATED, {
     availableRoles,
@@ -59,7 +59,7 @@ export const notifyRolesUpdated = (
  */
 export const notifyTestModeActivated = (
   expiryTime: number,
-  initialRole: UserRole
+  initialRole: string
 ) => {
   dispatchTestModeEvent(TEST_MODE_EVENTS.ACTIVATED, {
     expiryTime,

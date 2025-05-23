@@ -36,7 +36,7 @@ export interface RolePermissions {
  * Role information including display name and description
  */
 export interface RoleInfo {
-  id: UserRole;
+  id: string;
   displayName: string;
   description: string;
   permissions: RolePermissions;
@@ -47,7 +47,7 @@ export interface RoleInfo {
  * Role assignment status
  */
 export interface UserRoleStatus {
-  role: UserRole;
+  role: string;
   isActive: boolean;
   isTestRole: boolean;
   assignedAt?: Date;
@@ -58,10 +58,10 @@ export interface UserRoleStatus {
  */
 export interface UserRoleContext {
   // Current active role
-  currentRole: UserRole;
+  currentRole: string;
   
   // All roles assigned to the user
-  availableRoles: UserRole[];
+  availableRoles: string[];
   
   // Detailed role information with permission status
   roleDetails: Record<UserRole, UserRoleStatus>;
@@ -71,7 +71,7 @@ export interface UserRoleContext {
   isTestMode: boolean;
   
   // Actions
-  setCurrentRole: (role: UserRole) => Promise<boolean>;
+  setCurrentRole: (role: string) => Promise<boolean>;
 }
 
 /**

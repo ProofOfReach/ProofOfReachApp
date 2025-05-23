@@ -16,7 +16,7 @@ import { UserRole, RolePermissions, RoleErrorType } from './types';
  * @param roles An array of roles that are allowed to access the endpoint
  * @returns Middleware function that checks if the user has any of the specified roles
  */
-export function requireRole(roles: UserRole[]) {
+export function requireRole(roles: string[]) {
   return async (
     req: NextApiRequest,
     res: NextApiResponse,

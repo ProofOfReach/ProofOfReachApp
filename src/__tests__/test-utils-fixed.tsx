@@ -7,7 +7,7 @@ type UserRole = 'viewer' | 'advertiser' | 'publisher' | 'admin' | 'stakeholder';
 
 // Define options interface for our custom render function
 interface CustomRenderOptions extends Omit<RenderOptions, 'wrapper'> {
-  initialRole?: UserRole;
+  initialRole?: string;
   authenticated?: boolean; 
 }
 
@@ -234,7 +234,7 @@ export function renderWithProviders(
 }
 
 // Export a mocked useAuth hook for direct use
-export const mockUseAuth = (authenticated: boolean = true, role: UserRole = 'viewer') => {
+export const mockUseAuth = (authenticated: boolean = true, role: string = 'viewer') => {
   return {
     auth: { 
       pubkey: 'test-pubkey', 

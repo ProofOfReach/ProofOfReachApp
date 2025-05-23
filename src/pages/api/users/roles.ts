@@ -7,7 +7,7 @@ import { normalizeRole } from '../../../utils/roleNormalizer';
 
 interface AddRoleRequest {
   pubkey: string;
-  role: UserRole;
+  role: string;
 }
 
 /**
@@ -75,7 +75,7 @@ async function addRole(req: NextApiRequest, res: NextApiResponse) {
     const normalizedRole = normalizeRole(role);
     
     // Validate role
-    const validRoles: UserRole[] = ['viewer', 'advertiser', 'publisher', 'admin', 'stakeholder'];
+    const validRoles: string[] = ['viewer', 'advertiser', 'publisher', 'admin', 'stakeholder'];
     if (!validRoles.includes(normalizedRole as UserRole)) {
       return res.status(400).json({ 
         success: false, 
@@ -151,7 +151,7 @@ async function removeRole(req: NextApiRequest, res: NextApiResponse) {
     const normalizedRole = normalizeRole(role);
     
     // Validate role
-    const validRoles: UserRole[] = ['viewer', 'advertiser', 'publisher', 'admin', 'stakeholder'];
+    const validRoles: string[] = ['viewer', 'advertiser', 'publisher', 'admin', 'stakeholder'];
     if (!validRoles.includes(normalizedRole as UserRole)) {
       return res.status(400).json({ 
         success: false, 

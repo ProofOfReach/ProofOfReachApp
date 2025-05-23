@@ -36,7 +36,7 @@ const Dashboard = () => {
   const [isTestMode, setIsTestMode] = useState<boolean>(false);
   
   // Function to get the current role from all possible sources
-  const getCurrentRoleFromAllSources = useCallback((): UserRole => {
+  const getCurrentRoleFromAllSources = useCallback((): string => {
     // Try to get role from context first (most reliable and up-to-date)
     if (roleContext && roleContext.role) {
       logger.debug('Getting role from context:', roleContext.role);
