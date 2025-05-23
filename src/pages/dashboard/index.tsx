@@ -32,7 +32,7 @@ import '@/lib/logger';
  * This replaces all the separate role-specific dashboards in favor of a unified experience
  */
 const Dashboard = () => {
-  const roleContext = defaultUseRole();
+  const roleContext = defaultUseRole?.() || { role: 'viewer' };
   // Get the role from context if available, otherwise use the user role
   const [currentRole, setCurrentRole] = useState<UserRole>(roleContext?.role || 'viewer');
   const [isTestMode, setIsTestMode] = useState<boolean>(false);

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
-import { User, Shield, Edit3, DollarSign, Lock } from 'react-feather';
+import { User, Shield, Edit3, DollarSign, Lock, Speaker } from 'react-feather';
 import '@/types/role';
 import '@/lib/roleService';
 import '@/services/roleManager';
@@ -54,7 +54,7 @@ const RoleDropdown: React.FC<RoleDropdownProps> = ({
   // Role icons with appropriate colors
   const roleIcons = {
     viewer: <User className="w-5 h-5 text-blue-500" />,
-    advertiser: <MegaphoneIcon className="w-5 h-5 text-orange-500" />,
+    advertiser: <Speaker className="w-5 h-5 text-orange-500" />,
     publisher: <Edit3 className="w-5 h-5 text-green-500" />,
     admin: <Shield className="w-5 h-5 text-purple-500" />,
     stakeholder: <DollarSign className="w-5 h-5 text-green-500" />

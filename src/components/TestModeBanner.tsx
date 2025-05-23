@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { MegaphoneIcon } from '@heroicons/react/24/outline';
+import { Speaker } from 'react-feather';
 import '@/hooks/useTestMode';
 import '@/lib/roleService';
 import '@/services/roleManager';
@@ -147,16 +147,15 @@ export default function TestModeBanner() {
   // Multiple checks to ensure banner is only shown to admin users:
   
   // Debug banner visibility state
-  logger.debug(`TestModeBanner visibility check:
+  console.log(`TestModeBanner visibility check:
     isActive: ${isActive}
     currentRole: ${currentRole}
     process.env.NODE_ENV: ${process.env.NODE_ENV}
-    RoleManager role: ${typeof window !== 'undefined' ? RoleManager.getCurrentRole() : 'SSR'}
   `);
   
   // 1. Don't render anything if not in test mode
   if (!isActive) {
-    logger.debug('TestModeBanner not shown: test mode not active');
+    console.log('TestModeBanner not shown: test mode not active');
     return null;
   }
   
