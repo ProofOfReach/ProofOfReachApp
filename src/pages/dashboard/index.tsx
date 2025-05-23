@@ -797,7 +797,7 @@ const Dashboard = () => {
   const containerKey = `dashboard-container-${currentRole}-${Date.now()}`;
   
   return (
-    <DashboardContainer key={containerKey}>
+    <div key={containerKey} className="dashboard-container">
       {currentRole !== 'admin' && currentRole !== 'stakeholder' && (
         <div className="flex items-center space-x-2">
           {getRoleIcon()}
@@ -848,7 +848,7 @@ const Dashboard = () => {
           </div>
         </DashboardCard>
       </div>
-    </DashboardContainer>
+    </div>
   );
 };
 
