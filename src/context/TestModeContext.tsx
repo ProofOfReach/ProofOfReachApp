@@ -8,6 +8,16 @@ import {
 } from '@/lib/testModeEvents';
 import { UserRole, TestModeState, STORAGE_KEYS } from '../types/role';
 
+// Simple RoleManager fallback for test mode
+const RoleManager = {
+  getCurrentRole: () => localStorage.getItem('currentRole') || 'viewer',
+  getAvailableRoles: () => ['viewer', 'advertiser', 'publisher', 'admin'],
+  setCurrentRole: (role: string) => {
+    localStorage.setItem('currentRole', role);
+    return true;
+  }
+};
+
 /**
  * Enhanced TestMode Context Interface
  * Provides a comprehensive API for managing test mode state
