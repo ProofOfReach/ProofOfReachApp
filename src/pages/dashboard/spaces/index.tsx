@@ -23,7 +23,7 @@ const SpacesListPage: React.FC = () => {
   const isLoading = !spaces && !error;
 
   // Apply filters to spaces
-  const filteredSpaces = spaces?.filter((space: any) => {
+  const filteredSpaces = (spaces && Array.isArray(spaces)) ? spaces.filter((space: any) => {
     // Search filter
     if (searchTerm && !space.name.toLowerCase().includes(searchTerm.toLowerCase()) &&
         !space.description.toLowerCase().includes(searchTerm.toLowerCase()) &&
@@ -32,7 +32,7 @@ const SpacesListPage: React.FC = () => {
     }
     
     return true;
-  });
+  }) : [];
 
   // Function to handle space deletion
   const handleDeleteSpace = async (spaceId: string) => {

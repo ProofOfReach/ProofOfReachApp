@@ -36,7 +36,7 @@ export default function TestModeBanner() {
     setCurrentRole: contextSetCurrentRole,
     isTestModeAllowed
   } = { 
-    isTestMode: localStorage.getItem('testMode') === 'true',
+    isTestMode: typeof window !== 'undefined' ? localStorage.getItem('testMode') === 'true' : false,
     timeRemaining: null,
     enableTestMode: async () => true,
     disableTestMode: async () => true,
