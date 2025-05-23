@@ -197,7 +197,7 @@ const AdApprovalsPage: NextPageWithLayout = () => {
   };
 
   // Handle ad rejection
-  const handleReject = (adId: string, reason: string = 'Content policy violation') => {
+  const handleReject = (adId: UserRole, reason: string = 'Content policy violation') => {
     setAds(prevAds => 
       prevAds.map(ad => 
         ad.id === adId 
@@ -217,7 +217,7 @@ const AdApprovalsPage: NextPageWithLayout = () => {
   };
 
   // Flag ad for further review
-  const handleFlag = (adId: string, flag: string) => {
+  const handleFlag = (adId: UserRole, flag: string) => {
     setAds(prevAds => 
       prevAds.map(ad => 
         ad.id === adId 
@@ -436,7 +436,7 @@ const AdApprovalsPage: NextPageWithLayout = () => {
                     <>
                       <dt className="text-gray-500 dark:text-gray-400">Flags:</dt>
                       <dd className="text-gray-900 dark:text-white">
-                        {selectedAd.flags.map((flag: string, index: number) => (
+                        {selectedAd.flags.map((flag: UserRole, index: number) => (
                           <span 
                             key={index}
                             className="inline-block px-2 py-1 mr-1 mb-1 text-xs rounded-full bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-300"

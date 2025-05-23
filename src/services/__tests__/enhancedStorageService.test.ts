@@ -33,10 +33,10 @@ jest.mock('@/lib/events', () => ({
 
 // Create mock localStorage and sessionStorage implementations
 const createStorageMock = () => {
-  let store: Record<string, string> = {};
+  let store: Record<UserRole, string> = {};
   return {
     getItem: jest.fn((key: string) => store[key] || null),
-    setItem: jest.fn((key: string, value: string) => {
+    setItem: jest.fn((key: UserRole, value: string) => {
       store[key] = value;
     }),
     removeItem: jest.fn((key: string) => {

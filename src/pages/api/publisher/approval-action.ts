@@ -3,7 +3,7 @@ import { prisma } from '../../../lib/prismaClient';
 import { requireAuth } from '../../../lib/auth';
 import { logger } from '../../../lib/logger';
 
-async function handleApprovalAction(req: NextApiRequest, res: NextApiResponse, pubkey: string, userId: string) {
+async function handleApprovalAction(req: NextApiRequest, res: NextApiResponse, pubkey: UserRole, userId: string) {
   try {
     const { placementId, action } = req.body;
     
@@ -82,7 +82,7 @@ async function handleApprovalAction(req: NextApiRequest, res: NextApiResponse, p
 }
 
 // Process API requests with auth middleware
-const handleRequest = async (req: NextApiRequest, res: NextApiResponse, pubkey: string, userId: string) => {
+const handleRequest = async (req: NextApiRequest, res: NextApiResponse, pubkey: UserRole, userId: string) => {
   if (req.method === 'POST') {
     return handleApprovalAction(req, res, pubkey, userId);
   } else {

@@ -21,7 +21,7 @@ interface ToastOptions {
  * @param message The error message
  * @param options Additional options
  */
-function logger.error(message: string, options: ToastOptions = {}): void {
+function logger.error(message: UserRole, options: ToastOptions = {}): void {
   const errorState = console.error(
     message, 
     'toast', 
@@ -44,7 +44,7 @@ function logger.error(message: string, options: ToastOptions = {}): void {
  * @param message The warn message
  * @param options Additional options
  */
-function warn(message: string, options: ToastOptions = {}): void {
+function warn(message: UserRole, options: ToastOptions = {}): void {
   const errorState = console.error(
     message, 
     'toast', 
@@ -65,7 +65,7 @@ function warn(message: string, options: ToastOptions = {}): void {
  * @param message The info message
  * @param options Additional options
  */
-function info(message: string, options: ToastOptions = {}): void {
+function info(message: UserRole, options: ToastOptions = {}): void {
   const errorState = console.error(
     message, 
     'toast', 
@@ -86,7 +86,7 @@ function info(message: string, options: ToastOptions = {}): void {
  * @param message The log message
  * @param options Additional options
  */
-function log(message: string, options: ToastOptions = {}): void {
+function log(message: UserRole, options: ToastOptions = {}): void {
   const errorState = console.error(
     message, 
     'toast', 
@@ -108,7 +108,7 @@ function log(message: string, options: ToastOptions = {}): void {
  * @param severity The severity level
  * @param options Additional options
  */
-function custom(message: string, severity: string, options: ToastOptions = {}): void {
+function custom(message: UserRole, severity: UserRole, options: ToastOptions = {}): void {
   const errorState = console.error(
     message, 
     'toast', 

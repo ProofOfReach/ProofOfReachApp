@@ -20,7 +20,7 @@ export interface CampaignWithAds extends Campaign {
 
 interface CampaignDataTableProps {
   campaigns: CampaignWithAds[];
-  onStatusChange?: (campaignId: string, newStatus: CampaignStatus) => Promise<void>;
+  onStatusChange?: (campaignId: UserRole, newStatus: CampaignStatus) => Promise<void>;
   onDelete?: (campaignId: string) => Promise<void>;
 }
 
@@ -31,7 +31,7 @@ const CampaignDataTable: React.FC<CampaignDataTableProps> = ({
 }) => {
   const [changingStatusId, setChangingStatusId] = React.useState<string | null>(null);
 
-  const handleStatusChange = async (campaignId: string, newStatus: CampaignStatus) => {
+  const handleStatusChange = async (campaignId: UserRole, newStatus: CampaignStatus) => {
     if (!onStatusChange) return;
     
     setChangingStatusId(campaignId);

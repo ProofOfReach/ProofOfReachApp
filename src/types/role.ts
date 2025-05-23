@@ -71,7 +71,7 @@ export function getDefaultRole(): string {
 }
 
 const roleDefaults = {
-  isValidstring,
+  isValidUserRole,
   filterValidRoles,
   getDefaultRole
 };

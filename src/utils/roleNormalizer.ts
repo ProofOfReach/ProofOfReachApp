@@ -8,7 +8,7 @@
 import type { UserRole } from '../types/role';
 
 /**
- * Normalizes a role string, converting legacy 'viewer' role to 'viewer'
+ * Normalizes a role UserRole, converting legacy 'viewer' role to 'viewer'
  * This ensures backward compatibility while we transition the codebase
  * 
  * @param role The role string to normalize

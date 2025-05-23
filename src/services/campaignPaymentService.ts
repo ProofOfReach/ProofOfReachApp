@@ -41,7 +41,7 @@ export const campaignPaymentService = {
    * Deducts from advertiser's balance and creates a transaction record
    */
   async processAdPayment(
-    campaignId: string, 
+    campaignId: UserRole, 
     amount: number,
     description: string
   ): Promise<boolean> {
@@ -88,7 +88,7 @@ export const campaignPaymentService = {
    * Adds to publisher's balance and creates a transaction record
    */
   async processPublisherEarning(
-    publisherId: string,
+    publisherId: UserRole,
     amount: number,
     description: string
   ): Promise<boolean> {

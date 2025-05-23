@@ -12,7 +12,7 @@
  */
 
 // Import types from the centralized type definitions
-import { string, RoleCapabilities } from '../types/role';
+import { UserRole, RoleCapabilities } from '../types/role';
 
 // Import the new implementations
 import { defaultUseRole, RoleProviderRefactored, RoleProviderRefactoredWithQueryClient } from './NewRoleContextRefactored';
@@ -34,11 +34,11 @@ export const defaultUseRoleWithAccess = defaultUseRoleAccess;
  * @deprecated Use accessControl.roles from src/lib/accessControl.ts instead
  */
 export const ROLES = {
-  VIEWER: 'viewer' as string,
-  ADVERTISER: 'advertiser' as string,
-  PUBLISHER: 'publisher' as string,
-  ADMIN: 'admin' as string,
-  STAKEHOLDER: 'stakeholder' as string,
+  VIEWER: 'viewer' as UserRole,
+  ADVERTISER: 'advertiser' as UserRole,
+  PUBLISHER: 'publisher' as UserRole,
+  ADMIN: 'admin' as UserRole,
+  STAKEHOLDER: 'stakeholder' as UserRole,
 };
 
 /**
@@ -52,7 +52,7 @@ export function isValidRole(role: string): role is UserRole {
  * Check if a role has a specific permission
  * @deprecated Use accessControl.checkPermission or defaultUseRoleAccess hook instead
  */
-export function hasPermission(role: string, permission: string): boolean {
+export function hasPermission(role: UserRole, permission: string): boolean {
   return accessControl.checkPermission(permission as any, role);
 }
 
@@ -60,7 +60,7 @@ export function hasPermission(role: string, permission: string): boolean {
  * Check if a role can access a specific route
  * @deprecated Use accessControl.checkRouteAccess or defaultUseRoleAccess hook instead
  */
-export function canAccessRoute(role: string, route: string): boolean {
+export function canAccessRoute(role: UserRole, route: string): boolean {
   return accessControl.checkRouteAccess(route, role);
 }
 
@@ -70,7 +70,7 @@ export function canAccessRoute(role: string, route: string): boolean {
  */
 export function getRoleCapabilities(role: string): RoleCapabilities {
   // Convert the object returned by accessControl to the expected RoleCapabilities type
-  const capabilities = accessControl.getRoleCapabilities(role) as Record<string, boolean>;
+  const capabilities = accessControl.getRoleCapabilities(role) as Record<UserRole, boolean>;
   
   // Create a properly-typed object that matches RoleCapabilities
   return {
@@ -87,7 +87,7 @@ export function getRoleCapabilities(role: string): RoleCapabilities {
 /**
  * @deprecated Use accessControl.isRoleAvailable from src/lib/accessControl.ts instead
  */
-export function isRoleAvailable(role: string, availableRoles: string[]): boolean {
+export function isRoleAvailable(role: UserRole, availableRoles: string[]): boolean {
   return accessControl.isRoleAvailable(role, availableRoles);
 }
 

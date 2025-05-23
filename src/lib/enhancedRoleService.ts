@@ -123,7 +123,7 @@ export async function getUserRoleData(userId: string): Promise<UserRoleData | nu
  * @returns The updated user role data
  */
 export async function changeUserRole(
-  userId: string,
+  userId: UserRole,
   role: RoleType | 'viewer'
 ): Promise<UserRoleData> {
   try {
@@ -432,7 +432,7 @@ export async function createUserWithTestMode(userId: string): Promise<UserRoleDa
  * @param role The role to check
  * @returns Whether the user has the role
  */
-export async function hasRole(userId: string, role: RoleType): Promise<boolean> {
+export async function hasRole(userId: UserRole, role: RoleType): Promise<boolean> {
   try {
     const user = await prisma.user.findUnique({
       where: { id: userId },
@@ -490,7 +490,7 @@ export async function isTestModeEnabled(userId: string): Promise<boolean> {
  * @param enabled Whether to enable or disable test mode
  * @returns The updated user role data or null if not found
  */
-export async function toggleTestMode(userId: string, enabled: boolean): Promise<UserRoleData | null> {
+export async function toggleTestMode(userId: UserRole, enabled: boolean): Promise<UserRoleData | null> {
   try {
     // Check if user exists
     const user = await prisma.user.findUnique({
@@ -537,7 +537,7 @@ export async function toggleTestMode(userId: string, enabled: boolean): Promise<
 // Export as a service object for consistency with other parts of the app
 export const enhancedRoleService = {
   getUserRoleData,
-  changestring,
+  changeUserRole,
   enableAllRoles,
   createUserWithTestMode,
   hasRole,

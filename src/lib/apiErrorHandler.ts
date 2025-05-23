@@ -25,7 +25,7 @@ export interface ApiErrorResponse {
   error: {
     message: string;
     code?: string;
-    details?: Record<string, unknown>;
+    details?: Record<UserRole, unknown>;
     status: number;
     requestId?: string;
     correlationId?: string;
@@ -37,7 +37,7 @@ export interface ApiErrorResponse {
 /**
  * Maps error types to HTTP status codes
  */
-const errorTypeToStatusCode: Record<string, number> = {
+const errorTypeToStatusCode: Record<UserRole, number> = {
   [string.USER_INPUT]: 400,
   [string.PERMISSIONS]: 403,
   [string.EXTERNAL]: 404,
@@ -102,7 +102,7 @@ export function handleApiRouteError(
   // Extract or generate correlation ID for request tracing
   const correlationId = extractCorrelationId(req) || 
                        (error && typeof error === 'object' && 'correlationId' in error) ? 
-                       (error as Record<string, unknown>).correlationId : 
+                       (error as Record<UserRole, unknown>).correlationId : 
                        uuidv4();
 
   // Generate a unique request ID if not already present
@@ -117,7 +117,7 @@ export function handleApiRouteError(
   let statusCode = 500;
   let userMessage = 'An unexpected error occurred';
   let errorCode = ErrorCode.INTERNAL_ERROR;
-  let errorDetails: Record<string, unknown> = {};
+  let errorDetails: Record<UserRole, unknown> = {};
   let retryable = false;
   let recoverable = false;
   let suggestedAction = suggestedActions[ErrorCode.INTERNAL_ERROR];
@@ -236,7 +236,7 @@ export function handleApiRouteError(
     'api',
     category === string.OPERATIONAL ? 'error' : 'warn',
     {
-      correlationId: correlationId as string,
+      correlationId: correlationId as UserRole,
       category,
       userFacing: true,
       data: {
@@ -258,8 +258,8 @@ export function handleApiRouteError(
       message: userMessage,
       code: errorCode,
       status: statusCode,
-      requestId: requestId as string,
-      correlationId: correlationId as string,
+      requestId: requestId as UserRole,
+      correlationId: correlationId as UserRole,
       retryable,
       suggestedAction,
       details: Object.keys(errorDetails).length > 0 ? errorDetails : undefined
@@ -282,9 +282,9 @@ export function handleApiRouteError(
  * @param fieldDetails Optional detailed validation errors by field
  */
 export function createApiValidationError(
-  message: string, 
+  message: UserRole, 
   invalidFields: string[],
-  fieldDetails?: Record<string, string>
+  fieldDetails?: Record<UserRole, string>
 ): Error {
   const error = new Error(message);
   error.name = 'ValidationError';
@@ -316,8 +316,8 @@ export function createApiValidationError(
  * @param resourceId ID of the resource that wasn't found
  */
 export function createNotFoundError(
-  message: string,
-  resourceType?: string,
+  message: UserRole,
+  resourceType?: UserRole,
   resourceId?: string | number
 ): Error {
   const error = new Error(message);
@@ -465,7 +465,7 @@ export function extractCorrelationId(req: NextApiRequest): string | undefined {
  * @param headers Request headers object
  * @returns Sanitized headers object
  */
-export function sanitizeHeaders(headers: Record<string, unknown>): Record<string, unknown> {
+export function sanitizeHeaders(headers: Record<UserRole, unknown>): Record<UserRole, unknown> {
   const sanitized = { ...headers };
   const sensitiveHeaderPatterns = [
     'authorization', 

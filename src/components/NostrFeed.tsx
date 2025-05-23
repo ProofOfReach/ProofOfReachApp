@@ -53,7 +53,7 @@ const NostrFeed: React.FC<NostrFeedProps> = ({
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [expandedProfiles, setExpandedProfiles] = useState<Set<string>>(new Set());
-  const [profiles, setProfiles] = useState<Record<string, any>>({});
+  const [profiles, setProfiles] = useState<Record<UserRole, any>>({});
 
   // Initialize NDK when component mounts
   useEffect(() => {
@@ -237,7 +237,7 @@ const NostrFeed: React.FC<NostrFeedProps> = ({
       
       const profileEvents = await ndkInstance.fetchEvents(profileFilter);
       
-      const profileData: Record<string, any> = {};
+      const profileData: Record<UserRole, any> = {};
       
       // Parse profile content
       profileEvents.forEach(event => {

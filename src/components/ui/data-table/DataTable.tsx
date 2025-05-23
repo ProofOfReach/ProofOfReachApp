@@ -27,7 +27,7 @@ interface DataTableProps<T> {
   emptyMessage?: string;
 }
 
-export function DataTable<T extends Record<string, any>>({
+export function DataTable<T extends Record<UserRole, any>>({
   columns,
   data,
   caption,
@@ -41,7 +41,7 @@ export function DataTable<T extends Record<string, any>>({
   }>({ key: null, direction: 'asc' });
   
   // Define default column widths from props if provided
-  const columnWidths: Record<string, number> = {};
+  const columnWidths: Record<UserRole, number> = {};
   columns.forEach((column) => {
     const key = String(column.accessorKey);
     columnWidths[key] = column.initialWidth || 150; // Default width

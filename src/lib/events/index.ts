@@ -30,8 +30,8 @@ import '@/context/RoleContext';
  * Convenience function to dispatch a role changed event
  */
 export const notifyRoleChanged = (
-  from: string,
-  to: string,
+  from: UserRole,
+  to: UserRole,
   availableRoles: string[] = []
 ) => {
   dispatchRoleEvent(ROLE_EVENTS.ROLE_CHANGED, {
@@ -78,7 +78,7 @@ export const notifyTestModeDeactivated = () => {
  * Convenience function to notify about storage value changes
  */
 export const notifyStorageChanged = (
-  key: string,
+  key: UserRole,
   value: any,
   previousValue: any,
   storageType: 'localStorage' | 'sessionStorage' | 'memory',
@@ -92,7 +92,7 @@ export const notifyStorageChanged = (
  */
 export const notifyStorageCleared = (
   storageType: 'localStorage' | 'sessionStorage' | 'memory',
-  namespace?: string,
+  namespace?: UserRole,
   keys?: string[]
 ) => {
   dispatchStorageCleared(storageType, namespace, keys);
@@ -102,7 +102,7 @@ export const notifyStorageCleared = (
  * Convenience function to notify about storage migrations
  */
 export const notifyStorageMigrated = (
-  key: string,
+  key: UserRole,
   fromVersion: number,
   toVersion: number,
   log: boolean,

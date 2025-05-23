@@ -21,7 +21,7 @@ const RoleSwitcher: React.FC<RoleSwitcherProps> = ({
 
   // Get the display name for a role
   const getRoleDisplayName = (role: RoleType | 'viewer'): string => {
-    const displayNames: Record<string, string> = {
+    const displayNames: Record<UserRole, string> = {
       admin: 'Administrator',
       advertiser: 'Advertiser',
       publisher: 'Publisher',
@@ -34,7 +34,7 @@ const RoleSwitcher: React.FC<RoleSwitcherProps> = ({
 
   // Get the color for a role
   const getRoleColor = (role: RoleType | 'viewer'): string => {
-    const colors: Record<string, string> = {
+    const colors: Record<UserRole, string> = {
       admin: 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300',
       advertiser: 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300',
       publisher: 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300',

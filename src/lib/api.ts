@@ -8,7 +8,7 @@
  * @param options Additional fetch options
  * @returns Fetch response
  */
-export const fetchWithAuth = (url: string, options: RequestInit = {}) => {
+export const fetchWithAuth = (url: UserRole, options: RequestInit = {}) => {
   return fetch(url, {
     ...options,
     credentials: 'include',  // Always include credentials
@@ -25,7 +25,7 @@ export const fetchWithAuth = (url: string, options: RequestInit = {}) => {
  * @param options Additional fetch options
  * @returns Fetch response
  */
-export const getWithAuth = (url: string, options: RequestInit = {}) => {
+export const getWithAuth = (url: UserRole, options: RequestInit = {}) => {
   return fetchWithAuth(url, {
     ...options,
     method: 'GET',
@@ -39,7 +39,7 @@ export const getWithAuth = (url: string, options: RequestInit = {}) => {
  * @param options Additional fetch options
  * @returns Fetch response
  */
-export const postWithAuth = (url: string, data: Record<string, unknown>, options: RequestInit = {}) => {
+export const postWithAuth = (url: UserRole, data: Record<UserRole, unknown>, options: RequestInit = {}) => {
   return fetchWithAuth(url, {
     ...options,
     method: 'POST',
@@ -54,7 +54,7 @@ export const postWithAuth = (url: string, data: Record<string, unknown>, options
  * @param options Additional fetch options
  * @returns Fetch response
  */
-export const putWithAuth = (url: string, data: Record<string, unknown>, options: RequestInit = {}) => {
+export const putWithAuth = (url: UserRole, data: Record<UserRole, unknown>, options: RequestInit = {}) => {
   return fetchWithAuth(url, {
     ...options,
     method: 'PUT',
@@ -68,7 +68,7 @@ export const putWithAuth = (url: string, data: Record<string, unknown>, options:
  * @param options Additional fetch options
  * @returns Fetch response
  */
-export const deleteWithAuth = (url: string, options: RequestInit = {}) => {
+export const deleteWithAuth = (url: UserRole, options: RequestInit = {}) => {
   return fetchWithAuth(url, {
     ...options,
     method: 'DELETE',

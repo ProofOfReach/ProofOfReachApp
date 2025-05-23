@@ -20,13 +20,13 @@ jest.mock('next/router', () => ({
 
 // Mock localStorage
 const localStorageMock = (() => {
-  let store: Record<string, string> = {};
+  let store: Record<UserRole, string> = {};
 
   return {
     getItem: jest.fn((key: string) => {
       return store[key] || null;
     }),
-    setItem: jest.fn((key: string, value: string) => {
+    setItem: jest.fn((key: UserRole, value: string) => {
       store[key] = value.toString();
     }),
     removeItem: jest.fn((key: string) => {

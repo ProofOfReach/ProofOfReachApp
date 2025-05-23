@@ -5,7 +5,7 @@ import '@/types/campaign';
 
 interface CampaignListProps {
   campaigns: CampaignWithAds[];
-  onStatusChange: (campaignId: string, newStatus: CampaignStatus) => void;
+  onStatusChange: (campaignId: UserRole, newStatus: CampaignStatus) => void;
   onDelete: (campaignId: string) => void;
 }
 
@@ -25,7 +25,7 @@ const CampaignList: React.FC<CampaignListProps> = ({ campaigns, onStatusChange, 
     });
   };
 
-  const handleStatusChange = (campaignId: string, currentStatus: CampaignStatus) => {
+  const handleStatusChange = (campaignId: UserRole, currentStatus: CampaignStatus) => {
     const newStatus = currentStatus === 'ACTIVE' ? 'PAUSED' : 'ACTIVE';
     onStatusChange(campaignId, newStatus);
   };

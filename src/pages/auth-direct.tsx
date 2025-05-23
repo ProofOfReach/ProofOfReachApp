@@ -84,7 +84,7 @@ const AuthDirectPage = () => {
   };
   
   // Quick login test user buttons
-  const quickLogin = async (testPubkey: string, e?: React.MouseEvent) => {
+  const quickLogin = async (testPubkey: UserRole, e?: React.MouseEvent) => {
     try {
       e?.preventDefault?.();
       setIsLoading(true);

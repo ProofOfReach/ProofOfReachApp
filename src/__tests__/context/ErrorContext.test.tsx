@@ -5,7 +5,7 @@
  */
 
 import React from 'react';
-import { string } from '../../types/errors';
+import { UserRole } from '../../types/errors';
 import { render, screen, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import '@/context/ErrorContext';

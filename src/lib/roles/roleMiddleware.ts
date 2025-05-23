@@ -8,7 +8,7 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import { roleService } from './roleService';
 import { getServerSession } from '../auth';
 import { logger } from '../logger';
-import { string, RolePermissions, RoleErrorType } from './types';
+import { UserRole, RolePermissions, RoleErrorType } from './types';
 
 /**
  * Middleware to require specific roles for API routes
@@ -20,7 +20,7 @@ export function requireRole(roles: string[]) {
   return async (
     req: NextApiRequest,
     res: NextApiResponse,
-    next: (userId: string, pubkey: string) => Promise<void>
+    next: (userId: UserRole, pubkey: string) => Promise<void>
   ) => {
     try {
       // Get user session
@@ -100,7 +100,7 @@ export function requirePermission(permissions: Array<keyof RolePermissions>) {
   return async (
     req: NextApiRequest,
     res: NextApiResponse,
-    next: (userId: string, pubkey: string) => Promise<void>
+    next: (userId: UserRole, pubkey: string) => Promise<void>
   ) => {
     try {
       // Get user session
@@ -182,19 +182,19 @@ export function requirePermission(permissions: Array<keyof RolePermissions>) {
  * @returns A function that processes the request through all middlewares
  */
 export function composeMiddleware(
-  middlewares: Array<(req: NextApiRequest, res: NextApiResponse, next: (userId: string, pubkey: string) => Promise<void>) => Promise<void>>
+  middlewares: Array<(req: NextApiRequest, res: NextApiResponse, next: (userId: UserRole, pubkey: string) => Promise<void>) => Promise<void>>
 ) {
-  return (handler: (req: NextApiRequest, res: NextApiResponse, userId: string, pubkey: string) => Promise<void>) => {
+  return (handler: (req: NextApiRequest, res: NextApiResponse, userId: UserRole, pubkey: string) => Promise<void>) => {
     return async (req: NextApiRequest, res: NextApiResponse) => {
       // Create a function to call the next middleware
-      const executeMiddleware = async (index: number, userId?: string, pubkey?: string): Promise<void> => {
+      const executeMiddleware = async (index: number, userId?: UserRole, pubkey?: string): Promise<void> => {
         if (index >= middlewares.length) {
           // We've reached the end of the middleware chain, call the handler
-          return handler(req, res, userId as string, pubkey as string);
+          return handler(req, res, userId as UserRole, pubkey as string);
         }
         
         // Call the current middleware with a function to call the next one
-        return middlewares[index](req, res, (nextUserId: string, nextPubkey: string): Promise<void> => {
+        return middlewares[index](req, res, (nextUserId: UserRole, nextPubkey: string): Promise<void> => {
           return executeMiddleware(index + 1, nextUserId || userId, nextPubkey || pubkey);
         });
       };

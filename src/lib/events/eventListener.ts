@@ -80,7 +80,7 @@ export const addLegacyEventListener = (
  * @returns A cleanup function to remove the event listener
  */
 export const addStorageEventListener = (
-  key: string,
+  key: UserRole,
   handler: (newValue: string | null, oldValue: string | null) => void
 ): () => void => {
   if (typeof window === 'undefined') return () => {};
@@ -108,7 +108,7 @@ export const addStorageEventListener = (
  * @returns A cleanup function to remove the event listener
  */
 export const addEventListener = (
-  eventName: string,
+  eventName: UserRole,
   handler: (event: CustomEvent) => void
 ): () => void => {
   if (typeof window === 'undefined') return () => {};

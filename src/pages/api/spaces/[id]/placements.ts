@@ -3,7 +3,7 @@ import { prisma } from '../../../../lib/prismaClient';
 import { requireAuth } from '../../../../lib/auth';
 import { logger } from '../../../../lib/logger';
 
-async function handlePlacements(req: NextApiRequest, res: NextApiResponse, pubkey: string, userId: string) {
+async function handlePlacements(req: NextApiRequest, res: NextApiResponse, pubkey: UserRole, userId: string) {
   try {
     if (req.method !== 'GET') {
       return res.status(405).json({ error: 'Method not allowed' });

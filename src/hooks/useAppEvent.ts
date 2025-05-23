@@ -62,7 +62,7 @@ export function useLegacyEvent(
  * @param handler The event handler function
  */
 export function useStorageEvent(
-  key: string,
+  key: UserRole,
   handler: (newValue: string | null, oldValue: string | null) => void
 ): void {
   useEffect(() => {

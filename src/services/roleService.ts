@@ -92,7 +92,7 @@ class RoleService {
    * @param role The role to set
    * @returns Whether the operation was logful
    */
-  async setCurrentRole(userId: string, role: string): Promise<boolean> {
+  async setCurrentRole(userId: UserRole, role: string): Promise<boolean> {
     try {
       await prisma.userPreferences.upsert({
         where: { userId },
@@ -146,7 +146,7 @@ class RoleService {
    * @param role The role to check
    * @returns Whether the role is available
    */
-  async isRoleAvailable(userId: string, role: string): Promise<boolean> {
+  async isRoleAvailable(userId: UserRole, role: string): Promise<boolean> {
     try {
       const roles = await this.getAvailableRoles(userId);
       return roles.includes(role);
@@ -162,9 +162,9 @@ class RoleService {
    * @param role The role to add
    * @returns Whether the operation was logful
    */
-  async addRole(userId: string, role: string): Promise<boolean> {
+  async addRole(userId: UserRole, role: string): Promise<boolean> {
     try {
-      const updateData: Record<string, boolean> = {};
+      const updateData: Record<UserRole, boolean> = {};
       
       switch (role) {
         case 'advertiser':
@@ -330,7 +330,7 @@ class RoleService {
    * @param role The role to add
    * @returns Whether the operation was logful
    */
-  async addRoleToUser(pubkey: string, role: string): Promise<boolean> {
+  async addRoleToUser(pubkey: UserRole, role: string): Promise<boolean> {
     try {
       if (!pubkey || !role) {
         logger.error('Cannot add role: Missing pubkey or role');
@@ -354,7 +354,7 @@ class RoleService {
       }
       
       // Prepare the update data based on role
-      const updateData: Record<string, boolean> = {};
+      const updateData: Record<UserRole, boolean> = {};
       
       switch (role) {
         case 'advertiser':
@@ -394,7 +394,7 @@ class RoleService {
    * @param role The role to remove
    * @returns Whether the operation was logful
    */
-  async removeRoleFromUser(pubkey: string, role: string): Promise<boolean> {
+  async removeRoleFromUser(pubkey: UserRole, role: string): Promise<boolean> {
     try {
       if (!pubkey || !role) {
         logger.error('Cannot remove role: Missing pubkey or role');
@@ -418,7 +418,7 @@ class RoleService {
       }
       
       // Prepare the update data based on role
-      const updateData: Record<string, boolean> = {};
+      const updateData: Record<UserRole, boolean> = {};
       
       switch (role) {
         case 'advertiser':

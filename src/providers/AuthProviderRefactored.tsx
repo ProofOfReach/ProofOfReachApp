@@ -39,7 +39,7 @@ export const AuthProviderRefactored: React.FC<AuthProviderProps> = ({ children }
    * @param secondParam - Can be either a signed message string or a boolean indicating test mode
    * @returns The authentication state
    */
-  const login = useCallback(async (pubkey: string, secondParam: string | boolean): Promise<AuthState> => {
+  const login = useCallback(async (pubkey: UserRole, secondParam: string | boolean): Promise<AuthState> => {
     setIsLoading(true);
     try {
       // Determine if this is a test mode login
@@ -119,7 +119,7 @@ export const AuthProviderRefactored: React.FC<AuthProviderProps> = ({ children }
   /**
    * Function to add a role to the user
    */
-  const addRole = useCallback(async (pubkey: string, role: string): Promise<boolean> => {
+  const addRole = useCallback(async (pubkey: UserRole, role: string): Promise<boolean> => {
     // Skip if no auth state or not the current user
     if (!authState || !authState.isLoggedIn || authState.pubkey !== pubkey) {
       return false;
@@ -178,7 +178,7 @@ export const AuthProviderRefactored: React.FC<AuthProviderProps> = ({ children }
   /**
    * Function to remove a role from the user
    */
-  const removeRole = useCallback(async (pubkey: string, role: string): Promise<boolean> => {
+  const removeRole = useCallback(async (pubkey: UserRole, role: string): Promise<boolean> => {
     // Skip if no auth state or not the current user
     if (!authState || !authState.isLoggedIn || authState.pubkey !== pubkey) {
       return false;

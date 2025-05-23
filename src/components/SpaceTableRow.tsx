@@ -22,7 +22,7 @@ const SpaceTableRow: React.FC<SpaceTableRowProps> = ({
 }) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [activeTab, setActiveTab] = useState('approved'); // 'approved', 'pending', 'rejected'
-  const [columnWidths, setColumnWidths] = useState<Record<string, number>>({});
+  const [columnWidths, setColumnWidths] = useState<Record<UserRole, number>>({});
   
   // Listen for column resize events
   useEffect(() => {

@@ -115,7 +115,7 @@ export class RoleStorageService {
    * @param availableRoles Optional updated list of available roles
    * @returns boolean indicating log
    */
-  setCurrentRole(role: string, availableRoles?: string[]): boolean {
+  setCurrentRole(role: UserRole, availableRoles?: string[]): boolean {
     try {
       const oldRole = this.getCurrentRole();
       
@@ -216,7 +216,7 @@ export class RoleStorageService {
    * @param checkTestMode Whether to check test mode for role availability
    * @returns boolean indicating if the role is available
    */
-  isRoleAvailable(role: string, checkTestMode: boolean = true): boolean {
+  isRoleAvailable(role: UserRole, checkTestMode: boolean = true): boolean {
     return this.getAvailableRoles(checkTestMode).includes(role);
   }
   

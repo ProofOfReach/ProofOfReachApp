@@ -3,7 +3,7 @@ import { prisma } from '../../../lib/prismaClient';
 import { requireAuth } from '../../../lib/auth';
 import { logger } from '../../../lib/logger';
 
-async function getAd(req: NextApiRequest, res: NextApiResponse, pubkey: string, userId: string) {
+async function getAd(req: NextApiRequest, res: NextApiResponse, pubkey: UserRole, userId: string) {
   try {
     const { id } = req.query;
 
@@ -43,7 +43,7 @@ async function getAd(req: NextApiRequest, res: NextApiResponse, pubkey: string, 
   }
 }
 
-async function updateAd(req: NextApiRequest, res: NextApiResponse, pubkey: string, userId: string) {
+async function updateAd(req: NextApiRequest, res: NextApiResponse, pubkey: UserRole, userId: string) {
   try {
     const { id } = req.query;
     const { 
@@ -128,7 +128,7 @@ async function updateAd(req: NextApiRequest, res: NextApiResponse, pubkey: strin
   }
 }
 
-async function deleteAd(req: NextApiRequest, res: NextApiResponse, pubkey: string, userId: string) {
+async function deleteAd(req: NextApiRequest, res: NextApiResponse, pubkey: UserRole, userId: string) {
   try {
     const { id } = req.query;
 
@@ -185,7 +185,7 @@ async function deleteAd(req: NextApiRequest, res: NextApiResponse, pubkey: strin
 }
 
 // Route handler function
-async function adHandler(req: NextApiRequest, res: NextApiResponse, pubkey: string, userId: string) {
+async function adHandler(req: NextApiRequest, res: NextApiResponse, pubkey: UserRole, userId: string) {
   if (req.method === 'GET') {
     return getAd(req, res, pubkey, userId);
   } else if (req.method === 'PATCH' || req.method === 'PUT') {

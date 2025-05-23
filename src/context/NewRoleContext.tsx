@@ -15,7 +15,7 @@ export type UserRole = 'viewer' | 'advertiser' | 'publisher' | 'admin' | 'stakeh
  */
 interface RoleContextType {
   role: string;
-  setRole: (role: string, targetPath?: string) => Promise<boolean>;
+  setRole: (role: UserRole, targetPath?: string) => Promise<boolean>;
   availableRoles: string[];
   isRoleAvailable: (role: string) => boolean;
   clearRole: () => void;
@@ -329,7 +329,7 @@ export const RoleProvider: React.FC<RoleProviderProps> = ({
   /**
    * Public API for changing roles
    */
-  const setRole = async (newRole: string, targetPath?: string): Promise<boolean> => {
+  const setRole = async (newRole: UserRole, targetPath?: string): Promise<boolean> => {
     if (ensureValidRole(roleData?.currentRole || '') === newRole) {
       return true; // Already in this role
     }

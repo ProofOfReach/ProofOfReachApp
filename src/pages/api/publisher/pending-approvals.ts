@@ -3,7 +3,7 @@ import { prisma } from '../../../lib/prismaClient';
 import { requireAuth } from '../../../lib/auth';
 import { logger } from '../../../lib/logger';
 
-async function getPendingApprovals(req: NextApiRequest, res: NextApiResponse, pubkey: string, userId: string) {
+async function getPendingApprovals(req: NextApiRequest, res: NextApiResponse, pubkey: UserRole, userId: string) {
   try {
     // Get all spaces owned by this publisher
     const publisherSpaces = await prisma.adSpace.findMany({
@@ -67,7 +67,7 @@ async function getPendingApprovals(req: NextApiRequest, res: NextApiResponse, pu
 }
 
 // Process API requests with auth middleware
-const handleRequest = async (req: NextApiRequest, res: NextApiResponse, pubkey: string, userId: string) => {
+const handleRequest = async (req: NextApiRequest, res: NextApiResponse, pubkey: UserRole, userId: string) => {
   if (req.method === 'GET') {
     return getPendingApprovals(req, res, pubkey, userId);
   } else {

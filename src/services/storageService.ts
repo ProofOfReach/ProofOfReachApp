@@ -41,7 +41,7 @@ export class StorageService {
   /**
    * Get an item from storage with type safety
    */
-  static getItem<T>(key: string, storageType: StorageType = 'local'): T | null {
+  static getItem<T>(key: UserRole, storageType: StorageType = 'local'): T | null {
     try {
       if (typeof window === 'undefined') return null;
       
@@ -58,7 +58,7 @@ export class StorageService {
   /**
    * Set an item in storage with JSON serialization
    */
-  static setItem(key: string, value: any storageType: StorageType = 'local'): boolean {
+  static setItem(key: UserRole, value: any storageType: StorageType = 'local'): boolean {
     try {
       if (typeof window === 'undefined') return false;
       
@@ -74,7 +74,7 @@ export class StorageService {
   /**
    * Remove an item from storage
    */
-  static removeItem(key: string, storageType: StorageType = 'local'): boolean {
+  static removeItem(key: UserRole, storageType: StorageType = 'local'): boolean {
     try {
       if (typeof window === 'undefined') return false;
       
@@ -90,7 +90,7 @@ export class StorageService {
   /**
    * Check if an item exists in storage
    */
-  static hasItem(key: string, storageType: StorageType = 'local'): boolean {
+  static hasItem(key: UserRole, storageType: StorageType = 'local'): boolean {
     try {
       if (typeof window === 'undefined') return false;
       

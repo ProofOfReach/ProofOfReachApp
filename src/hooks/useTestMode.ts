@@ -27,7 +27,7 @@ export interface UseTestModeResult {
   isDevEnvironment: boolean;
   
   // Actions
-  enableTestMode: (duration?: number, initialRole?: string, debug?: boolean) => boolean;
+  enableTestMode: (duration?: number, initialRole?: UserRole, debug?: boolean) => boolean;
   disableTestMode: () => boolean;
   setCurrentRole: (role: string) => Promise<boolean>;
   enableAllRoles: () => boolean;
@@ -123,7 +123,7 @@ export function useTestMode(): UseTestModeResult {
   // Actions
   const enableTestMode = useCallback((
     duration?: number,
-    initialRole?: string,
+    initialRole?: UserRole,
     debug?: boolean
   ): boolean => {
     return testModeService.enableTestMode(duration, initialRole, debug);

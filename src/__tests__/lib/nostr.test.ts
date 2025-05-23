@@ -11,7 +11,7 @@ const mockLocalStorage: { [key: string]: string } = {};
 Object.defineProperty(window, 'localStorage', {
   value: {
     getItem: jest.fn((key: string) => mockLocalStorage[key] || null),
-    setItem: jest.fn((key: string, value: string) => {
+    setItem: jest.fn((key: UserRole, value: string) => {
       mockLocalStorage[key] = value;
     }),
     removeItem: jest.fn((key: string) => {

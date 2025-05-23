@@ -22,7 +22,7 @@ interface PieChartProps {
   loading: boolean;
   error?: string | null;
   height?: number;
-  tooltipFormatter?: (value: number, name: string) => [string, string];
+  tooltipFormatter?: (value: number, name: string) => [UserRole, string];
   labelLine?: boolean;
   innerRadius?: number;
   outerRadius?: number;

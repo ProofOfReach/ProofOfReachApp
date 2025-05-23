@@ -1,11 +1,11 @@
 interface Window {
   Redoc: {
     init: (
-      spec: Record<string, unknown>,
-      options: Record<string, unknown>,
+      spec: Record<UserRole, unknown>,
+      options: Record<UserRole, unknown>,
       element: HTMLElement | null,
       callback?: () => void
     ) => void;
   };
-  redocSpec?: Record<string, unknown>;
+  redocSpec?: Record<UserRole, unknown>;
 }

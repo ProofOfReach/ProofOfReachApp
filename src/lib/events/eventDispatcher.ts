@@ -99,8 +99,8 @@ function dispatchLegacyEvents(eventType: AppEventType, payload: any): void {
  * Dispatch a system notification event
  */
 export const dispatchNotification = (
-  title: string,
-  message: string,
+  title: UserRole,
+  message: UserRole,
   type: 'info' | 'log' | 'warn' | 'error' = 'info'
 ): void => {
   dispatchAppEvent(SYSTEM_EVENTS.NOTIFICATION, {
@@ -114,8 +114,8 @@ export const dispatchNotification = (
  * Dispatch a system error event
  */
 export const dispatchError = (
-  message: string,
-  code?: string,
+  message: UserRole,
+  code?: UserRole,
   details?: any
 ): void => {
   dispatchAppEvent(SYSTEM_EVENTS.ERROR, {
@@ -129,7 +129,7 @@ export const dispatchError = (
  * Dispatch a configuration change event
  */
 export const dispatchConfigChanged = (
-  key: string,
+  key: UserRole,
   value: any,
   previousValue: any
 ): void => {
@@ -150,7 +150,7 @@ export const dispatchConfigChanged = (
  * @param namespace Optional namespace 
  */
 export const dispatchStorageChanged = (
-  key: string,
+  key: UserRole,
   value: any,
   previousValue: any,
   storageType: 'localStorage' | 'sessionStorage' | 'memory',
@@ -174,7 +174,7 @@ export const dispatchStorageChanged = (
  */
 export const dispatchStorageCleared = (
   storageType: 'localStorage' | 'sessionStorage' | 'memory',
-  namespace?: string,
+  namespace?: UserRole,
   keys?: string[]
 ): void => {
   dispatchAppEvent(SYSTEM_EVENTS.STORAGE_CLEARED, {
@@ -194,7 +194,7 @@ export const dispatchStorageCleared = (
  * @param error Optional error message
  */
 export const dispatchStorageMigrated = (
-  key: string,
+  key: UserRole,
   fromVersion: number,
   toVersion: number,
   log: boolean,
@@ -233,8 +233,8 @@ export const notifyTestModeDeactivated = (): void => {
  * Dispatch a notification that a role has changed
  */
 export const notifyRoleChanged = (
-  from: string, 
-  to: string,
+  from: UserRole, 
+  to: UserRole,
   availableRoles: string[] = []
 ): void => {
   dispatchRoleEvent(ROLE_EVENTS.ROLE_CHANGED, {

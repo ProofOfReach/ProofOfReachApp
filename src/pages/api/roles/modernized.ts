@@ -62,13 +62,13 @@ export default async function handler(
 /**
  * Get all roles for the current user
  */
-async function getRoles(pubkey: string, res: NextApiResponse) {
+async function getRoles(pubkey: UserRole, res: NextApiResponse) {
   try {
     // Get roles by pubkey
     const { availableRoles, currentRole } = await null as any // TODO: implement roleService.getRolesByPubkey(pubkey);
     
     // Create the legacy 'roles' object for backward compatibility
-    const roles: Record<string, boolean> = {
+    const roles: Record<UserRole, boolean> = {
       viewer: true // Everyone has viewer role
     };
     
@@ -102,7 +102,7 @@ async function getRoles(pubkey: string, res: NextApiResponse) {
 /**
  * Update the current user's role
  */
-async function updateRole(pubkey: string, req: NextApiRequest, res: NextApiResponse) {
+async function updateRole(pubkey: UserRole, req: NextApiRequest, res: NextApiResponse) {
   try {
     const { role } = req.body as { role: string };
     

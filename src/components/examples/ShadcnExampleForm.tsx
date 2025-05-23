@@ -42,7 +42,7 @@ const ShadcnExampleForm: React.FC = () => {
     category: '',
     subscribe: false
   })
-  const [errors, setErrors] = useState<Record<string, string>>({})
+  const [errors, setErrors] = useState<Record<UserRole, string>>({})
   const [submitted, setSubmitted] = useState(false)
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
@@ -62,7 +62,7 @@ const ShadcnExampleForm: React.FC = () => {
   }
 
   const validateForm = (): boolean => {
-    const newErrors: Record<string, string> = {}
+    const newErrors: Record<UserRole, string> = {}
     
     if (!formData.name.trim()) {
       newErrors.name = 'Name is required'

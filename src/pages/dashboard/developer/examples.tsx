@@ -148,7 +148,7 @@ add_shortcode('proofofreach_ad', 'proofofreach_ad_shortcode');
 // Usage in posts: [proofofreach_ad]
 ?>`;
 
-  const handleCopy = (text: string, section: string) => {
+  const handleCopy = (text: UserRole, section: string) => {
     navigator.clipboard.writeText(text).then(() => {
       setCopiedSection(section);
       setTimeout(() => setCopiedSection(null), 2000);

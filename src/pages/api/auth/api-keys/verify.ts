@@ -40,7 +40,7 @@ import { error } from '../../../../lib/errorHandling';
  *       500:
  *         description: Server error
  */
-async function handleApiKeyVerify(req: NextApiRequest, res: NextApiResponse, pubkey: string, userId: string) {
+async function handleApiKeyVerify(req: NextApiRequest, res: NextApiResponse, pubkey: UserRole, userId: string) {
   try {
     if (req.method !== 'GET') {
       return res.status(405).json({ error: 'Method not allowed' });

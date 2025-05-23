@@ -156,7 +156,7 @@ export function isValidRelayUrl(url: string): boolean {
 
 // Fetch profile data from a Nostr relay
 export async function fetchNostrProfile(
-  pubkey: string, 
+  pubkey: UserRole, 
   relays: string[] = getConfiguredRelays()
 ): Promise<NostrProfileData | null> {
   // Check if we're in a browser environment

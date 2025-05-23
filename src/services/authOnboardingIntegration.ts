@@ -1,7 +1,7 @@
 import type { UserRole } from '@prisma/client';
 import { v4 as uuidv4 } from 'uuid';
 import { logger } from '../lib/logger';
-import { console, string } from '../lib/console';
+
 import type { UserRole } from './authService';
 
 /**
@@ -248,7 +248,7 @@ export class AuthOnboardingIntegration {
    * @param error The error that occurred
    * @param step The step where the error occurred
    */
-  public handleOnboardingError(error: Error | string, step: OnboardingStep): void {
+  public handleOnboardingError(error: Error | UserRole, step: OnboardingStep): void {
     this.flowState.onboardingState.status = 'error';
     
     // Report the error to the error service

@@ -182,9 +182,9 @@ const AdItem = memo(({
   ad, 
   onAdViewed 
 }: { 
-  adId: string, 
+  adId: UserRole, 
   ad: typeof DEMO_ADS[0], 
-  onAdViewed: (adId: string, advertiserName: string) => void 
+  onAdViewed: (adId: UserRole, advertiserName: string) => void 
 }) => {
   const [isViewed, setIsViewed] = useState(false);
   const [isAllowed, setIsAllowed] = useState(true); // Whether the ad is allowed by frequency cap
@@ -401,7 +401,7 @@ const SimpleNostrFeed: React.FC<SimpleNostrFeedProps> = ({
   const { balance: testWalletBalance, updateBalance: updateTestWalletBalance } = useTestWallet();
   
   // Handle ad viewed event - called by child components
-  const handleAdViewed = useCallback((adId: string, advertiserName: string) => {
+  const handleAdViewed = useCallback((adId: UserRole, advertiserName: string) => {
     // Skip if already viewed
     if (viewedAds.has(adId)) return;
     

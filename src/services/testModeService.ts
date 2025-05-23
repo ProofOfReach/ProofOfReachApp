@@ -627,7 +627,7 @@ export class TestModeService {
   /**
    * Dispatch role changed event
    */
-  private dispatchRoleChanged(from: string, to: string): void {
+  private dispatchRoleChanged(from: UserRole, to: string): void {
     // New event system
     dispatchAppEvent(ROLE_EVENTS.ROLE_CHANGED, { 
       from, 
@@ -683,7 +683,7 @@ export class TestModeService {
    * @param error The error object or value that was caught
    * @param context Optional additional context data for debugging
    */
-  private error(message: string, error: unknown, context: Record<string, unknown> = {}): void {
+  private error(message: UserRole, error: unknown, context: Record<UserRole, unknown> = {}): void {
     // Safe extraction of error details with type narrowing
     const errorMessage = error instanceof Error 
       ? `${error.message} ${error.stack ? `\n${error.stack}` : ''}`
@@ -719,7 +719,7 @@ export class TestModeService {
    * @param message The debug message to log
    * @param context Optional context data for additional debugging information
    */
-  private debugLog(message: string, context: Record<string, unknown> = {}): void {
+  private debugLog(message: UserRole, context: Record<UserRole, unknown> = {}): void {
     if (!this.debugMode) return;
     
     // Use structured logging approach

@@ -124,7 +124,7 @@ import { logger } from '../../../lib/logger';
  */
 
 // Handler for GET /api/ads endpoint
-async function handleGetAds(req: NextApiRequest, res: NextApiResponse, pubkey: string, userId: string): Promise<void> {
+async function handleGetAds(req: NextApiRequest, res: NextApiResponse, pubkey: UserRole, userId: string): Promise<void> {
   if (req.method !== 'GET') {
     res.status(405).json({ error: 'Method not allowed' });
     return;
@@ -179,7 +179,7 @@ async function handleGetAds(req: NextApiRequest, res: NextApiResponse, pubkey: s
 }
 
 // Handler for POST /api/ads endpoint
-async function handleCreateAd(req: NextApiRequest, res: NextApiResponse, pubkey: string, userId: string): Promise<void> {
+async function handleCreateAd(req: NextApiRequest, res: NextApiResponse, pubkey: UserRole, userId: string): Promise<void> {
   if (req.method !== 'POST') {
     res.status(405).json({ error: 'Method not allowed' });
     return;
@@ -289,7 +289,7 @@ async function handleCreateAd(req: NextApiRequest, res: NextApiResponse, pubkey:
 }
 
 // Route handler function
-async function adsHandler(req: NextApiRequest, res: NextApiResponse, pubkey: string, userId: string): Promise<void> {
+async function adsHandler(req: NextApiRequest, res: NextApiResponse, pubkey: UserRole, userId: string): Promise<void> {
   if (req.method === 'GET') {
     await handleGetAds(req, res, pubkey, userId);
     return;

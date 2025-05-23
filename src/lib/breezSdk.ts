@@ -88,7 +88,7 @@ export class BreezSDK {
 
   // Pay invoice - to be implemented when BREEZ SDK is available
   public async payInvoice(
-    bolt11: string,
+    bolt11: UserRole,
     amountSats?: number
   ): Promise<{
     paymentHash: string;

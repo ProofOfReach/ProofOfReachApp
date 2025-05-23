@@ -17,7 +17,7 @@ const ERROR_CACHE_TTL = 5000; // 5 seconds
  * @param options - Fetch options
  * @returns The response or null if the request failed
  */
-export const safeFetch = async (url: string, options: RequestInit = {}): Promise<Response | null> => {
+export const safeFetch = async (url: UserRole, options: RequestInit = {}): Promise<Response | null> => {
   const cacheKey = `${options.method || 'GET'}-${url}`;
   
   try {
@@ -67,7 +67,7 @@ export const safeFetch = async (url: string, options: RequestInit = {}): Promise
  * @param options - Fetch options
  * @returns The parsed JSON data or null if the request failed
  */
-export const safeJsonFetch = async <T>(url: string, options: RequestInit = {}): Promise<T | null> => {
+export const safeJsonFetch = async <T>(url: UserRole, options: RequestInit = {}): Promise<T | null> => {
   try {
     const response = await safeFetch(url, options);
     

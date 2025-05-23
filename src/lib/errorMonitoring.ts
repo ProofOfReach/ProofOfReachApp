@@ -121,7 +121,7 @@ class ErrorMonitoringService {
       // Make the metrics available for debugging
       (window as any).__errorMetrics = {
         getMetrics: () => this.metrics,
-        trackError: (code: string, data: any) => this.trackErrorMetrics(code, data),
+        trackError: (code: UserRole, data: any) => this.trackErrorMetrics(code, data),
         clearMetrics: () => this.clearMetrics()
       };
     }
@@ -142,7 +142,7 @@ class ErrorMonitoringService {
       component?: string;
       category?: string;
       severity?: string;
-      data?: Record<string, unknown>;
+      data?: Record<UserRole, unknown>;
     } = {}
   ): void {
     if (!this.config.enabled) {
@@ -227,7 +227,7 @@ class ErrorMonitoringService {
    * @param data Additional data about the error
    */
   private trackErrorMetrics(
-    errorCode: string,
+    errorCode: UserRole,
     data: {
       component?: string;
       message?: string;
@@ -329,7 +329,7 @@ class ErrorMonitoringService {
       component?: string;
       category?: string;
       severity?: string;
-      data?: Record<string, unknown>;
+      data?: Record<UserRole, unknown>;
     }
   ): void {
     // In a production app, this would send to a service like Sentry, LogRocket, etc.

@@ -7,7 +7,7 @@
 import { prisma } from '../prismaClient';
 import { logger } from '../logger';
 import { 
-  string, 
+  UserRole, 
   RoleError, 
   RoleErrorType,
   RoleInfo,
@@ -16,7 +16,7 @@ import {
 } from './types';
 
 // Default role definitions with permissions
-const ROLE_DEFINITIONS: Record<string, RoleInfo> = {
+const ROLE_DEFINITIONS: Record<UserRole, RoleInfo> = {
   viewer: {
     id: 'viewer',
     displayName: 'Viewer',
@@ -169,14 +169,14 @@ export class RoleService {
   /**
    * Get all role definitions
    */
-  public getAllRoleDefinitions(): Record<string, RoleInfo> {
+  public getAllRoleDefinitions(): Record<UserRole, RoleInfo> {
     return { ...ROLE_DEFINITIONS };
   }
 
   /**
    * Check if a role has a specific permission
    */
-  public roleHasPermission(role: string, permission: keyof RolePermissions): boolean {
+  public roleHasPermission(role: UserRole, permission: keyof RolePermissions): boolean {
     const roleInfo = this.getRoleDefinition(role);
     return roleInfo.permissions[permission] || false;
   }
@@ -263,7 +263,7 @@ export class RoleService {
   /**
    * Set a user's current role
    */
-  public async setCurrentRole(userId: string, role: string): Promise<boolean> {
+  public async setCurrentRole(userId: UserRole, role: string): Promise<boolean> {
     try {
       // Validate the requested role
       if (!Object.keys(ROLE_DEFINITIONS).includes(role)) {
@@ -299,7 +299,7 @@ export class RoleService {
   /**
    * Get detailed role status for a user
    */
-  public async getUserRoleStatus(userId: string): Promise<Record<string, UserRoleStatus>> {
+  public async getUserRoleStatus(userId: string): Promise<Record<UserRole, UserRoleStatus>> {
     try {
       // Get user record to verify existence
       const user = await prisma.user.findUnique({
@@ -317,7 +317,7 @@ export class RoleService {
       });
 
       // Initialize result with default role statuses
-      const result: Record<string, UserRoleStatus> = this.getDefaultRoleStatus();
+      const result: Record<UserRole, UserRoleStatus> = this.getDefaultRoleStatus();
 
       // Always set viewer role to active (base role)
       result.viewer.isActive = true;
@@ -342,7 +342,7 @@ export class RoleService {
   /**
    * Check if a user has a specific role
    */
-  public async hasRole(userId: string, role: string): Promise<boolean> {
+  public async hasRole(userId: UserRole, role: string): Promise<boolean> {
     try {
       const roles = await this.getUserRoles(userId);
       return roles.includes(role);
@@ -394,8 +394,8 @@ export class RoleService {
    * Assign a role to a user
    */
   public async assignRole(
-    userId: string, 
-    role: string, 
+    userId: UserRole, 
+    role: UserRole, 
     options: { 
       isActive?: boolean, 
       isTestRole?: boolean
@@ -460,14 +460,14 @@ export class RoleService {
   /**
    * Remove a role from a user
    */
-  public async removeRole(userId: string, role: string): Promise<boolean> {
+  public async removeRole(userId: UserRole, role: string): Promise<boolean> {
     return this.assignRole(userId, role, { isActive: false });
   }
 
   /**
    * Check if a user has a specific permission
    */
-  public async checkPermission(userId: string, permission: keyof RolePermissions): Promise<boolean> {
+  public async checkPermission(userId: UserRole, permission: keyof RolePermissions): Promise<boolean> {
     try {
       const permissions = await this.getUserPermissions(userId);
       return permissions[permission] || false;
@@ -480,7 +480,7 @@ export class RoleService {
   /**
    * Format standard role error
    */
-  public formatError(type: RoleErrorType, message: string, status: number = 400, details?: any): RoleError {
+  public formatError(type: RoleErrorType, message: UserRole, status: number = 400, details?: any): RoleError {
     return {
       type,
       message,
@@ -492,7 +492,7 @@ export class RoleService {
   /**
    * Get default role status
    */
-  private getDefaultRoleStatus(): Record<string, UserRoleStatus> {
+  private getDefaultRoleStatus(): Record<UserRole, UserRoleStatus> {
     return {
       viewer: { role: 'viewer', isActive: true, isTestRole: false },
       advertiser: { role: 'advertiser', isActive: false, isTestRole: false },
@@ -623,7 +623,7 @@ export class RoleService {
    * Update current role by nostrPubkey
    * This is a convenience method for API endpoints
    */
-  public async updateRoleByPubkey(pubkey: string, role: string): Promise<boolean> {
+  public async updateRoleByPubkey(pubkey: UserRole, role: string): Promise<boolean> {
     try {
       // Find the user by pubkey
       const user = await prisma.user.findUnique({

@@ -8,8 +8,8 @@ export interface NostrWindow extends Window {
     getUserPublicKey(): Promise<string>;
     signEvent(event: any): Promise<any>;
     nip04?: {
-      encrypt(pubkey: string, plaintext: string): Promise<string>;
-      decrypt(pubkey: string, ciphertext: string): Promise<string>;
+      encrypt(pubkey: UserRole, plaintext: string): Promise<string>;
+      decrypt(pubkey: UserRole, ciphertext: string): Promise<string>;
     };
   };
 }
@@ -390,7 +390,7 @@ class NostrHelpers {
    * @param privateKey The private key to store
    * @param publicKey The public key to store
    */
-  public storeTestKeys(privateKey: string, publicKey: string): void {
+  public storeTestKeys(privateKey: UserRole, publicKey: string): void {
     if (typeof window === 'undefined') {
       logger.warn('Cannot store test keys: window is undefined');
       return;
@@ -448,7 +448,7 @@ export const nostr = new NostrHelpers();
  * @param challenge The challenge/message that was signed
  * @returns Whether the signature is valid
  */
-export function verifyNostrSignature(pubkey: string, signature: string, challenge: string): boolean {
+export function verifyNostrSignature(pubkey: UserRole, signature: UserRole, challenge: string): boolean {
   try {
     // In a real implementation, this would use cryptographic verification
     // For this implementation, we'll do a simple check that the signature exists
@@ -544,7 +544,7 @@ export function generateRegularAccount(): TestKeypair {
  * @param privateKey The private key to store
  * @param publicKey The public key to store
  */
-export function storeRegularAccountKeys(privateKey: string, publicKey: string): void {
+export function storeRegularAccountKeys(privateKey: UserRole, publicKey: string): void {
   if (typeof window === 'undefined') {
     logger.warn('Cannot store regular account keys: window is undefined');
     return;
@@ -566,11 +566,11 @@ export const hasNostrExtension = () => nostr.hasNostrExtension();
 export const getNostrPublicKey = () => nostr.getNostrPublicKey();
 export const generatePrivateKey = () => nostr.generatePrivateKey();
 // Maintain backward compatibility with tests while using the renamed method
-export const getUserPublicKey = (privateKey: string) => nostr.derivePublicKey(privateKey);
 export const getUserPublicKey = () => nostr.getUserPublicKey();
+export const derivePublicKey = (privateKey: string) => nostr.derivePublicKey(privateKey);
 export const generateTestKeyPair = () => nostr.generateTestKeyPair();
 export const getStoredTestKeys = () => nostr.getStoredTestKeys();
-export const storeTestKeys = (privateKey: string, publicKey: string) => nostr.storeTestKeys(privateKey, publicKey);
+export const storeTestKeys = (privateKey: UserRole, publicKey: string) => nostr.storeTestKeys(privateKey, publicKey);
 export const clearStoredTestKeys = () => nostr.clearStoredTestKeys();
 export const getUserPublicKeyFromRequest = (req: any) => nostr.getUserPublicKeyFromRequest(req);
 export const signEvent = (event: NostrEvent) => nostr.signEvent(event);

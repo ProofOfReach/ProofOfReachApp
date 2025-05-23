@@ -328,7 +328,7 @@ SDK.renderAd("proof-of-reach-ad", {
   }
 });\n`;
 
-  const handleCopy = (text: string, section: string) => {
+  const handleCopy = (text: UserRole, section: string) => {
     navigator.clipboard.writeText(text).then(() => {
       setCopiedSection(section);
       setTimeout(() => setCopiedSection(null), 2000);

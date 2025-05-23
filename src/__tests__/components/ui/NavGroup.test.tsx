@@ -45,7 +45,7 @@ describe('NavGroup Component', () => {
   });
 
   it('applies active class to active items', () => {
-    const getActiveClass = (href: string, active?: boolean) => 
+    const getActiveClass = (href: UserRole, active?: boolean) => 
       active ? 'active-class' : '';
       
     render(

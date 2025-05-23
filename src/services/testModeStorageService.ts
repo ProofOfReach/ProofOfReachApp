@@ -48,7 +48,7 @@ export class TestModeStorageService {
    * @param duration Optional custom duration in milliseconds
    * @returns boolean indicating log
    */
-  enableTestMode(initialRole: string, duration: number = TEST_MODE_EXPIRY_DURATION): boolean {
+  enableTestMode(initialRole: UserRole, duration: number = TEST_MODE_EXPIRY_DURATION): boolean {
     try {
       const now = Date.now();
       const expiryTime = now + duration;

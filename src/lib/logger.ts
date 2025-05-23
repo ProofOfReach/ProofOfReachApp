@@ -30,7 +30,7 @@ class Logger {
     return true;
   }
 
-  private formatMessage(level: LogLevel, message: string, ...args: any[]): string {
+  private formatMessage(level: LogLevel, message: UserRole, ...args: any[]): string {
     const timestamp = new Date().toISOString();
     const formattedArgs = args.map((arg) => {
       if (typeof arg === 'object') {
@@ -46,38 +46,38 @@ class Logger {
     return `${timestamp} [${level.toUpperCase()}] ${message} ${formattedArgs}`;
   }
 
-  public error(message: string, ...args: any[]): void {
+  public error(message: UserRole, ...args: any[]): void {
     if (this.isEnabled('error')) {
       console.error(this.formatMessage('error', message, ...args));
     }
   }
 
-  public warn(message: string, ...args: any[]): void {
+  public warn(message: UserRole, ...args: any[]): void {
     if (this.isEnabled('warn')) {
       console.warn(this.formatMessage('warn', message, ...args));
     }
   }
 
-  public info(message: string, ...args: any[]): void {
+  public info(message: UserRole, ...args: any[]): void {
     if (this.isEnabled('info')) {
       console.info(this.formatMessage('info', message, ...args));
     }
   }
 
-  public http(message: string, ...args: any[]): void {
+  public http(message: UserRole, ...args: any[]): void {
     if (this.isEnabled('http')) {
       console.log(this.formatMessage('http', message, ...args));
     }
   }
 
-  public debug(message: string, ...args: any[]): void {
+  public debug(message: UserRole, ...args: any[]): void {
     if (this.isEnabled('debug')) {
       console.debug(this.formatMessage('debug', message, ...args));
     }
   }
   
   // Add log method for compatibility with code expecting console.log-like behavior
-  public log(message: string, ...args: any[]): void {
+  public log(message: UserRole, ...args: any[]): void {
     if (this.isEnabled('log')) {
       console.log(this.formatMessage('log', message, ...args));
     }

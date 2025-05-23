@@ -13,7 +13,7 @@
  */
 
 import { logger } from './logger';
-import { string, isValidstring, getDefaultRole } from '../types/role';
+import { UserRole, isValidUserRole, getDefaultRole } from '../types/role';
 import { prisma } from './prisma';
 import { normalizeRole, normalizeRoles, normalizeRoleData } from '../utils/roleNormalizer';
 
@@ -54,7 +54,7 @@ const DEFAULT_CONFIG: RoleServiceConfig = {
 export class UnifiedRoleService {
   private config: Required<RoleServiceConfig>;
   private cache: RoleData | null = null;
-  private roleCache: Record<string, UserRole[]> = {};
+  private roleCache: Record<UserRole, UserRole[]> = {};
   
   /**
    * Create a new UnifiedRoleService instance
@@ -74,7 +74,7 @@ export class UnifiedRoleService {
   /**
    * Log debug messages if debug mode is enabled
    */
-  private debug(message: string, data?: any): void {
+  private debug(message: UserRole, data?: any): void {
     if (this.config.debug) {
       logger.info(`[UnifiedRoleService] ${message}`, data);
     }
@@ -145,7 +145,7 @@ export class UnifiedRoleService {
     );
     
     return {
-      currentRole: data.currentRole as string,
+      currentRole: data.currentRole as UserRole,
       availableRoles: data.availableRoles as UserRole[],
       timestamp: data.timestamp
     };
@@ -195,7 +195,7 @@ export class UnifiedRoleService {
    * @param forceRefresh Whether to force refresh from database
    * @returns Promise resolving to array of roles
    */
-  public async getUserRoles(userId: string, forceRefresh = false): Promise<UserRole[]> {
+  public async getUserRoles(userId: UserRole, forceRefresh = false): Promise<UserRole[]> {
     try {
       // Test mode users have all roles
       if (userId.startsWith('pk_test_')) {
@@ -268,7 +268,7 @@ export class UnifiedRoleService {
    * @param roleParam If provided, check if userId has this role on the server
    * @returns Boolean (sync) or Promise<boolean> (async) depending on context
    */
-  public hasRole(roleOrUserId: string, roleParam?: string): boolean | Promise<boolean> {
+  public hasRole(roleOrUserId: UserRole, roleParam?: string): boolean | Promise<boolean> {
     // If the second parameter is provided, this is the server version
     if (roleParam) {
       return this.hasRoleOnServer(roleOrUserId, roleParam);
@@ -299,7 +299,7 @@ export class UnifiedRoleService {
    * @param role Role to check
    * @returns Promise resolving to boolean
    */
-  private async hasRoleOnServer(userId: string, role: string): Promise<boolean> {
+  private async hasRoleOnServer(userId: UserRole, role: string): Promise<boolean> {
     // Normalize the role (convert 'viewer' to 'viewer')
     const normalizedRole = normalizeRole(role) as UserRole;
     
@@ -322,7 +322,7 @@ export class UnifiedRoleService {
    * @returns Promise resolving to log status
    */
   public async updateUserRoles(
-    userId: string,
+    userId: UserRole,
     addRoles: string[] = [],
     removeRoles: string[] = []
   ): Promise<boolean> {
@@ -418,7 +418,7 @@ export class UnifiedRoleService {
    * @param roleParam If provided, set this role as current for the userId on the server
    * @returns Boolean (sync) or Promise<boolean> (async) depending on context
    */
-  public setCurrentRole(userIdOrRole: string, roleParam?: string): boolean | Promise<boolean> {
+  public setCurrentRole(userIdOrRole: UserRole, roleParam?: string): boolean | Promise<boolean> {
     // If second parameter is provided, this is the async server version
     if (roleParam) {
       return this.setCurrentRoleOnServer(userIdOrRole, roleParam);
@@ -435,7 +435,7 @@ export class UnifiedRoleService {
    * @param role Role to set as current
    * @returns Promise resolving to log status
    */
-  private async setCurrentRoleOnServer(userId: string, role: string): Promise<boolean> {
+  private async setCurrentRoleOnServer(userId: UserRole, role: string): Promise<boolean> {
     try {
       // Normalize the role (convert 'viewer' to 'viewer')
       const normalizedRole = normalizeRole(role);
@@ -513,7 +513,7 @@ export class UnifiedRoleService {
       
       const newData = {
         ...currentData,
-        currentRole: normalizedRole as string,
+        currentRole: normalizedRole as UserRole,
         timestamp: Date.now()
       };
       

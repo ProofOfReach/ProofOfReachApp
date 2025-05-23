@@ -3,7 +3,7 @@ import { prisma } from '../../../lib/prismaClient';
 import { requireAuth } from '../../../lib/auth';
 import { logger } from '../../../lib/logger';
 
-async function handler(req: NextApiRequest, res: NextApiResponse, pubkey: string, userId: string) {
+async function handler(req: NextApiRequest, res: NextApiResponse, pubkey: UserRole, userId: string) {
   const { id } = req.query;
   
   if (!id || typeof id !== 'string') {
@@ -31,7 +31,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse, pubkey: string
 export default requireAuth(handler);
 
 // GET - Retrieve a specific ad space
-async function getAdSpace(req: NextApiRequest, res: NextApiResponse, id: string, userId: string) {
+async function getAdSpace(req: NextApiRequest, res: NextApiResponse, id: UserRole, userId: string) {
   try {
     const adSpace = await prisma.adSpace.findUnique({
       where: {
@@ -59,7 +59,7 @@ async function getAdSpace(req: NextApiRequest, res: NextApiResponse, id: string,
 }
 
 // PUT - Update an existing ad space
-async function updateAdSpace(req: NextApiRequest, res: NextApiResponse, id: string, userId: string) {
+async function updateAdSpace(req: NextApiRequest, res: NextApiResponse, id: UserRole, userId: string) {
   try {
     // Check if the ad space exists and belongs to the user
     const existingSpace = await prisma.adSpace.findUnique({
@@ -121,7 +121,7 @@ async function updateAdSpace(req: NextApiRequest, res: NextApiResponse, id: stri
 }
 
 // DELETE - Remove an existing ad space
-async function deleteAdSpace(req: NextApiRequest, res: NextApiResponse, id: string, userId: string) {
+async function deleteAdSpace(req: NextApiRequest, res: NextApiResponse, id: UserRole, userId: string) {
   try {
     // Check if the ad space exists and belongs to the user
     const existingSpace = await prisma.adSpace.findUnique({

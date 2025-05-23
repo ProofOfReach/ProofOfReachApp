@@ -123,7 +123,7 @@ export type StorageKey = typeof STORAGE_KEYS[keyof typeof STORAGE_KEYS] | string
  * In-memory storage for items that shouldn't persist
  * or for environments without access to localStorage/sessionStorage
  */
-const memoryStorage: Map<string, string> = new Map();
+const memoryStorage: Map<UserRole, string> = new Map();
 
 /**
  * Enhanced Storage Service class
@@ -187,7 +187,7 @@ export class EnhancedStorageService {
   /**
    * Get the storage object based on the specified type
    */
-  private getStorageObject(type: StorageType): Storage | Map<string, string> {
+  private getStorageObject(type: StorageType): Storage | Map<UserRole, string> {
     if (typeof window === 'undefined') {
       return memoryStorage;
     }
@@ -1041,7 +1041,7 @@ export class EnhancedStorageService {
     succeeded: number; 
     failed: number;
     skipped: number;
-    errors: Record<string, string>;
+    errors: Record<UserRole, string>;
   } {
     try {
       const storageType = options.storageType || this.defaultStorageType;
@@ -1063,7 +1063,7 @@ export class EnhancedStorageService {
         succeeded: 0,
         failed: 0,
         skipped: 0,
-        errors: {} as Record<string, string>
+        errors: {} as Record<UserRole, string>
       };
       
       // Process each key

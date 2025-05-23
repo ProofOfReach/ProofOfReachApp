@@ -129,7 +129,7 @@ jest.mock('@prisma/client', () => {
     })),
     Prisma: {
       PrismaClientKnownRequestError: class PrismaClientKnownRequestError extends Error {
-        constructor(message: string, meta: any) {
+        constructor(message: UserRole, meta: any) {
           super(message);
           this.name = 'PrismaClientKnownRequestError';
           this.meta = meta;

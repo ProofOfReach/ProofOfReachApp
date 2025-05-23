@@ -84,7 +84,7 @@ async function updatePreferences(req: NextApiRequest, res: NextApiResponse, pubk
 }
 
 // Process API requests with auth middleware
-const handleRequest = async (req: NextApiRequest, res: NextApiResponse, pubkey: string, userId: string) => {
+const handleRequest = async (req: NextApiRequest, res: NextApiResponse, pubkey: UserRole, userId: string) => {
   if (req.method === 'GET') {
     return getPreferences(req, res, pubkey);
   } else if (req.method === 'PUT' || req.method === 'PATCH') {

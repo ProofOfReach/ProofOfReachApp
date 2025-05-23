@@ -18,7 +18,7 @@ export default function ErrorTestingPage(): React.ReactElement {
   const { showErrorToast } = useErrorStateToast();
   
   const [apiError, setApiError] = useState<Error | null>(null);
-  const [formErrors, setFormErrors] = useState<Record<string, string> | null>(null);
+  const [formErrors, setFormErrors] = useState<Record<UserRole, string> | null>(null);
   const [networkError, setNetworkError] = useState<Error | null>(null);
   const [permissionError, setPermissionError] = useState<Error | null>(null);
   

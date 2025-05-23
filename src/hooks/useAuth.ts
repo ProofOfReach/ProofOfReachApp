@@ -19,7 +19,7 @@ export interface AuthState {
 // Create auth context
 export const AuthContext = createContext<{
   auth: AuthState | null;
-  login: (pubkey: string, isTest?: boolean) => Promise<boolean>;
+  login: (pubkey: UserRole, isTest?: boolean) => Promise<boolean>;
   logout: () => Promise<void>;
   refreshRoles: () => Promise<UserRole[]>;
   addRole: (role: string) => Promise<boolean>;
@@ -115,7 +115,7 @@ export const useAuthProvider = () => {
   }, []);
 
   // Login function
-  const login = async (pubkey: string, isTest = false): Promise<boolean> => {
+  const login = async (pubkey: UserRole, isTest = false): Promise<boolean> => {
     try {
       // Actual login call to the API
       const response = await fetch('/api/auth/login', {

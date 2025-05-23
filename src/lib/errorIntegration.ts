@@ -32,7 +32,7 @@ let initialized = false;
  * Create an error object with default values
  */
 export function createError(
-  message: string,
+  message: UserRole,
   source: string = 'unknown',
   type: ErrorType = 'unknown',
   severity: string = 'error'
@@ -60,7 +60,7 @@ export function error(
   options?: {
     details?: string;
     retry?: () => void;
-    data?: Record<string, any>;
+    data?: Record<UserRole, any>;
   }
 ): any {
   const message = error instanceof Error ? error.message : error;
@@ -326,7 +326,7 @@ export function getErrorMetrics() {
  */
 export function reportNetworkError(
   error: string | Error,
-  details?: string,
+  details?: UserRole,
   retry?: () => void
 ): any {
   return error(
@@ -343,7 +343,7 @@ export function reportNetworkError(
  */
 export function reportApiError(
   error: string | Error,
-  endpoint?: string,
+  endpoint?: UserRole,
   statusCode?: number,
   retry?: () => void
 ): any {

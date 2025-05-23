@@ -41,7 +41,7 @@ const ImprovedDashboardLayout: React.FC<ImprovedDashboardLayoutProps> = ({
   const [currentRole, setCurrentRole] = useState<UserRole>('viewer');
   
   // Role icons with appropriate colors
-  const roleIcons: Record<string, React.ReactNode> = {
+  const roleIcons: Record<UserRole, React.ReactNode> = {
     viewer: <User className="w-5 h-5 text-blue-500" />,
     advertiser: <MegaphoneIcon className="w-5 h-5 text-orange-500" />,
     publisher: <FileText className="w-5 h-5 text-green-500" />,
@@ -183,7 +183,7 @@ const ImprovedDashboardLayout: React.FC<ImprovedDashboardLayoutProps> = ({
     ];
     
     // Role-specific items
-    const roleSpecificItems: Record<string, NavigationItem[]> = {
+    const roleSpecificItems: Record<UserRole, NavigationItem[]> = {
       viewer: [
         { role: 'viewer', label: 'Nostr Feed', icon: <FileText className="w-5 h-5 mr-3" />, href: '/dashboard/nostr-feed' },
         { role: 'viewer', label: 'My Wallet', icon: <BitcoinIcon className="w-5 h-5 mr-3" />, href: '/dashboard/wallet' }

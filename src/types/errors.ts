@@ -73,6 +73,6 @@ export interface any {
   userFacing: boolean;
   details?: string;
   stack?: string;
-  data?: Record<string, any>;
+  data?: Record<UserRole, any>;
   errors?: FieldError[];
 }

@@ -87,7 +87,7 @@ export interface EnhancedStorageProvider {
    * @param options Options for retrieval
    * @returns The stored value or null if not found
    */
-  getItem(key: string, options?: {
+  getItem(key: UserRole, options?: {
     decrypt?: boolean;
     namespace?: string;
     defaultValue?: unknown;
@@ -101,7 +101,7 @@ export interface EnhancedStorageProvider {
    * @param options Options for storage
    * @returns Promise that resolves when the operation is complete
    */
-  setItem(key: string, value: string, options?: {
+  setItem(key: UserRole, value: UserRole, options?: {
     encrypt?: boolean;
     namespace?: string;
     expiry?: ExpiryOptions;
@@ -114,7 +114,7 @@ export interface EnhancedStorageProvider {
    * @param options Options for removal
    * @returns Promise that resolves when the operation is complete
    */
-  removeItem(key: string, options?: {
+  removeItem(key: UserRole, options?: {
     namespace?: string;
   }): Promise<void>;
   
@@ -133,7 +133,7 @@ export interface EnhancedStorageProvider {
    * @param options Options for checking
    * @returns Promise that resolves to a boolean indicating existence
    */
-  has(key: string, options?: {
+  has(key: UserRole, options?: {
     namespace?: string;
   }): Promise<boolean>;
   
@@ -482,13 +482,13 @@ function createEnhancedStorage(storageType: StorageType): EnhancedStorageProvide
  * Create a mock storage object for server-side rendering
  */
 function createMockStorage(): Storage {
-  const data: Record<string, string> = {};
+  const data: Record<UserRole, string> = {};
   
   return {
     getItem(key: string): string | null {
       return key in data ? data[key] : null;
     },
-    setItem(key: string, value: string): void {
+    setItem(key: UserRole, value: string): void {
       data[key] = value;
     },
     removeItem(key: string): void {

@@ -41,7 +41,7 @@ export interface NavSection {
  * @param currentPath Current active path
  * @returns Array of navigation sections
  */
-export function buildNavigation(role: string, currentPath: string): NavSection[] {
+export function buildNavigation(role: UserRole, currentPath: string): NavSection[] {
   // Common navigation items available to all roles
   const commonItems: NavItemWithIconName[] = [
     {
@@ -59,7 +59,7 @@ export function buildNavigation(role: string, currentPath: string): NavSection[]
   ];
 
   // Role-specific main navigation items
-  const mainItems: Record<string, NavItemWithIconName[]> = {
+  const mainItems: Record<UserRole, NavItemWithIconName[]> = {
     viewer: [
       {
         label: 'Nostr Feed',
@@ -210,7 +210,7 @@ export function getRoleIconAndColor(role: string): {
   textColor: string; 
   label: string;
 } {
-  const roleConfig: Record<string, {
+  const roleConfig: Record<UserRole, {
     iconName: IconName;
     bgColor: string;
     textColor: string;

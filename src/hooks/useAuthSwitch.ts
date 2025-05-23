@@ -65,9 +65,9 @@ export function useAuthSwitch() {
   // Create a safe login function that provides type safety for the login-new page
   const createSafeLoginFunction = (auth: any) => {
     // This function handles two different parameter formats for backward compatibility:
-    // 1. (pubkey: string, signedMessage: string) - old signature
-    // 2. (pubkey: string, isTestMode: boolean) - new signature
-    return async (pubkey: string, secondParam: any) => {
+    // 1. (pubkey: UserRole, signedMessage: string) - old signature
+    // 2. (pubkey: UserRole, isTestMode: boolean) - new signature
+    return async (pubkey: UserRole, secondParam: any) => {
       if (!auth || !auth.login) {
         logger.error('Login function not available');
         return null;
@@ -102,7 +102,7 @@ export function useAuthSwitch() {
             const ROLE_CACHE_KEY = 'roleData';
             try {
               // Create or update the React Query cache
-              let cache: Record<string, any> = {};
+              let cache: Record<UserRole, any> = {};
               
               // Try to get existing cache or create a new one
               if (window.localStorage.getItem('_REACT_QUERY_OFFLINE_CACHE')) {

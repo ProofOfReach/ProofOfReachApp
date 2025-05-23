@@ -63,8 +63,8 @@ const generateExampleValue = (schema: any): any => {
     case 'object':
       if (!schema.properties) return {};
       
-      const result: Record<string, any> = {};
-      Object.entries(schema.properties).forEach(([propName, propSchema]: [string, any]) => {
+      const result: Record<UserRole, any> = {};
+      Object.entries(schema.properties).forEach(([propName, propSchema]: [UserRole, any]) => {
         result[propName] = generateExampleValue(propSchema);
       });
       
@@ -100,18 +100,18 @@ const generateExampleRequestBodyJS = (requestBody: any): string => {
 
 const APIDocsPage: React.FC<APIDocsProps> = ({ spec }) => {
   const [activeSection, setActiveSection] = useState('info');
-  const [expandedPaths, setExpandedPaths] = useState<Record<string, boolean>>({});
+  const [expandedPaths, setExpandedPaths] = useState<Record<UserRole, boolean>>({});
   
   // Process spec to organize by tags
   const taggedEndpoints = React.useMemo(() => {
-    const result: Record<string, any[]> = {};
+    const result: Record<UserRole, any[]> = {};
     
     // Add 'All' category
     result['All'] = [];
     
     if (spec.paths) {
-      Object.entries(spec.paths).forEach(([path, pathData]: [string, any]) => {
-        Object.entries(pathData).forEach(([method, endpointData]: [string, any]) => {
+      Object.entries(spec.paths).forEach(([path, pathData]: [UserRole, any]) => {
+        Object.entries(pathData).forEach(([method, endpointData]: [UserRole, any]) => {
           const endpoint = {
             path,
             method: method.toUpperCase(),
@@ -152,7 +152,7 @@ const APIDocsPage: React.FC<APIDocsProps> = ({ spec }) => {
   };
   
   // Method color mapping
-  const methodColors: Record<string, string> = {
+  const methodColors: Record<UserRole, string> = {
     GET: 'bg-blue-600',
     POST: 'bg-green-600',
     PUT: 'bg-yellow-600',
@@ -407,7 +407,7 @@ fetch("${window.location.origin}${endpoint.path}", {
                           <div>
                             <h3 className="text-sm uppercase tracking-wider text-gray-400 mb-2">Responses</h3>
                             <div className="space-y-3">
-                              {Object.entries(endpoint.responses).map(([code, response]: [string, any], respIndex: number) => (
+                              {Object.entries(endpoint.responses).map(([code, response]: [UserRole, any], respIndex: number) => (
                                 <div key={respIndex} className="bg-gray-700 rounded-lg p-4">
                                   <div className="flex items-center mb-2">
                                     <span className={`px-2 py-1 rounded text-xs font-bold ${
@@ -464,7 +464,7 @@ fetch("${window.location.origin}${endpoint.path}", {
             <div>
               <h1 className="text-2xl font-bold text-white mb-6">Data Models</h1>
               <div className="space-y-6">
-                {Object.entries(spec.components.schemas).map(([name, schema]: [string, any]) => (
+                {Object.entries(spec.components.schemas).map(([name, schema]: [UserRole, any]) => (
                   <div key={name} className="bg-gray-800 rounded-lg overflow-hidden">
                     <div className="p-4">
                       <h2 className="text-xl font-bold text-white">{name}</h2>

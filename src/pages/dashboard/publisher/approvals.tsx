@@ -144,7 +144,7 @@ const PublisherApprovalsPage = () => {
   };
 
   // Handle approval or rejection
-  const handleApproval = async (requestId: string, approved: boolean) => {
+  const handleApproval = async (requestId: UserRole, approved: boolean) => {
     try {
       // This would be an API call in a real application
       console.log(`${approved ? 'Approving' : 'Rejecting'} request ${requestId}`);

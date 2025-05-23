@@ -24,8 +24,8 @@ interface AdSpace {
 interface AdApprovalProps {
   ad: Ad;
   space: AdSpace;
-  onApprove: (adId: string, spaceId: string) => void;
-  onReject: (adId: string, spaceId: string, reason: string) => void;
+  onApprove: (adId: UserRole, spaceId: string) => void;
+  onReject: (adId: UserRole, spaceId: UserRole, reason: string) => void;
   domainBlacklist?: string[];
 }
 

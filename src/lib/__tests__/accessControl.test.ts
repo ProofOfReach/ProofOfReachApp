@@ -195,7 +195,7 @@ describe('Access Control System', () => {
     });
     
     it('should return capabilities with metadata when requested', () => {
-      const capabilities = getRoleCapabilities('publisher', true) as Record<string, any>;
+      const capabilities = getRoleCapabilities('publisher', true) as Record<UserRole, any>;
       
       expect(capabilities.MANAGE_AD_PLACEMENTS).toHaveProperty('granted', true);
       expect(capabilities.MANAGE_AD_PLACEMENTS).toHaveProperty('category');
@@ -206,7 +206,7 @@ describe('Access Control System', () => {
     });
     
     it('should handle inheritance correctly', () => {
-      const capabilities = getRoleCapabilities('publisher', true) as Record<string, any>;
+      const capabilities = getRoleCapabilities('publisher', true) as Record<UserRole, any>;
       
       // UPDATE_PLACEMENT_SETTINGS inherits from MANAGE_AD_PLACEMENTS
       expect(capabilities.UPDATE_PLACEMENT_SETTINGS).toHaveProperty('granted', true);
@@ -218,7 +218,7 @@ describe('Access Control System', () => {
     });
     
     it('should handle multi-level inheritance correctly', () => {
-      const capabilities = getRoleCapabilities('publisher', true) as Record<string, any>;
+      const capabilities = getRoleCapabilities('publisher', true) as Record<UserRole, any>;
       
       // Test a deep permission chain if it exists in your permissions structure
       // For example, if EXPORT_ANALYTICS inherits from VIEW_ADVANCED_ANALYTICS

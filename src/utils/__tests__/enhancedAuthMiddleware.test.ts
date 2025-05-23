@@ -7,7 +7,7 @@ import { enhancedAuthMiddleware, requireRoles, requireAdmin } from '../enhancedA
 import { prisma } from '../../lib/prisma';
 
 // Mock Next.js request/response
-const createMockReq = (cookies: Record<string, string> = {}): NextApiRequest => {
+const createMockReq = (cookies: Record<UserRole, string> = {}): NextApiRequest => {
   return {
     cookies,
     method: 'GET',

@@ -5,7 +5,7 @@
  * that is fully decoupled from test mode concerns.
  */
 
-import { string, isValidUserRole } from '../types/role';
+import { UserRole, isValidUserRole } from '../types/role';
 import '@/lib/logger';
 import { StorageService, STORAGE_KEYS } from './storageService';
 import '@/lib/testModeEvents';

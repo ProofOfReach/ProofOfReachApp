@@ -36,7 +36,7 @@ async function getTransactionHistory(req: NextApiRequest, res: NextApiResponse, 
 }
 
 // Process API requests with auth middleware
-const handleRequest = async (req: NextApiRequest, res: NextApiResponse, pubkey: string, userId: string) => {
+const handleRequest = async (req: NextApiRequest, res: NextApiResponse, pubkey: UserRole, userId: string) => {
   if (req.method === 'GET') {
     return getTransactionHistory(req, res, pubkey);
   } else {

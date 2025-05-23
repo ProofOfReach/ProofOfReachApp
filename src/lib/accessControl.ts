@@ -15,7 +15,7 @@
  * this module instead of implementing their own logic.
  */
 
-import { string, isValidstring, filterValidRoles } from '../types/role';
+import { UserRole, isValidUserRole, filterValidRoles } from '../types/role';
 import { logger } from './logger';
 import { unifiedRoleService } from './unifiedRoleService';
 
@@ -48,7 +48,7 @@ export interface PermissionConfig {
 }
 
 // Helper type to ensure type safety for permissions in the PERMISSIONS object
-export type PermissionsRecord = Record<string, PermissionConfig>;
+export type PermissionsRecord = Record<UserRole, PermissionConfig>;
 
 // Define all available permissions in the system
 export const PERMISSIONS: PermissionsRecord = {
@@ -252,7 +252,7 @@ export const PERMISSIONS: PermissionsRecord = {
 };
 
 // Define route access permissions
-export const ROUTE_PERMISSIONS: Record<string, UserRole[]> = {
+export const ROUTE_PERMISSIONS: Record<UserRole, UserRole[]> = {
   // Public routes (accessible to all authenticated users)
   '/dashboard': ['viewer', 'advertiser', 'publisher', 'admin', 'stakeholder'],
   
@@ -297,7 +297,7 @@ export const PUBLIC_ROUTES = [
  * Routes that are restricted to specific roles and should
  * explicitly block access for other roles
  */
-export const RESTRICTED_ROUTES: Record<string, UserRole[]> = {
+export const RESTRICTED_ROUTES: Record<UserRole, UserRole[]> = {
   '/dashboard/admin': ['admin'],
   '/dashboard/users': ['admin'],
   '/dashboard/system': ['admin']
@@ -328,7 +328,7 @@ export interface PermissionContext {
  */
 export function checkPermission(
   permission: keyof typeof PERMISSIONS, 
-  role: string | string,
+  role: string | UserRole,
   context: PermissionContext = {}
 ): boolean {
   // Validate role
@@ -388,7 +388,7 @@ export function checkPermission(
  * @param role The role to check
  * @returns True if the role can access the route, false otherwise
  */
-export function checkRouteAccess(route: string, role: string | string): boolean {
+export function checkRouteAccess(route: UserRole, role: string | string): boolean {
   if (!isValidUserRole(role)) {
     logger.warn(`Invalid role provided to checkRouteAccess: ${role}`);
     return false;
@@ -453,7 +453,7 @@ export interface PermissionCapability {
 /**
  * Enhanced capability map with metadata about each permission
  */
-export type EnhancedCapabilityMap = Record<string, PermissionCapability>;
+export type EnhancedCapabilityMap = Record<UserRole, PermissionCapability>;
 
 /**
  * Helper function to safely access permission properties
@@ -479,9 +479,9 @@ function getPermissionProperty<T>(
  * @returns Record of permission names mapped to capability information
  */
 export function getRoleCapabilities(
-  role: string | string, 
+  role: string | UserRole, 
   includeMetadata: boolean = false
-): EnhancedCapabilityMap | Record<string, boolean> {
+): EnhancedCapabilityMap | Record<UserRole, boolean> {
   if (!isValidUserRole(role)) {
     logger.warn(`Invalid role provided to getRoleCapabilities: ${role}`);
     return {};
@@ -601,7 +601,7 @@ export function getRoleCapabilities(
   
   // If metadata is not needed, return a simplified boolean map
   if (!includeMetadata) {
-    const simplifiedCapabilities: Record<string, boolean> = {};
+    const simplifiedCapabilities: Record<UserRole, boolean> = {};
     for (const [key, value] of Object.entries(enhancedCapabilities)) {
       simplifiedCapabilities[key] = value.granted;
     }
@@ -617,7 +617,7 @@ export function getRoleCapabilities(
  * @param availableRoles List of roles available to the user
  * @returns True if the role is available, false otherwise
  */
-export function isRoleAvailable(role: string | string, availableRoles: string[]): boolean {
+export function isRoleAvailable(role: string | UserRole, availableRoles: string[]): boolean {
   if (!isValidUserRole(role)) {
     logger.warn(`Invalid role provided to isRoleAvailable: ${role}`);
     return false;
@@ -655,11 +655,11 @@ export function getRoleDashboardPath(role: string | string): string {
 
 // Define the available roles in the system
 export const ROLES = {
-  VIEWER: 'viewer' as string,
-  ADVERTISER: 'advertiser' as string,
-  PUBLISHER: 'publisher' as string,
-  ADMIN: 'admin' as string,
-  STAKEHOLDER: 'stakeholder' as string,
+  VIEWER: 'viewer' as UserRole,
+  ADVERTISER: 'advertiser' as UserRole,
+  PUBLISHER: 'publisher' as UserRole,
+  ADMIN: 'admin' as UserRole,
+  STAKEHOLDER: 'stakeholder' as UserRole,
 };
 
 /**
@@ -691,7 +691,7 @@ export const accessControl = {
   getAllRoles,
   
   // Validation functions
-  isValidRole: isValidstring,
+  isValidRole: isValidUserRole,
   validateRoles: filterValidRoles
 };
 

@@ -8,7 +8,7 @@ import { logger } from './logger';
 export class AuthenticationError extends Error {
   statusCode: number;
   
-  constructor(message: string, statusCode: number = 401) {
+  constructor(message: UserRole, statusCode: number = 401) {
     super(message);
     this.name = 'AuthenticationError';
     this.statusCode = statusCode;
@@ -33,7 +33,7 @@ export interface UserSession {
  * @param res The Next.js response object
  */
 export function setAuthCookie(
-  pubkey: string,
+  pubkey: UserRole,
   req: NextApiRequest,
   res: NextApiResponse
 ): void {
@@ -206,7 +206,7 @@ export function requireAuth(
   handler: (
     req: NextApiRequest,
     res: NextApiResponse,
-    pubkey: string,
+    pubkey: UserRole,
     userId: string
   ) => Promise<void>
 ) {

@@ -47,7 +47,7 @@ export interface AuthStateContext {
   /**
    * Function to attempt login
    */
-  login: (pubkey: string, signedMessage: string) => Promise<AuthState>;
+  login: (pubkey: UserRole, signedMessage: string) => Promise<AuthState>;
   
   /**
    * Function to log out
@@ -67,12 +67,12 @@ export interface AuthStateContext {
   /**
    * Function to add a role to the user
    */
-  addRole: (pubkey: string, role: string) => Promise<boolean>;
+  addRole: (pubkey: UserRole, role: string) => Promise<boolean>;
   
   /**
    * Function to remove a role from the user
    */
-  removeRole: (pubkey: string, role: string) => Promise<boolean>;
+  removeRole: (pubkey: UserRole, role: string) => Promise<boolean>;
   
   /**
    * Whether authentication is being checked

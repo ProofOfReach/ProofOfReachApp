@@ -76,7 +76,7 @@ export function defaultUseRoleAccess() {
    */
   const updateCapabilitiesForRole = (role: string) => {
     // Define capabilities for each role
-    const roleCapabilities: Record<string, RoleCapabilities> = {
+    const roleCapabilities: Record<UserRole, RoleCapabilities> = {
       viewer: {
         viewContent: true,
         createComment: true,
@@ -174,7 +174,7 @@ export function defaultUseRoleAccess() {
    * Check if current role matches or exceeds required role level
    */
   const checkRole = useCallback((requiredRole: string): PermissionCheckResult => {
-    const roleHierarchy: Record<string, number> = {
+    const roleHierarchy: Record<UserRole, number> = {
       viewer: 1,
       advertiser: 2,
       publisher: 2,
@@ -203,7 +203,7 @@ export function defaultUseRoleAccess() {
     if (!router.pathname) return { isAllowed: true, currentRole };
     
     // Define route access rules
-    const routeAccessRules: Record<string, UserRole> = {
+    const routeAccessRules: Record<UserRole, UserRole> = {
       '/dashboard/admin': 'admin',
       '/dashboard/admin/users': 'admin',
       '/dashboard/admin/settings': 'admin',
@@ -222,7 +222,7 @@ export function defaultUseRoleAccess() {
         const effectiveRole = currentRole || role;
         
         // Use the role hierarchy to check access
-        const roleHierarchy: Record<string, number> = {
+        const roleHierarchy: Record<UserRole, number> = {
           viewer: 1,
           advertiser: 2,
           publisher: 2,
@@ -259,7 +259,7 @@ export function defaultUseRoleAccess() {
       logger.warn(`Access denied to route ${router.pathname}. ${access.message}`);
       
       // Redirect to appropriate page based on role
-      const roleDefaultRoutes: Record<string, string> = {
+      const roleDefaultRoutes: Record<UserRole, string> = {
         viewer: '/dashboard',
         advertiser: '/dashboard/advertiser',
         publisher: '/dashboard/publisher',

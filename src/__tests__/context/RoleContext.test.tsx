@@ -186,7 +186,7 @@ const renderTestComponent = (initialRole: string = VIEWER_ROLE) => {
   const useAuthMock = require('../../hooks/useAuth').useAuth;
   
   // Map our role constants to the appropriate type
-  // Since UserRole is a type alias for string, we can use the same value
+  // Since UserRole is a type alias for UserRole, we can use the same value
   // The explicit cast ensures TypeScript is happy
   const castedRole = initialRole as unknown as UserRole;
   

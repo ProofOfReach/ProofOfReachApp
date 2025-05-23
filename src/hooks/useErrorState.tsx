@@ -187,9 +187,9 @@ export function useErrorState() {
    * Handle an error
    */
   const error = useCallback((
-    error: Error | string,
-    component?: string,
-    errorType?: string,
+    error: Error | UserRole,
+    component?: UserRole,
+    errorType?: UserRole,
     severity: string = 'error'
   ): void => {
     if (isTest) {

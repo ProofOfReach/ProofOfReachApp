@@ -13,7 +13,7 @@ const EnableAdminMode: React.FC = () => {
   const { setRole, availableRoles } = defaultUseRole();
   const [error, setError] = useState<string | null>(null);
   const [isRedirecting, setIsRedirecting] = useState(true);
-  const [debugInfo, setDebugInfo] = useState<Record<string, any>>({});
+  const [debugInfo, setDebugInfo] = useState<Record<UserRole, any>>({});
   const [showDebug, setShowDebug] = useState(false);
   
   useEffect(() => {

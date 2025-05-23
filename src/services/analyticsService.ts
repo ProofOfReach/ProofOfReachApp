@@ -42,7 +42,7 @@ export interface AdSpacePerformance {
  * @returns Summary data
  */
 export const fetchAdvertiserSummary = async (
-  advertiserId?: string,
+  advertiserId?: UserRole,
   dateRange?: DateRange
 ): Promise<any> => {
   const query = new URLSearchParams();
@@ -72,7 +72,7 @@ export const fetchAdvertiserSummary = async (
  * @returns Array of daily metrics
  */
 export const fetchAdvertiserDailyMetrics = async (
-  advertiserId?: string,
+  advertiserId?: UserRole,
   dateRange?: DateRange
 ): Promise<DailyMetrics[]> => {
   const query = new URLSearchParams();
@@ -102,7 +102,7 @@ export const fetchAdvertiserDailyMetrics = async (
  * @returns Array of campaign performance data
  */
 export const fetchCampaignPerformance = async (
-  advertiserId?: string,
+  advertiserId?: UserRole,
   dateRange?: DateRange
 ): Promise<CampaignPerformance[]> => {
   const query = new URLSearchParams();
@@ -132,7 +132,7 @@ export const fetchCampaignPerformance = async (
  * @returns Array of daily earnings metrics
  */
 export const fetchPublisherEarnings = async (
-  publisherId?: string,
+  publisherId?: UserRole,
   dateRange?: DateRange
 ): Promise<DailyMetrics[]> => {
   const query = new URLSearchParams();

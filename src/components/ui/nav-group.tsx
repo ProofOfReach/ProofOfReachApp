@@ -22,7 +22,7 @@ interface NavGroupProps {
   title?: string;
   items: NavItem[];
   className?: string;
-  getActiveClass?: (href: string, active?: boolean) => string;
+  getActiveClass?: (href: UserRole, active?: boolean) => string;
 }
 
 /**

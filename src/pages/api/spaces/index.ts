@@ -3,7 +3,7 @@ import { prisma } from '../../../lib/prismaClient';
 import { requireAuth } from '../../../lib/auth';
 import { logger } from '../../../lib/logger';
 
-async function getSpaces(req: NextApiRequest, res: NextApiResponse, pubkey: string, userId: string) {
+async function getSpaces(req: NextApiRequest, res: NextApiResponse, pubkey: UserRole, userId: string) {
   try {
     // Get optional limit parameter
     const limit = req.query.limit ? parseInt(req.query.limit as string) : undefined;
@@ -42,7 +42,7 @@ async function getSpaces(req: NextApiRequest, res: NextApiResponse, pubkey: stri
   }
 }
 
-async function createSpace(req: NextApiRequest, res: NextApiResponse, pubkey: string, userId: string) {
+async function createSpace(req: NextApiRequest, res: NextApiResponse, pubkey: UserRole, userId: string) {
   try {
     // Mark user as a publisher by adding the publisher role
     await prisma.user.update({
@@ -115,7 +115,7 @@ async function createSpace(req: NextApiRequest, res: NextApiResponse, pubkey: st
 }
 
 // Process API requests with auth middleware
-const handleRequest = async (req: NextApiRequest, res: NextApiResponse, pubkey: string, userId: string) => {
+const handleRequest = async (req: NextApiRequest, res: NextApiResponse, pubkey: UserRole, userId: string) => {
   if (req.method === 'GET') {
     return getSpaces(req, res, pubkey, userId);
   } else if (req.method === 'POST') {

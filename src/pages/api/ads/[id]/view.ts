@@ -2,7 +2,7 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import { logger } from '../../../../lib/logger';
 
 // Demo mode - store ad views in memory
-const demoAdViews = new Map<string, Set<string>>();
+const demoAdViews = new Map<UserRole, Set<string>>();
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== 'POST') {

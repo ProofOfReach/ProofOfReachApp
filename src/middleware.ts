@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import type { UserRole } from './context/RoleContext';
 
 // Map of paths to the roles that can access them
-const ROLE_PATH_MAP: Record<string, UserRole[]> = {
+const ROLE_PATH_MAP: Record<UserRole, UserRole[]> = {
   '/dashboard/advertiser': ['advertiser', 'admin'],
   '/dashboard/publisher': ['publisher', 'admin'],
   '/dashboard/admin': ['admin'],

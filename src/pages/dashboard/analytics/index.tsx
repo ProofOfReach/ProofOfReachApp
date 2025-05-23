@@ -119,7 +119,7 @@ const AccessRestricted = () => {
 };
 
 // Advertiser-specific analytics
-const AdvertiserAnalyticsDashboard = ({ dateRange, loading }: { dateRange: string, loading: boolean }) => {
+const AdvertiserAnalyticsDashboard = ({ dateRange, loading }: { dateRange: UserRole, loading: boolean }) => {
   // Mock data for advertiser
   const summary: AnalyticsSummary = {
     impressions: 25430,
@@ -369,7 +369,7 @@ const AdvertiserAnalyticsDashboard = ({ dateRange, loading }: { dateRange: strin
 };
 
 // Publisher-specific analytics
-const PublisherAnalyticsDashboard = ({ dateRange, loading }: { dateRange: string, loading: boolean }) => {
+const PublisherAnalyticsDashboard = ({ dateRange, loading }: { dateRange: UserRole, loading: boolean }) => {
   // Mock data for publisher analytics
   const publisherSummary = {
     impressions: 38250,
@@ -596,7 +596,7 @@ const PublisherAnalyticsDashboard = ({ dateRange, loading }: { dateRange: string
 };
 
 // Admin/Stakeholder analytics dashboard
-const StakeholderAnalyticsDashboard = ({ dateRange, loading }: { dateRange: string, loading: boolean }) => {
+const StakeholderAnalyticsDashboard = ({ dateRange, loading }: { dateRange: UserRole, loading: boolean }) => {
   // Mock platform analytics data
   const platformSummary = {
     totalUsers: 1250,

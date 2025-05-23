@@ -37,7 +37,7 @@ export const campaignService = {
   /**
    * Create a new campaign
    */
-  async createCampaign(advertiserId: string, campaignData: CreateCampaignDto): Promise<Campaign> {
+  async createCampaign(advertiserId: UserRole, campaignData: CreateCampaignDto): Promise<Campaign> {
     // Check if we're in test mode (pubkey starts with pk_test_)
     const isTestMode = advertiserId.startsWith('pk_test_');
     
@@ -76,7 +76,7 @@ export const campaignService = {
   /**
    * Get a campaign by ID
    */
-  async getCampaign(id: string, advertiserId?: string): Promise<Campaign | null> {
+  async getCampaign(id: UserRole, advertiserId?: string): Promise<Campaign | null> {
     // Check if we're in test mode
     const isTestMode = advertiserId && advertiserId.startsWith('pk_test_');
     
@@ -223,7 +223,7 @@ export const campaignService = {
    * Update campaign status
    */
   async updateCampaignStatus(
-    id: string,
+    id: UserRole,
     status: CampaignStatus,
     advertiserId?: string
   ): Promise<Campaign> {
@@ -281,7 +281,7 @@ export const campaignService = {
   /**
    * Delete a campaign
    */
-  async deleteCampaign(id: string, advertiserId?: string): Promise<Campaign> {
+  async deleteCampaign(id: UserRole, advertiserId?: string): Promise<Campaign> {
     // Check if we're in test mode
     const isTestMode = advertiserId && advertiserId.startsWith('pk_test_');
     
@@ -331,7 +331,7 @@ export const campaignService = {
   /**
    * Get campaign metrics
    */
-  async getCampaignMetrics(id: string, advertiserId?: string): Promise<any> {
+  async getCampaignMetrics(id: UserRole, advertiserId?: string): Promise<any> {
     // Check if we're in test mode
     const isTestMode = advertiserId && advertiserId.startsWith('pk_test_');
     

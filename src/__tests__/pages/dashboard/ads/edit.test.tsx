@@ -68,13 +68,13 @@ global.fetch = jest.fn().mockImplementation(mockFetchImplementation);
 
 // Mock localStorage
 const localStorageMock = (function() {
-  let store: Record<string, string> = {};
+  let store: Record<UserRole, string> = {};
 
   return {
     getItem: jest.fn((key: string) => {
       return store[key] || null;
     }),
-    setItem: jest.fn((key: string, value: string) => {
+    setItem: jest.fn((key: UserRole, value: string) => {
       store[key] = value.toString();
     }),
     removeItem: jest.fn((key: string) => {

@@ -56,7 +56,7 @@ const CampaignsPage: NextPageWithLayout = () => {
     }
   };
 
-  const handleStatusChange = async (campaignId: string, newStatus: CampaignStatus) => {
+  const handleStatusChange = async (campaignId: UserRole, newStatus: CampaignStatus) => {
     try {
       const response = await fetch(`/api/campaigns/${campaignId}`, {
         method: 'PATCH',

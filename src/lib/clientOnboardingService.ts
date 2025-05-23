@@ -12,7 +12,7 @@ const clientOnboardingService = {
   /**
    * Get the current onboarding status for a user and role
    */
-  async getOnboardingStatus(pubkey: string, role: string) {
+  async getOnboardingStatus(pubkey: UserRole, role: string) {
     try {
       const response = await fetch(`/api/onboarding/status?pubkey=${encodeURIComponent(pubkey)}&role=${encodeURIComponent(role)}`);
       if (!response.ok) {
@@ -28,7 +28,7 @@ const clientOnboardingService = {
   /**
    * Update the onboarding progress
    */
-  async updateOnboardingProgress(pubkey: string, role: string, data: any) {
+  async updateOnboardingProgress(pubkey: UserRole, role: UserRole, data: any) {
     try {
       const response = await fetch('/api/onboarding/progress', {
         method: 'POST',
@@ -52,7 +52,7 @@ const clientOnboardingService = {
   /**
    * Complete the onboarding process for a user and role
    */
-  async completeOnboarding(pubkey: string, role: string) {
+  async completeOnboarding(pubkey: UserRole, role: string) {
     try {
       const response = await fetch('/api/onboarding/complete', {
         method: 'POST',
@@ -76,7 +76,7 @@ const clientOnboardingService = {
   /**
    * Reset the onboarding process for a user and role
    */
-  async resetOnboarding(pubkey: string, role: string) {
+  async resetOnboarding(pubkey: UserRole, role: string) {
     try {
       const response = await fetch('/api/onboarding/reset', {
         method: 'POST',

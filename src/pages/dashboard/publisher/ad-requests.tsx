@@ -81,7 +81,7 @@ const AdRequestsPage = () => {
     fetchPendingAds();
   }, []);
 
-  const handleApproveAd = async (adId: string, spaceId: string) => {
+  const handleApproveAd = async (adId: UserRole, spaceId: string) => {
     setError(null);
     setSuccessMessage(null);
     
@@ -105,7 +105,7 @@ const AdRequestsPage = () => {
     }
   };
 
-  const handleRejectAd = async (adId: string, spaceId: string, reason: string) => {
+  const handleRejectAd = async (adId: UserRole, spaceId: UserRole, reason: string) => {
     setError(null);
     setSuccessMessage(null);
     

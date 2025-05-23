@@ -11,7 +11,7 @@ import { logger } from '../lib/logger';
  */
 interface RoleContextType {
   role: string;
-  setRole: (role: string, targetPath?: string) => Promise<boolean>;
+  setRole: (role: UserRole, targetPath?: string) => Promise<boolean>;
   availableRoles: string[];
   isRoleAvailable: (role: string) => boolean;
   clearRole: () => void;
@@ -315,7 +315,7 @@ export const RoleProviderRefactored: React.FC<RoleProviderProps> = ({
         // Update role data in the query cache
         client.setQueryData<RoleDataType>([ROLE_CACHE_KEY], {
           availableRoles: ALL_ROLES,
-          currentRole: currentRole as string,
+          currentRole: currentRole as UserRole,
           timestamp: Date.now()
         });
         
@@ -350,7 +350,7 @@ export const RoleProviderRefactored: React.FC<RoleProviderProps> = ({
   /**
    * Public API for changing roles
    */
-  const setRole = async (newRole: string, targetPath?: string): Promise<boolean> => {
+  const setRole = async (newRole: UserRole, targetPath?: string): Promise<boolean> => {
     if (ensureValidRole(roleData?.currentRole || '') === newRole) {
       return true; // Already in this role
     }

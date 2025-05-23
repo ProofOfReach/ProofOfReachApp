@@ -44,7 +44,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
   
   try {
     const result = await onboardingService.resetOnboardingStatus(
-      pubkey as string, 
+      pubkey as UserRole, 
       role as UserRole | undefined
     );
     

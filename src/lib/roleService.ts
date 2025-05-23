@@ -55,7 +55,7 @@ export class RoleService {
    * @returns Promise that resolves to true if logful
    */
   public static async changeRole(
-    role: string, 
+    role: UserRole, 
     skipSave: boolean = false
   ): Promise<boolean> {
     if (typeof window === 'undefined') return false;

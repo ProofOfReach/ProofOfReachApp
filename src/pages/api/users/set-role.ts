@@ -142,7 +142,7 @@ async function handleSetRole(req: NextApiRequest, res: NextApiResponse<ResponseD
 }
 
 // Process API requests with auth middleware
-const handleRequest = async (req: NextApiRequest, res: NextApiResponse<ResponseData>, pubkey: string, userId: string) => {
+const handleRequest = async (req: NextApiRequest, res: NextApiResponse<ResponseData>, pubkey: UserRole, userId: string) => {
   return handleSetRole(req, res, pubkey);
 };
 

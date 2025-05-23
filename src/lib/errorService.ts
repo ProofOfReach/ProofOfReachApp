@@ -28,8 +28,8 @@ interface ErrorTraceContext {
  */
 export class ErrorService {
   private static instance: ErrorService;
-  private errors: Record<string, any> = {};
-  private traceContexts: Record<string, ErrorTraceContext> = {};
+  private errors: Record<UserRole, any> = {};
+  private traceContexts: Record<UserRole, ErrorTraceContext> = {};
   private listeners: Array<(error: any) => void> = [];
   private clearListeners: Array<(errorId: string) => void> = [];
 
@@ -67,13 +67,13 @@ export class ErrorService {
    */
   public error(
     error: Error | string | unknown,
-    source: string,
+    source: UserRole,
     type: ErrorType = 'unknown',
     severity: string = 'error',
     options?: {
       userFacing?: boolean;
       details?: string;
-      data?: Record<string, any>;
+      data?: Record<UserRole, any>;
       errors?: FieldError[];
       correlationId?: string;
       category?: string;
@@ -247,7 +247,7 @@ export class ErrorService {
    * @returns An error handler function
    */
   public createApiErrorHandler(
-    component: string,
+    component: UserRole,
     options?: {
       userFacing?: boolean;
       severity?: string;
@@ -300,7 +300,7 @@ export class ErrorService {
    * @param correlationId The correlation ID
    * @param context The context to store
    */
-  public setTraceContext(correlationId: string, context: Record<string, any>): void {
+  public setTraceContext(correlationId: UserRole, context: Record<UserRole, any>): void {
     this.traceContexts[correlationId] = {
       ...context,
       lastUpdated: Date.now()
@@ -314,7 +314,7 @@ export class ErrorService {
    * @param correlationId The correlation ID
    * @returns The trace context or null if not found
    */
-  public getTraceContext(correlationId: string): Record<string, any> | null {
+  public getTraceContext(correlationId: string): Record<UserRole, any> | null {
     const context = this.traceContexts[correlationId];
     if (!context) {
       return null;
@@ -407,7 +407,7 @@ export class ErrorService {
    * @param correlationId The correlation ID
    * @param error The error to add
    */
-  private logToTraceContext(correlationId: string, error: any): void {
+  private logToTraceContext(correlationId: UserRole, error: any): void {
     const context = this.traceContexts[correlationId] || { lastUpdated: Date.now() };
     
     if (!context.errors) {

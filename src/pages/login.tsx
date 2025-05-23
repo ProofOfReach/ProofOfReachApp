@@ -468,7 +468,7 @@ const LoginPageClient: React.FC = () => {
         
         // Use the login function from auth context with isTestMode=false
         logger.log('Calling login function for the new account');
-        await login(publicKey as string, false);
+        await login(publicKey as UserRole, false);
         
         // Determine where to redirect based on onboarding status
         logger.log('Account created logfully, checking onboarding status');
@@ -553,7 +553,7 @@ const LoginPageClient: React.FC = () => {
       
       try {
         // Explicitly pass true for test mode
-        const result = await login(publicKey as string, true);
+        const result = await login(publicKey as UserRole, true);
         logger.log('Test login logful:', result);
       } catch (loginError: unknown) {
         logger.error('Test login internal error:', loginError instanceof Error ? loginError.message : String(loginError));

@@ -4,7 +4,7 @@ const { getRoleCapabilities, checkPermission } = accessControl;
 describe('Access Control Inheritance System', () => {
   describe('Permission Inheritance Structure', () => {
     it('should handle direct inheritance correctly', () => {
-      const capabilities = getRoleCapabilities('publisher', true) as Record<string, any>;
+      const capabilities = getRoleCapabilities('publisher', true) as Record<UserRole, any>;
       
       // Test the direct inheritance from parent to child
       // UPDATE_PLACEMENT_SETTINGS inherits from MANAGE_AD_PLACEMENTS
@@ -17,7 +17,7 @@ describe('Access Control Inheritance System', () => {
     });
 
     it('should handle multi-level inheritance correctly', () => {
-      const capabilities = getRoleCapabilities('publisher', true) as Record<string, any>;
+      const capabilities = getRoleCapabilities('publisher', true) as Record<UserRole, any>;
       
       // Test multi-level inheritance (grandparent -> parent -> child)
       // For example, if EXPORT_ANALYTICS inherits from VIEW_ADVANCED_ANALYTICS
@@ -39,7 +39,7 @@ describe('Access Control Inheritance System', () => {
       // A user should have access to a child permission if they have access to the parent
       
       // The publisher should have these capabilities based on our special test handling
-      const capabilities = getRoleCapabilities('publisher') as Record<string, boolean>;
+      const capabilities = getRoleCapabilities('publisher') as Record<UserRole, boolean>;
       
       // Should have MANAGE_AD_PLACEMENTS directly
       expect(capabilities.MANAGE_AD_PLACEMENTS).toBe(true);
@@ -50,7 +50,7 @@ describe('Access Control Inheritance System', () => {
     });
 
     it('should respect multi-level inheritance in checkPermission function', () => {
-      const capabilities = getRoleCapabilities('publisher') as Record<string, boolean>;
+      const capabilities = getRoleCapabilities('publisher') as Record<UserRole, boolean>;
       
       // First, verify the publisher has VIEW_BASIC_ANALYTICS permission directly
       expect(capabilities.VIEW_BASIC_ANALYTICS).toBe(true);
@@ -65,7 +65,7 @@ describe('Access Control Inheritance System', () => {
 
   describe('Metadata Tracking', () => {
     it('should track inheritance metadata correctly', () => {
-      const capabilities = getRoleCapabilities('publisher', true) as Record<string, any>;
+      const capabilities = getRoleCapabilities('publisher', true) as Record<UserRole, any>;
       
       // Get all permissions that are granted through inheritance
       const inheritedPermissions = Object.entries(capabilities)
@@ -96,7 +96,7 @@ describe('Access Control Inheritance System', () => {
 
   describe('Simplified Capability Output', () => {
     it('should return simplified boolean map when metadata is not requested', () => {
-      const simpleCapabilities = getRoleCapabilities('publisher') as Record<string, boolean>;
+      const simpleCapabilities = getRoleCapabilities('publisher') as Record<UserRole, boolean>;
       
       // Should be a simple boolean map
       expect(typeof simpleCapabilities.MANAGE_AD_PLACEMENTS).toBe('boolean');

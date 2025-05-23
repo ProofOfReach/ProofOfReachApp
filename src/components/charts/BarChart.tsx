@@ -28,7 +28,7 @@ interface BarChartProps {
   loading: boolean;
   error?: string | null;
   height?: number;
-  tooltipFormatter?: (value: number, name: string) => [string, string];
+  tooltipFormatter?: (value: number, name: string) => [UserRole, string];
   layout?: 'vertical' | 'horizontal';
 }
 

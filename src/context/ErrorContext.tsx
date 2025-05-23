@@ -153,7 +153,7 @@ export const useErrorStateReporting = () => {
     throw new Error('useErrorStateReporting must be used within an ErrorProvider');
   }
   
-  const error = useCallback((error: Error | string, component?: string, errorType?: string) => {
+  const error = useCallback((error: Error | UserRole, component?: UserRole, errorType?: string) => {
     const errorMessage = error instanceof Error ? error.message : error;
     
     // Show error toast
@@ -172,7 +172,7 @@ export const useErrorStateReporting = () => {
  * Provides simplified methods to show different types of toasts
  */
 export const useErrorStateToast = () => {
-  const showErrorToast = useCallback((message: string, severity: string = 'error') => {
+  const showErrorToast = useCallback((message: UserRole, severity: string = 'error') => {
     switch (severity) {
       case 'info':
         console.info(message);

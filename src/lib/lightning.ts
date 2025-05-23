@@ -104,7 +104,7 @@ const createMockInvoice = async (
 };
 
 const payMockInvoice = async (
-  bolt11: string,
+  bolt11: UserRole,
   amountSats?: number
 ): Promise<Payment> => {
   await initializeMockLightning();
@@ -189,7 +189,7 @@ const createBreezInvoice = async (
 };
 
 const payBreezInvoice = async (
-  bolt11: string,
+  bolt11: UserRole,
   amountSats?: number
 ): Promise<Payment> => {
   await initializeBreezSDK();
@@ -281,7 +281,7 @@ export const createInvoice = async (
 
 // Pay a Lightning invoice
 export const payInvoice = async (
-  bolt11: string,
+  bolt11: UserRole,
   amountSats?: number
 ): Promise<Payment> => {
   if (isTestMode()) {

@@ -10,7 +10,7 @@ interface EnhancedRoleContextType {
   /** Current active role */
   role: string;
   /** Function to change the role */
-  setRole: (newRole: string, redirectPath?: string) => Promise<void>;
+  setRole: (newRole: UserRole, redirectPath?: string) => Promise<void>;
   /** Role transition in progress */
   isTransitioning: boolean;
   /** Last transition event details */
@@ -138,7 +138,7 @@ export const EnhancedRoleProvider: React.FC<EnhancedRoleProviderProps> = ({
   /**
    * Change the active role
    */
-  const setRole = async (newRole: string, redirectPath?: string): Promise<void> => {
+  const setRole = async (newRole: UserRole, redirectPath?: string): Promise<void> => {
     // Check if role is available
     if (!isRoleAvailable(newRole)) {
       console.warn(`Role ${newRole} is not available.`);
@@ -158,7 +158,7 @@ export const EnhancedRoleProvider: React.FC<EnhancedRoleProviderProps> = ({
           await router.push(redirectPath);
         } else {
           // Otherwise navigate to the default dashboard for the role
-          const roleDashboards: Record<string, string> = {
+          const roleDashboards: Record<UserRole, string> = {
             user: '/dashboard',
             advertiser: '/dashboard/advertiser',
             publisher: '/dashboard/publisher',
@@ -182,7 +182,7 @@ export const EnhancedRoleProvider: React.FC<EnhancedRoleProviderProps> = ({
   
   // Context value to be provided
   const contextValue: EnhancedRoleContextType = {
-    role: localRole as string,
+    role: localRole as UserRole,
     setRole,
     isTransitioning,
     lastTransition,

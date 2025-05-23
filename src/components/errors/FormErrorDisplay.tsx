@@ -14,7 +14,7 @@ export interface FieldError {
 }
 
 export interface FormErrorDisplayProps {
-  errors: FieldError[] | Record<string, string> | string[] | string;
+  errors: FieldError[] | Record<UserRole, string> | string[] | string;
   title?: string;
   showSummary?: boolean;
   className?: string;
@@ -74,7 +74,7 @@ const FormErrorDisplay: React.FC<FormErrorDisplayProps> = ({
     }
   } else if (typeof errors === 'object' && errors !== null) {
     try {
-      // Record<string, string> format (field -> message)
+      // Record<UserRole, string> format (field -> message)
       errorArray = Object.entries(errors).map(([field, message]) => ({
         field,
         message: typeof message === 'string' ? message : String(message),
@@ -90,7 +90,7 @@ const FormErrorDisplay: React.FC<FormErrorDisplayProps> = ({
   }
   
   // Group errors by field
-  const errorsByField: Record<string, string[]> = {};
+  const errorsByField: Record<UserRole, string[]> = {};
   errorArray.forEach(error => {
     if (!errorsByField[error.field]) {
       errorsByField[error.field] = [];

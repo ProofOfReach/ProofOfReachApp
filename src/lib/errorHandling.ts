@@ -40,7 +40,7 @@ declare global {
 /**
  * Log error to the console or monitoring service with proper context
  */
-export function logger.error(message: string, err?: unknown): void {
+export function logger.error(message: UserRole, err?: unknown): void {
   if (!err) {
     console.error(`Error in ${message}`);
     return;
@@ -63,8 +63,8 @@ export function logger.error(message: string, err?: unknown): void {
  * Create a standardized API error response
  */
 export function createErrorResponse(
-  type: ErrorType | string,
-  message: string,
+  type: ErrorType | UserRole,
+  message: UserRole,
   status = 500,
   details?: any
 ): AppError {
@@ -198,7 +198,7 @@ export function error(
 /**
  * Create a validation error with 400 status code
  */
-export function validationError(message: string, details?: Record<string, unknown>): AppError {
+export function validationError(message: UserRole, details?: Record<UserRole, unknown>): AppError {
   return createErrorResponse(ErrorType.Validation, message, 400, details);
 }
 
@@ -226,7 +226,7 @@ export function notFoundError(message = 'Resource not found'): AppError {
 /**
  * Create a database error with 500 status code
  */
-export function databaseError(message = 'Database operation failed', details?: Record<string, unknown>): AppError {
+export function databaseError(message = 'Database operation failed', details?: Record<UserRole, unknown>): AppError {
   return createErrorResponse(ErrorType.Database, message, 500, details);
 }
 
@@ -254,7 +254,7 @@ export function nostrError(message = 'Nostr operation failed', details?: any): A
 /**
  * Base function to throw typed errors
  */
-function throwTypedError(type: ErrorType, message: string, status?: number, details?: any): never {
+function throwTypedError(type: ErrorType, message: UserRole, status?: number, details?: any): never {
   // For Api errors, use ApiError class directly for compatibility with tests
   if (type === ErrorType.Api) {
     const { ApiError } = require('../utils/apiError');
@@ -272,7 +272,7 @@ function throwTypedError(type: ErrorType, message: string, status?: number, deta
 /**
  * Throw a validation error that will be caught by error
  */
-export function throwValidationError(message: string, details?: any): never {
+export function throwValidationError(message: UserRole, details?: any): never {
   return throwTypedError(ErrorType.Validation, message, 400, details);
 }
 

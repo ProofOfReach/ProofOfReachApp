@@ -40,7 +40,7 @@ const SimplifiedEnhancedSidebar: React.FC = () => {
   }, []);
   
   // Get active menu item styling
-  const getActiveClass = (href: string, active?: boolean): string => {
+  const getActiveClass = (href: UserRole, active?: boolean): string => {
     const isActive = active || router.pathname === href || router.pathname.startsWith(`${href}/`);
     
     if (isActive) {

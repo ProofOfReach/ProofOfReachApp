@@ -107,7 +107,7 @@ describe('LineChart Component', () => {
   });
 
   it('handles custom formatter properly', () => {
-    const tooltipFormatter = (value: number, name: string): [string, string] => [`${value}%`, name];
+    const tooltipFormatter = (value: number, name: string): [UserRole, string] => [`${value}%`, name];
     
     render(
       <LineChart

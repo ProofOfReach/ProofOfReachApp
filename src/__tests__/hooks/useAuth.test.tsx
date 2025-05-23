@@ -110,7 +110,7 @@ describe('useAuth Hook', () => {
         };
       });
       
-      (UserManager.getUserRoles as jest.Mock).mockResolvedValue(['viewer' as string, 'advertiser' as UserRole]);
+      (UserManager.getUserRoles as jest.Mock).mockResolvedValue(['viewer' as UserRole, 'advertiser' as UserRole]);
       (UserManager.getUserProfile as jest.Mock).mockResolvedValue({
         name: 'Test User',
       });
@@ -280,7 +280,7 @@ describe('useAuth Hook', () => {
       });
       
       // Setup for refreshRoles
-      (UserManager.getUserRoles as jest.Mock).mockResolvedValueOnce(['viewer' as string, 'advertiser' as UserRole]);
+      (UserManager.getUserRoles as jest.Mock).mockResolvedValueOnce(['viewer' as UserRole, 'advertiser' as UserRole]);
       
       // Call refreshRoles
       let refreshedRoles: string[] = [];
@@ -341,7 +341,7 @@ describe('useAuth Hook', () => {
       });
       
       (UserManager.isTestMode as jest.Mock).mockResolvedValue(false);
-      (UserManager.getUserRoles as jest.Mock).mockResolvedValue(['viewer' as string, 'advertiser' as string, 'publisher' as UserRole]);
+      (UserManager.getUserRoles as jest.Mock).mockResolvedValue(['viewer' as UserRole, 'advertiser' as UserRole, 'publisher' as UserRole]);
       
       const { result } = renderHook(() => useAuthProvider());
       

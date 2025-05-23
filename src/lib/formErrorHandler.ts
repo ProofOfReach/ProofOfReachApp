@@ -17,10 +17,10 @@ export interface Formany {
   formError: string | null;
   
   // Field-specific errors
-  fieldErrors: Record<string, string>;
+  fieldErrors: Record<UserRole, string>;
   
   // Map of which fields have been touched (for validation on blur)
-  touchedFields: Record<string, boolean>;
+  touchedFields: Record<UserRole, boolean>;
 }
 
 /**
@@ -34,7 +34,7 @@ export interface ApiValidationErrorResponse {
     status: number;
     details?: {
       invalidFields?: string[];
-      fieldErrors?: Record<string, string>;
+      fieldErrors?: Record<UserRole, string>;
     };
   };
 }
@@ -191,7 +191,7 @@ export function markAllFieldsTouched(
  */
 export function setFieldError(
   state: Formany,
-  fieldName: string,
+  fieldName: UserRole,
   errorMessage: string
 ): Formany {
   return {

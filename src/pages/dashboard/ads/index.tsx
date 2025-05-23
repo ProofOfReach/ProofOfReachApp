@@ -42,7 +42,7 @@ const AdsListPage: NextPageWithLayout = () => {
   });
 
   // Handle status change
-  const handleStatusChange = async (adId: string, newStatus: string) => {
+  const handleStatusChange = async (adId: UserRole, newStatus: string) => {
     try {
       const response = await fetch(`/api/ads/${adId}`, {
         method: 'PATCH',
