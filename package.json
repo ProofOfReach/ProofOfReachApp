@@ -21,6 +21,7 @@
     "@babel/preset-react": "^7.27.1",
     "@babel/preset-typescript": "^7.27.1",
     "@eslint/eslintrc": "^3.3.1",
+    "@heroicons/react": "^2.2.0",
     "@hookform/resolvers": "^5.0.1",
     "@noble/hashes": "^1.8.0",
     "@nostr-dev-kit/ndk": "^2.14.9",

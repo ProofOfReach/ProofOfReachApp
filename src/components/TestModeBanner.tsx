@@ -54,13 +54,14 @@ export default function TestModeBanner() {
   
   // Listen for new unified role events
   useAppEvent(ROLE_EVENTS.ROLE_CHANGED, (payload) => {
-    logger.log(`TestModeBanner received ROLE_CHANGED event: ${payload.from} → ${payload.to}`);
+    console.log(`TestModeBanner received ROLE_CHANGED event: ${payload.from} → ${payload.to}`);
     
-    // Ensure type safety
-    if (RoleManager.isValidRole(payload.to)) {
+    // Simple role validation without RoleManager dependency
+    const validRoles = ['viewer', 'advertiser', 'publisher', 'admin', 'stakeholder'];
+    if (validRoles.includes(payload.to)) {
       setCurrentRole(payload.to);
     } else {
-      logger.warn(`Received invalid role in event: ${payload.to}`);
+      console.warn(`Received invalid role in event: ${payload.to}`);
     }
   });
   
