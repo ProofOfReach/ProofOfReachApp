@@ -24,7 +24,7 @@ export interface CampaignWithAds extends Campaign {
 
 interface CampaignListProps {
   campaigns: CampaignWithAds[];
-  onStatusChange?: (campaignId: UserRole, newStatus: CampaignStatus) => Promise<void>;
+  onStatusChange?: (campaignId: string, newStatus: CampaignStatus) => Promise<void>;
   onDelete?: (campaignId: string) => Promise<void>;
 }
 
@@ -48,7 +48,7 @@ const CampaignList: React.FC<CampaignListProps> = ({
     });
   };
 
-  const handleStatusChange = async (campaignId: UserRole, newStatus: CampaignStatus) => {
+  const handleStatusChange = async (campaignId: string, newStatus: CampaignStatus) => {
     if (!onStatusChange) return;
     
     setChangingStatusId(campaignId);

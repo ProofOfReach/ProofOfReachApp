@@ -19,7 +19,7 @@ export interface CampaignWithAds extends Campaign {
 
 interface CampaignDataTableProps {
   campaigns: CampaignWithAds[];
-  onStatusChange?: (campaignId: UserRole, newStatus: CampaignStatus) => Promise<void>;
+  onStatusChange?: (campaignId: string, newStatus: CampaignStatus) => Promise<void>;
   onDelete?: (campaignId: string) => Promise<void>;
 }
 
@@ -30,7 +30,7 @@ const CampaignDataTable: React.FC<CampaignDataTableProps> = ({
 }) => {
   const [changingStatusId, setChangingStatusId] = React.useState<string | null>(null);
 
-  const handleStatusChange = async (campaignId: UserRole, newStatus: CampaignStatus) => {
+  const handleStatusChange = async (campaignId: string, newStatus: CampaignStatus) => {
     if (!onStatusChange) return;
     
     setChangingStatusId(campaignId);
@@ -133,39 +133,33 @@ const CampaignDataTable: React.FC<CampaignDataTableProps> = ({
             <div className="absolute z-10 left-0 mt-1 w-36 bg-white dark:bg-gray-800 rounded-md shadow-lg overflow-hidden transform scale-0 group-hover:scale-100 opacity-0 group-hover:opacity-100 transition-all duration-150 origin-top-left">
               <div className="py-1">
                 {row.status !== 'ACTIVE' && (
-                  <Button 
+                  <button 
                     onClick={() => handleStatusChange(row.id, 'ACTIVE')} 
-                    variant="ghost" 
-                    size="sm"
-                    className="w-full px-4 py-2 text-xs text-left justify-start font-normal h-auto"
+                    className="w-full px-4 py-2 text-xs text-left justify-start font-normal h-auto hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center"
                   >
                     <Play className="h-3 w-3 mr-1.5" />
                     Set Active
-                  </Button>
+                  </button>
                 )}
                 
                 {row.status !== 'PAUSED' && (
-                  <Button 
+                  <button 
                     onClick={() => handleStatusChange(row.id, 'PAUSED')} 
-                    variant="ghost" 
-                    size="sm"
-                    className="w-full px-4 py-2 text-xs text-left justify-start font-normal h-auto"
+                    className="w-full px-4 py-2 text-xs text-left justify-start font-normal h-auto hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center"
                   >
                     <Pause className="h-3 w-3 mr-1.5" />
                     Set Paused
-                  </Button>
+                  </button>
                 )}
                 
                 {row.status !== 'ENDED' && (
-                  <Button 
+                  <button 
                     onClick={() => handleStatusChange(row.id, 'ENDED')} 
-                    variant="ghost" 
-                    size="sm"
-                    className="w-full px-4 py-2 text-xs text-left justify-start font-normal h-auto"
+                    className="w-full px-4 py-2 text-xs text-left justify-start font-normal h-auto hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center"
                   >
                     <Square className="h-3 w-3 mr-1.5" />
                     Set Ended
-                  </Button>
+                  </button>
                 )}
               </div>
             </div>
@@ -223,37 +217,62 @@ const CampaignDataTable: React.FC<CampaignDataTableProps> = ({
       initialWidth: 120,
       cell: (row: CampaignWithAds) => (
         <div className="flex space-x-2 justify-end">
-          <Button asChild variant="ghost" size="sm" className="h-8 w-8 p-0">
-            <Link 
-              href={`/dashboard/advertiser/campaigns/${row.id}/edit`}
-              className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300"
-            >
-              <Edit className="h-4 w-4" />
-            </Link>
-          </Button>
+          <Link 
+            href={`/dashboard/advertiser/campaigns/${row.id}/edit`}
+            className="h-8 w-8 p-0 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300 flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-700 rounded"
+          >
+            <Edit className="h-4 w-4" />
+          </Link>
           
           {onDelete && (
-            <Button
+            <button
               onClick={() => handleDelete(row.id)}
-              variant="ghost"
-              size="sm"
-              className="h-8 w-8 p-0 text-red-500 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300"
+              className="h-8 w-8 p-0 text-red-500 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 flex items-center justify-center hover:bg-red-50 dark:hover:bg-red-900/30 rounded"
             >
               <Trash2 className="h-4 w-4" />
-            </Button>
+            </button>
           )}
         </div>
       )
     }
   ];
 
+  if (campaigns.length === 0) {
+    return (
+      <div className="text-center py-8 text-gray-500">
+        No campaigns found. Create a campaign to get started.
+      </div>
+    );
+  }
+
   return (
-    <DataTable 
-      columns={columns} 
-      data={campaigns} 
-      searchField="name"
-      emptyMessage="No campaigns found. Create a campaign to get started."
-    />
+    <div className="overflow-x-auto">
+      <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+        <thead className="bg-gray-50 dark:bg-gray-800">
+          <tr>
+            {columns.map((column, index) => (
+              <th
+                key={index}
+                className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider"
+              >
+                {column.header}
+              </th>
+            ))}
+          </tr>
+        </thead>
+        <tbody className="bg-white dark:bg-gray-900 divide-y divide-gray-200 dark:divide-gray-700">
+          {campaigns.map((campaign) => (
+            <tr key={campaign.id} className="hover:bg-gray-50 dark:hover:bg-gray-800">
+              {columns.map((column, colIndex) => (
+                <td key={colIndex} className="px-6 py-4 whitespace-nowrap">
+                  {typeof column.cell === 'function' ? column.cell(campaign) : campaign[column.accessorKey as keyof CampaignWithAds]}
+                </td>
+              ))}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
   );
 };
 
