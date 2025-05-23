@@ -1,7 +1,7 @@
 import React from 'react';
-import '@/components/layout/ImprovedDashboardLayout';
-import '@/components/ui/Typography';
-import '@/components/ui/card';
+import ImprovedDashboardLayout from '@/components/layout/ImprovedDashboardLayout';
+import { Title, Paragraph } from '@/components/ui/Typography';
+import { Card } from '@/components/ui/card';
 import { Book, Code, FileText, Key } from 'react-feather';
 import Link from 'next/link';
 

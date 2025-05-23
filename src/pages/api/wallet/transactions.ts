@@ -1,8 +1,8 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { walletService } from '../../../services/walletService';
 import { ApiError } from '../../../utils/apiError';
-import '@/utils/enhancedAuthMiddleware';
-import '@/lib/logger';
+import { authMiddleware, AuthenticatedUser } from '@/utils/enhancedAuthMiddleware';
+import { logger } from '@/lib/logger';
 
 /**
  * API handler for getting transaction history
@@ -64,4 +64,4 @@ async function handleTransactionsRequest(req: NextApiRequest, res: NextApiRespon
 }
 
 // Export with enhanced auth middleware
-export default enhancedAuthMiddleware(handleTransactionsRequest);
+export default authMiddleware(handleTransactionsRequest);

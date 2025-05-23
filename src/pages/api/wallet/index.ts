@@ -1,8 +1,8 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import '@/lib/prismaClient';
-import '@/lib/logger';
-import '@/lib/errorHandling';
-import '@/utils/enhancedAuthMiddleware';
+import { prisma } from '@/lib/prismaClient';
+import { logger } from '@/lib/logger';
+import { AuthenticatedUser } from '@/lib/errorHandling';
+import { authMiddleware } from '@/utils/enhancedAuthMiddleware';
 
 /**
  * @swagger
@@ -84,4 +84,4 @@ async function handleGetWallet(req: NextApiRequest, res: NextApiResponse, user: 
 }
 
 // Export with enhanced auth middleware
-export default enhancedAuthMiddleware(handleWalletRequest);
+export default authMiddleware(handleWalletRequest);
