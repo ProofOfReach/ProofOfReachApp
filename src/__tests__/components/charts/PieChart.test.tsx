@@ -1,5 +1,7 @@
+import React from 'react';
 import { render, screen } from '@testing-library/react';
-import '@/components/charts';
+import { PieChart } from '@/components/charts';
+import type { UserRole } from '@/types/auth';
 
 // Create a mock for recharts
 jest.mock('recharts', () => {

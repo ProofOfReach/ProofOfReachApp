@@ -679,6 +679,91 @@ const Dashboard = () => {
     );
   };
   
+  const renderViewerDashboard = () => {
+    return (
+      <div className="space-y-6">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
+            <h2 className="text-lg font-medium text-gray-900 dark:text-white mb-4">Your Balance</h2>
+            <div className="text-3xl font-bold text-green-600 dark:text-green-400">
+              <CurrencyAmount sats={1250} />
+            </div>
+            <p className="text-gray-500 dark:text-gray-400 mt-2">Available balance</p>
+          </div>
+          
+          <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
+            <h2 className="text-lg font-medium text-gray-900 dark:text-white mb-4">Ads Viewed</h2>
+            <div className="text-3xl font-bold text-blue-600 dark:text-blue-400">127</div>
+            <p className="text-gray-500 dark:text-gray-400 mt-2">This month</p>
+          </div>
+          
+          <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
+            <h2 className="text-lg font-medium text-gray-900 dark:text-white mb-4">Earnings</h2>
+            <div className="text-3xl font-bold text-green-600 dark:text-green-400">
+              <CurrencyAmount sats={485} />
+            </div>
+            <p className="text-gray-500 dark:text-gray-400 mt-2">From ad interactions</p>
+          </div>
+        </div>
+        
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
+            <h2 className="text-lg font-medium text-gray-900 dark:text-white mb-4">Recent Activity</h2>
+            <div className="space-y-3">
+              <div className="flex items-center justify-between py-2 border-b border-gray-100 dark:border-gray-700">
+                <span className="text-gray-700 dark:text-gray-300">Viewed sponsored post</span>
+                <span className="text-sm text-green-600 dark:text-green-400">+12 sats</span>
+              </div>
+              <div className="flex items-center justify-between py-2 border-b border-gray-100 dark:border-gray-700">
+                <span className="text-gray-700 dark:text-gray-300">Clicked banner ad</span>
+                <span className="text-sm text-green-600 dark:text-green-400">+25 sats</span>
+              </div>
+              <div className="flex items-center justify-between py-2">
+                <span className="text-gray-700 dark:text-gray-300">Engaged with content</span>
+                <span className="text-sm text-green-600 dark:text-green-400">+8 sats</span>
+              </div>
+            </div>
+          </div>
+          
+          <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
+            <h2 className="text-lg font-medium text-gray-900 dark:text-white mb-4">Quick Actions</h2>
+            <div className="space-y-3">
+              <Link
+                href="/nostr-feed"
+                className="block w-full p-3 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg hover:bg-blue-100 dark:hover:bg-blue-800/30 transition-colors"
+              >
+                <div className="flex items-center space-x-2">
+                  <User className="h-5 w-5 text-blue-600 dark:text-blue-400" />
+                  <span className="text-blue-600 dark:text-blue-400 font-medium">Browse Nostr Feed</span>
+                </div>
+              </Link>
+              
+              <Link
+                href="/dashboard/wallet"
+                className="block w-full p-3 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg hover:bg-green-100 dark:hover:bg-green-800/30 transition-colors"
+              >
+                <div className="flex items-center space-x-2">
+                  <DollarSign className="h-5 w-5 text-green-600 dark:text-green-400" />
+                  <span className="text-green-600 dark:text-green-400 font-medium">Manage Wallet</span>
+                </div>
+              </Link>
+              
+              <Link
+                href="/dashboard/settings"
+                className="block w-full p-3 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+              >
+                <div className="flex items-center space-x-2">
+                  <User className="h-5 w-5 text-gray-600 dark:text-gray-400" />
+                  <span className="text-gray-600 dark:text-gray-400 font-medium">Account Settings</span>
+                </div>
+              </Link>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  };
+  
   const renderDefaultDashboard = () => {
     return (
       <div className="space-y-6">
@@ -720,54 +805,6 @@ const Dashboard = () => {
                 <p className="text-sm text-gray-500 dark:text-gray-400">Monetize your content with ads</p>
               </div>
             </button>
-          </div>
-        </div>
-      </div>
-    );
-  };
-  
-  // Create viewer dashboard content
-  const renderViewerDashboard = () => {
-    return (
-      <div className="space-y-6">
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6 border border-gray-200 dark:border-gray-700">
-          <h2 className="text-lg font-medium text-gray-900 dark:text-white mb-4">Welcome to Proof of Reach</h2>
-          <p className="text-gray-600 dark:text-gray-300">
-            As a Viewer, you can browse ads, interact with content, and earn rewards through the Lightning Network.
-          </p>
-          
-          <div className="mt-4">
-            <div className="flex items-center space-x-2 text-gray-700 dark:text-gray-300">
-              <User className="h-5 w-5 text-blue-500" />
-              <p>You're currently using the Viewer role</p>
-            </div>
-          </div>
-        </div>
-        
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
-            <h2 className="text-lg font-medium text-gray-900 dark:text-white mb-4">Your Wallet</h2>
-            <p className="text-2xl font-bold text-gray-900 dark:text-white">
-              <CurrencyAmount sats={10500} />
-            </p>
-            <p className="text-gray-500 dark:text-gray-400 mt-2">Earned from content engagement</p>
-            <Link 
-              href="/dashboard/wallet" 
-              className="text-blue-600 dark:text-blue-400 hover:underline flex items-center text-sm mt-4"
-            >
-              Manage Wallet <ChevronRight className="ml-1 h-4 w-4" />
-            </Link>
-          </div>
-          
-          <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
-            <h2 className="text-lg font-medium text-gray-900 dark:text-white mb-4">Privacy Settings</h2>
-            <p className="text-gray-500 dark:text-gray-400 mb-4">Manage your privacy and content preferences.</p>
-            <Link 
-              href="/dashboard/settings" 
-              className="text-blue-600 dark:text-blue-400 hover:underline flex items-center text-sm"
-            >
-              View Settings <ChevronRight className="ml-1 h-4 w-4" />
-            </Link>
           </div>
         </div>
       </div>
