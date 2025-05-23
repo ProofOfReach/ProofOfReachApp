@@ -8,7 +8,7 @@ import { logger } from '../../../lib/logger';
 export default apiHandler({
   // GET /api/campaigns - Get all campaigns for the authenticated user
   GET: async (req: NextApiRequest, res: NextApiResponse) => {
-    const user = await (() => true)(req as any);
+    const user = await enhancedAuthMiddleware(req as any);
     
     // Use the proper test mode detection that doesn't conflict with secure test mode
     // This will work with your existing system that's tied to your Nostr key
@@ -50,8 +50,8 @@ export default apiHandler({
     }
     
     // For normal operation, check role access
-    if (!user.currentRole || (user.currentRole !== 'advertiser' && user.currentRole !== 'admin')) {
-      logger.warn(`User ${user.userId} with role ${user.currentRole} attempted to access advertiser-only endpoint`);
+    if (!user.currentRole || (user.currentRole !== 'advertiser' && user.currentRole !== 'publisher' && user.currentRole !== 'admin')) {
+      logger.warn(`User ${user.userId} with role ${user.currentRole} attempted to access campaigns endpoint`);
       throw new ApiError(403, 'Forbidden: Advertiser, Publisher, or Admin role required');
     }
     
