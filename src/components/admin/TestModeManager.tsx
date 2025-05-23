@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import.*./hooks/useTestMode';
-import.*./types/role';
+import "./hooks/useTestMode';
+import "./types/role';
 import { Shield, CheckSquare, AlertCircle, Clock } from 'react-feather';
 
 /**

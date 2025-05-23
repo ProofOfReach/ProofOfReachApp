@@ -1,5 +1,5 @@
 import * as React from "react"
-import.*./lib/utils"
+import "./lib/utils"
 
 /**
  * Form component and related elements following shadcn/ui patterns

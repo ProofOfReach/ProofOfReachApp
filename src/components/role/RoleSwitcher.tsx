@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import.*./lib/enhancedRoleService';
+import "./lib/enhancedRoleService';
 
 interface RoleSwitcherProps {
   currentRole: RoleType | 'viewer';

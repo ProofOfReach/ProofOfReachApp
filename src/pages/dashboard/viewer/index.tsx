@@ -1,7 +1,7 @@
 import React from 'react';
-import.*./components/dashboards/ViewerDashboard';
-import.*./components/ui';
-import.*./utils/layoutHelpers';
+import "./components/dashboards/ViewerDashboard';
+import "./components/ui';
+import "./utils/layoutHelpers';
 import type { NextPageWithLayout } from '../../_app';
 
 /**

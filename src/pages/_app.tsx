@@ -8,12 +8,12 @@
 import type { AppProps } from 'next/app';
 import { NextPage } from 'next';
 import { ReactElement, ReactNode } from 'react';
-import.*./context/ErrorContext';
-import.*./components/errors/ErrorInitializer';
-import.*./components/ErrorBoundary';
-import.*./context/TestModeContext';
-import.*./providers/AuthProviderRefactored';
-import.*./styles/globals.css';
+import { ErrorProvider } from '@/context/ErrorContext';
+import ErrorInitializer from '@/components/errors/ErrorInitializer';
+import ErrorBoundary from '@/components/ErrorBoundary';
+import { TestModeProvider } from '@/context/TestModeContext';
+import { AuthProviderRefactored } from '@/providers/AuthProviderRefactored';
+import '@/styles/globals.css';
 
 // Define types for pages with layouts
 export type NextPageWithLayout<P = {}, IP = P> = NextPage<P, IP> & {

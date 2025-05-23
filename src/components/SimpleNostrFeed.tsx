@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useRef, useCallback, memo } from 'react';
-import.*./context/TestModeContext';
-import.*./hooks/useTestWallet';
-import.*./lib/logger';
-import.*./utils/toast';
+import "./context/TestModeContext';
+import "./hooks/useTestWallet';
+import "./lib/logger';
+import "./utils/toast';
 // Simple date formatter function to avoid ESM import issues with date-fns
 function formatDistanceToNow(date: Date): string {
   const now = new Date();

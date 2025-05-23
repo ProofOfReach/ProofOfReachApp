@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import.*./hooks/useTestMode';
-import.*./lib/roleService';
-import.*./services/roleManager';
-import.*./types/role';
-import.*./lib/logger';
+import "./hooks/useTestMode';
+import "./lib/roleService';
+import "./services/roleManager';
+import "./types/role';
+import "./lib/logger';
 import { 
   useAppEvent, 
   useLegacyEvent, 
@@ -20,9 +20,9 @@ import {
   notifyRoleChanged,
   notifyRolesUpdated
 } from '@/lib/events';
-import.*./services/enhancedStorageService';
-import.*./services/storageService';
-import.*./services/testModeService';
+import "./services/enhancedStorageService';
+import "./services/storageService';
+import "./services/testModeService';
 
 /**
  * TestModeBanner Component

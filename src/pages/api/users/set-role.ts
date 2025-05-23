@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import.*./lib/auth';
-import.*./lib/prismaClient';
+import "./lib/auth';
+import "./lib/prismaClient';
 import { UserRole } from '../../../context/RoleContext';
 
 type ResponseData = {

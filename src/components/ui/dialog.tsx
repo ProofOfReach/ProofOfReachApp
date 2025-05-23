@@ -1,7 +1,7 @@
 import * as React from "react"
 import { X } from "react-feather"
 
-import.*./lib/utils"
+import "./lib/utils"
 
 // Interface for dialog props
 interface DialogProps {

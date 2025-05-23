@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import.*./context/OnboardingContext';
+import "./context/OnboardingContext';
 import OnboardingProgress from './OnboardingProgress';
 import RoleConfirmation from './RoleConfirmation';
 import ViewerOnboarding from './ViewerOnboarding';
 import PublisherOnboarding from './PublisherOnboarding';
 import AdvertiserOnboarding from './AdvertiserOnboarding';
-import.*./components/Loading';
-import.*./components/ui/button';
+import "./components/Loading';
+import "./components/ui/button';
 import { ArrowLeft, ArrowRight } from 'react-feather';
-import.*./types/role';
+import "./types/role';
 
 const OnboardingWizard: React.FC = () => {
   // Track if component is mounted in client-side environment

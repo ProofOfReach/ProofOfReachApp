@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 // Import the handler from modernized roles API
 import modernizedHandler from './modernized';
-import.*./lib/logger';
+import "./lib/logger';
 
 /**
  * API handler for managing user roles

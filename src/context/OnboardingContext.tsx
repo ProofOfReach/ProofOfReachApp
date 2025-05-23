@@ -1,10 +1,10 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { useRouter } from 'next/router';
-import.*./hooks/useAuthRefactored';
-import.*./types/role';
-import.*./context/RoleContext';
-import.*./lib/clientOnboardingService';
-import.*./lib/logger';
+import "./hooks/useAuthRefactored';
+import "./types/role';
+import "./context/RoleContext';
+import "./lib/clientOnboardingService';
+import "./lib/logger';
 
 // Create a safer initial value for SSR hydration
 const defaultContextValue = {

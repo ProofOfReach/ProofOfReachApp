@@ -3,8 +3,8 @@
  * This file provides a client-safe API for onboarding functionality
  */
 
-import.*./types/role';
-import.*./lib/logger';
+import "./types/role';
+import "./lib/logger';
 
 // This service wraps the API calls needed for onboarding
 // instead of directly importing server-side code

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import.*./components/layout/ImprovedDashboardLayout';
+import "./components/layout/ImprovedDashboardLayout';
 import { Settings, Save, RefreshCw, UserCheck, Bell, Moon, Sun, Shield, Lock, Plus, X, AlertCircle, Info } from 'react-feather';
 
 const UserSettingsPage = () => {

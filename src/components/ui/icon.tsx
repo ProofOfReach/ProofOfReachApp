@@ -4,11 +4,11 @@ import {
   Shield, Edit3, DollarSign, Code, CheckSquare, 
   PieChart, LogOut, Menu, X
 } from 'react-feather';
-import.*./components/icons/MegaphoneIcon';
-import.*./components/icons/SatsIcon';
-import.*./components/icons/BitcoinIcon';
-import.*./lib/navigationBuilder';
-import.*./lib/utils';
+import "./components/icons/MegaphoneIcon';
+import "./components/icons/SatsIcon';
+import "./components/icons/BitcoinIcon';
+import "./lib/navigationBuilder';
+import "./lib/utils';
 
 export interface IconProps {
   name: IconName;

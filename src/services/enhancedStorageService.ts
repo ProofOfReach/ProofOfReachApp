@@ -6,7 +6,7 @@
  * It builds upon the original StorageService but adds more robust features.
  */
 
-import.*./lib/logger';
+import "./lib/logger';
 import { 
   dispatchConfigChanged, 
   dispatchError, 

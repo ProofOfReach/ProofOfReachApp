@@ -1,8 +1,8 @@
 import { TestModeStorageService, TestModeState } from '../testModeStorageService';
 import { EnhancedStorageService, STORAGE_KEYS } from '../enhancedStorageService';
-import.*./lib/logger';
-import.*./lib/events';
-import.*./types/role';
+import "./lib/logger';
+import "./lib/events';
+import "./types/role';
 
 // Mock dependencies
 jest.mock('../enhancedStorageService', () => ({

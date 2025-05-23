@@ -4,14 +4,14 @@ import DashboardLayout from '../../../components/layout/DashboardLayout';
 import { useRole } from '../../../context/RoleContext';
 import { useAuth } from '../../../hooks/useAuth';
 import { BarChart2, Calendar, Download, ArrowUp, ArrowDown, Eye, Zap, Target } from 'react-feather';
-import.*./components/charts';
+import "./components/charts';
 import { 
   fetchAdvertiserSummary, 
   fetchAdvertiserDailyMetrics,
   fetchCampaignPerformance,
   DailyMetrics
 } from '@/services/analyticsService';
-import.*./utils/chartHelpers';
+import "./utils/chartHelpers';
 
 // Mock analytics data types
 interface AnalyticsSummary {

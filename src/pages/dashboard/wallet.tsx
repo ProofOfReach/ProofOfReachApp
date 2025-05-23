@@ -8,14 +8,14 @@ import TransactionHistory from '../../components/TransactionHistory';
 import BitcoinIcon from '../../components/icons/BitcoinIcon';
 import BitcoinBadgeIcon from '../../components/icons/BitcoinBadgeIcon';
 import CurrencyAmount from '../../components/CurrencyAmount';
-import.*./components/ui';
-import.*./components/ui/button';
-import.*./components/ui/input';
-import.*./utils/layoutHelpers';
+import "./components/ui';
+import "./components/ui/button';
+import "./components/ui/input';
+import "./utils/layoutHelpers';
 import type { NextPageWithLayout } from '../_app';
-import.*./hooks/useRoleAccess';
-import.*./context/TestModeContext';
-import.*./hooks/useTestWallet';
+import "./hooks/useRoleAccess';
+import "./context/TestModeContext';
+import "./hooks/useTestWallet';
 
 // Fetch balance from the API
 const fetcher = (url: string) => fetch(url).then(res => res.json());

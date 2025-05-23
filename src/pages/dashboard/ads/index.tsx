@@ -3,11 +3,11 @@ import { useRouter } from 'next/router';
 import Link from 'next/link';
 import { Plus, Search, Filter } from 'react-feather';
 import useSWR from 'swr';
-import.*./components/AdCard';
-import.*./utils/layoutHelpers';
-import.*./pages/_app';
-import.*./components/ui';
-import.*./hooks/useAuth';
+import "./components/AdCard';
+import "./utils/layoutHelpers';
+import "./pages/_app';
+import "./components/ui';
+import "./hooks/useAuth';
 
 // Fetcher function for SWR
 const fetcher = (url: string) => fetch(url).then(res => res.json());

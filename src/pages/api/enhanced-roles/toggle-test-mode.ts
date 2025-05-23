@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import.*./lib/enhancedRoleService';
-import.*./lib/logger';
-import.*./utils/authMiddleware';
+import "./lib/enhancedRoleService';
+import "./lib/logger';
+import "./utils/authMiddleware';
 
 /**
  * API route to toggle test mode for a user

@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, screen, act } from '@testing-library/react';
-import.*./context/OnboardingContext';
-import.*./types/role';
+import "./context/OnboardingContext';
+import "./types/role';
 
 // Mock dependencies
 jest.mock('next/router', () => ({
@@ -40,7 +40,7 @@ jest.mock('@/lib/onboardingService', () => ({
 }));
 
 // Import onboardingService after mocking
-import.*./lib/onboardingService';
+import "./lib/onboardingService';
 
 // Test component that uses the useOnboarding hook
 const TestComponent = () => {

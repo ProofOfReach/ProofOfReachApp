@@ -8,15 +8,15 @@
  * Part of the Phase 6 TestMode modernization strategy.
  */
 
-import.*./lib/logger';
-import.*./services/storageService';
-import.*./lib/events/eventDispatcher';
+import "./lib/logger';
+import "./services/storageService';
+import "./lib/events/eventDispatcher';
 import { 
   TEST_MODE_EVENTS, 
   ROLE_EVENTS 
 } from '@/lib/events/eventTypes';
-import.*./types/role';
-import.*./services/roleManager';
+import "./types/role';
+import "./services/roleManager';
 
 // Define the RoleEvent interface for the event payload
 interface RoleEvent {

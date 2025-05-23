@@ -1,9 +1,9 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import.*./lib/auth';
-import.*./utils/chartHelpers';
-import.*./services/analyticsService';
+import "./lib/auth';
+import "./utils/chartHelpers';
+import "./services/analyticsService';
 // Import from utils wrapper to avoid ESM compatibility issues
-import.*./utils/dateUtils';
+import "./utils/dateUtils';
 
 // API handler for fetching publisher earnings data
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {

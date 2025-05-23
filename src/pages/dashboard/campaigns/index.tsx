@@ -4,12 +4,12 @@ import { useRouter } from 'next/router';
 import { Campaign, CampaignStatus } from '@prisma/client';
 import { AlertCircle, CheckCircle, ArrowRight, Plus } from 'react-feather';
 
-import.*./components/campaigns/CampaignList';
-import.*./components/campaigns/CampaignDataTable';
-import.*./components/ui/Loading';
-import.*./components/ui/button';
-import.*./components/ui';
-import.*./utils/layoutHelpers';
+import "./components/campaigns/CampaignList';
+import "./components/campaigns/CampaignDataTable';
+import "./components/ui/Loading';
+import "./components/ui/button';
+import "./components/ui';
+import "./utils/layoutHelpers';
 import type { NextPageWithLayout } from '../../_app';
 
 const CampaignsPage: NextPageWithLayout = () => {

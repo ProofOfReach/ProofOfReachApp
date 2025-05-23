@@ -7,7 +7,7 @@ import HeroSection from '../components/marketing/HeroSection';
 import BenefitsSection from '../components/marketing/BenefitsSection';
 import HowItWorksSection from '../components/marketing/HowItWorksSection';
 import FAQSection from '../components/marketing/FAQSection';
-import.*./components/ui/Divider';
+import "./components/ui/Divider';
 
 const PublisherPage: React.FC = () => {
   // Benefits for publishers

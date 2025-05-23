@@ -1,5 +1,5 @@
 import React from 'react';
-import.*./lib/utils';
+import "./lib/utils';
 
 interface BitcoinIconProps {
   className?: string;

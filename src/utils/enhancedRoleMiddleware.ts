@@ -1,8 +1,8 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { GetServerSidePropsContext } from 'next';
-import.*./lib/enhancedRoleService';
-// import.*./lib/prisma';
-import.*./lib/logger';
+import "./lib/enhancedRoleService';
+// import "./lib/prisma';
+import "./lib/logger';
 
 type NextHandler = (req: NextApiRequest, res: NextApiResponse) => Promise<void>;
 

@@ -1,5 +1,5 @@
 import * as React from "react"
-import.*./lib/utils"
+import "./lib/utils"
 
 /**
  * Button variants definition

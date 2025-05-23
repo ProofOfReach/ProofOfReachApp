@@ -7,7 +7,7 @@
  */
 
 import { v4 as uuidv4 } from 'uuid';
-import.*./types/errors';
+import '@/types/errors';
 
 // Custom event names
 const ERROR_EVENTS = {

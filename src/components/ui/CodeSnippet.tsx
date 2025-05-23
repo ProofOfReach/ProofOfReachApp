@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Copy, Check } from 'react-feather';
-import.*./lib/utils';
+import "./lib/utils';
 
 interface CodeSnippetProps {
   code: string;

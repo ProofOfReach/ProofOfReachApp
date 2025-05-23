@@ -14,8 +14,8 @@ import {
 } from '../lib/nostr';
 import { postWithAuth } from '../lib/api';
 import { isPostForcedLogout } from '../lib/resetAuth';
-import.*./lib/logger';
-import.*./services/enhancedStorageService';
+import "./lib/logger';
+import "./services/enhancedStorageService';
 
 // Create a client-side only wrapper component to avoid hydration issues
 import dynamic from 'next/dynamic';
@@ -347,7 +347,7 @@ const LoginPageClient: React.FC = () => {
         
         // Check onboarding status and redirect appropriately
         logger.debug('Determining redirect destination...');
-        const onboardingService = await import.*./lib/onboardingService').then(mod => mod.default);
+        const onboardingService = await import "./lib/onboardingService').then(mod => mod.default);
         // No default role - let the onboarding process handle role selection
         const redirectUrl = await onboardingService.getPostLoginRedirectUrl(pubkey);
         
@@ -472,7 +472,7 @@ const LoginPageClient: React.FC = () => {
         
         // Determine where to redirect based on onboarding status
         logger.log('Account created successfully, checking onboarding status');
-        const onboardingService = await import.*./lib/onboardingService').then(mod => mod.default);
+        const onboardingService = await import "./lib/onboardingService').then(mod => mod.default);
         // No default role - let the onboarding process handle role selection
         const redirectUrl = await onboardingService.getPostLoginRedirectUrl(publicKey as string);
         
@@ -486,7 +486,7 @@ const LoginPageClient: React.FC = () => {
         // We can still redirect to onboarding or dashboard
         logger.log('API call failed but continuing with redirection');
         try {
-          const onboardingService = await import.*./lib/onboardingService').then(mod => mod.default);
+          const onboardingService = await import "./lib/onboardingService').then(mod => mod.default);
           // No default role - let the onboarding process handle role selection
           const redirectUrl = await onboardingService.getPostLoginRedirectUrl(publicKey || '');
           
@@ -563,7 +563,7 @@ const LoginPageClient: React.FC = () => {
       // Complete onboarding for test users (regardless of login success)
       try {
         // Import onboarding service dynamically
-        const onboardingService = await import.*./lib/onboardingService').then(mod => mod.default);
+        const onboardingService = await import "./lib/onboardingService').then(mod => mod.default);
         
         // Define proper interface for API request and responses
         interface OnboardingCompleteRequest {

@@ -6,8 +6,8 @@
  */
 
 import React, { Component, ErrorInfo, ReactNode } from 'react';
-import.*./lib/errorService';
-import.*./utils/toast';
+import "./lib/errorService';
+import "./utils/toast';
 
 interface ErrorBoundaryProps {
   children: ReactNode;

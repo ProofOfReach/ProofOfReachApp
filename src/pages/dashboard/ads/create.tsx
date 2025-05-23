@@ -1,15 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
-import.*./hooks/useAuth';
-import.*./context/RoleContext';
+import "./hooks/useAuth';
+import "./context/RoleContext';
 import Link from 'next/link';
 import { AlertCircle, CreditCard, ArrowLeft, RefreshCw } from 'react-feather';
-import.*./components/AdForm';
-import.*./lib/api';
-import.*./components/SatoshiIcon';
-import.*./pages/_app';
-import.*./components/ui';
-import.*./utils/layoutHelpers';
+import "./components/AdForm';
+import "./lib/api';
+import "./components/SatoshiIcon';
+import "./pages/_app';
+import "./components/ui';
+import "./utils/layoutHelpers';
 
 const CreateAdPage: NextPageWithLayout = () => {
   const { auth } = useAuth();

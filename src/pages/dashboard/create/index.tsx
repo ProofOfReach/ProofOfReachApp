@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { useRouter } from 'next/router';
-import.*./pages/_app';
-import.*./utils/layoutHelpers';
+import "./pages/_app';
+import "./utils/layoutHelpers';
 
 /**
  * Redirect page from /dashboard/create to /dashboard/ads/create

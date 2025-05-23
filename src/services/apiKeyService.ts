@@ -1,6 +1,6 @@
-import.*./lib/prismaClient';
+import "./lib/prismaClient';
 import crypto from 'crypto';
-import.*./lib/logger';
+import "./lib/logger';
 import { Prisma } from '@prisma/client';
 
 /**

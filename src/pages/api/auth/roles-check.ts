@@ -3,10 +3,10 @@
  * Special endpoint to query and verify user roles with detailed diagnostics
  */
 import type { NextApiRequest, NextApiResponse } from 'next';
-import.*./lib/prismaClient';
-import.*./lib/auth';
-import.*./lib/logger';
-import.*./lib/roles/roleService';
+import "./lib/prismaClient';
+import "./lib/auth';
+import "./lib/logger';
+import "./lib/roles/roleService';
 
 export default async function handler(
   req: NextApiRequest,

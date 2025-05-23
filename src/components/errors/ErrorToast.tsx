@@ -6,7 +6,7 @@
  */
 
 import React, { useEffect, useState } from 'react';
-import.*./types/errors';
+import "./types/errors';
 
 export type ErrorToastType = 'error' | 'warning' | 'network' | 'permission' | 'validation';
 

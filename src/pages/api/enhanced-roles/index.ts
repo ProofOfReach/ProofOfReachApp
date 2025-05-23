@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import.*./lib/enhancedRoleService';
-import.*./lib/logger';
+import "./lib/enhancedRoleService';
+import "./lib/logger';
 
 /**
  * API endpoint to get user role data

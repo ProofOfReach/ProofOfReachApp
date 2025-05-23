@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { NextPage } from 'next';
 import { useRouter } from 'next/router';
 import { LogOut } from 'react-feather';
-import.*./lib/roleService';
+import "./lib/roleService';
 
 /**
  * System logout page

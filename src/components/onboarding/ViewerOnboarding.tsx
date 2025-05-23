@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import.*./context/OnboardingContext';
-import.*./components/onboarding/OnboardingProgress';
+import "./context/OnboardingContext';
+import "./components/onboarding/OnboardingProgress';
 import { CheckCircle, Search, ChevronRight, ChevronLeft, Check } from 'react-feather';
-import.*./components/ui/switch';
-import.*./components/ui/SkipButton';
-import.*./components/ProfileAvatar';
+import "./components/ui/switch';
+import "./components/ui/SkipButton';
+import "./components/ProfileAvatar';
 
 // Helper function to check for Nostr extension
 const checkForNostrExtension = (): boolean => {

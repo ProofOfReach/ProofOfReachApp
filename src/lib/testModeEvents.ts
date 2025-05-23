@@ -16,8 +16,8 @@ import {
   ROLE_EVENTS,
   TestModeEventPayloads as NewTestModeEventPayloads
 } from './events';
-import.*./context/RoleContext';
-import.*./services/storageService';
+import "./context/RoleContext';
+import "./services/storageService';
 
 // Re-export the new event names with the old naming for backward compatibility
 export const TEST_MODE_EVENTS = {

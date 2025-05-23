@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { DollarSign, AlertCircle } from 'react-feather';
 import CurrencyAmount from './CurrencyAmount';
-import.*./context/TestModeContext';
-import.*./hooks/useTestWallet';
+import "./context/TestModeContext';
+import "./hooks/useTestWallet';
 
 interface LightningWalletBalanceProps {
   compact?: boolean;

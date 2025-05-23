@@ -16,10 +16,10 @@ jest.mock('@/context/AuthContext', () => {
 import React from 'react';
 import { render, screen, fireEvent, act } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import.*./components/onboarding/OnboardingWizard';
-import.*./context/OnboardingContext';
+import "./components/onboarding/OnboardingWizard';
+import "./context/OnboardingContext';
 // Import useAuth differently since it's a default export
-import.*./context/AuthContext';
+import "./context/AuthContext';
 
 // Define types for the components
 type OnboardingComponentProps = {

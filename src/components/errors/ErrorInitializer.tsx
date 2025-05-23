@@ -9,9 +9,9 @@
  */
 
 import { useEffect } from 'react';
-import.*./hooks/useErrorState';
+import "./hooks/useErrorState';
 // Import the function that the tests expect
-import.*./lib/errorIntegration';
+import "./lib/errorIntegration';
 
 interface ErrorInitializerProps {
   disableWindowEvents?: boolean;

@@ -24,7 +24,7 @@ import {
   dispatchStorageMigrated
 } from './eventDispatcher';
 import { ROLE_EVENTS, TEST_MODE_EVENTS, SYSTEM_EVENTS } from './eventTypes';
-import.*./context/RoleContext';
+import '@/context/RoleContext';
 
 /**
  * Convenience function to dispatch a role changed event

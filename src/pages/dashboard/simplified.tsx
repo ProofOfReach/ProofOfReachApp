@@ -1,10 +1,10 @@
 import { useState, useEffect } from 'react';
-import.*./utils/layoutHelpers';
+import "./utils/layoutHelpers';
 import type { NextPageWithLayout } from '../_app';
 import { useLocalRole } from '../../hooks/useLocalRole';
 import { useRole } from '../../context/RoleContext';
 import RoleDropdown from '../../components/role/RoleDropdown';
-import.*./components/ui';
+import "./components/ui';
 
 /**
  * Simplified dashboard page with efficient role switching and state management

@@ -1,8 +1,8 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { walletService } from '../../../services/walletService';
 import { ApiError } from '../../../utils/apiError';
-import.*./utils/enhancedAuthMiddleware';
-import.*./lib/logger';
+import "./utils/enhancedAuthMiddleware';
+import "./lib/logger';
 
 /**
  * API handler for getting transaction history

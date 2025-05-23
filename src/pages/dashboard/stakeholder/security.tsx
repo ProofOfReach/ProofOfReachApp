@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import.*./components/layout/ImprovedDashboardLayout';
-import.*./components/ui/Typography';
-import.*./components/ui/card';
+import "./components/layout/ImprovedDashboardLayout';
+import "./components/ui/Typography';
+import "./components/ui/card';
 import { 
   Shield, Lock, Key, AlertTriangle, Activity, 
   Check, Clock, Eye, Trash, ChevronDown, ChevronUp 

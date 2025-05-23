@@ -1,9 +1,9 @@
 import React from 'react';
 import { GetServerSideProps } from 'next';
-import.*./components/role/AdminRolePanel';
-import.*./context/NewRoleContextRefactored';
-import.*./utils/authMiddleware';
-import.*./lib/logger';
+import "./components/role/AdminRolePanel';
+import "./context/NewRoleContextRefactored';
+import "./utils/authMiddleware';
+import "./lib/logger';
 import { Loader } from 'react-feather';
 
 // Define NextPageWithLayout type since we don't have it in a shared location yet

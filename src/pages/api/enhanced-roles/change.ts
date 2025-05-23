@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import.*./lib/enhancedRoleService';
-import.*./lib/logger';
-import.*./utils/roleNormalizer';
+import "./lib/enhancedRoleService';
+import "./lib/logger';
+import "./utils/roleNormalizer';
 
 /**
  * API endpoint to change a user's role

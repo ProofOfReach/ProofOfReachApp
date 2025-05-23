@@ -18,7 +18,7 @@ import {
   SYSTEM_EVENTS,
   LEGACY_EVENTS
 } from './eventTypes';
-import.*./types/role';
+import '@/types/role';
 
 /**
  * Dispatch an application event with type-safe payload

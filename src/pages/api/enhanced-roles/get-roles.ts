@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import.*./lib/enhancedRoleService';
-import.*./utils/enhancedRoleMiddleware';
-import.*./lib/logger';
+import "./lib/enhancedRoleService';
+import "./utils/enhancedRoleMiddleware';
+import "./lib/logger';
 
 /**
  * @swagger

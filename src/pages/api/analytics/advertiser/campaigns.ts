@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import.*./services/analyticsService';
+import "./services/analyticsService';
 
 // API handler for fetching advertiser campaign performance data
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {

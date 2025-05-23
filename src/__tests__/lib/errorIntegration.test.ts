@@ -9,7 +9,7 @@ import {
   resetErrorState,
   initializeErrorHandling
 } from '@/lib/errorIntegration';
-import.*./types/errors';
+import "./types/errors';
 
 // For tests where we need a simpler category enum
 const TestErrorCategory = {

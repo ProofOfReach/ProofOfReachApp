@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { Loader, RefreshCw } from 'react-feather';
 import { useRouter } from 'next/router';
-import.*./context/NewRoleContextRefactored';
-import.*./lib/logger';
+import "./context/NewRoleContextRefactored';
+import "./lib/logger';
 
 /**
  * Simple page to enable test mode with admin role

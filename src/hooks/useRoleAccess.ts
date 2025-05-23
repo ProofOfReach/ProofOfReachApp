@@ -8,9 +8,9 @@
 
 import { useCallback, useMemo, useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
-import.*./services/roleManager';
-import.*./types/role';
-import.*./lib/logger';
+import "./services/roleManager';
+import "./types/role';
+import "./lib/logger';
 
 /**
  * Permission check result with additional context

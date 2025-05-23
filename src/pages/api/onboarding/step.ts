@@ -1,9 +1,9 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import.*./types/role';
-import.*./lib/onboardingService';
-import.*./lib/logger';
-import.*./lib/errorService';
-import.*./types/errors';
+import "./types/role';
+import "./lib/onboardingService';
+import "./lib/logger';
+import "./lib/errorService';
+import "./types/errors';
 
 /**
  * API endpoint to save the current step in the onboarding process

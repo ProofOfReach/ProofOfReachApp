@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import.*./lib/roleService';
-import.*./hooks/useTestMode';
-import.*./services/roleManager';
-import.*./services/enhancedStorageService';
-import.*./services/storageService';
-import.*./types/role';
-import.*./lib/events';
-import.*./hooks/useAppEvent';
-import.*./lib/events/eventTypes';
-import.*./lib/logger';
+import "./lib/roleService';
+import "./hooks/useTestMode';
+import "./services/roleManager';
+import "./services/enhancedStorageService';
+import "./services/storageService';
+import "./types/role';
+import "./lib/events';
+import "./hooks/useAppEvent';
+import "./lib/events/eventTypes';
+import "./lib/logger';
 import Link from 'next/link';
 
 /**

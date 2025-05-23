@@ -1,8 +1,8 @@
-import.*./lib/prisma';
-import.*./lib/logger';
-import.*./types/role';
-import.*./lib/errorService';
-import.*./types/errors';
+import "./lib/prisma';
+import "./lib/logger';
+import "./types/role';
+import "./lib/errorService';
+import "./types/errors';
 
 /**
  * Service for managing onboarding state and redirections

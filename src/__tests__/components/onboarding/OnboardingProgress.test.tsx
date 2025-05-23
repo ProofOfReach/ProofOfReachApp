@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
-import.*./components/onboarding/OnboardingProgress';
-import.*./context/OnboardingContext';
+import "./components/onboarding/OnboardingProgress';
+import "./context/OnboardingContext';
 
 // Mock the OnboardingContext
 jest.mock('@/context/OnboardingContext', () => {

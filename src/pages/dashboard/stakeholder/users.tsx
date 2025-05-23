@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import.*./components/layout/ImprovedDashboardLayout';
-import.*./components/ui/Typography';
-import.*./components/ui/card';
+import "./components/layout/ImprovedDashboardLayout';
+import "./components/ui/Typography';
+import "./components/ui/card';
 import { Search, Filter, User as UserIcon, Check, X, Shield } from 'react-feather';
 
 // Sample data for demonstration

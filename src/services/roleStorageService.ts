@@ -5,7 +5,7 @@
  * extending the EnhancedStorageService with role-specific methods.
  */
 
-import.*./lib/logger';
+import "./lib/logger';
 import { 
   dispatchRoleEvent, 
   ROLE_EVENTS,
@@ -13,7 +13,7 @@ import {
   notifyRolesUpdated
 } from '@/lib/events';
 import { EnhancedStorageService, STORAGE_KEYS, enhancedStorage } from './enhancedStorageService';
-import.*./context/RoleContext';
+import "./context/RoleContext';
 import { testModeStorage } from './testModeStorageService';
 
 // Default role to use when none is set

@@ -1,16 +1,16 @@
 import React, { useState } from 'react';
-import.*./pages/_app';
-import.*./utils/layoutHelpers';
-import.*./context/RoleContext';
+import "./pages/_app';
+import "./utils/layoutHelpers';
+import "./context/RoleContext';
 import { BarChart2, Calendar, Download, ArrowUp, ArrowDown, Eye, Zap, Target } from 'react-feather';
-import.*./components/charts';
+import "./components/charts';
 import { 
   fetchAdvertiserSummary, 
   fetchAdvertiserDailyMetrics,
   fetchCampaignPerformance,
   DailyMetrics
 } from '@/services/analyticsService';
-import.*./utils/chartHelpers';
+import "./utils/chartHelpers';
 
 // Mock analytics data types
 interface AnalyticsSummary {

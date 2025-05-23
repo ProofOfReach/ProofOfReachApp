@@ -1,5 +1,5 @@
 import React from 'react';
-import.*./context/CurrencyContext';
+import "./context/CurrencyContext';
 
 interface CurrencyAmountProps {
   // Support both naming conventions (sats and amount) for backwards compatibility

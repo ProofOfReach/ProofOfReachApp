@@ -3,17 +3,17 @@ import { useRouter } from 'next/router';
 import useSWR from 'swr';
 import { DollarSign, RefreshCw, Clock, AlertCircle, Archive } from 'react-feather';
 
-import.*./components/ui';
-import.*./utils/layoutHelpers';
+import "./components/ui';
+import "./utils/layoutHelpers';
 import type { NextPageWithLayout } from '../../_app';
-import.*./hooks/useAuth';
-import.*./context/RoleContext';
-import.*./components/LightningWallet';
-import.*./components/LightningWalletBalance';
-import.*./components/TransactionHistory';
-import.*./context/CurrencyContext';
-import.*./components/CurrencyAmount';
-import.*./utils/fetcher';
+import "./hooks/useAuth';
+import "./context/RoleContext';
+import "./components/LightningWallet';
+import "./components/LightningWalletBalance';
+import "./components/TransactionHistory';
+import "./context/CurrencyContext';
+import "./components/CurrencyAmount';
+import "./utils/fetcher';
 
 const BillingPage: NextPageWithLayout = () => {
   const { auth } = useAuth();

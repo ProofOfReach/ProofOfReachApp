@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { PieChart, Calendar, Download, RefreshCw, Filter } from 'react-feather';
-import.*./components/layout/EnhancedDashboardLayout';
-import.*./components/ui';
+import "./components/layout/EnhancedDashboardLayout';
+import "./components/ui';
 import type { ReactElement } from 'react';
 import type { NextPageWithLayout } from '../../_app';
-import.*./components/CurrencyAmount';
+import "./components/CurrencyAmount';
 
 // Import chart components
 import { Line, Bar, Pie } from 'react-chartjs-2';

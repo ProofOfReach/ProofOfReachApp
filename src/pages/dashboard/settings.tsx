@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useAuth } from '../../hooks/useAuth';
-import.*./utils/layoutHelpers';
-import.*./components/ui/DashboardContainer';
+import "./utils/layoutHelpers';
+import "./components/ui/DashboardContainer';
 import { Settings, Save, RefreshCw, UserCheck, Bell, Moon, Sun, Shield, Lock, Plus, X, AlertCircle, Info, Globe, Wifi } from 'react-feather';
 import { 
   fetchNostrProfile, 
@@ -13,7 +13,7 @@ import {
   saveRelays,
   DEFAULT_RELAYS
 } from '../../lib/nostrProfile';
-import.*./components/ui/CopyToClipboard';
+import "./components/ui/CopyToClipboard';
 
 const UserSettingsPage = () => {
   const { auth } = useAuth();

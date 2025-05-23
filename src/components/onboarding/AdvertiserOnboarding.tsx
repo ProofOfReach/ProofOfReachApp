@@ -1,6 +1,6 @@
 import React from 'react';
-import.*./context/OnboardingContext';
-import.*./components/ui/SkipButton';
+import "./context/OnboardingContext';
+import "./components/ui/SkipButton';
 import { 
   CheckCircle, 
   Target, 

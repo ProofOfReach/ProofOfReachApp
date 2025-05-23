@@ -3,11 +3,11 @@
  * Uses the new centralized role management system
  */
 import { NextApiRequest, NextApiResponse } from 'next';
-import.*./lib/roles/roleService';
-import.*./lib/auth';
-import.*./lib/logger';
-import.*./lib/roles/types';
-import.*./lib/prismaClient';
+import "./lib/roles/roleService';
+import "./lib/auth';
+import "./lib/logger';
+import "./lib/roles/types';
+import "./lib/prismaClient';
 
 export default async function handler(
   req: NextApiRequest,

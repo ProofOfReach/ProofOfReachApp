@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import.*./lib/auth';
-import.*./services/analyticsService';
+import "./lib/auth';
+import "./services/analyticsService';
 
 // API handler for fetching publisher ad space performance data
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {

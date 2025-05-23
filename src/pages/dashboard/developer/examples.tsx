@@ -1,11 +1,11 @@
 import { useState, useRef } from 'react';
 import { Book, Code, Clipboard, Check, Copy, ExternalLink } from 'react-feather';
 import Link from 'next/link';
-import.*./components/layout/ImprovedDashboardLayout';
-import.*./components/ui/button';
-import.*./components/ui/card';
-import.*./components/ui/Typography';
-import.*./hooks/useAuth';
+import "./components/layout/ImprovedDashboardLayout';
+import "./components/ui/button';
+import "./components/ui/card';
+import "./components/ui/Typography';
+import "./hooks/useAuth';
 
 const SDKExamplesPage = () => {
   const { auth } = useAuth();

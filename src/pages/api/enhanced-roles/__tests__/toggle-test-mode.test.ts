@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { createMocks } from 'node-mocks-http';
 import toggleTestModeHandler from '../toggle-test-mode';
-import.*./lib/enhancedRoleService';
+import "./lib/enhancedRoleService';
 
 // Mock dependencies
 jest.mock('@/lib/enhancedRoleService', () => ({

@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
-import.*./components/layout/ImprovedDashboardLayout';
-import.*./components/ui/Typography';
-import.*./components/ui/card';
+import "./components/layout/ImprovedDashboardLayout';
+import "./components/ui/Typography';
+import "./components/ui/card';
 import { Check, Copy, ExternalLink } from 'react-feather';
 import Link from 'next/link';
-import.*./hooks/useAuthSwitch';
+import "./hooks/useAuthSwitch';
 
 const SDKExamplesPage = () => {
   const { pubkey } = useAuthSwitch();

@@ -7,10 +7,10 @@
  */
 
 import React, { createContext, useState, useEffect, useMemo, useCallback, useContext } from 'react';
-import.*./types/errors';
-import.*./lib/errorIntegration';
-import.*./lib/errorService';
-import.*./utils/toast';
+import "./types/errors';
+import "./lib/errorIntegration';
+import "./lib/errorService';
+import "./utils/toast';
 
 // Create the context with a default value
 export const ErrorContext = createContext<{

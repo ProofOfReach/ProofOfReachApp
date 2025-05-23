@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
-import.*./components/ui/nav-group';
-import.*./lib/navigationBuilder';
+import "./components/ui/nav-group';
+import "./lib/navigationBuilder';
 
 // Mock the Icon component
 jest.mock('@/components/ui/icon', () => {

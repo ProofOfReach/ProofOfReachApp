@@ -1,5 +1,5 @@
 import { ReactNode } from 'react';
-import.*./components/ui/nav-group';
+import '@/components/ui/nav-group';
 
 // Define role type for type safety
 export type UserRole = 'viewer' | 'advertiser' | 'publisher' | 'admin' | 'stakeholder';

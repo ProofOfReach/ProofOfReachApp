@@ -1,8 +1,8 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import.*./lib/prismaClient';
-import.*./lib/logger';
-import.*./lib/errorHandling';
-import.*./utils/enhancedAuthMiddleware';
+import "./lib/prismaClient';
+import "./lib/logger';
+import "./lib/errorHandling';
+import "./utils/enhancedAuthMiddleware';
 
 /**
  * @swagger

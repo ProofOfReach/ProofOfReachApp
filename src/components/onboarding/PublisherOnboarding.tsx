@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import.*./context/OnboardingContext';
+import "./context/OnboardingContext';
 import { Code, DollarSign, Layout, Settings, CheckCircle, ToggleRight, Archive } from 'react-feather';
 import ApiKeyBox from './ApiKeyBox';
-import.*./components/ui/CodeSnippet';
-import.*./components/ui/SkipButton';
+import "./components/ui/CodeSnippet';
+import "./components/ui/SkipButton';
 
 interface PublisherOnboardingProps {
   currentStep: OnboardingStep;

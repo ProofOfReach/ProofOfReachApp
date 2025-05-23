@@ -6,8 +6,8 @@
  * direct methods for success and info messages.
  */
 
-import.*./lib/errorIntegration';
-import.*./types/errors';
+import "./lib/errorIntegration';
+import "./types/errors';
 
 interface ToastOptions {
   duration?: number;

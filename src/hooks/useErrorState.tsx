@@ -7,11 +7,11 @@
  */
 
 import { useContext, useCallback, useState, useEffect } from 'react';
-import.*./context/ErrorContext';
-import.*./types/errors';
+import "./context/ErrorContext';
+import "./types/errors';
 
 // Import the errorIntegration service
-import.*./lib/errorIntegration';
+import "./lib/errorIntegration';
 
 // Type definition for test mocks
 interface TestErrorState {

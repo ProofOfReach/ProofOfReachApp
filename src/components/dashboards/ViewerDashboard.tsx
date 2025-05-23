@@ -1,7 +1,7 @@
 import React from 'react';
 import useSWR from 'swr';
 import { Calendar, Activity, Users } from 'react-feather';
-import.*./components/CurrencyAmount';
+import "./components/CurrencyAmount';
 
 // Define fetcher for SWR
 const fetcher = (url: string) => 

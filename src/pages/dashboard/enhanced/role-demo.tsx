@@ -1,7 +1,7 @@
 import React from 'react';
-import.*./context/EnhancedRoleContext';
-import.*./components/role';
-import.*./components/auth/withRoleAccess';
+import "./context/EnhancedRoleContext';
+import "./components/role';
+import "./components/auth/withRoleAccess';
 
 /**
  * Role management demo page

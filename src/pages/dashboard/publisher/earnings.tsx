@@ -1,19 +1,19 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import.*./components/layout/DashboardLayout';
-import.*./context/RoleContext';
-import.*./hooks/useAuth';
+import "./components/layout/DashboardLayout';
+import "./context/RoleContext';
+import "./hooks/useAuth';
 import { BarChart2, Calendar, Download, ArrowUp, ArrowDown, Eye, Zap, Target, DollarSign } from 'react-feather';
-import.*./components/charts';
-import.*./components/icons/SatsIcon';
-import.*./components/CurrencyAmount';
+import "./components/charts';
+import "./components/icons/SatsIcon';
+import "./components/CurrencyAmount';
 import { 
   fetchPublisherEarnings,
   fetchAdSpacePerformance,
   DailyMetrics,
   AdSpacePerformance
 } from '@/services/analyticsService';
-import.*./utils/chartHelpers';
+import "./utils/chartHelpers';
 
 // Mock earnings data
 interface EarningsSummary {

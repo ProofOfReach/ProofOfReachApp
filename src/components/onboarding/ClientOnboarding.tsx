@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
-import.*./hooks/useAuthRefactored';
+import "./hooks/useAuthRefactored';
 import OnboardingWizard from './OnboardingWizard';
-import.*./context/OnboardingContext';
-import.*./components/Loading';
-import.*./types/role';
-import.*./lib/logger';
+import "./context/OnboardingContext';
+import "./components/Loading';
+import "./types/role';
+import "./lib/logger';
 
 /**
  * Client-Side Onboarding Component

@@ -1,8 +1,8 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import.*./utils/apiHandler';
-import.*./lib/onboardingService';
-import.*./types/role';
-import.*./lib/logger';
+import "./utils/apiHandler';
+import "./lib/onboardingService';
+import "./types/role';
+import "./lib/logger';
 
 /**
  * @swagger

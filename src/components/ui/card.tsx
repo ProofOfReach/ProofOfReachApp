@@ -1,5 +1,5 @@
 import * as React from "react"
-import.*./lib/utils"
+import "./lib/utils"
 
 /**
  * Card component and subcomponents following shadcn/ui patterns

@@ -1,6 +1,6 @@
 import { NextPage } from 'next';
-import.*./components/layout/ImprovedDashboardLayout';
-import.*./components/dashboards/ViewerDashboard';
+import "./components/layout/ImprovedDashboardLayout';
+import "./components/dashboards/ViewerDashboard';
 
 /**
  * Dashboard page using the improved layout component

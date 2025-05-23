@@ -1,13 +1,13 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode, useCallback } from 'react';
 import { logger } from '../lib/logger';
-import.*./services/storageService';
+import "./services/storageService';
 import { 
   dispatchTestModeEvent, 
   TEST_MODE_EVENTS, 
   addTestModeEventListener 
 } from '@/lib/testModeEvents';
-import.*./types/role';
-import.*./services/roleManager';
+import "./types/role';
+import "./services/roleManager';
 
 /**
  * Enhanced TestMode Context Interface
