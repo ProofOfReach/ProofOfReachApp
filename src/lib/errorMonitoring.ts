@@ -8,7 +8,7 @@
  */
 
 import { ErrorSeverity, ErrorCategory, errorService } from '@/lib/errorService';
-import { logger } from '@/lib/logger';
+import { logger } from './logger';
 
 /**
  * Error metrics tracking

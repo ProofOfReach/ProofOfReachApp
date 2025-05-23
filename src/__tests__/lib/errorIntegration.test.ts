@@ -142,7 +142,7 @@ describe('Error Integration Service', () => {
     
     it('uses window.__errorMetrics when available', () => {
       // Set up a mock metrics structure
-      global.window.__errorMetrics = {
+      (global.window as any).__errorMetrics = {
         getMetrics: jest.fn().mockReturnValue({
           totalErrors: 5,
           recoveredErrors: 3,
