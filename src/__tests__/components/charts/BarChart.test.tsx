@@ -108,7 +108,7 @@ describe('BarChart Component', () => {
   });
 
   it('handles custom formatter properly', () => {
-    const tooltipFormatter = (value: number, name: string): [UserRole, string] => [`${value}%`, name];
+    const tooltipFormatter = (value: number, name: string): [string, string] => [`${value}%`, name];
     
     render(
       <BarChart

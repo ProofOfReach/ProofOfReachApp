@@ -4,7 +4,7 @@
 
 import React from 'react';
 import { render } from '@testing-library/react';
-import '@/components/errors/ErrorInitializer';
+import ErrorInitializer from '@/components/errors/ErrorInitializer';
 
 
 // Mock the console module
