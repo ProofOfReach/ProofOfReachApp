@@ -21,7 +21,7 @@ export default function TestModeDisabler() {
           setShowDisabler(true);
         }
       } catch (error) {
-        logger.log('Error checking admin status for TestModeDisabler:', error);
+        console.log('Error checking admin status for TestModeDisabler:', error);
       }
     }
   }, []);
