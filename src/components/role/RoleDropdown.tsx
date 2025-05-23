@@ -78,10 +78,33 @@ const RoleDropdown: React.FC<RoleDropdownProps> = ({
     }
   };
   
-  // Fetch available roles and set initial role on mount
-  // Create a storage event listener
+  // Immediately check for test mode and set roles
   useEffect(() => {
     if (typeof window === 'undefined') return;
+    
+    // Immediate test mode check
+    const isTestModeActive = localStorage.getItem('isTestMode') === 'true' || 
+                            localStorage.getItem('bypass_api_calls') === 'true' ||
+                            localStorage.getItem('testMode') === 'true';
+    
+    console.log('🚀 RoleDropdown immediate test mode check:', {
+      isTestMode,
+      localStorage_isTestMode: localStorage.getItem('isTestMode'),
+      localStorage_bypass: localStorage.getItem('bypass_api_calls'),
+      localStorage_testMode: localStorage.getItem('testMode'),
+      isTestModeActive
+    });
+    
+    if (isTestModeActive) {
+      console.log('🎯 Setting all roles immediately in test mode');
+      const allRoles: UserRole[] = ['viewer', 'advertiser', 'publisher', 'admin', 'stakeholder'];
+      setAvailableRoles(allRoles);
+      setIsLoading(false);
+      return;
+    }
+    
+    // If not test mode, proceed with normal loading
+    fetchRolesFromCache();
     
     // Function to handle localStorage changes from other components/tabs
     const handleStorageChange = (event: StorageEvent) => {
@@ -108,8 +131,7 @@ const RoleDropdown: React.FC<RoleDropdownProps> = ({
     
     // Get current role from localStorage first (since that's what TestModeBanner uses)
     const storedRole = localStorage.getItem('currentRole');
-    const serviceRole = RoleService.getCurrentRole();
-    const currentRoleValue = storedRole || serviceRole || 'viewer';
+    const currentRoleValue = storedRole || 'viewer';
     
     // Always update current role to maintain consistency
     setCurrentRole(currentRoleValue as UserRole);
@@ -178,10 +200,9 @@ const RoleDropdown: React.FC<RoleDropdownProps> = ({
         setAvailableRoles(['viewer']);
       }
     } else {
-      // If no cache, use RoleManager to get available roles
-      console.debug('No cached roles found, using RoleManager');
-      const managerRoles = RoleManager.getAvailableRoles();
-      setAvailableRoles(managerRoles);
+      // If no cache, fallback to viewer role
+      console.debug('No cached roles found, using fallback');
+      setAvailableRoles(['viewer']);
     }
     
     setIsLoading(false);
@@ -354,17 +375,9 @@ const RoleDropdown: React.FC<RoleDropdownProps> = ({
         // Fallback to user role only for security reasons
         setAvailableRoles(['viewer']);
         
-        // Try to get roles from RoleManager as fallback
-        try {
-          const managerRoles = RoleManager.getAvailableRoles();
-          if (managerRoles && managerRoles.length) {
-            setAvailableRoles(managerRoles);
-            notifyRolesUpdated(managerRoles, currentRole);
-          }
-        } catch (fallbackError) {
-          console.log('Error getting roles from RoleManager:', fallbackError);
-          notifyRolesUpdated(['viewer'], currentRole);
-        }
+        // Fallback to viewer role for security
+        setAvailableRoles(['viewer']);
+        notifyRolesUpdated(['viewer'], currentRole);
       }
     } catch (error) {
       console.log('Error in role loading process:', error);
