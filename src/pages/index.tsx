@@ -349,7 +349,7 @@ const HomePage: NextPageWithLayout = () => {
                 <li>• Pay only for real engagement</li>
               </ul>
             </CardContent>
-            <CardFooter>
+            <CardFooter className="flex justify-center">
               {isDev ? (
                 <Link href="/advertiser" className="text-blue-600 hover:text-blue-700 inline-flex items-center font-medium">
                   Learn more →
@@ -372,7 +372,7 @@ const HomePage: NextPageWithLayout = () => {
                 <li>• Direct advertiser relationships</li>
               </ul>
             </CardContent>
-            <CardFooter>
+            <CardFooter className="flex justify-center">
               {isDev ? (
                 <Link href="/publisher" className="text-blue-600 hover:text-blue-700 inline-flex items-center font-medium">
                   Learn more →
@@ -394,7 +394,7 @@ const HomePage: NextPageWithLayout = () => {
                 <li>• Block advertisers you dislike</li>
               </ul>
             </CardContent>
-            <CardFooter>
+            <CardFooter className="flex justify-center">
               {isDev ? (
                 <Link href="/viewer" className="text-blue-600 hover:text-blue-800 inline-flex items-center font-medium">
                   Learn more →
