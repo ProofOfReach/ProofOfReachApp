@@ -40,7 +40,7 @@ declare global {
 /**
  * Log error to the console or monitoring service with proper context
  */
-export function logger.log(message: UserRole, err?: unknown): void {
+export function logError(message: string, err?: unknown): void {
   if (!err) {
     console.log(`Error in ${message}`);
     return;
@@ -63,8 +63,8 @@ export function logger.log(message: UserRole, err?: unknown): void {
  * Create a standardized API error response
  */
 export function createErrorResponse(
-  type: ErrorType | UserRole,
-  message: UserRole,
+  type: ErrorType | string,
+  message: string,
   status = 500,
   details?: any
 ): AppError {
@@ -159,7 +159,7 @@ function getDefaultMessageForErrorType(type: ErrorType): string {
  * Standard error handler for API routes
  */
 export function error(
-  err: any
+  err: any,
   req: NextApiRequest,
   res: NextApiResponse
 ): void {
@@ -167,7 +167,7 @@ export function error(
   const appError = mapError(err);
   
   // Log the error with context
-  logger.log(`${req.method} ${req.url}`, {
+  logError(`${req.method} ${req.url}`, {
     ...err,
     path: req.url,
     method: req.method,
@@ -198,7 +198,7 @@ export function error(
 /**
  * Create a validation error with 400 status code
  */
-export function validationError(message: UserRole, details?: Record<UserRole, unknown>): AppError {
+export function validationError(message: string, details?: Record<string, unknown>): AppError {
   return createErrorResponse(ErrorType.Validation, message, 400, details);
 }
 
