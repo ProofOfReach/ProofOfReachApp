@@ -131,9 +131,18 @@ const RoleDropdown: React.FC<RoleDropdownProps> = ({
                              localStorage.getItem('bypass_api_calls') === 'true' ||
                              localStorage.getItem('testMode') === 'true';
     
+    console.log('🔍 Test mode detection in fetchRolesFromCache:', {
+      isTestMode,
+      localStorage_isTestMode: localStorage.getItem('isTestMode'),
+      localStorage_bypass: localStorage.getItem('bypass_api_calls'),
+      localStorage_testMode: localStorage.getItem('testMode'),
+      isTestModeActive,
+      currentRoleValue
+    });
+    
     if (isTestModeActive) {
       // In test mode, we want to show all roles but still highlight the current one
-      console.log('Test mode detected in fetchRolesFromCache with currentRole:', currentRoleValue);
+      console.log('✅ Test mode detected in fetchRolesFromCache with currentRole:', currentRoleValue);
       
       // Show all roles and highlight the current one using all valid roles
       const allRoles: string[] = ['viewer', 'advertiser', 'publisher', 'admin', 'stakeholder']; 
