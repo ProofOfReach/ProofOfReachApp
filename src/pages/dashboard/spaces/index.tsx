@@ -101,7 +101,7 @@ const SpacesListPage: React.FC = () => {
     });
   };
 
-  if (!auth.pubkey) {
+  if (!auth.auth?.pubkey) {
     return (
       <Layout title="Ad Spaces - Nostr Ad Marketplace">
         <div className="text-center py-12">
