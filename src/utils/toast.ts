@@ -6,8 +6,7 @@
  * direct methods for log and info messages.
  */
 
-
-import '@/types/errors';
+import { ErrorType, ErrorSeverity } from '@/types/errors';
 
 interface ToastOptions {
   duration?: number;
@@ -22,20 +21,18 @@ interface ToastOptions {
  * @param options Additional options
  */
 function showToast(message: string, options: ToastOptions = {}): void {
-  const errorState = console.log(
-    message, 
-    'toast', 
-    'unexpected', 
-    'error',
-    {
-      details: options.details,
-      retry: options.retry
-    }
-  );
+  // Create a simple error state for toast display
+  const errorState = {
+    message,
+    source: 'toast',
+    type: 'unexpected' as ErrorType,
+    severity: 'error' as ErrorSeverity,
+    details: options.details,
+    retry: options.retry
+  };
   
-  // Instead of directly showing the toast, we set it in the error context
-  // This will be picked up by the ErrorToast component
-  console.log(errorState);
+  // In a real implementation, this would integrate with a toast system
+  console.error('[Toast Error]', errorState);
 }
 
 /**
@@ -45,18 +42,16 @@ function showToast(message: string, options: ToastOptions = {}): void {
  * @param options Additional options
  */
 function warn(message: string, options: ToastOptions = {}): void {
-  const errorState = console.log(
-    message, 
-    'toast', 
-    'business', 
-    'warn',
-    {
-      details: options.details,
-      retry: options.retry
-    }
-  );
+  const errorState = {
+    message,
+    source: 'toast',
+    type: 'business' as ErrorType,
+    severity: 'warn' as ErrorSeverity,
+    details: options.details,
+    retry: options.retry
+  };
   
-  console.log(errorState);
+  console.warn('[Toast Warning]', errorState);
 }
 
 /**
@@ -66,18 +61,16 @@ function warn(message: string, options: ToastOptions = {}): void {
  * @param options Additional options
  */
 function info(message: string, options: ToastOptions = {}): void {
-  const errorState = console.log(
-    message, 
-    'toast', 
-    'business', 
-    'info',
-    {
-      details: options.details,
-      retry: options.retry
-    }
-  );
+  const errorState = {
+    message,
+    source: 'toast',
+    type: 'business' as ErrorType,
+    severity: 'info' as ErrorSeverity,
+    details: options.details,
+    retry: options.retry
+  };
   
-  console.log(errorState);
+  console.info('[Toast Info]', errorState);
 }
 
 /**
@@ -87,18 +80,16 @@ function info(message: string, options: ToastOptions = {}): void {
  * @param options Additional options
  */
 function log(message: string, options: ToastOptions = {}): void {
-  const errorState = console.log(
-    message, 
-    'toast', 
-    'business', 
-    'log',
-    {
-      details: options.details,
-      retry: options.retry
-    }
-  );
+  const errorState = {
+    message,
+    source: 'toast',
+    type: 'business' as ErrorType,
+    severity: 'info' as ErrorSeverity,
+    details: options.details,
+    retry: options.retry
+  };
   
-  console.log(errorState);
+  console.log('[Toast Log]', errorState);
 }
 
 /**
@@ -109,18 +100,16 @@ function log(message: string, options: ToastOptions = {}): void {
  * @param options Additional options
  */
 function custom(message: string, severity: string, options: ToastOptions = {}): void {
-  const errorState = console.log(
-    message, 
-    'toast', 
-    'business', 
-    severity,
-    {
-      details: options.details,
-      retry: options.retry
-    }
-  );
+  const errorState = {
+    message,
+    source: 'toast',
+    type: 'business' as ErrorType,
+    severity: severity as ErrorSeverity,
+    details: options.details,
+    retry: options.retry
+  };
   
-  console.log(errorState);
+  console.log('[Toast Custom]', errorState);
 }
 
 // Export the toast API

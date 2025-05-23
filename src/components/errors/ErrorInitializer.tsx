@@ -10,6 +10,7 @@
 
 import { useEffect } from 'react';
 import { logger } from '@/lib/logger';
+import { useErrorState } from '@/hooks/useErrorState';
 
 interface ErrorInitializerProps {
   disableWindowEvents?: boolean;
