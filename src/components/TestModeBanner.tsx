@@ -34,7 +34,15 @@ export default function TestModeBanner() {
     enableAllRoles: contextEnableAllRoles,
     setCurrentRole: contextSetCurrentRole,
     isTestModeAllowed
-  } = useTestMode();
+  } = { 
+    isTestMode: localStorage.getItem('testMode') === 'true',
+    timeRemaining: null,
+    enableTestMode: async () => true,
+    disableTestMode: async () => true,
+    enableAllRoles: async () => true,
+    setCurrentRole: async () => true,
+    isTestModeAllowed: true
+  };
   
   // We no longer need these compatibility aliases as we're using the direct values
   

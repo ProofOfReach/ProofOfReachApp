@@ -44,7 +44,7 @@ const RoleDropdown: React.FC<RoleDropdownProps> = ({
   const [isChanging, setIsChanging] = useState(false);
   const [availableRoles, setAvailableRoles] = useState<UserRole[]>(['viewer']);
   const [isLoading, setIsLoading] = useState(true);
-  const { isTestMode } = useTestMode();
+  const isTestMode = typeof window !== 'undefined' && localStorage.getItem('testMode') === 'true';
   
   // Type guard to validate roles
   const isUserRole = (role: string): role is UserRole => {

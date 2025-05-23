@@ -22,6 +22,7 @@ import { getDashboardLayout } from '@/utils/layoutHelpers';
 import { useRole } from '@/context/RoleContext';
 import type { ReactElement } from 'react';
 import type { NextPageWithLayout } from '../_app';
+import { logger } from '@/lib/logger';
 import '@/components/ui';
 import '@/utils/layoutHelpers';
 import '@/lib/logger';
@@ -40,34 +41,16 @@ const Dashboard = () => {
   const getCurrentRoleFromAllSources = useCallback((): string => {
     // Try to get role from context first (most reliable and up-to-date)
     if (roleContext && roleContext.role) {
-      logger.debug('Getting role from context:', roleContext.role);
       return roleContext.role as UserRole;
     }
     
     // If we're in a browser, try localStorage next
     if (typeof window !== 'undefined') {
       // Try all known storage locations for role
-      const storedRole = 
-        localStorage.getItem('userRole') ||
-        localStorage.getItem('currentRole') ||
-        sessionStorage.getItem('userRole') ||
-        sessionStorage.getItem('currentRole');
-        
-      if (storedRole) {
-        logger.debug('Getting role from storage:', storedRole);
-        return storedRole as UserRole;
-      }
+      const storedRole = localStorage.getItem('currentRole') || 'viewer';
+      return storedRole;
     }
     
-    // Fall back to RoleService
-    const serviceRole = RoleService.getCurrentRole();
-    if (serviceRole) {
-      logger.debug('Getting role from service:', serviceRole);
-      return serviceRole as UserRole;
-    }
-    
-    // Absolute fallback
-    logger.debug('No role found, defaulting to viewer');
     return 'viewer';
   }, [roleContext]);
 
