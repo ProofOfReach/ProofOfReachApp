@@ -266,7 +266,7 @@ const ImprovedDashboardLayout: React.FC<ImprovedDashboardLayoutProps> = ({
               <div className="mb-2 text-sm font-medium text-gray-600 dark:text-gray-400">
                 Current Role
               </div>
-              <RoleDropdown 
+              <SimpleRoleDropdown 
                 skipNavigation={true} 
                 className="w-full"
                 onRoleChange={handleRoleChange}
