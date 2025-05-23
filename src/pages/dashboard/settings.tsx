@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useAuth } from '../../hooks/useAuth';
 import { getDashboardLayout } from '@/utils/layoutHelpers';
-import '@/components/ui/DashboardContainer';
+import DashboardContainer from '@/components/ui/DashboardContainer';
+import CopyToClipboard from '@/components/ui/CopyToClipboard';
 import { Settings, Save, RefreshCw, UserCheck, Bell, Moon, Sun, Shield, Lock, Plus, X, AlertCircle, Info, Globe, Wifi } from 'react-feather';
 import { 
   fetchNostrProfile, 
