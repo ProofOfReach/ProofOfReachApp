@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import '@/utils/apiHandler';
+import { apiHandler } from '@/utils/apiHandler';
 import '@/lib/onboardingService';
 import '@/types/role';
 import '@/lib/logger';

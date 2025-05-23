@@ -18,6 +18,7 @@ import '@/components/ui/StatCard';
 import '@/components/CurrencyAmount';
 import '@/components/CurrencyWrapper';
 import '@/lib/roleService';
+import { getDashboardLayout } from '@/utils/layoutHelpers';
 import '@/context/RoleContext';
 import type { ReactElement } from 'react';
 import type { NextPageWithLayout } from '../_app';
