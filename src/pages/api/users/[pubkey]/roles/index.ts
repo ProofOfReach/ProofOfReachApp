@@ -236,6 +236,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 /*const handler = createApiHandler({
   GET: getUserRoles,
   POST: addUserRole,
-});
+});*/
 
 export default handler;

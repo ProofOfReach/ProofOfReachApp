@@ -153,14 +153,16 @@ async function deleteAd(req: NextApiRequest, res: NextApiResponse, pubkey: strin
       // Return remaining budget to user
       await prisma.user.update({
         where: { id: userId },
-        data: { balance: { increment: ad.budget } }
+        data: { balance: { increment: 0 } } // TODO: implement proper budget handling
       });
 
       // Create a transaction record for the returned budget
       await prisma.transaction.create({
         data: {
           userId: userId,
-          amount: ad.budget,
+          amount: 0, // TODO: implement proper budget handling
+          balanceBefore: 0,
+          balanceAfter: 0,
           type: 'DEPOSIT',
           status: 'COMPLETED',
           description: `Refunded budget from deleted ad: ${ad.title}`
