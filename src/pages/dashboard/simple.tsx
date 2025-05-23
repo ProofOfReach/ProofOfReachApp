@@ -13,8 +13,13 @@ import {
  * Simple working dashboard without complex dependencies
  */
 const SimpleDashboard = () => {
-  const currentRole = typeof window !== 'undefined' ? 
-    localStorage.getItem('currentRole') || 'viewer' : 'viewer';
+  const [currentRole, setCurrentRole] = React.useState('viewer');
+
+  React.useEffect(() => {
+    // Set role from localStorage only on client side to avoid hydration mismatch
+    const savedRole = localStorage.getItem('currentRole') || 'viewer';
+    setCurrentRole(savedRole);
+  }, []);
 
   const renderRoleContent = () => {
     switch (currentRole) {
@@ -143,7 +148,7 @@ const SimpleDashboard = () => {
                 <button 
                   onClick={() => {
                     localStorage.setItem('currentRole', 'advertiser');
-                    window.location.reload();
+                    setCurrentRole('advertiser');
                   }}
                   className="block w-full p-3 bg-blue-50 rounded hover:bg-blue-100 text-left"
                 >
@@ -152,7 +157,7 @@ const SimpleDashboard = () => {
                 <button 
                   onClick={() => {
                     localStorage.setItem('currentRole', 'publisher');
-                    window.location.reload();
+                    setCurrentRole('publisher');
                   }}
                   className="block w-full p-3 bg-purple-50 rounded hover:bg-purple-100 text-left"
                 >
@@ -178,7 +183,7 @@ const SimpleDashboard = () => {
               <button 
                 onClick={() => {
                   localStorage.setItem('currentRole', 'viewer');
-                  window.location.reload();
+                  setCurrentRole('viewer');
                 }}
                 className="text-sm text-blue-600 hover:text-blue-800"
               >
