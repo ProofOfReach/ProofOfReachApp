@@ -15,7 +15,8 @@ import Link from 'next/link';
 import '@/context/RoleContext';
 import '@/components/layout/ImprovedDashboardLayout';
 import '@/components/ui/StatCard';
-import '@/components/CurrencyAmount';
+import CurrencyAmount from '@/components/CurrencyAmount';
+import DashboardCard from '@/components/ui/DashboardCard';
 import '@/components/CurrencyWrapper';
 import '@/lib/roleService';
 import { getDashboardLayout } from '@/utils/layoutHelpers';
@@ -810,7 +811,8 @@ const Dashboard = () => {
       
       {/* Common dashboard components that show up for all roles */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <DashboardCard title="Quick Actions">
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+          <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Quick Actions</h3>
           <div className="space-y-2">
             <Link 
               href="/profile" 
@@ -825,9 +827,10 @@ const Dashboard = () => {
               Account Settings
             </Link>
           </div>
-        </DashboardCard>
+        </div>
         
-        <DashboardCard title="System Status">
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+          <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">System Status</h3>
           <div className="space-y-3">
             <div className="flex items-center justify-between">
               <span className="text-sm text-gray-600 dark:text-gray-400">Current Role:</span>
@@ -846,7 +849,7 @@ const Dashboard = () => {
               <span className="px-2 py-1 bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300 rounded text-xs font-medium">Operational</span>
             </div>
           </div>
-        </DashboardCard>
+        </div>
       </div>
     </div>
   );
