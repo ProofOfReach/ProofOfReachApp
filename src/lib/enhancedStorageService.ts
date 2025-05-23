@@ -1,5 +1,6 @@
 import { v4 as uuidv4 } from 'uuid';
 import CryptoJS from 'crypto-js';
+import { UserRole } from '../types/role';
 import { logger } from './logger';
 // Enhanced storage service functionality
 

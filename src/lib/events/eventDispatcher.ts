@@ -7,6 +7,7 @@
  */
 
 import { logger } from '../logger';
+import { UserRole } from '../types/role';
 import {
   AppEventType,
   AppEventPayloads,

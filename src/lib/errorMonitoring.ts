@@ -96,9 +96,9 @@ class ErrorMonitoringService {
     if (this.config.captureGlobalErrors && typeof window !== 'undefined') {
       // Capture uncaught exceptions
       window.addEventListener('error', (event) => {
-        this.captureError(event.log || new Error(event.message), {
+        this.captureError(new Error(event.message), {
           component: 'window.onerror',
-          category: string.EXTERNAL,
+          category: 'EXTERNAL',
           severity: "error"
         });
         

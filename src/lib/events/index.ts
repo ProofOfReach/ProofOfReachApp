@@ -5,6 +5,8 @@
  * re-exporting all relevant types and functions for convenience.
  */
 
+import { UserRole } from '../types/role';
+
 // Event Types
 export * from './eventTypes';
 

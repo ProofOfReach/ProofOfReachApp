@@ -6,6 +6,7 @@
  */
 
 import { UserRole } from '../types/role';
+import { logger } from '../lib/logger';
 
 // Define storage key constants to avoid string duplication
 export const STORAGE_KEYS = {
