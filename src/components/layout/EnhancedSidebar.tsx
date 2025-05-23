@@ -6,7 +6,6 @@ import {
   DollarSign, LogOut, Code, ChevronDown, Lock,
   X, Menu
 } from 'react-feather';
-import { defaultUseRole } from '../../context/NewRoleContext';
 import { defaultUseRole } from '../../context/NewRoleContextRefactored';
 import type { UserRole } from '../../types/auth';
 import { useAuth } from '../../hooks/useAuth';
