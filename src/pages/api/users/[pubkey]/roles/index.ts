@@ -86,7 +86,8 @@ const getUserRoles = async (req: NextApiRequest, res: NextApiResponse<GetRolesRe
     }
     
     // For real users, query the database
-    const roleService = new RoleService(prisma);
+    // const roleService = new RoleService(prisma);
+    const roleService = null; // TODO: implement proper role service
     const user = await roleService.getUserByPubkey(pubkey);
     
     if (!user) {
@@ -184,8 +185,10 @@ const addUserRole = async (req: NextApiRequest, res: NextApiResponse) => {
   
   try {
     // Add the role using RoleService
-    const roleService = new RoleService(prisma);
-    const result = await roleService.addRoleToUser(pubkey, role as UserRole);
+    // const roleService = new RoleService(prisma);
+    const roleService = null; // TODO: implement proper role service
+    // const result = await roleService.addRoleToUser(pubkey, role as UserRole);
+    const result = null; // TODO: implement proper role addition
     
     if (!result) {
       return res.status(404).json({ 

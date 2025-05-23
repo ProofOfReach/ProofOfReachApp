@@ -115,7 +115,7 @@ AdminRoleManagementPage.getLayout = (page: React.ReactElement) => {
 export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
   try {
     // Verify authentication
-    const user = await authenticateRequest(req);
+    const user = await authenticateRequest(req as any);
     
     if (!user) {
       // Redirect to login if not authenticated
