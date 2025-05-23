@@ -1,7 +1,7 @@
 import { ReactElement } from 'react';
 import { render, RenderOptions } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import { UserRole, RoleProvider } from '../context/RoleContext';
+import { string, RoleProvider } from '../context/RoleContext';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import type { UserRole } from '../types/role';
 

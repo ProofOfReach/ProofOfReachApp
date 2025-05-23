@@ -235,7 +235,7 @@ export class AuthService {
         this._provider = 'test';
       } else {
         // Get the public key from Nostr extension
-        pubkey = await nostr.getPublicKey();
+        pubkey = await nostr.getUserPublicKey();
         this._provider = 'nostr';
       }
       

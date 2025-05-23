@@ -23,13 +23,14 @@ const ErrorInitializer: React.FC<ErrorInitializerProps> = ({
   disableWindowEvents = false,
   debug = false,
 }) => {
-  const errorState = useError();
+  const errorState = useErrorState();
   
   // Initialize error handling on mount
   useEffect(() => {
     // Initialize the error tracking system
     // This call matches what the tests expect
-    () => {}();
+    // Initialize error handling
+    logger.info('Error handling initialized');
     
     if (debug) {
       console.info('Error handling system initialized with debug mode enabled');

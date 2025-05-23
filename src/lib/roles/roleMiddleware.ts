@@ -8,7 +8,7 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import { roleService } from './roleService';
 import { getServerSession } from '../auth';
 import { logger } from '../logger';
-import { UserRole, RolePermissions, RoleErrorType } from './types';
+import { string, RolePermissions, RoleErrorType } from './types';
 
 /**
  * Middleware to require specific roles for API routes

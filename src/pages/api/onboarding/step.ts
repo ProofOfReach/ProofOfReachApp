@@ -32,7 +32,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     // Save the onboarding step
     await onboardingService.saveOnboardingStep(
       pubkey as string,
-      role as UserRole,
+      role as string,
       step as string
     );
 

@@ -66,15 +66,15 @@ export const ErrorProvider: React.FC<ErrorProviderProps> = ({
   }, []);
   
   // Functions to manipulate errors
-  const log = useCallback((error: any): void => {
+  const addError = useCallback((error: any): void => {
     console.log(error);
   }, []);
   
-  const log = useCallback((id: string): void => {
+  const addError = useCallback((id: string): void => {
     console.log(id);
   }, []);
   
-  const log = useCallback((): void => {
+  const addError = useCallback((): void => {
     console.log();
   }, []);
   
@@ -121,11 +121,11 @@ export const ErrorProvider: React.FC<ErrorProviderProps> = ({
  * 
  * Returns error state and methods to update it
  */
-export const useError = () => {
+export const useErrorState = () => {
   const context = useContext(ErrorContext);
   
   if (!context) {
-    throw new Error('useError must be used within an ErrorProvider');
+    throw new Error('useErrorState must be used within an ErrorProvider');
   }
   
   // Simplify the state for component use
@@ -146,11 +146,11 @@ export const useError = () => {
  * 
  * Provides simplified error reporting functions
  */
-export const useErrorReporting = () => {
+export const useErrorStateReporting = () => {
   const context = useContext(ErrorContext);
   
   if (!context) {
-    throw new Error('useErrorReporting must be used within an ErrorProvider');
+    throw new Error('useErrorStateReporting must be used within an ErrorProvider');
   }
   
   const error = useCallback((error: Error | string, component?: string, errorType?: string) => {
@@ -171,7 +171,7 @@ export const useErrorReporting = () => {
  * 
  * Provides simplified methods to show different types of toasts
  */
-export const useErrorToast = () => {
+export const useErrorStateToast = () => {
   const showErrorToast = useCallback((message: string, severity: string = 'error') => {
     switch (severity) {
       case 'info':

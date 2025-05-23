@@ -64,7 +64,7 @@ export interface UserRoleContext {
   availableRoles: string[];
   
   // Detailed role information with permission status
-  roleDetails: Record<UserRole, UserRoleStatus>;
+  roleDetails: Record<string, UserRoleStatus>;
   
   // Session information
   isAuthenticated: boolean;

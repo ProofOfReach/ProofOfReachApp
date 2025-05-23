@@ -7,7 +7,7 @@
 import { prisma } from '../prismaClient';
 import { logger } from '../logger';
 import { 
-  UserRole, 
+  string, 
   RoleError, 
   RoleErrorType,
   RoleInfo,
@@ -16,7 +16,7 @@ import {
 } from './types';
 
 // Default role definitions with permissions
-const ROLE_DEFINITIONS: Record<UserRole, RoleInfo> = {
+const ROLE_DEFINITIONS: Record<string, RoleInfo> = {
   viewer: {
     id: 'viewer',
     displayName: 'Viewer',
@@ -169,7 +169,7 @@ export class RoleService {
   /**
    * Get all role definitions
    */
-  public getAllRoleDefinitions(): Record<UserRole, RoleInfo> {
+  public getAllRoleDefinitions(): Record<string, RoleInfo> {
     return { ...ROLE_DEFINITIONS };
   }
 
@@ -299,7 +299,7 @@ export class RoleService {
   /**
    * Get detailed role status for a user
    */
-  public async getUserRoleStatus(userId: string): Promise<Record<UserRole, UserRoleStatus>> {
+  public async getUserRoleStatus(userId: string): Promise<Record<string, UserRoleStatus>> {
     try {
       // Get user record to verify existence
       const user = await prisma.user.findUnique({
@@ -317,7 +317,7 @@ export class RoleService {
       });
 
       // Initialize result with default role statuses
-      const result: Record<UserRole, UserRoleStatus> = this.getDefaultRoleStatus();
+      const result: Record<string, UserRoleStatus> = this.getDefaultRoleStatus();
 
       // Always set viewer role to active (base role)
       result.viewer.isActive = true;
@@ -492,7 +492,7 @@ export class RoleService {
   /**
    * Get default role status
    */
-  private getDefaultRoleStatus(): Record<UserRole, UserRoleStatus> {
+  private getDefaultRoleStatus(): Record<string, UserRoleStatus> {
     return {
       viewer: { role: 'viewer', isActive: true, isTestRole: false },
       advertiser: { role: 'advertiser', isActive: false, isTestRole: false },

@@ -3,7 +3,7 @@
  */
 
 import * as nostrLib from '../../lib/nostr';
-import { getPublicKey } from 'nostr-tools';
+import { getUserPublicKey } from 'nostr-tools';
 
 // Mock localStorage
 const mockLocalStorage: { [key: string]: string } = {};
@@ -60,7 +60,7 @@ describe('Nostr Library', () => {
       // Mock window.nostr
       Object.defineProperty(window, 'nostr', {
         value: {
-          getPublicKey: jest.fn(),
+          getUserPublicKey: jest.fn(),
           signEvent: jest.fn(),
           getRelays: jest.fn(),
         },
@@ -86,10 +86,10 @@ describe('Nostr Library', () => {
     it('returns public key when nostr extension is available', async () => {
       const mockPubkey = 'test-pubkey-from-nostr-extension';
       
-      // Mock window.nostr with a getPublicKey method that returns our mock value
+      // Mock window.nostr with a getUserPublicKey method that returns our mock value
       Object.defineProperty(window, 'nostr', {
         value: {
-          getPublicKey: jest.fn().mockResolvedValue(mockPubkey),
+          getUserPublicKey: jest.fn().mockResolvedValue(mockPubkey),
           signEvent: jest.fn(),
           getRelays: jest.fn(),
         },
@@ -98,17 +98,17 @@ describe('Nostr Library', () => {
       
       const result = await nostrLib.getNostrPublicKey();
       expect(result).toBe(mockPubkey);
-      expect(window.nostr!.getPublicKey).toHaveBeenCalled();
+      expect(window.nostr!.getUserPublicKey).toHaveBeenCalled();
     });
     
-    it('returns null and logs error when getPublicKey throws', async () => {
+    it('returns null and logs error when getUserPublicKey throws', async () => {
       // Spy on console.error
       const consoleSpy = jest.spyOn(console, 'error').mockImplementation();
       
-      // Mock window.nostr with a getPublicKey method that throws
+      // Mock window.nostr with a getUserPublicKey method that throws
       Object.defineProperty(window, 'nostr', {
         value: {
-          getPublicKey: jest.fn().mockRejectedValue(new Error('Test error')),
+          getUserPublicKey: jest.fn().mockRejectedValue(new Error('Test error')),
           signEvent: jest.fn(),
           getRelays: jest.fn(),
         },
@@ -117,7 +117,7 @@ describe('Nostr Library', () => {
       
       const result = await nostrLib.getNostrPublicKey();
       expect(result).toBeNull();
-      expect(window.nostr!.getPublicKey).toHaveBeenCalled();
+      expect(window.nostr!.getUserPublicKey).toHaveBeenCalled();
       expect(consoleSpy).toHaveBeenCalledWith(
         'Timeout or error while waiting for Nostr extension:',
         expect.any(Error)
@@ -137,19 +137,19 @@ describe('Nostr Library', () => {
     
     it('derives a public key from a private key', () => {
       const privateKey = nostrLib.generatePrivateKey();
-      const publicKey = nostrLib.getPublicKey(privateKey);
+      const publicKey = nostrLib.getUserPublicKey(privateKey);
       
       expect(typeof publicKey).toBe('string');
       // Since our implementation is a mock using SHA-256, 
       // we just need to confirm we get a consistent output
-      expect(nostrLib.getPublicKey(privateKey)).toBe(publicKey);
+      expect(nostrLib.getUserPublicKey(privateKey)).toBe(publicKey);
     });
     
-    it('handles invalid input for getPublicKey', () => {
+    it('handles invalid input for getUserPublicKey', () => {
       const consoleSpy = jest.spyOn(console, 'error').mockImplementation();
       
       // Empty string should still return a value, although in a real impl it would fail
-      const result = nostrLib.getPublicKey('');
+      const result = nostrLib.getUserPublicKey('');
       expect(typeof result).toBe('string');
       
       consoleSpy.mockRestore();
@@ -230,9 +230,9 @@ describe('Nostr Library', () => {
     });
   });
 
-  describe('getPublicKeyFromRequest', () => {
+  describe('getUserPublicKeyFromRequest', () => {
     it('returns null for request without cookie', () => {
-      const result = nostrLib.getPublicKeyFromRequest(mockReq);
+      const result = nostrLib.getUserPublicKeyFromRequest(mockReq);
       expect(result).toBeNull();
     });
     
@@ -240,7 +240,7 @@ describe('Nostr Library', () => {
       const testPubKey = 'test-pubkey-123';
       mockReq.cookies = { nostr_pubkey: testPubKey };
       
-      const result = nostrLib.getPublicKeyFromRequest(mockReq);
+      const result = nostrLib.getUserPublicKeyFromRequest(mockReq);
       expect(result).toBe(testPubKey);
     });
   });

@@ -59,7 +59,7 @@ export function buildNavigation(role: string, currentPath: string): NavSection[]
   ];
 
   // Role-specific main navigation items
-  const mainItems: Record<UserRole, NavItemWithIconName[]> = {
+  const mainItems: Record<string, NavItemWithIconName[]> = {
     viewer: [
       {
         label: 'Nostr Feed',
@@ -210,7 +210,7 @@ export function getRoleIconAndColor(role: string): {
   textColor: string; 
   label: string;
 } {
-  const roleConfig: Record<UserRole, {
+  const roleConfig: Record<string, {
     iconName: IconName;
     bgColor: string;
     textColor: string;

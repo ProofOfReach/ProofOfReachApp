@@ -1,5 +1,5 @@
 /**
- * useError Hook
+ * useErrorState Hook
  * 
  * This hook provides a simplified interface for accessing and manipulating
  * global error state in components. It wraps the errorContext in a
@@ -30,7 +30,7 @@ interface Testany {
  * 
  * @returns Object with error state and functions for managing errors
  */
-export function useError() {
+export function useErrorState() {
   // Check if we're in a test environment
   const isTest = typeof jest !== 'undefined';
   
@@ -111,7 +111,7 @@ export function useError() {
   
   // If we're not in a test and there's no context, throw an error
   if (!isTest && !errorContext) {
-    throw new Error('useError must be used within an ErrorContext.Provider');
+    throw new Error('useErrorState must be used within an ErrorContext.Provider');
   }
   
   // Use either real context or local state
@@ -159,7 +159,7 @@ export function useError() {
   /**
    * Clear error state
    */
-  const log = useCallback((): void => {
+  const addError = useCallback((): void => {
     if (isTest) {
       try {
         // Handle test environment

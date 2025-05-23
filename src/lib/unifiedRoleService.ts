@@ -13,7 +13,7 @@
  */
 
 import { logger } from './logger';
-import { UserRole, isValidUserRole, getDefaultRole } from '../types/role';
+import { string, isValidstring, getDefaultRole } from '../types/role';
 import { prisma } from './prisma';
 import { normalizeRole, normalizeRoles, normalizeRoleData } from '../utils/roleNormalizer';
 
@@ -145,7 +145,7 @@ export class UnifiedRoleService {
     );
     
     return {
-      currentRole: data.currentRole as UserRole,
+      currentRole: data.currentRole as string,
       availableRoles: data.availableRoles as UserRole[],
       timestamp: data.timestamp
     };
@@ -513,7 +513,7 @@ export class UnifiedRoleService {
       
       const newData = {
         ...currentData,
-        currentRole: normalizedRole as UserRole,
+        currentRole: normalizedRole as string,
         timestamp: Date.now()
       };
       

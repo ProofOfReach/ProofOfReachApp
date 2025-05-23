@@ -25,7 +25,7 @@ const ImprovedDropdownSidebar: React.FC = () => {
   };
 
   // Define menu items for each role
-  const menuItems: Record<UserRole, {
+  const menuItems: Record<string, {
     href: string;
     label: string;
     icon: React.ReactNode;

@@ -12,7 +12,7 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import { ApiError } from './apiError';
 import { logger } from '../lib/logger';
 import { prisma } from '../lib/prisma';
-import { UserRole, isValidUserRole } from '../types/role';
+import { string, isValidUserRole } from '../types/role';
 // import { unifiedRoleService } from '../lib/unifiedRoleService';
 
 export interface AuthenticatedUser {

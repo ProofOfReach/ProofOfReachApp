@@ -5,7 +5,7 @@ import { localStorage } from './enhancedStorageService';
 // Define Nostr-related types
 export interface NostrWindow extends Window {
   nostr?: {
-    getPublicKey(): Promise<string>;
+    getUserPublicKey(): Promise<string>;
     signEvent(event: any): Promise<any>;
     nip04?: {
       encrypt(pubkey: string, plaintext: string): Promise<string>;
@@ -51,7 +51,7 @@ class NostrHelpers {
    */
   public derivePublicKey(privateKey: string): string {
     try {
-      // In a real implementation, we would use nostr-tools getPublicKey function
+      // In a real implementation, we would use nostr-tools getUserPublicKey function
       // For now, just return a deterministic value based on the input for testing
       return `pk_derived_${privateKey.substring(0, 8)}`;
     } catch (error) {
@@ -67,7 +67,7 @@ class NostrHelpers {
    * @param req The request object
    * @returns The public key from the request cookies, or null if not found
    */
-  public getPublicKeyFromRequest(req: any): string | null {
+  public getUserPublicKeyFromRequest(req: any): string | null {
     if (!req || !req.cookies) {
       return null;
     }
@@ -91,7 +91,7 @@ class NostrHelpers {
       });
       
       // Get the public key from the Nostr extension
-      const nostrPromise = window.nostr!.getPublicKey();
+      const nostrPromise = window.nostr!.getUserPublicKey();
       
       // Race the promises
       const publicKey = await Promise.race([nostrPromise, timeoutPromise]);
@@ -149,8 +149,8 @@ class NostrHelpers {
         throw new Error('Nostr extension not found');
       }
 
-      // Call the extension's getPublicKey method
-      const pubkey = await win.nostr.getPublicKey();
+      // Call the extension's getUserPublicKey method
+      const pubkey = await win.nostr.getUserPublicKey();
       
       if (!pubkey) {
         throw new Error('Failed to get public key from Nostr extension');
@@ -566,13 +566,13 @@ export const hasNostrExtension = () => nostr.hasNostrExtension();
 export const getNostrPublicKey = () => nostr.getNostrPublicKey();
 export const generatePrivateKey = () => nostr.generatePrivateKey();
 // Maintain backward compatibility with tests while using the renamed method
-export const getPublicKey = (privateKey: string) => nostr.derivePublicKey(privateKey);
+export const getUserPublicKey = (privateKey: string) => nostr.derivePublicKey(privateKey);
 export const getUserPublicKey = () => nostr.getUserPublicKey();
 export const generateTestKeyPair = () => nostr.generateTestKeyPair();
 export const getStoredTestKeys = () => nostr.getStoredTestKeys();
 export const storeTestKeys = (privateKey: string, publicKey: string) => nostr.storeTestKeys(privateKey, publicKey);
 export const clearStoredTestKeys = () => nostr.clearStoredTestKeys();
-export const getPublicKeyFromRequest = (req: any) => nostr.getPublicKeyFromRequest(req);
+export const getUserPublicKeyFromRequest = (req: any) => nostr.getUserPublicKeyFromRequest(req);
 export const signEvent = (event: NostrEvent) => nostr.signEvent(event);
 export const isTestMode = () => nostr.isTestMode();
 export const enableTestMode = () => nostr.enableTestMode();

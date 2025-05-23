@@ -14,8 +14,8 @@ import '@/components/errors/NetworkErrorDisplay';
 import '@/components/errors/PermissionErrorDisplay';
 
 export default function ErrorTestingPage(): React.ReactElement {
-  const { errorState, setError, log } = useError();
-  const { showErrorToast } = useErrorToast();
+  const { errorState, setError, log } = useErrorState();
+  const { showErrorToast } = useErrorStateToast();
   
   const [apiError, setApiError] = useState<Error | null>(null);
   const [formErrors, setFormErrors] = useState<Record<string, string> | null>(null);

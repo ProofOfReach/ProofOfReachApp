@@ -169,7 +169,7 @@ const UserSettingsPage = () => {
         // Immediate async function to get pubkey from extension
         (async () => {
           try {
-            const extensionPubkey = await window.nostr.getPublicKey();
+            const extensionPubkey = await window.nostr.getUserPublicKey();
             console.log('GOT PUBKEY DIRECTLY FROM EXTENSION:', extensionPubkey);
             
             if (extensionPubkey) {
@@ -238,7 +238,7 @@ const UserSettingsPage = () => {
         if (typeof window !== 'undefined' && window.nostr) {
           try {
             console.log('NOSTR EXTENSION DETECTED, GETTING PUBLIC KEY');
-            const extensionPubkey = await window.nostr.getPublicKey();
+            const extensionPubkey = await window.nostr.getUserPublicKey();
             console.log('EXTENSION PUBKEY:', extensionPubkey);
             console.log('CURRENT PUBKEY TO USE:', pubkeyToUse);
             

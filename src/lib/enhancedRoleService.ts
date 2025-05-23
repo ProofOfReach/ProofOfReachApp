@@ -537,7 +537,7 @@ export async function toggleTestMode(userId: string, enabled: boolean): Promise<
 // Export as a service object for consistency with other parts of the app
 export const enhancedRoleService = {
   getUserRoleData,
-  changeUserRole,
+  changestring,
   enableAllRoles,
   createUserWithTestMode,
   hasRole,

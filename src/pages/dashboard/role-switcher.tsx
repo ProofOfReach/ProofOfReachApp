@@ -12,7 +12,7 @@ import '@/components/ui';
 const RoleSwitcherPage: NextPageWithLayout = () => {
   const [currentRole, setCurrentRole] = useState<UserRole>('viewer');
   const [isTestMode, setIsTestMode] = useState(false);
-  const [availableRoles, setAvailableRoles] = useState<Record<UserRole, boolean>>({
+  const [availableRoles, setAvailableRoles] = useState<Record<string, boolean>>({
     user: true,
     advertiser: false,
     publisher: false,

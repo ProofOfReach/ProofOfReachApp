@@ -12,7 +12,7 @@
  */
 
 // Import types from the centralized type definitions
-import { UserRole, RoleCapabilities } from '../types/role';
+import { string, RoleCapabilities } from '../types/role';
 
 // Import the new implementations
 import { useRole, RoleProviderRefactored, RoleProviderRefactoredWithQueryClient } from './NewRoleContextRefactored';
@@ -34,11 +34,11 @@ export const useRoleWithAccess = useRoleAccess;
  * @deprecated Use accessControl.roles from src/lib/accessControl.ts instead
  */
 export const ROLES = {
-  VIEWER: 'viewer' as UserRole,
-  ADVERTISER: 'advertiser' as UserRole,
-  PUBLISHER: 'publisher' as UserRole,
-  ADMIN: 'admin' as UserRole,
-  STAKEHOLDER: 'stakeholder' as UserRole,
+  VIEWER: 'viewer' as string,
+  ADVERTISER: 'advertiser' as string,
+  PUBLISHER: 'publisher' as string,
+  ADMIN: 'admin' as string,
+  STAKEHOLDER: 'stakeholder' as string,
 };
 
 /**

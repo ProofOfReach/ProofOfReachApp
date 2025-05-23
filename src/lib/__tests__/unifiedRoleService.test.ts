@@ -122,7 +122,7 @@ describe('UnifiedRoleService', () => {
     it('should load from localStorage on initialization if data exists', () => {
       // Setup mock data in localStorage
       const mockData: RoleData = {
-        currentRole: 'publisher' as UserRole,
+        currentRole: 'publisher' as string,
         availableRoles: ['viewer', 'publisher'] as UserRole[],
         timestamp: Date.now()
       };
@@ -153,7 +153,7 @@ describe('UnifiedRoleService', () => {
       const service = new UnifiedRoleService();
       
       const testData: RoleData = {
-        currentRole: 'advertiser' as UserRole,
+        currentRole: 'advertiser' as string,
         availableRoles: ['viewer', 'advertiser'] as UserRole[],
         timestamp: Date.now()
       };
@@ -170,7 +170,7 @@ describe('UnifiedRoleService', () => {
       
       // Set up available roles
       service.setRoleData({
-        currentRole: 'viewer' as UserRole,
+        currentRole: 'viewer' as string,
         availableRoles: ['viewer', 'advertiser', 'publisher'] as UserRole[],
         timestamp: Date.now()
       });
@@ -187,7 +187,7 @@ describe('UnifiedRoleService', () => {
       
       // Set up available roles that don't include 'admin'
       service.setRoleData({
-        currentRole: 'viewer' as UserRole,
+        currentRole: 'viewer' as string,
         availableRoles: ['viewer', 'advertiser'] as UserRole[],
         timestamp: Date.now()
       });
@@ -203,7 +203,7 @@ describe('UnifiedRoleService', () => {
       const service = new UnifiedRoleService();
       
       service.setRoleData({
-        currentRole: 'viewer' as UserRole,
+        currentRole: 'viewer' as string,
         availableRoles: ['viewer', 'advertiser'] as UserRole[],
         timestamp: Date.now()
       });
@@ -217,7 +217,7 @@ describe('UnifiedRoleService', () => {
       const service = new UnifiedRoleService();
       
       service.setRoleData({
-        currentRole: 'publisher' as UserRole,
+        currentRole: 'publisher' as string,
         availableRoles: ['viewer', 'publisher'] as UserRole[],
         timestamp: Date.now()
       });
@@ -341,7 +341,7 @@ describe('UnifiedRoleService', () => {
     it('should sync role data with the server', async () => {
       // Set up local data
       unifiedRoleService.setRoleData({
-        currentRole: 'publisher' as UserRole,
+        currentRole: 'publisher' as string,
         availableRoles: ['viewer', 'publisher'] as UserRole[],
         timestamp: Date.now() - 3600000 // 1 hour old
       });
@@ -373,7 +373,7 @@ describe('UnifiedRoleService', () => {
     it('should handle server errors gracefully', async () => {
       // Set up local data
       const initialData = {
-        currentRole: 'viewer' as UserRole,
+        currentRole: 'viewer' as string,
         availableRoles: ['viewer'] as UserRole[],
         timestamp: Date.now()
       };

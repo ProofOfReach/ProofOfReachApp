@@ -247,7 +247,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
 /*const handler = async (req: any res: any) => res.status(501).json({error: "Not implemented"}) // TODO: implement({
   GET: getUserRoles,
-  POST: addUserRole,
+  POST: addstring,
 });*/
 
 export default handler;

@@ -178,10 +178,10 @@ export async function fetchNostrProfile(
     const window_: any = window;
     if (window_?.nostr) {
       try {
-        // Check if getPublicKey method exists (all NIP-07 extensions should have this)
-        if (typeof window_.nostr.getPublicKey === 'function') {
+        // Check if getUserPublicKey method exists (all NIP-07 extensions should have this)
+        if (typeof window_.nostr.getUserPublicKey === 'function') {
           // First check if this is the current user's pubkey
-          const userPubkey = await window_.nostr.getPublicKey();
+          const userPubkey = await window_.nostr.getUserPublicKey();
           
           // Only try to get metadata if this is the user's own pubkey
           if (userPubkey === pubkey && typeof window_.nostr.getMetadata === 'function') {

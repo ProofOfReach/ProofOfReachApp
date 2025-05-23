@@ -15,7 +15,7 @@
  * this module instead of implementing their own logic.
  */
 
-import { UserRole, isValidUserRole, filterValidRoles } from '../types/role';
+import { string, isValidstring, filterValidRoles } from '../types/role';
 import { logger } from './logger';
 import { unifiedRoleService } from './unifiedRoleService';
 
@@ -655,11 +655,11 @@ export function getRoleDashboardPath(role: string | string): string {
 
 // Define the available roles in the system
 export const ROLES = {
-  VIEWER: 'viewer' as UserRole,
-  ADVERTISER: 'advertiser' as UserRole,
-  PUBLISHER: 'publisher' as UserRole,
-  ADMIN: 'admin' as UserRole,
-  STAKEHOLDER: 'stakeholder' as UserRole,
+  VIEWER: 'viewer' as string,
+  ADVERTISER: 'advertiser' as string,
+  PUBLISHER: 'publisher' as string,
+  ADMIN: 'admin' as string,
+  STAKEHOLDER: 'stakeholder' as string,
 };
 
 /**
@@ -691,7 +691,7 @@ export const accessControl = {
   getAllRoles,
   
   // Validation functions
-  isValidRole: isValidUserRole,
+  isValidRole: isValidstring,
   validateRoles: filterValidRoles
 };
 

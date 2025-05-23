@@ -248,7 +248,7 @@ const LoginPageClient: React.FC = () => {
       await new Promise(resolve => setTimeout(resolve, 1000));
       
       // Verify extension is still available after delay
-      if (!window.nostr || !window.nostr.getPublicKey) {
+      if (!window.nostr || !window.nostr.getUserPublicKey) {
         throw new Error('Nostr extension API not available. Please refresh the page and try again.');
       }
       
@@ -259,7 +259,7 @@ const LoginPageClient: React.FC = () => {
         
         // Set up timeout for extension response
         const timeoutDuration = 5000; // 5 seconds
-        const publicKeyPromise = window.nostr.getPublicKey();
+        const publicKeyPromise = window.nostr.getUserPublicKey();
         const timeoutPromise = new Promise<never>((_, reject) => {
           setTimeout(() => reject(new Error(`Timeout after ${timeoutDuration}ms waiting for Nostr extension`)), timeoutDuration);
         });

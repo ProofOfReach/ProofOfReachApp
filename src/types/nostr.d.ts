@@ -4,7 +4,7 @@
 
 interface Window {
   nostr?: {
-    getPublicKey(): Promise<string>;
+    getUserPublicKey(): Promise<string>;
     signEvent(event: any): Promise<any>;
     getRelays?(): Promise<{ [url: string]: { read: boolean; write: boolean } }>;
     nip04?: {

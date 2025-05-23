@@ -383,21 +383,21 @@ export function getRolePreferences(role: string): Record<string, any> {
  * 
  * @returns Record of preferences by role
  */
-export function getRolePreferencesForAllRoles(): Record<UserRole, Record<string, any>> {
+export function getRolePreferencesForAllRoles(): Record<string, Record<string, any>> {
   if (typeof window === 'undefined') {
-    return {} as Record<UserRole, Record<string, any>>;
+    return {} as Record<string, Record<string, any>>;
   }
   
   try {
     const preferencesJson = localStorage.getItem(ROLE_PREFERENCES_KEY);
     if (preferencesJson) {
-      return JSON.parse(preferencesJson) as Record<UserRole, Record<string, any>>;
+      return JSON.parse(preferencesJson) as Record<string, Record<string, any>>;
     }
   } catch (error) {
     logger.error('Error getting all role preferences:', error);
   }
   
-  return {} as Record<UserRole, Record<string, any>>;
+  return {} as Record<string, Record<string, any>>;
 }
 
 /**

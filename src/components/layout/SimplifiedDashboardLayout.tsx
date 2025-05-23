@@ -28,7 +28,7 @@ const SimplifiedDashboardLayout: React.FC<SimplifiedDashboardLayoutProps> = ({
   // Role transition state
   const [transitionState, setTransitionState] = useState({
     active: false,
-    fromRole: 'viewer' as UserRole,
+    fromRole: 'viewer' as string,
     toRole: 'viewer' as UserRole
   });
   
@@ -46,7 +46,7 @@ const SimplifiedDashboardLayout: React.FC<SimplifiedDashboardLayoutProps> = ({
       // Show transition overlay
       setTransitionState({
         active: true,
-        fromRole: customEvent.detail.from as UserRole,
+        fromRole: customEvent.detail.from as string,
         toRole: customEvent.detail.to as UserRole
       });
       

@@ -158,7 +158,7 @@ export const EnhancedRoleProvider: React.FC<EnhancedRoleProviderProps> = ({
           await router.push(redirectPath);
         } else {
           // Otherwise navigate to the default dashboard for the role
-          const roleDashboards: Record<UserRole, string> = {
+          const roleDashboards: Record<string, string> = {
             user: '/dashboard',
             advertiser: '/dashboard/advertiser',
             publisher: '/dashboard/publisher',
@@ -182,7 +182,7 @@ export const EnhancedRoleProvider: React.FC<EnhancedRoleProviderProps> = ({
   
   // Context value to be provided
   const contextValue: EnhancedRoleContextType = {
-    role: localRole as UserRole,
+    role: localRole as string,
     setRole,
     isTransitioning,
     lastTransition,

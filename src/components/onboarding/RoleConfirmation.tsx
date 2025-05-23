@@ -105,7 +105,7 @@ const RoleConfirmation: React.FC<RoleConfirmationProps> = ({ onConfirm }) => {
 
   const allRoleCards = [
     {
-      role: 'viewer' as UserRole,
+      role: 'viewer' as string,
       title: 'Viewer',
       description: 'Browse ads and content across the Proof Of Reach network',
       icon: <Users className="h-8 w-8 text-[#1a73e8]" />,
@@ -119,7 +119,7 @@ const RoleConfirmation: React.FC<RoleConfirmationProps> = ({ onConfirm }) => {
       color: 'blue'
     },
     {
-      role: 'publisher' as UserRole,
+      role: 'publisher' as string,
       title: 'Publisher',
       description: 'Monetize your content through the Proof Of Reach network',
       icon: <Package className="h-8 w-8 text-green-500" />,
@@ -133,7 +133,7 @@ const RoleConfirmation: React.FC<RoleConfirmationProps> = ({ onConfirm }) => {
       color: 'green'
     },
     {
-      role: 'advertiser' as UserRole,
+      role: 'advertiser' as string,
       title: 'Advertiser',
       description: 'Promote your products on the Proof Of Reach network',
       icon: <Radio className="h-8 w-8 text-purple-500" />,

@@ -1,13 +1,13 @@
 /**
- * useError Hook Unit Tests
+ * useErrorState Hook Unit Tests
  * 
- * Tests the functionality of the useError hook for accessing global error state.
+ * Tests the functionality of the useErrorState hook for accessing global error state.
  */
 
 import React from 'react';
 import { render, screen, fireEvent, act } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import '@/hooks/useError';
+import '@/hooks/useErrorState';
 import '@/lib/console';
 
 // Mock console
@@ -18,7 +18,7 @@ jest.mock('@/lib/console', () => ({
   error: jest.fn(),
 }));
 
-describe('useError', () => {
+describe('useErrorState', () => {
   const mockany = {
     hasError: false,
     message: '',
@@ -48,7 +48,7 @@ describe('useError', () => {
     });
     
     const TestComponent = () => {
-      const errorState = useError();
+      const errorState = useErrorState();
       
       return (
         <div>
@@ -70,7 +70,7 @@ describe('useError', () => {
   
   it('should provide a setError function that updates error state', () => {
     const TestComponent = () => {
-      const { setError, hasError, message } = useError();
+      const { setError, hasError, message } = useErrorState();
       
       return (
         <div>
@@ -116,7 +116,7 @@ describe('useError', () => {
     });
     
     const TestComponent = () => {
-      const { log, hasError, message } = useError();
+      const { log, hasError, message } = useErrorState();
       
       return (
         <div>
@@ -149,7 +149,7 @@ describe('useError', () => {
   
   it('should provide a error function that reports errors', () => {
     const TestComponent = () => {
-      const { error } = useError();
+      const { error } = useErrorState();
       
       return (
         <button 
@@ -183,7 +183,7 @@ describe('useError', () => {
     
     try {
       const TestComponent = () => {
-        const { hasError, message } = useError();
+        const { hasError, message } = useErrorState();
         
         return (
           <div>

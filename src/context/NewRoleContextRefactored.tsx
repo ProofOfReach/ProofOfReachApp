@@ -315,7 +315,7 @@ export const RoleProviderRefactored: React.FC<RoleProviderProps> = ({
         // Update role data in the query cache
         client.setQueryData<RoleDataType>([ROLE_CACHE_KEY], {
           availableRoles: ALL_ROLES,
-          currentRole: currentRole as UserRole,
+          currentRole: currentRole as string,
           timestamp: Date.now()
         });
         

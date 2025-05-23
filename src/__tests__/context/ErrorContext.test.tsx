@@ -33,10 +33,10 @@ describe('ErrorContext', () => {
     jest.clearAllMocks();
   });
 
-  describe('useError', () => {
+  describe('useErrorState', () => {
     it('should return the error context when used within ErrorProvider', () => {
       const TestComponent = () => {
-        const { errorState, setError, log } = useError();
+        const { errorState, setError, log } = useErrorState();
         
         return (
           <div>
@@ -86,10 +86,10 @@ describe('ErrorContext', () => {
     });
   });
   
-  describe('useErrorReporting', () => {
+  describe('useErrorStateReporting', () => {
     it('should provide a simplified error reporting function', () => {
       const TestComponent = () => {
-        const { error } = useErrorReporting();
+        const { error } = useErrorStateReporting();
         
         return (
           <button 
@@ -114,10 +114,10 @@ describe('ErrorContext', () => {
     });
   });
   
-  describe('useErrorToast', () => {
+  describe('useErrorStateToast', () => {
     it('should provide simplified toast functions', () => {
       const TestComponent = () => {
-        const { showErrorToast } = useErrorToast();
+        const { showErrorToast } = useErrorStateToast();
         
         return (
           <div>
