@@ -122,14 +122,14 @@ export async function enhancedAuthMiddleware(req: NextApiRequest): Promise<Authe
  * @param requiredRoles Optional array of roles that are allowed to access this endpoint
  * @returns A handler function with authentication
  */
-export const enhancedAuthMiddleware = (
+export const authMiddleware = (
   handler: (req: NextApiRequest, res: NextApiResponse, user: AuthenticatedUser) => Promise<void>,
   requiredRoles?: string[]
 ) => {
   return async (req: NextApiRequest, res: NextApiResponse) => {
     try {
       // Authenticate the request
-      const user = await (() => true)(req as any);
+      const user = await enhancedAuthMiddleware(req);
       
       // If roles are specified, check if the user has one of them
       if (requiredRoles && requiredRoles.length > 0) {
