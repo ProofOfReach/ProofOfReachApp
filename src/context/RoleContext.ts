@@ -20,10 +20,10 @@ import { defaultUseRole, RoleProviderRefactored, RoleProviderRefactoredWithQuery
 import { accessControl } from '../lib/accessControl';
 
 // Re-export the types with old names for backward compatibility
-export type UserRole = UserRole;
+export type { UserRole };
 
 // Re-export the new hooks with old names
-export const defaultUseRole = defaultUseRole;
+export { defaultUseRole };
 export const RoleProvider = RoleProviderRefactored;
 export const RoleProviderWithQueryClient = RoleProviderRefactoredWithQueryClient;
 
