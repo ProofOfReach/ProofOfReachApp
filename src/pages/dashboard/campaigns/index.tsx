@@ -1,33 +1,38 @@
 import { useEffect, useState } from 'react';
 import { NextPage } from 'next';
 import { useRouter } from 'next/router';
-import { Campaign, CampaignStatus } from '@prisma/client';
+import { Campaign, CampaignStatus, Ad } from '@prisma/client';
 import { AlertCircle, CheckCircle, ArrowRight, Plus } from 'react-feather';
-import Layout from '@/components/Layout';
+import DashboardContainer from '@/components/layout/DashboardContainer';
 import type { NextPageWithLayout } from '../../_app';
+
+// Type definition for campaigns with ads
+type CampaignWithAds = Campaign & {
+  ads?: Ad[];
+};
 
 const CampaignsPage: NextPageWithLayout = () => {
   const router = useRouter();
   const [campaigns, setCampaigns] = useState<CampaignWithAds[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [logMessage, setSuccessMessage] = useState<string | null>(null);
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
   // Fetch campaigns on initial load
   useEffect(() => {
     fetchCampaigns();
   }, []);
 
-  // Clear log message after 5 seconds
+  // Clear success message after 5 seconds
   useEffect(() => {
-    if (logMessage) {
+    if (successMessage) {
       const timer = setTimeout(() => {
         setSuccessMessage(null);
       }, 5000);
 
       return () => clearTimeout(timer);
     }
-  }, [logMessage]);
+  }, [successMessage]);
 
   const fetchCampaigns = async () => {
     setIsLoading(true);
@@ -43,14 +48,13 @@ const CampaignsPage: NextPageWithLayout = () => {
       const data = await response.json();
       setCampaigns(data);
     } catch (err) {
-      console.log('Error fetching campaigns:', err);
-      setError('Failed to load campaigns. Please try again.');
+      setError(err instanceof Error ? err.message : 'An error occurred');
     } finally {
       setIsLoading(false);
     }
   };
 
-  const handleStatusChange = async (campaignId: UserRole, newStatus: CampaignStatus) => {
+  const handleStatusChange = async (campaignId: string, newStatus: CampaignStatus) => {
     try {
       const response = await fetch(`/api/campaigns/${campaignId}`, {
         method: 'PATCH',
@@ -65,171 +69,176 @@ const CampaignsPage: NextPageWithLayout = () => {
       }
 
       // Update local state
-      setCampaigns(prevCampaigns => 
-        prevCampaigns.map(campaign => 
+      setCampaigns(prev => 
+        prev.map(campaign => 
           campaign.id === campaignId 
-            ? { ...campaign, status: newStatus } 
+            ? { ...campaign, status: newStatus }
             : campaign
         )
       );
 
-      setSuccessMessage(`Campaign status updated to ${newStatus.toLowerCase()}`);
+      setSuccessMessage('Campaign status updated successfully');
     } catch (err) {
-      console.log('Error updating campaign status:', err);
-      setError('Failed to update campaign status. Please try again.');
+      setError(err instanceof Error ? err.message : 'Failed to update campaign');
     }
   };
 
-  const handleDeleteCampaign = async (campaignId: string) => {
-    try {
-      const response = await fetch(`/api/campaigns/${campaignId}`, {
-        method: 'DELETE',
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to delete campaign');
-      }
-
-      // Remove from local state
-      setCampaigns(prevCampaigns => 
-        prevCampaigns.filter(campaign => campaign.id !== campaignId)
-      );
-
-      setSuccessMessage('Campaign deleted logfully');
-    } catch (err) {
-      console.log('Error deleting campaign:', err);
-      setError('Failed to delete campaign. Please try again.');
+  const getStatusColor = (status: CampaignStatus) => {
+    switch (status) {
+      case 'DRAFT':
+        return 'text-gray-600 bg-gray-100';
+      case 'ACTIVE':
+        return 'text-green-600 bg-green-100';
+      case 'PAUSED':
+        return 'text-yellow-600 bg-yellow-100';
+      case 'COMPLETED':
+        return 'text-blue-600 bg-blue-100';
+      default:
+        return 'text-gray-600 bg-gray-100';
     }
   };
 
   return (
-    <Layout title="Campaigns - Nostr Ad Marketplace">
-      <div className="max-w-6xl mx-auto">
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8">
-          <div>
-            <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Campaigns Dashboard</h1>
-            <p className="text-gray-600 dark:text-gray-400 mt-2">Create and manage your advertising campaigns</p>
-          </div>
-          <button 
+    <DashboardContainer title="Campaigns" userRole="advertiser">
+      <div className="max-w-7xl mx-auto">
+        {/* Header */}
+        <div className="flex justify-between items-center mb-6">
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
+            Campaign Management
+          </h1>
+          <button
             onClick={() => router.push('/dashboard/campaigns/create')}
-            className="mt-4 md:mt-0 inline-flex items-center px-4 py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600 transition-colors"
+            className="bg-orange-600 hover:bg-orange-700 text-white px-4 py-2 rounded-lg inline-flex items-center"
           >
-            <Plus size={18} className="mr-1" />
+            <Plus className="w-4 h-4 mr-2" />
             Create Campaign
           </button>
         </div>
 
-      {/* Alert Messages */}
-      {error && (
-        <div className="mb-6 p-4 bg-red-100 dark:bg-red-900/20 text-red-800 dark:text-red-400 rounded-lg flex items-start">
-          <AlertCircle className="h-5 w-5 mr-2 mt-0.5 shrink-0" />
-          <span>{error}</span>
-        </div>
-      )}
+        {/* Status Messages */}
+        {error && (
+          <div className="mb-4 p-4 bg-red-50 border border-red-200 rounded-lg flex items-center">
+            <AlertCircle className="h-5 w-5 text-red-500 mr-2" />
+            <span className="text-red-700">{error}</span>
+          </div>
+        )}
 
-      {logMessage && (
-        <div className="mb-6 p-4 bg-green-100 dark:bg-green-900/20 text-green-800 dark:text-green-400 rounded-lg flex items-start">
-          <CheckCircle className="h-5 w-5 mr-2 mt-0.5 shrink-0" />
-          <span>{logMessage}</span>
-        </div>
-      )}
+        {successMessage && (
+          <div className="mb-4 p-4 bg-green-50 border border-green-200 rounded-lg flex items-center">
+            <CheckCircle className="h-5 w-5 text-green-500 mr-2" />
+            <span className="text-green-700">{successMessage}</span>
+          </div>
+        )}
 
-        {/* Quick Stats */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-          <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow">
-            <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400">Active Campaigns</h3>
-            <p className="text-2xl font-bold text-gray-900 dark:text-white mt-2">
-              {campaigns.filter(c => c.status === 'ACTIVE').length}
-            </p>
+        {/* Loading State */}
+        {isLoading && (
+          <div className="text-center py-8">
+            <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-orange-600"></div>
+            <p className="mt-2 text-gray-600 dark:text-gray-400">Loading campaigns...</p>
           </div>
-          
-          <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow">
-            <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400">Total Ads</h3>
-            <p className="text-2xl font-bold text-gray-900 dark:text-white mt-2">
-              {campaigns.reduce((count, campaign) => count + (campaign.ads?.length || 0), 0)}
-            </p>
-          </div>
-          
-          <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow">
-            <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400">Total Budget</h3>
-            <p className="text-2xl font-bold text-gray-900 dark:text-white mt-2">
-              {campaigns.reduce((total, campaign) => total + (campaign?.budget || 0), 0).toLocaleString()} sats
-            </p>
-          </div>
-      </div>
+        )}
 
-        {/* Campaign List */}
-        {isLoading ? (
-          <div className="flex justify-center my-12">
-            <div className="text-gray-500">Loading campaigns...</div>
-          </div>
-        ) : (
-          <div className="bg-white dark:bg-gray-800 rounded-lg shadow">
-            <div className="p-6 border-b border-gray-200 dark:border-gray-700">
-              <h2 className="text-lg font-semibold text-gray-900 dark:text-white">Campaigns</h2>
-            </div>
-            <div className="p-6">
-              {campaigns.length > 0 ? (
-                <div className="space-y-4">
-                  {campaigns.map((campaign) => (
-                    <div key={campaign.id} className="border border-gray-200 dark:border-gray-700 rounded-lg p-4">
-                      <div className="flex justify-between items-start">
-                        <div>
-                          <h3 className="font-medium text-gray-900 dark:text-white">{campaign.name}</h3>
-                          <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
-                            Status: <span className="capitalize">{campaign.status}</span>
-                          </p>
+        {/* Campaigns Table */}
+        {!isLoading && campaigns.length > 0 && (
+          <div className="bg-white dark:bg-gray-800 shadow rounded-lg overflow-hidden">
+            <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+              <thead className="bg-gray-50 dark:bg-gray-700">
+                <tr>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                    Campaign
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                    Status
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                    Budget
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                    Created
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                    Actions
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                {campaigns.map((campaign) => (
+                  <tr key={campaign.id} className="hover:bg-gray-50 dark:hover:bg-gray-700">
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div>
+                        <div className="text-sm font-medium text-gray-900 dark:text-white">
+                          {campaign.name}
                         </div>
-                        <div className="flex space-x-2">
-                          <button 
-                            onClick={() => handleStatusChange(campaign.id, campaign.status === 'ACTIVE' ? 'PAUSED' : 'ACTIVE')}
-                            className="px-3 py-1 text-sm bg-blue-500 text-white rounded hover:bg-blue-600"
-                          >
-                            {campaign.status === 'ACTIVE' ? 'Pause' : 'Activate'}
-                          </button>
-                          <button 
-                            onClick={() => handleDeleteCampaign(campaign.id)}
-                            className="px-3 py-1 text-sm bg-red-500 text-white rounded hover:bg-red-600"
-                          >
-                            Delete
-                          </button>
+                        <div className="text-sm text-gray-500 dark:text-gray-400">
+                          {campaign.description}
                         </div>
                       </div>
-                    </div>
-                  ))}
-                </div>
-              ) : (
-                <div className="text-center py-8">
-                  <p className="text-gray-500 dark:text-gray-400">No campaigns yet</p>
-                </div>
-              )}
-            </div>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${getStatusColor(campaign.status)}`}>
+                        {campaign.status}
+                      </span>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">
+                      {campaign.budget.toLocaleString()} sats
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
+                      {new Date(campaign.createdAt).toLocaleDateString()}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                      <button
+                        onClick={() => router.push(`/dashboard/campaigns/${campaign.id}`)}
+                        className="text-orange-600 hover:text-orange-900 mr-4"
+                      >
+                        View
+                      </button>
+                      <button
+                        onClick={() => router.push(`/dashboard/campaigns/${campaign.id}/edit`)}
+                        className="text-indigo-600 hover:text-indigo-900"
+                      >
+                        Edit
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
         )}
 
-        {/* Call to Action */}
+        {/* Empty State */}
         {!isLoading && campaigns.length === 0 && (
-          <div className="mt-8 p-6 bg-orange-50 dark:bg-orange-900/10 rounded-lg border border-orange-100 dark:border-orange-900/50 text-center">
-            <h3 className="text-lg font-semibold text-orange-800 dark:text-orange-400 mb-2">
-              Ready to Start Your First Campaign?
+          <div className="text-center py-12 bg-white dark:bg-gray-800 rounded-lg shadow">
+            <div className="mx-auto h-12 w-12 text-gray-400">
+              <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
+              </svg>
+            </div>
+            <h3 className="mt-2 text-sm font-medium text-gray-900 dark:text-white">
+              No campaigns
             </h3>
-            <p className="text-orange-700 dark:text-orange-300 mb-4 max-w-lg mx-auto">
-              Create a campaign to reach your target audience across the Proof Of Reach network with engaging ads that drive results.
+            <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
+              Get started by creating your first campaign.
             </p>
-            <button
-              onClick={() => router.push('/dashboard/campaigns/create')}
-              className="bg-orange-600 hover:bg-orange-700 text-white px-6 py-2 rounded-lg inline-flex items-center"
-            >
-              Create Your First Campaign
-              <ArrowRight className="ml-2 h-4 w-4" />
-            </button>
+            <div className="mt-6">
+              <button
+                onClick={() => router.push('/dashboard/campaigns/create')}
+                className="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-orange-600 hover:bg-orange-700"
+              >
+                <Plus className="-ml-1 mr-2 h-5 w-5" />
+                Create Campaign
+              </button>
+            </div>
           </div>
         )}
       </div>
-    </Layout>
+    </DashboardContainer>
   );
 };
 
-// Layout handled by DashboardContainer component
+// Use the DashboardContainer layout
+CampaignsPage.getLayout = function getLayout(page: React.ReactElement) {
+  return page;
+};
 
 export default CampaignsPage;
