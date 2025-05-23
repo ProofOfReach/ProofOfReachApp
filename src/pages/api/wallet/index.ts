@@ -67,7 +67,7 @@ async function handleGetWallet(req: NextApiRequest, res: NextApiResponse, user: 
         return;
       }
       
-      balance = userRecord?.balance ?? 0 || 0;
+      balance = (userRecord?.balance ?? 0) || 0;
     } catch (error) {
       // Handle database errors or invalid user ID
       logger.log('Error finding user:', error);

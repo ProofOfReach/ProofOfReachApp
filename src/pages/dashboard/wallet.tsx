@@ -10,6 +10,8 @@ import BitcoinBadgeIcon from '../../components/icons/BitcoinBadgeIcon';
 import CurrencyAmount from '../../components/CurrencyAmount';
 import DashboardContainer from '../../components/ui/DashboardContainer';
 import DashboardHeader from '../../components/ui/DashboardHeader';
+import DashboardCard from '../../components/ui/DashboardCard';
+import { Button } from '../../components/ui/button';
 import '@/components/ui';
 import '@/components/ui/button';
 import '@/components/ui/input';

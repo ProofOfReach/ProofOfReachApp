@@ -33,7 +33,7 @@ export const walletService = {
         throw new ApiError(404, 'User not found');
       }
       
-      return user?.balance ?? 0 || 0;
+      return (user?.balance ?? 0) || 0;
     } catch (error) {
       console.log('Error getting wallet balance:', error);
       throw error;
@@ -75,7 +75,7 @@ export const walletService = {
       }
       
       // Set initial balance if null
-      const currentBalance = user?.balance ?? 0 || 0;
+      const currentBalance = (user?.balance ?? 0) || 0;
       
       // Calculate new balance based on transaction type
       let newBalance = currentBalance;
@@ -138,7 +138,7 @@ export const walletService = {
       
       return {
         transaction: result.transaction,
-        updatedBalance: result.user?.balance ?? 0 || 0
+        updatedBalance: (result.user?.balance ?? 0) || 0
       };
     } catch (error) {
       console.log('Error updating balance:', error);
