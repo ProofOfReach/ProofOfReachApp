@@ -32,19 +32,13 @@ import '@/lib/logger';
  * This replaces all the separate role-specific dashboards in favor of a unified experience
  */
 const Dashboard = () => {
-  const roleContext = defaultUseRole?.() || { role: 'viewer' };
-  // Get the role from context if available, otherwise use the user role
-  const [currentRole, setCurrentRole] = useState<UserRole>(roleContext?.role || 'viewer');
+  // Simplified role handling to fix runtime error
+  const [currentRole, setCurrentRole] = useState<UserRole>('viewer');
   const [isTestMode, setIsTestMode] = useState<boolean>(false);
   
   // Function to get the current role from all possible sources
   const getCurrentRoleFromAllSources = useCallback((): string => {
-    // Try to get role from context first (most reliable and up-to-date)
-    if (roleContext && roleContext.role) {
-      return roleContext.role as UserRole;
-    }
-    
-    // If we're in a browser, try localStorage next
+    // If we're in a browser, try localStorage
     if (typeof window !== 'undefined') {
       // Try all known storage locations for role
       const storedRole = localStorage.getItem('currentRole') || 'viewer';
@@ -52,7 +46,7 @@ const Dashboard = () => {
     }
     
     return 'viewer';
-  }, [roleContext]);
+  }, []);
 
   // Initialize and listen for role changes
   useEffect(() => {
@@ -293,8 +287,10 @@ const Dashboard = () => {
     window.addEventListener('storage', handleStorageChange);
     
     // Force an immediate check of the current role from context
-    if (roleContext && roleContext.role) {
-      setCurrentRole(roleContext.role as UserRole);
+    // Use localStorage role as fallback
+    const storedRole = getCurrentRoleFromAllSources();
+    if (storedRole && storedRole !== currentRole) {
+      setCurrentRole(storedRole as UserRole);
     }
     
     return () => {
@@ -305,7 +301,7 @@ const Dashboard = () => {
       window.removeEventListener('dashboard-role-changed', handleDashboardRoleChange);
       window.removeEventListener('storage', handleStorageChange);
     };
-  }, [roleContext, getCurrentRoleFromAllSources]);
+  }, [getCurrentRoleFromAllSources]);
   
   // Determine what icon to show based on role
   const getRoleIcon = () => {
@@ -764,7 +760,7 @@ const Dashboard = () => {
     
     // Add comprehensive logging to help debug role issues
     logger.debug(`Rendering dashboard for role: '${normalizedRole}' (raw: '${currentRole}')`);
-    logger.debug(`Role context value: ${roleContext?.role}`);
+    logger.debug(`Current role value: ${currentRole}`);
     logger.debug(`Local storage role: ${typeof window !== 'undefined' ? localStorage.getItem('currentRole') : 'N/A'}`);
     
     // Force dashboard re-render with a unique key that changes with EVERY render
