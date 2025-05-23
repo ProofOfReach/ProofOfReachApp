@@ -14,8 +14,7 @@ import {
 } from '../lib/nostr';
 import { postWithAuth } from '../lib/api';
 import { isPostForcedLogout } from '../lib/resetAuth';
-import '@/lib/logger';
-import '@/services/enhancedStorageService';
+import { logger } from '../lib/logger';
 
 // Create a client-side only wrapper component to avoid hydration issues
 import dynamic from 'next/dynamic';
@@ -468,7 +467,7 @@ const LoginPageClient: React.FC = () => {
         
         // Use the login function from auth context with isTestMode=false
         logger.log('Calling login function for the new account');
-        await login(publicKey as UserRole, false);
+        await login(publicKey, false);
         
         // Determine where to redirect based on onboarding status
         logger.log('Account created logfully, checking onboarding status');
