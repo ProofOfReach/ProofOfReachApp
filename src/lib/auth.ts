@@ -129,9 +129,8 @@ export function generateAuthToken(user: User): string {
  * @param res The Next.js response object
  * @returns A user session if authenticated, null otherwise
  */
-export async function getServerSession(
-  req: NextApiRequest, 
-  res: NextApiResponse
+export async function getSessionFromRequest(
+  req: NextApiRequest
 ): Promise<UserSession | null> {
   // First check if test mode is enabled
   if (req.cookies.isTestMode === 'true') {
