@@ -41,6 +41,14 @@ const Dashboard = () => {
     return 'viewer';
   }, []);
 
+  // Client-side role loading to avoid hydration issues
+  useEffect(() => {
+    const savedRole = getCurrentRoleFromAllSources();
+    if (savedRole && ['viewer', 'advertiser', 'publisher', 'admin', 'stakeholder'].includes(savedRole)) {
+      setCurrentRole(savedRole as UserRole);
+    }
+  }, [getCurrentRoleFromAllSources]);
+
   // Initialize and listen for role changes
   useEffect(() => {
     if (typeof window === 'undefined') return;
@@ -70,7 +78,7 @@ const Dashboard = () => {
     const initialRole = getCurrentRoleFromAllSources();
     
     // Log for debugging
-    logger.debug('Dashboard initializing with role:', initialRole);
+    console.debug('[DEBUG] Dashboard initializing with role:', initialRole);
     
     // Normalize the role value to avoid string formatting issues
     const normalizedRole = initialRole.replace(/['"]/g, '');
@@ -118,7 +126,7 @@ const Dashboard = () => {
         // Clean up the role value to prevent string formatting issues
         const normalizedRole = newRole.replace(/['"]/g, '');
         
-        logger.debug(`Setting role from event to: ${normalizedRole} (original: ${newRole})`);
+        console.debug(`[DEBUG] Setting role from event to: ${normalizedRole} (original: ${newRole})`);
         
         // Determine if we're in test mode - client-side only check
         const isTestMode = typeof window !== 'undefined' && localStorage.getItem('isTestMode') === 'true';
@@ -142,9 +150,9 @@ const Dashboard = () => {
           }
           
           // Log current state after update
-          logger.debug(`Updated localStorage role to: ${normalizedRole}`);
-          logger.debug(`Current role state is now: ${normalizedRole}`);
-          logger.debug(`Test mode: ${isTestMode ? 'active' : 'inactive'}`);
+          console.debug(`[DEBUG] Updated localStorage role to: ${normalizedRole}`);
+          console.debug(`[DEBUG] Current role state is now: ${normalizedRole}`);
+          console.debug(`[DEBUG] Test mode: ${isTestMode ? 'active' : 'inactive'}`);
           
           // Force a dashboard re-render by dispatching another event
           // This ensures the dashboard responds to the role change immediately
@@ -182,7 +190,7 @@ const Dashboard = () => {
         
         // For test mode, ensure test-specific storage is also updated
         if (isTestMode) {
-          logger.debug(`Setting test mode specific role: ${eventRole}`);
+          console.debug(`[DEBUG] Setting test mode specific role: ${eventRole}`);
           localStorage.setItem('testModeRole', eventRole);
           
           // Set timestamps to force re-renders
@@ -199,7 +207,7 @@ const Dashboard = () => {
       else {
         const latestRole = getCurrentRoleFromAllSources();
         const normalizedRole = latestRole.replace(/['"]/g, '');
-        logger.debug(`Dashboard role change using latest role: ${normalizedRole}`);
+        console.debug(`[DEBUG] Dashboard role change using latest role: ${normalizedRole}`);
         
         // Update the role in state
         setCurrentRole(normalizedRole as UserRole);
@@ -209,7 +217,7 @@ const Dashboard = () => {
         
         // For test mode, ensure test-specific storage is also updated
         if (isTestMode) {
-          logger.debug(`Setting test mode specific role: ${normalizedRole}`);
+          console.debug(`[DEBUG] Setting test mode specific role: ${normalizedRole}`);
           localStorage.setItem('testModeRole', normalizedRole);
           
           // Set timestamps to force re-renders
