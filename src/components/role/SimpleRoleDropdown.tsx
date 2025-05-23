@@ -124,25 +124,29 @@ const SimpleRoleDropdown: React.FC<RoleDropdownProps> = ({
         value={currentRole} 
         onChange={(e) => handleRoleChange(e.target.value as UserRole)}
         disabled={isChanging}
-        className="appearance-none bg-white border border-gray-300 rounded px-4 py-2 pr-8 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 disabled:opacity-50"
+        className="appearance-none bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg pl-10 pr-10 py-2.5 text-sm font-medium text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 disabled:opacity-50 disabled:cursor-not-allowed shadow-sm hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
       >
         {availableRoles.map((role) => (
-          <option key={role} value={role}>
+          <option key={role} value={role} className="bg-white dark:bg-gray-800 text-gray-900 dark:text-white">
             {getRoleDisplayName(role)}
           </option>
         ))}
       </select>
       
-      {/* Custom dropdown arrow */}
-      <div className="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
-        <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-        </svg>
+      {/* Current role icon */}
+      <div className="absolute inset-y-0 left-3 flex items-center pointer-events-none">
+        {roleIcons[currentRole]}
       </div>
       
-      {/* Current role icon */}
-      <div className="absolute inset-y-0 left-2 flex items-center pointer-events-none">
-        {roleIcons[currentRole]}
+      {/* Custom dropdown arrow */}
+      <div className="absolute inset-y-0 right-3 flex items-center pointer-events-none">
+        {isChanging ? (
+          <div className="w-4 h-4 border-2 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+        ) : (
+          <svg className="w-4 h-4 text-gray-400 dark:text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+          </svg>
+        )}
       </div>
     </div>
   );
