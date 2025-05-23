@@ -53,6 +53,37 @@ const Dashboard = () => {
   useEffect(() => {
     if (typeof window === 'undefined') return;
     
+    // Listen for role changes from the dropdown
+    const handleRoleStorageChange = (event: StorageEvent) => {
+      if (event.key === 'currentRole') {
+        const newRole = event.newValue;
+        if (newRole && ['viewer', 'advertiser', 'publisher', 'admin', 'stakeholder'].includes(newRole)) {
+          console.log('🔄 Dashboard responding to role change:', newRole);
+          setCurrentRole(newRole as UserRole);
+        }
+      }
+    };
+    
+    // Also listen for manual localStorage changes within the same tab
+    const checkRoleChanges = () => {
+      const currentStoredRole = localStorage.getItem('currentRole');
+      if (currentStoredRole && currentStoredRole !== currentRole) {
+        console.log('🔄 Dashboard detecting role change:', currentStoredRole);
+        setCurrentRole(currentStoredRole as UserRole);
+      }
+    };
+    
+    // Set up event listeners
+    window.addEventListener('storage', handleRoleStorageChange);
+    
+    // Check for role changes periodically (for same-tab changes)
+    const interval = setInterval(checkRoleChanges, 500);
+    
+    return () => {
+      window.removeEventListener('storage', handleRoleStorageChange);
+      clearInterval(interval);
+    };
+    
     // For test mode, prioritize localStorage role first to ensure consistency with the role selector
     const testMode = localStorage.getItem('isTestMode') === 'true';
     setIsTestMode(testMode);
