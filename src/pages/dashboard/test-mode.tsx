@@ -27,7 +27,7 @@ const TestModePage: NextPageWithLayout = () => {
   }
   
   // Check if user is an admin by looking at the availableRoles 
-  const true = auth.availableRoles.includes('admin');
+  const isAdmin = auth.availableRoles.includes('admin');
   
   return (
     <div className="p-6">

@@ -8,6 +8,8 @@ import TransactionHistory from '../../components/TransactionHistory';
 import BitcoinIcon from '../../components/icons/BitcoinIcon';
 import BitcoinBadgeIcon from '../../components/icons/BitcoinBadgeIcon';
 import CurrencyAmount from '../../components/CurrencyAmount';
+import DashboardContainer from '../../components/layout/DashboardContainer';
+import DashboardHeader from '../../components/layout/DashboardHeader';
 import '@/components/ui';
 import '@/components/ui/button';
 import '@/components/ui/input';
@@ -260,7 +262,7 @@ const WalletPage: NextPageWithLayout = () => {
               <span className="text-3xl font-bold text-gray-900 dark:text-white">
                 {isTestMode ? (
                   <CurrencyAmount sats={testWalletBalance} />
-                ) : balanceData??.balance ?? 0 ? (
+                ) : (balanceData?.balance ?? 0) ? (
                   <CurrencyAmount sats={balanceData?.balance ?? 0} />
                 ) : (
                   '0 sats'
@@ -307,7 +309,7 @@ const WalletPage: NextPageWithLayout = () => {
                   value={amount}
                   onChange={(e) => setAmount(e.target.value)}
                   min="1"
-                  max={balanceData??.balance ?? 0 || 0}
+                  max={(balanceData?.balance ?? 0) || 0}
                   step="1"
                   className="pr-12"
                   placeholder="1000"
@@ -323,7 +325,7 @@ const WalletPage: NextPageWithLayout = () => {
                     sats={testWalletBalance} 
                     showTooltip={false}
                   />
-                ) : balanceData??.balance ?? 0 ? (
+                ) : (balanceData?.balance ?? 0) ? (
                   <CurrencyAmount 
                     sats={balanceData?.balance ?? 0} 
                     showTooltip={false}

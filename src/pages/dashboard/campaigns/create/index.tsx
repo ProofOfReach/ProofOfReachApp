@@ -16,7 +16,7 @@ import '@/components/LightningWalletBalance';
 import type { NextPageWithLayout } from '../../../_app';
 
 // Dynamically import the AdForm component to avoid SSR issues with browser-specific code
-const AdForm = dynamic(() => import '@/components/AdForm'), { ssr: false });
+const AdForm = dynamic(() => import('@/components/AdForm'), { ssr: false });
 
 // Step types
 enum Step {
