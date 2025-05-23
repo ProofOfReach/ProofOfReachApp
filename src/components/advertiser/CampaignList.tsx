@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { Edit2, Trash2, Play, Pause, AlertCircle, ChevronDown, ChevronUp } from 'react-feather';
-import "./types/campaign';
+import '@/types/campaign';
 
 interface CampaignListProps {
   campaigns: CampaignWithAds[];

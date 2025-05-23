@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import "./lib/enhancedRoleService';
-import "./lib/logger';
+import '@/lib/enhancedRoleService';
+import '@/lib/logger';
 
 /**
  * API endpoint to get user role data
@@ -33,7 +33,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       userData
     });
   } catch (error) {
-    logger.logger.error('Error getting role data:', error);
+    logger.error('Error getting role data:', error);
     
     return res.status(500).json({ 
       success: false, 

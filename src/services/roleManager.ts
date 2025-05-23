@@ -6,9 +6,9 @@
  */
 
 import { UserRoleType, isValidUserRole } from '../types/role';
-import "./lib/logger';
+import '@/lib/logger';
 import { StorageService, STORAGE_KEYS } from './storageService';
-import "./lib/testModeEvents';
+import '@/lib/testModeEvents';
 
 // Events specific to role management
 export const ROLE_EVENTS = {
@@ -99,7 +99,7 @@ export class RoleManager {
       
       return true;
     } catch (error) {
-      logger.logger.error('Error setting current role:', error);
+      logger.error('Error setting current role:', error);
       return false;
     }
   }
@@ -124,7 +124,7 @@ export class RoleManager {
           }
         }
       } catch (error) {
-        logger.logger.error('Error parsing legacy available roles:', error);
+        logger.error('Error parsing legacy available roles:', error);
       }
     }
     
@@ -173,7 +173,7 @@ export class RoleManager {
       
       return true;
     } catch (error) {
-      logger.logger.error('Error setting available roles:', error);
+      logger.error('Error setting available roles:', error);
       return false;
     }
   }

@@ -16,8 +16,8 @@ import {
   ROLE_EVENTS,
   TestModeEventPayloads as NewTestModeEventPayloads
 } from './events';
-import "./context/RoleContext';
-import "./services/storageService';
+import '@/context/RoleContext';
+import '@/services/storageService';
 
 // Re-export the new event names with the old naming for backward compatibility
 export const TEST_MODE_EVENTS = {
@@ -79,10 +79,10 @@ export const dispatchTestModeEvent = <T extends TestModeEventType>(
         dispatchRoleEvent(ROLE_EVENTS.ROLES_UPDATED, payload as any);
         break;
       default:
-        logger.logger.error(`Unknown event type: ${eventType}`);
+        logger.error(`Unknown event type: ${eventType}`);
     }
   } catch (error) {
-    logger.logger.error(`Error dispatching test mode event ${eventType}:`, error);
+    logger.error(`Error dispatching test mode event ${eventType}:`, error);
   }
 };
 
@@ -107,7 +107,7 @@ export const addTestModeEventListener = <T extends TestModeEventType>(
     case TEST_MODE_EVENTS.ROLES_UPDATED:
       return addAppEventListener(ROLE_EVENTS.ROLES_UPDATED, handler as any);
     default:
-      logger.logger.error(`Unknown event type: ${eventType}`);
+      logger.error(`Unknown event type: ${eventType}`);
       return () => {}; // Return a no-op cleanup function
   }
 };

@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import "./lib/enhancedRoleService';
-import "./utils/enhancedRoleMiddleware';
-import "./lib/logger';
+import '@/lib/enhancedRoleService';
+import '@/utils/enhancedRoleMiddleware';
+import '@/lib/logger';
 
 /**
  * @swagger
@@ -90,7 +90,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       return res.status(405).json({ error: 'Method not allowed' });
     }
   } catch (error) {
-    logger.logger.error('Error handling test mode:', error);
+    logger.error('Error handling test mode:', error);
     return res.status(500).json({ error: 'Internal server error' });
   }
 }

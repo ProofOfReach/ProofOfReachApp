@@ -35,7 +35,7 @@ export const walletService = {
       
       return user.balance || 0;
     } catch (error) {
-      console.logger.error('Error getting wallet balance:', error);
+      console.error('Error getting wallet balance:', error);
       throw error;
     }
   },
@@ -48,7 +48,7 @@ export const walletService = {
       const balance = await this.getBalance(userId);
       return balance >= amount;
     } catch (error) {
-      console.logger.error('Error checking balance sufficiency:', error);
+      console.error('Error checking balance sufficiency:', error);
       return false;
     }
   },
@@ -141,7 +141,7 @@ export const walletService = {
         updatedBalance: result.user.balance || 0
       };
     } catch (error) {
-      console.logger.error('Error updating balance:', error);
+      console.error('Error updating balance:', error);
       if (error instanceof ApiError) {
         throw error;
       }
@@ -171,7 +171,7 @@ export const walletService = {
         hasMore: total > offset + limit
       };
     } catch (error) {
-      console.logger.error('Error fetching transaction history:', error);
+      console.error('Error fetching transaction history:', error);
       throw new ApiError(500, 'Failed to fetch transaction history');
     }
   }

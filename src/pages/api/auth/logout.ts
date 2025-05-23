@@ -37,7 +37,7 @@ export default async function handler(
     });
     return;
   } catch (error) {
-    logger.logger.error('Logout error:', error);
+    logger.error('Logout error:', error);
     handleError(error, req, res);
     return;
   }

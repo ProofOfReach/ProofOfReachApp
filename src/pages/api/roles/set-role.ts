@@ -107,7 +107,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       preferences: userPrefs
     });
   } catch (error) {
-    console.logger.error('Error setting role:', error);
+    console.error('Error setting role:', error);
     return res.status(500).json({ error: 'Failed to set role' });
   }
 }

@@ -44,7 +44,7 @@ async function handler(
       }
     });
   } catch (error) {
-    logger.logger.error('Error in profile endpoint:', error);
+    logger.error('Error in profile endpoint:', error);
     return res.status(500).json({ error: 'An error occurred while fetching profile' });
   }
 }

@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import Head from 'next/head';
 import { ChevronDown, Settings } from 'react-feather';
-import "./components/SimpleNostrFeed';
+import '@/components/SimpleNostrFeed';
 import type { NextPageWithLayout } from '../_app';
-import "./utils/layoutHelpers';
+import '@/utils/layoutHelpers';
 
 const NostrFeedPage: NextPageWithLayout = () => {
   const [showSettings, setShowSettings] = useState(false);

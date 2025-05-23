@@ -11,7 +11,7 @@ import {
 } from 'react-feather';
 import Link from 'next/link';
 import "./components/ui/button";
-import "./components/ui/data-table/DataTable';
+import '@/components/ui/data-table/DataTable';
 
 // Extended Campaign type with ads array
 export interface CampaignWithAds extends Campaign {

@@ -9,9 +9,9 @@
  */
 
 import { useEffect } from 'react';
-import "./hooks/useErrorState';
+import '@/hooks/useErrorState';
 // Import the function that the tests expect
-import "./lib/errorIntegration';
+import '@/lib/errorIntegration';
 
 interface ErrorInitializerProps {
   disableWindowEvents?: boolean;
@@ -61,7 +61,7 @@ const ErrorInitializer: React.FC<ErrorInitializerProps> = ({
       );
       
       if (debug) {
-        console.logger.error('[ErrorInitializer] Uncaught error:', event);
+        console.error('[ErrorInitializer] Uncaught error:', event);
       }
     };
     
@@ -81,7 +81,7 @@ const ErrorInitializer: React.FC<ErrorInitializerProps> = ({
       );
       
       if (debug) {
-        console.logger.error('[ErrorInitializer] Unhandled promise rejection:', event.reason);
+        console.error('[ErrorInitializer] Unhandled promise rejection:', event.reason);
       }
     };
     

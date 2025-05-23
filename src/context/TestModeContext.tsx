@@ -1,13 +1,13 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode, useCallback } from 'react';
 import { logger } from '../lib/logger';
-import "./services/storageService';
+import '@/services/storageService';
 import { 
   dispatchTestModeEvent, 
   TEST_MODE_EVENTS, 
   addTestModeEventListener 
 } from '@/lib/testModeEvents';
-import "./types/role';
-import "./services/roleManager';
+import '@/types/role';
+import '@/services/roleManager';
 
 /**
  * Enhanced TestMode Context Interface
@@ -103,7 +103,7 @@ export const TestModeProvider: React.FC<TestModeProviderProps> = ({ children }) 
       
       return false;
     } catch (error) {
-      logger.logger.error('Error updating test mode state:', error);
+      logger.error('Error updating test mode state:', error);
       return false;
     }
   }, []);
@@ -387,10 +387,10 @@ export const TestModeProvider: React.FC<TestModeProviderProps> = ({ children }) 
         
         logger.log('Test mode enabled successfully');
       } else {
-        logger.logger.error('Failed to enable test mode');
+        logger.error('Failed to enable test mode');
       }
     } catch (error) {
-      logger.logger.error('Error enabling test mode', error);
+      logger.error('Error enabling test mode', error);
     }
   }, [updateTestModeState]);
   
@@ -413,7 +413,7 @@ export const TestModeProvider: React.FC<TestModeProviderProps> = ({ children }) 
       
       logger.log('Test mode disabled');
     } catch (error) {
-      logger.logger.error('Error disabling test mode', error);
+      logger.error('Error disabling test mode', error);
     }
   }, []);
   
@@ -434,7 +434,7 @@ export const TestModeProvider: React.FC<TestModeProviderProps> = ({ children }) 
       // Fully delegate to RoleManager
       const roleSuccess = RoleManager.enableAllRoles();
       if (!roleSuccess) {
-        logger.logger.error('Failed to enable all roles via RoleManager');
+        logger.error('Failed to enable all roles via RoleManager');
         return false;
       }
       
@@ -461,7 +461,7 @@ export const TestModeProvider: React.FC<TestModeProviderProps> = ({ children }) 
       logger.log('All roles enabled in test mode');
       return true;
     } catch (error) {
-      logger.logger.error('Error enabling all roles in test mode', error);
+      logger.error('Error enabling all roles in test mode', error);
       return false;
     }
   }, []);
@@ -485,7 +485,7 @@ export const TestModeProvider: React.FC<TestModeProviderProps> = ({ children }) 
       // Fully delegate to RoleManager
       const roleSuccess = RoleManager.setCurrentRole(role);
       if (!roleSuccess) {
-        logger.logger.error(`Failed to set role to ${role} via RoleManager`);
+        logger.error(`Failed to set role to ${role} via RoleManager`);
         return false;
       }
       
@@ -508,7 +508,7 @@ export const TestModeProvider: React.FC<TestModeProviderProps> = ({ children }) 
       
       return true;
     } catch (error) {
-      logger.logger.error('Error changing role in test mode', error);
+      logger.error('Error changing role in test mode', error);
       return false;
     }
   }, []);

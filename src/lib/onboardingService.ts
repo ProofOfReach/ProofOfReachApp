@@ -1,8 +1,8 @@
-import "./lib/prisma';
-import "./lib/logger';
-import "./types/role';
-import "./lib/errorService';
-import "./types/errors';
+import '@/lib/prisma';
+import '@/lib/logger';
+import '@/types/role';
+import '@/lib/errorService';
+import '@/types/errors';
 
 /**
  * Service for managing onboarding state and redirections
@@ -145,7 +145,7 @@ const onboardingService = {
           }
         );
         
-        logger.logger.error('Client-side error marking onboarding complete', {
+        logger.error('Client-side error marking onboarding complete', {
           error: error instanceof Error ? error.message : 'Unknown error',
           pubkey,
           role
@@ -281,7 +281,7 @@ const onboardingService = {
         }
       );
       
-      logger.logger.error('Error in markOnboardingComplete', {
+      logger.error('Error in markOnboardingComplete', {
         error: error instanceof Error ? error.message : 'Unknown error',
         pubkey,
         role
@@ -336,7 +336,7 @@ const onboardingService = {
           }
         );
         
-        logger.logger.error('Client-side error resetting onboarding status', {
+        logger.error('Client-side error resetting onboarding status', {
           error: error instanceof Error ? error.message : 'Unknown error',
           pubkey,
           role
@@ -502,7 +502,7 @@ const onboardingService = {
         }
       );
       
-      logger.logger.error('Error in resetOnboardingStatus', { 
+      logger.error('Error in resetOnboardingStatus', { 
         error: error instanceof Error ? error.message : 'Unknown error', 
         pubkey, 
         role 
@@ -648,7 +648,7 @@ const onboardingService = {
         }
       );
       
-      logger.logger.error('Error in saveOnboardingStep', { 
+      logger.error('Error in saveOnboardingStep', { 
         error: error instanceof Error ? error.message : 'Unknown error', 
         pubkey,
         role, 
@@ -762,7 +762,7 @@ const onboardingService = {
         }
       );
       
-      logger.logger.error('Error getting post-login redirect URL', { 
+      logger.error('Error getting post-login redirect URL', { 
         error: error instanceof Error ? error.message : 'Unknown error', 
         pubkey, 
         role 

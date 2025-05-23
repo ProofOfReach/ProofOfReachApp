@@ -6,12 +6,12 @@
  */
 
 import { useState } from 'react';
-import "./context/ErrorContext';
-import "./types/errors';
-import "./components/errors/ApiErrorDisplay';
-import "./components/errors/FormErrorDisplay';
-import "./components/errors/NetworkErrorDisplay';
-import "./components/errors/PermissionErrorDisplay';
+import '@/context/ErrorContext';
+import '@/types/errors';
+import '@/components/errors/ApiErrorDisplay';
+import '@/components/errors/FormErrorDisplay';
+import '@/components/errors/NetworkErrorDisplay';
+import '@/components/errors/PermissionErrorDisplay';
 
 export default function ErrorTestingPage(): React.ReactElement {
   const { errorState, setError, clearError } = useError();

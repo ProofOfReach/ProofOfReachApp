@@ -204,7 +204,7 @@ export const RoleProvider: React.FC<RoleProviderProps> = ({
             };
           }
         } catch (error) {
-          console.logger.error('Error reading roles from cache:', error);
+          console.error('Error reading roles from cache:', error);
         }
       }
       
@@ -286,7 +286,7 @@ export const RoleProvider: React.FC<RoleProviderProps> = ({
           setIsChangingRole(false);
         })
         .catch(error => {
-          console.logger.error('Navigation error:', error);
+          console.error('Navigation error:', error);
           setIsChangingRole(false);
         });
     }
@@ -302,7 +302,7 @@ export const RoleProvider: React.FC<RoleProviderProps> = ({
         localStorage.setItem('roleCacheTimestamp', roleData.timestamp.toString());
         localStorage.setItem('userRole', roleData.currentRole);
       } catch (error) {
-        console.logger.error('Error saving roles to cache:', error);
+        console.error('Error saving roles to cache:', error);
       }
     }
   }, [roleData]);
@@ -341,7 +341,7 @@ export const RoleProvider: React.FC<RoleProviderProps> = ({
       });
       return result.success;
     } catch (error) {
-      console.logger.error('Error changing role:', error);
+      console.error('Error changing role:', error);
       return false;
     }
   };

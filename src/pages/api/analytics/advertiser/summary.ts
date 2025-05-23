@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import "./lib/auth';
-import "./utils/chartHelpers';
+import '@/lib/auth';
+import '@/utils/chartHelpers';
 
 export default async function handler(
   req: NextApiRequest,
@@ -27,7 +27,7 @@ export default async function handler(
     
     res.status(200).json(summaryData);
   } catch (error) {
-    console.logger.error('Error in analytics/advertiser/summary:', error);
+    console.error('Error in analytics/advertiser/summary:', error);
     res.status(500).json({ error: 'Failed to fetch analytics summary' });
   }
 }

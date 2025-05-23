@@ -1,8 +1,8 @@
 import React from 'react';
 import { NavigationMenuList, NavigationMenuItem, NavigationMenuNextLink } from './navigation-menu';
-import "./lib/utils';
+import '@/lib/utils';
 import Icon from './icon';
-import "./lib/navigationBuilder';
+import '@/lib/navigationBuilder';
 
 /**
  * Interface for a navigation item

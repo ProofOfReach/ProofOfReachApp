@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import "./lib/roleService';
-import "./hooks/useTestMode';
-import "./services/roleManager';
-import "./services/enhancedStorageService';
-import "./services/storageService';
-import "./types/role';
-import "./lib/events';
-import "./hooks/useAppEvent';
-import "./lib/events/eventTypes';
-import "./lib/logger';
+import '@/lib/roleService';
+import '@/hooks/useTestMode';
+import '@/services/roleManager';
+import '@/services/enhancedStorageService';
+import '@/services/storageService';
+import '@/types/role';
+import '@/lib/events';
+import '@/hooks/useAppEvent';
+import '@/lib/events/eventTypes';
+import '@/lib/logger';
 import Link from 'next/link';
 
 /**
@@ -83,12 +83,12 @@ const DebugRoleEnabler: React.FC = () => {
         if (legacySuccess) {
           logger.log('All roles enabled using legacy method');
         } else {
-          logger.logger.error('Failed to enable all roles');
+          logger.error('Failed to enable all roles');
         }
       }
     } catch (error) {
       const errorMsg = error instanceof Error ? error.message : String(error);
-      logger.logger.error('Error enabling all roles:', errorMsg);
+      logger.error('Error enabling all roles:', errorMsg);
     } finally {
       setIsLoading(false);
     }

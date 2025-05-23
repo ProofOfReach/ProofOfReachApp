@@ -78,7 +78,7 @@ export function authMiddleware(handler: AuthenticatedHandler) {
             });
           }
         } catch (e) {
-          console.logger.error('Auth cookie parse error:', e);
+          console.error('Auth cookie parse error:', e);
         }
       }
       
@@ -113,7 +113,7 @@ export function authMiddleware(handler: AuthenticatedHandler) {
       // If all auth methods fail, return 401
       return res.status(401).json({ error: 'Unauthorized' });
     } catch (error) {
-      console.logger.error('Auth middleware error:', error);
+      console.error('Auth middleware error:', error);
       return res.status(500).json({ error: 'Internal server error' });
     }
   };

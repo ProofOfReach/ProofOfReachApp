@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
-import "./components/layout/ImprovedDashboardLayout';
-import "./components/ui';
-import "./components/ui/Badge';
-import "./components/ui/button';
-import "./components/ui/Tabs';
-import "./components/ui/Tab';
-import "./components/ui/Tooltip';
+import '@/components/layout/ImprovedDashboardLayout';
+import '@/components/ui';
+import '@/components/ui/Badge';
+import '@/components/ui/button';
+import '@/components/ui/Tabs';
+import '@/components/ui/Tab';
+import '@/components/ui/Tooltip';
 import {
   Shield,
   User,
@@ -22,8 +22,8 @@ import {
   Download,
   HelpCircle
 } from 'react-feather';
-import "./components/charts';
-import "./components/charts';
+import '@/components/charts';
+import '@/components/charts';
 
 /**
  * Proof of Reach Report Page

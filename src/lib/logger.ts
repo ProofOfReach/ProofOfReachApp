@@ -48,7 +48,7 @@ class Logger {
 
   public logger.error(message: string, ...args: any[]): void {
     if (this.isEnabled('error')) {
-      console.logger.error(this.formatMessage('error', message, ...args));
+      console.error(this.formatMessage('error', message, ...args));
     }
   }
 

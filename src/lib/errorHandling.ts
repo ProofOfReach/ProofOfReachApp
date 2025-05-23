@@ -42,7 +42,7 @@ declare global {
  */
 export function logger.error(message: string, err?: unknown): void {
   if (!err) {
-    console.logger.error(`Error in ${message}`);
+    console.error(`Error in ${message}`);
     return;
   }
 
@@ -56,7 +56,7 @@ export function logger.error(message: string, err?: unknown): void {
     details: (err as any).details
   };
 
-  console.logger.error(`Error in ${message}:`, errorInfo);
+  console.error(`Error in ${message}:`, errorInfo);
 }
 
 /**

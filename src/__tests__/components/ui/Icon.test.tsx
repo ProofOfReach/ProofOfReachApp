@@ -1,6 +1,6 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
-import "./components/ui/icon';
+import '@/components/ui/icon';
 
 describe('Icon Component', () => {
   it('renders icon correctly with specified name', () => {

@@ -1,10 +1,10 @@
 import React from 'react';
-import "./components/layout/ImprovedDashboardLayout';
+import '@/components/layout/ImprovedDashboardLayout';
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer
 } from 'recharts';
-import "./components/ui/Typography';
-import "./components/ui/card';
+import '@/components/ui/Typography';
+import '@/components/ui/card';
 
 // Sample data for demonstration
 const monthlySummary = [

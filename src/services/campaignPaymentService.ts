@@ -31,7 +31,7 @@ export const campaignPaymentService = {
       // Check if advertiser has sufficient balance
       return campaign.advertiser.balance > 0;
     } catch (error) {
-      console.logger.error('Error checking campaign funding:', error);
+      console.error('Error checking campaign funding:', error);
       return false;
     }
   },
@@ -78,7 +78,7 @@ export const campaignPaymentService = {
       
       return true;
     } catch (error) {
-      console.logger.error('Error processing ad payment:', error);
+      console.error('Error processing ad payment:', error);
       return false;
     }
   },
@@ -112,7 +112,7 @@ export const campaignPaymentService = {
       
       return true;
     } catch (error) {
-      console.logger.error('Error processing publisher earning:', error);
+      console.error('Error processing publisher earning:', error);
       return false;
     }
   },
@@ -134,7 +134,7 @@ export const campaignPaymentService = {
       
       return updatedCampaign;
     } catch (error) {
-      console.logger.error('Error pausing campaign:', error);
+      console.error('Error pausing campaign:', error);
       throw new ApiError(500, 'Failed to pause campaign');
     }
   },
@@ -171,7 +171,7 @@ export const campaignPaymentService = {
       
       return null;
     } catch (error) {
-      console.logger.error('Error resuming campaign:', error);
+      console.error('Error resuming campaign:', error);
       return null;
     }
   },
@@ -203,7 +203,7 @@ export const campaignPaymentService = {
       
       return resumedCount;
     } catch (error) {
-      console.logger.error('Error resuming paused campaigns:', error);
+      console.error('Error resuming paused campaigns:', error);
       return 0;
     }
   }

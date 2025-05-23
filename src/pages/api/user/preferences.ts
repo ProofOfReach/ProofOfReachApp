@@ -31,7 +31,7 @@ async function getPreferences(req: NextApiRequest, res: NextApiResponse, pubkey:
 
     return res.status(200).json(user.preferences);
   } catch (error) {
-    console.logger.error('Error fetching user preferences:', error);
+    console.error('Error fetching user preferences:', error);
     return res.status(500).json({ error: 'Failed to fetch user preferences' });
   }
 }
@@ -78,7 +78,7 @@ async function updatePreferences(req: NextApiRequest, res: NextApiResponse, pubk
 
     return res.status(200).json(preferences);
   } catch (error) {
-    console.logger.error('Error updating user preferences:', error);
+    console.error('Error updating user preferences:', error);
     return res.status(500).json({ error: 'Failed to update user preferences' });
   }
 }

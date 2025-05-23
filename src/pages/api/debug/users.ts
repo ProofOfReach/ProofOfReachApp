@@ -57,7 +57,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     
     return res.status(200).json(response);
   } catch (error) {
-    console.logger.error('Error in debug/users endpoint:', error);
+    console.error('Error in debug/users endpoint:', error);
     return res.status(500).json({ error: 'Internal server error' });
   }
 }

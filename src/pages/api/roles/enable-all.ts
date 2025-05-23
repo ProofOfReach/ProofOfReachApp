@@ -71,7 +71,7 @@ export default async function handler(
       },
     });
   } catch (error) {
-    console.logger.error('Error enabling all roles:', error);
+    console.error('Error enabling all roles:', error);
     return res.status(500).json({ error: 'Failed to enable all roles' });
   }
 }

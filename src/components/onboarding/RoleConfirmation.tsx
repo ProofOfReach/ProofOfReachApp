@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import "./types/role';
-import "./context/RoleContext';
-import "./context/OnboardingContext';
-import "./hooks/useAuth';
+import '@/types/role';
+import '@/context/RoleContext';
+import '@/context/OnboardingContext';
+import '@/hooks/useAuth';
 import { Users, Radio, Package, Shield, Key } from 'react-feather';
-import "./lib/logger';
-import "./lib/nostrProfile';
+import '@/lib/logger';
+import '@/lib/nostrProfile';
 
 type RoleConfirmationProps = {
   onConfirm?: (role: UserRoleType) => void;
@@ -85,7 +85,7 @@ const RoleConfirmation: React.FC<RoleConfirmationProps> = ({ onConfirm }) => {
         setTimeout(() => setPubkeyCopied(false), 2000);
       })
       .catch(err => {
-        logger.logger.error('Failed to copy pubkey to clipboard', err);
+        logger.error('Failed to copy pubkey to clipboard', err);
       });
   };
 

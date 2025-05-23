@@ -9,11 +9,11 @@
  */
 
 import { useState, useEffect, useCallback } from 'react';
-import "./services/testModeService';
-import "./types/role';
-import "./hooks/useAppEvent';
-import "./lib/events/eventTypes';
-import "./lib/logger';
+import '@/services/testModeService';
+import '@/types/role';
+import '@/hooks/useAppEvent';
+import '@/lib/events/eventTypes';
+import '@/lib/logger';
 
 /**
  * Interface for the hook return value

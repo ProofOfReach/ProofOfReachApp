@@ -5,11 +5,11 @@
  * Provides consistent error handling and type safety.
  */
 
-import "./context/RoleContext';
-import "./lib/logger';
-import "./types/role';
-import "./services/enhancedStorageService';
-import "./services/roleManager';
+import '@/context/RoleContext';
+import '@/lib/logger';
+import '@/types/role';
+import '@/services/enhancedStorageService';
+import '@/services/roleManager';
 
 // Define storage key constants to avoid string duplication
 export const STORAGE_KEYS = {
@@ -66,7 +66,7 @@ export class StorageService {
       storage.setItem(key, JSON.stringify(value));
       return true;
     } catch (error) {
-      logger.logger.error(`Error setting item ${key} in ${storageType} storage:`, error);
+      logger.error(`Error setting item ${key} in ${storageType} storage:`, error);
       return false;
     }
   }
@@ -82,7 +82,7 @@ export class StorageService {
       storage.removeItem(key);
       return true;
     } catch (error) {
-      logger.logger.error(`Error removing item ${key} from ${storageType} storage:`, error);
+      logger.error(`Error removing item ${key} from ${storageType} storage:`, error);
       return false;
     }
   }
@@ -97,7 +97,7 @@ export class StorageService {
       const storage = storageType === 'session' ? sessionStorage : localStorage;
       return storage.getItem(key) !== null;
     } catch (error) {
-      logger.logger.error(`Error checking for item ${key} in ${storageType} storage:`, error);
+      logger.error(`Error checking for item ${key} in ${storageType} storage:`, error);
       return false;
     }
   }
@@ -113,7 +113,7 @@ export class StorageService {
       storage.clear();
       return true;
     } catch (error) {
-      logger.logger.error(`Error clearing ${storageType} storage:`, error);
+      logger.error(`Error clearing ${storageType} storage:`, error);
       return false;
     }
   }
@@ -189,7 +189,7 @@ export class StorageService {
         logger.debug('Error getting role from localStorage:', e);
       }
     } catch (e) {
-      logger.logger.error('Error in getCurrentRole:', e);
+      logger.error('Error in getCurrentRole:', e);
     }
     
     // Default to viewer role
@@ -283,7 +283,7 @@ export class StorageService {
         }
       }
     } catch (error) {
-      logger.logger.error('Error in isTestModeActive:', error);
+      logger.error('Error in isTestModeActive:', error);
     }
     
     // Default to false for production to prevent accidental test mode activation
@@ -314,7 +314,7 @@ export class StorageService {
       localStorage?.setItem('forceDisableTestMode', 'true');
       logger.info('Test mode force disabled globally');
     } catch (error) {
-      logger.logger.error('Error in forceDisableTestMode:', error);
+      logger.error('Error in forceDisableTestMode:', error);
     }
   }
   

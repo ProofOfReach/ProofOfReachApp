@@ -26,7 +26,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse, auth: any) {
         availableRoles: normalizeRoles(availableRoles)
       });
     } catch (error) {
-      console.logger.error('Error getting role:', error);
+      console.error('Error getting role:', error);
       return res.status(500).json({ error: 'Internal server error' });
     }
   }
@@ -73,7 +73,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse, auth: any) {
         return res.status(500).json({ error: 'Failed to set role' });
       }
     } catch (error) {
-      console.logger.error('Error setting role:', error);
+      console.error('Error setting role:', error);
       return res.status(500).json({ error: 'Internal server error' });
     }
   }

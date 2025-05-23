@@ -1,6 +1,6 @@
 import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
-import "./components/ui/CopyToClipboard';
+import '@/components/ui/CopyToClipboard';
 
 // Mock the clipboard API
 Object.assign(navigator, {

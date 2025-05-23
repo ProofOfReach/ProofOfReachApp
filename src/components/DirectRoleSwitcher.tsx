@@ -138,7 +138,7 @@ const DirectRoleSwitcher: React.FC = () => {
         }
       }
     } catch (error) {
-      console.logger.error('Error enabling roles:', error);
+      console.error('Error enabling roles:', error);
       // Continue with navigation even if DB update fails
     }
     
@@ -185,7 +185,7 @@ const DirectRoleSwitcher: React.FC = () => {
           const parsedRoles = JSON.parse(cachedRoles) as UserRole[];
           return parsedRoles.filter(roleOption => roleOption !== currentRole);
         } catch (error) {
-          console.logger.error('Error parsing cached roles in DirectRoleSwitcher:', error);
+          console.error('Error parsing cached roles in DirectRoleSwitcher:', error);
         }
       }
     }

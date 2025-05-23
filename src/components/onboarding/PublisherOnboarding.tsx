@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import "./context/OnboardingContext';
+import '@/context/OnboardingContext';
 import { Code, DollarSign, Layout, Settings, CheckCircle, ToggleRight, Archive } from 'react-feather';
 import ApiKeyBox from './ApiKeyBox';
-import "./components/ui/CodeSnippet';
-import "./components/ui/SkipButton';
+import '@/components/ui/CodeSnippet';
+import '@/components/ui/SkipButton';
 
 interface PublisherOnboardingProps {
   currentStep: OnboardingStep;
@@ -71,7 +71,7 @@ const PublisherOnboarding: React.FC<PublisherOnboardingProps> = ({
           }
         }
       } catch (error) {
-        console.logger.error('Error fetching user data:', error);
+        console.error('Error fetching user data:', error);
       }
     };
     
@@ -159,7 +159,7 @@ const PublisherOnboarding: React.FC<PublisherOnboardingProps> = ({
         error: warning // If there's a warning, show it as a non-critical error
       });
     } catch (error) {
-      console.logger.error('Error generating API key:', error);
+      console.error('Error generating API key:', error);
       
       // Create a fallback key that follows our naming conventions
       const fallbackKey = `pub_fallback_${pubkey.substring(0, 8)}_${Date.now()}`;

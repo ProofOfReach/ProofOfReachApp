@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Loader, AlertCircle, CheckCircle } from 'react-feather';
-import "./context/NewRoleContextRefactored';
-import "./hooks/useAuthRefactored';
+import '@/context/NewRoleContextRefactored';
+import '@/hooks/useAuthRefactored';
 
 /**
  * Admin panel for managing roles across the system
@@ -46,7 +46,7 @@ export const AdminRolePanel: React.FC = () => {
         message: `Test mode ${enabled ? 'enabled' : 'disabled'} successfully`
       });
     } catch (error) {
-      console.logger.error('Error toggling test mode:', error);
+      console.error('Error toggling test mode:', error);
       setActionResult({
         success: false,
         message: `Failed to ${enabled ? 'enable' : 'disable'} test mode: ${(error as any).message || 'Unknown error'}`

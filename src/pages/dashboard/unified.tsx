@@ -2,15 +2,15 @@ import React, { useState, useEffect } from 'react';
 import { NextPage } from 'next';
 import { Home, ShoppingBag, Upload, Shield, Briefcase, User } from 'react-feather';
 
-import "./components/layout/ImprovedDashboardLayout';
-import "./lib/roleService';
-import "./context/RoleContext';
+import '@/components/layout/ImprovedDashboardLayout';
+import '@/lib/roleService';
+import '@/context/RoleContext';
 
 // Import our various role-specific dashboard components
-import "./components/dashboard/user/UserDashboard';
+import '@/components/dashboard/user/UserDashboard';
 // Component imports would go here in a real implementation
-// import "./components/dashboard/advertiser/AdvertiserDashboard';
-// import "./components/dashboard/publisher/PublisherDashboard';
+// import '@/components/dashboard/advertiser/AdvertiserDashboard';
+// import '@/components/dashboard/publisher/PublisherDashboard';
 // etc.
 
 /**

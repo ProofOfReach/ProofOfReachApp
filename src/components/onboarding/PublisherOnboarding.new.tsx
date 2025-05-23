@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import "./context/OnboardingContext';
+import '@/context/OnboardingContext';
 import { Code, DollarSign, Layout, Settings, CheckCircle, ToggleRight, Archive, Copy, RefreshCw } from 'react-feather';
-import "./components/ui/CodeSnippet';
-import "./components/ui/SkipButton';
+import '@/components/ui/CodeSnippet';
+import '@/components/ui/SkipButton';
 
 interface PublisherOnboardingProps {
   currentStep: OnboardingStep;
@@ -306,7 +306,7 @@ const PublisherOnboarding: React.FC<PublisherOnboardingProps> = React.memo(({ cu
       });
     })
     .catch(error => {
-      console.logger.error('Failed to load publisher config:', error);
+      console.error('Failed to load publisher config:', error);
     });
 </script>`}
                     />
@@ -414,7 +414,7 @@ function AdContainer() {
         // Render ads in container
         window.NostrAds.render('#ad-container');
       } catch (error) {
-        console.logger.error('Failed to initialize ad client:', error);
+        console.error('Failed to initialize ad client:', error);
       }
     };
     
@@ -478,7 +478,7 @@ async function serveAdExample() {
       console.log('No suitable ad available');
     }
   } catch (error) {
-    console.logger.error('Error serving ad:', error);
+    console.error('Error serving ad:', error);
   }
 }
 
@@ -504,7 +504,7 @@ async function getStatsExample() {
     console.log('CTR:', stats.ctr);
     console.log('Earnings:', stats.earnings);
   } catch (error) {
-    console.logger.error('Error fetching stats:', error);
+    console.error('Error fetching stats:', error);
   }
 }`}
                       />

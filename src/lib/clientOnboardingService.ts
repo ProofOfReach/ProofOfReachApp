@@ -3,8 +3,8 @@
  * This file provides a client-safe API for onboarding functionality
  */
 
-import "./types/role';
-import "./lib/logger';
+import '@/types/role';
+import '@/lib/logger';
 
 // This service wraps the API calls needed for onboarding
 // instead of directly importing server-side code
@@ -20,7 +20,7 @@ const clientOnboardingService = {
       }
       return await response.json();
     } catch (error) {
-      logger.logger.error('Error getting onboarding status', { error, pubkey, role });
+      logger.error('Error getting onboarding status', { error, pubkey, role });
       return { isComplete: false, currentStep: null, lastStep: null };
     }
   },
@@ -44,7 +44,7 @@ const clientOnboardingService = {
       
       return await response.json();
     } catch (error) {
-      logger.logger.error('Error updating onboarding progress', { error, pubkey, role });
+      logger.error('Error updating onboarding progress', { error, pubkey, role });
       throw error;
     }
   },
@@ -68,7 +68,7 @@ const clientOnboardingService = {
       
       return await response.json();
     } catch (error) {
-      logger.logger.error('Error completing onboarding', { error, pubkey, role });
+      logger.error('Error completing onboarding', { error, pubkey, role });
       throw error;
     }
   },
@@ -92,7 +92,7 @@ const clientOnboardingService = {
       
       return await response.json();
     } catch (error) {
-      logger.logger.error('Error resetting onboarding', { error, pubkey, role });
+      logger.error('Error resetting onboarding', { error, pubkey, role });
       throw error;
     }
   }

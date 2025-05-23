@@ -29,7 +29,7 @@ const CopyToClipboard: React.FC<CopyToClipboardProps> = ({
       // Reset after 2 seconds
       setTimeout(() => setCopied(false), 2000);
     } catch (error) {
-      console.logger.error('Failed to copy text:', error);
+      console.error('Failed to copy text:', error);
     }
   };
   

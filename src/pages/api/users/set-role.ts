@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import "./lib/auth';
-import "./lib/prismaClient';
+import '@/lib/auth';
+import '@/lib/prismaClient';
 import { UserRole } from '../../../context/RoleContext';
 
 type ResponseData = {
@@ -133,7 +133,7 @@ async function handleSetRole(req: NextApiRequest, res: NextApiResponse<ResponseD
       roles
     });
   } catch (error) {
-    console.logger.error('Error updating user role:', error);
+    console.error('Error updating user role:', error);
     return res.status(500).json({ 
       success: false, 
       error: 'Failed to update user role' 

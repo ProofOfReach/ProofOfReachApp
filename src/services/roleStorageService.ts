@@ -5,7 +5,7 @@
  * extending the EnhancedStorageService with role-specific methods.
  */
 
-import "./lib/logger';
+import '@/lib/logger';
 import { 
   dispatchRoleEvent, 
   ROLE_EVENTS,
@@ -13,7 +13,7 @@ import {
   notifyRolesUpdated
 } from '@/lib/events';
 import { EnhancedStorageService, STORAGE_KEYS, enhancedStorage } from './enhancedStorageService';
-import "./context/RoleContext';
+import '@/context/RoleContext';
 import { testModeStorage } from './testModeStorageService';
 
 // Default role to use when none is set
@@ -67,7 +67,7 @@ export class RoleStorageService {
       
       return roleStorage.currentRole;
     } catch (error) {
-      logger.logger.error('Error getting current role:', error);
+      logger.error('Error getting current role:', error);
       return DEFAULT_ROLE;
     }
   }
@@ -103,7 +103,7 @@ export class RoleStorageService {
       
       return roleStorage.availableRoles;
     } catch (error) {
-      logger.logger.error('Error getting available roles:', error);
+      logger.error('Error getting available roles:', error);
       return [DEFAULT_ROLE];
     }
   }
@@ -154,7 +154,7 @@ export class RoleStorageService {
       
       return success;
     } catch (error) {
-      logger.logger.error('Error setting current role:', error);
+      logger.error('Error setting current role:', error);
       return false;
     }
   }
@@ -204,7 +204,7 @@ export class RoleStorageService {
       
       return success;
     } catch (error) {
-      logger.logger.error('Error setting available roles:', error);
+      logger.error('Error setting available roles:', error);
       return false;
     }
   }
@@ -233,7 +233,7 @@ export class RoleStorageService {
       }
       return success;
     } catch (error) {
-      logger.logger.error('Error clearing role data:', error);
+      logger.error('Error clearing role data:', error);
       return false;
     }
   }
@@ -249,7 +249,7 @@ export class RoleStorageService {
         defaultValue: null
       });
     } catch (error) {
-      logger.logger.error('Error getting role storage:', error);
+      logger.error('Error getting role storage:', error);
       return null;
     }
   }
@@ -264,7 +264,7 @@ export class RoleStorageService {
     try {
       return this.storage.setItem(STORAGE_KEYS.CURRENT_ROLE, roleStorage);
     } catch (error) {
-      logger.logger.error('Error setting role storage:', error);
+      logger.error('Error setting role storage:', error);
       return false;
     }
   }

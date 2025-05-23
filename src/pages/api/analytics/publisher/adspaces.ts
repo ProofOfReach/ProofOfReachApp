@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import "./lib/auth';
-import "./services/analyticsService';
+import '@/lib/auth';
+import '@/services/analyticsService';
 
 // API handler for fetching publisher ad space performance data
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
@@ -44,7 +44,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       
       res.status(200).json(adSpaces);
   } catch (error) {
-    console.logger.error('Error in publisher/adspaces:', error);
+    console.error('Error in publisher/adspaces:', error);
     res.status(500).json({ error: 'Failed to fetch ad space data' });
   }
 }

@@ -239,7 +239,7 @@ function createEnhancedStorage(storageType: StorageType): EnhancedStorageProvide
             
             return decrypted || defaultValue as string | null;
           } catch (error) {
-            logger.logger.error('Error decrypting stored item', { 
+            logger.error('Error decrypting stored item', { 
               error: error instanceof Error ? error.message : 'Unknown error',
               key: namespacedKey,
               category: ErrorCategory.TECHNICAL
@@ -250,7 +250,7 @@ function createEnhancedStorage(storageType: StorageType): EnhancedStorageProvide
         
         return storedItem.data;
       } catch (error) {
-        logger.logger.error('Error getting item from storage', { 
+        logger.error('Error getting item from storage', { 
           error: error instanceof Error ? error.message : 'Unknown error',
           key,
           category: ErrorCategory.TECHNICAL
@@ -344,7 +344,7 @@ function createEnhancedStorage(storageType: StorageType): EnhancedStorageProvide
           });
         }
       } catch (error) {
-        logger.logger.error('Error setting item in storage', { 
+        logger.error('Error setting item in storage', { 
           error: error instanceof Error ? error.message : 'Unknown error',
           key,
           category: ErrorCategory.TECHNICAL
@@ -386,7 +386,7 @@ function createEnhancedStorage(storageType: StorageType): EnhancedStorageProvide
           window.dispatchEvent(systemEvent);
         }
       } catch (error) {
-        logger.logger.error('Error removing item from storage', { 
+        logger.error('Error removing item from storage', { 
           error: error instanceof Error ? error.message : 'Unknown error',
           key,
           category: ErrorCategory.TECHNICAL
@@ -420,7 +420,7 @@ function createEnhancedStorage(storageType: StorageType): EnhancedStorageProvide
           storage.clear();
         }
       } catch (error) {
-        logger.logger.error('Error clearing storage', { 
+        logger.error('Error clearing storage', { 
           error: error instanceof Error ? error.message : 'Unknown error',
           category: ErrorCategory.TECHNICAL
         });
@@ -463,7 +463,7 @@ function createEnhancedStorage(storageType: StorageType): EnhancedStorageProvide
         
         return true;
       } catch (error) {
-        logger.logger.error('Error checking if item exists in storage', { 
+        logger.error('Error checking if item exists in storage', { 
           error: error instanceof Error ? error.message : 'Unknown error',
           key,
           category: ErrorCategory.TECHNICAL

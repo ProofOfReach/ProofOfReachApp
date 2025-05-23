@@ -155,9 +155,9 @@ const StaticClientSidebar: React.FC = () => {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ pubkey })
-      }).catch(e => console.logger.error('Error enabling roles in database:', e));
+      }).catch(e => console.error('Error enabling roles in database:', e));
     } catch (e) {
-      console.logger.error('Error in role setup:', e);
+      console.error('Error in role setup:', e);
     }
     
     // Direct navigation with hard reload

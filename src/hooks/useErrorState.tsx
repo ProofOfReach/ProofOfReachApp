@@ -7,11 +7,11 @@
  */
 
 import { useContext, useCallback, useState, useEffect } from 'react';
-import "./context/ErrorContext';
-import "./types/errors';
+import '@/context/ErrorContext';
+import '@/types/errors';
 
 // Import the errorIntegration service
-import "./lib/errorIntegration';
+import '@/lib/errorIntegration';
 
 // Type definition for test mocks
 interface TestErrorState {
@@ -92,7 +92,7 @@ export function useErrorState() {
               });
             }
           } catch (error) {
-            console.logger.error('Error handling error state change:', error);
+            console.error('Error handling error state change:', error);
           }
         };
         
@@ -104,7 +104,7 @@ export function useErrorState() {
           window.removeEventListener('error-state-changed', handleErrorStateChange);
         };
       } catch (err) {
-        console.logger.error('Error initializing error state:', err);
+        console.error('Error initializing error state:', err);
       }
     }
   }, [isTest]);
@@ -141,7 +141,7 @@ export function useErrorState() {
           severity: error.severity || 'error'
         }));
       } catch (err) {
-        console.logger.error('Error in setError:', err);
+        console.error('Error in setError:', err);
       }
     } else if (errorContext) {
       // In real environment
@@ -175,7 +175,7 @@ export function useErrorState() {
           severity: 'info'
         }));
       } catch (err) {
-        console.logger.error('Error in clearError:', err);
+        console.error('Error in clearError:', err);
       }
     } else if (errorContext) {
       // In real environment
@@ -213,7 +213,7 @@ export function useErrorState() {
           severity
         }));
       } catch (err) {
-        console.logger.error('Error in handleError:', err);
+        console.error('Error in handleError:', err);
       }
     } else if (errorContext) {
       // In real environment

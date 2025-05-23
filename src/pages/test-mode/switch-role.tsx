@@ -52,7 +52,7 @@ const SwitchRolePage: React.FC = () => {
             console.log('All roles enabled in database');
           }
         } catch (error) {
-          console.logger.error('Error enabling roles in database:', error);
+          console.error('Error enabling roles in database:', error);
         }
       };
       

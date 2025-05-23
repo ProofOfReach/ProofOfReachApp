@@ -79,7 +79,7 @@ export const useUnifiedRole = () => {
           setCurrentRole(activeRole);
         }
       } catch (error) {
-        logger.logger.error('Error initializing role state:', error);
+        logger.error('Error initializing role state:', error);
         
         // Default to basic viewer role
         if (isMounted) {

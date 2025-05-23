@@ -6,7 +6,7 @@
  */
 
 import React from 'react';
-import "./types/errors';
+import '@/types/errors';
 
 export interface FieldError {
   field: string;

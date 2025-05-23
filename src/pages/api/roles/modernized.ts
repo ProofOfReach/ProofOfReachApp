@@ -3,11 +3,11 @@
  * Uses the new centralized role management system
  */
 import { NextApiRequest, NextApiResponse } from 'next';
-import "./lib/roles/roleService';
-import "./lib/auth';
-import "./lib/logger';
-import "./lib/roles/types';
-import "./lib/prismaClient';
+import '@/lib/roles/roleService';
+import '@/lib/auth';
+import '@/lib/logger';
+import '@/lib/roles/types';
+import '@/lib/prismaClient';
 
 export default async function handler(
   req: NextApiRequest,
@@ -47,7 +47,7 @@ export default async function handler(
         });
     }
   } catch (error) {
-    logger.logger.error('Error in modernized roles API:', error);
+    logger.error('Error in modernized roles API:', error);
     return res.status(500).json({
       success: false,
       error: null as any // TODO: implement roleService.formatError(
@@ -87,7 +87,7 @@ async function getRoles(pubkey: string, res: NextApiResponse) {
       currentRole
     });
   } catch (error) {
-    logger.logger.error('Error getting roles:', error);
+    logger.error('Error getting roles:', error);
     return res.status(500).json({
       success: false,
       error: null as any // TODO: implement roleService.formatError(
@@ -216,7 +216,7 @@ async function updateRole(pubkey: string, req: NextApiRequest, res: NextApiRespo
       availableRoles
     });
   } catch (error) {
-    logger.logger.error('Error updating role:', error);
+    logger.error('Error updating role:', error);
     return res.status(500).json({
       success: false,
       error: null as any // TODO: implement roleService.formatError(

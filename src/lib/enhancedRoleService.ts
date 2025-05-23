@@ -110,7 +110,7 @@ export async function getUserRoleData(userId: string): Promise<UserRoleData | nu
       updatedAt: user.updatedAt,
     };
   } catch (error) {
-    logger.logger.error('Error getting user role data:', error);
+    logger.error('Error getting user role data:', error);
     throw new Error('Failed to get user role data');
   }
 }
@@ -183,7 +183,7 @@ export async function changeUserRole(
       updatedAt: updatedUser.updatedAt,
     };
   } catch (error) {
-    logger.logger.error('Error changing user role:', error);
+    logger.error('Error changing user role:', error);
     throw new Error('Failed to change user role');
   }
 }
@@ -331,7 +331,7 @@ export async function enableAllRoles(userId: string): Promise<UserRoleData> {
       updatedAt: updatedUser.updatedAt,
     };
   } catch (error) {
-    logger.logger.error('Error enabling all roles:', error);
+    logger.error('Error enabling all roles:', error);
     throw new Error('Failed to enable all roles');
   }
 }
@@ -420,7 +420,7 @@ export async function createUserWithTestMode(userId: string): Promise<UserRoleDa
       updatedAt: newUser.updatedAt,
     };
   } catch (error) {
-    logger.logger.error('Error creating user with test mode:', error);
+    logger.error('Error creating user with test mode:', error);
     throw new Error('Failed to create user with test mode');
   }
 }
@@ -455,7 +455,7 @@ export async function hasRole(userId: string, role: RoleType): Promise<boolean> 
     // Check new userRoles table
     return user.userRoles.some(userRole => userRole.role === role && userRole.isActive);
   } catch (error) {
-    logger.logger.error('Error checking user role:', error);
+    logger.error('Error checking user role:', error);
     return false;
   }
 }
@@ -478,7 +478,7 @@ export async function isTestModeEnabled(userId: string): Promise<boolean> {
     
     return !!user.isTestUser;
   } catch (error) {
-    logger.logger.error('Error checking test mode:', error);
+    logger.error('Error checking test mode:', error);
     return false;
   }
 }
@@ -529,7 +529,7 @@ export async function toggleTestMode(userId: string, enabled: boolean): Promise<
       updatedAt: updatedUser.updatedAt,
     };
   } catch (error) {
-    logger.logger.error('Error toggling test mode:', error);
+    logger.error('Error toggling test mode:', error);
     throw new Error('Failed to toggle test mode');
   }
 }

@@ -7,7 +7,7 @@
  * Part of the Phase 1 error handling infrastructure implementation.
  */
 
-import "./lib/errorService';
+import '@/lib/errorService';
 import { logger } from './logger';
 
 /**
@@ -177,7 +177,7 @@ class ErrorMonitoringService {
       // Log to console in development
       if (this.config.logToConsole) {
         console.group('Error captured by ErrorMonitoringService');
-        console.logger.error(error);
+        console.error(error);
         console.info('Context:', {
           component,
           category: context.category,
@@ -194,7 +194,7 @@ class ErrorMonitoringService {
     } catch (err) {
       // Avoid infinite loops if our error handling itself has errors
       if (this.config.logToConsole) {
-        console.logger.error('Error in ErrorMonitoringService:', err);
+        console.error('Error in ErrorMonitoringService:', err);
       }
     }
   }

@@ -1,7 +1,7 @@
 import React from 'react';
 import { NextPage } from 'next';
 import Head from 'next/head';
-import "./components/ui/data-table/DataTable';
+import '@/components/ui/data-table/DataTable';
 import { 
   Dialog, 
   DialogTrigger, 
@@ -12,7 +12,7 @@ import {
   DialogFooter,
   DialogClose
 } from '@/components/ui/dialog';
-import "./components/ui/input';
+import '@/components/ui/input';
 import { Edit, Eye, Trash2 } from 'react-feather';
 
 // Sample data for the table

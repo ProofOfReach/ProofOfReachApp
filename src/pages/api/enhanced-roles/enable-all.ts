@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import "./lib/enhancedRoleService';
-import "./utils/enhancedRoleMiddleware';
-import "./lib/logger';
+import '@/lib/enhancedRoleService';
+import '@/utils/enhancedRoleMiddleware';
+import '@/lib/logger';
 
 /**
  * @swagger
@@ -52,7 +52,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       data: updatedUserData
     });
   } catch (error) {
-    logger.logger.error('Error enabling all roles:', error);
+    logger.error('Error enabling all roles:', error);
     return res.status(500).json({ error: 'Internal server error' });
   }
 };

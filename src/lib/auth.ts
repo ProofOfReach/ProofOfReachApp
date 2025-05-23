@@ -79,7 +79,7 @@ export async function isAuthenticated(
     // Handle if it's a promise
     pubkeyValue = pubkey instanceof Promise ? await pubkey : pubkey;
   } catch (err) {
-    logger.logger.error('Error getting auth cookie', err);
+    logger.error('Error getting auth cookie', err);
     return null;
   }
   
@@ -103,7 +103,7 @@ export async function isAuthenticated(
     return pubkeyValue;
   } catch (error: unknown) {
     const errorMessage = error instanceof Error ? error.message : String(error);
-    logger.logger.error(`Error verifying authentication: ${errorMessage}`);
+    logger.error(`Error verifying authentication: ${errorMessage}`);
     return null;
   }
 }
@@ -191,7 +191,7 @@ export async function getServerSession(
     };
   } catch (error: unknown) {
     const errorMessage = error instanceof Error ? error.message : String(error);
-    logger.logger.error(`Error verifying auth token: ${errorMessage}`);
+    logger.error(`Error verifying auth token: ${errorMessage}`);
     return null;
   }
 }
@@ -223,7 +223,7 @@ export function requireAuth(
       // Call the handler with the pubkey and userId
       return await handler(req, res, session.user.nostrPubkey, session.user.id);
     } catch (error) {
-      logger.logger.error('Authentication middleware error:', error);
+      logger.error('Authentication middleware error:', error);
       return res.status(500).json({ error: 'Internal server error' });
     }
   };

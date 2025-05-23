@@ -1,8 +1,8 @@
 import { TestModeStorageService, TestModeState } from '../testModeStorageService';
 import { EnhancedStorageService, STORAGE_KEYS } from '../enhancedStorageService';
-import "./lib/logger';
-import "./lib/events';
-import "./types/role';
+import '@/lib/logger';
+import '@/lib/events';
+import '@/types/role';
 
 // Mock dependencies
 jest.mock('../enhancedStorageService', () => ({
@@ -254,7 +254,7 @@ describe('TestModeStorageService', () => {
       // Create a mock implementation that throws specifically for this test
       mockStorage.getSecureItem.mockImplementationOnce(() => {
         const error = new Error('Storage error');
-        logger.logger.error('Error checking test mode:', error);
+        logger.error('Error checking test mode:', error);
         throw error;
       });
       
@@ -370,7 +370,7 @@ describe('TestModeStorageService', () => {
       // Create a mock implementation that throws specifically for this test
       mockStorage.getSecureItem.mockImplementationOnce(() => {
         const error = new Error('Storage error');
-        logger.logger.error('Error getting test mode time remaining:', error);
+        logger.error('Error getting test mode time remaining:', error);
         throw error;
       });
       
@@ -497,7 +497,7 @@ describe('TestModeStorageService', () => {
       // Create a mock implementation that throws with the correct error message
       mockStorage.getSecureItem.mockImplementationOnce(() => {
         const error = new Error('Storage error');
-        logger.logger.error('Error extending test mode duration:', error);
+        logger.error('Error extending test mode duration:', error);
         throw error;
       });
       
@@ -594,7 +594,7 @@ describe('TestModeStorageService', () => {
       // Create a mock implementation that throws with the correct error message
       mockStorage.getSecureItem.mockImplementationOnce(() => {
         const error = new Error('Storage error');
-        logger.logger.error('Error updating test mode initial role:', error);
+        logger.error('Error updating test mode initial role:', error);
         throw error;
       });
       

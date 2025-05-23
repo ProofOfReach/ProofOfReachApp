@@ -12,18 +12,18 @@ import {
   AlertCircle
 } from 'react-feather';
 import Link from 'next/link';
-import "./context/RoleContext';
-import "./components/layout/ImprovedDashboardLayout';
-import "./components/ui/StatCard';
-import "./components/CurrencyAmount';
-import "./components/CurrencyWrapper';
-import "./lib/roleService';
-import "./context/RoleContext';
+import '@/context/RoleContext';
+import '@/components/layout/ImprovedDashboardLayout';
+import '@/components/ui/StatCard';
+import '@/components/CurrencyAmount';
+import '@/components/CurrencyWrapper';
+import '@/lib/roleService';
+import '@/context/RoleContext';
 import type { ReactElement } from 'react';
 import type { NextPageWithLayout } from '../_app';
-import "./components/ui';
-import "./utils/layoutHelpers';
-import "./lib/logger';
+import '@/components/ui';
+import '@/utils/layoutHelpers';
+import '@/lib/logger';
 
 /**
  * Main dashboard page - serves content based on the current role

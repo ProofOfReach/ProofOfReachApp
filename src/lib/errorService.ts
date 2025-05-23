@@ -377,7 +377,7 @@ export class ErrorService {
       try {
         listener(error);
       } catch (err) {
-        logger.logger.error('Error in error listener', { 
+        logger.error('Error in error listener', { 
           error: err instanceof Error ? err.message : 'Unknown error' 
         });
       }
@@ -394,7 +394,7 @@ export class ErrorService {
       try {
         listener(errorId);
       } catch (err) {
-        logger.logger.error('Error in clear listener', { 
+        logger.error('Error in clear listener', { 
           error: err instanceof Error ? err.message : 'Unknown error' 
         });
       }
@@ -441,10 +441,10 @@ export class ErrorService {
     
     switch (error.severity) {
       case 'critical':
-        logger.logger.error(`[CRITICAL] ${error.message}`, logData);
+        logger.error(`[CRITICAL] ${error.message}`, logData);
         break;
       case 'error':
-        logger.logger.error(error.message, logData);
+        logger.error(error.message, logData);
         break;
       case 'warning':
         logger.warn(error.message, logData);

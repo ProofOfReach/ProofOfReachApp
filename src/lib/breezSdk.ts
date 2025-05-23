@@ -42,7 +42,7 @@ export class BreezSDK {
       
       this.initialized = true;
     } catch (error) {
-      console.logger.error("Failed to initialize BREEZ SDK:", error);
+      console.error("Failed to initialize BREEZ SDK:", error);
       throw new Error("Failed to initialize BREEZ SDK");
     }
   }
@@ -61,7 +61,7 @@ export class BreezSDK {
       // For now, we return a placeholder
       return 0;
     } catch (error) {
-      console.logger.error("Failed to get balance:", error);
+      console.error("Failed to get balance:", error);
       throw new Error("Failed to get balance from BREEZ SDK");
     }
   }
@@ -81,7 +81,7 @@ export class BreezSDK {
       // For now, we throw an error indicating BREEZ SDK is not yet implemented
       throw new Error("BREEZ SDK not yet implemented - API key required");
     } catch (error) {
-      console.logger.error("Failed to create invoice:", error);
+      console.error("Failed to create invoice:", error);
       throw error;
     }
   }
@@ -101,7 +101,7 @@ export class BreezSDK {
       // For now, we throw an error indicating BREEZ SDK is not yet implemented
       throw new Error("BREEZ SDK not yet implemented - API key required");
     } catch (error) {
-      console.logger.error("Failed to pay invoice:", error);
+      console.error("Failed to pay invoice:", error);
       throw error;
     }
   }

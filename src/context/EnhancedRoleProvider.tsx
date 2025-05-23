@@ -113,10 +113,10 @@ export const EnhancedRoleProvider: React.FC<EnhancedRoleProviderProps> = ({
         const data = await response.json();
         setAvailableRoles(data.roles);
       } else {
-        console.logger.error('Failed to fetch available roles:', await response.text());
+        console.error('Failed to fetch available roles:', await response.text());
       }
     } catch (error) {
-      console.logger.error('Error fetching available roles:', error);
+      console.error('Error fetching available roles:', error);
     }
   };
   
@@ -174,7 +174,7 @@ export const EnhancedRoleProvider: React.FC<EnhancedRoleProviderProps> = ({
         }
       }
     } catch (error) {
-      console.logger.error('Error switching role:', error);
+      console.error('Error switching role:', error);
     } finally {
       setIsTransitioning(false);
     }

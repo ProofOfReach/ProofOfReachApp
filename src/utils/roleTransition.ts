@@ -69,7 +69,7 @@ export function dispatchRoleSwitchedEvent(from: UserRoleType, to: UserRoleType, 
     const event = new CustomEvent('roleSwitched', { detail });
     document.dispatchEvent(event);
   } catch (error) {
-    logger.logger.error('Error dispatching role switched event:', error);
+    logger.error('Error dispatching role switched event:', error);
   }
 }
 
@@ -202,7 +202,7 @@ export async function transitionToRole(
           scroll: false 
         });
       } catch (routerError) {
-        logger.logger.error('Error during Next.js router navigation:', routerError);
+        logger.error('Error during Next.js router navigation:', routerError);
         // Fallback to traditional navigation if Router fails
         window.location.href = targetPath;
         // Mark the transition as completed even though we're doing a full page navigation
@@ -215,7 +215,7 @@ export async function transitionToRole(
     completeRoleTransition();
     return true;
   } catch (error) {
-    logger.logger.error('Error during role transition:', error);
+    logger.error('Error during role transition:', error);
     clearRoleTransitionState();
     return false;
   }
@@ -234,7 +234,7 @@ export function setRoleTransitionState(state: RoleTransitionState): void {
   try {
     sessionStorage.setItem(ROLE_TRANSITION_STATE_KEY, JSON.stringify(state));
   } catch (error) {
-    logger.logger.error('Error setting role transition state:', error);
+    logger.error('Error setting role transition state:', error);
   }
 }
 
@@ -257,7 +257,7 @@ export function updateRoleTransitionState(partialState: Partial<RoleTransitionSt
       });
     }
   } catch (error) {
-    logger.logger.error('Error updating role transition state:', error);
+    logger.error('Error updating role transition state:', error);
   }
 }
 
@@ -277,7 +277,7 @@ export function getRoleTransitionState(): RoleTransitionState | null {
       return JSON.parse(stateJson) as RoleTransitionState;
     }
   } catch (error) {
-    logger.logger.error('Error getting role transition state:', error);
+    logger.error('Error getting role transition state:', error);
   }
   
   return null;
@@ -294,7 +294,7 @@ export function clearRoleTransitionState(): void {
   try {
     sessionStorage.removeItem(ROLE_TRANSITION_STATE_KEY);
   } catch (error) {
-    logger.logger.error('Error clearing role transition state:', error);
+    logger.error('Error clearing role transition state:', error);
   }
 }
 
@@ -316,7 +316,7 @@ export function completeRoleTransition(): void {
       });
     }
   } catch (error) {
-    logger.logger.error('Error completing role transition:', error);
+    logger.error('Error completing role transition:', error);
   }
 }
 
@@ -354,7 +354,7 @@ export function saveRolePreferences(role: UserRoleType, preferences: Record<stri
     // Save back to localStorage
     localStorage.setItem(ROLE_PREFERENCES_KEY, JSON.stringify(allPreferences));
   } catch (error) {
-    logger.logger.error('Error saving role preferences:', error);
+    logger.error('Error saving role preferences:', error);
   }
 }
 
@@ -373,7 +373,7 @@ export function getRolePreferences(role: UserRoleType): Record<string, any> {
     const allPreferences = getRolePreferencesForAllRoles();
     return allPreferences[role] || {};
   } catch (error) {
-    logger.logger.error('Error getting role preferences:', error);
+    logger.error('Error getting role preferences:', error);
     return {};
   }
 }
@@ -394,7 +394,7 @@ export function getRolePreferencesForAllRoles(): Record<UserRoleType, Record<str
       return JSON.parse(preferencesJson) as Record<UserRoleType, Record<string, any>>;
     }
   } catch (error) {
-    logger.logger.error('Error getting all role preferences:', error);
+    logger.error('Error getting all role preferences:', error);
   }
   
   return {} as Record<UserRoleType, Record<string, any>>;
@@ -438,7 +438,7 @@ export function addRoleSwitchedListener(
       document.removeEventListener('roleSwitched', typedCallback);
     };
   } catch (error) {
-    logger.logger.error('Error setting up role switched listener:', error);
+    logger.error('Error setting up role switched listener:', error);
     return () => {}; // Return no-op on error
   }
 }

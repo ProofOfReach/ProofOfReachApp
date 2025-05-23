@@ -64,7 +64,7 @@ class RoleService {
       logger.log(`Test mode ${enabled ? 'enabled' : 'disabled'}${expiryInMinutes ? ` with ${expiryInMinutes} minute expiry` : ''}`);
       return true;
     } catch (error) {
-      logger.logger.error('Error setting test mode:', error);
+      logger.error('Error setting test mode:', error);
       return false;
     }
   }
@@ -81,7 +81,7 @@ class RoleService {
       
       return userPref?.currentRole as UserRole || null;
     } catch (error) {
-      console.logger.error('Error getting current role:', error);
+      console.error('Error getting current role:', error);
       return null;
     }
   }
@@ -105,7 +105,7 @@ class RoleService {
       
       return true;
     } catch (error) {
-      console.logger.error('Error setting current role:', error);
+      console.error('Error setting current role:', error);
       return false;
     }
   }
@@ -135,7 +135,7 @@ class RoleService {
       
       return roles;
     } catch (error) {
-      console.logger.error('Error getting available roles:', error);
+      console.error('Error getting available roles:', error);
       return [];
     }
   }
@@ -151,7 +151,7 @@ class RoleService {
       const roles = await this.getAvailableRoles(userId);
       return roles.includes(role);
     } catch (error) {
-      console.logger.error('Error checking if role is available:', error);
+      console.error('Error checking if role is available:', error);
       return false;
     }
   }
@@ -188,7 +188,7 @@ class RoleService {
       
       return true;
     } catch (error) {
-      console.logger.error('Error adding role:', error);
+      console.error('Error adding role:', error);
       return false;
     }
   }
@@ -201,7 +201,7 @@ class RoleService {
   async enableAllRolesForTestUser(userId: string): Promise<{success: boolean, user?: any}> {
     try {
       if (!userId) {
-        console.logger.error('Cannot enable roles: No user ID provided');
+        console.error('Cannot enable roles: No user ID provided');
         return { success: false };
       }
       
@@ -214,7 +214,7 @@ class RoleService {
       });
       
       if (!existingUser) {
-        console.logger.error('User not found for ID:', userId);
+        console.error('User not found for ID:', userId);
         return { success: false };
       }
       
@@ -258,7 +258,7 @@ class RoleService {
         }
       };
     } catch (error) {
-      console.logger.error('Error enabling all roles for test user:', error);
+      console.error('Error enabling all roles for test user:', error);
       return { success: false };
     }
   }
@@ -271,7 +271,7 @@ class RoleService {
   async getUserByPubkey(pubkey: string): Promise<any | null> {
     try {
       if (!pubkey) {
-        logger.logger.error('Cannot get user: No pubkey provided');
+        logger.error('Cannot get user: No pubkey provided');
         return null;
       }
       
@@ -319,7 +319,7 @@ class RoleService {
       
       return user;
     } catch (error) {
-      logger.logger.error('Error getting user by pubkey:', error);
+      logger.error('Error getting user by pubkey:', error);
       return null;
     }
   }
@@ -333,7 +333,7 @@ class RoleService {
   async addRoleToUser(pubkey: string, role: UserRole): Promise<boolean> {
     try {
       if (!pubkey || !role) {
-        logger.logger.error('Cannot add role: Missing pubkey or role');
+        logger.error('Cannot add role: Missing pubkey or role');
         return false;
       }
       
@@ -349,7 +349,7 @@ class RoleService {
       });
       
       if (!user) {
-        logger.logger.error(`User not found for pubkey: ${pubkey}`);
+        logger.error(`User not found for pubkey: ${pubkey}`);
         return false;
       }
       
@@ -370,7 +370,7 @@ class RoleService {
           updateData.isStakeholder = true;
           break;
         default:
-          logger.logger.error(`Invalid role: ${role}`);
+          logger.error(`Invalid role: ${role}`);
           return false;
       }
       
@@ -383,7 +383,7 @@ class RoleService {
       logger.log(`Added role ${role} to user ${pubkey}`);
       return true;
     } catch (error) {
-      logger.logger.error('Error adding role to user:', error);
+      logger.error('Error adding role to user:', error);
       return false;
     }
   }
@@ -397,7 +397,7 @@ class RoleService {
   async removeRoleFromUser(pubkey: string, role: UserRole): Promise<boolean> {
     try {
       if (!pubkey || !role) {
-        logger.logger.error('Cannot remove role: Missing pubkey or role');
+        logger.error('Cannot remove role: Missing pubkey or role');
         return false;
       }
       
@@ -413,7 +413,7 @@ class RoleService {
       });
       
       if (!user) {
-        logger.logger.error(`User not found for pubkey: ${pubkey}`);
+        logger.error(`User not found for pubkey: ${pubkey}`);
         return false;
       }
       
@@ -434,7 +434,7 @@ class RoleService {
           updateData.isStakeholder = false;
           break;
         default:
-          logger.logger.error(`Invalid role: ${role}`);
+          logger.error(`Invalid role: ${role}`);
           return false;
       }
       
@@ -447,7 +447,7 @@ class RoleService {
       logger.log(`Removed role ${role} from user ${pubkey}`);
       return true;
     } catch (error) {
-      logger.logger.error('Error removing role from user:', error);
+      logger.error('Error removing role from user:', error);
       return false;
     }
   }

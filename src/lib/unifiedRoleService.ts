@@ -91,7 +91,7 @@ export class UnifiedRoleService {
         this.cache = this.validateRoleData(parsedData);
       }
     } catch (error) {
-      logger.logger.error('Error loading role data from storage:', error);
+      logger.error('Error loading role data from storage:', error);
       // Invalidate the cache on error
       this.cache = null;
     }
@@ -104,7 +104,7 @@ export class UnifiedRoleService {
     try {
       localStorage.setItem(this.config.storageKey, JSON.stringify(data));
     } catch (error) {
-      logger.logger.error('Error saving role data to storage:', error);
+      logger.error('Error saving role data to storage:', error);
     }
   }
   
@@ -183,7 +183,7 @@ export class UnifiedRoleService {
       this.saveToStorage(validatedData);
       this.debug('Role data updated', validatedData);
     } catch (error) {
-      logger.logger.error('Error setting role data:', error);
+      logger.error('Error setting role data:', error);
       throw error;
     }
   }
@@ -257,7 +257,7 @@ export class UnifiedRoleService {
       
       return roles;
     } catch (error) {
-      logger.logger.error('Error getting user roles:', error);
+      logger.error('Error getting user roles:', error);
       return [this.config.defaultRole];
     }
   }
@@ -407,7 +407,7 @@ export class UnifiedRoleService {
       
       return true;
     } catch (error) {
-      logger.logger.error('Error updating user roles:', error);
+      logger.error('Error updating user roles:', error);
       return false;
     }
   }
@@ -490,7 +490,7 @@ export class UnifiedRoleService {
       
       return true;
     } catch (error) {
-      logger.logger.error('Error setting current role on server:', error);
+      logger.error('Error setting current role on server:', error);
       return false;
     }
   }
@@ -520,7 +520,7 @@ export class UnifiedRoleService {
       this.setRoleData(newData);
       return true;
     } catch (error) {
-      logger.logger.error('Error setting current role in local context:', error);
+      logger.error('Error setting current role in local context:', error);
       return false;
     }
   }
@@ -544,7 +544,7 @@ export class UnifiedRoleService {
       
       this.setRoleData(newData);
     } catch (error) {
-      logger.logger.error('Error setting available roles:', error);
+      logger.error('Error setting available roles:', error);
       throw error;
     }
   }
@@ -618,7 +618,7 @@ export class UnifiedRoleService {
       // If we still don't have roles, return the default (normalized)
       return roles[0] || normalizeRole(this.config.defaultRole);
     } catch (error) {
-      logger.logger.error('Error getting current role from server:', error);
+      logger.error('Error getting current role from server:', error);
       // Return normalized default role
       return normalizeRole(this.config.defaultRole) as UserRoleType;
     }
@@ -643,7 +643,7 @@ export class UnifiedRoleService {
       }
       this.debug('Role data cleared');
     } catch (error) {
-      logger.logger.error('Error clearing role data:', error);
+      logger.error('Error clearing role data:', error);
     }
   }
   
@@ -699,7 +699,7 @@ export class UnifiedRoleService {
       
       return validatedData;
     } catch (error) {
-      logger.logger.error('Error syncing with server:', error);
+      logger.error('Error syncing with server:', error);
       return this.getRoleData();
     }
   }
@@ -724,7 +724,7 @@ export class UnifiedRoleService {
       
       return true;
     } catch (error) {
-      logger.logger.error('Error updating server role:', error);
+      logger.error('Error updating server role:', error);
       return false;
     }
   }

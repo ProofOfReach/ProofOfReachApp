@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import "./lib/logger';
+import '@/lib/logger';
 
 /**
  * Custom hook for managing test mode wallet balance
@@ -15,7 +15,7 @@ export function useTestWallet(defaultBalance = 100000) {
       const storedBalance = localStorage.getItem('testWalletBalance');
       return storedBalance ? parseInt(storedBalance, 10) : defaultBalance;
     } catch (error) {
-      logger.logger.error('Error getting test wallet balance from localStorage:', error);
+      logger.error('Error getting test wallet balance from localStorage:', error);
       return defaultBalance;
     }
   });
@@ -32,7 +32,7 @@ export function useTestWallet(defaultBalance = 100000) {
           setBalance(newBalance);
           logger.debug(`Test wallet balance updated from storage event: ${newBalance}`);
         } catch (error) {
-          logger.logger.error('Error parsing test wallet balance:', error);
+          logger.error('Error parsing test wallet balance:', error);
         }
       }
     };
@@ -49,7 +49,7 @@ export function useTestWallet(defaultBalance = 100000) {
           }
         }
       } catch (error) {
-        logger.logger.error('Error checking test wallet balance:', error);
+        logger.error('Error checking test wallet balance:', error);
       }
     };
 
@@ -72,7 +72,7 @@ export function useTestWallet(defaultBalance = 100000) {
       setBalance(newBalance);
       logger.debug(`Test wallet balance manually updated: ${newBalance}`);
     } catch (error) {
-      logger.logger.error('Error updating test wallet balance:', error);
+      logger.error('Error updating test wallet balance:', error);
     }
   };
 

@@ -1,8 +1,8 @@
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
-import "./components/ErrorBoundary';
-import "./lib/errorService';
-import "./lib/errorMonitoring';
+import '@/components/ErrorBoundary';
+import '@/lib/errorService';
+import '@/lib/errorMonitoring';
 
 // Mock the errorService
 jest.mock('@/lib/errorService', () => ({

@@ -1,6 +1,6 @@
 import React from 'react';
 import Layout from '../components/Layout';
-import "./components/ui/Typography';
+import '@/components/ui/Typography';
 
 const PrivacyPolicy: React.FC = () => {
   return (

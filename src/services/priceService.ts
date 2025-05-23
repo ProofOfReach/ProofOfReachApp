@@ -120,7 +120,7 @@ class PriceService {
       
       return priceData;
     } catch (error) {
-      console.logger.error('Error fetching BTC price:', error);
+      console.error('Error fetching BTC price:', error);
       
       // If we already have a cached price, try to get it directly from localStorage
       try {

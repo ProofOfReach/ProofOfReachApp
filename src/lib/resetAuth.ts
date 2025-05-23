@@ -21,7 +21,7 @@ export function resetAllAuthState(): void {
     localStorage.clear();
     logger.log('Cleared localStorage');
   } catch (error) {
-    logger.logger.error('Error clearing localStorage:', error);
+    logger.error('Error clearing localStorage:', error);
   }
   
   // 2. Clear all sessionStorage items
@@ -29,7 +29,7 @@ export function resetAllAuthState(): void {
     sessionStorage.clear();
     logger.log('Cleared sessionStorage');
   } catch (error) {
-    logger.logger.error('Error clearing sessionStorage:', error);
+    logger.error('Error clearing sessionStorage:', error);
   }
   
   // 3. Clear all cookies
@@ -45,7 +45,7 @@ export function resetAllAuthState(): void {
     
     logger.log('Cleared all cookies');
   } catch (error) {
-    logger.logger.error('Error clearing cookies:', error);
+    logger.error('Error clearing cookies:', error);
   }
   
   // 4. Set a prevention flag so login page won't auto-redirect
@@ -53,7 +53,7 @@ export function resetAllAuthState(): void {
     localStorage.setItem('prevent_auto_login', 'true');
     logger.log('Set prevent_auto_login flag');
   } catch (error) {
-    logger.logger.error('Error setting prevent_auto_login flag:', error);
+    logger.error('Error setting prevent_auto_login flag:', error);
   }
   
   // 5. Add a timestamp to help prevent caching issues
@@ -64,7 +64,7 @@ export function resetAllAuthState(): void {
     window.location.href = `/login?force_logout=true&t=${timestamp}`;
     logger.log('Redirecting to login page with force_logout flag');
   } catch (error) {
-    logger.logger.error('Error redirecting to login page:', error);
+    logger.error('Error redirecting to login page:', error);
   }
 }
 

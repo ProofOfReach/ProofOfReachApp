@@ -14,8 +14,8 @@ import {
 } from '../lib/nostr';
 import { postWithAuth } from '../lib/api';
 import { isPostForcedLogout } from '../lib/resetAuth';
-import "./lib/logger';
-import "./services/enhancedStorageService';
+import '@/lib/logger';
+import '@/services/enhancedStorageService';
 
 // Create a client-side only wrapper component to avoid hydration issues
 import dynamic from 'next/dynamic';
@@ -278,7 +278,7 @@ const LoginPageClient: React.FC = () => {
           ? extensionError.message 
           : String(extensionError);
           
-        logger.logger.error('Failed to get public key from Nostr extension:', { error: errorDetails });
+        logger.error('Failed to get public key from Nostr extension:', { error: errorDetails });
         
         if (errorDetails.includes('denied') || errorDetails.includes('rejected')) {
           throw new Error('Permission denied by user or Nostr extension. Please approve the request and try again.');
@@ -326,13 +326,13 @@ const LoginPageClient: React.FC = () => {
           data = await response.json();
           logger.debug('API login response:', data);
         } catch (jsonError) {
-          logger.logger.error('Failed to parse API response:', jsonError);
+          logger.error('Failed to parse API response:', jsonError);
           throw new Error('Received invalid response from server');
         }
         
         if (!response.ok) {
           const errorMessage = data.message || data.error || `Authentication failed with status ${response.status}`;
-          logger.logger.error('API login failed:', { status: response.status, error: errorMessage });
+          logger.error('API login failed:', { status: response.status, error: errorMessage });
           throw new Error(errorMessage);
         }
         
@@ -347,7 +347,7 @@ const LoginPageClient: React.FC = () => {
         
         // Check onboarding status and redirect appropriately
         logger.debug('Determining redirect destination...');
-        const onboardingService = await import "./lib/onboardingService').then(mod => mod.default);
+        const onboardingService = await import '@/lib/onboardingService').then(mod => mod.default);
         // No default role - let the onboarding process handle role selection
         const redirectUrl = await onboardingService.getPostLoginRedirectUrl(pubkey);
         
@@ -384,7 +384,7 @@ const LoginPageClient: React.FC = () => {
         }, 200);
       } catch (apiError: unknown) {
         const errorDetails = apiError instanceof Error ? apiError.message : String(apiError);
-        logger.logger.error('API authentication failed:', { error: errorDetails });
+        logger.error('API authentication failed:', { error: errorDetails });
         throw new Error(`Failed to authenticate with the server: ${errorDetails}`);
       }
     } catch (err: unknown) {
@@ -393,7 +393,7 @@ const LoginPageClient: React.FC = () => {
         ? err.message 
         : 'An unexpected error occurred during login';
         
-      logger.logger.error('Login process failed:', { 
+      logger.error('Login process failed:', { 
         error: errorMessage, 
         details: err instanceof Error ? err.stack : String(err)
       });
@@ -453,7 +453,7 @@ const LoginPageClient: React.FC = () => {
           data = await response.json();
           console.log('API login response:', data);
         } catch (jsonError) {
-          console.logger.error('Error parsing API response:', jsonError);
+          console.error('Error parsing API response:', jsonError);
         }
         
         if (!response.ok) {
@@ -472,7 +472,7 @@ const LoginPageClient: React.FC = () => {
         
         // Determine where to redirect based on onboarding status
         logger.log('Account created successfully, checking onboarding status');
-        const onboardingService = await import "./lib/onboardingService').then(mod => mod.default);
+        const onboardingService = await import '@/lib/onboardingService').then(mod => mod.default);
         // No default role - let the onboarding process handle role selection
         const redirectUrl = await onboardingService.getPostLoginRedirectUrl(publicKey as string);
         
@@ -480,13 +480,13 @@ const LoginPageClient: React.FC = () => {
         // Use window.location for a hard redirect to ensure state is refreshed
         window.location.href = redirectUrl;
       } catch (apiError: unknown) {
-        logger.logger.error('API error during account creation:', apiError instanceof Error ? apiError.message : String(apiError));
+        logger.error('API error during account creation:', apiError instanceof Error ? apiError.message : String(apiError));
         
         // Even if API call fails, we've already set cookies and localStorage
         // We can still redirect to onboarding or dashboard
         logger.log('API call failed but continuing with redirection');
         try {
-          const onboardingService = await import "./lib/onboardingService').then(mod => mod.default);
+          const onboardingService = await import '@/lib/onboardingService').then(mod => mod.default);
           // No default role - let the onboarding process handle role selection
           const redirectUrl = await onboardingService.getPostLoginRedirectUrl(publicKey || '');
           
@@ -494,14 +494,14 @@ const LoginPageClient: React.FC = () => {
           // Use window.location for a hard redirect to ensure state is refreshed
           window.location.href = redirectUrl;
         } catch (redirectError: unknown) {
-          logger.logger.error('Error during redirection:', redirectError instanceof Error ? redirectError.message : String(redirectError));
+          logger.error('Error during redirection:', redirectError instanceof Error ? redirectError.message : String(redirectError));
           // Fallback to dashboard if onboarding redirect fails
           window.location.href = '/dashboard';
         }
       }
     } catch (err: unknown) {
       const errorMessage = err instanceof Error ? err.message : 'Failed to create new account';
-      logger.logger.error('Create account error:', errorMessage);
+      logger.error('Create account error:', errorMessage);
       setError(errorMessage);
     } finally {
       setIsLoading(false);
@@ -556,14 +556,14 @@ const LoginPageClient: React.FC = () => {
         const result = await login(publicKey as string, true);
         logger.log('Test login successful:', result);
       } catch (loginError: unknown) {
-        logger.logger.error('Test login internal error:', loginError instanceof Error ? loginError.message : String(loginError));
+        logger.error('Test login internal error:', loginError instanceof Error ? loginError.message : String(loginError));
         logger.log('Continuing anyway since cookies were set directly');
       }
 
       // Complete onboarding for test users (regardless of login success)
       try {
         // Import onboarding service dynamically
-        const onboardingService = await import "./lib/onboardingService').then(mod => mod.default);
+        const onboardingService = await import '@/lib/onboardingService').then(mod => mod.default);
         
         // Define proper interface for API request and responses
         interface OnboardingCompleteRequest {
@@ -607,11 +607,11 @@ const LoginPageClient: React.FC = () => {
               logger.warn(`Failed to mark onboarding complete for role: ${role}`, errorData?.error || 'Unknown error');
             }
           } catch (roleError: unknown) {
-            logger.logger.error(`Error marking onboarding complete for role ${role}:`, roleError instanceof Error ? roleError.message : String(roleError));
+            logger.error(`Error marking onboarding complete for role ${role}:`, roleError instanceof Error ? roleError.message : String(roleError));
           }
         }
       } catch (onboardingError: unknown) {
-        logger.logger.error('Error setting up test user onboarding:', onboardingError instanceof Error ? onboardingError.message : String(onboardingError));
+        logger.error('Error setting up test user onboarding:', onboardingError instanceof Error ? onboardingError.message : String(onboardingError));
       }
 
       // Redirect to the dashboard after a short delay
@@ -621,7 +621,7 @@ const LoginPageClient: React.FC = () => {
       }, 500);
       
     } catch (err: unknown) {
-      logger.logger.error('Test mode login error:', err instanceof Error ? err.message : String(err));
+      logger.error('Test mode login error:', err instanceof Error ? err.message : String(err));
       setError(err instanceof Error ? err.message : 'Failed to create test account');
     } finally {
       setIsLoading(false);

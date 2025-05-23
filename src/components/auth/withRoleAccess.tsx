@@ -1,7 +1,7 @@
 import React from 'react';
 import { useRouter } from 'next/router';
-import "./lib/enhancedRoleService';
-import "./context/EnhancedRoleContext';
+import '@/lib/enhancedRoleService';
+import '@/context/EnhancedRoleContext';
 
 export interface WithRoleAccessOptions {
   // List of roles that can access this component

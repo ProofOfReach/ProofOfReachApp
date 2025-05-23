@@ -133,7 +133,7 @@ const TestComponent = () => {
     try {
       setRole(VIEWER_ROLE as unknown as UserRole);
     } catch (e) {
-      console.logger.error('Error setting viewer role:', e);
+      console.error('Error setting viewer role:', e);
     }
   };
   
@@ -141,7 +141,7 @@ const TestComponent = () => {
     try {
       setRole(ADVERTISER_ROLE as unknown as UserRole);
     } catch (e) {
-      console.logger.error('Error setting advertiser role:', e);
+      console.error('Error setting advertiser role:', e);
     }
   };
   
@@ -149,7 +149,7 @@ const TestComponent = () => {
     try {
       setRole(PUBLISHER_ROLE as unknown as UserRole);
     } catch (e) {
-      console.logger.error('Error setting publisher role:', e);
+      console.error('Error setting publisher role:', e);
     }
   };
   

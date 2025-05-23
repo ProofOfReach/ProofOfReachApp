@@ -40,7 +40,7 @@ export const dispatchAppEvent = <T extends AppEventType>(
     dispatchLegacyEvents(eventType, payload);
     
   } catch (error) {
-    logger.logger.error(`Error dispatching event ${eventType}:`, error);
+    logger.error(`Error dispatching event ${eventType}:`, error);
   }
 };
 

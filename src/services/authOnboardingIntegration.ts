@@ -268,7 +268,7 @@ export class AuthOnboardingIntegration {
       }
     );
     
-    logger.logger.error('Error in onboarding flow', {
+    logger.error('Error in onboarding flow', {
       error: error instanceof Error ? error.message : error,
       step,
       onboardingState: this.flowState.onboardingState

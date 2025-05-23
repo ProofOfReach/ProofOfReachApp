@@ -105,7 +105,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
       }
     });
   } catch (error) {
-    console.logger.error('Nostr login error:', error);
+    console.error('Nostr login error:', error);
     return res.status(500).json({ 
       code: 'INTERNAL_SERVER_ERROR', 
       message: 'An error occurred during authentication'

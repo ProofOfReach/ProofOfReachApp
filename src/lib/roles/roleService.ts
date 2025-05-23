@@ -217,7 +217,7 @@ export class RoleService {
       logger.debug(`Roles for user ${userId}: ${roles.join(', ')}`);
       return roles;
     } catch (error) {
-      logger.logger.error('Error getting user roles:', error);
+      logger.error('Error getting user roles:', error);
       return [DEFAULT_ROLE];
     }
   }
@@ -255,7 +255,7 @@ export class RoleService {
       
       return DEFAULT_ROLE;
     } catch (error) {
-      logger.logger.error('Error getting current role:', error);
+      logger.error('Error getting current role:', error);
       return DEFAULT_ROLE;
     }
   }
@@ -267,14 +267,14 @@ export class RoleService {
     try {
       // Validate the requested role
       if (!Object.keys(ROLE_DEFINITIONS).includes(role)) {
-        logger.logger.error(`Invalid role requested: ${role}`);
+        logger.error(`Invalid role requested: ${role}`);
         return false;
       }
 
       // Verify the user has this role assigned
       const availableRoles = await this.getUserRoles(userId);
       if (!availableRoles.includes(role)) {
-        logger.logger.error(`User ${userId} does not have the role: ${role}`);
+        logger.error(`User ${userId} does not have the role: ${role}`);
         return false;
       }
 
@@ -291,7 +291,7 @@ export class RoleService {
       logger.info(`User ${userId} role updated to ${role}`);
       return true;
     } catch (error) {
-      logger.logger.error(`Error setting current role to ${role}:`, error);
+      logger.error(`Error setting current role to ${role}:`, error);
       return false;
     }
   }
@@ -334,7 +334,7 @@ export class RoleService {
 
       return result;
     } catch (error) {
-      logger.logger.error('Error getting user role status:', error);
+      logger.error('Error getting user role status:', error);
       return this.getDefaultRoleStatus();
     }
   }
@@ -347,7 +347,7 @@ export class RoleService {
       const roles = await this.getUserRoles(userId);
       return roles.includes(role);
     } catch (error) {
-      logger.logger.error(`Error checking if user has role ${role}:`, error);
+      logger.error(`Error checking if user has role ${role}:`, error);
       return false;
     }
   }
@@ -385,7 +385,7 @@ export class RoleService {
 
       return permissions;
     } catch (error) {
-      logger.logger.error('Error getting user permissions:', error);
+      logger.error('Error getting user permissions:', error);
       return ROLE_DEFINITIONS[DEFAULT_ROLE].permissions;
     }
   }
@@ -404,7 +404,7 @@ export class RoleService {
     try {
       // Validate the role
       if (!Object.keys(ROLE_DEFINITIONS).includes(role)) {
-        logger.logger.error(`Invalid role for assignment: ${role}`);
+        logger.error(`Invalid role for assignment: ${role}`);
         return false;
       }
 
@@ -452,7 +452,7 @@ export class RoleService {
       logger.info(`Role ${role} ${isActive ? 'assigned to' : 'removed from'} user ${userId}`);
       return true;
     } catch (error) {
-      logger.logger.error(`Error assigning role ${role}:`, error);
+      logger.error(`Error assigning role ${role}:`, error);
       return false;
     }
   }
@@ -472,7 +472,7 @@ export class RoleService {
       const permissions = await this.getUserPermissions(userId);
       return permissions[permission] || false;
     } catch (error) {
-      logger.logger.error(`Error checking permission ${permission}:`, error);
+      logger.error(`Error checking permission ${permission}:`, error);
       return false;
     }
   }
@@ -575,7 +575,7 @@ export class RoleService {
       logger.info(`Role data synchronized for user ${userId}`);
       return true;
     } catch (error) {
-      logger.logger.error(`Error synchronizing role data:`, error);
+      logger.error(`Error synchronizing role data:`, error);
       return false;
     }
   }
@@ -611,7 +611,7 @@ export class RoleService {
         currentRole
       };
     } catch (error) {
-      logger.logger.error('Error getting roles by pubkey:', error);
+      logger.error('Error getting roles by pubkey:', error);
       return {
         availableRoles: [DEFAULT_ROLE],
         currentRole: DEFAULT_ROLE
@@ -638,7 +638,7 @@ export class RoleService {
       // Set their current role
       return await this.setCurrentRole(user.id, role);
     } catch (error) {
-      logger.logger.error('Error updating role by pubkey:', error);
+      logger.error('Error updating role by pubkey:', error);
       return false;
     }
   }

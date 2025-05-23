@@ -3,10 +3,10 @@
  * Special endpoint to query and verify user roles with detailed diagnostics
  */
 import type { NextApiRequest, NextApiResponse } from 'next';
-import "./lib/prismaClient';
-import "./lib/auth';
-import "./lib/logger';
-import "./lib/roles/roleService';
+import '@/lib/prismaClient';
+import '@/lib/auth';
+import '@/lib/logger';
+import '@/lib/roles/roleService';
 
 export default async function handler(
   req: NextApiRequest,
@@ -89,7 +89,7 @@ export default async function handler(
       hasInconsistency,
     });
   } catch (error) {
-    logger.logger.error('Error checking roles:', error);
+    logger.error('Error checking roles:', error);
     return res.status(500).json({
       success: false,
       error: 'Internal server error'

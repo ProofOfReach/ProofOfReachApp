@@ -113,7 +113,7 @@ const getUserRoles = async (req: NextApiRequest, res: NextApiResponse<GetRolesRe
       availableRoles 
     });
   } catch (error) {
-    logger.logger.error('Error getting user roles:', error);
+    logger.error('Error getting user roles:', error);
     return res.status(500).json({ 
       error: 'Internal server error',
       success: false
@@ -232,7 +232,7 @@ const addUserRole = async (req: NextApiRequest, res: NextApiResponse) => {
       availableRoles
     });
   } catch (error) {
-    logger.logger.error('Error adding user role:', error);
+    logger.error('Error adding user role:', error);
     return res.status(500).json({ 
       error: 'Internal server error',
       success: false

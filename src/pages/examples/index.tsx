@@ -2,7 +2,7 @@ import React from 'react';
 import Head from 'next/head';
 import Link from 'next/link';
 import { ArrowRight, Cpu, Layers, Layout, Box, FileText } from 'react-feather';
-import "./components/ui/button';
+import '@/components/ui/button';
 
 /**
  * Examples index page showcasing the different shadcn/ui examples available

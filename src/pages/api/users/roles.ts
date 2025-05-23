@@ -96,7 +96,7 @@ async function addRole(req: NextApiRequest, res: NextApiResponse) {
       });
     }
   } catch (error) {
-    logger.logger.error('Error adding role:', error);
+    logger.error('Error adding role:', error);
     return res.status(500).json({ 
       success: false, 
       message: 'Internal server error' 
@@ -172,7 +172,7 @@ async function removeRole(req: NextApiRequest, res: NextApiResponse) {
       });
     }
   } catch (error) {
-    logger.logger.error('Error removing role:', error);
+    logger.error('Error removing role:', error);
     return res.status(500).json({ 
       success: false, 
       message: 'Internal server error' 

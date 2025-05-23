@@ -1,5 +1,5 @@
 import { render, screen } from '@testing-library/react';
-import "./components/charts';
+import '@/components/charts';
 
 // Create a mock for recharts
 jest.mock('recharts', () => {

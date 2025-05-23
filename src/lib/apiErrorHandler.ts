@@ -13,8 +13,8 @@
  */
 
 import { NextApiRequest, NextApiResponse } from 'next';
-import "./lib/errorService';
-import "./types/errors';
+import '@/lib/errorService';
+import '@/types/errors';
 import { v4 as uuidv4 } from 'uuid';
 
 /**

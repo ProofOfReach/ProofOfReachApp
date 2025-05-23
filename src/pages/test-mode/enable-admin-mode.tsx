@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { Loader, RefreshCw } from 'react-feather';
 import { useRouter } from 'next/router';
-import "./context/NewRoleContextRefactored';
-import "./lib/logger';
+import '@/context/NewRoleContextRefactored';
+import '@/lib/logger';
 
 /**
  * Simple page to enable test mode with admin role
@@ -57,7 +57,7 @@ const EnableAdminMode: React.FC = () => {
           }
         })
         .catch(err => {
-          logger.logger.error('Error in setRole:', err);
+          logger.error('Error in setRole:', err);
           // Fall back to direct navigation
           setTimeout(() => {
             window.location.href = '/dashboard/admin';
@@ -66,7 +66,7 @@ const EnableAdminMode: React.FC = () => {
       
       return () => {}; // No cleanup needed
     } catch (err) {
-      console.logger.error('Error enabling admin test mode:', err);
+      console.error('Error enabling admin test mode:', err);
       setError('Failed to enable test mode. Please try again or check console for details.');
       setIsRedirecting(false);
     }

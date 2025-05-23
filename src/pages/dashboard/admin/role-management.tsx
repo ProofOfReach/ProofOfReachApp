@@ -1,9 +1,9 @@
 import React from 'react';
 import { GetServerSideProps } from 'next';
-import "./components/role/AdminRolePanel';
-import "./context/NewRoleContextRefactored';
-import "./utils/authMiddleware';
-import "./lib/logger';
+import '@/components/role/AdminRolePanel';
+import '@/context/NewRoleContextRefactored';
+import '@/utils/authMiddleware';
+import '@/lib/logger';
 import { Loader } from 'react-feather';
 
 // Define NextPageWithLayout type since we don't have it in a shared location yet
@@ -63,7 +63,7 @@ const AdminRoleManagementPage: NextPageWithLayout = () => {
                     window.location.href = '/dashboard/admin';
                   }, 500);
                 } catch (error) {
-                  console.logger.error('Error enabling test mode:', error);
+                  console.error('Error enabling test mode:', error);
                   alert('Failed to enable test mode. See console for details.');
                 }
               }}
@@ -140,7 +140,7 @@ export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
 
     return { props: {} };
   } catch (error) {
-    logger.logger.error('Error in getServerSideProps for admin role management:', error);
+    logger.error('Error in getServerSideProps for admin role management:', error);
     
     // Redirect to error page in case of error
     return {

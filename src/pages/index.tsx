@@ -16,7 +16,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import "./components/ui/form";
-import "./components/ui/Divider';
+import '@/components/ui/Divider';
 
 // Define the form schema
 const waitlistFormSchema = z.object({
@@ -134,7 +134,7 @@ const HomePage: NextPageWithLayout = () => {
         });
       }
     } catch (error) {
-      console.logger.error('Waitlist submission error:', error);
+      console.error('Waitlist submission error:', error);
       setSubmitStatus({
         success: false,
         message: 'An error occurred. Please try again later.'

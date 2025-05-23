@@ -38,7 +38,7 @@ const ProfileAvatar: React.FC<ProfileAvatarProps> = ({
           if (hexPubkey) {
             pubkeyToUse = hexPubkey;
           } else {
-            console.logger.error('Failed to convert npub to hex:', pubkey);
+            console.error('Failed to convert npub to hex:', pubkey);
           }
         }
 
@@ -50,7 +50,7 @@ const ProfileAvatar: React.FC<ProfileAvatarProps> = ({
           setAvatarUrl(createDefaultAvatar(pubkeyToUse));
         }
       } catch (e) {
-        console.logger.error('Error loading profile avatar:', e);
+        console.error('Error loading profile avatar:', e);
         setError(true);
         setAvatarUrl(createDefaultAvatar(pubkey));
       } finally {

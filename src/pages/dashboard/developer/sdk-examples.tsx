@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
-import "./components/layout/ImprovedDashboardLayout';
-import "./components/ui/Typography';
-import "./components/ui/card';
+import '@/components/layout/ImprovedDashboardLayout';
+import '@/components/ui/Typography';
+import '@/components/ui/card';
 import { Check, Copy, ExternalLink } from 'react-feather';
 import Link from 'next/link';
-import "./hooks/useAuthSwitch';
+import '@/hooks/useAuthSwitch';
 
 const SDKExamplesPage = () => {
   const { pubkey } = useAuthSwitch();
@@ -22,7 +22,7 @@ const SDKExamplesPage = () => {
     const SDK = window.ProofOfReachSDK || window.ProofOfReach;
     
     if (!SDK) {
-      console.logger.error("ProofOfReach SDK not loaded correctly!");
+      console.error("ProofOfReach SDK not loaded correctly!");
       return;
     }
     
@@ -108,7 +108,7 @@ function ProofOfReachAd({ containerId = "proof-of-reach-ad", adIndex = 0 }) {
       const SDK = window.ProofOfReachSDK || window.ProofOfReach;
       
       if (!SDK) {
-        console.logger.error("ProofOfReach SDK not loaded correctly!");
+        console.error("ProofOfReach SDK not loaded correctly!");
         return;
       }
       
@@ -188,7 +188,7 @@ function add_proofofreach_sdk() {
       const SDK = window.ProofOfReachSDK || window.ProofOfReach;
       
       if (!SDK) {
-        console.logger.error("ProofOfReach SDK not loaded correctly!");
+        console.error("ProofOfReach SDK not loaded correctly!");
         return;
       }
       
@@ -265,7 +265,7 @@ add_shortcode('proofofreach_ad', 'proofofreach_ad_shortcode');
   const advancedConfig = `// First, handle SDK object detection and initialization
 const SDK = window.ProofOfReachSDK || window.ProofOfReach;
 if (!SDK) {
-  console.logger.error("ProofOfReach SDK not loaded correctly!");
+  console.error("ProofOfReach SDK not loaded correctly!");
   return;
 }
 
@@ -321,7 +321,7 @@ SDK.renderAd("proof-of-reach-ad", {
     console.log(\`Ad impression recorded: \${adId}\`);
   },
   onError: (error) => {            // Called when error occurs
-    console.logger.error(\`Ad error: \${error}\`);
+    console.error(\`Ad error: \${error}\`);
   },
   onLoad: (adData) => {            // Called when ad loads successfully
     console.log("Ad loaded successfully", adData);

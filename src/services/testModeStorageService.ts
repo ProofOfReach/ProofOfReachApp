@@ -5,7 +5,7 @@
  * extending the EnhancedStorageService with TestMode-specific methods.
  */
 
-import "./lib/logger';
+import '@/lib/logger';
 import { 
   dispatchTestModeEvent, 
   TEST_MODE_EVENTS, 
@@ -13,7 +13,7 @@ import {
   notifyTestModeDeactivated
 } from '@/lib/events';
 import { EnhancedStorageService, STORAGE_KEYS, enhancedStorage } from './enhancedStorageService';
-import "./context/RoleContext';
+import '@/context/RoleContext';
 
 // Standard expiry time for test mode (1 hour)
 const TEST_MODE_EXPIRY_DURATION = 60 * 60 * 1000; // 1 hour in milliseconds
@@ -77,7 +77,7 @@ export class TestModeStorageService {
       
       return success;
     } catch (error) {
-      logger.logger.error('Error enabling test mode:', error);
+      logger.error('Error enabling test mode:', error);
       return false;
     }
   }
@@ -102,7 +102,7 @@ export class TestModeStorageService {
       
       return success;
     } catch (error) {
-      logger.logger.error('Error disabling test mode:', error);
+      logger.error('Error disabling test mode:', error);
       return false;
     }
   }
@@ -128,7 +128,7 @@ export class TestModeStorageService {
       
       return testMode.enabled;
     } catch (error) {
-      logger.logger.error('Error checking test mode:', error);
+      logger.error('Error checking test mode:', error);
       return false;
     }
   }
@@ -145,7 +145,7 @@ export class TestModeStorageService {
         refreshExpiry: true
       });
     } catch (error) {
-      logger.logger.error('Error getting test mode state:', error);
+      logger.error('Error getting test mode state:', error);
       return null;
     }
   }
@@ -166,7 +166,7 @@ export class TestModeStorageService {
       const timeRemaining = testMode.expiryTime - Date.now();
       return Math.max(0, timeRemaining);
     } catch (error) {
-      logger.logger.error('Error getting test mode time remaining:', error);
+      logger.error('Error getting test mode time remaining:', error);
       return 0;
     }
   }
@@ -213,7 +213,7 @@ export class TestModeStorageService {
       
       return success;
     } catch (error) {
-      logger.logger.error('Error extending test mode duration:', error);
+      logger.error('Error extending test mode duration:', error);
       return false;
     }
   }
@@ -257,7 +257,7 @@ export class TestModeStorageService {
       
       return success;
     } catch (error) {
-      logger.logger.error('Error updating test mode initial role:', error);
+      logger.error('Error updating test mode initial role:', error);
       return false;
     }
   }

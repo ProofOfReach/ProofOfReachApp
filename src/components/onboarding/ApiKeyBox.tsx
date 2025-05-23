@@ -26,7 +26,7 @@ const ApiKeyBox: React.FC<ApiKeyBoxProps> = ({
       setCopySuccess(true);
       setTimeout(() => setCopySuccess(false), 2000);
     } catch (error) {
-      console.logger.error('Error copying API key:', error);
+      console.error('Error copying API key:', error);
     }
   };
 

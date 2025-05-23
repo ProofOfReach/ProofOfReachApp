@@ -15,9 +15,9 @@ import {
   getFieldErrorMessage,
   hasAnyError
 } from '@/lib/formErrorHandler';
-import "./lib/apiErrorHandler';
-import "./lib/errorService';
-import "./types/errors';
+import '@/lib/apiErrorHandler';
+import '@/lib/errorService';
+import '@/types/errors';
 
 describe('Form Error Handler', () => {
   describe('createEmptyFormErrorState', () => {

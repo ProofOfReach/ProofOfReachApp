@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import "./hooks/useTestMode';
-import "./lib/roleService';
-import "./services/roleManager';
-import "./types/role';
-import "./lib/logger';
+import '@/hooks/useTestMode';
+import '@/lib/roleService';
+import '@/services/roleManager';
+import '@/types/role';
+import '@/lib/logger';
 import { 
   useAppEvent, 
   useLegacyEvent, 
@@ -20,9 +20,9 @@ import {
   notifyRoleChanged,
   notifyRolesUpdated
 } from '@/lib/events';
-import "./services/enhancedStorageService';
-import "./services/storageService';
-import "./services/testModeService';
+import '@/services/enhancedStorageService';
+import '@/services/storageService';
+import '@/services/testModeService';
 
 /**
  * TestModeBanner Component
@@ -220,13 +220,13 @@ export default function TestModeBanner() {
                 logger.log('All roles enabled successfully (legacy)');
               }
             } catch (error) {
-              logger.logger.error(`Legacy method failed: ${error}`);
+              logger.error(`Legacy method failed: ${error}`);
             }
           }
         }
       }
     } catch (error) {
-      logger.logger.error('Error enabling all roles:', error);
+      logger.error('Error enabling all roles:', error);
     } finally {
       setIsLoading(false);
     }
@@ -239,7 +239,7 @@ export default function TestModeBanner() {
       
       // Validate role
       if (!RoleManager.isValidRole(role)) {
-        logger.logger.error(`Invalid role: ${role}`);
+        logger.error(`Invalid role: ${role}`);
         return;
       }
       
@@ -293,7 +293,7 @@ export default function TestModeBanner() {
           if (success) {
             logger.log(`Role switched to ${role} using API`);
           } else {
-            logger.logger.error(`Failed to switch role to ${role}`);
+            logger.error(`Failed to switch role to ${role}`);
             
             // Fallback to legacy
             try {
@@ -304,15 +304,15 @@ export default function TestModeBanner() {
               }));
               logger.log(`Role switched to ${role} using legacy fallback methods`);
             } catch (error) {
-              logger.logger.error(`All role switching methods failed for ${role}:`, error);
+              logger.error(`All role switching methods failed for ${role}:`, error);
             }
           }
         } catch (error) {
-          logger.logger.error(`Error switching role via API: ${error}`);
+          logger.error(`Error switching role via API: ${error}`);
         }
       }
     } catch (error) {
-      logger.logger.error(`Error in handleRoleSwitch: ${error}`);
+      logger.error(`Error in handleRoleSwitch: ${error}`);
     }
   };
   

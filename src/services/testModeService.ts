@@ -8,15 +8,15 @@
  * Part of the Phase 6 TestMode modernization strategy.
  */
 
-import "./lib/logger';
-import "./services/storageService';
-import "./lib/events/eventDispatcher';
+import '@/lib/logger';
+import '@/services/storageService';
+import '@/lib/events/eventDispatcher';
 import { 
   TEST_MODE_EVENTS, 
   ROLE_EVENTS 
 } from '@/lib/events/eventTypes';
-import "./types/role';
-import "./services/roleManager';
+import '@/types/role';
+import '@/services/roleManager';
 
 // Define the RoleEvent interface for the event payload
 interface RoleEvent {
@@ -415,7 +415,7 @@ export class TestModeService {
       }
       
       // Neither approach worked
-      logger.logger.error(`Failed to change role to ${role}`);
+      logger.error(`Failed to change role to ${role}`);
       return false;
     } catch (error) {
       this.handleError(`Error setting current role to ${role}`, error);
@@ -491,7 +491,7 @@ export class TestModeService {
           logger.log('All roles enabled with new test mode state');
           return true;
         } else {
-          logger.logger.error('Failed to save new test mode state with all roles');
+          logger.error('Failed to save new test mode state with all roles');
           return false;
         }
       }
@@ -694,11 +694,11 @@ export class TestModeService {
       ? `\nContext: ${JSON.stringify(context, null, 2)}`
       : '';
     
-    logger.logger.error(`${message}: ${errorMessage}${contextStr}`);
+    logger.error(`${message}: ${errorMessage}${contextStr}`);
     
     // More detailed console logging in debug mode
     if (this.debugMode) {
-      console.logger.error(`TestModeService Error: ${message}`, {
+      console.error(`TestModeService Error: ${message}`, {
         error,
         context,
         timestamp: new Date().toISOString(),

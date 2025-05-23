@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
-import "./context/RoleContext';
-import "./lib/roleService';
+import '@/context/RoleContext';
+import '@/lib/roleService';
 
 /**
  * Hook for managing role state locally

@@ -1,8 +1,8 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { walletService } from '../../../services/walletService';
 import { ApiError } from '../../../utils/apiError';
-import "./utils/enhancedAuthMiddleware';
-import "./lib/logger';
+import '@/utils/enhancedAuthMiddleware';
+import '@/lib/logger';
 
 /**
  * API handler for getting transaction history
@@ -55,7 +55,7 @@ async function handleTransactionsRequest(req: NextApiRequest, res: NextApiRespon
       success: true
     });
   } catch (error) {
-    logger.logger.error('Transaction history error:', error);
+    logger.error('Transaction history error:', error);
     if (error instanceof ApiError) {
       return res.status(error.statusCode).json({ error: error.message });
     }

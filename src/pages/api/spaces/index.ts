@@ -37,7 +37,7 @@ async function getSpaces(req: NextApiRequest, res: NextApiResponse, pubkey: stri
 
     return res.status(200).json(spaces);
   } catch (error) {
-    logger.logger.error('Error fetching spaces:', error);
+    logger.error('Error fetching spaces:', error);
     return res.status(500).json({ error: 'Failed to fetch ad spaces' });
   }
 }
@@ -109,7 +109,7 @@ async function createSpace(req: NextApiRequest, res: NextApiResponse, pubkey: st
 
     return res.status(201).json(newSpace);
   } catch (error) {
-    logger.logger.error('Error creating ad space:', error);
+    logger.error('Error creating ad space:', error);
     return res.status(500).json({ error: 'Failed to create ad space' });
   }
 }

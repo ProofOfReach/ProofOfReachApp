@@ -70,7 +70,7 @@ const AdForm: React.FC<AdFormProps> = ({
       const data = await response.json();
       setAvailableAdSpaces(data);
     } catch (error) {
-      console.logger.error('Error fetching ad spaces:', error);
+      console.error('Error fetching ad spaces:', error);
       setAdSpacesError('Could not load available ad spaces. Please try again later.');
     } finally {
       setIsLoadingAdSpaces(false);

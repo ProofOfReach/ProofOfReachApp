@@ -1,7 +1,7 @@
 import { renderHook, act } from '@testing-library/react';
 import { useRouter } from 'next/router';
 import useRoleAccess from '../useRoleAccess';
-import "./services/roleManager';
+import '@/services/roleManager';
 
 // Mock Next.js router
 jest.mock('next/router', () => ({

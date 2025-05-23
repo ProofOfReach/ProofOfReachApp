@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import "./lib/enhancedRoleService';
-import "./lib/logger';
-import "./utils/roleNormalizer';
+import '@/lib/enhancedRoleService';
+import '@/lib/logger';
+import '@/utils/roleNormalizer';
 
 /**
  * API endpoint to change a user's role
@@ -52,7 +52,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       userData
     });
   } catch (error) {
-    logger.logger.error('Error changing role:', error);
+    logger.error('Error changing role:', error);
     
     // Special error handling for known error types
     if (error instanceof Error && error.message.includes('does not have access to role')) {

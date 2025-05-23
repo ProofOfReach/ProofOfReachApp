@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import "./components/layout/ImprovedDashboardLayout';
+import '@/components/layout/ImprovedDashboardLayout';
 import { Settings, Save, RefreshCw, UserCheck, Bell, Moon, Sun, Shield, Lock, Plus, X, AlertCircle, Info } from 'react-feather';
 
 const UserSettingsPage = () => {
@@ -67,7 +67,7 @@ const UserSettingsPage = () => {
         setShareBrowsing(data.shareBrowsing);
         setShareAge(data.shareAge);
       } catch (error) {
-        console.logger.error('Error fetching user preferences:', error);
+        console.error('Error fetching user preferences:', error);
       }
     };
     
@@ -169,7 +169,7 @@ const UserSettingsPage = () => {
         setSuccessMessage(null);
       }, 3000);
     } catch (error) {
-      console.logger.error('Error saving settings:', error);
+      console.error('Error saving settings:', error);
     } finally {
       setIsSubmitting(false);
     }

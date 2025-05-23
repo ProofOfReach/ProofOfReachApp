@@ -4,12 +4,12 @@ import { useRouter } from 'next/router';
 import { Campaign, CampaignStatus } from '@prisma/client';
 import { AlertCircle, CheckCircle, ArrowRight, Plus } from 'react-feather';
 
-import "./components/campaigns/CampaignList';
-import "./components/campaigns/CampaignDataTable';
-import "./components/ui/Loading';
-import "./components/ui/button';
-import "./components/ui';
-import "./utils/layoutHelpers';
+import '@/components/campaigns/CampaignList';
+import '@/components/campaigns/CampaignDataTable';
+import '@/components/ui/Loading';
+import '@/components/ui/button';
+import '@/components/ui';
+import '@/utils/layoutHelpers';
 import type { NextPageWithLayout } from '../../_app';
 
 const CampaignsPage: NextPageWithLayout = () => {
@@ -49,7 +49,7 @@ const CampaignsPage: NextPageWithLayout = () => {
       const data = await response.json();
       setCampaigns(data);
     } catch (err) {
-      console.logger.error('Error fetching campaigns:', err);
+      console.error('Error fetching campaigns:', err);
       setError('Failed to load campaigns. Please try again.');
     } finally {
       setIsLoading(false);
@@ -81,7 +81,7 @@ const CampaignsPage: NextPageWithLayout = () => {
 
       setSuccessMessage(`Campaign status updated to ${newStatus.toLowerCase()}`);
     } catch (err) {
-      console.logger.error('Error updating campaign status:', err);
+      console.error('Error updating campaign status:', err);
       setError('Failed to update campaign status. Please try again.');
     }
   };
@@ -103,7 +103,7 @@ const CampaignsPage: NextPageWithLayout = () => {
 
       setSuccessMessage('Campaign deleted successfully');
     } catch (err) {
-      console.logger.error('Error deleting campaign:', err);
+      console.error('Error deleting campaign:', err);
       setError('Failed to delete campaign. Please try again.');
     }
   };

@@ -368,7 +368,7 @@ fetch("${window.location.origin}${endpoint.path}", {
 })
 .then(response => response.json())
 .then(data => console.log(data))
-.catch(error => console.logger.error("Error:", error));`}
+.catch(error => console.error("Error:", error));`}
                                     </pre>
                                   </div>
                                 ) : (
@@ -394,7 +394,7 @@ fetch("${window.location.origin}${endpoint.path}", {
 })
 .then(response => response.json())
 .then(data => console.log(data))
-.catch(error => console.logger.error("Error:", error));`}
+.catch(error => console.error("Error:", error));`}
                                     </pre>
                                   </div>
                                 )}

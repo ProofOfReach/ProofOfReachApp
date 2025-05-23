@@ -28,7 +28,7 @@ export function apiHandler(handler: ApiHandler) {
       // Call the handler for the requested method
       return await handler[method]!(req, res);
     } catch (error) {
-      console.logger.error('API error:', error);
+      console.error('API error:', error);
       
       if (error instanceof ApiError) {
         return res.status(error.statusCode).json({

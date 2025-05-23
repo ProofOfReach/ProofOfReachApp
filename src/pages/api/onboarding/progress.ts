@@ -1,8 +1,8 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import "./utils/apiHandler';
-import "./lib/onboardingService';
-import "./types/role';
-import "./lib/logger';
+import '@/utils/apiHandler';
+import '@/lib/onboardingService';
+import '@/types/role';
+import '@/lib/logger';
 
 /**
  * @swagger
@@ -69,7 +69,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
     
     return res.status(200).json(result);
   } catch (error) {
-    logger.logger.error('Error updating onboarding progress', { error, pubkey, role });
+    logger.error('Error updating onboarding progress', { error, pubkey, role });
     return res.status(500).json({ 
       error: 'Failed to update onboarding progress',
       details: error instanceof Error ? error.message : 'Unknown error'
