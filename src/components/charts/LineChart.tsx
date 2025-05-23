@@ -27,7 +27,7 @@ interface LineChartProps {
   loading: boolean;
   error?: string | null;
   height?: number;
-  tooltipFormatter?: (value: number, name: string) => [UserRole, string];
+  tooltipFormatter?: (value: number, name: string) => [string, string];
 }
 
 const LineChart: React.FC<LineChartProps> = ({

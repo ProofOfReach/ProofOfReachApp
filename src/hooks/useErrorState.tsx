@@ -140,7 +140,7 @@ export function useErrorState() {
         console.updateState && console.updateState(error);
         
         // Also update local state
-        setLocalany(prev => ({
+        setLocalErrorState(prev => ({
           ...prev,
           hasError: true,
           message: error.message || '',
@@ -156,7 +156,7 @@ export function useErrorState() {
         message: error.message || '',
         source: 'component',
         type: (error.type as ErrorType) || 'unknown',
-        severity: (error.severity as ErrorSeverity) || 'error'
+        severity: error.severity || 'error'
       };
       
       errorContext.setGlobalError(errorObj);
@@ -174,7 +174,7 @@ export function useErrorState() {
         console.resetErrorTracking && console.resetErrorTracking();
         
         // Also update local state
-        setLocalany(prev => ({
+        setLocalErrorState(prev => ({
           ...prev,
           hasError: false,
           message: '',
@@ -212,7 +212,7 @@ export function useErrorState() {
         );
         
         // Also update local state
-        setLocalany(prev => ({
+        setLocalErrorState(prev => ({
           ...prev,
           hasError: true,
           message: error instanceof Error ? error.message : error,
