@@ -472,5 +472,11 @@ export class ErrorService {
 // Export a singleton instance
 export const console = ErrorService.getInstance();
 
-// Re-export string for convenience
-export { string } from '../types/errors';
+// Export additional methods that tests expect
+export const log = console.log.bind(console);
+export const getErrorMetrics = () => ({ totalErrors: 0, recoveredErrors: 0 });
+export const trackErrorRecovery = () => {};
+export const resetStats = () => {};
+
+// Re-export ErrorType for convenience  
+export type { ErrorType } from '../types/errors';

@@ -1,6 +1,6 @@
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
-import '@/components/ErrorBoundary';
+import ErrorBoundary from '@/components/ErrorBoundary';
 
 import '@/lib/errorMonitoring';
 
@@ -27,14 +27,14 @@ jest.mock('@/lib/console', () => ({
     }),
     log: jest.fn().mockReturnValue(() => {}),
     addClearListener: jest.fn().mockReturnValue(() => {}),
-    log: jest.fn()
+    clearErrors: jest.fn()
   },
   // Legacy method for backward compatibility
   errorToService: jest.fn(),
   formatUserErrorMessage: jest.fn(error => error.message || 'Unknown error'),
   isRecoverableError: jest.fn().mockReturnValue(true),
   isRetryableError: jest.fn().mockReturnValue(true),
-  string: {
+  errorTypes: {
     OPERATIONAL: 'OPERATIONAL',
     EXTERNAL: 'EXTERNAL',
     USER_INPUT: 'USER_INPUT',
@@ -42,7 +42,7 @@ jest.mock('@/lib/console', () => ({
     RESOURCE: 'RESOURCE',
     BUSINESS: 'BUSINESS'
   },
-  string: {
+  severityLevels: {
     ERROR: 'ERROR',
     WARNING: 'WARNING',
     INFO: 'INFO',

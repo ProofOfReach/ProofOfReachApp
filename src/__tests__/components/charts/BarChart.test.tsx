@@ -5,6 +5,7 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
 import { BarChart } from '../../../components/charts';
+import type { UserRole } from '../../../types/auth';
 
 // Mock recharts completely since it doesn't work well in Jest and the real implementation is super complex
 jest.mock('recharts', () => {
