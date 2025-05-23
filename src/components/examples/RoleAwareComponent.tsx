@@ -7,7 +7,7 @@
  */
 
 import React, { memo, useCallback } from 'react';
-import { defaultUseRoleAccess } from '../../hooks/defaultUseRoleAccess';
+import { useRole } from '../../context/RoleContext';
 import { logger } from '../../lib/logger';
 
 interface RoleAwareComponentProps {

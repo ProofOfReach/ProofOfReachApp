@@ -7,9 +7,7 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { getSessionFromRequest } from '../auth';
 import { getRoleCapabilities } from '../accessControl';
-import { ErrorService } from '../errorService';
-
-const errorService = new ErrorService();
+import { errorService } from '../errorService';
 
 type UserRole = 'viewer' | 'advertiser' | 'publisher' | 'admin' | 'stakeholder';
 
@@ -55,7 +53,7 @@ export function requireRole(roles: string[]) {
       // Check if user has any of the required roles
       const hasRequiredRole = roles.some(role => {
         const permission = `access_${role}`;
-        return userPermissions[permission];
+        return (userPermissions as any)[permission];
       });
       
       if (!hasRequiredRole) {
@@ -121,7 +119,7 @@ export function requirePermission(permissions: string[]) {
       const missingPermissions: string[] = [];
       
       for (const permission of permissions) {
-        if (!userPermissions[permission]) {
+        if (!(userPermissions as any)[permission]) {
           missingPermissions.push(permission);
         }
       }
