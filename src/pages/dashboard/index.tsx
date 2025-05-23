@@ -15,6 +15,7 @@ import Link from 'next/link';
 import { UserRole } from '@/types/role';
 import CurrencyAmount from '@/components/CurrencyAmount';
 import DashboardCard from '@/components/ui/DashboardCard';
+import StatCard from '@/components/ui/StatCard';
 import CurrencyWrapper from '@/components/CurrencyWrapper';
 import { getDashboardLayout } from '@/utils/layoutHelpers';
 import type { ReactElement } from 'react';
