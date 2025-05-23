@@ -78,11 +78,7 @@ async function getRoles(pubkey: UserRole, res: NextApiResponse) {
     logger.log('Error getting roles:', error);
     return res.status(500).json({
       log: false,
-      error: null as any // TODO: implement roleService.formatError(
-        RoleErrorType.DATABASE_ERROR, 
-        'Failed to get roles',
-        500
-      )
+      error: 'Failed to get roles'
     });
   }
 }
@@ -97,11 +93,7 @@ async function updateRole(pubkey: UserRole, req: NextApiRequest, res: NextApiRes
     if (!role) {
       return res.status(400).json({
         log: false,
-        error: null as any // TODO: implement roleService.formatError(
-          RoleErrorType.INVALID_ROLE, 
-          'Role is required',
-          400
-        )
+        error: 'Role is required'
       });
     }
     

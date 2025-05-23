@@ -261,17 +261,7 @@ const ImprovedDashboardLayout: React.FC<ImprovedDashboardLayoutProps> = ({
               </Link>
             </div>
             
-            {/* Role dropdown */}
-            <div className="p-4 border-b border-gray-200 dark:border-gray-700">
-              <div className="mb-2 text-sm font-medium text-gray-600 dark:text-gray-400">
-                Current Role
-              </div>
-              <SimpleRoleDropdown 
-                skipNavigation={true} 
-                className="w-full"
-                onRoleChange={handleRoleChange}
-              />
-            </div>
+
             
             {/* Navigation items */}
             <nav className="p-4" key={`nav-${currentRole}`}>
