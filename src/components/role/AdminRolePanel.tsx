@@ -9,7 +9,7 @@ import { useAuthRefactored } from '@/hooks/useAuthRefactored';
  */
 export const AdminRolePanel: React.FC = () => {
   const { role, availableRoles, isChangingRole } = useRoleRefactored();
-  const { authState } = useAuthRefactored();
+  const { authState } = useAuthRefactored() as any;
   const [isToggling, setIsToggling] = useState(false);
   const [isTestUser, setIsTestUser] = useState(false);
   const [actionResult, setActionResult] = useState<{

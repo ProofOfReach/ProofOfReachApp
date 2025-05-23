@@ -64,7 +64,7 @@ export const useAuthRefactored = (): AuthStateContext => {
  * @returns Whether the user has the role
  */
 export const useHasRole = (role: UserRole): boolean => {
-  const { hasRole } = useAuthRefactored();
+  const { hasRole } = useAuthRefactored() as any;
   return hasRole(role);
 };
 
@@ -74,7 +74,7 @@ export const useHasRole = (role: UserRole): boolean => {
  * @returns Whether the user is authenticated
  */
 export const useIsAuthenticated = (): boolean => {
-  const { authState } = useAuthRefactored();
+  const { authState } = useAuthRefactored() as any;
   return authState?.isLoggedIn || false;
 };
 
@@ -84,7 +84,7 @@ export const useIsAuthenticated = (): boolean => {
  * @returns The user's public key or empty string if not authenticated
  */
 export const useUserPubkey = (): string => {
-  const { authState } = useAuthRefactored();
+  const { authState } = useAuthRefactored() as any;
   return authState?.isLoggedIn ? authState.pubkey : '';
 };
 
@@ -94,7 +94,7 @@ export const useUserPubkey = (): string => {
  * @returns Whether the user is in test mode
  */
 export const useIsTestMode = (): boolean => {
-  const { authState } = useAuthRefactored();
+  const { authState } = useAuthRefactored() as any;
   return authState?.isTestMode || false;
 };
 
@@ -104,6 +104,6 @@ export const useIsTestMode = (): boolean => {
  * @returns The user's available roles or empty array if not authenticated
  */
 export const useAvailableRoles = (): UserRole[] => {
-  const { authState } = useAuthRefactored();
+  const { authState } = useAuthRefactored() as any;
   return authState?.isLoggedIn ? authState.availableRoles : [];
 };

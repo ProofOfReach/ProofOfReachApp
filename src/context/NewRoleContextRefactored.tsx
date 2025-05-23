@@ -81,7 +81,7 @@ export const RoleProviderRefactored: React.FC<RoleProviderProps> = ({
   queryClient = defaultQueryClient
 }) => {
   const router = useRouter();
-  const { authState, refreshRoles } = useAuthRefactored();
+  const { authState, refreshRoles } = useAuthRefactored() as any;
   const [isChangingRole, setIsChangingRole] = useState(false);
   
   // Use the query client for caching operations

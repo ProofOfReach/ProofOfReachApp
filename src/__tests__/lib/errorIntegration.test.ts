@@ -113,7 +113,7 @@ describe('Error Integration Service', () => {
     
     it('can access error state structure', () => {
       // Initialize our test error state with minimal properties
-      global.window.__errorState = {
+      (global.window as any).__errorState = {
         errors: [], 
         globalError: null
       };
@@ -127,7 +127,7 @@ describe('Error Integration Service', () => {
   
   describe('getErrorMetrics', () => {
     it('returns default metrics when no errors have occurred', () => {
-      // Make sure window.__errorMetrics doesn't exist for this test
+      // Make sure (window as any).__errorMetrics doesn't exist for this test
       (global.window as any).__errorMetrics = undefined;
       
       const metrics = getErrorMetrics();
@@ -140,7 +140,7 @@ describe('Error Integration Service', () => {
       expect(metrics).toHaveProperty('averageRecoveryTime');
     });
     
-    it('uses window.__errorMetrics when available', () => {
+    it('uses (window as any).__errorMetrics when available', () => {
       // Set up a mock metrics structure
       (global.window as any).__errorMetrics = {
         getMetrics: jest.fn().mockReturnValue({
@@ -157,7 +157,7 @@ describe('Error Integration Service', () => {
       const metrics = getErrorMetrics();
       
       // Verify the mock was called
-      expect(window.__errorMetrics.getMetrics).toHaveBeenCalled();
+      expect((window as any).__errorMetrics.getMetrics).toHaveBeenCalled();
       
       // Check that we correctly get the values from the mock
       expect(metrics.totalErrors).toBe(5);
@@ -186,7 +186,7 @@ describe('Error Integration Service', () => {
       );
     });
     
-    it('uses window.__errorMetrics when available', () => {
+    it('uses (window as any).__errorMetrics when available', () => {
       // Set up metrics mock
       (global.window as any).__errorMetrics = {
         trackRecovery: jest.fn()

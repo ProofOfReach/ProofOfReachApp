@@ -19,7 +19,7 @@ import { logger } from '@/lib/logger';
 const ClientOnboarding: React.FC = () => {
   const [isReady, setIsReady] = useState(false);
   const router = useRouter();
-  const { authState, isLoading: authLoading } = useAuthRefactored();
+  const { authState, isLoading: authLoading } = useAuthRefactored() as any;
   
   // Extract and validate role from URL parameters
   const urlRole = typeof router.query.role === 'string' && 

@@ -291,9 +291,9 @@ export function addErrorListener(listener: () => void): () => void {
 export function trackErrorRecovery(startTime: number, userRecovered: boolean = false): void {
   const recoveryTime = Date.now() - startTime;
   
-  // Use window.__errorMetrics if available for detailed tracking
-  if (typeof window !== 'undefined' && window.__errorMetrics && window.__errorMetrics.trackRecovery) {
-    window.__errorMetrics.trackRecovery(recoveryTime, userRecovered);
+  // Use (window as any).__errorMetrics if available for detailed tracking
+  if (typeof window !== 'undefined' && (window as any).__errorMetrics && (window as any).__errorMetrics.trackRecovery) {
+    (window as any).__errorMetrics.trackRecovery(recoveryTime, userRecovered);
   }
   
   // Log recovery for debugging
@@ -304,9 +304,9 @@ export function trackErrorRecovery(startTime: number, userRecovered: boolean = f
  * Get error metrics
  */
 export function getErrorMetrics() {
-  // Use window.__errorMetrics if available
-  if (typeof window !== 'undefined' && window.__errorMetrics && window.__errorMetrics.getMetrics) {
-    return window.__errorMetrics.getMetrics();
+  // Use (window as any).__errorMetrics if available
+  if (typeof window !== 'undefined' && (window as any).__errorMetrics && (window as any).__errorMetrics.getMetrics) {
+    return (window as any).__errorMetrics.getMetrics();
   }
   
   // Default metrics

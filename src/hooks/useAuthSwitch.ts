@@ -51,7 +51,7 @@ export function useAuthSwitch() {
   // Only try to use the refactored hooks outside of test environments
   if (typeof window !== 'undefined' && process.env.NODE_ENV !== 'test') {
     try {
-      refactoredAuth = useAuthRefactored();
+      refactoredAuth = useAuthRefactored() as any;
       refactoredRole = useRoleRefactored();
     } catch (error) {
       logger.error('Error using refactored hooks:', error);

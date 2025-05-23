@@ -21,7 +21,7 @@ import { useHydration } from '@/hooks/useHydration';
  */
 const OnboardingPage: React.FC = () => {
   const router = useRouter();
-  const { authState, isLoading: authLoading } = useAuthRefactored();
+  const { authState, isLoading: authLoading } = useAuthRefactored() as any;
   const [mounted, setMounted] = useState(false);
   const [checkedStorage, setCheckedStorage] = useState(false);
   const [isRedirecting, setIsRedirecting] = useState(false);
