@@ -46,7 +46,7 @@ class Logger {
     return `${timestamp} [${level.toUpperCase()}] ${message} ${formattedArgs}`;
   }
 
-  public logger.error(message: string, ...args: any[]): void {
+  public error(message: string, ...args: any[]): void {
     if (this.isEnabled('error')) {
       console.error(this.formatMessage('error', message, ...args));
     }

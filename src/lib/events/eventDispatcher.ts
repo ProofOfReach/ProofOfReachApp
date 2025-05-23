@@ -130,7 +130,7 @@ export const dispatchError = (
  */
 export const dispatchConfigChanged = (
   key: string,
-  value: any
+  value: any,
   previousValue: any
 ): void => {
   dispatchAppEvent(SYSTEM_EVENTS.CONFIG_CHANGED, {
@@ -151,8 +151,8 @@ export const dispatchConfigChanged = (
  */
 export const dispatchStorageChanged = (
   key: string,
-  value: any
-  previousValue: any
+  value: any,
+  previousValue: any,
   storageType: 'localStorage' | 'sessionStorage' | 'memory',
   namespace?: string
 ): void => {

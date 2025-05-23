@@ -79,8 +79,8 @@ export const notifyTestModeDeactivated = () => {
  */
 export const notifyStorageChanged = (
   key: string,
-  value: any
-  previousValue: any
+  value: any,
+  previousValue: any,
   storageType: 'localStorage' | 'sessionStorage' | 'memory',
   namespace?: string
 ) => {
