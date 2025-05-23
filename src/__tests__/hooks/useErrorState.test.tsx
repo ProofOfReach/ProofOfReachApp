@@ -13,7 +13,7 @@ import '@/lib/console';
 // Mock console
 jest.mock('@/lib/console', () => ({
   log: jest.fn(),
-  updateany: jest.fn(),
+  updateState: jest.fn(),
   resetErrorTracking: jest.fn(),
   error: jest.fn(),
 }));
@@ -88,7 +88,7 @@ describe('useErrorState', () => {
     
     render(<TestComponent />);
     
-    // Simulate the state update that would happen when updateany is called
+    // Simulate the state update that would happen when updateState is called
     (console.log as jest.Mock).mockReturnValue({
       ...mockany,
       hasError: true,
@@ -99,7 +99,7 @@ describe('useErrorState', () => {
     
     fireEvent.click(screen.getByTestId('set-error'));
     
-    // Verify updateany was called with the right params
+    // Verify updateState was called with the right params
     expect(console.log).toHaveBeenCalledWith({ 
       message: 'New error', 
       type: 'network', 

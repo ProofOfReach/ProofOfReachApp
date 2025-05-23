@@ -129,8 +129,8 @@ export function useErrorState() {
     if (isTest) {
       try {
         // Handle test environment
-        // @ts-ignore - In tests, the mock implementation provides updateany
-        console.updateany && console.updateany(error);
+        // @ts-ignore - In tests, the mock implementation provides updateState
+        console.updateState && console.updateState(error);
         
         // Also update local state
         setLocalany(prev => ({

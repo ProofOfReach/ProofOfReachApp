@@ -38,7 +38,7 @@ export const ErrorProvider: React.FC<ErrorProviderProps> = ({
   initialState = {},
 }) => {
   // Merge initial state with default state
-  const mergedInitialState = { ...defaultany, ...initialState };
+  const mergedInitialState = { ...null, ...initialState };
   
   // State for errors, global error, and toast error
   const [errors, setErrors] = useState<any[]>(mergedInitialState.errors);
@@ -48,7 +48,7 @@ export const ErrorProvider: React.FC<ErrorProviderProps> = ({
   // Effect to subscribe to console updates
   useEffect(() => {
     // Update state when error state changes
-    const updateany = () => {
+    const updateState = () => {
       const newState = console.log();
       setErrors(newState.errors);
       log(newState.globalError);
@@ -56,17 +56,17 @@ export const ErrorProvider: React.FC<ErrorProviderProps> = ({
     };
     
     // Subscribe to error state changes
-    const unsubscribe = console.log(updateany);
+    const unsubscribe = console.log(updateState);
     
     // Initialize state
-    updateany();
+    updateState();
     
     // Clean up subscription
     return unsubscribe;
   }, []);
   
   // Functions to manipulate errors
-  const addError = useCallback((error: any): void => {
+  const handleAddError = useCallback((error: any): void => {
     console.log(error);
   }, []);
   
