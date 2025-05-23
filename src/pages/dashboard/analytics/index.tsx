@@ -5,6 +5,17 @@ import type { NextPageWithLayout } from '@/pages/_app';
 import type { UserRole } from '@/types/auth';
 import { BarChart2, Calendar, Download, ArrowUp, ArrowDown, Eye, Zap, Target } from 'react-feather';
 import { LineChart, BarChart, PieChart } from 'recharts';
+
+// Utility functions for formatting
+const formatNumber = (num: number): string => {
+  if (num >= 1000000) return `${(num / 1000000).toFixed(1)}M`;
+  if (num >= 1000) return `${(num / 1000).toFixed(1)}K`;
+  return num.toString();
+};
+
+const formatSats = (sats: number): string => {
+  return `${formatNumber(sats)} sats`;
+};
 import { 
   fetchAdvertiserSummary, 
   fetchAdvertiserDailyMetrics,
