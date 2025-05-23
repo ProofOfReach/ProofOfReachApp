@@ -83,7 +83,7 @@ const LoginPageClient: React.FC = () => {
       }
       
       // Check if test mode was previously enabled via localStorage
-      const isTestModeEnabled = enhancedStorage.getItem('showTestOptions') === 'true';
+      const isTestModeEnabled = localStorage.getItem('showTestOptions') === 'true';
       if (isTestModeEnabled) {
         setShowTestOptions(true);
         
@@ -106,7 +106,7 @@ const LoginPageClient: React.FC = () => {
     setShowTestOptions(newValue);
     
     // Save preference to localStorage
-    enhancedStorage.setItem('showTestOptions', newValue.toString());
+    localStorage.setItem('showTestOptions', newValue.toString());
     
     // If turning on test mode and no keys generated yet, generate them
     if (newValue && !testKeysGenerated) {
