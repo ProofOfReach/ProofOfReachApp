@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { Speaker } from 'react-feather';
 import '@/hooks/useTestMode';
 import '@/lib/roleService';
-import '@/services/roleManager';
+import { RoleManager } from '@/services/roleManager';
 import '@/types/role';
 import '@/lib/logger';
 import { 
