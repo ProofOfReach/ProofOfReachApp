@@ -1,28 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
-import { User, Shield, Edit3, DollarSign, Lock, Speaker } from 'react-feather';
-import '@/types/role';
-import '@/lib/roleService';
-import '@/services/roleManager';
-import '@/components/icons/MegaphoneIcon';
-import '@/utils/roleEvents';
-import '@/context/TestModeContext';
-import '@/services/enhancedStorageService';
-import '@/services/storageService';
-import '@/lib/logger';
-import { 
-  useAppEvent, 
-  useLegacyEvent 
-} from '@/hooks/useAppEvent';
-import { 
-  ROLE_EVENTS, 
-  SYSTEM_EVENTS, 
-  TEST_MODE_EVENTS 
-} from '@/lib/events/eventTypes';
-import { 
-  notifyRoleChanged,
-  notifyRolesUpdated
-} from '@/lib/events';
+import { User, Shield, Edit3, DollarSign, Speaker } from 'react-feather';
 
 interface RoleDropdownProps {
   skipNavigation?: boolean;

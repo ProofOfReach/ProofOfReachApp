@@ -6,7 +6,7 @@ import { RoleService } from '../../lib/roleService';
 import { triggerRoleRefresh } from '../../utils/roleEvents';
 import ClientOnly from '../../utils/clientOnly';
 import DebugRoleEnabler from '../DebugRoleEnabler';
-import RoleDropdown from '../role/RoleDropdown';
+import SimpleRoleDropdown from '../role/SimpleRoleDropdown';
 import Link from 'next/link';
 import { 
   User, FileText, Settings, Shield,
@@ -335,19 +335,32 @@ const ImprovedDashboardLayout: React.FC<ImprovedDashboardLayoutProps> = ({
           {/* Main content */}
           <div className="flex-1 flex flex-col overflow-hidden">
             {/* Header */}
-            <header className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 py-4 px-6 flex items-center">
-              {/* Mobile menu button */}
-              <button 
-                onClick={() => setSidebarOpen(true)} 
-                className="md:hidden mr-4 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
-                aria-label="Open sidebar"
-              >
-                <Menu className="h-6 w-6" />
-              </button>
+            <header className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 py-4 px-6 flex items-center justify-between">
+              <div className="flex items-center">
+                {/* Mobile menu button */}
+                <button 
+                  onClick={() => setSidebarOpen(true)} 
+                  className="md:hidden mr-4 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+                  aria-label="Open sidebar"
+                >
+                  <Menu className="h-6 w-6" />
+                </button>
+                
+                <h1 className="text-xl font-medium text-gray-900 dark:text-white">
+                  {title || 'Dashboard'}
+                </h1>
+              </div>
               
-              <h1 className="text-xl font-medium text-gray-900 dark:text-white">
-                {title || 'Dashboard'}
-              </h1>
+              {/* Role selector in header */}
+              <div className="flex items-center space-x-4">
+                <SimpleRoleDropdown 
+                  skipNavigation={true}
+                  onRoleChange={(newRole) => {
+                    setCurrentRole(newRole as UserRole);
+                  }}
+                  className="min-w-[120px]"
+                />
+              </div>
             </header>
             
             {/* Debug tools (only in development for admins) */}
