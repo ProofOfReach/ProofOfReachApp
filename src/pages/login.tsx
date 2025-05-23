@@ -347,7 +347,7 @@ const LoginPageClient: React.FC = () => {
         
         // Check onboarding status and redirect appropriately
         logger.debug('Determining redirect destination...');
-        const onboardingService = await import '@/lib/onboardingService').then(mod => mod.default);
+        const onboardingService = await import('@/lib/onboardingService').then(mod => mod.default);
         // No default role - let the onboarding process handle role selection
         const redirectUrl = await onboardingService.getPostLoginRedirectUrl(pubkey);
         
@@ -472,7 +472,7 @@ const LoginPageClient: React.FC = () => {
         
         // Determine where to redirect based on onboarding status
         logger.log('Account created logfully, checking onboarding status');
-        const onboardingService = await import '@/lib/onboardingService').then(mod => mod.default);
+        const onboardingService = await import('@/lib/onboardingService').then(mod => mod.default);
         // No default role - let the onboarding process handle role selection
         const redirectUrl = await onboardingService.getPostLoginRedirectUrl(publicKey as string);
         
@@ -486,7 +486,7 @@ const LoginPageClient: React.FC = () => {
         // We can still redirect to onboarding or dashboard
         logger.log('API call failed but continuing with redirection');
         try {
-          const onboardingService = await import '@/lib/onboardingService').then(mod => mod.default);
+          const onboardingService = await import('@/lib/onboardingService').then(mod => mod.default);
           // No default role - let the onboarding process handle role selection
           const redirectUrl = await onboardingService.getPostLoginRedirectUrl(publicKey || '');
           
@@ -563,7 +563,7 @@ const LoginPageClient: React.FC = () => {
       // Complete onboarding for test users (regardless of login log)
       try {
         // Import onboarding service dynamically
-        const onboardingService = await import '@/lib/onboardingService').then(mod => mod.default);
+        const onboardingService = await import('@/lib/onboardingService').then(mod => mod.default);
         
         // Define proper interface for API request and responses
         interface OnboardingCompleteRequest {
