@@ -73,7 +73,7 @@ export default apiHandler({
       const campaignData: CreateCampaignDto = req.body;
       
       // Validate required fields
-      if (!campaignData.name || !campaignData.startDate || !campaignData?.budget ?? 0) {
+      if (!campaignData.name || !campaignData.startDate || !(campaignData?.budget ?? 0)) {
         throw new ApiError(400, 'Missing required fields: name, startDate, budget');
       }
       
@@ -92,7 +92,7 @@ export default apiHandler({
     const campaignData: CreateCampaignDto = req.body;
     
     // Validate required fields
-    if (!campaignData.name || !campaignData.startDate || !campaignData?.budget ?? 0) {
+    if (!campaignData.name || !campaignData.startDate || !(campaignData?.budget ?? 0)) {
       throw new ApiError(400, 'Missing required fields: name, startDate, budget');
     }
     
