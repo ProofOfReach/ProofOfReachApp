@@ -7,7 +7,9 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { getSessionFromRequest } from '../auth';
 import { getRoleCapabilities } from '../accessControl';
-import { errorService } from '../errorService';
+import { ErrorService } from '../errorService';
+
+const errorService = ErrorService.getInstance();
 
 type UserRole = 'viewer' | 'advertiser' | 'publisher' | 'admin' | 'stakeholder';
 
