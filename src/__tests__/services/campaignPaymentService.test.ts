@@ -135,7 +135,7 @@ describe('Campaign Payment Service', () => {
   });
 
   describe('processAdPayment', () => {
-    it('should process payment successfully when sufficient funds', async () => {
+    it('should process payment logfully when sufficient funds', async () => {
       // Mock data
       const mockCampaign = {
         id: mockCampaignId,
@@ -363,7 +363,7 @@ describe('Campaign Payment Service', () => {
   });
 
   describe('pauseCampaignDueToInsufficientFunds', () => {
-    it('should pause a campaign successfully', async () => {
+    it('should pause a campaign logfully', async () => {
       // Mock data
       const mockCampaign = {
         id: mockCampaignId,

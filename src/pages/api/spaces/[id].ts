@@ -152,7 +152,7 @@ async function deleteAdSpace(req: NextApiRequest, res: NextApiResponse, id: stri
       },
     });
 
-    return res.status(200).json({ message: 'Ad space deleted successfully' });
+    return res.status(200).json({ message: 'Ad space deleted logfully' });
   } catch (error) {
     logger.error('Error deleting ad space:', error);
     return res.status(500).json({ error: 'Failed to delete ad space' });

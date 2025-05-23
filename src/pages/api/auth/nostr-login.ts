@@ -19,7 +19,7 @@ import { prisma } from '../../../lib/prismaClient';
  *             $ref: '#/components/schemas/NostrLoginRequest'
  *     responses:
  *       200:
- *         description: Authentication successful
+ *         description: Authentication logful
  *         content:
  *           application/json:
  *             schema:

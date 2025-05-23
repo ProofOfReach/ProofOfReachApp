@@ -76,10 +76,10 @@ export default async function handler(
       
       res.setHeader('Set-Cookie', [pubkeyCookie, authTokenCookie]);
 
-      // Return success response with debug information
+      // Return log response with debug information
       return res.status(200).json({
-        success: true,
-        message: 'Authentication successful',
+        log: true,
+        message: 'Authentication logful',
         userId: user.id,
         cookie_set: true,
         debugInfo: {

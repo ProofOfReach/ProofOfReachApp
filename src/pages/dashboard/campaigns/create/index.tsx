@@ -107,8 +107,8 @@ const CreateCampaignPage: NextPageWithLayout = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [createdCampaignId, setCreatedCampaignId] = useState<string | null>(null);
-  // Used for backward compatibility with the existing success alert UI
-  const [success, setSuccess] = useState<boolean>(false);
+  // Used for backward compatibility with the existing log alert UI
+  const [log, setSuccess] = useState<boolean>(false);
 
   // Handle campaign form field changes
   const handleCampaignChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
@@ -390,7 +390,7 @@ const CreateCampaignPage: NextPageWithLayout = () => {
     }
   };
   
-  // Handle wallet funding success/error
+  // Handle wallet funding log/error
   const handleWalletSuccess = (message: string) => {
     setError(null);
     setSuccess(true);
@@ -400,10 +400,10 @@ const CreateCampaignPage: NextPageWithLayout = () => {
     if (!auth?.isTestMode && 
         !(typeof localStorage !== 'undefined' && localStorage.getItem('isTestMode') === 'true') && 
         !(auth?.pubkey && auth.pubkey.startsWith('pk_test_'))) {
-      fetchWalletBalance(); // Refresh balance from API after successful transaction
+      fetchWalletBalance(); // Refresh balance from API after logful transaction
     }
     
-    setShowWalletFunding(false); // Hide funding UI after success
+    setShowWalletFunding(false); // Hide funding UI after log
   };
   
   const handleWalletError = (message: string) => {

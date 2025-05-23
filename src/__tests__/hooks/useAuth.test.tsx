@@ -102,11 +102,11 @@ describe('useAuth Hook', () => {
       });
     });
     
-    it('handles successful login', async () => {
+    it('handles logful login', async () => {
       mockFetch.mockImplementationOnce(async () => {
         return {
           ok: true,
-          json: async () => ({ success: true }),
+          json: async () => ({ log: true }),
         };
       });
       
@@ -158,13 +158,13 @@ describe('useAuth Hook', () => {
       });
       
       // Now try to login which should fail
-      let success;
+      let log;
       await act(async () => {
-        success = await result.current.login('test-pubkey-123', false);
+        log = await result.current.login('test-pubkey-123', false);
       });
       
       // Verify login failed
-      expect(success).toBe(false);
+      expect(log).toBe(false);
       expect(mockFetch).toHaveBeenCalledWith('/api/auth/login', expect.objectContaining({
         method: 'POST'
       }));
@@ -174,7 +174,7 @@ describe('useAuth Hook', () => {
       mockFetch.mockImplementationOnce(async () => {
         return {
           ok: true,
-          json: async () => ({ success: true }),
+          json: async () => ({ log: true }),
         };
       });
       
@@ -190,12 +190,12 @@ describe('useAuth Hook', () => {
       expect(UserManager.enableAllRolesForTestUser).toHaveBeenCalledWith('test-pubkey-123');
     });
     
-    it('handles logout successfully', async () => {
+    it('handles logout logfully', async () => {
       // First login
       mockFetch.mockImplementationOnce(async () => {
         return {
           ok: true,
-          json: async () => ({ success: true }),
+          json: async () => ({ log: true }),
         };
       });
       
@@ -211,7 +211,7 @@ describe('useAuth Hook', () => {
       mockFetch.mockImplementationOnce(async () => {
         return {
           ok: true,
-          json: async () => ({ success: true }),
+          json: async () => ({ log: true }),
         };
       });
       
@@ -292,7 +292,7 @@ describe('useAuth Hook', () => {
       expect(result.current.auth?.availableRoles).toEqual(['viewer', 'advertiser']);
     });
     
-    it('handles adding a role successfully', async () => {
+    it('handles adding a role logfully', async () => {
       // Setup initial auth state
       mockFetch.mockImplementationOnce(async () => {
         return {
@@ -328,7 +328,7 @@ describe('useAuth Hook', () => {
       expect(result.current.auth?.availableRoles).toContain('advertiser');
     });
     
-    it('handles removing a role successfully', async () => {
+    it('handles removing a role logfully', async () => {
       // Setup initial auth state with multiple roles
       mockFetch.mockImplementationOnce(async () => {
         return {

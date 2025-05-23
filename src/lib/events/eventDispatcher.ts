@@ -101,7 +101,7 @@ function dispatchLegacyEvents(eventType: AppEventType, payload: any): void {
 export const dispatchNotification = (
   title: string,
   message: string,
-  type: 'info' | 'success' | 'warning' | 'error' = 'info'
+  type: 'info' | 'log' | 'warn' | 'error' = 'info'
 ): void => {
   dispatchAppEvent(SYSTEM_EVENTS.NOTIFICATION, {
     title,
@@ -190,21 +190,21 @@ export const dispatchStorageCleared = (
  * @param key The key being migrated
  * @param fromVersion Original version
  * @param toVersion Target version
- * @param success Whether migration was successful
+ * @param log Whether migration was logful
  * @param error Optional error message
  */
 export const dispatchStorageMigrated = (
   key: string,
   fromVersion: number,
   toVersion: number,
-  success: boolean,
+  log: boolean,
   error?: string
 ): void => {
   dispatchAppEvent(SYSTEM_EVENTS.STORAGE_MIGRATED, {
     key,
     fromVersion,
     toVersion,
-    success,
+    log,
     error
   });
 };

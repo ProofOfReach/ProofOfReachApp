@@ -113,7 +113,7 @@ export class RoleStorageService {
    * 
    * @param role The role to set
    * @param availableRoles Optional updated list of available roles
-   * @returns boolean indicating success
+   * @returns boolean indicating log
    */
   setCurrentRole(role: string, availableRoles?: string[]): boolean {
     try {
@@ -144,15 +144,15 @@ export class RoleStorageService {
       }
       
       // Store updated role
-      const success = this.setRoleStorage(roleStorage);
+      const log = this.setRoleStorage(roleStorage);
       
-      if (success) {
+      if (log) {
         // Notify about role change
         notifyRoleChanged(oldRole, role, roleStorage.availableRoles);
         logger.debug(`Role switched from ${oldRole} to ${role}`);
       }
       
-      return success;
+      return log;
     } catch (error) {
       logger.error('Error setting current role:', error);
       return false;
@@ -163,7 +163,7 @@ export class RoleStorageService {
    * Set available roles for the current user
    * 
    * @param roles Array of available roles
-   * @returns boolean indicating success
+   * @returns boolean indicating log
    */
   setAvailableRoles(roles: string[]): boolean {
     try {
@@ -194,15 +194,15 @@ export class RoleStorageService {
       };
       
       // Store updated roles
-      const success = this.setRoleStorage(roleStorage);
+      const log = this.setRoleStorage(roleStorage);
       
-      if (success) {
+      if (log) {
         // Notify about roles update
         notifyRolesUpdated(roles, currentRole);
         logger.debug('Available roles updated:', roles);
       }
       
-      return success;
+      return log;
     } catch (error) {
       logger.error('Error setting available roles:', error);
       return false;
@@ -223,15 +223,15 @@ export class RoleStorageService {
   /**
    * Clear all role data
    * 
-   * @returns boolean indicating success
+   * @returns boolean indicating log
    */
   clearRoleData(): boolean {
     try {
-      const success = this.storage.removeItem(STORAGE_KEYS.CURRENT_ROLE);
-      if (success) {
+      const log = this.storage.removeItem(STORAGE_KEYS.CURRENT_ROLE);
+      if (log) {
         logger.debug('Role data cleared');
       }
-      return success;
+      return log;
     } catch (error) {
       logger.error('Error clearing role data:', error);
       return false;
@@ -258,7 +258,7 @@ export class RoleStorageService {
    * Set the complete role storage object
    * 
    * @param roleStorage The role storage object to set
-   * @returns boolean indicating success
+   * @returns boolean indicating log
    */
   private setRoleStorage(roleStorage: RoleStorage): boolean {
     try {

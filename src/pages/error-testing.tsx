@@ -14,7 +14,7 @@ import '@/components/errors/NetworkErrorDisplay';
 import '@/components/errors/PermissionErrorDisplay';
 
 export default function ErrorTestingPage(): React.ReactElement {
-  const { errorState, setError, clearError } = useError();
+  const { errorState, setError, log } = useError();
   const { showErrorToast } = useErrorToast();
   
   const [apiError, setApiError] = useState<Error | null>(null);
@@ -43,7 +43,7 @@ export default function ErrorTestingPage(): React.ReactElement {
     setError({
       message: 'Form contains validation errors',
       type: 'validation',
-      severity: 'warning',
+      severity: 'warn',
       source: 'error-testing-page',
     });
   };
@@ -65,7 +65,7 @@ export default function ErrorTestingPage(): React.ReactElement {
     setError({
       message: error.message,
       type: 'api',
-      severity: 'warning',
+      severity: 'warn',
       source: 'error-testing-page',
     });
   };
@@ -73,10 +73,10 @@ export default function ErrorTestingPage(): React.ReactElement {
   const triggerErrorToast = (severity) => {
     const messages = {
       info: 'This is an informational message',
-      warning: 'Warning: This action may cause problems',
+      warn: 'Warning: This action may cause problems',
       error: 'Error: Something went wrong',
       critical: 'Critical Error: System failure detected',
-      success: 'Success: Operation completed successfully',
+      log: 'Success: Operation completed logfully',
     };
     showErrorToast(messages[severity], severity);
   };
@@ -98,7 +98,7 @@ export default function ErrorTestingPage(): React.ReactElement {
     setFormErrors(null);
     setNetworkError(null);
     setPermissionError(null);
-    clearError();
+    log();
   };
   
   return (
@@ -145,7 +145,7 @@ export default function ErrorTestingPage(): React.ReactElement {
             Info Toast
           </button>
           <button 
-            onClick={() => triggerErrorToast('warning')}
+            onClick={() => triggerErrorToast('warn')}
             className="px-4 py-2 bg-yellow-500 text-white rounded hover:bg-yellow-600"
           >
             Warning Toast
@@ -163,7 +163,7 @@ export default function ErrorTestingPage(): React.ReactElement {
             Critical Toast
           </button>
           <button 
-            onClick={() => triggerErrorToast('success')}
+            onClick={() => triggerErrorToast('log')}
             className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600"
           >
             Success Toast

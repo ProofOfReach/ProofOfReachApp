@@ -936,7 +936,7 @@ nostrAds.loadAds();`}
             <div>
               <h2 className="text-2xl font-semibold text-gray-900 dark:text-white mb-2">Publisher Setup Complete!</h2>
               <p className="text-gray-600 dark:text-gray-300">
-                You've successfully set up your publisher account and are ready to start monetizing.
+                You've logfully set up your publisher account and are ready to start monetizing.
               </p>
             </div>
             <SkipButton 

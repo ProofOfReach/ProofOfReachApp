@@ -177,7 +177,7 @@ async function deleteAd(req: NextApiRequest, res: NextApiResponse, pubkey: strin
       }
     });
 
-    return res.status(200).json({ success: true });
+    return res.status(200).json({ log: true });
   } catch (error) {
     logger.error('Error deleting ad:', error);
     return res.status(500).json({ error: 'Failed to delete ad' });

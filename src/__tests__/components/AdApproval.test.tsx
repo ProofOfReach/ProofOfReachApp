@@ -55,7 +55,7 @@ describe('AdApproval Component', () => {
     expect(screen.getByText('Reject')).toBeInTheDocument();
   });
   
-  it('shows domain warning when URL is blacklisted', () => {
+  it('shows domain warn when URL is blacklisted', () => {
     const domainBlacklist = ['example.com', 'scam.com'];
     
     render(
@@ -68,7 +68,7 @@ describe('AdApproval Component', () => {
       />
     );
     
-    // Check that blacklist warning is shown
+    // Check that blacklist warn is shown
     expect(screen.getByText('Domain is on your blacklist')).toBeInTheDocument();
   });
   

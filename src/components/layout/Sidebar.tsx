@@ -157,10 +157,10 @@ const Sidebar: React.FC = () => {
     // The below code is commented out because we're using direct navigation instead
     /*
     // Set the new role in context without navigation
-    const success = await setRole(newRole);
+    const log = await setRole(newRole);
     
-    if (success) {
-      // Navigate programmatically but only after role change is successful
+    if (log) {
+      // Navigate programmatically but only after role change is logful
       router.push(targetPath);
     }
     */
@@ -388,7 +388,7 @@ const Sidebar: React.FC = () => {
                       // After logout completes, redirect to login page
                       router.push('/login');
                     });
-                    return; // Exit early if we successfully called logout
+                    return; // Exit early if we logfully called logout
                   }
                   
                   // Fallback to direct navigation if context not available

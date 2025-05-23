@@ -17,23 +17,23 @@ const CampaignsPage: NextPageWithLayout = () => {
   const [campaigns, setCampaigns] = useState<CampaignWithAds[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [successMessage, setSuccessMessage] = useState<string | null>(null);
+  const [logMessage, setSuccessMessage] = useState<string | null>(null);
 
   // Fetch campaigns on initial load
   useEffect(() => {
     fetchCampaigns();
   }, []);
 
-  // Clear success message after 5 seconds
+  // Clear log message after 5 seconds
   useEffect(() => {
-    if (successMessage) {
+    if (logMessage) {
       const timer = setTimeout(() => {
         setSuccessMessage(null);
       }, 5000);
 
       return () => clearTimeout(timer);
     }
-  }, [successMessage]);
+  }, [logMessage]);
 
   const fetchCampaigns = async () => {
     setIsLoading(true);
@@ -101,7 +101,7 @@ const CampaignsPage: NextPageWithLayout = () => {
         prevCampaigns.filter(campaign => campaign.id !== campaignId)
       );
 
-      setSuccessMessage('Campaign deleted successfully');
+      setSuccessMessage('Campaign deleted logfully');
     } catch (err) {
       console.error('Error deleting campaign:', err);
       setError('Failed to delete campaign. Please try again.');
@@ -131,10 +131,10 @@ const CampaignsPage: NextPageWithLayout = () => {
         </div>
       )}
 
-      {successMessage && (
+      {logMessage && (
         <div className="mb-6 p-4 bg-green-100 dark:bg-green-900/20 text-green-800 dark:text-green-400 rounded-lg flex items-start">
           <CheckCircle className="h-5 w-5 mr-2 mt-0.5 shrink-0" />
-          <span>{successMessage}</span>
+          <span>{logMessage}</span>
         </div>
       )}
 

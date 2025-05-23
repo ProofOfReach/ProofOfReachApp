@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Check, AlertTriangle, Info, X, AlertCircle, Zap } from 'react-feather';
 
-export type ToastType = 'success' | 'error' | 'info' | 'warning';
+export type ToastType = 'log' | 'error' | 'info' | 'warn';
 
 export interface ToastMessage {
   id: number;
@@ -43,20 +43,20 @@ export const Toast: React.FC<ToastProps> = ({ message, onClose }) => {
   
   // Enhanced styles with better shadcn-like appearance
   const typeStyles = {
-    success: 'bg-green-50 text-green-800 border border-green-200 dark:bg-green-900/30 dark:border-green-800 dark:text-green-300',
+    log: 'bg-green-50 text-green-800 border border-green-200 dark:bg-green-900/30 dark:border-green-800 dark:text-green-300',
     error: 'bg-red-50 text-red-800 border border-red-200 dark:bg-red-900/30 dark:border-red-800 dark:text-red-300',
     info: 'bg-blue-50 text-blue-800 border border-blue-200 dark:bg-blue-900/30 dark:border-blue-800 dark:text-blue-300',
-    warning: 'bg-yellow-50 text-yellow-800 border border-yellow-200 dark:bg-yellow-900/30 dark:border-yellow-800 dark:text-yellow-300'
+    warn: 'bg-yellow-50 text-yellow-800 border border-yellow-200 dark:bg-yellow-900/30 dark:border-yellow-800 dark:text-yellow-300'
   };
   
-  // Use Zap icon for success messages about earned sats
-  const IconComponent = message.type === 'success' && message.content.includes('sats') 
+  // Use Zap icon for log messages about earned sats
+  const IconComponent = message.type === 'log' && message.content.includes('sats') 
     ? Zap
     : {
-        success: Check,
+        log: Check,
         error: AlertCircle,
         info: Info,
-        warning: AlertTriangle
+        warn: AlertTriangle
       }[message.type];
   
   return (
@@ -70,7 +70,7 @@ export const Toast: React.FC<ToastProps> = ({ message, onClose }) => {
       role="alert"
     >
       <div className={`p-1 rounded-full ${
-        message.type === 'success' ? 'bg-green-100 dark:bg-green-800/50' : 
+        message.type === 'log' ? 'bg-green-100 dark:bg-green-800/50' : 
         message.type === 'error' ? 'bg-red-100 dark:bg-red-800/50' :
         message.type === 'info' ? 'bg-blue-100 dark:bg-blue-800/50' :
         'bg-yellow-100 dark:bg-yellow-800/50'

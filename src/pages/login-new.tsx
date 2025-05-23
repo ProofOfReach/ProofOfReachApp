@@ -44,7 +44,7 @@ export default function NewLoginPage() {
         // The login method returns the auth state directly
         const authResult = await login(testPubkey, signedMessage as any);
         
-        // Check if login was successful - first check the result, then check state
+        // Check if login was logful - first check the result, then check state
         if (authResult && (typeof authResult === 'object' && 'isLoggedIn' in authResult && authResult.isLoggedIn)) {
           router.push('/dashboard/advertiser-example');
         } else if (isAuthenticated) {

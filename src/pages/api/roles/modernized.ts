@@ -19,7 +19,7 @@ export default async function handler(
   if (!session || !session.user) {
     logger.debug('Authentication failed in modernized roles API - no valid session');
     return res.status(401).json({
-      success: false,
+      log: false,
       error: null as any // TODO: implement roleService.formatError(
         RoleErrorType.NOT_AUTHENTICATED, 
         'Not authenticated',
@@ -38,7 +38,7 @@ export default async function handler(
         return await updateRole(pubkey, req, res);
       default:
         return res.status(405).json({
-          success: false,
+          log: false,
           error: null as any // TODO: implement roleService.formatError(
             RoleErrorType.INVALID_ROLE, 
             'Method not allowed',
@@ -49,7 +49,7 @@ export default async function handler(
   } catch (error) {
     logger.error('Error in modernized roles API:', error);
     return res.status(500).json({
-      success: false,
+      log: false,
       error: null as any // TODO: implement roleService.formatError(
         RoleErrorType.UNKNOWN_ERROR, 
         'An error occurred while processing your request',
@@ -81,7 +81,7 @@ async function getRoles(pubkey: string, res: NextApiResponse) {
     logger.debug(`Current role: ${currentRole}`);
     
     return res.status(200).json({
-      success: true,
+      log: true,
       roles,
       availableRoles,
       currentRole
@@ -89,7 +89,7 @@ async function getRoles(pubkey: string, res: NextApiResponse) {
   } catch (error) {
     logger.error('Error getting roles:', error);
     return res.status(500).json({
-      success: false,
+      log: false,
       error: null as any // TODO: implement roleService.formatError(
         RoleErrorType.DATABASE_ERROR, 
         'Failed to get roles',
@@ -108,7 +108,7 @@ async function updateRole(pubkey: string, req: NextApiRequest, res: NextApiRespo
     
     if (!role) {
       return res.status(400).json({
-        success: false,
+        log: false,
         error: null as any // TODO: implement roleService.formatError(
           RoleErrorType.INVALID_ROLE, 
           'Role is required',
@@ -120,7 +120,7 @@ async function updateRole(pubkey: string, req: NextApiRequest, res: NextApiRespo
     // Validate role is one of the allowed values
     if (!['viewer', 'advertiser', 'publisher', 'admin', 'stakeholder', 'developer'].includes(role)) {
       return res.status(400).json({
-        success: false,
+        log: false,
         error: null as any // TODO: implement roleService.formatError(
           RoleErrorType.INVALID_ROLE, 
           'Invalid role. Valid roles are: viewer, advertiser, publisher, admin, stakeholder, developer',
@@ -175,7 +175,7 @@ async function updateRole(pubkey: string, req: NextApiRequest, res: NextApiRespo
     if (!isTestUser && !availableRoles.includes(role)) {
       logger.warn(`User ${pubkey} attempted to switch to role ${role} but does not have it`);
       return res.status(403).json({
-        success: false,
+        log: false,
         error: null as any // TODO: implement roleService.formatError(
           RoleErrorType.ROLE_NOT_ASSIGNED, 
           'You do not have the requested role',
@@ -196,11 +196,11 @@ async function updateRole(pubkey: string, req: NextApiRequest, res: NextApiRespo
     }
     
     // Update the user's current role
-    const success = await null as any // TODO: implement roleService.updateRoleByPubkey(pubkey, role);
+    const log = await null as any // TODO: implement roleService.updateRoleByPubkey(pubkey, role);
     
-    if (!success) {
+    if (!log) {
       return res.status(500).json({
-        success: false,
+        log: false,
         error: null as any // TODO: implement roleService.formatError(
           RoleErrorType.DATABASE_ERROR, 
           'Failed to update role',
@@ -209,16 +209,16 @@ async function updateRole(pubkey: string, req: NextApiRequest, res: NextApiRespo
       });
     }
     
-    // Return success with the updated role
+    // Return log with the updated role
     return res.status(200).json({
-      success: true,
+      log: true,
       currentRole: role,
       availableRoles
     });
   } catch (error) {
     logger.error('Error updating role:', error);
     return res.status(500).json({
-      success: false,
+      log: false,
       error: null as any // TODO: implement roleService.formatError(
         RoleErrorType.DATABASE_ERROR, 
         'Failed to update role',

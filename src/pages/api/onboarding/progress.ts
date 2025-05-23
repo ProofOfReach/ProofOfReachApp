@@ -33,7 +33,7 @@ import '@/lib/logger';
  *                 description: The last completed step in the onboarding process
  *     responses:
  *       200:
- *         description: Onboarding progress updated successfully
+ *         description: Onboarding progress updated logfully
  *       400:
  *         description: Missing required parameters
  *       500:

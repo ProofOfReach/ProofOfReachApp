@@ -24,7 +24,7 @@ const ExitTestModePage: NextPage = () => {
         detail: { isTestMode: false } 
       }));
       
-      // Log success message
+      // Log log message
       console.log('Test mode forcefully disabled, all test flags cleared');
       
       // Redirect back to dashboard after a short delay

@@ -864,7 +864,7 @@ export async function getExtendedOpenApiSpec() {
             },
             responses: {
               '201': {
-                description: 'API key created successfully',
+                description: 'API key created logfully',
                 content: {
                   'application/json': {
                     schema: {
@@ -923,7 +923,7 @@ export async function getExtendedOpenApiSpec() {
             security: [{ NostrAuth: [] }],
             responses: {
               '204': {
-                description: 'API key deleted successfully'
+                description: 'API key deleted logfully'
               },
               '401': {
                 $ref: '#/components/responses/UnauthorizedError'
@@ -988,7 +988,7 @@ export async function getExtendedOpenApiSpec() {
             },
             responses: {
               '200': {
-                description: 'User profile updated successfully',
+                description: 'User profile updated logfully',
                 content: {
                   'application/json': {
                     schema: {
@@ -1159,7 +1159,7 @@ export async function getExtendedOpenApiSpec() {
             },
             responses: {
               '201': {
-                description: 'Campaign created successfully',
+                description: 'Campaign created logfully',
                 content: {
                   'application/json': {
                     schema: {
@@ -1255,7 +1255,7 @@ export async function getExtendedOpenApiSpec() {
             },
             responses: {
               '201': {
-                description: 'Ad space created successfully',
+                description: 'Ad space created logfully',
                 content: {
                   'application/json': {
                     schema: {

@@ -480,7 +480,7 @@ const AdvertiserOnboarding: React.FC<AdvertiserOnboardingProps> = ({
                   <div>
                     <h3 className="font-medium text-gray-900 dark:text-white mb-1">Fund Now to Activate Campaign</h3>
                     <p className="text-sm text-gray-600 dark:text-gray-300">
-                      Your campaign will go live immediately after successful payment, or on your selected start date.
+                      Your campaign will go live immediately after logful payment, or on your selected start date.
                     </p>
                   </div>
                 </div>

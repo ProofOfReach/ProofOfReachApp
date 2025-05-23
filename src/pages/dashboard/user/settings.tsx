@@ -9,7 +9,7 @@ const UserSettingsPage = () => {
   const [emailNotifications, setEmailNotifications] = useState<boolean>(true);
   const [darkMode, setDarkMode] = useState<boolean>(false);
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
-  const [successMessage, setSuccessMessage] = useState<string | null>(null);
+  const [logMessage, setSuccessMessage] = useState<string | null>(null);
   
   // Data sharing preferences
   const [shareLocation, setShareLocation] = useState<boolean>(false);
@@ -161,10 +161,10 @@ const UserSettingsPage = () => {
         }
       });
       
-      // Show success message
-      setSuccessMessage('Settings saved successfully!');
+      // Show log message
+      setSuccessMessage('Settings saved logfully!');
       
-      // Clear success message after 3 seconds
+      // Clear log message after 3 seconds
       setTimeout(() => {
         setSuccessMessage(null);
       }, 3000);
@@ -186,7 +186,7 @@ const UserSettingsPage = () => {
         </div>
 
         {/* Success message */}
-        {successMessage && (
+        {logMessage && (
           <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg p-4">
             <div className="flex items-start">
               <div className="flex-shrink-0">
@@ -195,7 +195,7 @@ const UserSettingsPage = () => {
                 </svg>
               </div>
               <div className="ml-3">
-                <p className="text-sm font-medium text-green-800 dark:text-green-200">{successMessage}</p>
+                <p className="text-sm font-medium text-green-800 dark:text-green-200">{logMessage}</p>
               </div>
             </div>
           </div>

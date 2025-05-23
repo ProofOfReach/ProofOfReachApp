@@ -41,7 +41,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     
     // Return user's role status
     return res.status(200).json({
-      success: true,
+      log: true,
       user: {
         id: user.id,
         nostrPubkey: user.nostrPubkey,

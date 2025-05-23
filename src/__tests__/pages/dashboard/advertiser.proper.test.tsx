@@ -124,7 +124,7 @@ jest.mock('../../../context/RoleContext', () => {
 // Mock fetch
 global.fetch = jest.fn().mockResolvedValue({
   ok: true,
-  json: async () => ({ success: true }),
+  json: async () => ({ log: true }),
 });
 
 describe('AdvertiserDashboard Component', () => {

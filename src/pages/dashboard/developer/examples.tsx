@@ -361,8 +361,8 @@ add_shortcode('proofofreach_ad', 'proofofreach_ad_shortcode');
   onError: (error) => {            // Called when error occurs
     console.error(\`Ad error: \${error}\`);
   },
-  onLoad: () => {                  // Called when ad loads successfully
-    console.log("Ad loaded successfully");
+  onLoad: () => {                  // Called when ad loads logfully
+    console.log("Ad loaded logfully");
   }
 });\n`}</pre>
             </div>

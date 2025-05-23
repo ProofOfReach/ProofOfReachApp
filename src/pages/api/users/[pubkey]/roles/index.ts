@@ -8,8 +8,8 @@ import prisma from '../../../../../lib/prisma';
 type GetRolesResponseData = {
   roles: string[];
   availableRoles: string[];
-  success: boolean;
-} | { error: string; success: false };
+  log: boolean;
+} | { error: string; log: false };
 
 /**
  * Get user roles
@@ -45,7 +45,7 @@ type GetRolesResponseData = {
  *                   items:
  *                     type: string
  *                     enum: [advertiser, publisher, admin, stakeholder]
- *                 success:
+ *                 log:
  *                   type: boolean
  *       404:
  *         description: User not found
@@ -56,7 +56,7 @@ const getUserRoles = async (req: NextApiRequest, res: NextApiResponse<GetRolesRe
   const { pubkey } = req.query;
   
   if (!pubkey || typeof pubkey !== 'string') {
-    return res.status(400).json({ error: 'Invalid or missing pubkey parameter', success: false });
+    return res.status(400).json({ error: 'Invalid or missing pubkey parameter', log: false });
   }
   
   try {
@@ -79,7 +79,7 @@ const getUserRoles = async (req: NextApiRequest, res: NextApiResponse<GetRolesRe
       const roles: string[] = ['viewer', ...availableRoles];
       
       return res.status(200).json({ 
-        success: true, 
+        log: true, 
         roles,
         availableRoles 
       });
@@ -93,7 +93,7 @@ const getUserRoles = async (req: NextApiRequest, res: NextApiResponse<GetRolesRe
     if (!user) {
       return res.status(404).json({ 
         error: 'User not found',
-        success: false 
+        log: false 
       });
     }
     
@@ -108,7 +108,7 @@ const getUserRoles = async (req: NextApiRequest, res: NextApiResponse<GetRolesRe
     const roles: string[] = ['viewer', ...availableRoles];
     
     return res.status(200).json({ 
-      success: true, 
+      log: true, 
       roles,
       availableRoles 
     });
@@ -116,7 +116,7 @@ const getUserRoles = async (req: NextApiRequest, res: NextApiResponse<GetRolesRe
     logger.error('Error getting user roles:', error);
     return res.status(500).json({ 
       error: 'Internal server error',
-      success: false
+      log: false
     });
   }
 };
@@ -150,7 +150,7 @@ const getUserRoles = async (req: NextApiRequest, res: NextApiResponse<GetRolesRe
  *                 enum: [advertiser, publisher, admin, stakeholder]
  *     responses:
  *       200:
- *         description: Role added successfully
+ *         description: Role added logfully
  *       404:
  *         description: User not found
  *       500:
@@ -163,14 +163,14 @@ const addUserRole = async (req: NextApiRequest, res: NextApiResponse) => {
   if (!pubkey || typeof pubkey !== 'string') {
     return res.status(400).json({ 
       error: 'Invalid or missing pubkey parameter',
-      success: false
+      log: false
     });
   }
   
   if (!role || typeof role !== 'string') {
     return res.status(400).json({ 
       error: 'Invalid or missing role in request body',
-      success: false
+      log: false
     });
   }
   
@@ -179,7 +179,7 @@ const addUserRole = async (req: NextApiRequest, res: NextApiResponse) => {
   if (!validRoles.includes(role as UserRole)) {
     return res.status(400).json({ 
       error: `Invalid role. Valid roles are: ${validRoles.join(', ')}`,
-      success: false
+      log: false
     });
   }
   
@@ -193,7 +193,7 @@ const addUserRole = async (req: NextApiRequest, res: NextApiResponse) => {
     if (!user) {
       return res.status(404).json({ 
         error: 'User not found',
-        success: false 
+        log: false 
       });
     }
     
@@ -202,7 +202,7 @@ const addUserRole = async (req: NextApiRequest, res: NextApiResponse) => {
     if (!result) {
       return res.status(404).json({ 
         error: 'User not found',
-        success: false
+        log: false
       });
     }
     
@@ -211,7 +211,7 @@ const addUserRole = async (req: NextApiRequest, res: NextApiResponse) => {
     
     if (!user) {
       return res.status(200).json({ 
-        success: true,
+        log: true,
         message: 'Role added, but user could not be retrieved' 
       });
     }
@@ -227,7 +227,7 @@ const addUserRole = async (req: NextApiRequest, res: NextApiResponse) => {
     const roles: string[] = ['viewer', ...availableRoles];
     
     return res.status(200).json({ 
-      success: true, 
+      log: true, 
       roles,
       availableRoles
     });
@@ -235,7 +235,7 @@ const addUserRole = async (req: NextApiRequest, res: NextApiResponse) => {
     logger.error('Error adding user role:', error);
     return res.status(500).json({ 
       error: 'Internal server error',
-      success: false
+      log: false
     });
   }
 };

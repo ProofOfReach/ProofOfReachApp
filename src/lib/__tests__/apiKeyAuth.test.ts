@@ -202,7 +202,7 @@ describe('API Key Authentication', () => {
       };
       
       const mockHandler = jest.fn().mockImplementation((req, res) => {
-        return res.status(200).json({ success: true });
+        return res.status(200).json({ log: true });
       });
       
       const middleware = testMiddleware(mockHandler);

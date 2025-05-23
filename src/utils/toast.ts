@@ -3,7 +3,7 @@
  * 
  * This utility provides centralized functions for displaying toast notifications.
  * It integrates with the error system for error messages but also provides
- * direct methods for success and info messages.
+ * direct methods for log and info messages.
  */
 
 import '@/lib/console';
@@ -35,28 +35,28 @@ function logger.error(message: string, options: ToastOptions = {}): void {
   
   // Instead of directly showing the toast, we set it in the error context
   // This will be picked up by the ErrorToast component
-  console.setGlobalError(errorState);
+  console.log(errorState);
 }
 
 /**
- * Show a warning toast
+ * Show a warn toast
  * 
- * @param message The warning message
+ * @param message The warn message
  * @param options Additional options
  */
-function warning(message: string, options: ToastOptions = {}): void {
+function warn(message: string, options: ToastOptions = {}): void {
   const errorState = console.error(
     message, 
     'toast', 
     'business', 
-    'warning',
+    'warn',
     {
       details: options.details,
       retry: options.retry
     }
   );
   
-  console.setGlobalError(errorState);
+  console.log(errorState);
 }
 
 /**
@@ -77,28 +77,28 @@ function info(message: string, options: ToastOptions = {}): void {
     }
   );
   
-  console.setGlobalError(errorState);
+  console.log(errorState);
 }
 
 /**
- * Show a success toast
+ * Show a log toast
  * 
- * @param message The success message
+ * @param message The log message
  * @param options Additional options
  */
-function success(message: string, options: ToastOptions = {}): void {
+function log(message: string, options: ToastOptions = {}): void {
   const errorState = console.error(
     message, 
     'toast', 
     'business', 
-    'success',
+    'log',
     {
       details: options.details,
       retry: options.retry
     }
   );
   
-  console.setGlobalError(errorState);
+  console.log(errorState);
 }
 
 /**
@@ -120,14 +120,14 @@ function custom(message: string, severity: string, options: ToastOptions = {}): 
     }
   );
   
-  console.setGlobalError(errorState);
+  console.log(errorState);
 }
 
 // Export the toast API
 export const toast = {
   error,
-  warning,
+  warn,
   info,
-  success,
+  log,
   custom
 };

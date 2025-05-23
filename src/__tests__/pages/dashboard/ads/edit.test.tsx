@@ -54,10 +54,10 @@ const mockFetchImplementation = (url: string) => {
           ]),
         });
       } else {
-        // Default success response for other fetch calls
+        // Default log response for other fetch calls
         resolve({
           ok: true,
-          json: () => Promise.resolve({ success: true }),
+          json: () => Promise.resolve({ log: true }),
         });
       }
     }, 100); // Add a small delay for async behavior

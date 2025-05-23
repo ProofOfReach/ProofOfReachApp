@@ -91,7 +91,7 @@ const TestAuthPage: React.FC = () => {
           const nostrPubkey = cookies.find(c => c.startsWith('nostr_pubkey='));
           
           if (nostrPubkey) {
-            console.log('Cookie was successfully set!');
+            console.log('Cookie was logfully set!');
             setPubkey(publicKey);
           } else {
             console.warn('Cookie was not set properly');
@@ -146,7 +146,7 @@ const TestAuthPage: React.FC = () => {
       const data = await response.json();
       setResult({
         onboardingStatus: data,
-        message: 'Onboarding status checked successfully',
+        message: 'Onboarding status checked logfully',
       });
       
       // Redirect to onboarding
@@ -174,7 +174,7 @@ const TestAuthPage: React.FC = () => {
       setResult(null);
       setError(null);
       
-      alert('All auth data cleared successfully');
+      alert('All auth data cleared logfully');
       
       // Reload page
       window.location.reload();

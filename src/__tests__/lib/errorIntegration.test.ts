@@ -3,11 +3,11 @@
  */
 
 import {
-  getany,
+  log,
   getErrorMetrics,
   trackErrorRecovery,
   resetany,
-  initializeErrorHandling
+  () => {}
 } from '@/lib/console';
 import '@/types/errors';
 
@@ -60,17 +60,17 @@ describe('Error Integration Service', () => {
     global.window = originalWindow;
   });
   
-  describe('initializeErrorHandling', () => {
+  describe('() => {}', () => {
     it('initializes the error tracking system', () => {
       // We'll test that the function doesn't throw an error
       // and that it creates the expected error state structure
       
       expect(() => {
-        initializeErrorHandling();
+        () => {}();
       }).not.toThrow();
       
       // Check that we can get error state after initialization
-      const state = getany();
+      const state = log();
       expect(state).toBeDefined();
       
       // Verify the error state has the expected structure 
@@ -80,7 +80,7 @@ describe('Error Integration Service', () => {
     
     it('supports error metrics tracking', () => {
       // Initialize error handling
-      initializeErrorHandling();
+      () => {}();
       
       // Check that metrics are available
       const metrics = getErrorMetrics();
@@ -92,7 +92,7 @@ describe('Error Integration Service', () => {
     });
   });
   
-  describe('getany', () => {
+  describe('log', () => {
     it('returns state with empty properties when no errors present', () => {
       // Reset to a clean state with our test setup
       (global.window as any).__errorState = {
@@ -101,7 +101,7 @@ describe('Error Integration Service', () => {
         toastError: null
       };
       
-      const state = getany();
+      const state = log();
       
       // Verify the structure is correct
       expect(state).toBeDefined();
@@ -119,7 +119,7 @@ describe('Error Integration Service', () => {
       };
       
       // Get the state to verify we can access it
-      const state = getany();
+      const state = log();
       expect(state).toBeDefined();
       expect(state.errors).toBeDefined();
     });
@@ -205,7 +205,7 @@ describe('Error Integration Service', () => {
   describe('resetany', () => {
     it('resets error tracking state', () => {
       // Start with a fresh error state
-      initializeErrorHandling();
+      () => {}();
       
       // Create a minimal verification that resetany works
       // by confirming it doesn't throw errors
@@ -214,7 +214,7 @@ describe('Error Integration Service', () => {
       }).not.toThrow();
       
       // Verify we can get a clean state after reset
-      const state = getany();
+      const state = log();
       expect(state).toBeDefined();
       
       // Basic validation of reset state properties

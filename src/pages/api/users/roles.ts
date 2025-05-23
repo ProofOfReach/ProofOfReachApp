@@ -22,7 +22,7 @@ const handler: NextApiHandler = async (req: NextApiRequest, res: NextApiResponse
   } else {
     res.setHeader('Allow', ['POST', 'DELETE']);
     return res.status(405).json({ 
-      success: false, 
+      log: false, 
       message: `Method ${req.method} Not Allowed` 
     });
   }
@@ -53,7 +53,7 @@ const handler: NextApiHandler = async (req: NextApiRequest, res: NextApiResponse
  *                 enum: [advertiser, publisher, admin, stakeholder]
  *     responses:
  *       200:
- *         description: Role added successfully
+ *         description: Role added logfully
  *       400:
  *         description: Invalid input
  *       403:
@@ -66,7 +66,7 @@ async function addRole(req: NextApiRequest, res: NextApiResponse) {
     // Validate input
     if (!pubkey || !role) {
       return res.status(400).json({ 
-        success: false, 
+        log: false, 
         message: 'Missing required parameters: pubkey and role' 
       });
     }
@@ -78,7 +78,7 @@ async function addRole(req: NextApiRequest, res: NextApiResponse) {
     const validRoles: string[] = ['viewer', 'advertiser', 'publisher', 'admin', 'stakeholder'];
     if (!validRoles.includes(normalizedRole as UserRole)) {
       return res.status(400).json({ 
-        success: false, 
+        log: false, 
         message: `Invalid role: ${normalizedRole}. Valid roles are: ${validRoles.join(', ')}` 
       });
     }
@@ -88,17 +88,17 @@ async function addRole(req: NextApiRequest, res: NextApiResponse) {
     
     if (result) {
       logger.log(`Role ${normalizedRole} added to user ${pubkey}`);
-      return res.status(200).json({ success: true });
+      return res.status(200).json({ log: true });
     } else {
       return res.status(400).json({ 
-        success: false, 
+        log: false, 
         message: 'Failed to add role. User may not exist.' 
       });
     }
   } catch (error) {
     logger.error('Error adding role:', error);
     return res.status(500).json({ 
-      success: false, 
+      log: false, 
       message: 'Internal server error' 
     });
   }
@@ -129,7 +129,7 @@ async function addRole(req: NextApiRequest, res: NextApiResponse) {
  *                 enum: [advertiser, publisher, admin, stakeholder]
  *     responses:
  *       200:
- *         description: Role removed successfully
+ *         description: Role removed logfully
  *       400:
  *         description: Invalid input
  *       403:
@@ -142,7 +142,7 @@ async function removeRole(req: NextApiRequest, res: NextApiResponse) {
     // Validate input
     if (!pubkey || !role) {
       return res.status(400).json({ 
-        success: false, 
+        log: false, 
         message: 'Missing required parameters: pubkey and role' 
       });
     }
@@ -154,7 +154,7 @@ async function removeRole(req: NextApiRequest, res: NextApiResponse) {
     const validRoles: string[] = ['viewer', 'advertiser', 'publisher', 'admin', 'stakeholder'];
     if (!validRoles.includes(normalizedRole as UserRole)) {
       return res.status(400).json({ 
-        success: false, 
+        log: false, 
         message: `Invalid role: ${normalizedRole}. Valid roles are: ${validRoles.join(', ')}` 
       });
     }
@@ -164,17 +164,17 @@ async function removeRole(req: NextApiRequest, res: NextApiResponse) {
     
     if (result) {
       logger.log(`Role ${normalizedRole} removed from user ${pubkey}`);
-      return res.status(200).json({ success: true });
+      return res.status(200).json({ log: true });
     } else {
       return res.status(400).json({ 
-        success: false, 
+        log: false, 
         message: 'Failed to remove role. User may not exist or does not have this role.' 
       });
     }
   } catch (error) {
     logger.error('Error removing role:', error);
     return res.status(500).json({ 
-      success: false, 
+      log: false, 
       message: 'Internal server error' 
     });
   }

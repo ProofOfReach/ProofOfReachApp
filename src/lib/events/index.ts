@@ -105,8 +105,8 @@ export const notifyStorageMigrated = (
   key: string,
   fromVersion: number,
   toVersion: number,
-  success: boolean,
+  log: boolean,
   error?: string
 ) => {
-  dispatchStorageMigrated(key, fromVersion, toVersion, success, error);
+  dispatchStorageMigrated(key, fromVersion, toVersion, log, error);
 };

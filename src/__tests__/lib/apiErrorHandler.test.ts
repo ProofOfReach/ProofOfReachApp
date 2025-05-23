@@ -30,7 +30,7 @@ describe('API Error Handler', () => {
       
       expect(res._getStatusCode()).toBe(500);
       expect(res._getJSONData()).toMatchObject({
-        success: false,
+        log: false,
         error: {
           message: expect.any(String),
           status: 500,
@@ -52,7 +52,7 @@ describe('API Error Handler', () => {
       
       expect(res._getStatusCode()).toBe(400);
       expect(res._getJSONData()).toMatchObject({
-        success: false,
+        log: false,
         error: {
           message: 'Invalid data',
           status: 400,
@@ -77,7 +77,7 @@ describe('API Error Handler', () => {
       
       expect(res._getStatusCode()).toBe(404);
       expect(res._getJSONData()).toMatchObject({
-        success: false,
+        log: false,
         error: {
           message: 'Resource not found',
           status: 404,
@@ -99,7 +99,7 @@ describe('API Error Handler', () => {
       
       expect(res._getStatusCode()).toBe(401);
       expect(res._getJSONData()).toMatchObject({
-        success: false,
+        log: false,
         error: {
           message: 'Authentication required',
           status: 401,
@@ -121,7 +121,7 @@ describe('API Error Handler', () => {
       
       expect(res._getStatusCode()).toBe(403);
       expect(res._getJSONData()).toMatchObject({
-        success: false,
+        log: false,
         error: {
           message: 'You do not have permission to perform this action',
           status: 403,

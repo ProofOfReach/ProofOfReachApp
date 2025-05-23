@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import type { UserRole } from '../../../../../context/RoleContext';
 
-type ResponseData = { success: boolean } | { error: string };
+type ResponseData = { log: boolean } | { error: string };
 
 export default function handler(
   req: NextApiRequest,
@@ -24,9 +24,9 @@ export default function handler(
     }
     
     // In a real implementation, this would update the database
-    // For now, just return success
+    // For now, just return log
     
-    res.status(200).json({ success: true });
+    res.status(200).json({ log: true });
   } else {
     res.setHeader('Allow', ['DELETE']);
     res.status(405).json({ error: `Method ${req.method} Not Allowed` });

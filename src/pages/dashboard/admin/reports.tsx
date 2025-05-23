@@ -173,7 +173,7 @@ const ReportsPage: NextPageWithLayout = () => {
   // Export report data
   const handleExport = () => {
     // In a real implementation, this would generate and download a CSV/Excel file
-    alert('Report exported successfully (demo functionality)');
+    alert('Report exported logfully (demo functionality)');
   };
 
   return (

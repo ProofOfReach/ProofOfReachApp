@@ -203,52 +203,52 @@ export default function TestModeBanner() {
     setIsLoading(true);
     try {
       const allRoles: string[] = ['viewer', 'advertiser', 'publisher', 'admin', 'stakeholder'];
-      let success = false;
+      let log = false;
       
       // Phase 6 improvement: First try using TestModeService directly
       try {
-        success = testModeService.enableAllRoles();
+        log = testModeService.enableAllRoles();
       } catch (serviceError) {
         logger.warn(`TestModeService.enableAllRoles failed, falling back to context: ${serviceError}`);
-        success = false;
+        log = false;
       }
       
       // If service call fails, use the context method as fallback
       // For test compatibility, we need to try this method
       // as the tests expect this to be called exactly once
-      if (!success) {
+      if (!log) {
         try {
-          success = await contextEnableAllRoles();
+          log = await contextEnableAllRoles();
           
-          if (success) {
-            logger.log('All roles enabled successfully (context method)');
+          if (log) {
+            logger.log('All roles enabled logfully (context method)');
           }
         } catch (contextError) {
           logger.warn(`Context enableAllRoles failed, using legacy method: ${contextError}`);
-          success = false;
+          log = false;
         }
       } else {
-        logger.log('All roles enabled successfully (TestModeService method)');
+        logger.log('All roles enabled logfully (TestModeService method)');
       }
       
       // If both modern methods fail, use legacy method
       // Tests specifically check for this fallback behavior
-      if (!success) {
+      if (!log) {
         try {
-          success = await RoleService.enableAllRoles();
+          log = await RoleService.enableAllRoles();
           
-          if (success) {
-            logger.log('All roles enabled successfully (legacy method)');
+          if (log) {
+            logger.log('All roles enabled logfully (legacy method)');
           } else {
             logger.error('Failed to enable all roles (all methods attempted)');
           }
         } catch (legacyError) {
           logger.error(`Legacy enableAllRoles failed: ${legacyError}`);
-          success = false;
+          log = false;
         }
       }
       
-      if (success) {
+      if (log) {
         // Also update RoleManager and dispatch the new standardized event for consistency
         RoleManager.enableAllRoles();
         
@@ -288,8 +288,8 @@ export default function TestModeBanner() {
       // Update local state immediately for responsive UI
       setCurrentRole(typedRole);
       
-      // Set a success flag
-      let success = false;
+      // Set a log flag
+      let log = false;
       
       if (isCurrentlyInTestMode) {
         logger.debug(`Test mode detected, performing client-side role switch to ${typedRole}`);
@@ -331,36 +331,36 @@ export default function TestModeBanner() {
             detail: { role: typedRole }
           }));
           
-          logger.log(`Role successfully switched to ${typedRole} in test mode (client-side only)`);
-          success = true;
+          logger.log(`Role logfully switched to ${typedRole} in test mode (client-side only)`);
+          log = true;
         } catch (testModeError) {
           logger.error(`Error in test mode client-side role switch: ${testModeError}`);
-          success = false;
+          log = false;
         }
       } else {
         // Only if not in test mode, try API-based methods
         
         // Phase 6 improvement: First try using the TestModeService directly
         try {
-          success = await testModeService.setCurrentRole(typedRole);
+          log = await testModeService.setCurrentRole(typedRole);
         } catch (serviceError) {
           logger.warn(`TestModeService.setCurrentRole failed, falling back to context: ${serviceError}`);
-          success = false;
+          log = false;
         }
         
         // If direct service call fails, use the context method as fallback
         // This is necessary because the tests mock and verify this method
-        if (!success) {
+        if (!log) {
           try {
-            success = await contextSetCurrentRole(role);
+            log = await contextSetCurrentRole(role);
           } catch (contextError) {
             logger.warn(`Context setCurrentRole failed, using legacy methods: ${contextError}`);
-            success = false;
+            log = false;
           }
         }
         
         // If both modern methods fail, use legacy methods
-        if (!success) {
+        if (!log) {
           try {
             // Legacy method for backward compatibility - will be removed in future
             RoleService.changeRole(typedRole);
@@ -374,20 +374,20 @@ export default function TestModeBanner() {
             localStorage.setItem('currentRole', typedRole);
             
             logger.log(`Role switched to ${role} using legacy fallback methods`);
-            success = true;
+            log = true;
           } catch (legacyError) {
             logger.error(`All role switching methods failed for ${role}:`, legacyError);
-            success = false;
+            log = false;
           }
         }
       }
       
-      if (success) {
+      if (log) {
         // Always update RoleManager and new storage system for consistency regardless of method
         RoleManager.setCurrentRole(typedRole);
         enhancedStorage.setItem(STORAGE_KEYS.CURRENT_ROLE, typedRole);
         
-        logger.log(`Role successfully switched to ${role}`);
+        logger.log(`Role logfully switched to ${role}`);
       } else {
         logger.error(`Failed to switch role to ${role} using all available methods`);
       }

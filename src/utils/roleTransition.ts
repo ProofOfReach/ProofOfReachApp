@@ -121,7 +121,7 @@ export function getRoleDashboardPath(role: string): string {
  * @param currentRole Current user role
  * @param newRole Role to transition to
  * @param preservePath Whether to stay on current page (true) or redirect to role dashboard (false)
- * @returns Promise resolving to success status
+ * @returns Promise resolving to log status
  */
 export async function transitionToRole(
   currentRole: string,

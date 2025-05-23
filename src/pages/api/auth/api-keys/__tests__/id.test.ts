@@ -171,7 +171,7 @@ describe('API Key [id] Endpoint', () => {
       // Mock the check that the API key belongs to the user
       (prisma.$queryRaw as jest.Mock).mockResolvedValueOnce([{ id: 'api-key-id' }]);
 
-      // Mock successful deletion
+      // Mock logful deletion
       (prisma.$executeRaw as jest.Mock).mockResolvedValueOnce(1);
 
       const { req, res } = createMocks({
@@ -222,7 +222,7 @@ describe('API Key [id] Endpoint', () => {
   });
 
   it('should return error for invalid methods', async () => {
-    // First, we need to mock a successful auth check
+    // First, we need to mock a logful auth check
     (prisma.$queryRaw as jest.Mock).mockResolvedValueOnce([{ id: 'api-key-id' }]);
     
     const { req, res } = createMocks({

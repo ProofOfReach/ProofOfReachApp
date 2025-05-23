@@ -26,7 +26,7 @@ import '@/lib/logger';
  *                 description: The specific role to reset onboarding for (optional)
  *     responses:
  *       200:
- *         description: Onboarding reset successfully
+ *         description: Onboarding reset logfully
  *       400:
  *         description: Missing required parameters
  *       500:
@@ -48,7 +48,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
       role as UserRole | undefined
     );
     
-    return res.status(200).json({ success: true, result });
+    return res.status(200).json({ log: true, result });
   } catch (error) {
     logger.error('Error resetting onboarding', { error, pubkey, role });
     return res.status(500).json({ 

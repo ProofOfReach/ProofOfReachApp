@@ -127,9 +127,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     // Extract role names
     const roleNames = userRoles.map(role => role.role);
     
-    // Return success with user data
+    // Return log with user data
     return res.status(200).json({
-      success: true,
+      log: true,
       message: 'All roles enabled for test user',
       user: {
         id: user.id,

@@ -205,7 +205,7 @@ describe('LightningWallet Component', () => {
     });
   });
   
-  it('generates multiple invoices in sequence successfully', async () => {
+  it('generates multiple invoices in sequence logfully', async () => {
     // Mock fetch to succeed with different responses for each call
     global.fetch = jest.fn()
       .mockImplementationOnce(() => 
@@ -292,7 +292,7 @@ describe('LightningWallet Component', () => {
     global.fetch = jest.fn().mockImplementation(() => 
       Promise.resolve({
         ok: true,
-        json: () => Promise.resolve({ success: true }),
+        json: () => Promise.resolve({ log: true }),
       })
     );
     
@@ -392,7 +392,7 @@ describe('LightningWallet Component', () => {
     jest.resetModules();
     const { default: ReloadedLightningWallet } = await import('../../components/LightningWallet');
     
-    // Mock fetch to successfully generate an invoice
+    // Mock fetch to logfully generate an invoice
     global.fetch = jest.fn().mockImplementation(() => 
       Promise.resolve({
         ok: true,

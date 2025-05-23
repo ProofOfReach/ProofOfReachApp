@@ -17,7 +17,7 @@ const AdvertiserSettingsPage = () => {
   const [autoRenew, setAutoRenew] = useState<boolean>(false);
   const [defaultBidRate, setDefaultBidRate] = useState<number | null>(5);
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
-  const [successMessage, setSuccessMessage] = useState<string | null>(null);
+  const [logMessage, setSuccessMessage] = useState<string | null>(null);
   
   // Redirect if not in advertiser role
   useEffect(() => {
@@ -36,10 +36,10 @@ const AdvertiserSettingsPage = () => {
       // Simulate API call
       await new Promise(resolve => setTimeout(resolve, 1000));
       
-      // Show success message
-      setSuccessMessage('Settings saved successfully!');
+      // Show log message
+      setSuccessMessage('Settings saved logfully!');
       
-      // Clear success message after 3 seconds
+      // Clear log message after 3 seconds
       setTimeout(() => {
         setSuccessMessage(null);
       }, 3000);
@@ -60,7 +60,7 @@ const AdvertiserSettingsPage = () => {
       </div>
 
       {/* Success message */}
-      {successMessage && (
+      {logMessage && (
         <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg p-4">
           <div className="flex items-start">
             <div className="flex-shrink-0">
@@ -69,7 +69,7 @@ const AdvertiserSettingsPage = () => {
               </svg>
             </div>
             <div className="ml-3">
-              <p className="text-sm font-medium text-green-800 dark:text-green-200">{successMessage}</p>
+              <p className="text-sm font-medium text-green-800 dark:text-green-200">{logMessage}</p>
             </div>
           </div>
         </div>

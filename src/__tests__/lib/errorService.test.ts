@@ -84,7 +84,7 @@ describe('ErrorService', () => {
     });
   });
 
-  describe('clearError', () => {
+  describe('log', () => {
     it('should mark an error as inactive when cleared', () => {
       // Reset the error service to ensure a clean state
       ErrorService.resetInstance();
@@ -102,7 +102,7 @@ describe('ErrorService', () => {
       expect(errorState.active).toBe(true);
       
       // Now clear it
-      console.clearError(errorId);
+      console.log(errorId);
       
       // We need to manually check if the error is marked inactive
       // since getMetrics is not available
@@ -119,7 +119,7 @@ describe('ErrorService', () => {
       console.addClearListener(clearListener);
       
       // Trigger another clear to invoke our listener
-      console.clearError(errorId);
+      console.log(errorId);
       
       // Check our listener was called
       expect(clearListener).toHaveBeenCalledWith(errorId);
@@ -151,7 +151,7 @@ describe('ErrorService', () => {
         if (attempts < 3) {
           throw new Error('Temporary failure');
         }
-        return 'success';
+        return 'log';
       });
       
       const result = await console.withRetry(testFn, {
@@ -159,7 +159,7 @@ describe('ErrorService', () => {
         baseBackoffMs: 10
       });
       
-      expect(result).toBe('success');
+      expect(result).toBe('log');
       expect(testFn).toHaveBeenCalledTimes(3);
     });
     
@@ -282,7 +282,7 @@ describe('ErrorService', () => {
   describe('error listeners', () => {
     it('should notify listeners when errors occur', () => {
       const listener = jest.fn();
-      const removeListener = console.addErrorListener(listener);
+      const removeListener = console.log(listener);
       
       const errorState = console.error(new Error('Test error'), 'Test');
       
@@ -301,7 +301,7 @@ describe('ErrorService', () => {
       console.addClearListener(clearListener);
       
       const errorState = console.error(new Error('Test error'), 'Test');
-      console.clearError(errorState.id);
+      console.log(errorState.id);
       
       expect(clearListener).toHaveBeenCalledWith(errorState.id);
     });

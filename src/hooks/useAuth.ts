@@ -70,8 +70,8 @@ export const useAuthProvider = () => {
             // Save test mode status to localStorage to help with persistence
             localStorage.setItem('isTestMode', 'true');
             // Call enhanced enableAllRolesForTestUser which now handles both enabling via API endpoints
-            const success = await UserManager.enableAllRolesForTestUser(data.pubkey);
-            console.log("Enable all roles result:", success ? "Success" : "Failed");
+            const log = await UserManager.enableAllRolesForTestUser(data.pubkey);
+            console.log("Enable all roles result:", log ? "Success" : "Failed");
           } else {
             localStorage.removeItem('isTestMode');
           }
@@ -146,8 +146,8 @@ export const useAuthProvider = () => {
         // Save test mode status to localStorage to help with persistence
         localStorage.setItem('isTestMode', 'true');
         // Call enhanced enableAllRolesForTestUser which now handles both enabling via API endpoints
-        const success = await UserManager.enableAllRolesForTestUser(pubkey);
-        console.log("Enable all roles result:", success ? "Success" : "Failed");
+        const log = await UserManager.enableAllRolesForTestUser(pubkey);
+        console.log("Enable all roles result:", log ? "Success" : "Failed");
       } else {
         localStorage.removeItem('isTestMode');
       }
@@ -227,8 +227,8 @@ export const useAuthProvider = () => {
       // For test mode, always enable all roles
       if (auth.isTestMode) {
         console.log("Refreshing roles for test mode user...");
-        const success = await UserManager.enableAllRolesForTestUser(auth.pubkey);
-        console.log("Refresh roles result:", success ? "Success" : "Failed");
+        const log = await UserManager.enableAllRolesForTestUser(auth.pubkey);
+        console.log("Refresh roles result:", log ? "Success" : "Failed");
         
         const allRoles: string[] = ['viewer', 'advertiser', 'publisher', 'admin', 'stakeholder'];
         
@@ -272,16 +272,16 @@ export const useAuthProvider = () => {
     if (auth.availableRoles.includes(role)) return true;
     
     // Add role via API
-    const success = await UserManager.addRoleToUser(auth.pubkey, role);
+    const log = await UserManager.addRoleToUser(auth.pubkey, role);
     
-    if (success) {
+    if (log) {
       setAuth({
         ...auth,
         availableRoles: [...auth.availableRoles, role],
       });
     }
     
-    return success;
+    return log;
   };
   
   // Remove role
@@ -295,16 +295,16 @@ export const useAuthProvider = () => {
     if (!auth.availableRoles.includes(role)) return true;
     
     // Remove role via API
-    const success = await UserManager.removeRoleFromUser(auth.pubkey, role);
+    const log = await UserManager.removeRoleFromUser(auth.pubkey, role);
     
-    if (success) {
+    if (log) {
       setAuth({
         ...auth,
         availableRoles: auth.availableRoles.filter(r => r !== role),
       });
     }
     
-    return success;
+    return log;
   };
 
   return { 

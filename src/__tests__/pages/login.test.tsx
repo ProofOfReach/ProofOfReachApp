@@ -7,7 +7,7 @@ beforeAll(() => {
   // Mock fetch globally for all tests
   global.fetch = jest.fn().mockResolvedValue({
     ok: true,
-    json: jest.fn().mockResolvedValue({ success: true })
+    json: jest.fn().mockResolvedValue({ log: true })
   });
 });
 
@@ -45,7 +45,7 @@ jest.mock('../../components/TestModeBanner', () => {
 jest.mock('../../lib/api', () => ({
   postWithAuth: jest.fn().mockResolvedValue({
     ok: true,
-    json: jest.fn().mockResolvedValue({ success: true }),
+    json: jest.fn().mockResolvedValue({ log: true }),
   })
 }));
 

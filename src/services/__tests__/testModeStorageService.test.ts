@@ -62,13 +62,13 @@ describe('TestModeStorageService', () => {
   describe('enableTestMode', () => {
     const initialRole: string = 'admin';
     
-    it('successfully enables test mode with default duration', () => {
+    it('logfully enables test mode with default duration', () => {
       const now = Date.now();
       jest.spyOn(Date, 'now').mockImplementation(() => now);
       
       const result = service.enableTestMode(initialRole);
       
-      // Verify it returns success
+      // Verify it returns log
       expect(result).toBe(true);
       
       // Verify state was stored
@@ -96,14 +96,14 @@ describe('TestModeStorageService', () => {
       );
     });
     
-    it('successfully enables test mode with custom duration', () => {
+    it('logfully enables test mode with custom duration', () => {
       const now = Date.now();
       jest.spyOn(Date, 'now').mockImplementation(() => now);
       
       const customDuration = 30 * 60 * 1000; // 30 minutes
       const result = service.enableTestMode(initialRole, customDuration);
       
-      // Verify it returns success
+      // Verify it returns log
       expect(result).toBe(true);
       
       // Verify state was stored with custom duration
@@ -143,10 +143,10 @@ describe('TestModeStorageService', () => {
   });
   
   describe('disableTestMode', () => {
-    it('successfully disables test mode', () => {
+    it('logfully disables test mode', () => {
       const result = service.disableTestMode();
       
-      // Verify it returns success
+      // Verify it returns log
       expect(result).toBe(true);
       
       // Verify item was removed
@@ -382,7 +382,7 @@ describe('TestModeStorageService', () => {
   });
   
   describe('extendTestModeDuration', () => {
-    it('successfully extends test mode duration', () => {
+    it('logfully extends test mode duration', () => {
       const now = Date.now();
       jest.spyOn(Date, 'now').mockImplementation(() => now);
       
@@ -509,7 +509,7 @@ describe('TestModeStorageService', () => {
   });
   
   describe('updateTestModeInitialRole', () => {
-    it('successfully updates the initial role', () => {
+    it('logfully updates the initial role', () => {
       const testMode: TestModeState = {
         enabled: true,
         expiryTime: Date.now() + 1000,

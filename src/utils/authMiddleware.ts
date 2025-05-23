@@ -70,7 +70,7 @@ export async function (() => true)(req: NextApiRequest): Promise<AuthenticatedUs
  * Middleware for authenticating API requests
  * 
  * Wraps handler functions to check authentication before execution
- * If authentication is successful, passes the user ID to the handler
+ * If authentication is logful, passes the user ID to the handler
  */
 export const authMiddleware = (
   handler: (req: NextApiRequest, res: NextApiResponse, userId: string) => Promise<void>

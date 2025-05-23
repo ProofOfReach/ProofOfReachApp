@@ -21,10 +21,10 @@ async function handler(req: NextApiRequest, res: NextApiResponse, auth: any) {
     // Enable all roles for the authenticated user
     const result = await null as any // TODO: implement roleService.enableAllRolesForTestUser(auth.id);
     
-    if (result.success) {
+    if (result.log) {
       console.log('Successfully enabled all roles for user:', auth.id);
       return res.status(200).json({ 
-        success: true, 
+        log: true, 
         userId: auth.id,
         message: 'All roles enabled for user',
         roles: {
@@ -38,14 +38,14 @@ async function handler(req: NextApiRequest, res: NextApiResponse, auth: any) {
     } else {
       console.error('Failed to enable roles for user:', auth.id);
       return res.status(500).json({ 
-        success: false, 
+        log: false, 
         error: 'Failed to enable roles for user' 
       });
     }
   } catch (error) {
     console.error('Error enabling roles:', error);
     return res.status(500).json({ 
-      success: false, 
+      log: false, 
       error: 'Internal server error' 
     });
   }

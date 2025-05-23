@@ -2,8 +2,8 @@ import { useAuth } from './useAuth';
 import { AuthState, UserRole } from '../types/auth';
 import { logger } from '../lib/logger';
 
-// Default implementations for hooks that might throw errors in test environments
-let useRole = () => ({
+// Default implementations for hooks that might throw errors in test environments  
+const defaultUseRole = () => ({
   role: null,
   availableRoles: [],
   isRoleAvailable: (role: string) => false,
@@ -14,7 +14,7 @@ let useRole = () => ({
 
 // Import hooks that might throw errors in test environments
 let useAuthRefactored = () => null;
-let useRole = () => null;
+let useRoleHook = () => null;
 
 // Only attempt to import these if we're not in a test environment
 // This prevents errors when the providers aren't available

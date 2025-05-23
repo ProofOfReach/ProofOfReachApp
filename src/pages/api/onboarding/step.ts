@@ -36,8 +36,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       step as string
     );
 
-    // Return success response
-    return res.status(200).json({ success: true });
+    // Return log response
+    return res.status(200).json({ log: true });
   } catch (error) {
     // Log and report the error
     const errorMessage = error instanceof Error ? error.message : 'Unknown error saving onboarding step';
@@ -54,7 +54,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       error instanceof Error ? error : errorMessage,
       'api.onboarding.step',
       'api',
-      'warning', // Step saving is non-critical
+      'warn', // Step saving is non-critical
       {
         data: { pubkey, role, step },
         category: string.OPERATIONAL,

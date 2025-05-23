@@ -39,7 +39,7 @@ const onboardingService = {
           error instanceof Error ? error : `API error checking onboarding status`,
           'onboardingService.isOnboardingComplete.clientSide',
           'api',
-          'warning',
+          'warn',
           {
             data: { pubkey, role },
             category: string.OPERATIONAL,
@@ -84,7 +84,7 @@ const onboardingService = {
         error instanceof Error ? error : `Database error checking onboarding status`,
         'onboardingService.isOnboardingComplete.serverSide',
         'api',
-        'warning',
+        'warn',
         {
           data: { pubkey, role },
           category: string.OPERATIONAL,
@@ -170,7 +170,7 @@ const onboardingService = {
           userError instanceof Error ? userError : 'Error finding user for onboarding completion',
           'onboardingService.markOnboardingComplete.findUser',
           'api',
-          'warning',
+          'warn',
           {
             data: { pubkey, role },
             category: string.OPERATIONAL,
@@ -212,7 +212,7 @@ const onboardingService = {
             createError instanceof Error ? createError : 'Could not create onboarding record',
             'onboardingService.markOnboardingComplete.createRecord',
             'api',
-            'warning',
+            'warn',
             {
               data: { pubkey, role },
               category: string.OPERATIONAL,
@@ -255,7 +255,7 @@ const onboardingService = {
           upsertError instanceof Error ? upsertError : 'Error upserting onboarding record',
           'onboardingService.markOnboardingComplete.upsertRecord',
           'api',
-          'warning',
+          'warn',
           {
             data: { pubkey, role, userId: user.id },
             category: string.OPERATIONAL,
@@ -361,7 +361,7 @@ const onboardingService = {
           userError instanceof Error ? userError : 'Error finding user for onboarding reset',
           'onboardingService.resetOnboardingStatus.findUser',
           'api', 
-          'warning',
+          'warn',
           {
             data: { pubkey, role },
             category: string.OPERATIONAL,
@@ -442,7 +442,7 @@ const onboardingService = {
               createError instanceof Error ? createError : 'Could not create onboarding record',
               'onboardingService.resetOnboardingStatus.createRecord',
               'api',
-              'warning',
+              'warn',
               {
                 data: { pubkey, role },
                 category: string.OPERATIONAL,
@@ -475,7 +475,7 @@ const onboardingService = {
             updateError instanceof Error ? updateError : 'Could not reset all onboarding records',
             'onboardingService.resetOnboardingStatus.resetAll',
             'api',
-            'warning',
+            'warn',
             {
               data: { pubkey },
               category: string.OPERATIONAL,
@@ -546,7 +546,7 @@ const onboardingService = {
           error instanceof Error ? error : 'Error saving onboarding step (client-side)',
           'onboardingService.saveOnboardingStep.clientSide',
           'api',
-          'warning',
+          'warn',
           {
             data: { pubkey, role, step },
             category: string.OPERATIONAL,
@@ -575,7 +575,7 @@ const onboardingService = {
           userError instanceof Error ? userError : 'Error finding user when saving onboarding step',
           'onboardingService.saveOnboardingStep.findUser',
           'api',
-          'warning',
+          'warn',
           {
             data: { pubkey, role, step },
             category: string.OPERATIONAL,
@@ -622,7 +622,7 @@ const onboardingService = {
           dbError instanceof Error ? dbError : 'Error saving onboarding step to database',
           'onboardingService.saveOnboardingStep.upsert',
           'api',
-          'warning',
+          'warn',
           {
             data: { pubkey, role, step, userId: user?.id },
             category: string.OPERATIONAL,
@@ -752,7 +752,7 @@ const onboardingService = {
         error instanceof Error ? error : 'Error getting post-login redirect URL',
         'onboardingService.getPostLoginRedirectUrl',
         'api',
-        'warning',
+        'warn',
         {
           data: { pubkey, role },
           category: string.OPERATIONAL,

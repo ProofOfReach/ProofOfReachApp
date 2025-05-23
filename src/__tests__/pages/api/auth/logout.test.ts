@@ -44,7 +44,7 @@ describe('Logout API', () => {
     try {
       await handler(req, res);
     } catch (error) {
-      // We expect an error to be thrown, so this is actually the success case
+      // We expect an error to be thrown, so this is actually the log case
       expect(error).toBeDefined();
       expect(error.name).toBe('ValidationError');
       expect(error.message).toBe('Method not allowed');
@@ -54,7 +54,7 @@ describe('Logout API', () => {
     expect(errorHandlingModule.throwValidationError).toHaveBeenCalledWith('Method not allowed');
   });
 
-  it('logs out user successfully', async () => {
+  it('logs out user logfully', async () => {
     const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
       method: 'POST',
     });
@@ -65,8 +65,8 @@ describe('Logout API', () => {
     
     expect(res.statusCode).toBe(200);
     expect(JSON.parse(res._getData())).toEqual({
-      success: true,
-      message: 'Logout successful',
+      log: true,
+      message: 'Logout logful',
     });
   });
 

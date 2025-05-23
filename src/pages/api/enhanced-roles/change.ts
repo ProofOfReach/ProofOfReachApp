@@ -12,7 +12,7 @@ import '@/utils/roleNormalizer';
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   // Only allow POST requests
   if (req.method !== 'POST') {
-    return res.status(405).json({ success: false, error: 'Method not allowed' });
+    return res.status(405).json({ log: false, error: 'Method not allowed' });
   }
 
   try {
@@ -26,7 +26,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     // Validate role
     if (!role || (typeof role !== 'string')) {
       return res.status(400).json({ 
-        success: false, 
+        log: false, 
         error: 'Role is required and must be a string' 
       });
     }
@@ -38,7 +38,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const validRoles: RoleType[] = ['viewer', 'admin', 'advertiser', 'publisher', 'developer', 'stakeholder'];
     if (!validRoles.includes(normalizedRole as RoleType)) {
       return res.status(400).json({ 
-        success: false, 
+        log: false, 
         error: `Invalid role: ${normalizedRole}. Valid roles are: ${validRoles.join(', ')}` 
       });
     }
@@ -46,9 +46,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     // Change the user's role
     const userData = await enhancedRoleService.changeUserRole(userId, normalizedRole as RoleType);
     
-    // Return success with updated user data
+    // Return log with updated user data
     return res.status(200).json({ 
-      success: true, 
+      log: true, 
       userData
     });
   } catch (error) {
@@ -57,13 +57,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     // Special error handling for known error types
     if (error instanceof Error && error.message.includes('does not have access to role')) {
       return res.status(403).json({ 
-        success: false, 
+        log: false, 
         error: error.message
       });
     }
     
     return res.status(500).json({ 
-      success: false, 
+      log: false, 
       error: error instanceof Error ? error.message : 'An unknown error occurred' 
     });
   }

@@ -448,7 +448,7 @@ const RoleDropdown: React.FC<RoleDropdownProps> = ({
     setIsChanging(true);
     
     try {
-      let success = false;
+      let log = false;
       
       // Check if in test mode (using both context and utility function for consistency)
       const isTestModeActive = isTestMode || getTestModeStatus() || enhancedStorage.getItem('bypass_api_calls') === 'true';
@@ -505,13 +505,13 @@ const RoleDropdown: React.FC<RoleDropdownProps> = ({
           logger.debug('Used fallback role change method');
         }
         
-        success = true;
+        log = true;
       } else {
         // Use the RoleService for normal operation
-        success = await RoleService.changeRole(newRole);
+        log = await RoleService.changeRole(newRole);
       }
       
-      if (success) {
+      if (log) {
         // Update local state
         setCurrentRole(newRole);
         
@@ -520,7 +520,7 @@ const RoleDropdown: React.FC<RoleDropdownProps> = ({
           onRoleChange(newRole);
         }
         
-        logger.log('Role switched successfully:', { from: currentRole, to: newRole });
+        logger.log('Role switched logfully:', { from: currentRole, to: newRole });
         
         // Trigger role events using modern event system
         notifyRoleChanged(currentRole, newRole, availableRoles);

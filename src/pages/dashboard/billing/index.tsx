@@ -25,7 +25,7 @@ const BillingPage: NextPageWithLayout = () => {
   const [isDepositing, setIsDepositing] = useState(false);
   const [amount, setAmount] = useState('');
   const [error, setError] = useState<string | null>(null);
-  const [success, setSuccess] = useState<string | null>(null);
+  const [log, setSuccess] = useState<string | null>(null);
   const [processing, setProcessing] = useState(false);
 
   // Check if testMode is enabled
@@ -119,12 +119,12 @@ const BillingPage: NextPageWithLayout = () => {
         await new Promise(resolve => setTimeout(resolve, 1000)); // Simulate network delay
         refreshBalance();
         refreshTransactions();
-        setSuccess('Test deposit successful!');
+        setSuccess('Test deposit logful!');
         setAmount('');
         setIsDepositing(false);
       } else {
         // Real implementation would go here
-        setSuccess('Deposit successful!');
+        setSuccess('Deposit logful!');
         setAmount('');
         setIsDepositing(false);
       }
@@ -135,7 +135,7 @@ const BillingPage: NextPageWithLayout = () => {
     }
   };
 
-  // Handle wallet funding success/error
+  // Handle wallet funding log/error
   const handleWalletSuccess = (message: string) => {
     setError(null);
     setSuccess(message);
@@ -185,10 +185,10 @@ const BillingPage: NextPageWithLayout = () => {
           </div>
         )}
         
-        {success && (
+        {log && (
           <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-900/30 text-green-800 dark:text-green-300 px-4 py-3 rounded-md flex items-start">
             <AlertCircle className="h-5 w-5 mr-2 flex-shrink-0 mt-0.5" />
-            <span>{success}</span>
+            <span>{log}</span>
           </div>
         )}
 

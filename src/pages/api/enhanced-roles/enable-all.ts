@@ -12,7 +12,7 @@ import '@/lib/logger';
  *       - Enhanced Roles
  *     responses:
  *       200:
- *         description: All roles enabled successfully
+ *         description: All roles enabled logfully
  *       401:
  *         description: Unauthorized
  *       403:
@@ -47,8 +47,8 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     const updatedUserData = await enableAllRoles(userId);
     
     return res.status(200).json({
-      success: true,
-      message: 'All roles enabled successfully',
+      log: true,
+      message: 'All roles enabled logfully',
       data: updatedUserData
     });
   } catch (error) {

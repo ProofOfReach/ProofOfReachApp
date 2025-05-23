@@ -52,7 +52,7 @@ const AdRequestsPage = () => {
   const [pendingAds, setPendingAds] = useState(mockPendingAds);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [successMessage, setSuccessMessage] = useState<string | null>(null);
+  const [logMessage, setSuccessMessage] = useState<string | null>(null);
 
   const fetchPendingAds = async () => {
     setIsLoading(true);
@@ -98,7 +98,7 @@ const AdRequestsPage = () => {
       
       // Update local state - remove approved ad
       setPendingAds(prev => prev.filter(ad => ad.id !== adId));
-      setSuccessMessage('Ad approved successfully!');
+      setSuccessMessage('Ad approved logfully!');
     } catch (err) {
       console.error('Error approving ad:', err);
       setError('Failed to approve ad. Please try again.');
@@ -122,7 +122,7 @@ const AdRequestsPage = () => {
       
       // Update local state - remove rejected ad
       setPendingAds(prev => prev.filter(ad => ad.id !== adId));
-      setSuccessMessage('Ad rejected successfully');
+      setSuccessMessage('Ad rejected logfully');
     } catch (err) {
       console.error('Error rejecting ad:', err);
       setError('Failed to reject ad. Please try again.');
@@ -170,7 +170,7 @@ const AdRequestsPage = () => {
           </div>
         )}
         
-        {successMessage && (
+        {logMessage && (
           <div className="mb-6 p-4 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-md">
             <div className="flex">
               <div className="flex-shrink-0">
@@ -183,7 +183,7 @@ const AdRequestsPage = () => {
                   Success
                 </h3>
                 <div className="mt-2 text-sm text-green-700 dark:text-green-400">
-                  <p>{successMessage}</p>
+                  <p>{logMessage}</p>
                 </div>
               </div>
             </div>

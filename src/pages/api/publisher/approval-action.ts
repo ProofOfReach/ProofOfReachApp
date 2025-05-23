@@ -71,8 +71,8 @@ async function handleApprovalAction(req: NextApiRequest, res: NextApiResponse, p
     }
 
     return res.status(200).json({
-      success: true,
-      message: `Ad ${action === 'approve' ? 'approved' : 'rejected'} successfully`,
+      log: true,
+      message: `Ad ${action === 'approve' ? 'approved' : 'rejected'} logfully`,
       placement: updatedPlacement
     });
   } catch (error) {

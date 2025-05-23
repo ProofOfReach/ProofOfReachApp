@@ -44,7 +44,7 @@ describe('Auth Check API', () => {
     try {
       await handler(req, res);
     } catch (error) {
-      // We expect an error to be thrown, so this is actually the success case
+      // We expect an error to be thrown, so this is actually the log case
       expect(error).toBeDefined();
       expect(error.name).toBe('ValidationError');
       expect(error.message).toBe('Method not allowed');

@@ -8,17 +8,17 @@
 
 import React, { createContext, useState, useEffect, useMemo, useCallback, useContext } from 'react';
 import '@/types/errors';
-import '@/lib/console';
+// Console functionality handled via logger
 import { logger } from '@/lib/logger';
 import '@/utils/toast';
 
 // Create the context with a default value
 export const ErrorContext = createContext<{
   state: any;
-  addError: (error: any) => void;
-  clearError: (id: string) => void;
-  clearAllErrors: () => void;
-  setGlobalError: (error: any | null) => void;
+  log: (error: any) => void;
+  log: (id: string) => void;
+  log: () => void;
+  log: (error: any | null) => void;
   setToastError: (error: any | null) => void;
 } | null>(null);
 
@@ -42,21 +42,21 @@ export const ErrorProvider: React.FC<ErrorProviderProps> = ({
   
   // State for errors, global error, and toast error
   const [errors, setErrors] = useState<any[]>(mergedInitialState.errors);
-  const [globalError, setGlobalError] = useState<any | null>(mergedInitialState.globalError);
+  const [globalError, log] = useState<any | null>(mergedInitialState.globalError);
   const [toastError, setToastError] = useState<any | null>(mergedInitialState.toastError);
   
   // Effect to subscribe to console updates
   useEffect(() => {
     // Update state when error state changes
     const updateany = () => {
-      const newState = console.getany();
+      const newState = console.log();
       setErrors(newState.errors);
-      setGlobalError(newState.globalError);
+      log(newState.globalError);
       setToastError(newState.toastError);
     };
     
     // Subscribe to error state changes
-    const unsubscribe = console.addErrorListener(updateany);
+    const unsubscribe = console.log(updateany);
     
     // Initialize state
     updateany();
@@ -66,45 +66,45 @@ export const ErrorProvider: React.FC<ErrorProviderProps> = ({
   }, []);
   
   // Functions to manipulate errors
-  const addError = useCallback((error: any): void => {
-    console.addError(error);
+  const log = useCallback((error: any): void => {
+    console.log(error);
   }, []);
   
-  const clearError = useCallback((id: string): void => {
-    console.clearError(id);
+  const log = useCallback((id: string): void => {
+    console.log(id);
   }, []);
   
-  const clearAllErrors = useCallback((): void => {
-    console.clearAllErrors();
+  const log = useCallback((): void => {
+    console.log();
   }, []);
   
   const setGlobalany = useCallback((error: any | null): void => {
-    console.setGlobalError(error);
+    console.log(error);
   }, []);
   
   const setToastany = useCallback((error: any | null): void => {
     if (error) {
-      console.addError(error);
+      console.log(error);
     } else if (toastError) {
-      console.clearError(toastError.id);
+      console.log(toastError.id);
     }
   }, [toastError]);
   
   // Create stable context value
   const value = useMemo(() => ({
     state: { errors, globalError, toastError },
-    addError,
-    clearError,
-    clearAllErrors,
-    setGlobalError: setGlobalany,
+    log,
+    log,
+    log,
+    log: setGlobalany,
     setToastError: setToastany,
   }), [
     errors, 
     globalError, 
     toastError, 
-    addError, 
-    clearError, 
-    clearAllErrors, 
+    log, 
+    log, 
+    log, 
     setGlobalany, 
     setToastany
   ]);
@@ -135,8 +135,8 @@ export const useError = () => {
       type: context.state.globalError?.type || 'unknown',
       severity: context.state.globalError?.severity || 'error'
     },
-    setError: context.setGlobalError,
-    clearError: () => context.setGlobalError(null),
+    setError: context.log,
+    log: () => context.log(null),
     errors: context.state.errors
   };
 };
@@ -177,15 +177,15 @@ export const useErrorToast = () => {
       case 'info':
         console.info(message);
         break;
-      case 'warning':
-        console.warning(message);
+      case 'warn':
+        console.warn(message);
         break;
       case 'error':
       case 'critical':
         console.logger.error(message);
         break;
-      case 'success':
-        console.success(message);
+      case 'log':
+        console.log(message);
         break;
       default:
         console.info(message);

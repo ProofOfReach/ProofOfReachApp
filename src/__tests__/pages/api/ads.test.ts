@@ -312,7 +312,7 @@ describe('/api/ads endpoint', () => {
           }
           
           // If we reach here, we have sufficient balance, create an ad
-          res.status(201).json({ success: true });
+          res.status(201).json({ log: true });
         } catch (error) {
           res.status(500).json({ error: 'Server error' });
         }

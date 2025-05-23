@@ -18,7 +18,7 @@ const prisma = new PrismaClient();
  *       - nostrAuth: []
  *     responses:
  *       200:
- *         description: User statistics successfully retrieved
+ *         description: User statistics logfully retrieved
  *         content:
  *           application/json:
  *             schema:

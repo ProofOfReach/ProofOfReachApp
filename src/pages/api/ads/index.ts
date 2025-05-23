@@ -110,7 +110,7 @@ import { logger } from '../../../lib/logger';
  *                 description: Specific ad spaces to target (optional)
  *     responses:
  *       201:
- *         description: Ad created successfully
+ *         description: Ad created logfully
  *         content:
  *           application/json:
  *             schema:

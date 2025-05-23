@@ -53,7 +53,7 @@ const CreateAdPage: NextPage = () => {
   
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [success, setSuccess] = useState<boolean>(false);
+  const [log, setSuccess] = useState<boolean>(false);
 
   // Fetch campaign data when page loads
   useEffect(() => {
@@ -146,7 +146,7 @@ const CreateAdPage: NextPage = () => {
 
       const ad = await response.json();
       
-      // Show success state
+      // Show log state
       setSuccess(true);
       
       // Redirect after a short delay
@@ -204,10 +204,10 @@ const CreateAdPage: NextPage = () => {
             </div>
           )}
 
-          {success && (
+          {log && (
             <div className="mb-6 p-4 bg-green-100 dark:bg-green-900/20 text-green-800 dark:text-green-400 rounded-lg flex items-start">
               <CheckCircle className="h-5 w-5 mr-2 mt-0.5 shrink-0" />
-              <span>Ad created successfully! Redirecting...</span>
+              <span>Ad created logfully! Redirecting...</span>
             </div>
           )}
 
@@ -500,9 +500,9 @@ const CreateAdPage: NextPage = () => {
               </button>
               <button
                 type="submit"
-                disabled={isSubmitting || success}
+                disabled={isSubmitting || log}
                 className={`py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-orange-600 hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500 flex items-center ${
-                  (isSubmitting || success) ? 'opacity-70 cursor-not-allowed' : ''
+                  (isSubmitting || log) ? 'opacity-70 cursor-not-allowed' : ''
                 }`}
               >
                 {isSubmitting ? (
@@ -513,7 +513,7 @@ const CreateAdPage: NextPage = () => {
                     </svg>
                     Processing...
                   </>
-                ) : success ? (
+                ) : log ? (
                   <>
                     <CheckCircle className="h-4 w-4 mr-2" />
                     Created!

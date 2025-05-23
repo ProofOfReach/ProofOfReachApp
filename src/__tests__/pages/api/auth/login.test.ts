@@ -94,7 +94,7 @@ describe('Login API', () => {
     expect(res._getStatusCode()).toBe(500);
   });
 
-  it('logs in existing user successfully', async () => {
+  it('logs in existing user logfully', async () => {
     const mockPubkey = 'test-pubkey-123';
     const mockUser = {
       id: 'user-1',
@@ -121,8 +121,8 @@ describe('Login API', () => {
     expect(setAuthCookie).toHaveBeenCalledWith(mockPubkey, req, res);
     expect(res._getStatusCode()).toBe(200);
     expect(res._getJSONData()).toEqual({
-      success: true,
-      message: 'Authentication successful',
+      log: true,
+      message: 'Authentication logful',
       userId: mockUser.id,
     });
   });
@@ -168,8 +168,8 @@ describe('Login API', () => {
     expect(setAuthCookie).toHaveBeenCalledWith(mockPubkey, req, res);
     expect(res._getStatusCode()).toBe(200);
     expect(res._getJSONData()).toEqual({
-      success: true, 
-      message: 'Authentication successful',
+      log: true, 
+      message: 'Authentication logful',
       userId: mockUser.id,
     });
   });

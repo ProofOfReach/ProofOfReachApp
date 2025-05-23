@@ -105,7 +105,7 @@ jest.mock('../../../context/CurrencyContext', () => {
 // Mock fetch
 global.fetch = jest.fn().mockResolvedValue({
   ok: true,
-  json: async () => ({ success: true }),
+  json: async () => ({ log: true }),
 });
 
 describe('Dashboard Index Component', () => {

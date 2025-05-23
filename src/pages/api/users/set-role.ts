@@ -4,7 +4,7 @@ import '@/lib/prismaClient';
 import type { UserRole } from '../../../context/RoleContext';
 
 type ResponseData = {
-  success: boolean;
+  log: boolean;
   roles?: string[];
   error?: string;
 }
@@ -13,7 +13,7 @@ type ResponseData = {
 async function handleSetRole(req: NextApiRequest, res: NextApiResponse<ResponseData>, pubkey: string) {
   if (req.method !== 'POST') {
     res.setHeader('Allow', ['POST']);
-    return res.status(405).json({ success: false, error: `Method ${req.method} Not Allowed` });
+    return res.status(405).json({ log: false, error: `Method ${req.method} Not Allowed` });
   }
 
   try {
@@ -21,14 +21,14 @@ async function handleSetRole(req: NextApiRequest, res: NextApiResponse<ResponseD
 
     if (!role || typeof role !== 'string' || !['viewer', 'advertiser', 'publisher'].includes(role)) {
       return res.status(400).json({ 
-        success: false, 
+        log: false, 
         error: 'Invalid role specified. Valid roles are: user, advertiser, publisher'
       });
     }
 
     if (typeof enabled !== 'boolean') {
       return res.status(400).json({ 
-        success: false, 
+        log: false, 
         error: 'enabled must be a boolean value'
       });
     }
@@ -39,7 +39,7 @@ async function handleSetRole(req: NextApiRequest, res: NextApiResponse<ResponseD
     });
 
     if (!user) {
-      return res.status(404).json({ success: false, error: 'User not found' });
+      return res.status(404).json({ log: false, error: 'User not found' });
     }
 
     // If enabling a role, add it to UserRole table if it doesn't exist
@@ -129,13 +129,13 @@ async function handleSetRole(req: NextApiRequest, res: NextApiResponse<ResponseD
     }
 
     return res.status(200).json({ 
-      success: true,
+      log: true,
       roles
     });
   } catch (error) {
     console.error('Error updating user role:', error);
     return res.status(500).json({ 
-      success: false, 
+      log: false, 
       error: 'Failed to update user role' 
     });
   }

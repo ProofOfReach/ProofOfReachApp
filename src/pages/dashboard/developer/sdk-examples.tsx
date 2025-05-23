@@ -323,8 +323,8 @@ SDK.renderAd("proof-of-reach-ad", {
   onError: (error) => {            // Called when error occurs
     console.error(\`Ad error: \${error}\`);
   },
-  onLoad: (adData) => {            // Called when ad loads successfully
-    console.log("Ad loaded successfully", adData);
+  onLoad: (adData) => {            // Called when ad loads logfully
+    console.log("Ad loaded logfully", adData);
   }
 });\n`;
 

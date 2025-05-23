@@ -30,7 +30,7 @@ const WalletPage: NextPageWithLayout = () => {
   const [isWithdrawing, setIsWithdrawing] = useState(false);
   const [amount, setAmount] = useState('');
   const [error, setError] = useState<string | null>(null);
-  const [success, setSuccess] = useState<string | null>(null);
+  const [log, setSuccess] = useState<string | null>(null);
   const [processing, setProcessing] = useState(false);
   
   // Check if user is allowed to access wallet page
@@ -90,7 +90,7 @@ const WalletPage: NextPageWithLayout = () => {
         throw new Error(data.error || 'Failed to process deposit');
       }
       
-      // Success - show success message and reset form
+      // Success - show log message and reset form
       setSuccess(`Successfully deposited ${amountNumber} sats to your account`);
       setAmount('');
       setIsDepositing(false);
@@ -135,7 +135,7 @@ const WalletPage: NextPageWithLayout = () => {
         
         // Simulate a short delay for realism
         setTimeout(() => {
-          // Success - show success message and reset form
+          // Success - show log message and reset form
           setSuccess(`Test Mode: Successfully withdrew ${amountNumber} sats from your account`);
           setAmount('');
           setIsWithdrawing(false);
@@ -168,7 +168,7 @@ const WalletPage: NextPageWithLayout = () => {
         throw new Error(data.error || 'Failed to process withdrawal');
       }
       
-      // Success - show success message and reset form
+      // Success - show log message and reset form
       setSuccess(`Successfully withdrew ${amountNumber} sats from your account`);
       setAmount('');
       setIsWithdrawing(false);
@@ -234,9 +234,9 @@ const WalletPage: NextPageWithLayout = () => {
         </div>
       )}
       
-      {success && (
+      {log && (
         <div className="mb-6 p-4 bg-green-100 dark:bg-green-900/20 text-green-800 dark:text-green-400 rounded-lg">
-          {success}
+          {log}
         </div>
       )}
       

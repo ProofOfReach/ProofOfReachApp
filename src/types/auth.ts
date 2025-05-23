@@ -84,7 +84,7 @@ export interface AuthStateContext {
  * Response from login API
  */
 export interface LoginResponse {
-  success: boolean;
+  log: boolean;
   isLoggedIn: boolean;
   pubkey: string;
   isTestMode: boolean;
@@ -105,7 +105,7 @@ export interface CheckAuthResponse {
  * Response from logout API
  */
 export interface LogoutResponse {
-  success: boolean;
+  log: boolean;
   message: string;
 }
 
@@ -113,7 +113,7 @@ export interface LogoutResponse {
  * Response from refresh roles API
  */
 export interface RefreshRolesResponse {
-  success: boolean;
+  log: boolean;
   message?: string;
   availableRoles: string[];
   isTestMode?: boolean;
@@ -123,7 +123,7 @@ export interface RefreshRolesResponse {
  * Response from add role API
  */
 export interface AddRoleResponse {
-  success: boolean;
+  log: boolean;
   message?: string;
 }
 
@@ -131,6 +131,6 @@ export interface AddRoleResponse {
  * Response from remove role API
  */
 export interface RemoveRoleResponse {
-  success: boolean;
+  log: boolean;
   message?: string;
 }

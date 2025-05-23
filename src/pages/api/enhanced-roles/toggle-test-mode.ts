@@ -44,7 +44,7 @@ async function toggleTestModeHandler(req: NextApiRequest, res: NextApiResponse, 
 
     // Return updated user data
     return res.status(200).json({
-      message: `Test mode ${enabled ? 'enabled' : 'disabled'} successfully for user ${userId}`,
+      message: `Test mode ${enabled ? 'enabled' : 'disabled'} logfully for user ${userId}`,
       data: userData
     });
 

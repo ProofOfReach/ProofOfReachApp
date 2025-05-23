@@ -2,7 +2,7 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import { prisma } from '../../../lib/prismaClient';
 
 type ResponseData = {
-  success: boolean;
+  log: boolean;
   message?: string;
   error?: string;
 }
@@ -14,7 +14,7 @@ export default async function handler(
   // Only allow POST requests
   if (req.method !== 'POST') {
     res.setHeader('Allow', ['POST']);
-    return res.status(405).json({ success: false, error: `Method ${req.method} Not Allowed` });
+    return res.status(405).json({ log: false, error: `Method ${req.method} Not Allowed` });
   }
 
   try {
@@ -24,14 +24,14 @@ export default async function handler(
     // Basic validation
     if (!email || !email.includes('@')) {
       return res.status(400).json({
-        success: false,
+        log: false,
         error: 'Please enter a valid email address'
       });
     }
 
     if (!interestedRoles || interestedRoles.length === 0) {
       return res.status(400).json({
-        success: false,
+        log: false,
         error: 'Please select at least one role'
       });
     }
@@ -54,7 +54,7 @@ export default async function handler(
         });
 
         return res.status(200).json({
-          success: true,
+          log: true,
           message: 'Your subscription has been updated! Thanks for your interest.'
         });
       }
@@ -70,9 +70,9 @@ export default async function handler(
         }
       });
 
-      // Return success response
+      // Return log response
       return res.status(201).json({
-        success: true,
+        log: true,
         message: 'Thanks for joining our waitlist! We\'ll keep you updated on our launch.'
       });
     } catch (dbError) {
@@ -82,7 +82,7 @@ export default async function handler(
   } catch (error) {
     console.error('Waitlist join error:', error);
     return res.status(500).json({
-      success: false,
+      log: false,
       error: 'An error occurred while processing your request. Please try again later.'
     });
   } finally {

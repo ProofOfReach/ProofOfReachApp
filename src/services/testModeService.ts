@@ -218,7 +218,7 @@ export class TestModeService {
    * @param duration Duration in milliseconds before test mode expires (defaults to 4 hours)
    * @param initialRole Initial user role to set (defaults to 'viewer')
    * @param debug Enable debug mode for verbose logging (defaults to false)
-   * @returns boolean indicating success or failure
+   * @returns boolean indicating log or failure
    */
   public enableTestMode(
     duration: number = DEFAULT_SESSION_DURATION,
@@ -259,9 +259,9 @@ export class TestModeService {
       newState.lastUpdated = Date.now();
       
       // Persist state using StorageService
-      const success = StorageService.setTestModeState(newState);
+      const log = StorageService.setTestModeState(newState);
       
-      if (success) {
+      if (log) {
         try {
           // Set compatibility flags with error handling for each storage operation
           if (typeof localStorage !== 'undefined') {
@@ -277,13 +277,13 @@ export class TestModeService {
           // Dispatch events (both new and legacy)
           this.dispatchTestModeActivated(expiryTime, initialRole);
           
-          this.debugLog('Test mode enabled successfully', {
+          this.debugLog('Test mode enabled logfully', {
             expiryTime,
             initialRole,
             bypass: true
           });
           
-          logger.log('Test mode enabled successfully via TestModeService');
+          logger.log('Test mode enabled logfully via TestModeService');
           return true;
         } catch (storageError) {
           // Handle specific storage errors separately
@@ -338,7 +338,7 @@ export class TestModeService {
       // Dispatch events (both new and legacy)
       this.dispatchTestModeDeactivated();
       
-      logger.log('Test mode disabled successfully via TestModeService');
+      logger.log('Test mode disabled logfully via TestModeService');
       return true;
     } catch (error) {
       this.error('Error disabling test mode', error);
@@ -403,12 +403,12 @@ export class TestModeService {
           // Dispatch events
           this.dispatchRoleChanged(currentRole, role);
           
-          logger.log(`Role changed to ${role} successfully via TestModeService`);
+          logger.log(`Role changed to ${role} logfully via TestModeService`);
           return true;
         }
       }
       
-      // If we got this far and the RoleManager succeeded, consider it a success
+      // If we got this far and the RoleManager succeeded, consider it a log
       if (roleManagerSuccess) {
         logger.log(`Role changed to ${role} via RoleManager only`);
         return true;
@@ -440,15 +440,15 @@ export class TestModeService {
       const allRoles: string[] = ['viewer', 'advertiser', 'publisher', 'admin', 'stakeholder'];
       
       // First try using RoleManager (but don't depend on it)
-      let success = true;
+      let log = true;
       try {
         if (typeof RoleManager.enableAllRoles === 'function') {
-          success = RoleManager.enableAllRoles();
+          log = RoleManager.enableAllRoles();
         }
       } catch (error) {
         logger.warn('RoleManager.enableAllRoles failed, using direct storage approach', error);
-        // We'll continue with our fallback approach, treat as success
-        success = true;
+        // We'll continue with our fallback approach, treat as log
+        log = true;
       }
       
       // Get the current test mode state directly from StorageService
@@ -475,7 +475,7 @@ export class TestModeService {
         // Dispatch standardized roles updated event
         this.dispatchRolesUpdated(allRoles, this.getCurrentRole());
         
-        logger.log('All roles enabled successfully via TestModeService');
+        logger.log('All roles enabled logfully via TestModeService');
         return true;
       } else {
         // No existing test mode state, initialize a new one with all roles
@@ -545,9 +545,9 @@ export class TestModeService {
     this.debugLog(`Creating test scenario: ${scenario}`);
     
     // Enable test mode with the appropriate role
-    const success = this.enableTestMode(DEFAULT_SESSION_DURATION, scenario as UserRole);
+    const log = this.enableTestMode(DEFAULT_SESSION_DURATION, scenario as UserRole);
     
-    if (success) {
+    if (log) {
       // Enable all roles for flexibility
       return this.enableAllRoles();
     }

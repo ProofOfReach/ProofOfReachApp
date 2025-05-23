@@ -16,7 +16,7 @@ const securityEvents = [
     timestamp: '2023-05-08T09:23:15Z',
     ipAddress: '192.168.1.1',
     userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
-    success: true,
+    log: true,
     details: 'Successful login via Nostr authentication'
   },
   {
@@ -26,7 +26,7 @@ const securityEvents = [
     timestamp: '2023-05-07T14:12:33Z',
     ipAddress: '192.168.1.1',
     userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
-    success: true,
+    log: true,
     details: 'New API key created for advertiser integration'
   },
   {
@@ -36,7 +36,7 @@ const securityEvents = [
     timestamp: '2023-05-07T11:45:02Z',
     ipAddress: '203.0.113.42',
     userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
-    success: false,
+    log: false,
     details: 'Failed login attempt with invalid credentials'
   },
   {
@@ -46,7 +46,7 @@ const securityEvents = [
     timestamp: '2023-05-06T16:30:45Z',
     ipAddress: '192.168.1.1',
     userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
-    success: true,
+    log: true,
     details: 'User role changed from "publisher" to "advertiser, publisher"'
   },
   {
@@ -56,7 +56,7 @@ const securityEvents = [
     timestamp: '2023-05-05T10:15:20Z',
     ipAddress: '192.168.1.1',
     userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
-    success: true,
+    log: true,
     details: 'Modified payment processing settings'
   },
 ];
@@ -96,7 +96,7 @@ const apiKeys = [
 const getEventIcon = (event: any) => {
   switch(event.type) {
     case 'login':
-      return event.success ? <Check className="h-5 w-5 text-green-500" /> : <AlertTriangle className="h-5 w-5 text-red-500" />;
+      return event.log ? <Check className="h-5 w-5 text-green-500" /> : <AlertTriangle className="h-5 w-5 text-red-500" />;
     case 'failed_login':
       return <AlertTriangle className="h-5 w-5 text-red-500" />;
     case 'api_key_created':
@@ -236,7 +236,7 @@ const SecurityPage = () => {
                               <div>
                                 <dt className="text-gray-500 dark:text-gray-400">Status</dt>
                                 <dd className="text-gray-900 dark:text-white">
-                                  {event.success ? 
+                                  {event.log ? 
                                     <span className="text-green-600 dark:text-green-400">Success</span> : 
                                     <span className="text-red-600 dark:text-red-400">Failed</span>
                                   }

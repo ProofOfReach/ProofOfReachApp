@@ -27,7 +27,7 @@ import '@/lib/logger';
  *                 description: The role to mark as complete
  *     responses:
  *       200:
- *         description: Onboarding marked as complete successfully
+ *         description: Onboarding marked as complete logfully
  *       400:
  *         description: Missing required parameters
  *       500:
@@ -49,7 +49,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
       role as UserRole
     );
     
-    return res.status(200).json({ success: true, result });
+    return res.status(200).json({ log: true, result });
   } catch (error) {
     logger.error('Error marking onboarding as complete', { error, pubkey, role });
     return res.status(500).json({ 

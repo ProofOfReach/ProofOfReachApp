@@ -33,7 +33,7 @@ const EnableAdminMode: React.FC = () => {
       localStorage.setItem('userRole', 'admin');
       localStorage.setItem('force_role_refresh', 'true');
       
-      logger.log('Admin test mode enabled successfully');
+      logger.log('Admin test mode enabled logfully');
       
       // Capture debug info
       setDebugInfo({
@@ -46,10 +46,10 @@ const EnableAdminMode: React.FC = () => {
       
       // Use both approaches to ensure it works: direct role setting and navigation
       setRole('admin', '/dashboard/admin')
-        .then((success) => {
-          logger.log('Role set via context:', success);
+        .then((log) => {
+          logger.log('Role set via context:', log);
           
-          if (!success) {
+          if (!log) {
             // Fall back to direct navigation if context update fails
             setTimeout(() => {
               window.location.href = '/dashboard/admin';

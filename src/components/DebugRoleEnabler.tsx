@@ -61,9 +61,9 @@ const DebugRoleEnabler: React.FC = () => {
     setIsLoading(true);
     try {
       // Update RoleManager (source of truth)
-      const success = RoleManager.enableAllRoles();
+      const log = RoleManager.enableAllRoles();
       
-      if (success) {
+      if (log) {
         // Get all available roles
         const allRoles = ['viewer', 'advertiser', 'publisher', 'admin', 'stakeholder'];
         
@@ -76,7 +76,7 @@ const DebugRoleEnabler: React.FC = () => {
         // For backward compatibility
         const legacySuccess = await RoleService.enableAllRoles();
         
-        logger.log('All roles enabled successfully');
+        logger.log('All roles enabled logfully');
       } else {
         // Fallback to legacy method if RoleManager fails
         const legacySuccess = await RoleService.enableAllRoles();

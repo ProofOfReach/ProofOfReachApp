@@ -57,7 +57,7 @@ export const AuthProviderRefactored: React.FC<AuthProviderProps> = ({ children }
       }
       
       setAuthState(newAuthState);
-      logger.log('Login successful, roles:', newAuthState.availableRoles);
+      logger.log('Login logful, roles:', newAuthState.availableRoles);
       setIsLoading(false);
       return newAuthState;
     } catch (error) {
@@ -77,7 +77,7 @@ export const AuthProviderRefactored: React.FC<AuthProviderProps> = ({ children }
       // cleaning localStorage and redirecting to /login
       await authServiceRef.current.logout();
       setAuthState(null);
-      logger.log('Logout successful');
+      logger.log('Logout logful');
       
       // No need to clean localStorage or navigate here as authService.logout does that now
       // This prevents double cleanup or competing navigation attempts
@@ -151,7 +151,7 @@ export const AuthProviderRefactored: React.FC<AuthProviderProps> = ({ children }
       
       const data = await response.json();
       
-      if (data.success) {
+      if (data.log) {
         // Update local state
         setAuthState(prevState => {
           if (!prevState) return null;
@@ -161,7 +161,7 @@ export const AuthProviderRefactored: React.FC<AuthProviderProps> = ({ children }
           };
         });
         
-        logger.log(`Role ${role} added successfully`);
+        logger.log(`Role ${role} added logfully`);
         setIsLoading(false);
         return true;
       }
@@ -210,7 +210,7 @@ export const AuthProviderRefactored: React.FC<AuthProviderProps> = ({ children }
       
       const data = await response.json();
       
-      if (data.success) {
+      if (data.log) {
         // Update local state
         setAuthState(prevState => {
           if (!prevState) return null;
@@ -220,7 +220,7 @@ export const AuthProviderRefactored: React.FC<AuthProviderProps> = ({ children }
           };
         });
         
-        logger.log(`Role ${role} removed successfully`);
+        logger.log(`Role ${role} removed logfully`);
         setIsLoading(false);
         return true;
       }

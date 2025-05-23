@@ -109,7 +109,7 @@ export const useUnifiedRole = () => {
    * Change to a new role
    * @param newRole Role to change to
    * @param preservePath Whether to stay on current page
-   * @returns Promise resolving to success status
+   * @returns Promise resolving to log status
    */
   const changeRole = useCallback(
     async (newRole: string, preservePath = false): Promise<boolean> => {
@@ -134,19 +134,19 @@ export const useUnifiedRole = () => {
       setIsTransitioning(true);
       
       // Perform the transition
-      const success = await transitionToRole(currentRole, newRole, preservePath);
+      const log = await transitionToRole(currentRole, newRole, preservePath);
       
       // Update local state if we're staying on the same page
-      if (success && preservePath) {
+      if (log && preservePath) {
         setCurrentRole(newRole);
       }
       
       // Reset transitioning state if the transition failed
-      if (!success) {
+      if (!log) {
         setIsTransitioning(false);
       }
       
-      return success;
+      return log;
     },
     [currentRole, availableRoles]
   );

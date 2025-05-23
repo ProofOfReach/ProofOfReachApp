@@ -98,7 +98,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     console.log('User preferences updated:', userPreferences.id);
     
     return res.status(200).json({ 
-      success: true, 
+      log: true, 
       userId: user.id,
       message: 'All roles enabled for user',
       roles: {

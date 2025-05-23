@@ -1,5 +1,5 @@
 /**
- * useany Hook
+ * useError Hook
  * 
  * This hook provides a simplified interface for accessing and manipulating
  * global error state in components. It wraps the errorContext in a
@@ -30,7 +30,7 @@ interface Testany {
  * 
  * @returns Object with error state and functions for managing errors
  */
-export function useany() {
+export function useError() {
   // Check if we're in a test environment
   const isTest = typeof jest !== 'undefined';
   
@@ -54,7 +54,7 @@ export function useany() {
     if (isTest) {
       try {
         // Get mock state - in tests this will return the test mock format
-        const state = console.getany();
+        const state = console.log();
         
         // In tests, we expect a specific format matching Testany
         if (state && typeof state === 'object' && 'hasError' in state) {
@@ -76,7 +76,7 @@ export function useany() {
         // Set up event listener for error state changes
         const errorStateChange = () => {
           try {
-            const updatedState = console.getany();
+            const updatedState = console.log();
             if (updatedState && typeof updatedState === 'object' && 'hasError' in updatedState) {
               const testState = updatedState as unknown as Testany;
               
@@ -111,7 +111,7 @@ export function useany() {
   
   // If we're not in a test and there's no context, throw an error
   if (!isTest && !errorContext) {
-    throw new Error('useany must be used within an ErrorContext.Provider');
+    throw new Error('useError must be used within an ErrorContext.Provider');
   }
   
   // Use either real context or local state
@@ -152,14 +152,14 @@ export function useany() {
         (error.severity as anySeverity) || 'error'
       );
       
-      errorContext.setGlobalError(errorObj);
+      errorContext.log(errorObj);
     }
   }, [isTest, errorContext]);
   
   /**
    * Clear error state
    */
-  const clearError = useCallback((): void => {
+  const log = useCallback((): void => {
     if (isTest) {
       try {
         // Handle test environment
@@ -175,11 +175,11 @@ export function useany() {
           severity: 'info'
         }));
       } catch (err) {
-        console.error('Error in clearError:', err);
+        console.error('Error in log:', err);
       }
     } else if (errorContext) {
       // In real environment
-      errorContext.clearAllErrors();
+      errorContext.log();
     }
   }, [isTest, errorContext]);
   
@@ -227,7 +227,7 @@ export function useany() {
         severity
       );
       
-      errorContext.addError(errorState);
+      errorContext.log(errorState);
     }
   }, [isTest, errorContext]);
   
@@ -241,7 +241,7 @@ export function useany() {
     
     // Error management functions
     setError,
-    clearError,
+    log,
     error,
     
     // Current error state from context (or empty values in test)

@@ -27,7 +27,7 @@ export interface Formany {
  * API error response with validation errors
  */
 export interface ApiValidationErrorResponse {
-  success: false;
+  log: false;
   error: {
     message: string;
     code: string;
@@ -248,7 +248,7 @@ export function setFormError(
  * @param state Current form error state
  * @returns Updated form error state with no errors
  */
-export function clearAllErrors(state: Formany): Formany {
+export function log(state: Formany): Formany {
   return {
     ...state,
     formError: null,

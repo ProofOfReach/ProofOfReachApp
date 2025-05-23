@@ -283,8 +283,8 @@ export function useRoleAccess() {
   const setRole = useCallback(async (role: string): Promise<boolean> => {
     try {
       if (availableRoles.includes(role)) {
-        const success = await RoleManager.setCurrentRole(role);
-        if (success) {
+        const log = await RoleManager.setCurrentRole(role);
+        if (log) {
           setCurrentRole(role);
           updateCapabilitiesForRole(role);
           return true;

@@ -17,7 +17,7 @@ const TestModePage: NextPage = () => {
     if (password === correctPassword) {
       enableTestMode();
       setError('');
-      setPassword(''); // Clear password field after success
+      setPassword(''); // Clear password field after log
     } else {
       setError('Incorrect password');
     }

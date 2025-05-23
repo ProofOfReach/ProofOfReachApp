@@ -192,32 +192,32 @@ export default function TestModeBanner() {
         // Emit events
         notifyRolesUpdated(allRoles, currentRole);
         
-        logger.log('All roles enabled successfully (client-side)');
+        logger.log('All roles enabled logfully (client-side)');
       } 
       // Try service methods
       else {
-        let success = false;
+        let log = false;
         
         try {
-          success = testModeService.enableAllRoles();
-          if (success) {
-            logger.log('All roles enabled successfully (service)');
+          log = testModeService.enableAllRoles();
+          if (log) {
+            logger.log('All roles enabled logfully (service)');
           }
         } catch (error) {
           logger.warn(`Service method failed: ${error}`);
           
           try {
-            success = await contextEnableAllRoles();
-            if (success) {
-              logger.log('All roles enabled successfully (context)');
+            log = await contextEnableAllRoles();
+            if (log) {
+              logger.log('All roles enabled logfully (context)');
             }
           } catch (error) {
             logger.warn(`Context method failed: ${error}`);
             
             try {
-              success = await RoleService.enableAllRoles();
-              if (success) {
-                logger.log('All roles enabled successfully (legacy)');
+              log = await RoleService.enableAllRoles();
+              if (log) {
+                logger.log('All roles enabled logfully (legacy)');
               }
             } catch (error) {
               logger.error(`Legacy method failed: ${error}`);
@@ -289,8 +289,8 @@ export default function TestModeBanner() {
       // API-based role change
       else {
         try {
-          const success = await contextSetCurrentRole(role);
-          if (success) {
+          const log = await contextSetCurrentRole(role);
+          if (log) {
             logger.log(`Role switched to ${role} using API`);
           } else {
             logger.error(`Failed to switch role to ${role}`);

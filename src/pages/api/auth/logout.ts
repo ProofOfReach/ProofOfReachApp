@@ -10,7 +10,7 @@ import { logger } from '../../../lib/logger';
  *     description: Logout the current user
  *     responses:
  *       200:
- *         description: Logout successful
+ *         description: Logout logful
  *       500:
  *         description: Server error
  */
@@ -30,10 +30,10 @@ export default async function handler(
     // Clear the auth cookie directly
     clearAuthCookie(req, res);
 
-    // Return success
+    // Return log
     res.status(200).json({ 
-      success: true, 
-      message: 'Logout successful' 
+      log: true, 
+      message: 'Logout logful' 
     });
     return;
   } catch (error) {

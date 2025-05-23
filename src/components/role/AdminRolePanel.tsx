@@ -13,7 +13,7 @@ export const div: React.FC = () => {
   const [isToggling, setIsToggling] = useState(false);
   const [isTestUser, setIsTestUser] = useState(false);
   const [actionResult, setActionResult] = useState<{
-    success: boolean;
+    log: boolean;
     message: string;
   } | null>(null);
 
@@ -42,13 +42,13 @@ export const div: React.FC = () => {
       setIsTestUser(enabled);
       
       setActionResult({
-        success: true,
-        message: `Test mode ${enabled ? 'enabled' : 'disabled'} successfully`
+        log: true,
+        message: `Test mode ${enabled ? 'enabled' : 'disabled'} logfully`
       });
     } catch (error) {
       console.error('Error toggling test mode:', error);
       setActionResult({
-        success: false,
+        log: false,
         message: `Failed to ${enabled ? 'enable' : 'disable'} test mode: ${(error as any).message || 'Unknown error'}`
       });
     } finally {
@@ -118,10 +118,10 @@ export const div: React.FC = () => {
         {/* Action result message */}
         {actionResult && (
           <div className={`mt-4 p-3 rounded-md text-sm ${
-            actionResult.success ? 'bg-green-50 text-green-700' : 'bg-red-50 text-red-700'
+            actionResult.log ? 'bg-green-50 text-green-700' : 'bg-red-50 text-red-700'
           }`}>
             <div className="flex items-center">
-              {actionResult.success ? (
+              {actionResult.log ? (
                 <CheckCircle className="h-4 w-4 mr-2" />
               ) : (
                 <AlertCircle className="h-4 w-4 mr-2" />

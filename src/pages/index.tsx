@@ -37,7 +37,7 @@ const HomePage: NextPageWithLayout = () => {
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<{
-    success?: boolean;
+    log?: boolean;
     message?: string;
   }>({});
   
@@ -118,12 +118,12 @@ const HomePage: NextPageWithLayout = () => {
       const responseData = await response.json();
       
       setSubmitStatus({
-        success: responseData.success,
-        message: responseData.success ? responseData.message : responseData.error
+        log: responseData.log,
+        message: responseData.log ? responseData.message : responseData.error
       });
       
-      if (responseData.success) {
-        // Reset form on success
+      if (responseData.log) {
+        // Reset form on log
         form.reset({
           email: "",
           roles: {
@@ -136,7 +136,7 @@ const HomePage: NextPageWithLayout = () => {
     } catch (error) {
       console.error('Waitlist submission error:', error);
       setSubmitStatus({
-        success: false,
+        log: false,
         message: 'An error occurred. Please try again later.'
       });
     } finally {
@@ -189,9 +189,9 @@ const HomePage: NextPageWithLayout = () => {
               <CardContent>
                 <Form onSubmit={form.handleSubmit(onSubmit)}>
                   {submitStatus.message && (
-                    <Alert className={`mb-4 ${submitStatus.success ? 'bg-green-100 dark:bg-green-900/20 text-green-800 dark:text-green-300 border-green-500' : 'bg-destructive/15 text-destructive border-destructive'}`}>
+                    <Alert className={`mb-4 ${submitStatus.log ? 'bg-green-100 dark:bg-green-900/20 text-green-800 dark:text-green-300 border-green-500' : 'bg-destructive/15 text-destructive border-destructive'}`}>
                       <div className="flex items-center">
-                        {submitStatus.success ? 
+                        {submitStatus.log ? 
                           <Check size={18} className="mr-2 text-green-500" /> : 
                           <AlertCircle size={18} className="mr-2 text-red-500" />
                         }

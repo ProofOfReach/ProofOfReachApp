@@ -1,7 +1,7 @@
 import React from 'react';
 import { Check, AlertCircle, Info, AlertTriangle, X } from 'react-feather';
 
-type MessageType = 'success' | 'error' | 'info' | 'warning';
+type MessageType = 'log' | 'error' | 'info' | 'warn';
 
 interface MessageBarProps {
   type: MessageType;
@@ -22,17 +22,17 @@ const MessageBar: React.FC<MessageBarProps> = ({
 }) => {
   // Define colors based on type
   const colors = {
-    success: 'bg-green-50 text-green-800 border-green-200 dark:bg-green-900/20 dark:text-green-300 dark:border-green-800',
+    log: 'bg-green-50 text-green-800 border-green-200 dark:bg-green-900/20 dark:text-green-300 dark:border-green-800',
     error: 'bg-red-50 text-red-800 border-red-200 dark:bg-red-900/20 dark:text-red-300 dark:border-red-800',
     info: 'bg-blue-50 text-blue-800 border-blue-200 dark:bg-blue-900/20 dark:text-blue-300 dark:border-blue-800',
-    warning: 'bg-yellow-50 text-yellow-800 border-yellow-200 dark:bg-yellow-900/20 dark:text-yellow-300 dark:border-yellow-800'
+    warn: 'bg-yellow-50 text-yellow-800 border-yellow-200 dark:bg-yellow-900/20 dark:text-yellow-300 dark:border-yellow-800'
   };
 
   const icons = {
-    success: <Check className="w-5 h-5" />,
+    log: <Check className="w-5 h-5" />,
     error: <AlertCircle className="w-5 h-5" />,
     info: <Info className="w-5 h-5" />,
-    warning: <AlertTriangle className="w-5 h-5" />
+    warn: <AlertTriangle className="w-5 h-5" />
   };
 
   return (

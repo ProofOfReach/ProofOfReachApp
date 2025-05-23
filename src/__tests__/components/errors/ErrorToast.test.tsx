@@ -21,7 +21,7 @@ describe('ErrorToast', () => {
     expect(container.firstChild).toHaveClass('text-red-800');
     
     // Warning
-    rerender(<ErrorToast message="Warning message" type="warning" />);
+    rerender(<ErrorToast message="Warning message" type="warn" />);
     expect(container.firstChild).toHaveClass('bg-amber-100');
     expect(container.firstChild).toHaveClass('text-amber-800');
     

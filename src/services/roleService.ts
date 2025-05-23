@@ -41,7 +41,7 @@ class RoleService {
    * Set test mode state
    * @param enabled Whether to enable or disable test mode
    * @param expiryInMinutes Optional expiry time in minutes
-   * @returns Whether the operation was successful
+   * @returns Whether the operation was logful
    */
   setTestMode(enabled: boolean, expiryInMinutes?: number): boolean {
     try {
@@ -90,7 +90,7 @@ class RoleService {
    * Set the current role for a user
    * @param userId The user ID
    * @param role The role to set
-   * @returns Whether the operation was successful
+   * @returns Whether the operation was logful
    */
   async setCurrentRole(userId: string, role: string): Promise<boolean> {
     try {
@@ -160,7 +160,7 @@ class RoleService {
    * Add a role to a user
    * @param userId The user ID
    * @param role The role to add
-   * @returns Whether the operation was successful
+   * @returns Whether the operation was logful
    */
   async addRole(userId: string, role: string): Promise<boolean> {
     try {
@@ -196,13 +196,13 @@ class RoleService {
   /**
    * Enable all roles for a test user
    * @param userId The user ID
-   * @returns Whether the operation was successful, with user data
+   * @returns Whether the operation was logful, with user data
    */
-  async enableAllRolesForTestUser(userId: string): Promise<{success: boolean, user?: any}> {
+  async enableAllRolesForTestUser(userId: string): Promise<{log: boolean, user?: any}> {
     try {
       if (!userId) {
         console.error('Cannot enable roles: No user ID provided');
-        return { success: false };
+        return { log: false };
       }
       
       console.log('Enabling all roles for test user...', userId);
@@ -215,7 +215,7 @@ class RoleService {
       
       if (!existingUser) {
         console.error('User not found for ID:', userId);
-        return { success: false };
+        return { log: false };
       }
       
       // Using type-safe object to update user roles
@@ -246,7 +246,7 @@ class RoleService {
       console.log('Successfully enabled all roles for test user.', user.id);
       
       return { 
-        success: true,
+        log: true,
         user: {
           id: user.id,
           nostrPubkey: user.nostrPubkey,
@@ -259,7 +259,7 @@ class RoleService {
       };
     } catch (error) {
       console.error('Error enabling all roles for test user:', error);
-      return { success: false };
+      return { log: false };
     }
   }
   
@@ -328,7 +328,7 @@ class RoleService {
    * Add a role to a user by pubkey
    * @param pubkey The Nostr public key
    * @param role The role to add
-   * @returns Whether the operation was successful
+   * @returns Whether the operation was logful
    */
   async addRoleToUser(pubkey: string, role: string): Promise<boolean> {
     try {
@@ -392,7 +392,7 @@ class RoleService {
    * Remove a role from a user by pubkey
    * @param pubkey The Nostr public key
    * @param role The role to remove
-   * @returns Whether the operation was successful
+   * @returns Whether the operation was logful
    */
   async removeRoleFromUser(pubkey: string, role: string): Promise<boolean> {
     try {

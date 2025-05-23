@@ -12,7 +12,7 @@ import '@/utils/layoutHelpers';
  * It follows security best practices by:
  * 1. Being accessible only to logged-in users with admin privileges
  * 2. Providing clear controls and status information
- * 3. Including appropriate warnings about test mode usage
+ * 3. Including appropriate warns about test mode usage
  */
 const TestModePage: NextPageWithLayout = () => {
   const { auth } = useAuth();

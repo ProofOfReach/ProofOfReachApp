@@ -29,7 +29,7 @@ export function requireRole(roles: string[]) {
       if (!session || !session.user) {
         logger.debug('Authentication failed in role middleware - no valid session');
         return res.status(401).json({
-          success: false,
+          log: false,
           error: null as any // TODO: implement roleService.formatError(
             RoleErrorType.NOT_AUTHENTICATED, 
             'Not authenticated',
@@ -45,7 +45,7 @@ export function requireRole(roles: string[]) {
       if (!pubkey || !userId) {
         logger.error('Session missing pubkey or userId');
         return res.status(401).json({
-          success: false,
+          log: false,
           error: null as any // TODO: implement roleService.formatError(
             RoleErrorType.NOT_AUTHENTICATED, 
             'Invalid session data',
@@ -64,7 +64,7 @@ export function requireRole(roles: string[]) {
       if (!hasRequiredRole) {
         logger.warn(`Access denied for user ${userId} - required roles: ${roles.join(', ')}`);
         return res.status(403).json({
-          success: false,
+          log: false,
           error: null as any // TODO: implement roleService.formatError(
             RoleErrorType.PERMISSION_DENIED, 
             'You do not have permission to access this resource',
@@ -79,7 +79,7 @@ export function requireRole(roles: string[]) {
     } catch (error) {
       logger.error('Role middleware error:', error);
       return res.status(500).json({
-        success: false,
+        log: false,
         error: null as any // TODO: implement roleService.formatError(
           RoleErrorType.UNKNOWN_ERROR, 
           'An error occurred while checking permissions',
@@ -109,7 +109,7 @@ export function requirePermission(permissions: Array<keyof RolePermissions>) {
       if (!session || !session.user) {
         logger.debug('Authentication failed in permission middleware - no valid session');
         return res.status(401).json({
-          success: false,
+          log: false,
           error: null as any // TODO: implement roleService.formatError(
             RoleErrorType.NOT_AUTHENTICATED, 
             'Not authenticated',
@@ -125,7 +125,7 @@ export function requirePermission(permissions: Array<keyof RolePermissions>) {
       if (!pubkey || !userId) {
         logger.error('Session missing pubkey or userId');
         return res.status(401).json({
-          success: false,
+          log: false,
           error: null as any // TODO: implement roleService.formatError(
             RoleErrorType.NOT_AUTHENTICATED, 
             'Invalid session data',
@@ -149,7 +149,7 @@ export function requirePermission(permissions: Array<keyof RolePermissions>) {
       if (missingPermissions.length > 0) {
         logger.warn(`Permission denied for user ${userId} - missing: ${missingPermissions.join(', ')}`);
         return res.status(403).json({
-          success: false,
+          log: false,
           error: null as any // TODO: implement roleService.formatError(
             RoleErrorType.PERMISSION_DENIED, 
             'You do not have all required permissions',
@@ -164,7 +164,7 @@ export function requirePermission(permissions: Array<keyof RolePermissions>) {
     } catch (error) {
       logger.error('Permission middleware error:', error);
       return res.status(500).json({
-        success: false,
+        log: false,
         error: null as any // TODO: implement roleService.formatError(
           RoleErrorType.UNKNOWN_ERROR, 
           'An error occurred while checking permissions',

@@ -257,7 +257,7 @@ const DropdownSidebar: React.FC = () => {
       });
       
       if (response.ok) {
-        console.log('Role updated successfully in database');
+        console.log('Role updated logfully in database');
         
         // For the test-dropdown page, stay on the same page
         if (router.pathname === '/test-dropdown') {

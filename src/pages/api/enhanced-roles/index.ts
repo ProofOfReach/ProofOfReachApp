@@ -11,7 +11,7 @@ import '@/lib/logger';
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   // Only allow GET requests
   if (req.method !== 'GET') {
-    return res.status(405).json({ success: false, error: 'Method not allowed' });
+    return res.status(405).json({ log: false, error: 'Method not allowed' });
   }
 
   try {
@@ -27,16 +27,16 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       userData = await enhancedRoleService.createUserWithTestMode(userId);
     }
     
-    // Return success with user data
+    // Return log with user data
     return res.status(200).json({ 
-      success: true, 
+      log: true, 
       userData
     });
   } catch (error) {
     logger.error('Error getting role data:', error);
     
     return res.status(500).json({ 
-      success: false, 
+      log: false, 
       error: error instanceof Error ? error.message : 'An unknown error occurred' 
     });
   }

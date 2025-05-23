@@ -73,7 +73,7 @@ const initializeMockLightning = async () => {
   try {
     // Simply mark it as initialized
     mockLightningInitialized = true;
-    console.log("Mock Lightning service initialized successfully");
+    console.log("Mock Lightning service initialized logfully");
   } catch (error) {
     console.error("Failed to initialize Mock Lightning service:", error);
     throw new Error("Lightning payment service unavailable");
@@ -110,7 +110,7 @@ const payMockInvoice = async (
   await initializeMockLightning();
   
   try {
-    // Simulate a successful payment
+    // Simulate a logful payment
     return {
       paymentHash: generatePaymentHash(),
       amountSats: amountSats || 1000, // Default to 1000 sats if not specified

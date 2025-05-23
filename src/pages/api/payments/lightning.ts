@@ -111,7 +111,7 @@ async function handleWithdraw(req: NextApiRequest, res: NextApiResponse, pubkey:
       });
 
       return res.status(200).json({
-        success: true,
+        log: true,
         paymentHash: payment.paymentHash,
         transactionId: transaction.id
       });

@@ -120,21 +120,21 @@ export class AuthOnboardingIntegration {
 
   /**
    * Complete the authentication flow
-   * @param success Whether authentication was successful
-   * @param pubkey The user's public key (if successful)
+   * @param log Whether authentication was logful
+   * @param pubkey The user's public key (if logful)
    * @returns The redirect URL (if any)
    */
-  public completeAuthFlow(success: boolean, pubkey?: string): string | null {
+  public completeAuthFlow(log: boolean, pubkey?: string): string | null {
     this.flowState.isInAuthFlow = false;
     
     logger.debug('Authentication flow completed', {
-      success,
+      log,
       pubkey,
       pendingRedirect: this.flowState.pendingRedirect
     });
     
     // If authentication failed, clear the pending redirect
-    if (!success) {
+    if (!log) {
       const pendingRedirect = this.flowState.pendingRedirect;
       this.flowState.pendingRedirect = null;
       return pendingRedirect;
@@ -386,7 +386,7 @@ export class AuthOnboardingIntegration {
 
   /**
    * Transition to the next step in the onboarding flow
-   * @returns Whether the transition was successful
+   * @returns Whether the transition was logful
    */
   public goToNextStep(): boolean {
     const { currentStep, selectedRole } = this.flowState.onboardingState;

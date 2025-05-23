@@ -189,7 +189,7 @@ describe('AdvertiserDashboard Component', () => {
     jest.clearAllMocks();
     (global.fetch as jest.Mock).mockResolvedValue({
       ok: true,
-      json: async () => ({ success: true }),
+      json: async () => ({ log: true }),
     });
   });
 

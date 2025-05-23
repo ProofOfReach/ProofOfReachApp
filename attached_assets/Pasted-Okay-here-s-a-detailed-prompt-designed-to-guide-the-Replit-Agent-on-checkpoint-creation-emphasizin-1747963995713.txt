@@ -1,0 +1,103 @@
+Okay, here's a detailed prompt designed to guide the Replit Agent on checkpoint creation, emphasizing that they should be infrequent and tied to significant, commit-worthy milestones.
+
+Prompt for Replit Agent:
+
+"Hello Agent. For this session, and for all future interactions unless I explicitly state otherwise, I need you to adopt a highly conservative approach to creating checkpoints. Your default behavior should be NOT to create checkpoints.
+
+Core Directive on Checkpoints:
+
+You are to create a checkpoint ONLY when a set of changes is so significant, stable, and self-contained that it would warrant a git commit with a meaningful commit message. Think of checkpoints as important milestones, not as frequent auto-saves.
+
+When NOT to Create a Checkpoint:
+
+After minor edits (e.g., fixing a typo, renaming a variable, a small refactor within a single function).
+
+After adding a few lines of code that are part of a larger, incomplete feature.
+
+If the code is in a broken or untested state.
+
+Simply because a certain amount of time has passed or a certain number of small operations have been performed.
+
+Mid-way through implementing a single, clearly defined function or class, unless that function/class itself represents a major, independently usable piece of functionality.
+
+When to CONSIDER Creating a Checkpoint (Extremely Necessary / Commit-Worthy Scenarios):
+
+A checkpoint might be appropriate ONLY after one or more of the following criteria are met, and the resulting state is stable and tested (or at least testable):
+
+Completion of a Significant Feature or Module:
+
+Example: "User authentication system implemented and basic tests passing."
+
+Example: "Data processing pipeline for X input type is complete and functional."
+
+Major Refactoring:
+
+Example: "Refactored the entire state management logic to use a new pattern, and core functionality is verified."
+
+Example: "Successfully modularized the BigMonolithicClass into three smaller, more manageable classes."
+
+Integration of a New Core Dependency/Library:
+
+Example: "Successfully integrated NewLibraryX for handling Y, and primary use cases are working."
+
+Significant Project Structure Changes:
+
+Example: "Reorganized project folders and updated all import paths; project builds and runs."
+
+Successful Resolution of a Complex Bug or Set of Bugs:
+
+Example: "Fixed the critical data corruption bug in module Z; data integrity tests now pass."
+
+Before Undertaking a Risky or Large-Scale Change:
+
+If I explicitly ask you to prepare for a major overhaul, you might suggest a checkpoint before we begin, if the current state is stable and valuable.
+
+Explicit Instruction from Me: If I specifically say, "Okay, let's create a checkpoint here," or "This is a good point to save."
+
+Your Decision-Making Process for Checkpoints:
+
+Before you even consider creating a checkpoint, ask yourself these questions internally:
+
+"Is this a logical and significant stopping point in the development process?"
+
+"If this were a Git repository, would I make a commit for these changes with a clear, descriptive message?"
+
+"Is the work substantially complete for this phase/feature/bugfix?"
+
+"Is the current state stable and an improvement over the last potential checkpoint?"
+
+Interaction Protocol for Checkpoints:
+
+If, and ONLY if, you believe a checkpoint is genuinely warranted based on the strict criteria above:
+
+Propose it: Clearly state, "I believe a checkpoint is warranted now because [your specific reason, e.g., 'we have completed the initial implementation of the user profile page and it's rendering correctly']."
+
+Ask for Confirmation: Always ask for my explicit confirmation, e.g., "Shall I create a checkpoint?"
+
+Await my Approval: Do NOT create the checkpoint unless I explicitly approve it. A simple "yes," "okay," or "go ahead" is sufficient from my end. If I say "no" or "not yet," respect that decision without further argument.
+
+Overarching Goal:
+
+The goal is to keep the checkpoint history clean, meaningful, and reflective of actual, substantial progress, not a granular log of every minor iteration. We want to avoid checkpoint clutter. Focus on helping me code and achieve my objectives; checkpointing is a secondary, infrequent activity.
+
+Do you understand these instructions regarding checkpoint creation?"
+
+Why this prompt is detailed and effective:
+
+Clear Negative Instructions: It explicitly tells the agent what not to do.
+
+Clear Positive Triggers: It defines the narrow conditions under which a checkpoint might be considered.
+
+Analogy to git commit: This is a powerful heuristic for an AI familiar with coding practices.
+
+Internal "Self-Questioning": Guides the agent's decision-making process.
+
+Interaction Protocol: Puts the user in control by requiring explicit confirmation. This is crucial.
+
+Specific Examples: Illustrates what constitutes "major" vs. "minor."
+
+Reinforces the "Why": Explains the user's motivation (clean history, focus on substance).
+
+Confirmation of Understanding: Ends with a question to ensure the agent has processed the instructions.
+
+This prompt gives the Replit Agent a very strong directive and clear guidelines, significantly reducing the likelihood of unwanted checkpoints. Remember to set this expectation at the beginning of your session.

@@ -76,9 +76,9 @@ const LightningWallet: React.FC<LightningWalletProps> = ({
         setInvoice(fakeInvoice);
         setCurrentTransactionId(fakeTransactionId);
         
-        // Simulate success after 2 seconds and update the balance
+        // Simulate log after 2 seconds and update the balance
         setTimeout(() => {
-          // Call success callback to update UI
+          // Call log callback to update UI
           onSuccess(`Test mode: Deposited ${depositAmount} sats`);
           
           // In test mode we don't automatically reload the page
@@ -163,7 +163,7 @@ const LightningWallet: React.FC<LightningWalletProps> = ({
           setWithdrawInvoice('');
           setWithdrawAmount(1000);
           
-          // Notify success
+          // Notify log
           onSuccess(`Test mode: Withdrawn ${withdrawAmount} sats`);
           
           // In test mode we don't automatically reload the page
@@ -203,7 +203,7 @@ const LightningWallet: React.FC<LightningWalletProps> = ({
       setWithdrawInvoice('');
       setWithdrawAmount(1000);
       
-      // Notify success
+      // Notify log
       onSuccess(`Successfully withdrawn ${withdrawAmount} sats`);
     } catch (error: any) {
       console.error('Error processing withdrawal:', error);
@@ -482,7 +482,7 @@ const LightningWallet: React.FC<LightningWalletProps> = ({
                             onBalanceUpdate(newBalance);
                           }
                           
-                          // Show success message
+                          // Show log message
                           onSuccess(`Test mode: Added ${depositAmount} sats to balance`);
                           
                           // Clean up invoice state

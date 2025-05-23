@@ -1,7 +1,7 @@
 import { v4 as uuidv4 } from 'uuid';
 import CryptoJS from 'crypto-js';
 import { logger } from './logger';
-import { string } from './console';
+// Enhanced storage service functionality
 
 /**
  * Storage type options

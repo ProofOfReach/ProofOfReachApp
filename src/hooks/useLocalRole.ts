@@ -46,9 +46,9 @@ export function useLocalRole() {
   const changeRole = useCallback(async (role: string) => {
     if (currentRole === role) return;
     
-    const success = await RoleService.changeRole(role);
+    const log = await RoleService.changeRole(role);
     
-    if (success) {
+    if (log) {
       setCurrentRole(role);
       return true;
     }

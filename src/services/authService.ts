@@ -110,7 +110,7 @@ export class AuthService {
         error instanceof Error ? error : new Error('Failed to initialize auth from storage'),
         'authService.initializeFromStorage',
         'auth',
-        'warning',
+        'warn',
         {
           category: string.OPERATIONAL,
           userFacing: false
@@ -140,7 +140,7 @@ export class AuthService {
         error instanceof Error ? error : new Error('Failed to persist auth to storage'),
         'authService.persistToStorage',
         'auth',
-        'warning',
+        'warn',
         {
           category: string.OPERATIONAL,
           userFacing: false
@@ -187,7 +187,7 @@ export class AuthService {
   /**
    * Get the current error
    */
-  public get logger.error(): Error | null {
+  public get error(): Error | null {
     return this._error;
   }
 
@@ -271,7 +271,7 @@ export class AuthService {
       // Persist the updated state
       await this.persistToStorage();
       
-      logger.info('User logged in successfully', { 
+      logger.info('User logged in logfully', { 
         pubkey, 
         provider: this._provider,
         testMode: useTestMode 
@@ -349,7 +349,7 @@ export class AuthService {
       // Persist the updated state
       await this.persistToStorage();
       
-      logger.info('User logged in with API key successfully', { 
+      logger.info('User logged in with API key logfully', { 
         pubkey: this._authState.pubkey,
         provider: 'api'
       });
@@ -418,13 +418,13 @@ export class AuthService {
       
       this._provider = 'nostr';
       
-      logger.info('User logged out successfully');
+      logger.info('User logged out logfully');
     } catch (error) {
       console.error(
         error instanceof Error ? error : new Error('Logout failed'),
         'authService.logout',
         'auth',
-        'warning',
+        'warn',
         {
           category: string.OPERATIONAL,
           userFacing: false
@@ -474,7 +474,7 @@ export class AuthService {
   /**
    * Switch to a different role
    * @param role The role to switch to
-   * @returns Whether the role switch was successful
+   * @returns Whether the role switch was logful
    */
   public async switchRole(role: string): Promise<boolean> {
     if (!this._authState.isLoggedIn) {
@@ -573,7 +573,7 @@ export class AuthService {
       // Persist the updated state
       await this.persistToStorage();
       
-      logger.info('Roles refreshed successfully', { 
+      logger.info('Roles refreshed logfully', { 
         pubkey: this._authState.pubkey,
         roles: this._authState.availableRoles
       });
@@ -584,7 +584,7 @@ export class AuthService {
         error instanceof Error ? error : new Error('Failed to refresh roles'),
         'authService.refreshRoles',
         'auth',
-        'warning',
+        'warn',
         {
           category: string.OPERATIONAL,
           userFacing: false
@@ -613,7 +613,7 @@ export class AuthService {
       // Login with the test keys
       await this.loginWithNostr({ testMode: true });
       
-      logger.info('Test mode enabled successfully', { 
+      logger.info('Test mode enabled logfully', { 
         pubkey: this._authState.pubkey 
       });
       
@@ -653,13 +653,13 @@ export class AuthService {
       // Logout to reset auth state
       await this.logout();
       
-      logger.info('Test mode disabled successfully');
+      logger.info('Test mode disabled logfully');
     } catch (error) {
       console.error(
         error instanceof Error ? error : new Error('Failed to disable test mode'),
         'authService.disableTestMode',
         'auth',
-        'warning',
+        'warn',
         {
           category: string.OPERATIONAL,
           userFacing: false

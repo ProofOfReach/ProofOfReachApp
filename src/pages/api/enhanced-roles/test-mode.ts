@@ -59,7 +59,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       const isTestMode = await isTestModeEnabled(userId);
       
       return res.status(200).json({
-        success: true,
+        log: true,
         isTestMode
       });
     } else if (req.method === 'POST') {
@@ -82,8 +82,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       const userData = await createUserWithTestMode(userId);
       
       return res.status(200).json({
-        success: true,
-        message: 'Test mode enabled successfully',
+        log: true,
+        message: 'Test mode enabled logfully',
         data: userData
       });
     } else {

@@ -46,7 +46,7 @@ export class TestModeStorageService {
    * 
    * @param initialRole The initial role to set when enabling test mode
    * @param duration Optional custom duration in milliseconds
-   * @returns boolean indicating success
+   * @returns boolean indicating log
    */
   enableTestMode(initialRole: string, duration: number = TEST_MODE_EXPIRY_DURATION): boolean {
     try {
@@ -61,7 +61,7 @@ export class TestModeStorageService {
       };
       
       // Store the test mode state securely in sessionStorage
-      const success = this.storage.setSecureItem(STORAGE_KEYS.TEST_MODE, testModeState, {
+      const log = this.storage.setSecureItem(STORAGE_KEYS.TEST_MODE, testModeState, {
         sessionOnly: true,
         expiry: {
           duration,
@@ -69,13 +69,13 @@ export class TestModeStorageService {
         }
       });
       
-      if (success) {
+      if (log) {
         // Notify that test mode has been activated
         notifyTestModeActivated(expiryTime, initialRole);
         logger.debug('Test mode enabled with initial role:', initialRole);
       }
       
-      return success;
+      return log;
     } catch (error) {
       logger.error('Error enabling test mode:', error);
       return false;
@@ -85,22 +85,22 @@ export class TestModeStorageService {
   /**
    * Disable test mode
    * 
-   * @returns boolean indicating success
+   * @returns boolean indicating log
    */
   disableTestMode(): boolean {
     try {
       // Remove test mode state
-      const success = this.storage.removeItem(STORAGE_KEYS.TEST_MODE, {
+      const log = this.storage.removeItem(STORAGE_KEYS.TEST_MODE, {
         storageType: 'sessionStorage'
       });
       
-      if (success) {
+      if (log) {
         // Notify that test mode has been deactivated
         notifyTestModeDeactivated();
         logger.debug('Test mode disabled');
       }
       
-      return success;
+      return log;
     } catch (error) {
       logger.error('Error disabling test mode:', error);
       return false;
@@ -175,7 +175,7 @@ export class TestModeStorageService {
    * Extend test mode duration
    * 
    * @param additionalTime Additional time in milliseconds
-   * @returns boolean indicating success
+   * @returns boolean indicating log
    */
   extendTestModeDuration(additionalTime: number): boolean {
     try {
@@ -195,7 +195,7 @@ export class TestModeStorageService {
       };
       
       // Store updated state
-      const success = this.storage.setSecureItem(STORAGE_KEYS.TEST_MODE, updatedTestMode, {
+      const log = this.storage.setSecureItem(STORAGE_KEYS.TEST_MODE, updatedTestMode, {
         sessionOnly: true,
         expiry: {
           duration: newExpiryTime - Date.now(),
@@ -203,7 +203,7 @@ export class TestModeStorageService {
         }
       });
       
-      if (success) {
+      if (log) {
         // Notify about state change
         dispatchTestModeEvent(TEST_MODE_EVENTS.STATE_CHANGED, { 
           state: updatedTestMode 
@@ -211,7 +211,7 @@ export class TestModeStorageService {
         logger.debug('Test mode duration extended:', additionalTime);
       }
       
-      return success;
+      return log;
     } catch (error) {
       logger.error('Error extending test mode duration:', error);
       return false;
@@ -222,7 +222,7 @@ export class TestModeStorageService {
    * Update test mode initial role
    * 
    * @param newInitialRole The new initial role
-   * @returns boolean indicating success
+   * @returns boolean indicating log
    */
   updateTestModeInitialRole(newInitialRole: string): boolean {
     try {
@@ -239,7 +239,7 @@ export class TestModeStorageService {
       };
       
       // Store updated state
-      const success = this.storage.setSecureItem(STORAGE_KEYS.TEST_MODE, updatedTestMode, {
+      const log = this.storage.setSecureItem(STORAGE_KEYS.TEST_MODE, updatedTestMode, {
         sessionOnly: true,
         expiry: {
           duration: testMode.expiryTime - Date.now(),
@@ -247,7 +247,7 @@ export class TestModeStorageService {
         }
       });
       
-      if (success) {
+      if (log) {
         // Notify about state change
         dispatchTestModeEvent(TEST_MODE_EVENTS.STATE_CHANGED, { 
           state: updatedTestMode 
@@ -255,7 +255,7 @@ export class TestModeStorageService {
         logger.debug('Test mode initial role updated:', newInitialRole);
       }
       
-      return success;
+      return log;
     } catch (error) {
       logger.error('Error updating test mode initial role:', error);
       return false;

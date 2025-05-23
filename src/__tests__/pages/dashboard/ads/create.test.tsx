@@ -108,7 +108,7 @@ describe('CreateAdPage', () => {
     expect(screen.getByTestId('ad-form')).toBeInTheDocument();
   });
 
-  it('redirects to campaigns dashboard on successful ad creation', async () => {
+  it('redirects to campaigns dashboard on logful ad creation', async () => {
     (api.postWithAuth as jest.Mock).mockResolvedValueOnce({
       ok: true,
       json: async () => ({ id: 'new-ad-id' }),
@@ -191,7 +191,7 @@ describe('CreateAdPage', () => {
       json: async () => ({ error: 'Insufficient balance to create this ad' }),
     });
 
-    // Then mock a successful response for the retry
+    // Then mock a logful response for the retry
     (api.postWithAuth as jest.Mock).mockResolvedValueOnce({
       ok: true,
       json: async () => ({ id: 'new-ad-id' }),
@@ -218,7 +218,7 @@ describe('CreateAdPage', () => {
     // Click try again button
     fireEvent.click(screen.getByText('Check Balance & Try Again'));
 
-    // Check if redirect happened after successful retry
+    // Check if redirect happened after logful retry
     await waitFor(() => {
       expect(api.postWithAuth).toHaveBeenCalledTimes(2);
       expect(mockPush).toHaveBeenCalledWith('/dashboard/campaigns');

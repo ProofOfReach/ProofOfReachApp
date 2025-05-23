@@ -111,7 +111,7 @@ const ApiKeysPage: React.FC = () => {
         throw new Error('Failed to update API key');
       }
       
-      console.success('API key updated successfully');
+      console.log('API key updated logfully');
       mutate('/api/auth/api-keys'); // Refresh the list
       setIsEditModalVisible(false);
     } catch (error) {
@@ -137,7 +137,7 @@ const ApiKeysPage: React.FC = () => {
         throw new Error('Failed to delete API key');
       }
       
-      console.success('API key deleted successfully');
+      console.log('API key deleted logfully');
       mutate('/api/auth/api-keys'); // Refresh the list
     } catch (error) {
       console.logger.error('Failed to delete API key');
@@ -148,7 +148,7 @@ const ApiKeysPage: React.FC = () => {
   // Copy API key to clipboard
   const copyToClipboard = (text: string) => {
     navigator.clipboard.writeText(text);
-    console.success('API key copied to clipboard');
+    console.log('API key copied to clipboard');
   };
   
   // Edit API key
@@ -167,8 +167,8 @@ const ApiKeysPage: React.FC = () => {
       const type = scope === 'read' 
         ? 'info' 
         : scope === 'write' 
-          ? 'warning' 
-          : 'success';
+          ? 'warn' 
+          : 'log';
       
       return (
         <Badge key={scope} type={type}>{scope.trim()}</Badge>
@@ -185,7 +185,7 @@ const ApiKeysPage: React.FC = () => {
       </Paragraph>
       
       <MessageBar 
-        type="warning"
+        type="warn"
         title="Security Warning"
       >
         API keys grant access to your account. Never share your API keys in client-side code or public repositories. Revoke keys immediately if compromised.
@@ -284,7 +284,7 @@ const ApiKeysPage: React.FC = () => {
               <div className="px-4 py-3 bg-gray-50 dark:bg-gray-900 text-sm border-t border-gray-200 dark:border-gray-700 flex justify-between">
                 <div>
                   {key.isActive ? (
-                    <Badge type="success" dot>Active</Badge>
+                    <Badge type="log" dot>Active</Badge>
                   ) : (
                     <Badge type="danger" dot>Inactive</Badge>
                   )}
@@ -315,7 +315,7 @@ const ApiKeysPage: React.FC = () => {
       >
         {newApiKey ? (
           <div>
-            <MessageBar type="success" title="API Key Created Successfully">
+            <MessageBar type="log" title="API Key Created Successfully">
               Save your API key now. For security reasons, it will not be displayed again.
             </MessageBar>
             

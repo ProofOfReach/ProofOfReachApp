@@ -130,8 +130,8 @@ describe('useRoleAccess', () => {
     const { result } = renderHook(() => useRoleAccess());
     
     await act(async () => {
-      const success = await result.current.setRole('publisher');
-      expect(success).toBe(true);
+      const log = await result.current.setRole('publisher');
+      expect(log).toBe(true);
     });
     
     expect(RoleManager.setCurrentRole).toHaveBeenCalledWith('publisher');

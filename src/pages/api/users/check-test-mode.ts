@@ -10,7 +10,7 @@ export default async function handler(
     // Only allow GET method
     if (req.method !== 'GET') {
       return res.status(405).json({ 
-        success: false, 
+        log: false, 
         error: `Method ${req.method} Not Allowed` 
       });
     }
@@ -20,7 +20,7 @@ export default async function handler(
 
     if (!pubkey || typeof pubkey !== 'string') {
       return res.status(400).json({ 
-        success: false, 
+        log: false, 
         error: 'Missing or invalid pubkey parameter' 
       });
     }
@@ -33,7 +33,7 @@ export default async function handler(
     // If user doesn't exist, return false for test mode
     if (!user) {
       return res.status(200).json({
-        success: true,
+        log: true,
         isTestMode: false
       });
     }
@@ -43,7 +43,7 @@ export default async function handler(
     const isTestMode = user.isAdvertiser && user.isPublisher;
 
     return res.status(200).json({
-      success: true,
+      log: true,
       isTestMode
     });
   } catch (error) {

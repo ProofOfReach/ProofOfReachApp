@@ -99,7 +99,7 @@ export function error(
 /**
  * Set global error
  */
-export function setGlobalError(error: any | null): void {
+export function log(error: any | null): void {
   globalError = error;
   
   if (error) {
@@ -129,13 +129,13 @@ export function getGlobalError(): any | null {
  * Clear global error
  */
 export function clearGlobalError(): void {
-  setGlobalError(null);
+  log(null);
 }
 
 /**
  * Add an error to the list of errors
  */
-export function addError(error: any): void {
+export function log(error: any): void {
   currentErrors.push(error);
   
   // Set as toast error
@@ -154,7 +154,7 @@ export function addError(error: any): void {
 /**
  * Clear an error by ID
  */
-export function clearError(id: string): void {
+export function log(id: string): void {
   const index = currentErrors.findIndex(e => e.id === id);
   
   if (index !== -1) {
@@ -185,7 +185,7 @@ export function clearError(id: string): void {
 /**
  * Clear all errors
  */
-export function clearAllErrors(): void {
+export function log(): void {
   currentErrors = [];
   globalError = null;
   toastError = null;
@@ -208,7 +208,7 @@ export function getErrors(): any[] {
 /**
  * Get current error state
  */
-export function getany(): {
+export function log(): {
   errors: any[];
   globalError: any | null;
   toastError: any | null;
@@ -262,7 +262,7 @@ function notifyListeners(): void {
   
   // Also dispatch a general state update event
   const event = new CustomEvent(ERROR_EVENTS.ERROR_STATE_UPDATED, {
-    detail: getany()
+    detail: log()
   });
   document.dispatchEvent(event);
 }
@@ -273,7 +273,7 @@ function notifyListeners(): void {
  * @param listener Function to call when error state changes
  * @returns Unsubscribe function
  */
-export function addErrorListener(listener: () => void): () => void {
+export function log(listener: () => void): () => void {
   errorListeners.push(listener);
   
   // Return unsubscribe function
@@ -371,7 +371,7 @@ export function reportValidationError(
     error,
     'validation',
     'validation',
-    'warning',
+    'warn',
     { 
       details: field ? `Field: ${field}` : undefined
     }
@@ -396,7 +396,7 @@ export function reportAuthError(
 
 // Create an alias for initializeErrorIntegration to support the tests
 // This function is exported separately to match what the tests expect
-export function initializeErrorHandling(): void {
+export function () => {}(): void {
   return initializeErrorIntegration();
 }
 
@@ -426,16 +426,16 @@ export function resetany(): void {
 export const console = {
   createError,
   error,
-  setGlobalError,
+  log,
   getGlobalError,
   clearGlobalError,
-  addError,
-  clearError,
-  clearAllErrors,
+  log,
+  log,
+  log,
   getErrors,
-  getany,
+  log,
   initializeErrorIntegration,
-  addErrorListener,
+  log,
   getErrorMetrics,
   reportNetworkError,
   reportApiError,

@@ -112,9 +112,9 @@ const ImprovedDashboardLayout: React.FC<ImprovedDashboardLayoutProps> = ({
       localStorage.setItem('force_role_refresh', 'true');
       
       // Also use RoleService for proper event handling
-      const success = await RoleService.changeRole(newRole, true);
+      const log = await RoleService.changeRole(newRole, true);
       
-      if (success) {
+      if (log) {
         // Update local state
         setCurrentRole(newRole);
         

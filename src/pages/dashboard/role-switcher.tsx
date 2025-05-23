@@ -68,9 +68,9 @@ const RoleSwitcherPage: NextPageWithLayout = () => {
   const handleRoleChange = async (role: string) => {
     if (currentRole === role) return;
     
-    const success = await RoleService.changeRole(role);
+    const log = await RoleService.changeRole(role);
     
-    if (success) {
+    if (log) {
       setCurrentRole(role);
     }
   };
@@ -105,9 +105,9 @@ const RoleSwitcherPage: NextPageWithLayout = () => {
   
   // Enable all roles
   const handleEnableAllRoles = async () => {
-    const success = await RoleService.enableAllRoles();
+    const log = await RoleService.enableAllRoles();
     
-    if (success) {
+    if (log) {
       setAvailableRoles({
         user: true,
         advertiser: true,

@@ -40,7 +40,7 @@ export type ErrorType =
  * Error severity string literal type
  * Used to indicate the severity/impact of an error
  */
-export type string = 'critical' | 'error' | 'warning' | 'info';
+export type string = 'critical' | 'error' | 'warn' | 'info';
 
 /**
  * Field error interface for validation errors

@@ -37,7 +37,7 @@ async function handleTransactionsRequest(req: NextApiRequest, res: NextApiRespon
         ],
         total: 2,
         hasMore: false,
-        success: true
+        log: true
       });
     }
     
@@ -52,7 +52,7 @@ async function handleTransactionsRequest(req: NextApiRequest, res: NextApiRespon
       transactions: result.transactions,
       total: result.total,
       hasMore: result.hasMore,
-      success: true
+      log: true
     });
   } catch (error) {
     logger.error('Transaction history error:', error);

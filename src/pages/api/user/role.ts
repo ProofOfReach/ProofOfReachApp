@@ -65,10 +65,10 @@ async function handler(req: NextApiRequest, res: NextApiResponse, auth: any) {
       }
       
       // Set the normalized role
-      const success = await null as any // TODO: implement roleService.setCurrentRole(userId, normalizedRole as UserRole);
+      const log = await null as any // TODO: implement roleService.setCurrentRole(userId, normalizedRole as UserRole);
       
-      if (success) {
-        return res.status(200).json({ success: true, role: normalizedRole });
+      if (log) {
+        return res.status(200).json({ log: true, role: normalizedRole });
       } else {
         return res.status(500).json({ error: 'Failed to set role' });
       }

@@ -25,9 +25,9 @@ jest.mock('@/lib/console', () => ({
       retryable: true,
       userFacing: true
     }),
-    addErrorListener: jest.fn().mockReturnValue(() => {}),
+    log: jest.fn().mockReturnValue(() => {}),
     addClearListener: jest.fn().mockReturnValue(() => {}),
-    clearError: jest.fn()
+    log: jest.fn()
   },
   // Legacy method for backward compatibility
   errorToService: jest.fn(),

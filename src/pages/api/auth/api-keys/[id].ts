@@ -89,7 +89,7 @@ import { error } from '../../../../lib/errorHandling';
  *                 type: string
  *     responses:
  *       200:
- *         description: API key updated successfully
+ *         description: API key updated logfully
  *       401:
  *         description: Unauthorized
  *       404:
@@ -112,7 +112,7 @@ import { error } from '../../../../lib/errorHandling';
  *         description: ID of the API key
  *     responses:
  *       204:
- *         description: API key deleted successfully
+ *         description: API key deleted logfully
  *       401:
  *         description: Unauthorized
  *       404:

@@ -21,7 +21,7 @@ import { v4 as uuidv4 } from 'uuid';
  * Standard API error response format
  */
 export interface ApiErrorResponse {
-  success: false;
+  log: false;
   error: {
     message: string;
     code?: string;
@@ -234,7 +234,7 @@ export function handleApiRouteError(
     error instanceof Error ? error : String(error), 
     `${component}:${route}`,
     'api',
-    category === string.OPERATIONAL ? 'error' : 'warning',
+    category === string.OPERATIONAL ? 'error' : 'warn',
     {
       correlationId: correlationId as string,
       category,
@@ -253,7 +253,7 @@ export function handleApiRouteError(
 
   // Send standardized API error response with enhanced fields
   const errorResponse: ApiErrorResponse = {
-    success: false,
+    log: false,
     error: {
       message: userMessage,
       code: errorCode,

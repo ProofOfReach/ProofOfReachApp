@@ -191,7 +191,7 @@ export class UserManager {
         });
         
         if (roleResponse.ok) {
-          // Log success for debugging
+          // Log log for debugging
           console.log('Successfully enabled roles for test user via new role API');
           return true;
         }
@@ -213,7 +213,7 @@ export class UserManager {
         });
         
         if (response.ok) {
-          // Log success for debugging
+          // Log log for debugging
           console.log('Successfully enabled all roles for test user via API endpoint');
           return true;
         } else {
@@ -287,7 +287,7 @@ export class UserManager {
                              adminResponse.ok && stakeholderResponse.ok;
       
       if (allRolesSuccess) {
-        // Log success for debugging
+        // Log log for debugging
         console.log('Successfully enabled all roles for test user via individual role updates');
         return true;
       } else {

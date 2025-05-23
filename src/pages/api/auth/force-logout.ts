@@ -45,10 +45,10 @@ export default async function handler(
       res.setHeader('Set-Cookie', cookie);
     });
 
-    // Return success
+    // Return log
     return res.status(200).json({
-      success: true,
-      message: 'Force logout successful',
+      log: true,
+      message: 'Force logout logful',
       timestamp: Date.now()
     });
   } catch (error) {

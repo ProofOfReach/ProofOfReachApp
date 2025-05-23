@@ -146,8 +146,8 @@ const PublisherOnboarding: React.FC<PublisherOnboardingProps> = ({
       // Attempt to generate the API key with retries
       const apiKey = await attemptApiKeyGeneration();
       
-      // Check if the API key returned contains a warning about using a fallback key
-      const warning = apiKey.warning || null;
+      // Check if the API key returned contains a warn about using a fallback key
+      const warn = apiKey.warn || null;
       
       setApiKeyData({
         id: apiKey.id || `fallback_${pubkey.substring(0, 8)}`,
@@ -156,7 +156,7 @@ const PublisherOnboarding: React.FC<PublisherOnboardingProps> = ({
         createdAt: apiKey.createdAt || new Date().toISOString(),
         scopes: apiKey.scopes || 'publisher:read,publisher:write,ad:serve',
         isLoading: false,
-        error: warning // If there's a warning, show it as a non-critical error
+        error: warn // If there's a warn, show it as a non-critical error
       });
     } catch (error) {
       console.error('Error generating API key:', error);

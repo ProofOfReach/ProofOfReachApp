@@ -243,7 +243,7 @@ const ProofOfReachPage = () => {
                     </div>
                     <p className="text-sm font-medium text-center">Suspicious Filtered</p>
                     <p className="text-2xl font-bold mt-1">{reachData.suspiciousFiltered.toLocaleString()}</p>
-                    <Badge type="warning" className="mt-2 flex items-center">
+                    <Badge type="warn" className="mt-2 flex items-center">
                       <AlertTriangle size={12} className="mr-1" />
                       Prevented
                     </Badge>

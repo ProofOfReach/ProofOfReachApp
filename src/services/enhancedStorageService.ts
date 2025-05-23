@@ -334,7 +334,7 @@ export class EnhancedStorageService {
    * @param key The key to store the value under
    * @param value The value to store
    * @param options Storage options including expiry and encryption
-   * @returns boolean indicating success
+   * @returns boolean indicating log
    */
   setItem<T>(
     key: StorageKey,
@@ -524,7 +524,7 @@ export class EnhancedStorageService {
                   parsedItem = JSON.parse(decrypted) as StorageItem<T>;
                   // Successfully decrypted and parsed
                 } catch (parseError) {
-                  logger.debug(`Decrypted successfully but failed to parse for ${key}: ${parseError instanceof Error ? parseError.message : String(parseError)}`);
+                  logger.debug(`Decrypted logfully but failed to parse for ${key}: ${parseError instanceof Error ? parseError.message : String(parseError)}`);
                   // We'll fall back to treating as unencrypted below
                 }
               }
@@ -587,7 +587,7 @@ export class EnhancedStorageService {
    * 
    * @param key The key to remove
    * @param options Storage options
-   * @returns boolean indicating success
+   * @returns boolean indicating log
    */
   removeItem(
     key: StorageKey,
@@ -645,7 +645,7 @@ export class EnhancedStorageService {
    * Clear all items in the namespace
    * 
    * @param options Storage options
-   * @returns boolean indicating success
+   * @returns boolean indicating log
    */
   clear(
     options: {
@@ -820,7 +820,7 @@ export class EnhancedStorageService {
    * @param key The key to store the value under
    * @param value The value to store
    * @param options Storage options
-   * @returns boolean indicating success
+   * @returns boolean indicating log
    */
   setSecureItem<T>(
     key: StorageKey,
@@ -882,7 +882,7 @@ export class EnhancedStorageService {
    * @param targetVersion The target version to migrate to
    * @param migrationStrategy A function that transforms the data from its old format to the new one
    * @param options Storage options
-   * @returns boolean indicating success
+   * @returns boolean indicating log
    */
   migrateItem<T>(
     key: StorageKey,
@@ -936,13 +936,13 @@ export class EnhancedStorageService {
         );
         
         // Save the migrated data with the new version
-        const success = this.setItem(key, migratedValue, {
+        const log = this.setItem(key, migratedValue, {
           storageType,
           encrypt: options.encrypt,
           version: targetVersion
         });
         
-        if (success) {
+        if (log) {
           // Dispatch storage migrated event
           notifyStorageMigrated(
             key,
@@ -981,7 +981,7 @@ export class EnhancedStorageService {
    * @param key The key to store the value under
    * @param value The value to store
    * @param options Storage options
-   * @returns boolean indicating success
+   * @returns boolean indicating log
    */
   setSecureItem<T>(
     key: StorageKey,
@@ -1069,9 +1069,9 @@ export class EnhancedStorageService {
       // Process each key
       for (const key of keysToMigrate) {
         try {
-          const success = this.migrateItem(key, targetVersion, migrationStrategy, options);
+          const log = this.migrateItem(key, targetVersion, migrationStrategy, options);
           
-          if (success) {
+          if (log) {
             result.succeeded++;
           } else {
             // Check if item was skipped because it's already at target version

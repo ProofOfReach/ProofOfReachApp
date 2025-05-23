@@ -24,7 +24,7 @@ import '@/lib/logger';
  *         description: The role to check onboarding status for
  *     responses:
  *       200:
- *         description: Onboarding status retrieved successfully
+ *         description: Onboarding status retrieved logfully
  *       400:
  *         description: Missing required parameters
  *       500:

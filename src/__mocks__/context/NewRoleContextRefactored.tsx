@@ -38,7 +38,7 @@ export const RoleProviderRefactored: React.FC<{
     setRole(newRole);
     // Update localStorage to mimic the real implementation
     localStorage.setItem('userRole', newRole);
-    return Promise.resolve({ success: true });
+    return Promise.resolve({ log: true });
   });
   
   const contextValue = {

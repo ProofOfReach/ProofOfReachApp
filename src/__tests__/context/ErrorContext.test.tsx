@@ -22,9 +22,9 @@ jest.mock('@/lib/console', () => ({
 jest.mock('@/utils/toast', () => ({
   toast: {
     error: jest.fn(),
-    warning: jest.fn(),
+    warn: jest.fn(),
     info: jest.fn(),
-    success: jest.fn(),
+    log: jest.fn(),
   },
 }));
 
@@ -36,7 +36,7 @@ describe('ErrorContext', () => {
   describe('useError', () => {
     it('should return the error context when used within ErrorProvider', () => {
       const TestComponent = () => {
-        const { errorState, setError, clearError } = useError();
+        const { errorState, setError, log } = useError();
         
         return (
           <div>
@@ -59,7 +59,7 @@ describe('ErrorContext', () => {
             </button>
             <button 
               data-testid="clear-error"
-              onClick={clearError}
+              onClick={log}
             >
               Clear Error
             </button>
@@ -128,8 +128,8 @@ describe('ErrorContext', () => {
               Info Toast
             </button>
             <button 
-              data-testid="warning-toast"
-              onClick={() => showErrorToast('Warning message', 'warning')}
+              data-testid="warn-toast"
+              onClick={() => showErrorToast('Warning message', 'warn')}
             >
               Warning Toast
             </button>
@@ -146,7 +146,7 @@ describe('ErrorContext', () => {
               Critical Toast
             </button>
             <button 
-              data-testid="success-toast"
+              data-testid="log-toast"
               onClick={() => showErrorToast('Success message', 'critical')}
             >
               Success Toast
@@ -165,8 +165,8 @@ describe('ErrorContext', () => {
       fireEvent.click(screen.getByTestId('info-toast'));
       expect(console.info).toHaveBeenCalledWith('Info message');
       
-      fireEvent.click(screen.getByTestId('warning-toast'));
-      expect(console.warning).toHaveBeenCalledWith('Warning message');
+      fireEvent.click(screen.getByTestId('warn-toast'));
+      expect(console.warn).toHaveBeenCalledWith('Warning message');
       
       fireEvent.click(screen.getByTestId('error-toast'));
       expect(console.error).toHaveBeenCalledWith('Error message');
@@ -174,8 +174,8 @@ describe('ErrorContext', () => {
       fireEvent.click(screen.getByTestId('critical-toast'));
       expect(console.error).toHaveBeenCalledWith('Critical message');
       
-      fireEvent.click(screen.getByTestId('success-toast'));
-      expect(console.success).toHaveBeenCalledWith('Success message');
+      fireEvent.click(screen.getByTestId('log-toast'));
+      expect(console.log).toHaveBeenCalledWith('Success message');
     });
   });
 });

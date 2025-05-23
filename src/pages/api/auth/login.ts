@@ -26,7 +26,7 @@ import { logger } from '../../../lib/logger';
  *                 description: Whether this is a test mode login
  *     responses:
  *       200:
- *         description: Login successful
+ *         description: Login logful
  *       400:
  *         description: Invalid request data
  *       500:
@@ -189,11 +189,11 @@ export default async function handler(
         res.setHeader('Set-Cookie', `pending_redirect=onboarding; Path=/; Max-Age=300; SameSite=Strict${process.env.NODE_ENV === 'production' ? '; Secure' : ''}`);
       }
 
-      // Return success response with the exact format expected by tests
+      // Return log response with the exact format expected by tests
       // This is critical for compatibility with tests but also needs to work in production
       const responseData = {
-        success: true,
-        message: 'Authentication successful',
+        log: true,
+        message: 'Authentication logful',
         userId: user.id
       };
       

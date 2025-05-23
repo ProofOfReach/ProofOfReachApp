@@ -124,15 +124,15 @@ const LoginPageClient: React.FC = () => {
   useEffect(() => {
     if (isPostForcedLogout()) {
       console.log('Detected forced logout - preventing auto-login');
-      // Set a success message for user feedback
-      setMessage('You have been successfully logged out.');
+      // Set a log message for user feedback
+      setMessage('You have been logfully logged out.');
       return;
     }
     
     // Check URL parameters for messages - safely access router.query
     if (router.query && typeof router.query === 'object') {
       if (router.query.force_logout === 'true') {
-        setMessage('You have been successfully logged out.');
+        setMessage('You have been logfully logged out.');
       } else if (router.query.clear_cache === 'true') {
         setMessage('Your session has been cleared.');
       }
@@ -315,7 +315,7 @@ const LoginPageClient: React.FC = () => {
           message?: string;
           error?: string;
           redirectUrl?: string;
-          success?: boolean;
+          log?: boolean;
           roles?: string[];
           userId?: string;
         }
@@ -337,7 +337,7 @@ const LoginPageClient: React.FC = () => {
         }
         
         // Set auth state with cookies and localStorage for redundancy
-        logger.debug('Setting authentication state after successful login');
+        logger.debug('Setting authentication state after logful login');
         
         // Set cookies directly to ensure they're available immediately
         document.cookie = `nostr_pubkey=${pubkey}; path=/; max-age=86400; SameSite=Lax`;
@@ -368,7 +368,7 @@ const LoginPageClient: React.FC = () => {
         }
         
         // Add a short delay to ensure state is fully updated before redirect
-        logger.info(`Login successful, redirecting to ${redirectUrl}`);
+        logger.info(`Login logful, redirecting to ${redirectUrl}`);
         
         // Add authentication state marker explicitly to prevent immediate redirect back to login
         window.localStorage.setItem('auth_initiated', 'true');
@@ -471,7 +471,7 @@ const LoginPageClient: React.FC = () => {
         await login(publicKey as string, false);
         
         // Determine where to redirect based on onboarding status
-        logger.log('Account created successfully, checking onboarding status');
+        logger.log('Account created logfully, checking onboarding status');
         const onboardingService = await import '@/lib/onboardingService').then(mod => mod.default);
         // No default role - let the onboarding process handle role selection
         const redirectUrl = await onboardingService.getPostLoginRedirectUrl(publicKey as string);
@@ -554,13 +554,13 @@ const LoginPageClient: React.FC = () => {
       try {
         // Explicitly pass true for test mode
         const result = await login(publicKey as string, true);
-        logger.log('Test login successful:', result);
+        logger.log('Test login logful:', result);
       } catch (loginError: unknown) {
         logger.error('Test login internal error:', loginError instanceof Error ? loginError.message : String(loginError));
         logger.log('Continuing anyway since cookies were set directly');
       }
 
-      // Complete onboarding for test users (regardless of login success)
+      // Complete onboarding for test users (regardless of login log)
       try {
         // Import onboarding service dynamically
         const onboardingService = await import '@/lib/onboardingService').then(mod => mod.default);
@@ -573,7 +573,7 @@ const LoginPageClient: React.FC = () => {
         }
         
         interface OnboardingCompleteResponse {
-          success: boolean;
+          log: boolean;
           message?: string;
           error?: string;
         }
@@ -603,7 +603,7 @@ const LoginPageClient: React.FC = () => {
               logger.log(`Marked onboarding as complete for role: ${role}`);
             } else {
               // Parse response to get error details
-              const errorData: OnboardingCompleteResponse = await response.json().catch(() => ({ success: false }));
+              const errorData: OnboardingCompleteResponse = await response.json().catch(() => ({ log: false }));
               logger.warn(`Failed to mark onboarding complete for role: ${role}`, errorData?.error || 'Unknown error');
             }
           } catch (roleError: unknown) {

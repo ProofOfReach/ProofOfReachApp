@@ -24,7 +24,7 @@ import '@/lib/logger';
  *                 enum: [user, admin, advertiser, publisher, developer, stakeholder]
  *     responses:
  *       200:
- *         description: Role changed successfully
+ *         description: Role changed logfully
  *       400:
  *         description: Invalid role or missing parameter
  *       401:
@@ -68,8 +68,8 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       const updatedUserData = await changeUserRole(userId, role);
       
       return res.status(200).json({
-        success: true,
-        message: `Role changed to ${role} successfully`,
+        log: true,
+        message: `Role changed to ${role} logfully`,
         data: updatedUserData
       });
     } catch (error: any) {

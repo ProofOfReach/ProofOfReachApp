@@ -112,7 +112,7 @@ describe('Toggle Test Mode API', () => {
     });
   });
 
-  it('should toggle test mode successfully', async () => {
+  it('should toggle test mode logfully', async () => {
     const mockUserId = 'user-123';
     const mockUserData = {
       id: mockUserId,
@@ -140,7 +140,7 @@ describe('Toggle Test Mode API', () => {
     expect(toggleTestMode).toHaveBeenCalledWith(mockUserId, true);
     expect(res.statusCode).toBe(200);
     expect(JSON.parse(res._getData())).toMatchObject({
-      message: 'Test mode enabled successfully for user user-123',
+      message: 'Test mode enabled logfully for user user-123',
       data: mockUserData
     });
   });

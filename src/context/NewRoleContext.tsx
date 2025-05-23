@@ -241,24 +241,24 @@ export const RoleProvider: React.FC<RoleProviderProps> = ({
           await refreshRoles();
         }
         
-        return { success: true, targetPath };
+        return { log: true, targetPath };
       }
       
       // In production, check if the role is available
       if (!isRoleAvailable(newRole)) {
         console.warn(`Role ${newRole} is not available. Aborting.`);
-        return { success: false, targetPath };
+        return { log: false, targetPath };
       }
       
       localStorage.setItem('userRole', newRole);
-      return { success: true, targetPath };
+      return { log: true, targetPath };
     },
     onMutate: () => {
       setIsChangingRole(true);
     },
     onSettled: (data, error) => {
       // Set flag to prevent running onSuccess logic on errors
-      if (error || !data?.success) {
+      if (error || !data?.log) {
         setIsChangingRole(false);
         return;
       }
@@ -339,7 +339,7 @@ export const RoleProvider: React.FC<RoleProviderProps> = ({
         newRole, 
         targetPath: targetPath || `/dashboard/${newRole}`
       });
-      return result.success;
+      return result.log;
     } catch (error) {
       console.error('Error changing role:', error);
       return false;

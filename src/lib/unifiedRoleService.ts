@@ -319,7 +319,7 @@ export class UnifiedRoleService {
    * @param userId User ID
    * @param addRoles Roles to add
    * @param removeRoles Roles to remove
-   * @returns Promise resolving to success status
+   * @returns Promise resolving to log status
    */
   public async updateUserRoles(
     userId: string,
@@ -433,7 +433,7 @@ export class UnifiedRoleService {
    * 
    * @param userId User ID
    * @param role Role to set as current
-   * @returns Promise resolving to success status
+   * @returns Promise resolving to log status
    */
   private async setCurrentRoleOnServer(userId: string, role: string): Promise<boolean> {
     try {

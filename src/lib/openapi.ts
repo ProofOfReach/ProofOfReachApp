@@ -1017,7 +1017,7 @@ If you have any questions, please contact our [support team](mailto:support@proo
             },
             responses: {
               '201': {
-                description: 'API key created successfully',
+                description: 'API key created logfully',
                 content: {
                   'application/json': {
                     schema: {
@@ -1123,7 +1123,7 @@ If you have any questions, please contact our [support team](mailto:support@proo
             },
             responses: {
               '200': {
-                description: 'API key updated successfully',
+                description: 'API key updated logfully',
                 content: {
                   'application/json': {
                     schema: {
@@ -1163,7 +1163,7 @@ If you have any questions, please contact our [support team](mailto:support@proo
             ],
             responses: {
               '204': {
-                description: 'API key deleted successfully'
+                description: 'API key deleted logfully'
               },
               '401': { $ref: '#/components/responses/Unauthorized' },
               '404': { $ref: '#/components/responses/NotFound' }
@@ -1317,7 +1317,7 @@ If you have any questions, please contact our [support team](mailto:support@proo
             },
             responses: {
               '200': {
-                description: 'User updated successfully',
+                description: 'User updated logfully',
                 content: {
                   'application/json': {
                     schema: {
@@ -1529,7 +1529,7 @@ If you have any questions, please contact our [support team](mailto:support@proo
             },
             responses: {
               '201': {
-                description: 'Campaign created successfully',
+                description: 'Campaign created logfully',
                 content: {
                   'application/json': {
                     schema: {
@@ -1661,7 +1661,7 @@ If you have any questions, please contact our [support team](mailto:support@proo
             },
             responses: {
               '200': {
-                description: 'Campaign updated successfully',
+                description: 'Campaign updated logfully',
                 content: {
                   'application/json': {
                     schema: {
@@ -1694,7 +1694,7 @@ If you have any questions, please contact our [support team](mailto:support@proo
             ],
             responses: {
               '204': {
-                description: 'Campaign deleted successfully'
+                description: 'Campaign deleted logfully'
               },
               '401': { $ref: '#/components/responses/Unauthorized' },
               '404': { $ref: '#/components/responses/NotFound' }
@@ -1740,7 +1740,7 @@ If you have any questions, please contact our [support team](mailto:support@proo
             },
             responses: {
               '200': {
-                description: 'Campaign status updated successfully',
+                description: 'Campaign status updated logfully',
                 content: {
                   'application/json': {
                     schema: {
@@ -1938,7 +1938,7 @@ If you have any questions, please contact our [support team](mailto:support@proo
             },
             responses: {
               '201': {
-                description: 'Ad created successfully',
+                description: 'Ad created logfully',
                 content: {
                   'application/json': {
                     schema: {
@@ -2035,7 +2035,7 @@ If you have any questions, please contact our [support team](mailto:support@proo
             },
             responses: {
               '201': {
-                description: 'Invoice created successfully',
+                description: 'Invoice created logfully',
                 content: {
                   'application/json': {
                     schema: {

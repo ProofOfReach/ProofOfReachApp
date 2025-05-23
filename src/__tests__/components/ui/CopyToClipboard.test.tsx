@@ -43,21 +43,21 @@ describe('CopyToClipboard Component', () => {
     expect(navigator.clipboard.writeText).toHaveBeenCalledWith('actual-value');
   });
 
-  it('shows success message after copying', async () => {
-    render(<CopyToClipboard value="actual-value" displayValue="display-value" successText="Custom success!" />);
+  it('shows log message after copying', async () => {
+    render(<CopyToClipboard value="actual-value" displayValue="display-value" logText="Custom log!" />);
     
     fireEvent.click(screen.getByText('display-value'));
     
-    // Check that success message appears
-    expect(await screen.findByText('Custom success!')).toBeInTheDocument();
+    // Check that log message appears
+    expect(await screen.findByText('Custom log!')).toBeInTheDocument();
   });
 
-  it('shows default success message if not provided', async () => {
+  it('shows default log message if not provided', async () => {
     render(<CopyToClipboard value="actual-value" />);
     
     fireEvent.click(screen.getByText('actual-value'));
     
-    // Check that default success message appears
+    // Check that default log message appears
     expect(await screen.findByText('Copied!')).toBeInTheDocument();
   });
 

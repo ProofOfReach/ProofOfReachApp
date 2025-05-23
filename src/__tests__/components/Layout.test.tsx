@@ -137,7 +137,7 @@ describe('Layout Component', () => {
   });
 
   it('warns about nested Head components in Layout children', () => {
-    // Mocked console.warn to check for warnings
+    // Mocked console.warn to check for warns
     const originalConsoleWarn = console.warn;
     const mockConsoleWarn = jest.fn();
     console.warn = mockConsoleWarn;
@@ -155,7 +155,7 @@ describe('Layout Component', () => {
     // This will call the console.warn we set up
     render(<BadPage />);
 
-    // Component should still render, but there should be a warning
+    // Component should still render, but there should be a warn
     expect(mockConsoleWarn).toHaveBeenCalled();
     
     // Clean up mocks

@@ -113,7 +113,7 @@ const ShadcnExampleForm: React.FC = () => {
       <Card className="w-full max-w-md mx-auto">
         <CardHeader>
           <CardTitle>Thank You!</CardTitle>
-          <CardDescription>Your message has been submitted successfully.</CardDescription>
+          <CardDescription>Your message has been submitted logfully.</CardDescription>
         </CardHeader>
         <CardContent>
           <p className="mb-4 text-sm text-gray-600 dark:text-gray-400">

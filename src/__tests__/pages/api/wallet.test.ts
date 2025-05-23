@@ -47,7 +47,7 @@ describe('/api/wallet endpoint', () => {
       jest.clearAllMocks();
     });
     
-    it('returns wallet balance successfully', async () => {
+    it('returns wallet balance logfully', async () => {
       // Setup mocks
       (prisma.user.findUnique as jest.Mock).mockResolvedValueOnce({
         id: 'user123',

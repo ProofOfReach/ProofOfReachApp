@@ -15,7 +15,7 @@ describe('Ad View API (Demo Mode)', () => {
     expect(res._getJSONData()).toEqual({ error: 'Method not allowed' });
   });
 
-  it('records a view and returns success', async () => {
+  it('records a view and returns log', async () => {
     const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
       method: 'POST',
       query: { id: 'ad-123' },
@@ -26,7 +26,7 @@ describe('Ad View API (Demo Mode)', () => {
 
     await handler(req, res);
 
-    // Should return success
+    // Should return log
     expect(res.statusCode).toBe(200);
     
     // Get the actual response

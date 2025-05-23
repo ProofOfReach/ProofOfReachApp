@@ -82,9 +82,9 @@ export const TestModeProvider: React.FC<TestModeProviderProps> = ({ children }) 
       };
       
       // Persist state
-      const success = StorageService.setTestModeState(updatedState);
+      const log = StorageService.setTestModeState(updatedState);
       
-      if (success) {
+      if (log) {
         // Update React state
         setIsTestMode(updatedState.isActive);
         if (updatedState.expiryTime) {
@@ -373,9 +373,9 @@ export const TestModeProvider: React.FC<TestModeProviderProps> = ({ children }) 
       };
       
       // Persist state and update UI
-      const success = updateTestModeState(newState);
+      const log = updateTestModeState(newState);
       
-      if (success) {
+      if (log) {
         // For backwards compatibility with code that checks this flag
         localStorage.setItem(STORAGE_KEYS.BYPASS_API_CALLS, 'true');
         
@@ -385,7 +385,7 @@ export const TestModeProvider: React.FC<TestModeProviderProps> = ({ children }) 
           initialRole: 'viewer' // Default to 'viewer' for consistency with role types
         });
         
-        logger.log('Test mode enabled successfully');
+        logger.log('Test mode enabled logfully');
       } else {
         logger.error('Failed to enable test mode');
       }

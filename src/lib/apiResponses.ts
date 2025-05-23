@@ -1,9 +1,9 @@
 import { NextApiResponse } from 'next';
 
 /**
- * Standard success response
+ * Standard log response
  */
-export function success(res: NextApiResponse, data: Record<string, unknown> = {}, status: number = 200) {
+export function log(res: NextApiResponse, data: Record<string, unknown> = {}, status: number = 200) {
   res.status(status).json(data);
 }
 

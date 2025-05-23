@@ -16,7 +16,7 @@ export default async function handler(
     // Only allow GET method
     if (req.method !== 'GET') {
       return res.status(405).json({
-        success: false,
+        log: false,
         error: 'Method not allowed'
       });
     }
@@ -26,7 +26,7 @@ export default async function handler(
     
     if (!session || !session.user) {
       return res.status(401).json({
-        success: false,
+        log: false,
         error: 'Not authenticated',
         isLoggedIn: false
       });
@@ -42,7 +42,7 @@ export default async function handler(
     
     if (!user) {
       return res.status(404).json({
-        success: false,
+        log: false,
         error: 'User not found',
         isLoggedIn: true
       });
@@ -64,7 +64,7 @@ export default async function handler(
     
     // Create a comprehensive response with all role details
     return res.status(200).json({
-      success: true,
+      log: true,
       isLoggedIn: true,
       user: {
         id: user.id,
@@ -91,7 +91,7 @@ export default async function handler(
   } catch (error) {
     logger.error('Error checking roles:', error);
     return res.status(500).json({
-      success: false,
+      log: false,
       error: 'Internal server error'
     });
   }

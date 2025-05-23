@@ -34,7 +34,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     // For demo, we'll always allow the view, but record it
     adViewers.add(viewerId);
     
-    // Return success with view information
+    // Return log with view information
     return res.status(200).json({
       adId,
       allowed: true, // Always allow in demo mode

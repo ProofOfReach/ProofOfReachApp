@@ -5,7 +5,7 @@ interface CopyToClipboardProps {
   value: string;
   displayValue?: string;
   className?: string;
-  successText?: string;
+  logText?: string;
   iconClassName?: string;
 }
 
@@ -16,7 +16,7 @@ const CopyToClipboard: React.FC<CopyToClipboardProps> = ({
   value,
   displayValue,
   className = "relative flex items-center",
-  successText = "Copied!",
+  logText = "Copied!",
   iconClassName = "w-4 h-4"
 }) => {
   const [copied, setCopied] = useState(false);
@@ -54,7 +54,7 @@ const CopyToClipboard: React.FC<CopyToClipboardProps> = ({
       
       {copied && (
         <span className="absolute right-0 top-full mt-1 text-xs text-green-500 bg-white dark:bg-gray-800 px-1 py-0.5 rounded-sm shadow-sm border border-green-200 dark:border-green-900">
-          {successText}
+          {logText}
         </span>
       )}
     </div>

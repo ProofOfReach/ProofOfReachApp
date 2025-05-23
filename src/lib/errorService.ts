@@ -115,7 +115,7 @@ export class ErrorService {
     
     // Add to trace context if correlation ID is provided
     if (options?.correlationId) {
-      this.addErrorToTraceContext(options.correlationId, errorState);
+      this.logToTraceContext(options.correlationId, errorState);
     }
     
     // Log the error
@@ -132,7 +132,7 @@ export class ErrorService {
    * 
    * @param errorId The ID of the error to clear
    */
-  public clearError(errorId: string): void {
+  public log(errorId: string): void {
     const error = this.errors[errorId];
     if (error) {
       error.active = false;
@@ -284,7 +284,7 @@ export class ErrorService {
         firstError?.message || 'Validation failed',
         component,
         'validation',
-        'warning',
+        'warn',
         {
           userFacing: true,
           errors,
@@ -345,7 +345,7 @@ export class ErrorService {
    * @param listener The listener function
    * @returns A function to remove the listener
    */
-  public addErrorListener(listener: (error: any) => void): () => void {
+  public log(listener: (error: any) => void): () => void {
     this.listeners.push(listener);
     
     return () => {
@@ -407,7 +407,7 @@ export class ErrorService {
    * @param correlationId The correlation ID
    * @param error The error to add
    */
-  private addErrorToTraceContext(correlationId: string, error: any): void {
+  private logToTraceContext(correlationId: string, error: any): void {
     const context = this.traceContexts[correlationId] || { lastUpdated: Date.now() };
     
     if (!context.errors) {
@@ -446,7 +446,7 @@ export class ErrorService {
       case 'error':
         logger.error(error.message, logData);
         break;
-      case 'warning':
+      case 'warn':
         logger.warn(error.message, logData);
         break;
       case 'info':

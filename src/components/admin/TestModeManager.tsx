@@ -80,7 +80,7 @@ const TestModeManager: React.FC = () => {
     }
   };
   
-  // If test mode is not available in this environment, show warning
+  // If test mode is not available in this environment, show warn
   if (!isTestModeAllowed) {
     return (
       <div className="rounded-lg bg-yellow-50 dark:bg-yellow-900/20 p-4 border border-yellow-200 dark:border-yellow-800">

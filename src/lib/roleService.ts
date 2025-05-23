@@ -52,7 +52,7 @@ export class RoleService {
    * 
    * @param role The new role to set
    * @param skipSave If true, don't save to localStorage (useful for temporary changes)
-   * @returns Promise that resolves to true if successful
+   * @returns Promise that resolves to true if logful
    */
   public static async changeRole(
     role: string, 

@@ -8,7 +8,7 @@
 import React, { useEffect, useState } from 'react';
 import '@/types/errors';
 
-export type ErrorToastType = 'error' | 'warning' | 'network' | 'permission' | 'validation';
+export type ErrorToastType = 'error' | 'warn' | 'network' | 'permission' | 'validation';
 
 export interface ErrorToastProps {
   message: string;
@@ -65,7 +65,7 @@ const ErrorToast: React.FC<ErrorToastProps> = ({
     switch (errorType) {
       case 'error':
         return 'bg-red-100 text-red-800';
-      case 'warning':
+      case 'warn':
       case 'validation':
         return 'bg-amber-100 text-amber-800';
       case 'network':
@@ -86,7 +86,7 @@ const ErrorToast: React.FC<ErrorToastProps> = ({
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
           </svg>
         );
-      case 'warning':
+      case 'warn':
       case 'validation':
         return (
           <svg className="h-5 w-5 text-amber-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">

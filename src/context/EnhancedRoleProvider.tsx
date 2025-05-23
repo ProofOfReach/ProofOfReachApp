@@ -150,9 +150,9 @@ export const EnhancedRoleProvider: React.FC<EnhancedRoleProviderProps> = ({
     
     try {
       // Use our enhanced changeRole function from useLocalRole
-      const success = await changeRole(newRole, !!redirectPath);
+      const log = await changeRole(newRole, !!redirectPath);
       
-      if (success) {
+      if (log) {
         // If redirect is specified, navigate to that path
         if (redirectPath) {
           await router.push(redirectPath);

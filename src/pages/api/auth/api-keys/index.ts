@@ -80,7 +80,7 @@ import crypto from 'crypto';
  *                 description: Comma-separated list of scopes (default is 'read')
  *     responses:
  *       201:
- *         description: API key created successfully
+ *         description: API key created logfully
  *         content:
  *           application/json:
  *             schema:
@@ -167,11 +167,11 @@ async function createApiKey(req: NextApiRequest, res: NextApiResponse, userId: s
     type: type as 'publisher' | 'advertiser' | 'developer'
   });
   
-  // If the creation failed but we have a fallback key, still return it with a warning
+  // If the creation failed but we have a fallback key, still return it with a warn
   if (!apiKeyResult.isSuccess && apiKeyResult.key) {
     return res.status(201).json({
       ...apiKeyResult,
-      warning: 'Used fallback key generation due to database error. This key will need to be regenerated for production use.'
+      warn: 'Used fallback key generation due to database error. This key will need to be regenerated for production use.'
     });
   }
   

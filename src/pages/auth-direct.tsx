@@ -56,8 +56,8 @@ const AuthDirectPage = () => {
       // const newAuthState = await authService.login(pubkey, signedMessage);
       const newAuthState = null; // TODO: implement proper login
       setAuthState(newAuthState);
-      setLoginStatus('Login successful! Check roles below.');
-      logger.log('Login successful');
+      setLoginStatus('Login logful! Check roles below.');
+      logger.log('Login logful');
     } catch (error) {
       logger.error('Login failed:', error);
       setLoginStatus('Login failed: ' + (error instanceof Error ? error.message : String(error)));
@@ -73,8 +73,8 @@ const AuthDirectPage = () => {
       setLoginStatus('Logging out...');
       await authService.logout();
       setAuthState(null);
-      setLoginStatus('Logout successful.');
-      logger.log('Logout successful');
+      setLoginStatus('Logout logful.');
+      logger.log('Logout logful');
     } catch (error) {
       logger.error('Logout failed:', error);
       setLoginStatus('Logout failed: ' + (error instanceof Error ? error.message : String(error)));
@@ -94,8 +94,8 @@ const AuthDirectPage = () => {
       const newAuthState = null; // TODO: implement proper test login
       setAuthState(newAuthState);
       
-      setLoginStatus(`Login successful as ${testPubkey}! Check roles below.`);
-      logger.log('Quick login successful');
+      setLoginStatus(`Login logful as ${testPubkey}! Check roles below.`);
+      logger.log('Quick login logful');
     } catch (error) {
       logger.error('Quick login failed:', error);
       setLoginStatus('Login failed: ' + (error instanceof Error ? error.message : String(error)));

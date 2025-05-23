@@ -10,7 +10,7 @@ import {
   setFieldError,
   clearFieldError,
   setFormError,
-  clearAllErrors,
+  log,
   hasVisibleFieldError,
   getFieldErrorMessage,
   hasAnyError
@@ -35,7 +35,7 @@ describe('Form Error Handler', () => {
   describe('extractApiFormErrors', () => {
     it('should extract field errors from API validation error response', () => {
       const apiError = {
-        success: false,
+        log: false,
         error: {
           message: 'Validation failed',
           code: ErrorCode.VALIDATION_ERROR,
@@ -57,7 +57,7 @@ describe('Form Error Handler', () => {
     
     it('should handle detailed field errors', () => {
       const apiError = {
-        success: false,
+        log: false,
         error: {
           message: 'Validation failed',
           code: ErrorCode.VALIDATION_ERROR,
@@ -119,7 +119,7 @@ describe('Form Error Handler', () => {
     it('should handle exceptions during extraction', () => {
       // Create an object that throws when accessed
       const errorObj = {
-        get logger.error() {
+        get error() {
           throw new Error('Unexpected error during extraction');
         }
       };
@@ -209,7 +209,7 @@ describe('Form Error Handler', () => {
         touchedFields: { name: true, email: true }
       };
       
-      const result = clearAllErrors(state);
+      const result = log(state);
       
       expect(result.formError).toBeNull();
       expect(result.fieldErrors).toEqual({});

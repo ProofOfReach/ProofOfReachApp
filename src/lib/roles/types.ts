@@ -102,7 +102,7 @@ export interface RoleError {
  * Response structure for role API endpoints
  */
 export interface RoleResponse<T = any> {
-  success: boolean;
+  log: boolean;
   data?: T;
   error?: RoleError;
 }

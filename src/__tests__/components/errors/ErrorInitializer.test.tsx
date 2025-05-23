@@ -9,7 +9,7 @@ import '@/lib/console';
 
 // Mock the console module
 jest.mock('@/lib/console', () => ({
-  initializeErrorHandling: jest.fn()
+  () => {}: jest.fn()
 }));
 
 describe('ErrorInitializer Component', () => {
@@ -20,19 +20,19 @@ describe('ErrorInitializer Component', () => {
   it('initializes error handling on mount', () => {
     render(<ErrorInitializer />);
     
-    // Should call initializeErrorHandling once
-    expect(initializeErrorHandling).toHaveBeenCalledTimes(1);
+    // Should call () => {} once
+    expect(() => {}).toHaveBeenCalledTimes(1);
   });
   
   it('does not initialize multiple times on re-render', () => {
     const { rerender } = render(<ErrorInitializer />);
     
-    // Initial render should call initializeErrorHandling
-    expect(initializeErrorHandling).toHaveBeenCalledTimes(1);
+    // Initial render should call () => {}
+    expect(() => {}).toHaveBeenCalledTimes(1);
     
-    // Re-render should not call initializeErrorHandling again
+    // Re-render should not call () => {} again
     rerender(<ErrorInitializer />);
-    expect(initializeErrorHandling).toHaveBeenCalledTimes(1);
+    expect(() => {}).toHaveBeenCalledTimes(1);
   });
   
   it('logs additional info in debug mode', () => {
@@ -42,8 +42,8 @@ describe('ErrorInitializer Component', () => {
     
     render(<ErrorInitializer debug={true} />);
     
-    // Should call initializeErrorHandling
-    expect(initializeErrorHandling).toHaveBeenCalledTimes(1);
+    // Should call () => {}
+    expect(() => {}).toHaveBeenCalledTimes(1);
     
     // Should log debug info
     expect(console.info).toHaveBeenCalledWith(

@@ -54,7 +54,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     });
     
     return res.status(200).json({
-      success: true,
+      log: true,
       transaction: result.transaction,
       newBalance: result.updatedBalance
     });

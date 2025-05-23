@@ -28,7 +28,7 @@ export const ROLE_EVENTS = {
 export const SYSTEM_EVENTS = {
   CONFIG_CHANGED: 'system:config-changed',
   ERROR: 'system:error',
-  WARNING: 'system:warning',
+  WARNING: 'system:warn',
   NOTIFICATION: 'system:notification',
   STORAGE_CHANGED: 'system:storage-changed',
   STORAGE_CLEARED: 'system:storage-cleared',
@@ -131,7 +131,7 @@ export type SystemEventPayloads = {
   [SYSTEM_EVENTS.NOTIFICATION]: {
     title: string;
     message: string;
-    type: 'info' | 'success' | 'warning' | 'error';
+    type: 'info' | 'log' | 'warn' | 'error';
   };
   [SYSTEM_EVENTS.STORAGE_CHANGED]: {
     key: string;
@@ -149,7 +149,7 @@ export type SystemEventPayloads = {
     fromVersion: number;
     toVersion: number;
     key: string;
-    success: boolean;
+    log: boolean;
     error?: string;
   };
 };

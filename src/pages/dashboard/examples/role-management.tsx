@@ -36,9 +36,9 @@ const RoleManagementPage: NextPage = () => {
       logger.debug(`Attempting to switch role from ${currentRole} to ${role} using redirectless navigation`);
       
       // The true parameter preserves the current path (no redirect)
-      const success = await switchRole(role, true);
+      const log = await switchRole(role, true);
       
-      if (success) {
+      if (log) {
         logger.info(`Successfully switched to ${role} role without page reload`);
       } else {
         logger.error(`Failed to switch to ${role} role`);
