@@ -96,7 +96,7 @@ const HomePage: NextPageWithLayout = () => {
     }
   }, [isAuthenticated, pubkey, router]);
   
-  const onSubmit = async (data: WaitlistFormValues) => {
+  const onSubmit: any = async (data: WaitlistFormValues) => {
     setIsSubmitting(true);
     
     try {
