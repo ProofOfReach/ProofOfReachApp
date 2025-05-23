@@ -55,7 +55,7 @@ class NostrHelpers {
       // For now, just return a deterministic value based on the input for testing
       return `pk_derived_${privateKey.substring(0, 8)}`;
     } catch (error) {
-      logger.error('Error deriving public key', { 
+      logger.log('Error deriving public key', { 
         error: error instanceof Error ? error.message : 'Unknown error' 
       });
       return `pk_error_${Date.now()}`;
@@ -97,7 +97,7 @@ class NostrHelpers {
       const publicKey = await Promise.race([nostrPromise, timeoutPromise]);
       return publicKey;
     } catch (error) {
-      console.error('Timeout or error while waiting for Nostr extension:', error);
+      console.log('Timeout or error while waiting for Nostr extension:', error);
       return null;
     }
   }
@@ -158,7 +158,7 @@ class NostrHelpers {
 
       return pubkey;
     } catch (error) {
-      logger.error('Error getting Nostr public key', { 
+      logger.log('Error getting Nostr public key', { 
         error: error instanceof Error ? error.message : 'Unknown error' 
       });
       throw error;
@@ -201,7 +201,7 @@ class NostrHelpers {
 
       return signedEvent;
     } catch (error) {
-      logger.error('Error signing Nostr event', { 
+      logger.log('Error signing Nostr event', { 
         error: error instanceof Error ? error.message : 'Unknown error' 
       });
       throw error;
@@ -243,7 +243,7 @@ class NostrHelpers {
       
       logger.info('Test mode enabled');
     } catch (error) {
-      logger.error('Error enabling test mode', { 
+      logger.log('Error enabling test mode', { 
         error: error instanceof Error ? error.message : 'Unknown error' 
       });
       throw error;
@@ -261,7 +261,7 @@ class NostrHelpers {
       
       logger.info('Test mode disabled');
     } catch (error) {
-      logger.error('Error disabling test mode', { 
+      logger.log('Error disabling test mode', { 
         error: error instanceof Error ? error.message : 'Unknown error' 
       });
       throw error;
@@ -290,7 +290,7 @@ class NostrHelpers {
             .substring(0, 12);
         }
       } catch (cryptoError) {
-        logger.error('Error generating test keypair', { 
+        logger.log('Error generating test keypair', { 
           error: cryptoError instanceof Error ? cryptoError.message : 'Unknown error' 
         });
       }
@@ -324,7 +324,7 @@ class NostrHelpers {
       
       return keypair;
     } catch (error) {
-      logger.error('Error generating test keypair', { 
+      logger.log('Error generating test keypair', { 
         error: error instanceof Error ? error.message : 'Unknown error' 
       });
       
@@ -474,7 +474,7 @@ export function verifyNostrSignature(pubkey: UserRole, signature: UserRole, chal
     // This is NOT secure and just for demonstration
     return signature.length > 64;
   } catch (error) {
-    logger.error('Error verifying Nostr signature', {
+    logger.log('Error verifying Nostr signature', {
       error: error instanceof Error ? error.message : 'Unknown error'
     });
     return false;
@@ -501,7 +501,7 @@ export function generateRegularAccount(): TestKeypair {
           .substring(0, 64);
       }
     } catch (cryptoError) {
-      logger.error('Error generating regular keypair', { 
+      logger.log('Error generating regular keypair', { 
         error: cryptoError instanceof Error ? cryptoError.message : 'Unknown error' 
       });
     }
@@ -520,7 +520,7 @@ export function generateRegularAccount(): TestKeypair {
     
     return { publicKey, privateKey, npub, nsec };
   } catch (error) {
-    logger.error('Error in generateRegularAccount', {
+    logger.log('Error in generateRegularAccount', {
       error: error instanceof Error ? error.message : 'Unknown error'
     });
     

@@ -55,7 +55,7 @@ async function handleTransactionsRequest(req: NextApiRequest, res: NextApiRespon
       log: true
     });
   } catch (error) {
-    logger.error('Transaction history error:', error);
+    logger.log('Transaction history error:', error);
     if (error instanceof ApiError) {
       return res.status(error.statusCode).json({ error: error.message });
     }

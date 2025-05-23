@@ -104,7 +104,7 @@ const AdvertiserAnalyticsPage = () => {
         
         setLoading(false);
       } catch (error) {
-        console.error("Error fetching analytics data:", error);
+        console.log("Error fetching analytics data:", error);
         setChartError("Failed to load analytics data. Please try again later.");
         setLoading(false);
       }

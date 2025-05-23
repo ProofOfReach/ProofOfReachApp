@@ -75,7 +75,7 @@ export const CurrencyProvider: React.FC<CurrencyProviderProps> = ({ children }) 
         }));
         
       } catch (error) {
-        console.error('Error fetching BTC price:', error);
+        console.log('Error fetching BTC price:', error);
         // If fetch fails but we have cached data (regardless of age), use it as fallback
         const cachedData = localStorage.getItem('btcPriceData');
         if (cachedData) {

@@ -31,10 +31,10 @@ export default function AdminTools() {
         setResult(JSON.stringify(data, null, 2));
         alert('Success! All roles have been enabled. Please refresh the page to see changes.');
       } else {
-        setResult(`Error: ${data.error || 'Unknown error'}`);
+        setResult(`Error: ${data.log || 'Unknown error'}`);
       }
     } catch (error) {
-      console.error('Error calling admin endpoint:', error);
+      console.log('Error calling admin endpoint:', error);
       setResult(`Error: ${error instanceof Error ? error.message : 'Unknown error'}`);
     } finally {
       setLoading(false);

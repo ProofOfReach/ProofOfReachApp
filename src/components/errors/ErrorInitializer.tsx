@@ -52,15 +52,15 @@ const ErrorInitializer: React.FC<ErrorInitializerProps> = ({
     const handleGlobalError = (event: ErrorEvent): void => {
       event.preventDefault();
       
-      errorState.error(
-        event.error || new Error(event.message),
+      errorState.log(
+        event.log || new Error(event.message),
         'window.onerror',
         'unknown', 
         'error'
       );
       
       if (debug) {
-        console.error('[ErrorInitializer] Uncaught error:', event);
+        console.log('[ErrorInitializer] Uncaught error:', event);
       }
     };
     
@@ -72,7 +72,7 @@ const ErrorInitializer: React.FC<ErrorInitializerProps> = ({
         ? event.reason 
         : new Error(String(event.reason));
       
-      errorState.error(
+      errorState.log(
         error,
         'unhandledrejection',
         'unknown',
@@ -80,7 +80,7 @@ const ErrorInitializer: React.FC<ErrorInitializerProps> = ({
       );
       
       if (debug) {
-        console.error('[ErrorInitializer] Unhandled promise rejection:', event.reason);
+        console.log('[ErrorInitializer] Unhandled promise rejection:', event.reason);
       }
     };
     

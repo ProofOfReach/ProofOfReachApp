@@ -44,7 +44,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       data: userData
     });
   } catch (error) {
-    logger.error('Error getting user roles:', error);
+    logger.log('Error getting user roles:', error);
     return res.status(500).json({ error: 'Internal server error' });
   }
 };

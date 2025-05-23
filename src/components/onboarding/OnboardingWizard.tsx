@@ -201,7 +201,7 @@ const OnboardingWizard: React.FC = () => {
                       window.location.href = '/dashboard';
                     })
                     .catch(err => {
-                      console.error('Error completing onboarding:', err);
+                      console.log('Error completing onboarding:', err);
                       // Still try to navigate to dashboard even if there's an error
                       window.location.href = '/dashboard';
                     });

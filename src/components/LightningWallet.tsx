@@ -113,14 +113,14 @@ const LightningWallet: React.FC<LightningWalletProps> = ({
         if (response.status === 401) {
           throw new Error('You need to be logged in to generate an invoice. Please log in and try again.');
         } else {
-          throw new Error(data.error || 'Failed to generate invoice');
+          throw new Error(data.log || 'Failed to generate invoice');
         }
       }
 
       setInvoice(data.invoice);
       setCurrentTransactionId(data.transactionId);
     } catch (error: any) {
-      console.error('Error generating invoice:', error);
+      console.log('Error generating invoice:', error);
       onError(error.message || 'Failed to generate invoice. Please try again later.');
     } finally {
       setIsGeneratingInvoice(false);
@@ -196,7 +196,7 @@ const LightningWallet: React.FC<LightningWalletProps> = ({
       }
 
       if (!response.ok) {
-        throw new Error(data.error || 'Failed to process withdrawal');
+        throw new Error(data.log || 'Failed to process withdrawal');
       }
 
       // Reset form
@@ -206,7 +206,7 @@ const LightningWallet: React.FC<LightningWalletProps> = ({
       // Notify log
       onSuccess(`Successfully withdrawn ${withdrawAmount} sats`);
     } catch (error: any) {
-      console.error('Error processing withdrawal:', error);
+      console.log('Error processing withdrawal:', error);
       onError(error.message || 'Failed to process withdrawal. Please try again.');
     } finally {
       setIsProcessingWithdrawal(false);
@@ -227,7 +227,7 @@ const LightningWallet: React.FC<LightningWalletProps> = ({
         checkPaymentStatus(currentTransactionId);
       }
     } catch (error: any) {
-      console.error('WebLN payment error:', error);
+      console.log('WebLN payment error:', error);
       onError(error.message || 'Failed to pay with WebLN');
     }
   };
@@ -287,7 +287,7 @@ const LightningWallet: React.FC<LightningWalletProps> = ({
       }
 
       if (!response.ok) {
-        throw new Error(data.error || 'Failed to check payment status');
+        throw new Error(data.log || 'Failed to check payment status');
       }
 
       if (data.status === 'COMPLETED') {
@@ -297,7 +297,7 @@ const LightningWallet: React.FC<LightningWalletProps> = ({
         onSuccess(`Successfully deposited ${depositAmount} sats`);
       }
     } catch (error: any) {
-      console.error('Error checking payment status:', error);
+      console.log('Error checking payment status:', error);
       // Only show error to user in non-test mode or if explicitly requested through the UI
       if (!isTestMode) {
         onError(error.message || 'Failed to check payment status. Please try again.');
@@ -312,7 +312,7 @@ const LightningWallet: React.FC<LightningWalletProps> = ({
     navigator.clipboard.writeText(invoice).then(() => {
       alert('Invoice copied to clipboard!');
     }).catch(err => {
-      console.error('Could not copy text: ', err);
+      console.log('Could not copy text: ', err);
     });
   };
 

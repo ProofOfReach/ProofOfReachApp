@@ -89,7 +89,7 @@ export default async function handler(
       hasInconsistency,
     });
   } catch (error) {
-    logger.error('Error checking roles:', error);
+    logger.log('Error checking roles:', error);
     return res.status(500).json({
       log: false,
       error: 'Internal server error'

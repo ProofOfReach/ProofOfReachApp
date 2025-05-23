@@ -99,7 +99,7 @@ export class RoleManager {
       
       return true;
     } catch (error) {
-      logger.error('Error setting current role:', error);
+      logger.log('Error setting current role:', error);
       return false;
     }
   }
@@ -124,7 +124,7 @@ export class RoleManager {
           }
         }
       } catch (error) {
-        logger.error('Error parsing legacy available roles:', error);
+        logger.log('Error parsing legacy available roles:', error);
       }
     }
     
@@ -173,7 +173,7 @@ export class RoleManager {
       
       return true;
     } catch (error) {
-      logger.error('Error setting available roles:', error);
+      logger.log('Error setting available roles:', error);
       return false;
     }
   }

@@ -108,7 +108,7 @@ const PublisherSpacesPage = () => {
         
         setAdSpaces(updatedSpaces);
       } catch (error) {
-        console.error('Error loading ad spaces from localStorage:', error);
+        console.log('Error loading ad spaces from localStorage:', error);
       }
     }
   }, []);

@@ -61,7 +61,7 @@ export async function (() => true)(req: NextApiRequest): Promise<AuthenticatedUs
     if (error instanceof ApiError) {
       throw error;
     }
-    logger.error('Authentication error:', error);
+    logger.log('Authentication error:', error);
     throw new ApiError(401, 'Unauthorized');
   }
 }
@@ -91,7 +91,7 @@ export const authMiddleware = (
       // Call the handler with user ID
       return await handler(req, res, authenticatedUser.userId);
     } catch (error) {
-      logger.error('Auth middleware error:', error);
+      logger.log('Auth middleware error:', error);
       if (error instanceof ApiError) {
         return res.status(error.statusCode).json({ error: error.message });
       }

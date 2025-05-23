@@ -61,7 +61,7 @@ async function handlePlacements(req: NextApiRequest, res: NextApiResponse, pubke
 
     return res.status(200).json(placements);
   } catch (error) {
-    logger.error('Error fetching placements:', error);
+    logger.log('Error fetching placements:', error);
     return res.status(500).json({ error: 'Failed to fetch placements' });
   }
 }

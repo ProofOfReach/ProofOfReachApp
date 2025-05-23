@@ -57,7 +57,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       } : null,
     });
   } catch (error) {
-    logger.error('Error checking role status:', error);
+    logger.log('Error checking role status:', error);
     return res.status(500).json({ 
       error: 'Failed to check role status',
       details: error instanceof Error ? error.message : 'Unknown error',

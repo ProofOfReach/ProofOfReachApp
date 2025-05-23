@@ -232,7 +232,7 @@ export const OnboardingProvider: React.FC<OnboardingProviderProps> = ({ children
               router.push(redirectWithParam);
             }
           } catch (error) {
-            logger.error('Error checking onboarding status:', { error });
+            logger.log('Error checking onboarding status:', { error });
           }
         }
       }
@@ -277,7 +277,7 @@ export const OnboardingProvider: React.FC<OnboardingProviderProps> = ({ children
       clientOnboardingService.updateOnboardingProgress(pubkeyToUse, selectedRole, {
         currentStep
       }).catch(error => {
-        logger.error('Error saving onboarding progress', { error, pubkey: pubkeyToUse, role: selectedRole });
+        logger.log('Error saving onboarding progress', { error, pubkey: pubkeyToUse, role: selectedRole });
       });
     }
   }, [currentStep, selectedRole, authState, forcePubkey, isFirstStep]);
@@ -293,7 +293,7 @@ export const OnboardingProvider: React.FC<OnboardingProviderProps> = ({ children
         // Redirect to dashboard
         router.push(`/dashboard?timestamp=${Date.now()}`);
       } catch (error) {
-        logger.error('Error completing onboarding:', error);
+        logger.log('Error completing onboarding:', error);
       } finally {
         setIsLoading(false);
       }
@@ -314,7 +314,7 @@ export const OnboardingProvider: React.FC<OnboardingProviderProps> = ({ children
           router.push(`/dashboard?timestamp=${Date.now()}`);
         }
       } catch (error) {
-        logger.error('Error skipping onboarding:', { error, pubkey: pubkeyToUse });
+        logger.log('Error skipping onboarding:', { error, pubkey: pubkeyToUse });
       } finally {
         setIsLoading(false);
       }

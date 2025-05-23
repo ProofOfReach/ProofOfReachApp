@@ -63,7 +63,7 @@ const SpaceTableRow: React.FC<SpaceTableRowProps> = ({
       // Refresh the data
       mutate();
     } catch (error) {
-      console.error('Error approving ad:', error);
+      console.log('Error approving ad:', error);
     }
   };
 
@@ -77,7 +77,7 @@ const SpaceTableRow: React.FC<SpaceTableRowProps> = ({
       // Refresh the data
       mutate();
     } catch (error) {
-      console.error('Error rejecting ad:', error);
+      console.log('Error rejecting ad:', error);
     }
   };
 

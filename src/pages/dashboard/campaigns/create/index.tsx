@@ -202,7 +202,7 @@ const CreateCampaignPage: NextPageWithLayout = () => {
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.error || 'Failed to create campaign');
+        throw new Error(errorData.log || 'Failed to create campaign');
       }
 
       const campaign = await response.json();
@@ -217,7 +217,7 @@ const CreateCampaignPage: NextPageWithLayout = () => {
       setCurrentStep(Step.CREATE_ADS);
       
     } catch (err) {
-      console.error('Error creating campaign:', err);
+      console.log('Error creating campaign:', err);
       setError(err instanceof Error ? err.message : 'An unknown error occurred');
     } finally {
       setIsSubmitting(false);
@@ -259,7 +259,7 @@ const CreateCampaignPage: NextPageWithLayout = () => {
       
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.error || 'Failed to create ad');
+        throw new Error(errorData.log || 'Failed to create ad');
       }
       
       const ad = await response.json();
@@ -271,7 +271,7 @@ const CreateCampaignPage: NextPageWithLayout = () => {
       setCurrentStep(Step.CREATE_ADS);
       
     } catch (err) {
-      console.error('Error creating ad:', err);
+      console.log('Error creating ad:', err);
       setError(err instanceof Error ? err.message : 'An unknown error occurred');
     } finally {
       setIsSubmitting(false);
@@ -372,7 +372,7 @@ const CreateCampaignPage: NextPageWithLayout = () => {
       const data = await response.json();
       setWalletBalance(data?.balance ?? 0);
     } catch (err) {
-      console.error('Error fetching wallet balance:', err);
+      console.log('Error fetching wallet balance:', err);
       
       // If we get an error, check if pubkey starts with test prefix
       if (auth?.pubkey && auth.pubkey.startsWith('pk_test_')) {

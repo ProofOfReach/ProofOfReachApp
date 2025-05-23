@@ -47,7 +47,7 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
     const { componentName = 'ErrorBoundary', onError } = this.props;
     
     // Log the error to our error service with additional context
-    console.error(
+    console.log(
       error,
       componentName,
       'unexpected',
@@ -71,7 +71,7 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
     }
     
     // Show toast notification
-    console.log.error(`An error occurred: ${error.message}`);
+    console.log.log(`An error occurred: ${error.message}`);
   }
 
   handleRetry = (): void => {

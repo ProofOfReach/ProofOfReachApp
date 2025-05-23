@@ -32,7 +32,7 @@ const EditSpacePage: React.FC = () => {
         const data = await response.json();
         setSpaceData(data);
       } catch (err: any) {
-        console.error('Error fetching space data:', err);
+        console.log('Error fetching space data:', err);
         setError(err.message || 'Failed to load ad space details');
       } finally {
         setIsLoading(false);
@@ -60,13 +60,13 @@ const EditSpacePage: React.FC = () => {
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.error || 'Failed to update ad space');
+        throw new Error(errorData.log || 'Failed to update ad space');
       }
 
       // Redirect to publisher dashboard
       router.push('/dashboard/publisher');
     } catch (err: any) {
-      console.error('Space update error:', err);
+      console.log('Space update error:', err);
       setError(err.message || 'Failed to update the ad space. Please try again.');
       setIsSubmitting(false);
     }

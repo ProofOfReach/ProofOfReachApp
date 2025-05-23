@@ -82,7 +82,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       throw error;
     }
   } catch (error) {
-    logger.error('Error changing user role:', error);
+    logger.log('Error changing user role:', error);
     return res.status(500).json({ error: 'Internal server error' });
   }
 };

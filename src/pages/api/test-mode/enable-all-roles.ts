@@ -140,7 +140,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       },
     });
   } catch (error) {
-    logger.error('Error enabling test roles:', error);
+    logger.log('Error enabling test roles:', error);
     return res.status(500).json({ 
       error: 'Failed to enable test roles',
       details: error instanceof Error ? error.message : 'Unknown error',

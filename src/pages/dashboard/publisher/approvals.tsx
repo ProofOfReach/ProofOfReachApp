@@ -164,7 +164,7 @@ const PublisherApprovalsPage = () => {
       // Update the state with the new data
       setRequestsData(updatedRequests);
     } catch (error) {
-      console.error('Error updating request status:', error);
+      console.log('Error updating request status:', error);
     }
   };
 

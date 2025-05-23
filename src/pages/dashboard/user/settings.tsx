@@ -67,7 +67,7 @@ const UserSettingsPage = () => {
         setShareBrowsing(data.shareBrowsing);
         setShareAge(data.shareAge);
       } catch (error) {
-        console.error('Error fetching user preferences:', error);
+        console.log('Error fetching user preferences:', error);
       }
     };
     
@@ -169,7 +169,7 @@ const UserSettingsPage = () => {
         setSuccessMessage(null);
       }, 3000);
     } catch (error) {
-      console.error('Error saving settings:', error);
+      console.log('Error saving settings:', error);
     } finally {
       setIsSubmitting(false);
     }

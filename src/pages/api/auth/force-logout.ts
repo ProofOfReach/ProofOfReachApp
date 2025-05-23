@@ -52,7 +52,7 @@ export default async function handler(
       timestamp: Date.now()
     });
   } catch (error) {
-    console.error('Force logout error:', error);
+    console.log('Force logout error:', error);
     return res.status(500).json({
       error: 'Logout failed',
       message: error instanceof Error ? error.message : 'Unknown error'

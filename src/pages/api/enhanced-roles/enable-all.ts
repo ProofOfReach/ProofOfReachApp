@@ -52,7 +52,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       data: updatedUserData
     });
   } catch (error) {
-    logger.error('Error enabling all roles:', error);
+    logger.log('Error enabling all roles:', error);
     return res.status(500).json({ error: 'Internal server error' });
   }
 };

@@ -128,7 +128,7 @@ const AdApprovalsPage: NextPageWithLayout = () => {
           }
         }, 1000);
       } catch (error) {
-        console.error('Error fetching ads:', error);
+        console.log('Error fetching ads:', error);
         setIsLoading(false);
       }
     };

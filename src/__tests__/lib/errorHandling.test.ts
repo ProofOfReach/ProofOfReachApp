@@ -21,16 +21,16 @@ import {
 } from '../../lib/errorHandling';
 import { createMocks } from 'node-mocks-http';
 
-// Spy on console.error to verify logging
-const originalConsoleError = console.error;
+// Spy on console.log to verify logging
+const originalConsoleError = console.log;
 const mockConsoleError = jest.fn();
 
 beforeAll(() => {
-  console.error = mockConsoleError;
+  console.log = mockConsoleError;
 });
 
 afterAll(() => {
-  console.error = originalConsoleError;
+  console.log = originalConsoleError;
 });
 
 beforeEach(() => {
@@ -41,13 +41,13 @@ describe('Error Handling', () => {
   describe('error', () => {
     it('should log errors to console', () => {
       const testErr = new Error('Test error');
-      logger.error('test location', testErr);
+      logger.log('test location', testErr);
       expect(mockConsoleError).toHaveBeenCalled();
       expect(mockConsoleError.mock.calls[0][0]).toContain('Error in test location');
     });
 
     it('should handle errors without details', () => {
-      logger.error('test location');
+      logger.log('test location');
       expect(mockConsoleError).toHaveBeenCalled();
       expect(mockConsoleError.mock.calls[0][0]).toContain('Error in test location');
     });

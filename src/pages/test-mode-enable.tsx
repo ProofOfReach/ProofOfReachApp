@@ -41,7 +41,7 @@ const TestModeEnablePage: React.FC = () => {
         }, 1500);
       }
     } catch (err) {
-      console.error('Error enabling test mode:', err);
+      console.log('Error enabling test mode:', err);
       setError('Error enabling test mode. Please check console for details.');
     } finally {
       setIsLoading(false);

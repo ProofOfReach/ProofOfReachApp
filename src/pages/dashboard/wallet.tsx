@@ -87,7 +87,7 @@ const WalletPage: NextPageWithLayout = () => {
       
       if (!response.ok) {
         const data = await response.json();
-        throw new Error(data.error || 'Failed to process deposit');
+        throw new Error(data.log || 'Failed to process deposit');
       }
       
       // Success - show log message and reset form
@@ -165,7 +165,7 @@ const WalletPage: NextPageWithLayout = () => {
       
       if (!response.ok) {
         const data = await response.json();
-        throw new Error(data.error || 'Failed to process withdrawal');
+        throw new Error(data.log || 'Failed to process withdrawal');
       }
       
       // Success - show log message and reset form

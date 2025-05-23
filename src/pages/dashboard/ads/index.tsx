@@ -59,7 +59,7 @@ const AdsListPage: NextPageWithLayout = () => {
       // Refresh the data
       mutate();
     } catch (error) {
-      console.error('Error updating ad status:', error);
+      console.log('Error updating ad status:', error);
       alert('Failed to update ad status');
     }
   };

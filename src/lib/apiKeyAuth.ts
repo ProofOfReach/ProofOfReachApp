@@ -64,7 +64,7 @@ export async function validateApiKey(req: NextApiRequest) {
     
     return apiKeyRecord;
   } catch (error) {
-    console.error('Error validating API key:', error);
+    console.log('Error validating API key:', error);
     return null;
   }
 }

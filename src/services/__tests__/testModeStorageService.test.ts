@@ -138,7 +138,7 @@ describe('TestModeStorageService', () => {
       const result = service.enableTestMode(initialRole);
       
       expect(result).toBe(false);
-      expect(logger.error).toHaveBeenCalledWith('Error enabling test mode:', expect.any(Error));
+      expect(logger.log).toHaveBeenCalledWith('Error enabling test mode:', expect.any(Error));
     });
   });
   
@@ -181,7 +181,7 @@ describe('TestModeStorageService', () => {
       const result = service.disableTestMode();
       
       expect(result).toBe(false);
-      expect(logger.error).toHaveBeenCalledWith('Error disabling test mode:', expect.any(Error));
+      expect(logger.log).toHaveBeenCalledWith('Error disabling test mode:', expect.any(Error));
     });
   });
   
@@ -254,14 +254,14 @@ describe('TestModeStorageService', () => {
       // Create a mock implementation that throws specifically for this test
       mockStorage.getSecureItem.mockImplementationOnce(() => {
         const error = new Error('Storage error');
-        logger.error('Error checking test mode:', error);
+        logger.log('Error checking test mode:', error);
         throw error;
       });
       
       const result = service.isTestModeEnabled();
       
       expect(result).toBe(false);
-      expect(logger.error).toHaveBeenCalledWith('Error checking test mode:', expect.any(Error));
+      expect(logger.log).toHaveBeenCalledWith('Error checking test mode:', expect.any(Error));
     });
   });
   
@@ -301,7 +301,7 @@ describe('TestModeStorageService', () => {
       const result = service.getTestModeState();
       
       expect(result).toBeNull();
-      expect(logger.error).toHaveBeenCalledWith('Error getting test mode state:', expect.any(Error));
+      expect(logger.log).toHaveBeenCalledWith('Error getting test mode state:', expect.any(Error));
     });
   });
   
@@ -370,14 +370,14 @@ describe('TestModeStorageService', () => {
       // Create a mock implementation that throws specifically for this test
       mockStorage.getSecureItem.mockImplementationOnce(() => {
         const error = new Error('Storage error');
-        logger.error('Error getting test mode time remaining:', error);
+        logger.log('Error getting test mode time remaining:', error);
         throw error;
       });
       
       const result = service.getTestModeTimeRemaining();
       
       expect(result).toBe(0);
-      expect(logger.error).toHaveBeenCalledWith('Error getting test mode time remaining:', expect.any(Error));
+      expect(logger.log).toHaveBeenCalledWith('Error getting test mode time remaining:', expect.any(Error));
     });
   });
   
@@ -497,14 +497,14 @@ describe('TestModeStorageService', () => {
       // Create a mock implementation that throws with the correct error message
       mockStorage.getSecureItem.mockImplementationOnce(() => {
         const error = new Error('Storage error');
-        logger.error('Error extending test mode duration:', error);
+        logger.log('Error extending test mode duration:', error);
         throw error;
       });
       
       const result = service.extendTestModeDuration(1000);
       
       expect(result).toBe(false);
-      expect(logger.error).toHaveBeenCalledWith('Error extending test mode duration:', expect.any(Error));
+      expect(logger.log).toHaveBeenCalledWith('Error extending test mode duration:', expect.any(Error));
     });
   });
   
@@ -594,14 +594,14 @@ describe('TestModeStorageService', () => {
       // Create a mock implementation that throws with the correct error message
       mockStorage.getSecureItem.mockImplementationOnce(() => {
         const error = new Error('Storage error');
-        logger.error('Error updating test mode initial role:', error);
+        logger.log('Error updating test mode initial role:', error);
         throw error;
       });
       
       const result = service.updateTestModeInitialRole('admin');
       
       expect(result).toBe(false);
-      expect(logger.error).toHaveBeenCalledWith('Error updating test mode initial role:', expect.any(Error));
+      expect(logger.log).toHaveBeenCalledWith('Error updating test mode initial role:', expect.any(Error));
     });
   });
   

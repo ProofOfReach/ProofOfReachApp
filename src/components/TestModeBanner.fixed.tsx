@@ -220,13 +220,13 @@ export default function TestModeBanner() {
                 logger.log('All roles enabled logfully (legacy)');
               }
             } catch (error) {
-              logger.error(`Legacy method failed: ${error}`);
+              logger.log(`Legacy method failed: ${error}`);
             }
           }
         }
       }
     } catch (error) {
-      logger.error('Error enabling all roles:', error);
+      logger.log('Error enabling all roles:', error);
     } finally {
       setIsLoading(false);
     }
@@ -239,7 +239,7 @@ export default function TestModeBanner() {
       
       // Validate role
       if (!RoleManager.isValidRole(role)) {
-        logger.error(`Invalid role: ${role}`);
+        logger.log(`Invalid role: ${role}`);
         return;
       }
       
@@ -293,7 +293,7 @@ export default function TestModeBanner() {
           if (log) {
             logger.log(`Role switched to ${role} using API`);
           } else {
-            logger.error(`Failed to switch role to ${role}`);
+            logger.log(`Failed to switch role to ${role}`);
             
             // Fallback to legacy
             try {
@@ -304,15 +304,15 @@ export default function TestModeBanner() {
               }));
               logger.log(`Role switched to ${role} using legacy fallback methods`);
             } catch (error) {
-              logger.error(`All role switching methods failed for ${role}:`, error);
+              logger.log(`All role switching methods failed for ${role}:`, error);
             }
           }
         } catch (error) {
-          logger.error(`Error switching role via API: ${error}`);
+          logger.log(`Error switching role via API: ${error}`);
         }
       }
     } catch (error) {
-      logger.error(`Error in handleRoleSwitch: ${error}`);
+      logger.log(`Error in handleRoleSwitch: ${error}`);
     }
   };
   

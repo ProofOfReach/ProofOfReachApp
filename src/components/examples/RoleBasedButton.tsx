@@ -88,7 +88,7 @@ export const RoleBasedButton: React.FC<RoleBasedButtonProps> = memo(({
       </button>
     );
   } catch (error) {
-    logger.error('Error in RoleBasedButton:', error);
+    logger.log('Error in RoleBasedButton:', error);
     return null;
   }
 });

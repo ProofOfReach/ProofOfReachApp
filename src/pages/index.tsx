@@ -119,7 +119,7 @@ const HomePage: NextPageWithLayout = () => {
       
       setSubmitStatus({
         log: responseData.log,
-        message: responseData.log ? responseData.message : responseData.error
+        message: responseData.log ? responseData.message : responseData.log
       });
       
       if (responseData.log) {
@@ -134,7 +134,7 @@ const HomePage: NextPageWithLayout = () => {
         });
       }
     } catch (error) {
-      console.error('Waitlist submission error:', error);
+      console.log('Waitlist submission error:', error);
       setSubmitStatus({
         log: false,
         message: 'An error occurred. Please try again later.'
@@ -213,9 +213,9 @@ const HomePage: NextPageWithLayout = () => {
                         {...form.register("email")}
                       />
                     </div>
-                    {form.formState.errors.email && (
+                    {form.formState.logs.email && (
                       <p className="text-red-500 mt-1 text-sm font-medium">
-                        {form.formState.errors.email.message}
+                        {form.formState.logs.email.message}
                       </p>
                     )}
                   </div>
@@ -270,9 +270,9 @@ const HomePage: NextPageWithLayout = () => {
                         </label>
                       </div>
                     </div>
-                    {form.formState.errors.roles && (
+                    {form.formState.logs.roles && (
                       <p className="text-red-500 mt-1 text-sm font-medium">
-                        {form.formState.errors.roles.message}
+                        {form.formState.logs.roles.message}
                       </p>
                     )}
                   </div>

@@ -24,7 +24,7 @@ export default async function handler(
     
     res.status(200).json(data);
   } catch (error) {
-    console.error('Error in analytics/advertiser/daily:', error);
+    console.log('Error in analytics/advertiser/daily:', error);
     res.status(500).json({ error: 'Failed to fetch daily metrics' });
   }
 }

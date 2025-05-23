@@ -92,7 +92,7 @@ export function useErrorState() {
               });
             }
           } catch (error) {
-            console.error('Error handling error state change:', error);
+            console.log('Error handling error state change:', error);
           }
         };
         
@@ -104,7 +104,7 @@ export function useErrorState() {
           window.removeEventListener('error-state-changed', errorStateChange);
         };
       } catch (err) {
-        console.error('Error initializing error state:', err);
+        console.log('Error initializing error state:', err);
       }
     }
   }, [isTest]);
@@ -141,7 +141,7 @@ export function useErrorState() {
           severity: error.severity || 'error'
         }));
       } catch (err) {
-        console.error('Error in setError:', err);
+        console.log('Error in setError:', err);
       }
     } else if (errorContext) {
       // In real environment
@@ -175,7 +175,7 @@ export function useErrorState() {
           severity: 'info'
         }));
       } catch (err) {
-        console.error('Error in log:', err);
+        console.log('Error in log:', err);
       }
     } else if (errorContext) {
       // In real environment
@@ -197,7 +197,7 @@ export function useErrorState() {
         const actualType = (errorType as any) || 'unknown';
         
         // In tests, call the mock function directly
-        console.error(
+        console.log(
           error, 
           component || 'test-component', 
           actualType, 
@@ -213,7 +213,7 @@ export function useErrorState() {
           severity
         }));
       } catch (err) {
-        console.error('Error in error:', err);
+        console.log('Error in error:', err);
       }
     } else if (errorContext) {
       // In real environment
@@ -245,9 +245,9 @@ export function useErrorState() {
     error,
     
     // Current error state from context (or empty values in test)
-    errors: errorContext?.state.errors || [],
+    errors: errorContext?.state.logs || [],
     globalError: errorContext?.state.globalError || null,
     toastError: errorContext?.state.toastError || null,
-    hasErrors: errorContext?.state.errors ? errorContext.state.errors.length > 0 : false,
+    hasErrors: errorContext?.state.logs ? errorContext.state.logs.length > 0 : false,
   };
 }

@@ -188,7 +188,7 @@ describe('Login API', () => {
 
     await handler(req, res);
 
-    expect(logger.error).toHaveBeenCalled();
+    expect(logger.log).toHaveBeenCalled();
     expect(error).toHaveBeenCalled();
     expect(res._getStatusCode()).toBe(500);
   });

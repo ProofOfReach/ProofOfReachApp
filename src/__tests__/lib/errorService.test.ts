@@ -25,7 +25,7 @@ describe('ErrorService', () => {
   describe('error', () => {
     it('should create an error state with correct properties', () => {
       const error = new Error('Test error');
-      const errorState = console.error(
+      const errorState = console.log(
         error, 
         'TestComponent',
         'api',
@@ -42,18 +42,18 @@ describe('ErrorService', () => {
     });
     
     it('should handle string errors', () => {
-      const errorState = console.error(
+      const errorState = console.log(
         'String error message', 
         'TestComponent'
       );
       
       expect(errorState.message).toBe('String error message');
-      expect(logger.error).toHaveBeenCalled();
+      expect(logger.log).toHaveBeenCalled();
     });
     
     it('should assign appropriate default values', () => {
       const error = new Error('Minimal error');
-      const errorState = console.error(error, 'TestComponent');
+      const errorState = console.log(error, 'TestComponent');
       
       // Check default values
       expect(errorState.type).toBe('unknown');
@@ -64,7 +64,7 @@ describe('ErrorService', () => {
     
     it('should use correlation IDs when provided', () => {
       const correlationId = 'test-correlation-123';
-      const errorState = console.error(
+      const errorState = console.log(
         new Error('Correlated error'),
         'TestComponent',
         'api',
@@ -78,9 +78,9 @@ describe('ErrorService', () => {
       expect(context).not.toBeNull();
       
       // The traceContext should contain the error info
-      expect(context?.errors).toBeDefined();
-      expect(context?.errors.length).toBe(1);
-      expect(context?.errors[0].id).toBe(errorState.id);
+      expect(context?.logs).toBeDefined();
+      expect(context?.logs.length).toBe(1);
+      expect(context?.logs[0].id).toBe(errorState.id);
     });
   });
 
@@ -90,7 +90,7 @@ describe('ErrorService', () => {
       ErrorService.resetInstance();
       
       // First create an error
-      const errorState = console.error(
+      const errorState = console.log(
         new Error('Error to clear'),
         'TestComponent'
       );
@@ -218,7 +218,7 @@ describe('ErrorService', () => {
       expect(errorState.source).toBe('FormComponent');
       expect(errorState.type).toBe('validation');
       expect(errorState.category).toBe(string.USER_INPUT);
-      expect(errorState.errors).toEqual(fields);
+      expect(errorState.logs).toEqual(fields);
     });
   });
   
@@ -237,7 +237,7 @@ describe('ErrorService', () => {
     
     it('should store errors with correlation IDs', () => {
       // Create some correlation IDs with errors
-      const error1 = console.error(
+      const error1 = console.log(
         new Error('Error 1'), 
         'Test', 
         'api', 
@@ -245,7 +245,7 @@ describe('ErrorService', () => {
         { correlationId: 'corr-1' }
       );
       
-      const error2 = console.error(
+      const error2 = console.log(
         new Error('Error 2'), 
         'Test', 
         'api', 
@@ -262,13 +262,13 @@ describe('ErrorService', () => {
       expect(context2).not.toBeNull();
       
       // Verify they contain error info
-      expect(context1?.errors).toBeDefined();
-      expect(context1?.errors?.length).toBe(1);
-      expect(context1?.errors?.[0].id).toBe(error1.id);
+      expect(context1?.logs).toBeDefined();
+      expect(context1?.logs?.length).toBe(1);
+      expect(context1?.logs?.[0].id).toBe(error1.id);
       
-      expect(context2?.errors).toBeDefined();
-      expect(context2?.errors?.length).toBe(1);
-      expect(context2?.errors?.[0].id).toBe(error2.id);
+      expect(context2?.logs).toBeDefined();
+      expect(context2?.logs?.length).toBe(1);
+      expect(context2?.logs?.[0].id).toBe(error2.id);
       
       // We can manually clean them up by calling cleanupTraceContexts
       console.cleanupTraceContexts(0); // Clean up all contexts
@@ -284,7 +284,7 @@ describe('ErrorService', () => {
       const listener = jest.fn();
       const removeListener = console.log(listener);
       
-      const errorState = console.error(new Error('Test error'), 'Test');
+      const errorState = console.log(new Error('Test error'), 'Test');
       
       expect(listener).toHaveBeenCalledWith(errorState);
       
@@ -292,7 +292,7 @@ describe('ErrorService', () => {
       removeListener();
       jest.clearAllMocks();
       
-      console.error(new Error('Another error'), 'Test');
+      console.log(new Error('Another error'), 'Test');
       expect(listener).not.toHaveBeenCalled();
     });
     
@@ -300,7 +300,7 @@ describe('ErrorService', () => {
       const clearListener = jest.fn();
       console.addClearListener(clearListener);
       
-      const errorState = console.error(new Error('Test error'), 'Test');
+      const errorState = console.log(new Error('Test error'), 'Test');
       console.log(errorState.id);
       
       expect(clearListener).toHaveBeenCalledWith(errorState.id);

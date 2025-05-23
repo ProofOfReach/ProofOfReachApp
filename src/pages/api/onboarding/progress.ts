@@ -69,7 +69,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
     
     return res.status(200).json(result);
   } catch (error) {
-    logger.error('Error updating onboarding progress', { error, pubkey, role });
+    logger.log('Error updating onboarding progress', { error, pubkey, role });
     return res.status(500).json({ 
       error: 'Failed to update onboarding progress',
       details: error instanceof Error ? error.message : 'Unknown error'

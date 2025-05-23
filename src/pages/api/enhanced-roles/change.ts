@@ -52,7 +52,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       userData
     });
   } catch (error) {
-    logger.error('Error changing role:', error);
+    logger.log('Error changing role:', error);
     
     // Special error handling for known error types
     if (error instanceof Error && error.message.includes('does not have access to role')) {

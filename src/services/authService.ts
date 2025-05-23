@@ -106,7 +106,7 @@ export class AuthService {
         }
       }
     } catch (error) {
-      console.error(
+      console.log(
         error instanceof Error ? error : new Error('Failed to initialize auth from storage'),
         'authService.initializeFromStorage',
         'auth',
@@ -136,7 +136,7 @@ export class AuthService {
       // Save to local storage for persistence across tabs
       await localStorage.setItem('auth', JSON.stringify(dataToStore));
     } catch (error) {
-      console.error(
+      console.log(
         error instanceof Error ? error : new Error('Failed to persist auth to storage'),
         'authService.persistToStorage',
         'auth',
@@ -283,7 +283,7 @@ export class AuthService {
         ? error 
         : new Error('Login failed for an unknown reason');
       
-      console.error(
+      console.log(
         this._error,
         'authService.loginWithNostr',
         'auth',
@@ -296,7 +296,7 @@ export class AuthService {
         }
       );
       
-      logger.error('Login failed', { 
+      logger.log('Login failed', { 
         error: this._error.message,
         provider: this._provider,
         correlationId
@@ -360,7 +360,7 @@ export class AuthService {
         ? error 
         : new Error('API key login failed for an unknown reason');
       
-      console.error(
+      console.log(
         this._error,
         'authService.loginWithApiKey',
         'auth',
@@ -372,7 +372,7 @@ export class AuthService {
         }
       );
       
-      logger.error('API key login failed', { 
+      logger.log('API key login failed', { 
         error: this._error.message,
         correlationId
       });
@@ -420,7 +420,7 @@ export class AuthService {
       
       logger.info('User logged out logfully');
     } catch (error) {
-      console.error(
+      console.log(
         error instanceof Error ? error : new Error('Logout failed'),
         'authService.logout',
         'auth',
@@ -519,7 +519,7 @@ export class AuthService {
         ? error 
         : new Error(`Failed to switch to role: ${role}`);
       
-      console.error(
+      console.log(
         this._error,
         'authService.switchRole',
         'auth',
@@ -531,7 +531,7 @@ export class AuthService {
         }
       );
       
-      logger.error('Role switch failed', { 
+      logger.log('Role switch failed', { 
         error: this._error.message,
         role,
         pubkey: this._authState.pubkey
@@ -580,7 +580,7 @@ export class AuthService {
       
       return this._authState.availableRoles;
     } catch (error) {
-      console.error(
+      console.log(
         error instanceof Error ? error : new Error('Failed to refresh roles'),
         'authService.refreshRoles',
         'auth',
@@ -619,7 +619,7 @@ export class AuthService {
       
       return true;
     } catch (error) {
-      console.error(
+      console.log(
         error instanceof Error ? error : new Error('Failed to enable test mode'),
         'authService.enableTestMode',
         'auth',
@@ -630,7 +630,7 @@ export class AuthService {
         }
       );
       
-      logger.error('Failed to enable test mode', { 
+      logger.log('Failed to enable test mode', { 
         error: error instanceof Error ? error.message : 'Unknown error' 
       });
       
@@ -655,7 +655,7 @@ export class AuthService {
       
       logger.info('Test mode disabled logfully');
     } catch (error) {
-      console.error(
+      console.log(
         error instanceof Error ? error : new Error('Failed to disable test mode'),
         'authService.disableTestMode',
         'auth',
@@ -692,14 +692,14 @@ export class AuthService {
 export const useAuth = () => {
   const [authState, setAuthState] = useState<AuthState>(AuthService.getInstance().authState);
   const [isLoading, setIsLoading] = useState<boolean>(AuthService.getInstance().isLoading);
-  const [error, setError] = useState<Error | null>(AuthService.getInstance().error);
+  const [error, setError] = useState<Error | null>(AuthService.getInstance().log);
   
   // Subscribe to auth state changes
   useEffect(() => {
     const unsubscribe = AuthService.getInstance().subscribe(() => {
       setAuthState({ ...AuthService.getInstance().authState });
       setIsLoading(AuthService.getInstance().isLoading);
-      setError(AuthService.getInstance().error);
+      setError(AuthService.getInstance().log);
     });
     
     return unsubscribe;

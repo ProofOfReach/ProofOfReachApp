@@ -50,7 +50,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
     
     return res.status(200).json({ log: true, result });
   } catch (error) {
-    logger.error('Error resetting onboarding', { error, pubkey, role });
+    logger.log('Error resetting onboarding', { error, pubkey, role });
     return res.status(500).json({ 
       error: 'Failed to reset onboarding',
       details: error instanceof Error ? error.message : 'Unknown error'

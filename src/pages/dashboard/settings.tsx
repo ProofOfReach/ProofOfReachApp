@@ -143,7 +143,7 @@ const UserSettingsPage = () => {
           setNostrRelays(parsedRelays);
         }
       } catch (error) {
-        console.error('Error parsing saved relays:', error);
+        console.log('Error parsing saved relays:', error);
       }
     }
     
@@ -177,7 +177,7 @@ const UserSettingsPage = () => {
               return; // Exit early if we got the key
             }
           } catch (e) {
-            console.error('Error getting pubkey directly from extension:', e);
+            console.log('Error getting pubkey directly from extension:', e);
           }
           
           // Fallback to auth context if extension fails
@@ -185,7 +185,7 @@ const UserSettingsPage = () => {
           setPubkeyToUse(foundPubkey);
         })();
       } catch (e) {
-        console.error('Error accessing extension directly:', e);
+        console.log('Error accessing extension directly:', e);
         setPubkeyToUse(foundPubkey);
       }
     } else {
@@ -274,13 +274,13 @@ const UserSettingsPage = () => {
                       setIsLoadingProfile(false);
                       return; // Exit early if we got data from extension
                     } catch (e) {
-                      console.error('ERROR PARSING EXTENSION METADATA:', e);
+                      console.log('ERROR PARSING EXTENSION METADATA:', e);
                     }
                   } else {
                     console.log('NO CONTENT IN METADATA');
                   }
                 } catch (e) {
-                  console.error('ERROR GETTING METADATA:', e);
+                  console.log('ERROR GETTING METADATA:', e);
                 }
               } else {
                 console.log('EXTENSION DOES NOT HAVE getMetadata() METHOD');
@@ -310,7 +310,7 @@ const UserSettingsPage = () => {
                     return;
                   }
                 } catch (e) {
-                  console.error('ERROR GETTING USER METADATA:', e);
+                  console.log('ERROR GETTING USER METADATA:', e);
                 }
               }
               
@@ -320,7 +320,7 @@ const UserSettingsPage = () => {
               console.log('PUBKEYS DON\'T MATCH');
             }
           } catch (e) {
-            console.error('Error getting metadata from extension:', e);
+            console.log('Error getting metadata from extension:', e);
           }
         }
         
@@ -348,7 +348,7 @@ const UserSettingsPage = () => {
           setBio('Bitcoin enthusiast. Lightning Network advocate. Privacy-focused.');
         }
       } catch (error) {
-        console.error('Error fetching Nostr profile:', error);
+        console.log('Error fetching Nostr profile:', error);
         // Set defaults on error
         setDisplayName('Satoshi Nakamoto');
         setBio('Bitcoin enthusiast. Lightning Network advocate. Privacy-focused.');
@@ -381,7 +381,7 @@ const UserSettingsPage = () => {
         setShareBrowsing(data.shareBrowsing);
         setShareAge(data.shareAge);
       } catch (error) {
-        console.error('Error fetching user preferences:', error);
+        console.log('Error fetching user preferences:', error);
       }
     };
     
@@ -485,7 +485,7 @@ const UserSettingsPage = () => {
         setSuccessMessage(null);
       }, 3000);
     } catch (error) {
-      console.error('Error saving settings:', error);
+      console.log('Error saving settings:', error);
     } finally {
       setIsSubmitting(false);
     }

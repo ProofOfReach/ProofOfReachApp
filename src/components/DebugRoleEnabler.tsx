@@ -83,12 +83,12 @@ const DebugRoleEnabler: React.FC = () => {
         if (legacySuccess) {
           logger.log('All roles enabled using legacy method');
         } else {
-          logger.error('Failed to enable all roles');
+          logger.log('Failed to enable all roles');
         }
       }
     } catch (error) {
       const errorMsg = error instanceof Error ? error.message : String(error);
-      logger.error('Error enabling all roles:', errorMsg);
+      logger.log('Error enabling all roles:', errorMsg);
     } finally {
       setIsLoading(false);
     }

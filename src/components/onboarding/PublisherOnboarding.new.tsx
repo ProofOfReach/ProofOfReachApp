@@ -210,9 +210,9 @@ const PublisherOnboarding: React.FC<PublisherOnboardingProps> = React.memo(({ cu
                     <span className="animate-spin mr-2"><RefreshCw size={16} /></span>
                     Generating your API key...
                   </div>
-                ) : apiKeyData.error ? (
+                ) : apiKeyData.log ? (
                   <div className="text-red-500 text-sm">
-                    {apiKeyData.error}
+                    {apiKeyData.log}
                     <button 
                       onClick={generateApiKey}
                       className="ml-2 underline"
@@ -306,7 +306,7 @@ const PublisherOnboarding: React.FC<PublisherOnboardingProps> = React.memo(({ cu
       });
     })
     .catch(error => {
-      console.error('Failed to load publisher config:', error);
+      console.log('Failed to load publisher config:', error);
     });
 </script>`}
                     />
@@ -414,7 +414,7 @@ function AdContainer() {
         // Render ads in container
         window.NostrAds.render('#ad-container');
       } catch (error) {
-        console.error('Failed to initialize ad client:', error);
+        console.log('Failed to initialize ad client:', error);
       }
     };
     
@@ -478,7 +478,7 @@ async function serveAdExample() {
       console.log('No suitable ad available');
     }
   } catch (error) {
-    console.error('Error serving ad:', error);
+    console.log('Error serving ad:', error);
   }
 }
 
@@ -504,7 +504,7 @@ async function getStatsExample() {
     console.log('CTR:', stats.ctr);
     console.log('Earnings:', stats.earnings);
   } catch (error) {
-    console.error('Error fetching stats:', error);
+    console.log('Error fetching stats:', error);
   }
 }`}
                       />
@@ -557,9 +557,9 @@ async function getStatsExample() {
                     <span className="animate-spin mr-2"><RefreshCw size={16} /></span>
                     Generating your API key...
                   </div>
-                ) : apiKeyData.error ? (
+                ) : apiKeyData.log ? (
                   <div className="text-red-500 text-sm">
-                    {apiKeyData.error}
+                    {apiKeyData.log}
                     <button 
                       onClick={generateApiKey}
                       className="ml-2 underline"

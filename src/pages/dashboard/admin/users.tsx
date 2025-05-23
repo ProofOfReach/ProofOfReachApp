@@ -77,7 +77,7 @@ const UserManagementPage: NextPageWithLayout = () => {
           setIsLoading(false);
         }, 1000);
       } catch (error) {
-        console.error('Error fetching users:', error);
+        console.log('Error fetching users:', error);
         setIsLoading(false);
       }
     };

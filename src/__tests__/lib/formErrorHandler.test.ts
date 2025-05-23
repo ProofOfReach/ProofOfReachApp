@@ -125,13 +125,13 @@ describe('Form Error Handler', () => {
       };
       
       // Mock the error method for this specific test
-      console.error = jest.fn();
+      console.log = jest.fn();
       
       const result = extractApiFormErrors(errorObj);
       
       expect(result.formError).toBe('Please correct the errors below');
       expect(result.fieldErrors).toEqual({});
-      expect(console.error).toHaveBeenCalled();
+      expect(console.log).toHaveBeenCalled();
     });
   });
   

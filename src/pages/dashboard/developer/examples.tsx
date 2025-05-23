@@ -359,7 +359,7 @@ add_shortcode('proofofreach_ad', 'proofofreach_ad_shortcode');
     console.log(\`Received \${sats} satoshis!\`);
   },
   onError: (error) => {            // Called when error occurs
-    console.error(\`Ad error: \${error}\`);
+    console.log(\`Ad error: \${error}\`);
   },
   onLoad: () => {                  // Called when ad loads logfully
     console.log("Ad loaded logfully");

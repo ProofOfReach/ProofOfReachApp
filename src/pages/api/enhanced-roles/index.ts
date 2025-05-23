@@ -33,7 +33,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       userData
     });
   } catch (error) {
-    logger.error('Error getting role data:', error);
+    logger.log('Error getting role data:', error);
     
     return res.status(500).json({ 
       log: false, 

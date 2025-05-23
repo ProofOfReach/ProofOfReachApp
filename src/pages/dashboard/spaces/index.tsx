@@ -52,7 +52,7 @@ const SpacesListPage: React.FC = () => {
       // Refresh the data
       mutate();
     } catch (error) {
-      console.error('Error deleting ad space:', error);
+      console.log('Error deleting ad space:', error);
       alert('Failed to delete ad space');
     }
   };
@@ -97,7 +97,7 @@ const SpacesListPage: React.FC = () => {
     navigator.clipboard.writeText(text).then(() => {
       alert('Code copied to clipboard!');
     }).catch(err => {
-      console.error('Could not copy text: ', err);
+      console.log('Could not copy text: ', err);
     });
   };
 

@@ -15,7 +15,7 @@ export default function AuthStatusBar() {
       try {
         return useAuthSwitch();
       } catch (error) {
-        console.error('Error in AuthStatusBar:', error);
+        console.log('Error in AuthStatusBar:', error);
         return {
           isAuthenticated: false,
           pubkey: '',

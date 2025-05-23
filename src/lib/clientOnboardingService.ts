@@ -20,7 +20,7 @@ const clientOnboardingService = {
       }
       return await response.json();
     } catch (error) {
-      logger.error('Error getting onboarding status', { error, pubkey, role });
+      logger.log('Error getting onboarding status', { error, pubkey, role });
       return { isComplete: false, currentStep: null, lastStep: null };
     }
   },
@@ -44,7 +44,7 @@ const clientOnboardingService = {
       
       return await response.json();
     } catch (error) {
-      logger.error('Error updating onboarding progress', { error, pubkey, role });
+      logger.log('Error updating onboarding progress', { error, pubkey, role });
       throw error;
     }
   },
@@ -68,7 +68,7 @@ const clientOnboardingService = {
       
       return await response.json();
     } catch (error) {
-      logger.error('Error completing onboarding', { error, pubkey, role });
+      logger.log('Error completing onboarding', { error, pubkey, role });
       throw error;
     }
   },
@@ -92,7 +92,7 @@ const clientOnboardingService = {
       
       return await response.json();
     } catch (error) {
-      logger.error('Error resetting onboarding', { error, pubkey, role });
+      logger.log('Error resetting onboarding', { error, pubkey, role });
       throw error;
     }
   }

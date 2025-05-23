@@ -28,7 +28,7 @@ const AuthDirectPage = () => {
         setAuthState(state);
         setLoginStatus(state ? 'Already logged in' : 'Not logged in');
       } catch (error) {
-        logger.error('Auth check error:', error);
+        logger.log('Auth check error:', error);
         setLoginStatus('Error checking auth state');
       } finally {
         setIsLoading(false);
@@ -59,7 +59,7 @@ const AuthDirectPage = () => {
       setLoginStatus('Login logful! Check roles below.');
       logger.log('Login logful');
     } catch (error) {
-      logger.error('Login failed:', error);
+      logger.log('Login failed:', error);
       setLoginStatus('Login failed: ' + (error instanceof Error ? error.message : String(error)));
     } finally {
       setIsLoading(false);
@@ -76,7 +76,7 @@ const AuthDirectPage = () => {
       setLoginStatus('Logout logful.');
       logger.log('Logout logful');
     } catch (error) {
-      logger.error('Logout failed:', error);
+      logger.log('Logout failed:', error);
       setLoginStatus('Logout failed: ' + (error instanceof Error ? error.message : String(error)));
     } finally {
       setIsLoading(false);
@@ -97,7 +97,7 @@ const AuthDirectPage = () => {
       setLoginStatus(`Login logful as ${testPubkey}! Check roles below.`);
       logger.log('Quick login logful');
     } catch (error) {
-      logger.error('Quick login failed:', error);
+      logger.log('Quick login failed:', error);
       setLoginStatus('Login failed: ' + (error instanceof Error ? error.message : String(error)));
     } finally {
       setIsLoading(false);

@@ -103,7 +103,7 @@ export const TestModeProvider: React.FC<TestModeProviderProps> = ({ children }) 
       
       return false;
     } catch (error) {
-      logger.error('Error updating test mode state:', error);
+      logger.log('Error updating test mode state:', error);
       return false;
     }
   }, []);
@@ -387,10 +387,10 @@ export const TestModeProvider: React.FC<TestModeProviderProps> = ({ children }) 
         
         logger.log('Test mode enabled logfully');
       } else {
-        logger.error('Failed to enable test mode');
+        logger.log('Failed to enable test mode');
       }
     } catch (error) {
-      logger.error('Error enabling test mode', error);
+      logger.log('Error enabling test mode', error);
     }
   }, [updateTestModeState]);
   
@@ -413,7 +413,7 @@ export const TestModeProvider: React.FC<TestModeProviderProps> = ({ children }) 
       
       logger.log('Test mode disabled');
     } catch (error) {
-      logger.error('Error disabling test mode', error);
+      logger.log('Error disabling test mode', error);
     }
   }, []);
   
@@ -434,7 +434,7 @@ export const TestModeProvider: React.FC<TestModeProviderProps> = ({ children }) 
       // Fully delegate to RoleManager
       const roleSuccess = RoleManager.enableAllRoles();
       if (!roleSuccess) {
-        logger.error('Failed to enable all roles via RoleManager');
+        logger.log('Failed to enable all roles via RoleManager');
         return false;
       }
       
@@ -461,7 +461,7 @@ export const TestModeProvider: React.FC<TestModeProviderProps> = ({ children }) 
       logger.log('All roles enabled in test mode');
       return true;
     } catch (error) {
-      logger.error('Error enabling all roles in test mode', error);
+      logger.log('Error enabling all roles in test mode', error);
       return false;
     }
   }, []);
@@ -485,7 +485,7 @@ export const TestModeProvider: React.FC<TestModeProviderProps> = ({ children }) 
       // Fully delegate to RoleManager
       const roleSuccess = RoleManager.setCurrentRole(role);
       if (!roleSuccess) {
-        logger.error(`Failed to set role to ${role} via RoleManager`);
+        logger.log(`Failed to set role to ${role} via RoleManager`);
         return false;
       }
       
@@ -508,7 +508,7 @@ export const TestModeProvider: React.FC<TestModeProviderProps> = ({ children }) 
       
       return true;
     } catch (error) {
-      logger.error('Error changing role in test mode', error);
+      logger.log('Error changing role in test mode', error);
       return false;
     }
   }, []);

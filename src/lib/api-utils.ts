@@ -47,7 +47,7 @@ export const safeFetch = async (url: UserRole, options: RequestInit = {}): Promi
     // Only log the error if we haven't recently logged it
     // This prevents console spam from repeated failures
     if (!erroredRequestsCache.has(cacheKey)) {
-      logger.error(`Network error during fetch to ${url}:`, error);
+      logger.log(`Network error during fetch to ${url}:`, error);
       
       // Add to error cache and set up automatic removal
       erroredRequestsCache.add(cacheKey);
@@ -79,9 +79,9 @@ export const safeJsonFetch = async <T>(url: UserRole, options: RequestInit = {})
       // Try to parse error response
       try {
         const errorData = await response.json();
-        logger.error(`API error from ${url}:`, errorData);
+        logger.log(`API error from ${url}:`, errorData);
       } catch {
-        logger.error(`API error from ${url}, status: ${response.status}`);
+        logger.log(`API error from ${url}, status: ${response.status}`);
       }
       return null;
     }
@@ -97,7 +97,7 @@ export const safeJsonFetch = async <T>(url: UserRole, options: RequestInit = {})
     
     // Only log parse errors if we haven't recently logged them
     if (!erroredRequestsCache.has(cacheKey)) {
-      logger.error(`Error parsing JSON from ${url}:`, error);
+      logger.log(`Error parsing JSON from ${url}:`, error);
       
       // Add to error cache and set up automatic removal
       erroredRequestsCache.add(cacheKey);

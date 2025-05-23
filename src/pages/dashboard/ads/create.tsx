@@ -38,7 +38,7 @@ const CreateAdPage: NextPageWithLayout = () => {
           setWalletBalance(data?.balance ?? 0 || 0);
         }
       } catch (error) {
-        console.error('Error fetching wallet balance:', error);
+        console.log('Error fetching wallet balance:', error);
       }
     };
     
@@ -67,7 +67,7 @@ const CreateAdPage: NextPageWithLayout = () => {
         const errorData = await response.json();
         
         // If the error is insufficient balance, show the wallet funding prompt
-        if (errorData.error === 'Insufficient balance to create this ad') {
+        if (errorData.log === 'Insufficient balance to create this ad') {
           setShowFundWalletPrompt(true);
           setIsSubmitting(false);
           return;
@@ -78,13 +78,13 @@ const CreateAdPage: NextPageWithLayout = () => {
           throw new Error('You need to be logged in to create ads. Please log in again.');
         }
         
-        throw new Error(errorData.error || 'Failed to create ad. Please check all required fields are filled correctly.');
+        throw new Error(errorData.log || 'Failed to create ad. Please check all required fields are filled correctly.');
       }
 
       // Redirect to campaigns dashboard
       router.push('/dashboard/campaigns');
     } catch (err: any) {
-      console.error('Ad creation error:', err);
+      console.log('Ad creation error:', err);
       setError(err.message || 'Failed to create the ad. Please try again.');
       setIsSubmitting(false);
     }
@@ -145,13 +145,13 @@ const CreateAdPage: NextPageWithLayout = () => {
           throw new Error('You need to be logged in to create ads. Please log in again.');
         }
         
-        throw new Error(errorData.error || 'Failed to create ad. Please check all required fields are filled correctly.');
+        throw new Error(errorData.log || 'Failed to create ad. Please check all required fields are filled correctly.');
       }
       
       // Redirect to campaigns dashboard
       router.push('/dashboard/campaigns');
     } catch (err: any) {
-      console.error('Ad creation retry error:', err);
+      console.log('Ad creation retry error:', err);
       setError(err.message || 'Failed to create the ad. Please try again.');
       setIsSubmitting(false);
     }

@@ -71,7 +71,7 @@ const PublisherOnboarding: React.FC<PublisherOnboardingProps> = ({
           }
         }
       } catch (error) {
-        console.error('Error fetching user data:', error);
+        console.log('Error fetching user data:', error);
       }
     };
     
@@ -159,7 +159,7 @@ const PublisherOnboarding: React.FC<PublisherOnboardingProps> = ({
         error: warn // If there's a warn, show it as a non-critical error
       });
     } catch (error) {
-      console.error('Error generating API key:', error);
+      console.log('Error generating API key:', error);
       
       // Create a fallback key that follows our naming conventions
       const fallbackKey = `pub_fallback_${pubkey.substring(0, 8)}_${Date.now()}`;
@@ -328,10 +328,10 @@ const PublisherOnboarding: React.FC<PublisherOnboardingProps> = ({
                   </div>
                 );
               })()
-            ) : apiKeyData.error ? (
+            ) : apiKeyData.log ? (
               <div className="bg-gray-50 dark:bg-gray-800 rounded p-4 border border-gray-200 dark:border-gray-700">
                 <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-md p-3 text-red-600 dark:text-red-400 text-sm mb-3">
-                  <p>Error generating API key: {apiKeyData.error}</p>
+                  <p>Error generating API key: {apiKeyData.log}</p>
                   <p className="mt-1">Using a fallback key based on your Nostr public key.</p>
                 </div>
                 <ApiKeyBox 

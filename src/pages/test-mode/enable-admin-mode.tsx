@@ -57,7 +57,7 @@ const EnableAdminMode: React.FC = () => {
           }
         })
         .catch(err => {
-          logger.error('Error in setRole:', err);
+          logger.log('Error in setRole:', err);
           // Fall back to direct navigation
           setTimeout(() => {
             window.location.href = '/dashboard/admin';
@@ -66,7 +66,7 @@ const EnableAdminMode: React.FC = () => {
       
       return () => {}; // No cleanup needed
     } catch (err) {
-      console.error('Error enabling admin test mode:', err);
+      console.log('Error enabling admin test mode:', err);
       setError('Failed to enable test mode. Please try again or check console for details.');
       setIsRedirecting(false);
     }

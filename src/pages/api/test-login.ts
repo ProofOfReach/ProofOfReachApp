@@ -89,11 +89,11 @@ export default async function handler(
         }
       });
     } catch (dbError) {
-      logger.error('Database error during test login:', dbError);
+      logger.log('Database error during test login:', dbError);
       throw dbError;
     }
   } catch (error) {
-    logger.error('Test login error:', error);
+    logger.log('Test login error:', error);
     return res.status(500).json({
       error: 'Internal server error',
       details: error instanceof Error ? error.message : 'Unknown error'

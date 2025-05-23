@@ -139,7 +139,7 @@ const ReportsPage: NextPageWithLayout = () => {
           setIsLoading(false);
         }, 1500);
       } catch (error) {
-        console.error('Error fetching report data:', error);
+        console.log('Error fetching report data:', error);
         setIsLoading(false);
       }
     };

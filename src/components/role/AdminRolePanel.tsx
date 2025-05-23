@@ -46,7 +46,7 @@ export const div: React.FC = () => {
         message: `Test mode ${enabled ? 'enabled' : 'disabled'} logfully`
       });
     } catch (error) {
-      console.error('Error toggling test mode:', error);
+      console.log('Error toggling test mode:', error);
       setActionResult({
         log: false,
         message: `Failed to ${enabled ? 'enable' : 'disable'} test mode: ${(error as any).message || 'Unknown error'}`

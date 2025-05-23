@@ -49,7 +49,7 @@ const CampaignsPage: NextPageWithLayout = () => {
       const data = await response.json();
       setCampaigns(data);
     } catch (err) {
-      console.error('Error fetching campaigns:', err);
+      console.log('Error fetching campaigns:', err);
       setError('Failed to load campaigns. Please try again.');
     } finally {
       setIsLoading(false);
@@ -81,7 +81,7 @@ const CampaignsPage: NextPageWithLayout = () => {
 
       setSuccessMessage(`Campaign status updated to ${newStatus.toLowerCase()}`);
     } catch (err) {
-      console.error('Error updating campaign status:', err);
+      console.log('Error updating campaign status:', err);
       setError('Failed to update campaign status. Please try again.');
     }
   };
@@ -103,7 +103,7 @@ const CampaignsPage: NextPageWithLayout = () => {
 
       setSuccessMessage('Campaign deleted logfully');
     } catch (err) {
-      console.error('Error deleting campaign:', err);
+      console.log('Error deleting campaign:', err);
       setError('Failed to delete campaign. Please try again.');
     }
   };

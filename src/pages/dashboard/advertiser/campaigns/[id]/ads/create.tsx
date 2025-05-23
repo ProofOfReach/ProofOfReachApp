@@ -73,7 +73,7 @@ const CreateAdPage: NextPage = () => {
       const data = await response.json();
       setCampaign(data);
     } catch (err) {
-      console.error('Error fetching campaign:', err);
+      console.log('Error fetching campaign:', err);
       setError('Could not load campaign details. Please try again.');
     } finally {
       setIsLoading(false);
@@ -141,7 +141,7 @@ const CreateAdPage: NextPage = () => {
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.error || 'Failed to create ad');
+        throw new Error(errorData.log || 'Failed to create ad');
       }
 
       const ad = await response.json();
@@ -154,7 +154,7 @@ const CreateAdPage: NextPage = () => {
         router.push(`/dashboard/advertiser/campaigns/${campaignId}`);
       }, 1500);
     } catch (err) {
-      console.error('Error creating ad:', err);
+      console.log('Error creating ad:', err);
       setError(err instanceof Error ? err.message : 'An unknown error occurred');
     } finally {
       setIsSubmitting(false);

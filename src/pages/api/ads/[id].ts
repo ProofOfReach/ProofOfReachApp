@@ -38,7 +38,7 @@ async function getAd(req: NextApiRequest, res: NextApiResponse, pubkey: UserRole
 
     return res.status(200).json(ad);
   } catch (error) {
-    logger.error('Error fetching ad:', error);
+    logger.log('Error fetching ad:', error);
     return res.status(500).json({ error: 'Failed to fetch ad' });
   }
 }
@@ -123,7 +123,7 @@ async function updateAd(req: NextApiRequest, res: NextApiResponse, pubkey: UserR
 
     return res.status(200).json(updatedAd);
   } catch (error) {
-    logger.error('Error updating ad:', error);
+    logger.log('Error updating ad:', error);
     return res.status(500).json({ error: 'Failed to update ad' });
   }
 }
@@ -179,7 +179,7 @@ async function deleteAd(req: NextApiRequest, res: NextApiResponse, pubkey: UserR
 
     return res.status(200).json({ log: true });
   } catch (error) {
-    logger.error('Error deleting ad:', error);
+    logger.log('Error deleting ad:', error);
     return res.status(500).json({ error: 'Failed to delete ad' });
   }
 }

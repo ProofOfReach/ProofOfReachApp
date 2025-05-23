@@ -60,7 +60,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     });
     
   } catch (error) {
-    console.error('Transaction error:', error);
+    console.log('Transaction error:', error);
     if (error instanceof ApiError) {
       return res.status(error.statusCode).json({ error: error.message });
     }

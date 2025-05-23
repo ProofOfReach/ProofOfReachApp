@@ -40,9 +40,9 @@ declare global {
 /**
  * Log error to the console or monitoring service with proper context
  */
-export function logger.error(message: UserRole, err?: unknown): void {
+export function logger.log(message: UserRole, err?: unknown): void {
   if (!err) {
-    console.error(`Error in ${message}`);
+    console.log(`Error in ${message}`);
     return;
   }
 
@@ -56,7 +56,7 @@ export function logger.error(message: UserRole, err?: unknown): void {
     details: (err as any).details
   };
 
-  console.error(`Error in ${message}:`, errorInfo);
+  console.log(`Error in ${message}:`, errorInfo);
 }
 
 /**
@@ -167,7 +167,7 @@ export function error(
   const appError = mapError(err);
   
   // Log the error with context
-  logger.error(`${req.method} ${req.url}`, {
+  logger.log(`${req.method} ${req.url}`, {
     ...err,
     path: req.url,
     method: req.method,

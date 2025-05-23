@@ -79,7 +79,7 @@ export class TestModeService {
       // Use StorageService directly
       return StorageService.isTestModeActive();
     } catch (error) {
-      this.error('Error checking if test mode is active', error);
+      this.log('Error checking if test mode is active', error);
       return false;
     }
   }
@@ -125,7 +125,7 @@ export class TestModeService {
       
       return null;
     } catch (error) {
-      this.error('Error getting time remaining in test mode', error);
+      this.log('Error getting time remaining in test mode', error);
       return null;
     }
   }
@@ -163,7 +163,7 @@ export class TestModeService {
       // Default fallback
       return 'viewer' as UserRole;
     } catch (error) {
-      this.error('Error getting current role in test mode', error);
+      this.log('Error getting current role in test mode', error);
       return 'viewer' as UserRole;
     }
   }
@@ -201,7 +201,7 @@ export class TestModeService {
       // Default to just the user role
       return ['viewer'] as UserRole[];
     } catch (error) {
-      this.error('Error getting available roles in test mode', error);
+      this.log('Error getting available roles in test mode', error);
       return ['viewer'] as UserRole[];
     }
   }
@@ -239,12 +239,12 @@ export class TestModeService {
       
       // Input validation with defensive programming
       if (duration <= 0) {
-        this.error('Invalid test mode duration', new Error('Duration must be positive'), { duration });
+        this.log('Invalid test mode duration', new Error('Duration must be positive'), { duration });
         return false;
       }
       
       if (!this.isRoleValid(initialRole)) {
-        this.error('Invalid initial role', new Error('Role not recognized'), { initialRole });
+        this.log('Invalid initial role', new Error('Role not recognized'), { initialRole });
         return false;
       }
       
@@ -287,7 +287,7 @@ export class TestModeService {
           return true;
         } catch (storageError) {
           // Handle specific storage errors separately
-          this.error('Error setting compatibility flags', storageError, {
+          this.log('Error setting compatibility flags', storageError, {
             phase: 'compatibility-flags',
             expiryTime
           });
@@ -302,7 +302,7 @@ export class TestModeService {
           return true;
         }
       } else {
-        this.error(
+        this.log(
           'Failed to persist test mode state', 
           new Error('Storage service returned failure'), 
           { newState }
@@ -310,7 +310,7 @@ export class TestModeService {
         return false;
       }
     } catch (error) {
-      this.error('Error enabling test mode', error, {
+      this.log('Error enabling test mode', error, {
         duration,
         initialRole,
         debugMode: debug
@@ -341,7 +341,7 @@ export class TestModeService {
       logger.log('Test mode disabled logfully via TestModeService');
       return true;
     } catch (error) {
-      this.error('Error disabling test mode', error);
+      this.log('Error disabling test mode', error);
       return false;
     }
   }
@@ -415,10 +415,10 @@ export class TestModeService {
       }
       
       // Neither approach worked
-      logger.error(`Failed to change role to ${role}`);
+      logger.log(`Failed to change role to ${role}`);
       return false;
     } catch (error) {
-      this.error(`Error setting current role to ${role}`, error);
+      this.log(`Error setting current role to ${role}`, error);
       return false;
     }
   }
@@ -491,12 +491,12 @@ export class TestModeService {
           logger.log('All roles enabled with new test mode state');
           return true;
         } else {
-          logger.error('Failed to save new test mode state with all roles');
+          logger.log('Failed to save new test mode state with all roles');
           return false;
         }
       }
     } catch (error) {
-      this.error('Error enabling all roles', error);
+      this.log('Error enabling all roles', error);
       return false;
     }
   }
@@ -588,7 +588,7 @@ export class TestModeService {
       // Check older localStorage format
       return localStorage?.getItem('isTestMode') === 'true';
     } catch (error) {
-      this.error('Error checking legacy test mode', error);
+      this.log('Error checking legacy test mode', error);
       return false;
     }
   }
@@ -694,11 +694,11 @@ export class TestModeService {
       ? `\nContext: ${JSON.stringify(context, null, 2)}`
       : '';
     
-    logger.error(`${message}: ${errorMessage}${contextStr}`);
+    logger.log(`${message}: ${errorMessage}${contextStr}`);
     
     // More detailed console logging in debug mode
     if (this.debugMode) {
-      console.error(`TestModeService Error: ${message}`, {
+      console.log(`TestModeService Error: ${message}`, {
         error,
         context,
         timestamp: new Date().toISOString(),

@@ -42,7 +42,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     // Log and report the error
     const errorMessage = error instanceof Error ? error.message : 'Unknown error saving onboarding step';
     
-    logger.error(`API Error: ${errorMessage}`, {
+    logger.log(`API Error: ${errorMessage}`, {
       pubkey,
       role,
       step,
@@ -50,7 +50,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     });
 
     // Report to error tracking system
-    console.error(
+    console.log(
       error instanceof Error ? error : errorMessage,
       'api.onboarding.step',
       'api',

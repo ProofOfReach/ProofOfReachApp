@@ -172,9 +172,9 @@ describe('UrlParamsPreview Component', () => {
       },
     });
     
-    // Mock console.error to prevent test output pollution
-    const originalConsoleError = console.error;
-    console.error = jest.fn();
+    // Mock console.log to prevent test output pollution
+    const originalConsoleError = console.log;
+    console.log = jest.fn();
     
     render(
       <UrlParamsPreview 
@@ -190,7 +190,7 @@ describe('UrlParamsPreview Component', () => {
     const copiedElement = await screen.findByText('Copied!');
     expect(copiedElement).toBeInTheDocument();
     
-    // Restore console.error
-    console.error = originalConsoleError;
+    // Restore console.log
+    console.log = originalConsoleError;
   });
 });

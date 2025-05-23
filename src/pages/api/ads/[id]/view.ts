@@ -43,7 +43,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       periodHours: freqCapHours,
     });
   } catch (err) {
-    logger.error('Error recording ad view:', err);
+    logger.log('Error recording ad view:', err);
     return res.status(500).json({ error: 'Failed to record ad view' });
   }
 }

@@ -80,7 +80,7 @@ const prismaClientSingleton = () => {
     });
 
     (client as any).$on('error', (event: LogEvent) => {
-      logger.error(`Prisma Error: ${event.message}`);
+      logger.log(`Prisma Error: ${event.message}`);
     });
 
     (client as any).$on('info', (event: LogEvent) => {
@@ -108,7 +108,7 @@ const prismaClientSingleton = () => {
       logger.info('Database connection closed gracefully');
       process.exit(0);
     } catch (error) {
-      logger.error('Error disconnecting from database', error);
+      logger.log('Error disconnecting from database', error);
       process.exit(1);
     }
   };

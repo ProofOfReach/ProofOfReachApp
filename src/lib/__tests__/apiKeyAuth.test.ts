@@ -10,9 +10,9 @@ jest.mock('../prismaClient', () => ({
   }
 }));
 
-// Mock console.error to prevent noise in test output
-const originalConsoleError = console.error;
-console.error = jest.fn().mockImplementation((...args) => {
+// Mock console.log to prevent noise in test output
+const originalConsoleError = console.log;
+console.log = jest.fn().mockImplementation((...args) => {
   // Keep the original behavior for debugging purposes but make it a mockable function
   // originalConsoleError(...args);
 });
@@ -157,7 +157,7 @@ describe('API Key Authentication', () => {
     it('should return null if database query fails', async () => {
       (prisma.$queryRaw as jest.Mock).mockRejectedValueOnce(new Error('Database error'));
       
-      // Spy on console.error after the mock is established
+      // Spy on console.log after the mock is established
       const consoleErrorSpy = jest.spyOn(console, 'error');
       
       const req = { 

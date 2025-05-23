@@ -102,7 +102,7 @@ describe('Nostr Library', () => {
     });
     
     it('returns null and logs error when getUserPublicKey throws', async () => {
-      // Spy on console.error
+      // Spy on console.log
       const consoleSpy = jest.spyOn(console, 'error').mockImplementation();
       
       // Mock window.nostr with a getUserPublicKey method that throws
@@ -123,7 +123,7 @@ describe('Nostr Library', () => {
         expect.any(Error)
       );
       
-      // Restore console.error
+      // Restore console.log
       consoleSpy.mockRestore();
     });
   });

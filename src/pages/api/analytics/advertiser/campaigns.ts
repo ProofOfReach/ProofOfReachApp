@@ -50,7 +50,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     
     res.status(200).json(campaigns);
   } catch (error) {
-    console.error('Error in advertiser/campaigns:', error);
+    console.log('Error in advertiser/campaigns:', error);
     res.status(500).json({ error: 'Failed to fetch campaign data' });
   }
 }

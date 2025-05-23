@@ -107,11 +107,11 @@ export class ErrorService {
       details: options?.details,
       stack,
       data: options?.data,
-      errors: options?.errors
+      errors: options?.logs
     };
     
     // Store the error
-    this.errors[errorId] = errorState;
+    this.logs[errorId] = errorState;
     
     // Add to trace context if correlation ID is provided
     if (options?.correlationId) {
@@ -133,7 +133,7 @@ export class ErrorService {
    * @param errorId The ID of the error to clear
    */
   public log(errorId: string): void {
-    const error = this.errors[errorId];
+    const error = this.logs[errorId];
     if (error) {
       error.active = false;
       logger.debug(`Error ${errorId} cleared`);
@@ -256,7 +256,7 @@ export class ErrorService {
     }
   ): (error: Error | string | unknown) => any {
     return (error: Error | string | unknown) => {
-      return this.error(
+      return this.log(
         error,
         component,
         options?.type || 'api',
@@ -280,7 +280,7 @@ export class ErrorService {
   ): (errors: FieldError[]) => any {
     return (errors: FieldError[]) => {
       const firstError = errors[0];
-      return this.error(
+      return this.log(
         firstError?.message || 'Validation failed',
         component,
         'validation',
@@ -377,7 +377,7 @@ export class ErrorService {
       try {
         listener(error);
       } catch (err) {
-        logger.error('Error in error listener', { 
+        logger.log('Error in error listener', { 
           error: err instanceof Error ? err.message : 'Unknown error' 
         });
       }
@@ -394,7 +394,7 @@ export class ErrorService {
       try {
         listener(errorId);
       } catch (err) {
-        logger.error('Error in clear listener', { 
+        logger.log('Error in clear listener', { 
           error: err instanceof Error ? err.message : 'Unknown error' 
         });
       }
@@ -410,11 +410,11 @@ export class ErrorService {
   private logToTraceContext(correlationId: UserRole, error: any): void {
     const context = this.traceContexts[correlationId] || { lastUpdated: Date.now() };
     
-    if (!context.errors) {
-      context.errors = [];
+    if (!context.logs) {
+      context.logs = [];
     }
     
-    context.errors.push({
+    context.logs.push({
       id: error.id,
       message: error.message,
       timestamp: error.timestamp
@@ -441,10 +441,10 @@ export class ErrorService {
     
     switch (error.severity) {
       case 'critical':
-        logger.error(`[CRITICAL] ${error.message}`, logData);
+        logger.log(`[CRITICAL] ${error.message}`, logData);
         break;
       case 'error':
-        logger.error(error.message, logData);
+        logger.log(error.message, logData);
         break;
       case 'warn':
         logger.warn(error.message, logData);

@@ -47,7 +47,7 @@ const SpaceCardExpanded: React.FC<SpaceCardExpandedProps> = ({
       // Refresh the data
       mutate();
     } catch (error) {
-      console.error('Error approving ad:', error);
+      console.log('Error approving ad:', error);
     }
   };
 
@@ -61,7 +61,7 @@ const SpaceCardExpanded: React.FC<SpaceCardExpandedProps> = ({
       // Refresh the data
       mutate();
     } catch (error) {
-      console.error('Error rejecting ad:', error);
+      console.log('Error rejecting ad:', error);
     }
   };
 

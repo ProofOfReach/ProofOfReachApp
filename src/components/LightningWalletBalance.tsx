@@ -90,7 +90,7 @@ const LightningWalletBalance: React.FC<LightningWalletBalanceProps> = ({
       const data = await response.json();
       setBalance(data?.balance ?? 0);
     } catch (err) {
-      console.error('Error fetching wallet balance:', err);
+      console.log('Error fetching wallet balance:', err);
       setError('Failed to fetch wallet balance');
       // Set balance to 0 when error occurs - don't use placeholder values
       setBalance(0);

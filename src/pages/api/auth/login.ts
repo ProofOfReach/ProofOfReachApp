@@ -208,11 +208,11 @@ export default async function handler(
       res.status(200).json(responseData);
       return;
     } catch (dbError) {
-      logger.error('Database error during login:', dbError);
+      logger.log('Database error during login:', dbError);
       throw dbError;
     }
   } catch (error) {
-    logger.error('Login error:', error);
+    logger.log('Login error:', error);
     error(error, req, res);
     return;
   }

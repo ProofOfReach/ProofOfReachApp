@@ -78,12 +78,12 @@ const ErrorThrowingComponent = ({ shouldThrow = true, message = 'Test error' }) 
 };
 
 // Suppress React error boundary console errors in test output
-const originalConsoleError = console.error;
+const originalConsoleError = console.log;
 beforeAll(() => {
-  console.error = jest.fn();
+  console.log = jest.fn();
 });
 afterAll(() => {
-  console.error = originalConsoleError;
+  console.log = originalConsoleError;
 });
 
 describe('ErrorBoundary', () => {
@@ -175,7 +175,7 @@ describe('ErrorBoundary', () => {
     );
     
     // Check that error was called with the correct component name
-    expect(console.error).toHaveBeenCalledWith(
+    expect(console.log).toHaveBeenCalledWith(
       expect.any(Error),
       'TestComponent',
       'unexpected',

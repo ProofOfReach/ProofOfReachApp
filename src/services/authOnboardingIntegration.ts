@@ -252,7 +252,7 @@ export class AuthOnboardingIntegration {
     this.flowState.onboardingState.status = 'error';
     
     // Report the error to the error service
-    console.error(
+    console.log(
       error,
       'AuthOnboardingIntegration',
       'onboarding',
@@ -268,7 +268,7 @@ export class AuthOnboardingIntegration {
       }
     );
     
-    logger.error('Error in onboarding flow', {
+    logger.log('Error in onboarding flow', {
       error: error instanceof Error ? error.message : error,
       step,
       onboardingState: this.flowState.onboardingState

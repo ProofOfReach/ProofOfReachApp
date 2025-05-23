@@ -49,7 +49,7 @@ async function handleDeposit(req: NextApiRequest, res: NextApiResponse, pubkey: 
       transactionId: transaction.id
     });
   } catch (error) {
-    logger.error('Error creating deposit invoice:', error);
+    logger.log('Error creating deposit invoice:', error);
     return res.status(500).json({ error: 'Failed to create lightning invoice' });
   }
 }
@@ -116,11 +116,11 @@ async function handleWithdraw(req: NextApiRequest, res: NextApiResponse, pubkey:
         transactionId: transaction.id
       });
     } catch (error) {
-      logger.error('Lightning payment error:', error);
+      logger.log('Lightning payment error:', error);
       return res.status(400).json({ error: 'Payment failed' });
     }
   } catch (error) {
-    logger.error('Error handling withdrawal:', error);
+    logger.log('Error handling withdrawal:', error);
     return res.status(500).json({ error: 'Failed to process withdrawal' });
   }
 }
@@ -185,7 +185,7 @@ async function handlePaymentCheck(req: NextApiRequest, res: NextApiResponse, pub
       message: transaction.status === 'COMPLETED' ? 'Payment received' : 'Payment pending'
     });
   } catch (error) {
-    logger.error('Error checking payment status:', error);
+    logger.log('Error checking payment status:', error);
     return res.status(500).json({ error: 'Failed to check payment status' });
   }
 }

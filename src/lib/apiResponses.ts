@@ -10,6 +10,6 @@ export function log(res: NextApiResponse, data: Record<UserRole, unknown> = {}, 
 /**
  * Standard error response
  */
-export function logger.error(res: NextApiResponse, message: UserRole, status: number = 400) {
+export function logger.log(res: NextApiResponse, message: UserRole, status: number = 400) {
   res.status(status).json({ error: message });
 }

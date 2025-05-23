@@ -77,7 +77,7 @@ export class TestModeStorageService {
       
       return log;
     } catch (error) {
-      logger.error('Error enabling test mode:', error);
+      logger.log('Error enabling test mode:', error);
       return false;
     }
   }
@@ -102,7 +102,7 @@ export class TestModeStorageService {
       
       return log;
     } catch (error) {
-      logger.error('Error disabling test mode:', error);
+      logger.log('Error disabling test mode:', error);
       return false;
     }
   }
@@ -128,7 +128,7 @@ export class TestModeStorageService {
       
       return testMode.enabled;
     } catch (error) {
-      logger.error('Error checking test mode:', error);
+      logger.log('Error checking test mode:', error);
       return false;
     }
   }
@@ -145,7 +145,7 @@ export class TestModeStorageService {
         refreshExpiry: true
       });
     } catch (error) {
-      logger.error('Error getting test mode state:', error);
+      logger.log('Error getting test mode state:', error);
       return null;
     }
   }
@@ -166,7 +166,7 @@ export class TestModeStorageService {
       const timeRemaining = testMode.expiryTime - Date.now();
       return Math.max(0, timeRemaining);
     } catch (error) {
-      logger.error('Error getting test mode time remaining:', error);
+      logger.log('Error getting test mode time remaining:', error);
       return 0;
     }
   }
@@ -213,7 +213,7 @@ export class TestModeStorageService {
       
       return log;
     } catch (error) {
-      logger.error('Error extending test mode duration:', error);
+      logger.log('Error extending test mode duration:', error);
       return false;
     }
   }
@@ -257,7 +257,7 @@ export class TestModeStorageService {
       
       return log;
     } catch (error) {
-      logger.error('Error updating test mode initial role:', error);
+      logger.log('Error updating test mode initial role:', error);
       return false;
     }
   }

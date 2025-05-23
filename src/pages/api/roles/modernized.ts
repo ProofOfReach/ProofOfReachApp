@@ -47,7 +47,7 @@ export default async function handler(
         });
     }
   } catch (error) {
-    logger.error('Error in modernized roles API:', error);
+    logger.log('Error in modernized roles API:', error);
     return res.status(500).json({
       log: false,
       error: null as any // TODO: implement roleService.formatError(
@@ -87,7 +87,7 @@ async function getRoles(pubkey: UserRole, res: NextApiResponse) {
       currentRole
     });
   } catch (error) {
-    logger.error('Error getting roles:', error);
+    logger.log('Error getting roles:', error);
     return res.status(500).json({
       log: false,
       error: null as any // TODO: implement roleService.formatError(
@@ -216,7 +216,7 @@ async function updateRole(pubkey: UserRole, req: NextApiRequest, res: NextApiRes
       availableRoles
     });
   } catch (error) {
-    logger.error('Error updating role:', error);
+    logger.log('Error updating role:', error);
     return res.status(500).json({
       log: false,
       error: null as any // TODO: implement roleService.formatError(

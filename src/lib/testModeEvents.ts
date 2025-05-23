@@ -79,10 +79,10 @@ export const dispatchTestModeEvent = <T extends TestModeEventType>(
         dispatchRoleEvent(ROLE_EVENTS.ROLES_UPDATED, payload as any);
         break;
       default:
-        logger.error(`Unknown event type: ${eventType}`);
+        logger.log(`Unknown event type: ${eventType}`);
     }
   } catch (error) {
-    logger.error(`Error dispatching test mode event ${eventType}:`, error);
+    logger.log(`Error dispatching test mode event ${eventType}:`, error);
   }
 };
 
@@ -107,7 +107,7 @@ export const addTestModeEventListener = <T extends TestModeEventType>(
     case TEST_MODE_EVENTS.ROLES_UPDATED:
       return addAppEventListener(ROLE_EVENTS.ROLES_UPDATED, handler as any);
     default:
-      logger.error(`Unknown event type: ${eventType}`);
+      logger.log(`Unknown event type: ${eventType}`);
       return () => {}; // Return a no-op cleanup function
   }
 };

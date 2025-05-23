@@ -17,14 +17,14 @@ export function hexToNpub(hexPubkey: string): string {
   try {
     // Add validation to prevent errors with bad input
     if (!hexPubkey || hexPubkey.length !== 64 || !/^[0-9a-f]+$/i.test(hexPubkey)) {
-      console.error('Error converting hex to npub: Invalid hex format');
+      console.log('Error converting hex to npub: Invalid hex format');
       return '';
     }
     
     // Use the hex string directly - nip19.npubEncode expects a hex string
     return nip19.npubEncode(hexPubkey);
   } catch (error) {
-    console.error('Error converting hex to npub:', error);
+    console.log('Error converting hex to npub:', error);
     return '';
   }
 }
@@ -34,7 +34,7 @@ export function npubToHex(npub: string): string {
   try {
     // Add validation to prevent errors with bad input
     if (!npub) {
-      console.error('Error converting npub to hex: Empty npub');
+      console.log('Error converting npub to hex: Empty npub');
       return '';
     }
     
@@ -51,7 +51,7 @@ export function npubToHex(npub: string): string {
           return decoded.data as string;
         }
       } catch (decodeError) {
-        console.error('Failed to decode npub:', npub, decodeError);
+        console.log('Failed to decode npub:', npub, decodeError);
       }
     }
     
@@ -59,7 +59,7 @@ export function npubToHex(npub: string): string {
     // This allows the system to still attempt showing something
     return npub;
   } catch (error) {
-    console.error('Error converting npub to hex:', error);
+    console.log('Error converting npub to hex:', error);
     // Return the original as fallback
     return npub;
   }
@@ -91,7 +91,7 @@ export function formatNpubForDisplay(npub: string): string {
     // Fallback: truncate whatever was provided
     return npub.length > 10 ? `...${npub.slice(-6)}` : npub;
   } catch (error) {
-    console.error('Error formatting npub for display:', error);
+    console.log('Error formatting npub for display:', error);
     return npub;
   }
 }
@@ -118,7 +118,7 @@ export function getConfiguredRelays(): string[] {
         return parsedRelays;
       }
     } catch (error) {
-      console.error('Error parsing saved relays:', error);
+      console.log('Error parsing saved relays:', error);
     }
   }
   
@@ -134,7 +134,7 @@ export function saveRelays(relays: string[]): void {
   try {
     localStorage.setItem('nostrRelays', JSON.stringify(relays));
   } catch (error) {
-    console.error('Error saving relays to local storage:', error);
+    console.log('Error saving relays to local storage:', error);
   }
 }
 
@@ -190,20 +190,20 @@ export async function fetchNostrProfile(
               try {
                 return JSON.parse(profileEvent.content);
               } catch (e) {
-                console.error('Error parsing profile content:', e);
+                console.log('Error parsing profile content:', e);
               }
             }
           }
         }
       } catch (e) {
-        console.error('Error getting data from extension:', e);
+        console.log('Error getting data from extension:', e);
       }
     }
     
     // Return null if we couldn't get the profile from either source
     return null;
   } catch (error) {
-    console.error('Error fetching Nostr profile:', error);
+    console.log('Error fetching Nostr profile:', error);
     return null;
   }
 }

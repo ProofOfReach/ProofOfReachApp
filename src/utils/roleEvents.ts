@@ -21,7 +21,7 @@ export function triggerRoleRefresh() {
       });
       window.dispatchEvent(storageEvent);
     } catch (error) {
-      console.error('Error dispatching storage event:', error);
+      console.log('Error dispatching storage event:', error);
     }
   }
 }
@@ -37,7 +37,7 @@ export function saveAvailableRoles(roles: string[]) {
     // Trigger refresh to update all components
     triggerRoleRefresh();
   } catch (error) {
-    console.error('Error saving available roles to localStorage:', error);
+    console.log('Error saving available roles to localStorage:', error);
   }
 }
 
@@ -51,7 +51,7 @@ export function getAvailableRoles(): string[] {
     
     return JSON.parse(roles);
   } catch (error) {
-    console.error('Error retrieving available roles from localStorage:', error);
+    console.log('Error retrieving available roles from localStorage:', error);
     return ['viewer'];
   }
 }

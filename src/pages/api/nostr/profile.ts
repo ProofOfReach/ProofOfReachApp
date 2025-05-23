@@ -37,7 +37,7 @@ export default async function handleProfileRequest(req: NextApiRequest, res: Nex
             logger.warn('Unexpected decoded type for npub:', decoded);
           }
         } catch (decodeError) {
-          logger.error('Failed to decode npub:', targetPubkey, decodeError);
+          logger.log('Failed to decode npub:', targetPubkey, decodeError);
           // For safety, return a meaningful error since we can't proceed with an invalid key
           return res.status(400).json({ 
             error: 'Invalid npub format',
@@ -59,7 +59,7 @@ export default async function handleProfileRequest(req: NextApiRequest, res: Nex
       pubkey: targetPubkey
     });
   } catch (error: any) {
-    logger.error('Error fetching Nostr profile:', error);
+    logger.log('Error fetching Nostr profile:', error);
     return res.status(500).json({ 
       error: 'Failed to fetch profile data',
       message: error.message
@@ -132,12 +132,12 @@ async function fetchProfileFromRelay(pubkey: string): Promise<any> {
       logger.info('Profile data found:', profileData);
       return profileData;
     } catch (e) {
-      logger.error('Error parsing profile content:', e);
+      logger.log('Error parsing profile content:', e);
       return null;
     }
   } catch (error) {
-    logger.error('Error fetching from relays:', error);
-    logger.error('Error details:', error instanceof Error ? error.message : String(error));
+    logger.log('Error fetching from relays:', error);
+    logger.log('Error details:', error instanceof Error ? error.message : String(error));
     pool.close(RELAYS);
     
     // Check on primal.net for this specific pubkey

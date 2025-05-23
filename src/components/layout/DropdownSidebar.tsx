@@ -67,7 +67,7 @@ const DropdownSidebar: React.FC = () => {
       
       // Refresh roles if auth is available
       if (refreshRoles) {
-        refreshRoles().catch(err => console.error('Error refreshing roles:', err));
+        refreshRoles().catch(err => console.log('Error refreshing roles:', err));
       }
       
       // Try to enable roles in the database - this is important
@@ -90,7 +90,7 @@ const DropdownSidebar: React.FC = () => {
             console.warn('Failed to enable roles in database:', await response.text());
           }
         } catch (error) {
-          console.error('Error enabling roles in database:', error);
+          console.log('Error enabling roles in database:', error);
         }
       };
       
@@ -286,14 +286,14 @@ const DropdownSidebar: React.FC = () => {
           await router.push(`/dashboard/${newRole}`);
         }
       } else {
-        console.error('Failed to update role:', await response.text());
+        console.log('Failed to update role:', await response.text());
         // Handle API error - still try to navigate but log the error
         if (router.pathname !== '/test-dropdown') {
           await router.push(`/dashboard/${newRole}`);
         }
       }
     } catch (error) {
-      console.error('Error changing role:', error);
+      console.log('Error changing role:', error);
       // As a fallback, use direct navigation, but not for test-dropdown
       if (router.pathname !== '/test-dropdown') {
         window.location.href = `/dashboard/${newRole}`;

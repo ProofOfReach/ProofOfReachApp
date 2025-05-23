@@ -85,7 +85,7 @@ const RoleConfirmation: React.FC<RoleConfirmationProps> = ({ onConfirm }) => {
         setTimeout(() => setPubkeyCopied(false), 2000);
       })
       .catch(err => {
-        logger.error('Failed to copy pubkey to clipboard', err);
+        logger.log('Failed to copy pubkey to clipboard', err);
       });
   };
 

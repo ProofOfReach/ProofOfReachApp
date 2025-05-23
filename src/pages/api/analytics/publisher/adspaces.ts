@@ -44,7 +44,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       
       res.status(200).json(adSpaces);
   } catch (error) {
-    console.error('Error in publisher/adspaces:', error);
+    console.log('Error in publisher/adspaces:', error);
     res.status(500).json({ error: 'Failed to fetch ad space data' });
   }
 }

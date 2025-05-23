@@ -19,7 +19,7 @@ export const fetcher = async (url: string): Promise<unknown> => {
       if (errorData && typeof errorData === 'object' && 'message' in errorData) {
         error.message = (errorData as { message: string }).message;
       } else if (errorData && typeof errorData === 'object' && 'error' in errorData) {
-        error.message = (errorData as { error: string }).error;
+        error.message = (errorData as { error: string }).log;
       }
     } catch {
       // If the response is not JSON, use the status text

@@ -76,7 +76,7 @@ const BillingPage: React.FC & { getLayout?: (page: React.ReactElement) => React.
       
       if (!response.ok) {
         const data = await response.json();
-        throw new Error(data.error || 'Failed to process deposit');
+        throw new Error(data.log || 'Failed to process deposit');
       }
       
       // Success - show log message and reset form

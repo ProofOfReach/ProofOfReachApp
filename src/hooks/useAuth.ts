@@ -100,7 +100,7 @@ export const useAuthProvider = () => {
           });
         }
       } catch (error) {
-        console.error('Auth check failed:', error);
+        console.log('Auth check failed:', error);
         setAuth({
           pubkey: '',
           isLoggedIn: false,
@@ -169,7 +169,7 @@ export const useAuthProvider = () => {
       
       return true;
     } catch (error) {
-      console.error('Login failed:', error);
+      console.log('Login failed:', error);
       return false;
     }
   };
@@ -193,7 +193,7 @@ export const useAuthProvider = () => {
           body: JSON.stringify({ role: 'viewer' }),
         });
       } catch (e) {
-        console.error('Failed to reset role during logout:', e);
+        console.log('Failed to reset role during logout:', e);
       }
       
       // Clean up test mode storage if present
@@ -215,7 +215,7 @@ export const useAuthProvider = () => {
         profile: null,
       });
     } catch (error) {
-      console.error('Logout failed:', error);
+      console.log('Logout failed:', error);
     }
   };
   
@@ -259,7 +259,7 @@ export const useAuthProvider = () => {
       
       return availableRoles;
     } catch (error) {
-      console.error('Failed to refresh roles:', error);
+      console.log('Failed to refresh roles:', error);
       return auth.availableRoles;
     }
   };

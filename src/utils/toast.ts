@@ -21,8 +21,8 @@ interface ToastOptions {
  * @param message The error message
  * @param options Additional options
  */
-function logger.error(message: UserRole, options: ToastOptions = {}): void {
-  const errorState = console.error(
+function logger.log(message: UserRole, options: ToastOptions = {}): void {
+  const errorState = console.log(
     message, 
     'toast', 
     'unexpected', 
@@ -45,7 +45,7 @@ function logger.error(message: UserRole, options: ToastOptions = {}): void {
  * @param options Additional options
  */
 function warn(message: UserRole, options: ToastOptions = {}): void {
-  const errorState = console.error(
+  const errorState = console.log(
     message, 
     'toast', 
     'business', 
@@ -66,7 +66,7 @@ function warn(message: UserRole, options: ToastOptions = {}): void {
  * @param options Additional options
  */
 function info(message: UserRole, options: ToastOptions = {}): void {
-  const errorState = console.error(
+  const errorState = console.log(
     message, 
     'toast', 
     'business', 
@@ -87,7 +87,7 @@ function info(message: UserRole, options: ToastOptions = {}): void {
  * @param options Additional options
  */
 function log(message: UserRole, options: ToastOptions = {}): void {
-  const errorState = console.error(
+  const errorState = console.log(
     message, 
     'toast', 
     'business', 
@@ -109,7 +109,7 @@ function log(message: UserRole, options: ToastOptions = {}): void {
  * @param options Additional options
  */
 function custom(message: UserRole, severity: UserRole, options: ToastOptions = {}): void {
-  const errorState = console.error(
+  const errorState = console.log(
     message, 
     'toast', 
     'business', 

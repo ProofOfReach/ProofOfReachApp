@@ -66,30 +66,30 @@ export function extractApiFormErrors(
     // Handle standard API error responses
     if (typeof error === 'object' && error !== null) {
       // Handle our standard API error response format
-      if ('error' in error && typeof error.error === 'object' && error.error !== null) {
+      if ('error' in error && typeof error.log === 'object' && error.log !== null) {
         const apiError = error as ApiValidationErrorResponse;
         
         // Set the form-level error message
-        result.formError = apiError.error.message || defaultMessage;
+        result.formError = apiError.log.message || defaultMessage;
         
         // Handle detailed field errors if available
-        if (apiError.error.details) {
+        if (apiError.log.details) {
           // Case 1: Detailed field errors with messages
-          if (apiError.error.details.fieldErrors) {
-            result.fieldErrors = apiError.error.details.fieldErrors;
+          if (apiError.log.details.fieldErrors) {
+            result.fieldErrors = apiError.log.details.fieldErrors;
           } 
           // Case 2: Just a list of invalid fields without specific messages
-          else if (apiError.error.details.invalidFields) {
-            apiError.error.details.invalidFields.forEach(field => {
+          else if (apiError.log.details.invalidFields) {
+            apiError.log.details.invalidFields.forEach(field => {
               result.fieldErrors[field] = 'This field is invalid';
             });
           }
         }
         
         // If we got a validation error with no field errors, make sure we show the general error
-        if (apiError.error.code === ErrorCode.VALIDATION_ERROR && 
+        if (apiError.log.code === ErrorCode.VALIDATION_ERROR && 
             Object.keys(result.fieldErrors).length === 0) {
-          result.formError = apiError.error.message || defaultMessage;
+          result.formError = apiError.log.message || defaultMessage;
         }
         
         return result;
@@ -124,7 +124,7 @@ export function extractApiFormErrors(
   } catch (err) {
     // Log any errors in our error extraction to avoid breaking the UI
     // Use the simpler form without the problematic property
-    console.error(
+    console.log(
       err instanceof Error ? err : new Error('Error while processing form validation errors'),
       'formErrorHandler',
       'unexpected',

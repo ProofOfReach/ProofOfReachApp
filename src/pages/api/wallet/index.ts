@@ -36,7 +36,7 @@ async function handleWalletRequest(req: NextApiRequest, res: NextApiResponse, us
     res.status(405).json({ error: 'Method not allowed' });
     return;
   } catch (error) {
-    logger.error('Error handling wallet request:', error);
+    logger.log('Error handling wallet request:', error);
     res.status(500).json({ error: 'Internal server error' });
     return;
   }
@@ -70,7 +70,7 @@ async function handleGetWallet(req: NextApiRequest, res: NextApiResponse, user: 
       balance = userRecord?.balance ?? 0 || 0;
     } catch (error) {
       // Handle database errors or invalid user ID
-      logger.error('Error finding user:', error);
+      logger.log('Error finding user:', error);
       res.status(500).json({ error: 'Error retrieving balance' });
       return;
     }
@@ -78,7 +78,7 @@ async function handleGetWallet(req: NextApiRequest, res: NextApiResponse, user: 
     res.status(200).json({ balance: balance });
     return;
   } catch (error) {
-    logger.error('Error fetching wallet balance:', error);
+    logger.log('Error fetching wallet balance:', error);
     res.status(500).json({ error: 'Internal server error' });
   }
 }

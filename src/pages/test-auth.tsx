@@ -42,7 +42,7 @@ const TestAuthPage: React.FC = () => {
           setPubkey(storedPubkey);
         }
       } catch (err) {
-        console.error('Error checking auth status:', err);
+        console.log('Error checking auth status:', err);
       }
     };
     
@@ -119,10 +119,10 @@ const TestAuthPage: React.FC = () => {
           checkAuth();
         }, 500);
       } else {
-        setError(data.error || 'Failed to create account');
+        setError(data.log || 'Failed to create account');
       }
     } catch (err: any) {
-      console.error('Error creating account:', err);
+      console.log('Error creating account:', err);
       setError(err.message || 'Unknown error creating account');
     } finally {
       setIsLoading(false);
@@ -152,7 +152,7 @@ const TestAuthPage: React.FC = () => {
       // Redirect to onboarding
       router.push('/onboarding');
     } catch (err: any) {
-      console.error('Error checking onboarding:', err);
+      console.log('Error checking onboarding:', err);
       setError(err.message || 'Unknown error checking onboarding');
     } finally {
       setIsLoading(false);
@@ -179,7 +179,7 @@ const TestAuthPage: React.FC = () => {
       // Reload page
       window.location.reload();
     } catch (err: any) {
-      console.error('Error clearing data:', err);
+      console.log('Error clearing data:', err);
       setError(err.message || 'Unknown error clearing data');
     }
   };

@@ -67,7 +67,7 @@ export function defaultUseRoleAccess() {
         document.removeEventListener('roleSwitched', handleRoleChange as EventListener);
       };
     } catch (error) {
-      logger.error('Error initializing defaultUseRoleAccess hook:', error);
+      logger.log('Error initializing defaultUseRoleAccess hook:', error);
     }
   }, []);
   
@@ -292,7 +292,7 @@ export function defaultUseRoleAccess() {
       }
       return false;
     } catch (error) {
-      logger.error('Error setting role:', error);
+      logger.log('Error setting role:', error);
       return false;
     }
   }, [availableRoles]);

@@ -166,7 +166,7 @@ describe('useErrorState', () => {
     fireEvent.click(screen.getByTestId('handle-error'));
     
     // Verify error was called with the right params
-    expect(console.error).toHaveBeenCalledWith(
+    expect(console.log).toHaveBeenCalledWith(
       expect.any(Error),
       'test-component',
       'validation',

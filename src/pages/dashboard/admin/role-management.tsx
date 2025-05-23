@@ -63,7 +63,7 @@ const AdminRoleManagementPage: NextPageWithLayout = () => {
                     window.location.href = '/dashboard/admin';
                   }, 500);
                 } catch (error) {
-                  console.error('Error enabling test mode:', error);
+                  console.log('Error enabling test mode:', error);
                   alert('Failed to enable test mode. See console for details.');
                 }
               }}
@@ -140,7 +140,7 @@ export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
 
     return { props: {} };
   } catch (error) {
-    logger.error('Error in getServerSideProps for admin role management:', error);
+    logger.log('Error in getServerSideProps for admin role management:', error);
     
     // Redirect to error page in case of error
     return {

@@ -75,7 +75,7 @@ describe('Error Integration Service', () => {
       
       // Verify the error state has the expected structure 
       expect(state).toHaveProperty('errors');
-      expect(Array.isArray(state.errors)).toBe(true);
+      expect(Array.isArray(state.logs)).toBe(true);
     });
     
     it('supports error metrics tracking', () => {
@@ -106,8 +106,8 @@ describe('Error Integration Service', () => {
       // Verify the structure is correct
       expect(state).toBeDefined();
       expect(state).toHaveProperty('errors');
-      expect(Array.isArray(state.errors)).toBe(true);
-      expect(state.errors.length).toBe(0);
+      expect(Array.isArray(state.logs)).toBe(true);
+      expect(state.logs.length).toBe(0);
       expect(state.globalError).toBeNull();
     });
     
@@ -121,7 +121,7 @@ describe('Error Integration Service', () => {
       // Get the state to verify we can access it
       const state = log();
       expect(state).toBeDefined();
-      expect(state.errors).toBeDefined();
+      expect(state.logs).toBeDefined();
     });
   });
   
@@ -219,8 +219,8 @@ describe('Error Integration Service', () => {
       
       // Basic validation of reset state properties
       expect(state).toHaveProperty('errors');
-      expect(Array.isArray(state.errors)).toBe(true);
-      expect(state.errors.length).toBe(0);
+      expect(Array.isArray(state.logs)).toBe(true);
+      expect(state.logs.length).toBe(0);
     });
   });
 });

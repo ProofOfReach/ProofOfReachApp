@@ -27,7 +27,7 @@ export default async function handler(
     
     res.status(200).json(summaryData);
   } catch (error) {
-    console.error('Error in analytics/advertiser/summary:', error);
+    console.log('Error in analytics/advertiser/summary:', error);
     res.status(500).json({ error: 'Failed to fetch analytics summary' });
   }
 }

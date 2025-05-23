@@ -217,14 +217,14 @@ async function handler(req: NextApiRequest, res: NextApiResponse, pubkey: UserRo
       });
     } catch (error) {
       // Log error but don't fail the request
-      logger.error('Error processing impression:', error);
+      logger.log('Error processing impression:', error);
     }
 
     // Return the selected ad
     res.status(200).json(adResponse);
     return;
   } catch (error) {
-    logger.error('Error serving ad:', error);
+    logger.log('Error serving ad:', error);
     res.status(500).json({
       code: 'INTERNAL_SERVER_ERROR',
       message: 'An error occurred while serving an ad'

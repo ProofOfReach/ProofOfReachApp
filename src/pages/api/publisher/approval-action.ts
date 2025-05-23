@@ -76,7 +76,7 @@ async function handleApprovalAction(req: NextApiRequest, res: NextApiResponse, p
       placement: updatedPlacement
     });
   } catch (error) {
-    logger.error(`Error handling approval action:`, error);
+    logger.log(`Error handling approval action:`, error);
     return res.status(500).json({ error: 'Failed to process approval action' });
   }
 }

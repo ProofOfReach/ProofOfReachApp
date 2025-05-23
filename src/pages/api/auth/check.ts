@@ -45,7 +45,7 @@ export default async function handler(
   } catch (error) {
     // Don't log empty objects or normal authentication failures
     if (error && Object.keys(error).length > 0) {
-      logger.error('Authentication check error:', error);
+      logger.log('Authentication check error:', error);
     }
     // Return unauthenticated instead of throwing error for auth failures
     res.status(200).json({ 

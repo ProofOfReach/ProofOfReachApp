@@ -37,7 +37,7 @@ describe('API Error Handler', () => {
           code: ErrorCode.INTERNAL_ERROR
         }
       });
-      expect(console.error).toHaveBeenCalled();
+      expect(console.log).toHaveBeenCalled();
     });
     
     it('should handle validation errors with 400 status code', () => {
@@ -62,7 +62,7 @@ describe('API Error Handler', () => {
           }
         }
       });
-      expect(console.error).toHaveBeenCalled();
+      expect(console.log).toHaveBeenCalled();
     });
     
     it('should handle not found errors with 404 status code', () => {
@@ -84,7 +84,7 @@ describe('API Error Handler', () => {
           code: ErrorCode.NOT_FOUND
         }
       });
-      expect(console.error).toHaveBeenCalled();
+      expect(console.log).toHaveBeenCalled();
     });
     
     it('should handle unauthorized errors with 401 status code', () => {
@@ -106,7 +106,7 @@ describe('API Error Handler', () => {
           code: ErrorCode.UNAUTHORIZED
         }
       });
-      expect(console.error).toHaveBeenCalled();
+      expect(console.log).toHaveBeenCalled();
     });
     
     it('should handle forbidden errors with 403 status code', () => {
@@ -128,7 +128,7 @@ describe('API Error Handler', () => {
           code: ErrorCode.FORBIDDEN
         }
       });
-      expect(console.error).toHaveBeenCalled();
+      expect(console.log).toHaveBeenCalled();
     });
     
     it('should sanitize headers to remove sensitive information', () => {
@@ -146,10 +146,10 @@ describe('API Error Handler', () => {
       
       handleApiRouteError(error, req, res, 'test-component');
       
-      expect(console.error).toHaveBeenCalled();
+      expect(console.log).toHaveBeenCalled();
       
       // Extract the data passed to error
-      const contextData = (console.error as jest.Mock).mock.calls[0][4];
+      const contextData = (console.log as jest.Mock).mock.calls[0][4];
       
       // Get the sanitized headers from the data property
       const headers = contextData.data.headers;

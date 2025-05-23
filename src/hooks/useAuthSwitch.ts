@@ -25,7 +25,7 @@ if (typeof window !== 'undefined' && process.env.NODE_ENV !== 'test') {
     useAuthRefactored = importedAuthHook;
     defaultUseRole = importedRoleHook;
   } catch (error) {
-    logger.error('Error importing refactored hooks:', error);
+    logger.log('Error importing refactored hooks:', error);
   }
 }
 
@@ -54,7 +54,7 @@ export function useAuthSwitch() {
       refactoredAuth = useAuthRefactored() as any;
       refactoredRole = defaultUseRole();
     } catch (error) {
-      logger.error('Error using refactored hooks:', error);
+      logger.log('Error using refactored hooks:', error);
     }
   }
   
@@ -69,7 +69,7 @@ export function useAuthSwitch() {
     // 2. (pubkey: UserRole, isTestMode: boolean) - new signature
     return async (pubkey: UserRole, secondParam: any) => {
       if (!auth || !auth.login) {
-        logger.error('Login function not available');
+        logger.log('Login function not available');
         return null;
       }
       
@@ -130,7 +130,7 @@ export function useAuthSwitch() {
               // Also set a flag to force role context to refresh
               localStorage.setItem('force_role_refresh', 'true');
             } catch (e) {
-              logger.error('Error updating React Query cache:', e);
+              logger.log('Error updating React Query cache:', e);
             }
           }
           
@@ -146,7 +146,7 @@ export function useAuthSwitch() {
         // Regular login flow - pass the parameters as they were received
         return await auth.login(pubkey, secondParam);
       } catch (error) {
-        logger.error('Error in safe login:', error);
+        logger.log('Error in safe login:', error);
         return null;
       }
     };
@@ -156,13 +156,13 @@ export function useAuthSwitch() {
   const createSafeRoleFunction = (role: any, functionName: string) => {
     return (...args: any[]) => {
       if (!role || !role[functionName]) {
-        logger.error(`${functionName} function not available`);
+        logger.log(`${functionName} function not available`);
         return null;
       }
       try {
         return role[functionName](...args);
       } catch (error) {
-        logger.error(`Error in ${functionName}:`, error);
+        logger.log(`Error in ${functionName}:`, error);
         return null;
       }
     };

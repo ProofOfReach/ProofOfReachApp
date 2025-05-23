@@ -49,7 +49,7 @@ async function toggleTestModeHandler(req: NextApiRequest, res: NextApiResponse, 
     });
 
   } catch (error) {
-    logger.error('Error toggling test mode:', error);
+    logger.log('Error toggling test mode:', error);
     return res.status(500).json({ 
       message: error instanceof Error ? error.message : 'Unknown error toggling test mode'
     });

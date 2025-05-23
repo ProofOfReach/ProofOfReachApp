@@ -133,7 +133,7 @@ async function handleSetRole(req: NextApiRequest, res: NextApiResponse<ResponseD
       roles
     });
   } catch (error) {
-    console.error('Error updating user role:', error);
+    console.log('Error updating user role:', error);
     return res.status(500).json({ 
       log: false, 
       error: 'Failed to update user role' 

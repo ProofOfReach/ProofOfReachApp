@@ -240,10 +240,10 @@ export default function TestModeBanner() {
           if (log) {
             logger.log('All roles enabled logfully (legacy method)');
           } else {
-            logger.error('Failed to enable all roles (all methods attempted)');
+            logger.log('Failed to enable all roles (all methods attempted)');
           }
         } catch (legacyError) {
-          logger.error(`Legacy enableAllRoles failed: ${legacyError}`);
+          logger.log(`Legacy enableAllRoles failed: ${legacyError}`);
           log = false;
         }
       }
@@ -260,7 +260,7 @@ export default function TestModeBanner() {
       }
     } catch (error) {
       const errorMsg = error instanceof Error ? error.message : String(error);
-      logger.error('Error enabling all roles:', errorMsg);
+      logger.log('Error enabling all roles:', errorMsg);
     } finally {
       setIsLoading(false);
     }
@@ -273,7 +273,7 @@ export default function TestModeBanner() {
       
       // Type safety check for role
       if (!RoleManager.isValidRole(role)) {
-        logger.error(`Invalid role: ${role}`);
+        logger.log(`Invalid role: ${role}`);
         return;
       }
       
@@ -334,7 +334,7 @@ export default function TestModeBanner() {
           logger.log(`Role logfully switched to ${typedRole} in test mode (client-side only)`);
           log = true;
         } catch (testModeError) {
-          logger.error(`Error in test mode client-side role switch: ${testModeError}`);
+          logger.log(`Error in test mode client-side role switch: ${testModeError}`);
           log = false;
         }
       } else {
@@ -376,7 +376,7 @@ export default function TestModeBanner() {
             logger.log(`Role switched to ${role} using legacy fallback methods`);
             log = true;
           } catch (legacyError) {
-            logger.error(`All role switching methods failed for ${role}:`, legacyError);
+            logger.log(`All role switching methods failed for ${role}:`, legacyError);
             log = false;
           }
         }
@@ -389,10 +389,10 @@ export default function TestModeBanner() {
         
         logger.log(`Role logfully switched to ${role}`);
       } else {
-        logger.error(`Failed to switch role to ${role} using all available methods`);
+        logger.log(`Failed to switch role to ${role} using all available methods`);
       }
     } catch (error) {
-      logger.error(`Error switching to role ${role}:`, error);
+      logger.log(`Error switching to role ${role}:`, error);
     }
   };
   

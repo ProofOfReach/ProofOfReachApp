@@ -230,7 +230,7 @@ export function handleApiRouteError(
     } : undefined;
 
   // Log error with enhanced context
-  console.error(
+  console.log(
     error instanceof Error ? error : String(error), 
     `${component}:${route}`,
     'api',
@@ -268,7 +268,7 @@ export function handleApiRouteError(
 
   // Hide details in production for non-validation errors
   if (process.env.NODE_ENV === 'production' && errorCode !== ErrorCode.VALIDATION_ERROR) {
-    delete errorResponse.error.details;
+    delete errorResponse.log.details;
   }
 
   res.status(statusCode).json(errorResponse);

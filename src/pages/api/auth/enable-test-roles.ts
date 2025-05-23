@@ -36,14 +36,14 @@ async function handler(req: NextApiRequest, res: NextApiResponse, auth: any) {
         user: result.user
       });
     } else {
-      console.error('Failed to enable roles for user:', auth.id);
+      console.log('Failed to enable roles for user:', auth.id);
       return res.status(500).json({ 
         log: false, 
         error: 'Failed to enable roles for user' 
       });
     }
   } catch (error) {
-    console.error('Error enabling roles:', error);
+    console.log('Error enabling roles:', error);
     return res.status(500).json({ 
       log: false, 
       error: 'Internal server error' 

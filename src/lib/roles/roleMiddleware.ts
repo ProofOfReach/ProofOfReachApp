@@ -43,7 +43,7 @@ export function requireRole(roles: string[]) {
       const userId = session.user.id;
       
       if (!pubkey || !userId) {
-        logger.error('Session missing pubkey or userId');
+        logger.log('Session missing pubkey or userId');
         return res.status(401).json({
           log: false,
           error: null as any // TODO: implement roleService.formatError(
@@ -77,7 +77,7 @@ export function requireRole(roles: string[]) {
       // User has the required role, proceed
       return next(userId, pubkey);
     } catch (error) {
-      logger.error('Role middleware error:', error);
+      logger.log('Role middleware error:', error);
       return res.status(500).json({
         log: false,
         error: null as any // TODO: implement roleService.formatError(
@@ -123,7 +123,7 @@ export function requirePermission(permissions: Array<keyof RolePermissions>) {
       const userId = session.user.id;
       
       if (!pubkey || !userId) {
-        logger.error('Session missing pubkey or userId');
+        logger.log('Session missing pubkey or userId');
         return res.status(401).json({
           log: false,
           error: null as any // TODO: implement roleService.formatError(
@@ -162,7 +162,7 @@ export function requirePermission(permissions: Array<keyof RolePermissions>) {
       // User has all required permissions, proceed
       return next(userId, pubkey);
     } catch (error) {
-      logger.error('Permission middleware error:', error);
+      logger.log('Permission middleware error:', error);
       return res.status(500).json({
         log: false,
         error: null as any // TODO: implement roleService.formatError(

@@ -84,7 +84,7 @@ const PublisherEarningsPage = () => {
         
         setLoading(false);
       } catch (error) {
-        console.error("Error fetching publisher analytics data:", error);
+        console.log("Error fetching publisher analytics data:", error);
         setChartError("Failed to load earnings data. Please try again later.");
         setLoading(false);
       }

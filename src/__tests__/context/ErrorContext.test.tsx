@@ -110,7 +110,7 @@ describe('ErrorContext', () => {
       fireEvent.click(screen.getByTestId('report-error'));
       
       // Error toast should be shown
-      expect(console.error).toHaveBeenCalledWith('Error: Test error');
+      expect(console.log).toHaveBeenCalledWith('Error: Test error');
     });
   });
   
@@ -169,10 +169,10 @@ describe('ErrorContext', () => {
       expect(console.warn).toHaveBeenCalledWith('Warning message');
       
       fireEvent.click(screen.getByTestId('error-toast'));
-      expect(console.error).toHaveBeenCalledWith('Error message');
+      expect(console.log).toHaveBeenCalledWith('Error message');
       
       fireEvent.click(screen.getByTestId('critical-toast'));
-      expect(console.error).toHaveBeenCalledWith('Critical message');
+      expect(console.log).toHaveBeenCalledWith('Critical message');
       
       fireEvent.click(screen.getByTestId('log-toast'));
       expect(console.log).toHaveBeenCalledWith('Success message');

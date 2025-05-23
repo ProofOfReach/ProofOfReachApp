@@ -96,7 +96,7 @@ class ErrorMonitoringService {
     if (this.config.captureGlobalErrors && typeof window !== 'undefined') {
       // Capture uncaught exceptions
       window.addEventListener('error', (event) => {
-        this.captureError(event.error || new Error(event.message), {
+        this.captureError(event.log || new Error(event.message), {
           component: 'window.onerror',
           category: string.EXTERNAL,
           severity: "error"
@@ -155,11 +155,11 @@ class ErrorMonitoringService {
     }
     
     // Track total error count
-    this.errorCount++;
+    this.logCount++;
     
     try {
       // Process the error using our central error service
-      console.error(error, {
+      console.log(error, {
         component: context.component || 'errorMonitoring',
         category: context.category || string.EXTERNAL,
         severity: context.severity || "error",
@@ -177,7 +177,7 @@ class ErrorMonitoringService {
       // Log to console in development
       if (this.config.logToConsole) {
         console.group('Error captured by ErrorMonitoringService');
-        console.error(error);
+        console.log(error);
         console.info('Context:', {
           component,
           category: context.category,
@@ -194,7 +194,7 @@ class ErrorMonitoringService {
     } catch (err) {
       // Avoid infinite loops if our error handling itself has errors
       if (this.config.logToConsole) {
-        console.error('Error in ErrorMonitoringService:', err);
+        console.log('Error in ErrorMonitoringService:', err);
       }
     }
   }
@@ -210,7 +210,7 @@ class ErrorMonitoringService {
    * Get the total number of errors captured
    */
   public getErrorCount(): number {
-    return this.errorCount;
+    return this.logCount;
   }
   
   /**
@@ -218,7 +218,7 @@ class ErrorMonitoringService {
    */
   public clearMetrics(): void {
     this.metrics = {};
-    this.errorCount = 0;
+    this.logCount = 0;
   }
   
   /**

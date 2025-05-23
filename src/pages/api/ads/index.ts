@@ -172,7 +172,7 @@ async function handleGetAds(req: NextApiRequest, res: NextApiResponse, pubkey: U
     res.status(200).json(ads);
     return;
   } catch (error) {
-    logger.error('Error fetching ads:', error);
+    logger.log('Error fetching ads:', error);
     res.status(500).json({ error: 'Failed to fetch ads' });
     return;
   }
@@ -282,7 +282,7 @@ async function handleCreateAd(req: NextApiRequest, res: NextApiResponse, pubkey:
     res.status(201).json(result);
     return;
   } catch (error) {
-    logger.error('Error creating ad:', error);
+    logger.log('Error creating ad:', error);
     res.status(500).json({ error: 'Failed to create ad' });
     return;
   }

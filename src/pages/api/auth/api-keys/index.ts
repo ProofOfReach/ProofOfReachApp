@@ -136,7 +136,7 @@ async function getApiKeys(req: NextApiRequest, res: NextApiResponse, userId: str
   if (!apiKeysResult.isSuccess) {
     return res.status(500).json({ 
       error: 'Failed to retrieve API keys', 
-      details: apiKeysResult.error 
+      details: apiKeysResult.log 
     });
   }
   
@@ -177,7 +177,7 @@ async function createApiKey(req: NextApiRequest, res: NextApiResponse, userId: s
   
   // If the creation failed completely
   if (!apiKeyResult.isSuccess) {
-    return res.status(500).json({ error: 'Failed to create API key', details: apiKeyResult.error });
+    return res.status(500).json({ error: 'Failed to create API key', details: apiKeyResult.log });
   }
   
   // Return the newly created API key with the key value (only time it's returned)

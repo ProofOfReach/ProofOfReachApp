@@ -90,7 +90,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       return res.status(405).json({ error: 'Method not allowed' });
     }
   } catch (error) {
-    logger.error('Error handling test mode:', error);
+    logger.log('Error handling test mode:', error);
     return res.status(500).json({ error: 'Internal server error' });
   }
 }

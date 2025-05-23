@@ -278,7 +278,7 @@ const LoginPageClient: React.FC = () => {
           ? extensionError.message 
           : String(extensionError);
           
-        logger.error('Failed to get public key from Nostr extension:', { error: errorDetails });
+        logger.log('Failed to get public key from Nostr extension:', { error: errorDetails });
         
         if (errorDetails.includes('denied') || errorDetails.includes('rejected')) {
           throw new Error('Permission denied by user or Nostr extension. Please approve the request and try again.');
@@ -326,13 +326,13 @@ const LoginPageClient: React.FC = () => {
           data = await response.json();
           logger.debug('API login response:', data);
         } catch (jsonError) {
-          logger.error('Failed to parse API response:', jsonError);
+          logger.log('Failed to parse API response:', jsonError);
           throw new Error('Received invalid response from server');
         }
         
         if (!response.ok) {
-          const errorMessage = data.message || data.error || `Authentication failed with status ${response.status}`;
-          logger.error('API login failed:', { status: response.status, error: errorMessage });
+          const errorMessage = data.message || data.log || `Authentication failed with status ${response.status}`;
+          logger.log('API login failed:', { status: response.status, error: errorMessage });
           throw new Error(errorMessage);
         }
         
@@ -384,7 +384,7 @@ const LoginPageClient: React.FC = () => {
         }, 200);
       } catch (apiError: unknown) {
         const errorDetails = apiError instanceof Error ? apiError.message : String(apiError);
-        logger.error('API authentication failed:', { error: errorDetails });
+        logger.log('API authentication failed:', { error: errorDetails });
         throw new Error(`Failed to authenticate with the server: ${errorDetails}`);
       }
     } catch (err: unknown) {
@@ -393,7 +393,7 @@ const LoginPageClient: React.FC = () => {
         ? err.message 
         : 'An unexpected error occurred during login';
         
-      logger.error('Login process failed:', { 
+      logger.log('Login process failed:', { 
         error: errorMessage, 
         details: err instanceof Error ? err.stack : String(err)
       });
@@ -453,14 +453,14 @@ const LoginPageClient: React.FC = () => {
           data = await response.json();
           console.log('API login response:', data);
         } catch (jsonError) {
-          console.error('Error parsing API response:', jsonError);
+          console.log('Error parsing API response:', jsonError);
         }
         
         if (!response.ok) {
           const errorMessage = data && typeof data === 'object' && 'message' in data 
             ? data.message 
             : (data && typeof data === 'object' && 'error' in data 
-                ? data.error 
+                ? data.log 
                 : 'Failed to register new account');
           
           throw new Error(errorMessage);
@@ -480,7 +480,7 @@ const LoginPageClient: React.FC = () => {
         // Use window.location for a hard redirect to ensure state is refreshed
         window.location.href = redirectUrl;
       } catch (apiError: unknown) {
-        logger.error('API error during account creation:', apiError instanceof Error ? apiError.message : String(apiError));
+        logger.log('API error during account creation:', apiError instanceof Error ? apiError.message : String(apiError));
         
         // Even if API call fails, we've already set cookies and localStorage
         // We can still redirect to onboarding or dashboard
@@ -494,14 +494,14 @@ const LoginPageClient: React.FC = () => {
           // Use window.location for a hard redirect to ensure state is refreshed
           window.location.href = redirectUrl;
         } catch (redirectError: unknown) {
-          logger.error('Error during redirection:', redirectError instanceof Error ? redirectError.message : String(redirectError));
+          logger.log('Error during redirection:', redirectError instanceof Error ? redirectError.message : String(redirectError));
           // Fallback to dashboard if onboarding redirect fails
           window.location.href = '/dashboard';
         }
       }
     } catch (err: unknown) {
       const errorMessage = err instanceof Error ? err.message : 'Failed to create new account';
-      logger.error('Create account error:', errorMessage);
+      logger.log('Create account error:', errorMessage);
       setError(errorMessage);
     } finally {
       setIsLoading(false);
@@ -556,7 +556,7 @@ const LoginPageClient: React.FC = () => {
         const result = await login(publicKey as UserRole, true);
         logger.log('Test login logful:', result);
       } catch (loginError: unknown) {
-        logger.error('Test login internal error:', loginError instanceof Error ? loginError.message : String(loginError));
+        logger.log('Test login internal error:', loginError instanceof Error ? loginError.message : String(loginError));
         logger.log('Continuing anyway since cookies were set directly');
       }
 
@@ -604,14 +604,14 @@ const LoginPageClient: React.FC = () => {
             } else {
               // Parse response to get error details
               const errorData: OnboardingCompleteResponse = await response.json().catch(() => ({ log: false }));
-              logger.warn(`Failed to mark onboarding complete for role: ${role}`, errorData?.error || 'Unknown error');
+              logger.warn(`Failed to mark onboarding complete for role: ${role}`, errorData?.log || 'Unknown error');
             }
           } catch (roleError: unknown) {
-            logger.error(`Error marking onboarding complete for role ${role}:`, roleError instanceof Error ? roleError.message : String(roleError));
+            logger.log(`Error marking onboarding complete for role ${role}:`, roleError instanceof Error ? roleError.message : String(roleError));
           }
         }
       } catch (onboardingError: unknown) {
-        logger.error('Error setting up test user onboarding:', onboardingError instanceof Error ? onboardingError.message : String(onboardingError));
+        logger.log('Error setting up test user onboarding:', onboardingError instanceof Error ? onboardingError.message : String(onboardingError));
       }
 
       // Redirect to the dashboard after a short delay
@@ -621,7 +621,7 @@ const LoginPageClient: React.FC = () => {
       }, 500);
       
     } catch (err: unknown) {
-      logger.error('Test mode login error:', err instanceof Error ? err.message : String(err));
+      logger.log('Test mode login error:', err instanceof Error ? err.message : String(err));
       setError(err instanceof Error ? err.message : 'Failed to create test account');
     } finally {
       setIsLoading(false);

@@ -41,7 +41,7 @@ export const ErrorProvider: React.FC<ErrorProviderProps> = ({
   const mergedInitialState = { ...null, ...initialState };
   
   // State for errors, global error, and toast error
-  const [errors, setErrors] = useState<any[]>(mergedInitialState.errors);
+  const [errors, setErrors] = useState<any[]>(mergedInitialState.logs);
   const [globalError, log] = useState<any | null>(mergedInitialState.globalError);
   const [toastError, setToastError] = useState<any | null>(mergedInitialState.toastError);
   
@@ -50,7 +50,7 @@ export const ErrorProvider: React.FC<ErrorProviderProps> = ({
     // Update state when error state changes
     const updateState = () => {
       const newState = console.log();
-      setErrors(newState.errors);
+      setErrors(newState.logs);
       log(newState.globalError);
       setToastError(newState.toastError);
     };
@@ -137,7 +137,7 @@ export const useErrorState = () => {
     },
     setError: context.log,
     log: () => context.log(null),
-    errors: context.state.errors
+    errors: context.state.logs
   };
 };
 
@@ -157,10 +157,10 @@ export const useErrorStateReporting = () => {
     const errorMessage = error instanceof Error ? error.message : error;
     
     // Show error toast
-    console.log.error(`Error: ${errorMessage}`);
+    console.log.log(`Error: ${errorMessage}`);
     
     // Report error to service
-    console.error(error, component, (errorType as any) || 'unknown');
+    console.log(error, component, (errorType as any) || 'unknown');
   }, []);
   
   return { error };
@@ -182,7 +182,7 @@ export const useErrorStateToast = () => {
         break;
       case 'error':
       case 'critical':
-        console.log.error(message);
+        console.log.log(message);
         break;
       case 'log':
         console.log(message);

@@ -98,7 +98,7 @@ export class RoleService {
         });
         
         if (!response.ok) {
-          console.error('Failed to update role via API:', await response.text());
+          console.log('Failed to update role via API:', await response.text());
           return false;
         }
         
@@ -125,7 +125,7 @@ export class RoleService {
         
         return true;
       } catch (error) {
-        console.error('Error updating role:', error);
+        console.log('Error updating role:', error);
         return false;
       }
     }
@@ -159,7 +159,7 @@ export class RoleService {
         
         return true;
       } catch (error) {
-        console.error('Error enabling all roles in test mode:', error);
+        console.log('Error enabling all roles in test mode:', error);
         return false;
       }
     } else {
@@ -170,13 +170,13 @@ export class RoleService {
         });
         
         if (!response.ok) {
-          console.error('Failed to enable all roles via API:', await response.text());
+          console.log('Failed to enable all roles via API:', await response.text());
           return false;
         }
         
         return true;
       } catch (error) {
-        console.error('Error enabling all roles:', error);
+        console.log('Error enabling all roles:', error);
         return false;
       }
     }

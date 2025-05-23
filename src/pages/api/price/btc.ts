@@ -43,7 +43,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     // Return the price data
     return res.status(200).json(cachedPrice);
   } catch (error) {
-    console.error('Error fetching BTC price:', error);
+    console.log('Error fetching BTC price:', error);
     
     // If we have any cached data, return it even if it's stale
     if (cachedPrice) {

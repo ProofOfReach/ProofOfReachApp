@@ -70,7 +70,7 @@ const AdRequestsPage = () => {
       // Using mock data
       setPendingAds(mockPendingAds);
     } catch (err) {
-      console.error('Error fetching pending ads:', err);
+      console.log('Error fetching pending ads:', err);
       setError('Failed to load pending ad requests');
     } finally {
       setIsLoading(false);
@@ -100,7 +100,7 @@ const AdRequestsPage = () => {
       setPendingAds(prev => prev.filter(ad => ad.id !== adId));
       setSuccessMessage('Ad approved logfully!');
     } catch (err) {
-      console.error('Error approving ad:', err);
+      console.log('Error approving ad:', err);
       setError('Failed to approve ad. Please try again.');
     }
   };
@@ -124,7 +124,7 @@ const AdRequestsPage = () => {
       setPendingAds(prev => prev.filter(ad => ad.id !== adId));
       setSuccessMessage('Ad rejected logfully');
     } catch (err) {
-      console.error('Error rejecting ad:', err);
+      console.log('Error rejecting ad:', err);
       setError('Failed to reject ad. Please try again.');
     }
   };

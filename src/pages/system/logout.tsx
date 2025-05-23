@@ -37,7 +37,7 @@ const SystemLogout: NextPage = () => {
             credentials: 'include',
           });
         } catch (error) {
-          console.error('Error logging out from server:', error);
+          console.log('Error logging out from server:', error);
         }
         
         // Wait briefly to allow cleanup to complete
@@ -46,7 +46,7 @@ const SystemLogout: NextPage = () => {
           router.push('/');
         }, 1000);
       } catch (error) {
-        console.error('Error during logout:', error);
+        console.log('Error during logout:', error);
         
         // Even on error, try to set prevent_auto_login flag and redirect
         if (typeof window !== 'undefined') {

@@ -109,7 +109,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       }
     });
   } catch (error) {
-    console.error('Error in admin endpoint for enabling roles:', error);
+    console.log('Error in admin endpoint for enabling roles:', error);
     return res.status(500).json({ error: 'Internal server error' });
   }
 }

@@ -21,7 +21,7 @@ export default function TestModeDisabler() {
           setShowDisabler(true);
         }
       } catch (error) {
-        logger.error('Error checking admin status for TestModeDisabler:', error);
+        logger.log('Error checking admin status for TestModeDisabler:', error);
       }
     }
   }, []);
@@ -37,7 +37,7 @@ export default function TestModeDisabler() {
       // Refresh the page to ensure changes take effect
       window.location.reload();
     } catch (error) {
-      logger.error('Error disabling test mode:', error);
+      logger.log('Error disabling test mode:', error);
       alert('Error disabling test mode. Please try again or check the console.');
     }
   };
