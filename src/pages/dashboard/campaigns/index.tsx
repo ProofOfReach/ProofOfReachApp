@@ -3,7 +3,9 @@ import { NextPage } from 'next';
 import { useRouter } from 'next/router';
 import { Campaign, CampaignStatus, Ad } from '@prisma/client';
 import { AlertCircle, CheckCircle, ArrowRight, Plus } from 'react-feather';
-import DashboardContainer from '@/components/layout/DashboardContainer';
+import DashboardContainer from '@/components/ui/DashboardContainer';
+import DashboardHeader from '@/components/ui/DashboardHeader';
+import { getDashboardLayout } from '@/utils/layoutHelpers';
 import type { NextPageWithLayout } from '../../_app';
 
 // Type definition for campaigns with ads
@@ -91,21 +93,22 @@ const CampaignsPage: NextPageWithLayout = () => {
         return 'text-green-600 bg-green-100';
       case 'PAUSED':
         return 'text-yellow-600 bg-yellow-100';
-      case 'COMPLETED':
+      case 'ENDED':
         return 'text-blue-600 bg-blue-100';
+      case 'SCHEDULED':
+        return 'text-purple-600 bg-purple-100';
+      case 'REVIEW':
+        return 'text-orange-600 bg-orange-100';
       default:
         return 'text-gray-600 bg-gray-100';
     }
   };
 
   return (
-    <DashboardContainer title="Campaigns" userRole="advertiser">
-      <div className="max-w-7xl mx-auto">
-        {/* Header */}
-        <div className="flex justify-between items-center mb-6">
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
-            Campaign Management
-          </h1>
+    <DashboardContainer>
+      <DashboardHeader 
+        title="Campaign Management"
+        actions={
           <button
             onClick={() => router.push('/dashboard/campaigns/create')}
             className="bg-orange-600 hover:bg-orange-700 text-white px-4 py-2 rounded-lg inline-flex items-center"
@@ -113,7 +116,9 @@ const CampaignsPage: NextPageWithLayout = () => {
             <Plus className="w-4 h-4 mr-2" />
             Create Campaign
           </button>
-        </div>
+        }
+      />
+      <div className="space-y-6">
 
         {/* Status Messages */}
         {error && (
@@ -236,9 +241,9 @@ const CampaignsPage: NextPageWithLayout = () => {
   );
 };
 
-// Use the DashboardContainer layout
+// Use the getDashboardLayout function
 CampaignsPage.getLayout = function getLayout(page: React.ReactElement) {
-  return page;
+  return getDashboardLayout(page, 'Campaigns');
 };
 
 export default CampaignsPage;
