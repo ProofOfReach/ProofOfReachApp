@@ -1,0 +1,49 @@
+
+
+1/1
+
+Next.js 0.0.0 (unknown)
+Webpack
+Runtime Error
+
+
+ReferenceError: ImprovedDashboardLayout is not defined
+
+Call Stack
+15
+
+ProofOfReachWithLayout
+./src/pages/dashboard/reports/proof-of-reach.tsx
+renderWithHooks
+file:///home/runner/workspace/node_modules/react-dom/cjs/react-dom-server.browser.development.js (5658:16)
+renderIndeterminateComponent
+file:///home/runner/workspace/node_modules/react-dom/cjs/react-dom-server.browser.development.js (5731:15)
+renderElement
+file:///home/runner/workspace/node_modules/react-dom/cjs/react-dom-server.browser.development.js (5946:7)
+renderNodeDestructiveImpl
+file:///home/runner/workspace/node_modules/react-dom/cjs/react-dom-server.browser.development.js (6104:11)
+renderNodeDestructive
+file:///home/runner/workspace/node_modules/react-dom/cjs/react-dom-server.browser.development.js (6076:14)
+renderContextProvider
+file:///home/runner/workspace/node_modules/react-dom/cjs/react-dom-server.browser.development.js (5920:3)
+renderElement
+file:///home/runner/workspace/node_modules/react-dom/cjs/react-dom-server.browser.development.js (6017:11)
+renderNodeDestructiveImpl
+file:///home/runner/workspace/node_modules/react-dom/cjs/react-dom-server.browser.development.js (6104:11)
+renderNodeDestructive
+file:///home/runner/workspace/node_modules/react-dom/cjs/react-dom-server.browser.development.js (6076:14)
+renderIndeterminateComponent
+file:///home/runner/workspace/node_modules/react-dom/cjs/react-dom-server.browser.development.js (5785:7)
+renderElement
+file:///home/runner/workspace/node_modules/react-dom/cjs/react-dom-server.browser.development.js (5946:7)
+renderNodeDestructiveImpl
+file:///home/runner/workspace/node_modules/react-dom/cjs/react-dom-server.browser.development.js (6104:11)
+renderNodeDestructive
+file:///home/runner/workspace/node_modules/react-dom/cjs/react-dom-server.browser.development.js (6076:14)
+renderContextProvider
+file:///home/runner/workspace/node_modules/react-dom/cjs/react-dom-server.browser.development.js (5920:3)
+1
+2
+This error happened while generating the page. Any console logs will be displayed in the terminal window.
+
+Was this helpful?

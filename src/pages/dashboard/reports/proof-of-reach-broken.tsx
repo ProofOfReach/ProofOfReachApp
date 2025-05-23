@@ -1,11 +1,5 @@
 import React, { useState } from 'react';
-import '@/components/layout/ImprovedDashboardLayout';
-import '@/components/ui';
-import '@/components/ui/Badge';
-import '@/components/ui/button';
-import '@/components/ui/Tabs';
-import '@/components/ui/Tab';
-import '@/components/ui/Tooltip';
+import ImprovedDashboardLayout from '@/components/layout/ImprovedDashboardLayout';
 import {
   Shield,
   User,
@@ -540,9 +534,9 @@ const ProofOfReachPage = () => {
                   </div>
                 </div>
                 <div className="mt-6">
-                  <Button className="w-full">
+                  <button className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg transition-colors">
                     Learn More About Proof of Reach
-                  </Button>
+                  </button>
                 </div>
               </div>
             </DashboardCard>
