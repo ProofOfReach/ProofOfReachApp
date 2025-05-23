@@ -4,6 +4,7 @@ import { apiHandler } from '../../../utils/apiHandler';
 import { authMiddleware } from '../../../utils/enhancedAuthMiddleware';
 import { ApiError } from '../../../utils/apiError';
 import { logger } from '../../../lib/logger';
+import { enhancedAuthMiddleware } from '../../../utils/enhancedAuthMiddleware';
 
 export default apiHandler({
   // GET /api/campaigns - Get all campaigns for the authenticated user
@@ -62,7 +63,7 @@ export default apiHandler({
   
   // POST /api/campaigns - Create a new campaign
   POST: async (req: NextApiRequest, res: NextApiResponse) => {
-    const user = await (() => true)(req as any);
+    const user = await enhancedAuthMiddleware(req as any);
     
     // Check for test mode
     const isTestMode = user.isTestMode || (user.pubkey && user.pubkey.startsWith('pk_test_'));
