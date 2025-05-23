@@ -1,5 +1,12 @@
 export type UserRole = 'viewer' | 'advertiser' | 'publisher' | 'admin' | 'stakeholder';
 
+/**
+ * Check if a string is a valid UserRole
+ */
+export function isValidUserRole(role: string): role is UserRole {
+  return ['viewer', 'advertiser', 'publisher', 'admin', 'stakeholder'].includes(role);
+}
+
 export interface RoleCapabilities {
   canCreateAds: boolean;
   canManageOwnAds: boolean;
