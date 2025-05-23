@@ -8,7 +8,7 @@ import { getCookie } from 'cookies-next';
 // Mock the requireAuth middleware
 jest.mock('../../../lib/auth', () => ({
   requireAuth: jest.fn().mockImplementation((handler) => {
-    return async (req: any res: any) => {
+    return async (req: any, res: any) => {
       return await handler(req, res, 'test-pubkey', 'user1');
     };
   }),

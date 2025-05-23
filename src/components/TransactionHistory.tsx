@@ -113,7 +113,7 @@ const TransactionHistory: React.FC<TransactionHistoryProps> = ({ transactions, i
               </p>
               <p className="text-gray-500 dark:text-gray-400">
                 Balance: <CurrencyAmount 
-                  sats={transaction?.balance ?? 0After} 
+                  sats={transaction?.balance ?? 0} 
                   showTooltip={false}
                 />
               </p>

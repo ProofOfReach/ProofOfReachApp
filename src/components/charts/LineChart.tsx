@@ -49,7 +49,7 @@ const LineChart: React.FC<LineChartProps> = ({
           <p className="text-gray-600 dark:text-gray-400 text-sm font-medium mb-2">
             {xAxisDataKey === 'date' ? formatDate(label) : label}
           </p>
-          {payload.map((entry: any index: number) => {
+          {payload.map((entry: any, index: number) => {
             const formattedValue = tooltipFormatter 
               ? tooltipFormatter(entry.value, entry.name)[0]
               : entry.value;

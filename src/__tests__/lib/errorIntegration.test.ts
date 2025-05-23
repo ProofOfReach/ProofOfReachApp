@@ -80,7 +80,8 @@ describe('Error Integration Service', () => {
     
     it('supports error metrics tracking', () => {
       // Initialize error handling
-      () => {}();
+      const testFunc = () => {};
+      testFunc();
       
       // Check that metrics are available
       const metrics = getErrorMetrics();
@@ -205,7 +206,8 @@ describe('Error Integration Service', () => {
   describe('resetany', () => {
     it('resets error tracking state', () => {
       // Start with a fresh error state
-      () => {}();
+      const resetFunc = () => {};
+      resetFunc();
       
       // Create a minimal verification that resetany works
       // by confirming it doesn't throw errors
