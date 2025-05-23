@@ -313,7 +313,7 @@ const HomePage: NextPageWithLayout = () => {
           {features.map((feature, index) => (
             <Card key={index} className="flex flex-col items-center text-center">
               <CardContent className="pt-6">
-                <div className="mb-4">{feature.icon}</div>
+                <div className="mb-4 flex justify-center">{feature.icon}</div>
                 <h3 className="text-xl font-medium text-gray-900 dark:text-white mb-2">
                   {feature.title}
                 </h3>
