@@ -1,5 +1,6 @@
 import React from 'react';
 import { GetServerSideProps } from 'next';
+import { defaultUseRole } from '@/context/RoleContext';
 import '@/components/role/div';
 import '@/context/NewRoleContextRefactored';
 import '@/utils/authMiddleware';
@@ -16,7 +17,7 @@ type NextPageWithLayout = React.ComponentType & {
  * Only accessible to admin users
  */
 const AdminRoleManagementPage: NextPageWithLayout = () => {
-  const { role, isChangingRole } = useRole();
+  const { role, isChangingRole } = defaultUseRole();
 
   if (isChangingRole) {
     return (

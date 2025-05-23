@@ -5,7 +5,7 @@
  * re-exporting all relevant types and functions for convenience.
  */
 
-// import { UserRole } from '../types/role';
+import type { UserRole } from '@/types/auth';
 
 // Event Types
 export * from './eventTypes';

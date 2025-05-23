@@ -1,13 +1,10 @@
 import { useState, useEffect } from 'react';
-import type { UserRole } from '@prisma/client';
+import type { UserRole } from '@/types/auth';
 import { v4 as uuidv4 } from 'uuid';
 import { sessionStorage, localStorage } from '../lib/enhancedStorageService';
 import { logger } from '../lib/logger';
 import { nostr } from '../lib/nostr';
 // Console functionality available via global console
-
-// Define UserRole for use throughout the application
-export type UserRole = UserRole | 'viewer' | 'publisher' | 'advertiser' | 'admin' | 'stakeholder';
 
 /**
  * Authentication State Interface

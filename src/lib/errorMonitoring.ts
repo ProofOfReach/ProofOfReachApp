@@ -9,6 +9,7 @@
 
 
 import { logger } from './logger';
+import type { UserRole } from '@/types/auth';
 
 /**
  * Error metrics tracking
