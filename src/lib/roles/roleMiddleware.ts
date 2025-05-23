@@ -65,12 +65,7 @@ export function requireRole(roles: string[]) {
         logger.warn(`Access denied for user ${userId} - required roles: ${roles.join(', ')}`);
         return res.status(403).json({
           log: false,
-          error: null as any // TODO: implement roleService.formatError(
-            RoleErrorType.PERMISSION_DENIED, 
-            'You do not have permission to access this resource',
-            403,
-            { requiredRoles: roles, userRoles }
-          )
+          error: null as any // TODO: implement roleService.formatError
         });
       }
       

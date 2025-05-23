@@ -31,7 +31,7 @@ export const RoleAwareComponent: React.FC<RoleAwareComponentProps> = memo(({
   const { 
     currentRole,
     capabilities,
-    canAccess: true,
+    canAccess,
     isPublisher,
     isAdvertiser,
     can
