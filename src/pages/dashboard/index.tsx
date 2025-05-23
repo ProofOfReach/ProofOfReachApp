@@ -98,7 +98,7 @@ const Dashboard = () => {
         detail?: { to?: string; role?: string; }
       }>;
       
-      logger.debug('Role switched event received:', customEvent.detail);
+      console.debug('[DEBUG] Role switched event received:', customEvent.detail);
       
       // Extract the new role from the event in any format
       let newRole: string | null = null;
@@ -166,7 +166,7 @@ const Dashboard = () => {
     
     // Specific handler for the dashboard-specific event
     const handleDashboardRoleChange = (event: Event) => {
-      logger.debug('Dashboard role change event received');
+      console.debug('Dashboard role change event received');
       
       // Determine if we're in test mode for client-side only role changes
       const isTestMode = typeof window !== 'undefined' && localStorage.getItem('isTestMode') === 'true';
@@ -180,7 +180,7 @@ const Dashboard = () => {
       // Check if the event contains a role
       if (customEvent.detail?.role) {
         const eventRole = customEvent.detail.role.replace(/['"]/g, '');
-        logger.debug(`Dashboard role change event has role: ${eventRole}`);
+        console.debug(`Dashboard role change event has role: ${eventRole}`);
         
         // Update the role in state
         setCurrentRole(eventRole as UserRole);
@@ -233,12 +233,12 @@ const Dashboard = () => {
       
       // Force the component to re-render completely
       setTimeout(() => {
-        logger.debug('Forcing complete dashboard re-render after role change');
+        console.debug('Forcing complete dashboard re-render after role change');
         // Use a force update technique by changing state
         setCurrentRole(prev => {
           // Return the same value but as a new reference to trigger re-render
           const currentVal = prev.toString();
-          logger.debug(`Re-render with role: ${currentVal}`);
+          console.debug(`Re-render with role: ${currentVal}`);
           return currentVal as UserRole;
         });
       }, 50);
@@ -268,7 +268,7 @@ const Dashboard = () => {
             newRole = event.newValue;
           }
           
-          logger.debug(`Storage change detected, updating role to: ${newRole}`);
+          console.debug(`Storage change detected, updating role to: ${newRole}`);
           setCurrentRole(newRole as UserRole);
         }
       }
@@ -752,7 +752,7 @@ const Dashboard = () => {
       if (storedRole) {
         // Clean up the stored role to handle any quotes
         effectiveRole = storedRole.replace(/['"]/g, '') as UserRole;
-        logger.debug(`Test mode active: Using localStorage role: ${effectiveRole}`);
+        console.debug(`Test mode active: Using localStorage role: ${effectiveRole}`);
       }
     }
     
@@ -760,9 +760,9 @@ const Dashboard = () => {
     const normalizedRole = effectiveRole?.toString().replace(/['"]/g, '') || 'viewer';
     
     // Add comprehensive logging to help debug role issues
-    logger.debug(`Rendering dashboard for role: '${normalizedRole}' (raw: '${currentRole}')`);
-    logger.debug(`Current role value: ${currentRole}`);
-    logger.debug(`Local storage role: ${typeof window !== 'undefined' ? localStorage.getItem('currentRole') : 'N/A'}`);
+    console.debug(`Rendering dashboard for role: '${normalizedRole}' (raw: '${currentRole}')`);
+    console.debug(`Current role value: ${currentRole}`);
+    console.debug(`Local storage role: ${typeof window !== 'undefined' ? localStorage.getItem('currentRole') : 'N/A'}`);
     
     // Force dashboard re-render with a unique key that changes with EVERY render
     // Remove random() to prevent excessive re-renders while still ensuring unique key per render
@@ -771,25 +771,25 @@ const Dashboard = () => {
     // Enhanced switch statement with more explicit case handling
     switch(normalizedRole) {
       case 'advertiser':
-        logger.debug('Rendering ADVERTISER dashboard');
+        console.debug('Rendering ADVERTISER dashboard');
         return <div key={dashboardKey} data-testid="advertiser-dashboard">{renderAdvertiserDashboard()}</div>;
       case 'publisher':
-        logger.debug('Rendering PUBLISHER dashboard');
+        console.debug('Rendering PUBLISHER dashboard');
         return <div key={dashboardKey} data-testid="publisher-dashboard">{renderPublisherDashboard()}</div>;
       case 'admin':
-        logger.debug('Rendering ADMIN dashboard');
+        console.debug('Rendering ADMIN dashboard');
         return <div key={dashboardKey} data-testid="admin-dashboard">{renderAdminDashboard()}</div>;
       case 'stakeholder':
-        logger.debug('Rendering STAKEHOLDER dashboard');
+        console.debug('Rendering STAKEHOLDER dashboard');
         return <div key={dashboardKey} data-testid="stakeholder-dashboard">{renderStakeholderDashboard()}</div>;
       case 'viewer':
-        logger.debug('Rendering VIEWER dashboard');
+        console.debug('Rendering VIEWER dashboard');
         return <div key={dashboardKey} data-testid="viewer-dashboard">{renderViewerDashboard()}</div>;
       case 'viewer': // Handle the legacy 'viewer' role as 'viewer'
-        logger.debug('Rendering legacy USER (as viewer) dashboard');
+        console.debug('Rendering legacy USER (as viewer) dashboard');
         return <div key={dashboardKey} data-testid="viewer-dashboard">{renderViewerDashboard()}</div>;
       default:
-        logger.debug(`Unknown role '${normalizedRole}', defaulting to viewer dashboard`);
+        console.debug(`Unknown role '${normalizedRole}', defaulting to viewer dashboard`);
         return <div key={dashboardKey} data-testid="default-viewer-dashboard">{renderViewerDashboard()}</div>; // Default to viewer dashboard
     }
   };

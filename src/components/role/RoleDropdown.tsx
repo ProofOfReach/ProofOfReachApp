@@ -118,11 +118,11 @@ const RoleDropdown: React.FC<RoleDropdownProps> = ({
     let cachedRoles;
     try {
       cachedRoles = enhancedStorage.getItem(STORAGE_KEYS.AVAILABLE_ROLES);
-      logger.debug(`Retrieved cached roles from enhanced storage: ${cachedRoles}`);
+      console.debug(`Retrieved cached roles from enhanced storage: ${cachedRoles}`);
     } catch (error) {
       // Fallback to localStorage for backward compatibility
       cachedRoles = localStorage.getItem('cachedAvailableRoles');
-      logger.debug(`Falling back to localStorage for roles: ${cachedRoles}`);
+      console.debug(`Falling back to localStorage for roles: ${cachedRoles}`);
     }
     
     // Use both React context and utility function for consistent test mode detection
@@ -130,7 +130,7 @@ const RoleDropdown: React.FC<RoleDropdownProps> = ({
     
     if (isTestModeActive) {
       // In test mode, we want to show all roles but still highlight the current one
-      logger.log('Test mode detected in fetchRolesFromCache with currentRole:', currentRoleValue);
+      console.log('Test mode detected in fetchRolesFromCache with currentRole:', currentRoleValue);
       
       // Show all roles and highlight the current one using all valid roles
       const allRoles: string[] = ['viewer', 'advertiser', 'publisher', 'admin', 'stakeholder']; 
@@ -151,7 +151,7 @@ const RoleDropdown: React.FC<RoleDropdownProps> = ({
     
     if (cachedRoles) {
       try {
-        logger.debug('Using cached roles:', cachedRoles);
+        console.debug('Using cached roles:', cachedRoles);
         let parsedRoles = typeof cachedRoles === 'string' ? JSON.parse(cachedRoles) : cachedRoles;
         
         // Ensure we only use valid UserRole values through the RoleManager
@@ -162,12 +162,12 @@ const RoleDropdown: React.FC<RoleDropdownProps> = ({
         // Only show roles the user is authorized to use (from the cache)
         setAvailableRoles(validRoles);
       } catch (error) {
-        logger.log('Error parsing cached roles:', error);
+        console.log('Error parsing cached roles:', error);
         setAvailableRoles(['viewer']);
       }
     } else {
       // If no cache, use RoleManager to get available roles
-      logger.debug('No cached roles found, using RoleManager');
+      console.debug('No cached roles found, using RoleManager');
       const managerRoles = RoleManager.getAvailableRoles();
       setAvailableRoles(managerRoles);
     }
@@ -191,7 +191,7 @@ const RoleDropdown: React.FC<RoleDropdownProps> = ({
       } catch (error) {
         // Fallback to RoleManager
         currentRoleValue = RoleManager.getCurrentRole() || 'viewer';
-        logger.warn('Error retrieving role from enhanced storage, falling back to RoleManager:', error);
+        console.warn('Error retrieving role from enhanced storage, falling back to RoleManager:', error);
       }
       
       // Always update current role to maintain consistency
@@ -203,7 +203,7 @@ const RoleDropdown: React.FC<RoleDropdownProps> = ({
       
       // In test mode, we show all roles but still highlight the current one
       if (isTestModeActive) {
-        logger.log('Test mode active in fetchRolesFromAPI - currentRole:', currentRoleValue);
+        console.log('Test mode active in fetchRolesFromAPI - currentRole:', currentRoleValue);
         const allRoles: string[] = ['viewer', 'advertiser', 'publisher', 'admin', 'stakeholder'];
         
         // Use the enhancedStorage to save roles consistently
@@ -211,7 +211,7 @@ const RoleDropdown: React.FC<RoleDropdownProps> = ({
           enhancedStorage.setItem(STORAGE_KEYS.AVAILABLE_ROLES, JSON.stringify(allRoles));
           enhancedStorage.setItem(STORAGE_KEYS.ROLE_CACHE_TIMESTAMP, Date.now().toString());
         } catch (error) {
-          logger.log('Error storing roles in enhanced storage:', error);
+          console.log('Error storing roles in enhanced storage:', error);
           // Fallback to localStorage for backward compatibility
           localStorage.setItem('cachedAvailableRoles', JSON.stringify(allRoles));
           localStorage.setItem('roleCacheTimestamp', Date.now().toString());
@@ -244,7 +244,7 @@ const RoleDropdown: React.FC<RoleDropdownProps> = ({
         cacheAge = cacheTimestamp ? Date.now() - parseInt(cacheTimestamp, 10) : Infinity;
       } catch (error) {
         // Fallback to localStorage for backward compatibility
-        logger.warn('Error retrieving from enhanced storage, falling back to localStorage', 
+        console.warn('Error retrieving from enhanced storage, falling back to localStorage', 
           error instanceof Error ? error.message : 'Unknown error');
         cachedRoles = localStorage.getItem('cachedAvailableRoles');
         cacheTimestamp = localStorage.getItem('roleCacheTimestamp');
@@ -254,7 +254,7 @@ const RoleDropdown: React.FC<RoleDropdownProps> = ({
       // Use cache if it's less than 15 minutes old
       if (cachedRoles && cacheAge < 15 * 60 * 1000) {
         try {
-          logger.debug('Using cached roles within time limit:', cachedRoles);
+          console.debug('Using cached roles within time limit:', cachedRoles);
           let parsedRoles = typeof cachedRoles === 'string' ? JSON.parse(cachedRoles) : cachedRoles;
           
           // Ensure we only use valid UserRole values
@@ -267,14 +267,14 @@ const RoleDropdown: React.FC<RoleDropdownProps> = ({
           setIsLoading(false);
           return;
         } catch (error) {
-          logger.log('Error parsing cached roles:', error);
+          console.log('Error parsing cached roles:', error);
           // Continue to fetch roles from API
         }
       }
       
       // Try to fetch from API
       try {
-        logger.debug('Fetching roles from API...');
+        console.debug('Fetching roles from API...');
         const response = await fetch('/api/roles');
         if (response.ok) {
           const data = await response.json();
@@ -282,7 +282,7 @@ const RoleDropdown: React.FC<RoleDropdownProps> = ({
           // Use the availableRoles array which contains only the roles this user is authorized to use
           let fetchedRoles = data.availableRoles || ['viewer'];
           
-          logger.debug('Roles from API:', fetchedRoles);
+          console.debug('Roles from API:', fetchedRoles);
           
           // Filter to ensure we only use valid UserRole values
           const validRoles: string[] = Array.isArray(fetchedRoles) 
@@ -306,7 +306,7 @@ const RoleDropdown: React.FC<RoleDropdownProps> = ({
               }
             }));
           } catch (error) {
-            logger.log('Error storing roles in enhanced storage:', error);
+            console.log('Error storing roles in enhanced storage:', error);
             // Fallback to localStorage for backward compatibility
             localStorage.setItem('cachedAvailableRoles', JSON.stringify(validRoles));
             localStorage.setItem('roleCacheTimestamp', Date.now().toString());
@@ -320,7 +320,7 @@ const RoleDropdown: React.FC<RoleDropdownProps> = ({
             detail: { availableRoles: validRoles }
           }));
         } else {
-          logger.log('Failed to fetch available roles:', await response.text());
+          console.log('Failed to fetch available roles:', await response.text());
           // Fallback to user role only for security reasons
           setAvailableRoles(['viewer']);
           
@@ -328,7 +328,7 @@ const RoleDropdown: React.FC<RoleDropdownProps> = ({
           notifyRolesUpdated(['viewer'], currentRole);
         }
       } catch (error) {
-        logger.log('Error fetching roles from API:', error);
+        console.log('Error fetching roles from API:', error);
         // Fallback to user role only for security reasons
         setAvailableRoles(['viewer']);
         
@@ -340,12 +340,12 @@ const RoleDropdown: React.FC<RoleDropdownProps> = ({
             notifyRolesUpdated(managerRoles, currentRole);
           }
         } catch (fallbackError) {
-          logger.log('Error getting roles from RoleManager:', fallbackError);
+          console.log('Error getting roles from RoleManager:', fallbackError);
           notifyRolesUpdated(['viewer'], currentRole);
         }
       }
     } catch (error) {
-      logger.log('Error in role loading process:', error);
+      console.log('Error in role loading process:', error);
       setAvailableRoles(['viewer']);
       notifyRolesUpdated(['viewer'], currentRole);
     } finally {
@@ -356,7 +356,7 @@ const RoleDropdown: React.FC<RoleDropdownProps> = ({
   // Initial fetch of roles
   // Handle role changed events
   useAppEvent(ROLE_EVENTS.ROLE_CHANGED, (data: any) => {
-    logger.debug('Role changed event detected via new event system', data);
+    console.debug('Role changed event detected via new event system', data);
     if (data?.to) {
       setCurrentRole(data.to);
       fetchRolesFromCache();
@@ -365,7 +365,7 @@ const RoleDropdown: React.FC<RoleDropdownProps> = ({
   
   // Handle roles updated events
   useAppEvent(ROLE_EVENTS.ROLES_UPDATED, (data: any) => {
-    logger.debug('Roles updated event detected via new event system', data);
+    console.debug('Roles updated event detected via new event system', data);
     if (data?.availableRoles) {
       // Only update if we have valid roles
       const validRoles = data.availableRoles.filter(isUserRole);
@@ -380,7 +380,7 @@ const RoleDropdown: React.FC<RoleDropdownProps> = ({
   
   // Handle test mode state changes
   useAppEvent(TEST_MODE_EVENTS.STATE_CHANGED, () => {
-    logger.debug('Test mode state changed event detected via new event system');
+    console.debug('Test mode state changed event detected via new event system');
     // Refresh roles whenever test mode status changes
     fetchRolesFromAPI();
   });
@@ -391,12 +391,12 @@ const RoleDropdown: React.FC<RoleDropdownProps> = ({
     
     // Legacy event handlers for backward compatibility
     const handleLegacyRoleUpdate = () => {
-      logger.debug('Legacy role update event detected');
+      console.debug('Legacy role update event detected');
       fetchRolesFromCache();
     };
     
     const handleLegacyRoleChanged = (event: CustomEvent) => {
-      logger.debug('Legacy role changed event detected', event.detail);
+      console.debug('Legacy role changed event detected', event.detail);
       if (event.detail?.role) {
         setCurrentRole(event.detail.role as UserRole);
         fetchRolesFromCache();
@@ -404,7 +404,7 @@ const RoleDropdown: React.FC<RoleDropdownProps> = ({
     };
     
     const handleLegacyRolesUpdated = (event: CustomEvent) => {
-      logger.debug('Legacy roles updated event detected', event.detail);
+      console.debug('Legacy roles updated event detected', event.detail);
       if (event.detail?.availableRoles) {
         // Only update if we have valid roles
         const validRoles = event.detail.availableRoles.filter(isUserRole);
@@ -415,7 +415,7 @@ const RoleDropdown: React.FC<RoleDropdownProps> = ({
     };
     
     const handleLegacyTestModeUpdate = (event: CustomEvent) => {
-      logger.debug('Legacy test mode update event detected', event.detail);
+      console.debug('Legacy test mode update event detected', event.detail);
       // Refresh roles whenever test mode status changes
       fetchRolesFromAPI();
     };
@@ -455,7 +455,7 @@ const RoleDropdown: React.FC<RoleDropdownProps> = ({
       
       // In test mode, use the RoleManager and event system for role changes
       if (isTestModeActive) {
-        logger.log(`Changing role in test mode: ${currentRole} -> ${newRole}`);
+        console.log(`Changing role in test mode: ${currentRole} -> ${newRole}`);
         
         try {
           // 1. Store using EnhancedStorageService
@@ -490,10 +490,10 @@ const RoleDropdown: React.FC<RoleDropdownProps> = ({
             
             enhancedStorage.setItem(STORAGE_KEYS.LAST_ROLE_CHANGE, roleChangeData);
           } catch (e) {
-            logger.warn('Failed to update role change data in storage:', e);
+            console.warn('Failed to update role change data in storage:', e);
           }
         } catch (storageError) {
-          logger.log('Error using enhanced storage system:', storageError);
+          console.log('Error using enhanced storage system:', storageError);
           
           // Fallback to direct localStorage if enhanced storage fails
           localStorage.setItem('currentRole', newRole);
@@ -502,7 +502,7 @@ const RoleDropdown: React.FC<RoleDropdownProps> = ({
             detail: { role: newRole, from: currentRole, to: newRole }
           }));
           
-          logger.debug('Used fallback role change method');
+          console.debug('Used fallback role change method');
         }
         
         log = true;
@@ -520,7 +520,7 @@ const RoleDropdown: React.FC<RoleDropdownProps> = ({
           onRoleChange(newRole);
         }
         
-        logger.log('Role switched logfully:', { from: currentRole, to: newRole });
+        console.log('Role switched logfully:', { from: currentRole, to: newRole });
         
         // Trigger role events using modern event system
         notifyRoleChanged(currentRole, newRole, availableRoles);
@@ -534,12 +534,12 @@ const RoleDropdown: React.FC<RoleDropdownProps> = ({
           router.push('/dashboard');
         }
       } else {
-        logger.log('Failed to change role');
+        console.log('Failed to change role');
         // Reset to previous role on failure
         event.target.value = currentRole;
       }
     } catch (error) {
-      logger.log('Error changing role:', error);
+      console.log('Error changing role:', error);
       event.target.value = currentRole;
     } finally {
       setIsChanging(false);
