@@ -1,5 +1,5 @@
 import React from 'react';
-import { useRole } from '@/context/RoleContext';
+import { defaultUseRole } from '@/context/RoleContext';
 import { ChevronRight, ShoppingBag } from 'react-feather';
 import Link from 'next/link';
 import { getDashboardLayout } from '@/utils/layoutHelpers';

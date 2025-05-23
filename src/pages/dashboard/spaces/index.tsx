@@ -1,7 +1,7 @@
-import React, { useContext, useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import Layout from '../../../components/Layout';
-import { NostrAuthContext } from '../../_app';
+import { useAuth } from '@/hooks/useAuth';
 import Link from 'next/link';
 import { Plus, Search, Code, Trash2, Copy } from 'react-feather';
 import useSWR from 'swr';
@@ -11,7 +11,7 @@ import SpaceCard from '../../../components/SpaceCard';
 const fetcher = (url: string) => fetch(url).then(res => res.json());
 
 const SpacesListPage: React.FC = () => {
-  const { auth } = useContext(NostrAuthContext);
+  const auth = useAuth();
   const router = useRouter();
   const [searchTerm, setSearchTerm] = useState('');
   const [showCodeModal, setShowCodeModal] = useState(false);
@@ -78,7 +78,7 @@ const SpacesListPage: React.FC = () => {
     // In the final implementation, this will connect to the marketplace
     // and fetch relevant ads to display
     const spaceId = "${selectedSpace.id}";
-    const publisherPubkey = "${auth.pubkey}";
+    const publisherPubkey = "${auth.auth?.pubkey || ''}";
     
     document.addEventListener('DOMContentLoaded', function() {
       const adSpace = document.getElementById('nostr-ad-space-${selectedSpace.id}');
