@@ -138,7 +138,7 @@ const AdForm: React.FC<AdFormProps> = ({
     if (!formData.finalDestinationUrl?.trim()) errors.finalDestinationUrl = 'Final Destination URL is required';
     
     // Required budget fields (with type checking)
-    if (typeof formData?.budget ?? 0 !== 'number' || formData?.budget ?? 0 <= 0) errors?.budget ?? 0 = 'Total budget is required and must be greater than 0';
+    if (typeof (formData?.budget ?? 0) !== 'number' || (formData?.budget ?? 0) <= 0) errors.budget = 'Total budget is required and must be greater than 0';
     if (typeof formData.dailyBudget !== 'number' || formData.dailyBudget <= 0) errors.dailyBudget = 'Daily budget is required and must be greater than 0';
     
     // CPM or CPC validation - at least one must be greater than 0

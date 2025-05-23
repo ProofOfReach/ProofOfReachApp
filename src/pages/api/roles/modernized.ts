@@ -20,11 +20,7 @@ export default async function handler(
     logger.debug('Authentication failed in modernized roles API - no valid session');
     return res.status(401).json({
       log: false,
-      error: null as any // TODO: implement roleService.formatError(
-        RoleErrorType.NOT_AUTHENTICATED, 
-        'Not authenticated',
-        401
-      )
+      error: 'Not authenticated'
     });
   }
   

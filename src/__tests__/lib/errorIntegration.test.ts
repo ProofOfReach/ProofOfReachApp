@@ -6,9 +6,8 @@ import {
   log,
   getErrorMetrics,
   trackErrorRecovery,
-  resetany,
-  () => {}
-} from '@/lib/console';
+  resetStats
+} from '@/lib/errorService';
 import '@/types/errors';
 
 // For tests where we need a simpler category enum
@@ -66,7 +65,8 @@ describe('Error Integration Service', () => {
       // and that it creates the expected error state structure
       
       expect(() => {
-        () => {}();
+        const testFunc = () => {};
+        testFunc();
       }).not.toThrow();
       
       // Check that we can get error state after initialization

@@ -9,7 +9,7 @@ import '@/components/errors/ErrorInitializer';
 
 // Mock the console module
 jest.mock('@/lib/console', () => ({
-  () => {}: jest.fn()
+  mockFunction: jest.fn()
 }));
 
 describe('ErrorInitializer Component', () => {

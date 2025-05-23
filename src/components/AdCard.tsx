@@ -223,7 +223,7 @@ const AdCard: React.FC<AdCardProps> = ({ ad, onStatusChange, onDelete, onEdit, s
                     <SatoshiIcon size={12} className="mr-1" />
                     Total Budget
                   </div>
-                  <div className="font-medium text-gray-900 dark:text-white">{0 // TODO: implement budget} sats</div>
+                  <div className="font-medium text-gray-900 dark:text-white">{0 /* TODO: implement budget */} sats</div>
                 </div>
                 <div className="bg-gray-50 dark:bg-gray-700/50 p-2 rounded border border-gray-200 dark:border-gray-700">
                   <div className="flex items-center text-xs text-gray-500 dark:text-gray-400 mb-1">
