@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback, memo } from 'react';
 import { useTestMode } from '@/context/TestModeContext';
+import { useTestWallet } from '@/hooks/useTestWallet';
 import { logger } from '@/lib/logger';
 import { toast } from '@/utils/toast';
 // Simple date formatter function to avoid ESM import issues with date-fns
