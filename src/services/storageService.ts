@@ -5,11 +5,7 @@
  * Provides consistent error handling and type safety.
  */
 
-import '@/context/RoleContext';
-import '@/lib/logger';
-import '@/types/role';
-import '@/services/enhancedStorageService';
-import '@/services/roleManager';
+import { UserRole } from '../types/role';
 
 // Define storage key constants to avoid string duplication
 export const STORAGE_KEYS = {
@@ -50,7 +46,7 @@ export class StorageService {
       return value ? JSON.parse(value) : null;
     } catch (error) {
       // Log as debug instead of error since this is expected on public pages
-      logger.debug(`Error getting item ${key} from ${storageType} storage:`, error);
+      console.debug(`Error getting item ${key} from ${storageType} storage:`, error);
       return null;
     }
   }
@@ -66,7 +62,7 @@ export class StorageService {
       storage.setItem(key, JSON.stringify(value));
       return true;
     } catch (error) {
-      logger.log(`Error setting item ${key} in ${storageType} storage:`, error);
+      console.error(`Error setting item ${key} in ${storageType} storage:`, error);
       return false;
     }
   }
@@ -82,7 +78,7 @@ export class StorageService {
       storage.removeItem(key);
       return true;
     } catch (error) {
-      logger.log(`Error removing item ${key} from ${storageType} storage:`, error);
+      console.error(`Error removing item ${key} from ${storageType} storage:`, error);
       return false;
     }
   }
@@ -97,7 +93,7 @@ export class StorageService {
       const storage = storageType === 'session' ? sessionStorage : localStorage;
       return storage.getItem(key) !== null;
     } catch (error) {
-      logger.log(`Error checking for item ${key} in ${storageType} storage:`, error);
+      console.error(`Error checking for item ${key} in ${storageType} storage:`, error);
       return false;
     }
   }
@@ -113,7 +109,7 @@ export class StorageService {
       storage.clear();
       return true;
     } catch (error) {
-      logger.log(`Error clearing ${storageType} storage:`, error);
+      console.error(`Error clearing ${storageType} storage:`, error);
       return false;
     }
   }
@@ -166,7 +162,7 @@ export class StorageService {
           return role as UserRole;
         }
       } catch (e) {
-        logger.debug('Error getting role from RoleManager:', e);
+        console.debug('Error getting role from RoleManager:', e);
       }
       
       // Try enhanced storage next
@@ -176,7 +172,7 @@ export class StorageService {
           return storedRole as UserRole;
         }
       } catch (e) {
-        logger.debug('Error getting role from enhanced storage:', e);
+        console.debug('Error getting role from enhanced storage:', e);
       }
       
       // Finally try localStorage
@@ -186,10 +182,10 @@ export class StorageService {
           return localRole as UserRole;
         }
       } catch (e) {
-        logger.debug('Error getting role from localStorage:', e);
+        console.debug('Error getting role from localStorage:', e);
       }
     } catch (e) {
-      logger.log('Error in getCurrentRole:', e);
+      console.error('Error in getCurrentRole:', e);
     }
     
     // Default to viewer role

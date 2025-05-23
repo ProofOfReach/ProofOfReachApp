@@ -28,7 +28,7 @@ export const RoleProvider = RoleProviderRefactored;
 export const RoleProviderWithQueryClient = RoleProviderRefactoredWithQueryClient;
 
 // Export the new access control hook as an alternative
-export const defaultUseRoleWithAccess = defaultUseRoleAccess;
+export const defaultUseRoleWithAccess = defaultUseRole;
 
 /**
  * @deprecated Use accessControl.roles from src/lib/accessControl.ts instead
