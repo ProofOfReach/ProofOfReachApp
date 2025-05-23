@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import { error } from '../../../../lib/logger';
+import { logger } from '../../../../lib/logger';
 
 // Demo mode - store ad views in memory
 const demoAdViews = new Map<string, Set<string>>();

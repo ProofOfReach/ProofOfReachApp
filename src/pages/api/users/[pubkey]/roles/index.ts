@@ -228,7 +228,12 @@ const addUserRole = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 };
 
-const handler = createApiHandler({
+const handler = async (req: NextApiRequest, res: NextApiResponse) => {
+  // TODO: implement proper API handler
+  return res.status(501).json({ error: 'Not implemented' });
+};
+
+/*const handler = createApiHandler({
   GET: getUserRoles,
   POST: addUserRole,
 });

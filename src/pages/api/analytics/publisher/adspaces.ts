@@ -4,8 +4,11 @@ import { AdSpacePerformance } from '@/services/analyticsService';
 
 // API handler for fetching publisher ad space performance data
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  await requireAuth(req, res, async (user) => {
-    try {
+  try {
+    const user = await requireAuth(req); 
+    if (!user) {
+      return res.status(401).json({ error: 'Unauthorized' });
+    }
       // In a real implementation, this would fetch data from the database
       // For now, use sample data
       const adSpaces: AdSpacePerformance[] = [

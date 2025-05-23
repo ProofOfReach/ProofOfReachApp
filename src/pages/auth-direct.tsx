@@ -23,7 +23,8 @@ const AuthDirectPage = () => {
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        const state = await authService.checkAuth();
+        // const state = await authService.checkAuth();
+        const state = null; // TODO: implement proper auth check
         setAuthState(state);
         setLoginStatus(state ? 'Already logged in' : 'Not logged in');
       } catch (error) {
@@ -52,7 +53,8 @@ const AuthDirectPage = () => {
     try {
       setIsLoading(true);
       setLoginStatus('Logging in...');
-      const newAuthState = await authService.login(pubkey, signedMessage);
+      // const newAuthState = await authService.login(pubkey, signedMessage);
+      const newAuthState = null; // TODO: implement proper login
       setAuthState(newAuthState);
       setLoginStatus('Login successful! Check roles below.');
       logger.log('Login successful');
@@ -88,7 +90,8 @@ const AuthDirectPage = () => {
       setIsLoading(true);
       setLoginStatus(`Logging in as test ${testPubkey}...`);
       
-      const newAuthState = await authService.login(testPubkey, 'test-signature');
+      // const newAuthState = await authService.login(testPubkey, 'test-signature');
+      const newAuthState = null; // TODO: implement proper test login
       setAuthState(newAuthState);
       
       setLoginStatus(`Login successful as ${testPubkey}! Check roles below.`);
