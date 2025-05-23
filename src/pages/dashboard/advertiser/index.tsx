@@ -1,11 +1,10 @@
 import React from 'react';
-import '@/context/RoleContext';
-import '@/components/ui';
+import { useRole } from '@/context/RoleContext';
 import { ChevronRight, ShoppingBag } from 'react-feather';
 import Link from 'next/link';
-import '@/utils/layoutHelpers';
+import { getDashboardLayout } from '@/utils/layoutHelpers';
 import type { NextPageWithLayout } from '../../_app';
-import '@/components/CurrencyAmount';
+import CurrencyAmount from '@/components/CurrencyAmount';
 
 /**
  * Advertiser Dashboard Page

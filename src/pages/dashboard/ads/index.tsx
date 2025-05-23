@@ -3,11 +3,10 @@ import { useRouter } from 'next/router';
 import Link from 'next/link';
 import { Plus, Search, Filter } from 'react-feather';
 import useSWR from 'swr';
-import '@/components/AdCard';
-import '@/utils/layoutHelpers';
-import '@/pages/_app';
-import '@/components/ui';
-import '@/hooks/useAuth';
+import AdCard from '@/components/AdCard';
+import { getDashboardLayout } from '@/utils/layoutHelpers';
+import { NextPageWithLayout } from '@/pages/_app';
+import { AuthContext } from '@/hooks/useAuth';
 
 // Fetcher function for SWR
 const fetcher = (url: string) => fetch(url).then(res => res.json());
