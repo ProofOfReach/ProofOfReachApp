@@ -13,7 +13,7 @@ import DashboardHeader from '../../components/ui/DashboardHeader';
 import '@/components/ui';
 import '@/components/ui/button';
 import '@/components/ui/input';
-import '@/utils/layoutHelpers';
+import { getDashboardLayout } from '@/utils/layoutHelpers';
 import type { NextPageWithLayout } from '../_app';
 import { defaultUseRoleAccess } from '@/hooks/useRoleAccess';
 import { useTestMode } from '@/context/TestModeContext';
