@@ -1,14 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { useTestMode } from '@/context/TestModeContext';
-import '@/lib/roleService';
-import '@/services/roleManager';
-import '@/services/enhancedStorageService';
-import '@/services/storageService';
-import '@/types/role';
-import '@/lib/events';
-import '@/hooks/useAppEvent';
-import '@/lib/events/eventTypes';
-import '@/lib/logger';
 import Link from 'next/link';
 
 /**
