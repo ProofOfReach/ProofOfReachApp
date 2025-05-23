@@ -34,23 +34,15 @@ export default async function handler(
         return await updateRole(pubkey, req, res);
       default:
         return res.status(405).json({
-          log: false,
-          error: null as any // TODO: implement roleService.formatError(
-            RoleErrorType.INVALID_ROLE, 
-            'Method not allowed',
-            405
-          )
+          success: false,
+          error: 'Method not allowed'
         });
     }
   } catch (error) {
     logger.log('Error in modernized roles API:', error);
     return res.status(500).json({
-      log: false,
-      error: null as any // TODO: implement roleService.formatError(
-        RoleErrorType.UNKNOWN_ERROR, 
-        'An error occurred while processing your request',
-        500
-      )
+      success: false,
+      error: 'An error occurred while processing your request'
     });
   }
 }
