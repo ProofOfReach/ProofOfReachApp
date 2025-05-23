@@ -1,16 +1,16 @@
 import React, { useEffect } from 'react';
 import Head from 'next/head';
 import Script from 'next/script';
-import RoleDropdown from '@/components/role/RoleDropdown';
-import { UserRole } from '@/context/RoleContext';
-import { triggerRoleRefresh } from '@/utils/roleEvents';
+import.*./components/role/RoleDropdown';
+import.*./context/RoleContext';
+import.*./utils/roleEvents';
 
 /**
  * Test page for Role Dropdown
  * This page helps test the role dropdown component in isolation
  */
 const TestRoleDropdownPage: React.FC = () => {
-  const [selectedRole, setSelectedRole] = React.useState<UserRole>('user');
+  const [selectedRole, setSelectedRole] = React.useState<UserRole>('viewer');
 
   const handleRoleChange = (role: UserRole) => {
     console.log('Role changed to:', role);

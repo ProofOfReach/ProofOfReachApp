@@ -13,8 +13,8 @@
  */
 
 import { NextApiRequest, NextApiResponse } from 'next';
-import { errorService } from '@/lib/errorService';
-import { ErrorSeverity, ErrorCategory } from '@/types/errors';
+import.*./lib/errorService';
+import.*./types/errors';
 import { v4 as uuidv4 } from 'uuid';
 
 /**
@@ -199,7 +199,7 @@ export function handleApiRouteError(
       if ((error as any).code) {
         errorCode = (error as any).code;
         if (errorCode in suggestedActions) {
-          suggestedAction = suggestedActions[errorCode as ErrorCode];
+          suggestedAction = suggestedActions[errorCode as anyCode];
         }
       }
       if ((error as any).details) {

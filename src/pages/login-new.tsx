@@ -60,11 +60,11 @@ export default function NewLoginPage() {
           }, 500);
         }
       } catch (err) {
-        logger.error('Inner login error:', err);
+        logger.logger.error('Inner login error:', err);
         setErrorMessage('Login failed. Please try again.');
       }
     } catch (error) {
-      logger.error('Login error:', error);
+      logger.logger.error('Login error:', error);
       setErrorMessage(`Login error: ${error instanceof Error ? error.message : String(error)}`);
     } finally {
       setIsAttemptingLogin(false);

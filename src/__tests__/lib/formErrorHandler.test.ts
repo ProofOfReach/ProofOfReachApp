@@ -15,9 +15,9 @@ import {
   getFieldErrorMessage,
   hasAnyError
 } from '@/lib/formErrorHandler';
-import { ErrorCode } from '@/lib/apiErrorHandler';
-import { errorService } from '@/lib/errorService';
-import { ErrorCategory } from '@/types/errors';
+import.*./lib/apiErrorHandler';
+import.*./lib/errorService';
+import.*./types/errors';
 
 describe('Form Error Handler', () => {
   describe('createEmptyFormErrorState', () => {
@@ -119,7 +119,7 @@ describe('Form Error Handler', () => {
     it('should handle exceptions during extraction', () => {
       // Create an object that throws when accessed
       const errorObj = {
-        get error() {
+        get logger.error() {
           throw new Error('Unexpected error during extraction');
         }
       };

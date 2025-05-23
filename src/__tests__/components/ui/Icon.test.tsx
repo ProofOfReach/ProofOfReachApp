@@ -1,6 +1,6 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
-import Icon from '@/components/ui/icon';
+import.*./components/ui/icon';
 
 describe('Icon Component', () => {
   it('renders icon correctly with specified name', () => {
@@ -30,7 +30,7 @@ describe('Icon Component', () => {
 
   it('renders all available icon types', () => {
     const allIconNames = [
-      'home', 'settings', 'user', 'chart', 'file', 'shield',
+      'home', 'settings', 'viewer', 'chart', 'file', 'shield',
       'edit', 'dollar', 'code', 'check', 'pie', 'logout',
       'megaphone', 'sats', 'bitcoin'
     ];

@@ -1,15 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
-import { useAuth } from '@/hooks/useAuth';
-import { useRole } from '@/context/RoleContext';
+import.*./hooks/useAuth';
+import.*./context/RoleContext';
 import Link from 'next/link';
 import { AlertCircle, CreditCard, ArrowLeft, RefreshCw } from 'react-feather';
-import AdForm from '@/components/AdForm';
-import { postWithAuth } from '@/lib/api';
-import SatoshiIcon from '@/components/SatoshiIcon';
-import { NextPageWithLayout } from '@/pages/_app';
-import { DashboardContainer, DashboardHeader, DashboardCard } from '@/components/ui';
-import { getDashboardLayout } from '@/utils/layoutHelpers';
+import.*./components/AdForm';
+import.*./lib/api';
+import.*./components/SatoshiIcon';
+import.*./pages/_app';
+import.*./components/ui';
+import.*./utils/layoutHelpers';
 
 const CreateAdPage: NextPageWithLayout = () => {
   const { auth } = useAuth();
@@ -38,7 +38,7 @@ const CreateAdPage: NextPageWithLayout = () => {
           setWalletBalance(data.balance || 0);
         }
       } catch (error) {
-        console.error('Error fetching wallet balance:', error);
+        console.logger.error('Error fetching wallet balance:', error);
       }
     };
     
@@ -84,7 +84,7 @@ const CreateAdPage: NextPageWithLayout = () => {
       // Redirect to campaigns dashboard
       router.push('/dashboard/campaigns');
     } catch (err: any) {
-      console.error('Ad creation error:', err);
+      console.logger.error('Ad creation error:', err);
       setError(err.message || 'Failed to create the ad. Please try again.');
       setIsSubmitting(false);
     }
@@ -151,7 +151,7 @@ const CreateAdPage: NextPageWithLayout = () => {
       // Redirect to campaigns dashboard
       router.push('/dashboard/campaigns');
     } catch (err: any) {
-      console.error('Ad creation retry error:', err);
+      console.logger.error('Ad creation retry error:', err);
       setError(err.message || 'Failed to create the ad. Please try again.');
       setIsSubmitting(false);
     }

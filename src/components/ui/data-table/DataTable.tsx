@@ -8,7 +8,7 @@ import {
   TableCell,
   TableCaption
 } from '@/components/ui/table';
-import { Input } from '@/components/ui/input';
+import.*./components/ui/input';
 import { Search, ChevronDown, ChevronUp } from 'react-feather';
 
 interface Column<T> {

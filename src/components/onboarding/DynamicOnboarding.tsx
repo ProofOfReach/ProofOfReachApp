@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import OnboardingWizard from './OnboardingWizard';
-import { OnboardingProvider } from '@/context/OnboardingContext';
-import { UserRoleType } from '@/types/role';
-import Loading from '@/components/Loading';
+import.*./context/OnboardingContext';
+import.*./types/role';
+import.*./components/Loading';
 
 interface DynamicOnboardingProps {
   pubkey?: string;

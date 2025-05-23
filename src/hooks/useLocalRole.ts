@@ -1,13 +1,13 @@
 import { useState, useEffect, useCallback } from 'react';
-import { UserRole } from '@/context/RoleContext';
-import { RoleService } from '@/lib/roleService';
+import.*./context/RoleContext';
+import.*./lib/roleService';
 
 /**
  * Hook for managing role state locally
  * This is a simplified hook that uses RoleService for managing roles
  */
 export function useLocalRole() {
-  const [currentRole, setCurrentRole] = useState<UserRole>('user');
+  const [currentRole, setCurrentRole] = useState<UserRole>('viewer');
   const [isTestMode, setIsTestMode] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   

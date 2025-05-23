@@ -7,11 +7,11 @@
  */
 
 import { useContext, useCallback, useState, useEffect } from 'react';
-import { ErrorContext } from '@/context/ErrorContext';
-import { ErrorSeverity, ErrorState, ErrorType } from '@/types/errors';
+import.*./context/ErrorContext';
+import.*./types/errors';
 
 // Import the errorIntegration service
-import * as errorIntegration from '@/lib/errorIntegration';
+import.*./lib/errorIntegration';
 
 // Type definition for test mocks
 interface TestErrorState {
@@ -92,7 +92,7 @@ export function useErrorState() {
               });
             }
           } catch (error) {
-            console.error('Error handling error state change:', error);
+            console.logger.error('Error handling error state change:', error);
           }
         };
         
@@ -104,7 +104,7 @@ export function useErrorState() {
           window.removeEventListener('error-state-changed', handleErrorStateChange);
         };
       } catch (err) {
-        console.error('Error initializing error state:', err);
+        console.logger.error('Error initializing error state:', err);
       }
     }
   }, [isTest]);
@@ -141,15 +141,15 @@ export function useErrorState() {
           severity: error.severity || 'error'
         }));
       } catch (err) {
-        console.error('Error in setError:', err);
+        console.logger.error('Error in setError:', err);
       }
     } else if (errorContext) {
       // In real environment
       const errorObj = errorIntegration.createError(
         error.message || '',
         'component',
-        (error.type as ErrorType) || 'unknown',
-        (error.severity as ErrorSeverity) || 'error'
+        (error.type as anyType) || 'unknown',
+        (error.severity as anySeverity) || 'error'
       );
       
       errorContext.setGlobalError(errorObj);
@@ -175,7 +175,7 @@ export function useErrorState() {
           severity: 'info'
         }));
       } catch (err) {
-        console.error('Error in clearError:', err);
+        console.logger.error('Error in clearError:', err);
       }
     } else if (errorContext) {
       // In real environment
@@ -194,7 +194,7 @@ export function useErrorState() {
   ): void => {
     if (isTest) {
       try {
-        const actualType = (errorType as ErrorType) || 'unknown';
+        const actualType = (errorType as anyType) || 'unknown';
         
         // In tests, call the mock function directly
         errorIntegration.reportError(
@@ -213,12 +213,12 @@ export function useErrorState() {
           severity
         }));
       } catch (err) {
-        console.error('Error in handleError:', err);
+        console.logger.error('Error in handleError:', err);
       }
     } else if (errorContext) {
       // In real environment
       const errorMessage = error instanceof Error ? error.message : error;
-      const actualType = (errorType as ErrorType) || 'unknown';
+      const actualType = (errorType as anyType) || 'unknown';
       
       const errorState = errorIntegration.createError(
         errorMessage,

@@ -1,7 +1,7 @@
 import React from 'react';
-import { EnhancedRoleProvider } from '@/context/EnhancedRoleContext';
-import { RoleSwitcher, AdminRolePanel, RoleStatusBadge } from '@/components/role';
-import { withRoleAccess } from '@/components/auth/withRoleAccess';
+import.*./context/EnhancedRoleContext';
+import.*./components/role';
+import.*./components/auth/withRoleAccess';
 
 /**
  * Role management demo page

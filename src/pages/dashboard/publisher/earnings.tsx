@@ -1,19 +1,19 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import DashboardLayout from '@/components/layout/DashboardLayout';
-import { useRole } from '@/context/RoleContext';
-import { useAuth } from '@/hooks/useAuth';
+import.*./components/layout/DashboardLayout';
+import.*./context/RoleContext';
+import.*./hooks/useAuth';
 import { BarChart2, Calendar, Download, ArrowUp, ArrowDown, Eye, Zap, Target, DollarSign } from 'react-feather';
-import { LineChart, BarChart, PieChart } from '@/components/charts';
-import SatsIcon from '@/components/icons/SatsIcon';
-import CurrencyAmount from '@/components/CurrencyAmount';
+import.*./components/charts';
+import.*./components/icons/SatsIcon';
+import.*./components/CurrencyAmount';
 import { 
   fetchPublisherEarnings,
   fetchAdSpacePerformance,
   DailyMetrics,
   AdSpacePerformance
 } from '@/services/analyticsService';
-import { formatDate, formatNumber, formatSats, formatPercent } from '@/utils/chartHelpers';
+import.*./utils/chartHelpers';
 
 // Mock earnings data
 interface EarningsSummary {
@@ -84,7 +84,7 @@ const PublisherEarningsPage = () => {
         
         setLoading(false);
       } catch (error) {
-        console.error("Error fetching publisher analytics data:", error);
+        console.logger.error("Error fetching publisher analytics data:", error);
         setChartError("Failed to load earnings data. Please try again later.");
         setLoading(false);
       }

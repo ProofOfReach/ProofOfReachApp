@@ -111,7 +111,7 @@ export async function authenticateRequest(req: NextApiRequest): Promise<Authenti
     if (error instanceof ApiError) {
       throw error;
     }
-    logger.error('Authentication error:', error);
+    logger.logger.error('Authentication error:', error);
     throw new ApiError(401, 'Unauthorized');
   }
 }
@@ -129,7 +129,7 @@ export const enhancedAuthMiddleware = (
   return async (req: NextApiRequest, res: NextApiResponse) => {
     try {
       // Authenticate the request
-      const user = await authenticateRequest(req);
+      const user = await authenticateRequest(req as any);
       
       // If roles are specified, check if the user has one of them
       if (requiredRoles && requiredRoles.length > 0) {
@@ -163,7 +163,7 @@ export const enhancedAuthMiddleware = (
       // Call the handler with the authenticated user
       return await handler(req, res, user);
     } catch (error) {
-      logger.error('Auth middleware error:', error);
+      logger.logger.error('Auth middleware error:', error);
       
       if (error instanceof ApiError) {
         return res.status(error.statusCode).json({ error: error.message });

@@ -34,7 +34,7 @@ export default function AdminTools() {
         setResult(`Error: ${data.error || 'Unknown error'}`);
       }
     } catch (error) {
-      console.error('Error calling admin endpoint:', error);
+      console.logger.error('Error calling admin endpoint:', error);
       setResult(`Error: ${error instanceof Error ? error.message : 'Unknown error'}`);
     } finally {
       setLoading(false);

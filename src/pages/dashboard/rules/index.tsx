@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import { NextPageWithLayout } from '@/pages/_app';
-import { getDashboardLayout } from '@/utils/layoutHelpers';
-import { useRole } from '@/context/RoleContext';
+import.*./pages/_app';
+import.*./utils/layoutHelpers';
+import.*./context/RoleContext';
 import { Shield, Plus, XCircle, CheckCircle, Edit, Save, X } from 'react-feather';
-import { useAuth } from '@/hooks/useAuth';
+import.*./hooks/useAuth';
 
 // Rule types
 type RuleType = 'domain_blacklist' | 'keyword_blacklist' | 'pubkey_blacklist' | 'pubkey_whitelist';

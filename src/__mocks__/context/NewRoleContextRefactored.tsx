@@ -3,7 +3,7 @@
  */
 import React, { createContext, ReactNode, useContext } from 'react';
 
-export const ALL_ROLES = ['user', 'advertiser', 'publisher', 'admin', 'stakeholder'] as const;
+export const ALL_ROLES = ['viewer', 'advertiser', 'publisher', 'admin', 'stakeholder'] as const;
 export type UserRoleType = typeof ALL_ROLES[number];
 
 // Create a mock context with simplified implementation

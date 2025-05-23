@@ -1,8 +1,8 @@
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
-import ErrorBoundary from '@/components/ErrorBoundary';
-import { errorService } from '@/lib/errorService';
-import { errorMonitoring } from '@/lib/errorMonitoring';
+import.*./components/ErrorBoundary';
+import.*./lib/errorService';
+import.*./lib/errorMonitoring';
 
 // Mock the errorService
 jest.mock('@/lib/errorService', () => ({
@@ -36,7 +36,7 @@ jest.mock('@/lib/errorService', () => ({
   isRetryableError: jest.fn().mockReturnValue(true),
   ErrorCategory: {
     OPERATIONAL: 'OPERATIONAL',
-    PROGRAMMER: 'PROGRAMMER',
+    EXTERNAL: 'EXTERNAL',
     USER_INPUT: 'USER_INPUT',
     AUTHORIZATION: 'AUTHORIZATION',
     RESOURCE: 'RESOURCE',

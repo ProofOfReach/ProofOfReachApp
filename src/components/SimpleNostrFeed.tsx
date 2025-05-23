@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useRef, useCallback, memo } from 'react';
-import { useTestMode } from '@/context/TestModeContext';
-import { useTestWallet } from '@/hooks/useTestWallet';
-import { logger } from '@/lib/logger';
-import { toast } from '@/utils/toast';
+import.*./context/TestModeContext';
+import.*./hooks/useTestWallet';
+import.*./lib/logger';
+import.*./utils/toast';
 // Simple date formatter function to avoid ESM import issues with date-fns
 function formatDistanceToNow(date: Date): string {
   const now = new Date();
@@ -219,14 +219,14 @@ const AdItem = memo(({
         });
         
         if (!response.ok) {
-          console.error('Failed to check frequency cap:', response.statusText);
+          console.logger.error('Failed to check frequency cap:', response.statusText);
           return;
         }
         
         const data = await response.json();
         setIsAllowed(data.allowed);
       } catch (error) {
-        console.error('Error checking frequency cap:', error);
+        console.logger.error('Error checking frequency cap:', error);
       }
     };
     
@@ -442,7 +442,7 @@ const SimpleNostrFeed: React.FC<SimpleNostrFeedProps> = ({
         
         logger.debug(`Added ${amount} sats to test wallet balance. New balance: ${newBalance}`);
       } catch (error) {
-        logger.error('Error updating test wallet balance:', error);
+        logger.logger.error('Error updating test wallet balance:', error);
       }
     }
     

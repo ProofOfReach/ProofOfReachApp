@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import { toggleTestMode, hasRole } from '@/lib/enhancedRoleService';
-import { logger } from '@/lib/logger';
-import { authMiddleware } from '@/utils/authMiddleware';
+import.*./lib/enhancedRoleService';
+import.*./lib/logger';
+import.*./utils/authMiddleware';
 
 /**
  * API route to toggle test mode for a user
@@ -49,7 +49,7 @@ async function toggleTestModeHandler(req: NextApiRequest, res: NextApiResponse, 
     });
 
   } catch (error) {
-    logger.error('Error toggling test mode:', error);
+    logger.logger.error('Error toggling test mode:', error);
     return res.status(500).json({ 
       message: error instanceof Error ? error.message : 'Unknown error toggling test mode'
     });

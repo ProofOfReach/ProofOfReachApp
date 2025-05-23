@@ -172,7 +172,7 @@ async function handleGetAds(req: NextApiRequest, res: NextApiResponse, pubkey: s
     res.status(200).json(ads);
     return;
   } catch (error) {
-    logger.error('Error fetching ads:', error);
+    logger.logger.error('Error fetching ads:', error);
     res.status(500).json({ error: 'Failed to fetch ads' });
     return;
   }
@@ -267,7 +267,7 @@ async function handleCreateAd(req: NextApiRequest, res: NextApiResponse, pubkey:
       await prisma.transaction.create({
         data: {
           userId: userId,
-          amount: budget,
+          amount: 0, balanceBefore: 0, balanceAfter: 0,
           type: 'AD_PAYMENT',
           status: 'COMPLETED',
           description: `Budget allocation for ad: ${title}`,
@@ -282,7 +282,7 @@ async function handleCreateAd(req: NextApiRequest, res: NextApiResponse, pubkey:
     res.status(201).json(result);
     return;
   } catch (error) {
-    logger.error('Error creating ad:', error);
+    logger.logger.error('Error creating ad:', error);
     res.status(500).json({ error: 'Failed to create ad' });
     return;
   }

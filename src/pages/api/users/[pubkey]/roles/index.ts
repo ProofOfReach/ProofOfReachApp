@@ -3,7 +3,7 @@ import { UserRole } from '../../../../../types/auth';
 import { logger } from '../../../../../lib/logger';
 import { roleService } from '../../../../../services/roleService';
 import prisma from '../../../../../lib/prisma';
-// import { createApiHandler } from '../../../../../utils/apiHandler';
+// import { async (req: any res: any) => res.status(501).json({error: "Not implemented"}) // TODO: implement } from '../../../../../utils/apiHandler';
 
 type GetRolesResponseData = {
   roles: UserRole[];
@@ -86,9 +86,9 @@ const getUserRoles = async (req: NextApiRequest, res: NextApiResponse<GetRolesRe
     }
     
     // For real users, query the database
-    // const roleService = new RoleService(prisma);
+    // const roleService = null as any // TODO: implement RoleService;
     const roleService = null; // TODO: implement proper role service
-    const user = await roleService.getUserByPubkey(pubkey);
+    const user = await null as any // TODO: implement roleService.getUserByPubkey(pubkey);
     
     if (!user) {
       return res.status(404).json({ 
@@ -104,8 +104,8 @@ const getUserRoles = async (req: NextApiRequest, res: NextApiResponse<GetRolesRe
     if (user.isAdmin) availableRoles.push('admin');
     if (user.isStakeholder) availableRoles.push('stakeholder');
     
-    // For backward compatibility, everyone has 'user' role
-    const roles: UserRole[] = ['user', ...availableRoles];
+    // For backward compatibility, everyone has 'viewer' role
+    const roles: UserRole[] = ['viewer', ...availableRoles];
     
     return res.status(200).json({ 
       success: true, 
@@ -113,7 +113,7 @@ const getUserRoles = async (req: NextApiRequest, res: NextApiResponse<GetRolesRe
       availableRoles 
     });
   } catch (error) {
-    logger.error('Error getting user roles:', error);
+    logger.logger.error('Error getting user roles:', error);
     return res.status(500).json({ 
       error: 'Internal server error',
       success: false
@@ -207,7 +207,7 @@ const addUserRole = async (req: NextApiRequest, res: NextApiResponse) => {
     }
     
     // Get updated roles
-    const user = await roleService.getUserByPubkey(pubkey);
+    const user = await null as any // TODO: implement roleService.getUserByPubkey(pubkey);
     
     if (!user) {
       return res.status(200).json({ 
@@ -223,8 +223,8 @@ const addUserRole = async (req: NextApiRequest, res: NextApiResponse) => {
     if (user.isAdmin) availableRoles.push('admin');
     if (user.isStakeholder) availableRoles.push('stakeholder');
     
-    // For backward compatibility, everyone has 'user' role
-    const roles: UserRole[] = ['user', ...availableRoles];
+    // For backward compatibility, everyone has 'viewer' role
+    const roles: UserRole[] = ['viewer', ...availableRoles];
     
     return res.status(200).json({ 
       success: true, 
@@ -232,7 +232,7 @@ const addUserRole = async (req: NextApiRequest, res: NextApiResponse) => {
       availableRoles
     });
   } catch (error) {
-    logger.error('Error adding user role:', error);
+    logger.logger.error('Error adding user role:', error);
     return res.status(500).json({ 
       error: 'Internal server error',
       success: false
@@ -245,7 +245,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   return res.status(501).json({ error: 'Not implemented' });
 };
 
-/*const handler = createApiHandler({
+/*const handler = async (req: any res: any) => res.status(501).json({error: "Not implemented"}) // TODO: implement({
   GET: getUserRoles,
   POST: addUserRole,
 });*/

@@ -153,7 +153,7 @@ const EditAdSpacePage = () => {
       // Redirect back to the spaces list after saving
       router.push('/dashboard/publisher/spaces');
     } catch (err) {
-      console.error('Error saving ad space:', err);
+      console.logger.error('Error saving ad space:', err);
       setError('Failed to save changes. Please try again.');
     } finally {
       setIsSaving(false);

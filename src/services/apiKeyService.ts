@@ -1,6 +1,6 @@
-import { prisma } from '@/lib/prismaClient';
+import.*./lib/prismaClient';
 import crypto from 'crypto';
-import { logger } from '@/lib/logger';
+import.*./lib/logger';
 import { Prisma } from '@prisma/client';
 
 /**
@@ -112,7 +112,7 @@ export async function createApiKey(params: ApiKeyCreateParams): Promise<ApiKeyRe
     } as ApiKeyResponse;
   } catch (error) {
     // Log the error for debugging
-    logger.error(`Failed to create API key: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    logger.logger.error(`Failed to create API key: ${error instanceof Error ? error.message : 'Unknown error'}`);
     
     // Fall back to a deterministic key based on the user's ID
     // This ensures the UI can continue but will indicate there was an error
@@ -183,7 +183,7 @@ export async function getUserApiKeys(userId: string) {
     
     return { keys: apiKeysWithType, isSuccess: true, error: null };
   } catch (error) {
-    logger.error(`Failed to get API keys for user: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    logger.logger.error(`Failed to get API keys for user: ${error instanceof Error ? error.message : 'Unknown error'}`);
     return { keys: [], isSuccess: false, error: 'Failed to retrieve API keys' };
   }
 }
@@ -257,7 +257,7 @@ export async function verifyApiKey(apiKeyValue: string) {
       type
     };
   } catch (error) {
-    logger.error(`Error verifying API key: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    logger.logger.error(`Error verifying API key: ${error instanceof Error ? error.message : 'Unknown error'}`);
     return { isValid: false, error: 'Error validating API key' };
   }
 }

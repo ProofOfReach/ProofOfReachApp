@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import { CampaignPerformance } from '@/services/analyticsService';
+import.*./services/analyticsService';
 
 // API handler for fetching advertiser campaign performance data
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
@@ -50,7 +50,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     
     res.status(200).json(campaigns);
   } catch (error) {
-    console.error('Error in advertiser/campaigns:', error);
+    console.logger.error('Error in advertiser/campaigns:', error);
     res.status(500).json({ error: 'Failed to fetch campaign data' });
   }
 }

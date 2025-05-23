@@ -74,7 +74,7 @@ describe('Role Transition Utilities', () => {
   });
   
   it('should not transition if roles are the same', async () => {
-    const result = await transitionToRole('user', 'user');
+    const result = await transitionToRole('viewer', 'viewer');
     
     expect(result).toBe(true);
     expect(unifiedRoleService.setCurrentRole).not.toHaveBeenCalled();
@@ -89,7 +89,7 @@ describe('Role Transition Utilities', () => {
     });
     
     // Execute the transition
-    const result = await transitionToRole('user', 'advertiser');
+    const result = await transitionToRole('viewer', 'advertiser');
     
     // Verify expected behavior
     expect(result).toBe(true);
@@ -99,7 +99,7 @@ describe('Role Transition Utilities', () => {
     
     // This call isn't happening because we've isolated our test from the implementation
     // but in a real scenario it would be called. Let's skip this verification.
-    // expect(mockDispatchRoleSwitchedEvent).toHaveBeenCalledWith('user', 'advertiser');
+    // expect(mockDispatchRoleSwitchedEvent).toHaveBeenCalledWith('viewer', 'advertiser');
   });
   
   it('should use Next.js router for navigation when not preserving path', async () => {
@@ -108,7 +108,7 @@ describe('Role Transition Utilities', () => {
     Router.push = mockPush;
     
     // Execute
-    await transitionToRole('user', 'advertiser', false);
+    await transitionToRole('viewer', 'advertiser', false);
     
     // Verify router navigation
     expect(mockPush).toHaveBeenCalledWith(
@@ -124,7 +124,7 @@ describe('Role Transition Utilities', () => {
     Router.push = mockPush;
     
     // Execute with preservePath=true
-    await transitionToRole('user', 'advertiser', true);
+    await transitionToRole('viewer', 'advertiser', true);
     
     // Verify no navigation
     expect(mockPush).not.toHaveBeenCalled();
@@ -135,7 +135,7 @@ describe('Role Transition Utilities', () => {
     (unifiedRoleService.setCurrentRole).mockResolvedValue(false);
     
     // Execute
-    const result = await transitionToRole('user', 'admin');
+    const result = await transitionToRole('viewer', 'admin');
     
     // Verify
     expect(result).toBe(false);

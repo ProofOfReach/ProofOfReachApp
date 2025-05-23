@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
 import RoleGuard from '../RoleGuard';
-import useRoleAccess from '@/hooks/useRoleAccess';
+import.*./hooks/useRoleAccess';
 
 // Mock the useRoleAccess hook
 jest.mock('@/hooks/useRoleAccess');

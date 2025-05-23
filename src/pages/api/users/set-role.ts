@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { requireAuth } from '@/lib/auth';
-import { prisma } from '@/lib/prismaClient';
+import.*./lib/auth';
+import.*./lib/prismaClient';
 import { UserRole } from '../../../context/RoleContext';
 
 type ResponseData = {
@@ -19,7 +19,7 @@ async function handleSetRole(req: NextApiRequest, res: NextApiResponse<ResponseD
   try {
     const { role, enabled } = req.body;
 
-    if (!role || typeof role !== 'string' || !['user', 'advertiser', 'publisher'].includes(role)) {
+    if (!role || typeof role !== 'string' || !['viewer', 'advertiser', 'publisher'].includes(role)) {
       return res.status(400).json({ 
         success: false, 
         error: 'Invalid role specified. Valid roles are: user, advertiser, publisher'
@@ -133,7 +133,7 @@ async function handleSetRole(req: NextApiRequest, res: NextApiResponse<ResponseD
       roles
     });
   } catch (error) {
-    console.error('Error updating user role:', error);
+    console.logger.error('Error updating user role:', error);
     return res.status(500).json({ 
       success: false, 
       error: 'Failed to update user role' 

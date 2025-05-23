@@ -1,5 +1,5 @@
 import { ReactNode } from 'react';
-import { NavItem } from '@/components/ui/nav-group';
+import.*./components/ui/nav-group';
 
 // Define role type for type safety
 export type UserRole = 'viewer' | 'advertiser' | 'publisher' | 'admin' | 'stakeholder';
@@ -8,7 +8,7 @@ export type UserRole = 'viewer' | 'advertiser' | 'publisher' | 'admin' | 'stakeh
 export type IconName = 
   | 'home' 
   | 'settings' 
-  | 'user' 
+  | 'viewer' 
   | 'chart' 
   | 'file' 
   | 'shield'
@@ -124,7 +124,7 @@ export function buildNavigation(role: UserRole, currentPath: string): NavSection
       {
         label: 'Users',
         href: '/dashboard/users',
-        iconName: 'user',
+        iconName: 'viewer',
         active: currentPath === '/dashboard/users'
       },
       {
@@ -217,7 +217,7 @@ export function getRoleIconAndColor(role: UserRole): {
     label: string;
   }> = {
     viewer: {
-      iconName: 'user',
+      iconName: 'viewer',
       bgColor: 'bg-blue-100 dark:bg-blue-900/20',
       textColor: 'text-blue-700 dark:text-blue-300',
       label: 'Viewer'

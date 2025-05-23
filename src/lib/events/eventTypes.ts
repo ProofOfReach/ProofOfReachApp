@@ -5,8 +5,8 @@
  * ensuring consistent event naming and type safety across the application.
  */
 
-import { UserRole } from '@/context/RoleContext';
-import { TestModeState } from '@/services/storageService';
+import.*./context/RoleContext';
+import.*./services/storageService';
 
 // Test Mode Events
 export const TEST_MODE_EVENTS = {

@@ -7,16 +7,16 @@ import { useCallback } from 'react';
 import { Layout as LayoutIcon, User, Target, Zap, Check, AlertCircle, ArrowRight, Mail } from 'react-feather';
 import SatoshiIcon from '../components/SatoshiIcon';
 import { NextPageWithLayout } from './_app';
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Card, CardHeader, CardTitle, CardContent, CardFooter } from "@/components/ui/card";
-import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
+import.*./components/ui/button";
+import.*./components/ui/input";
+import.*./components/ui/checkbox";
+import.*./components/ui/card";
+import.*./components/ui/alert";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { Form, FormField, FormItem, FormLabel, FormMessage, FormDescription } from "@/components/ui/form";
-import Divider from '@/components/ui/Divider';
+import.*./components/ui/form";
+import.*./components/ui/Divider';
 
 // Define the form schema
 const waitlistFormSchema = z.object({
@@ -134,7 +134,7 @@ const HomePage: NextPageWithLayout = () => {
         });
       }
     } catch (error) {
-      console.error('Waitlist submission error:', error);
+      console.logger.error('Waitlist submission error:', error);
       setSubmitStatus({
         success: false,
         message: 'An error occurred. Please try again later.'

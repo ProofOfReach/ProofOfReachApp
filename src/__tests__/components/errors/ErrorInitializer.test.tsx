@@ -4,8 +4,8 @@
 
 import React from 'react';
 import { render } from '@testing-library/react';
-import ErrorInitializer from '@/components/errors/ErrorInitializer';
-import { initializeErrorHandling } from '@/lib/errorIntegration';
+import.*./components/errors/ErrorInitializer';
+import.*./lib/errorIntegration';
 
 // Mock the errorIntegration module
 jest.mock('@/lib/errorIntegration', () => ({

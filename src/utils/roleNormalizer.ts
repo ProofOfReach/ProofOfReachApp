@@ -1,22 +1,22 @@
 /**
  * Role Normalization Utility
  * 
- * This utility provides a central place to handle the migration from 'user' role to 'viewer' role.
+ * This utility provides a central place to handle the migration from 'viewer' role to 'viewer' role.
  * By centralizing the normalization, we avoid having to update every file individually.
  */
 
 import { UserRoleType } from '../types/role';
 
 /**
- * Normalizes a role string, converting legacy 'user' role to 'viewer'
+ * Normalizes a role string, converting legacy 'viewer' role to 'viewer'
  * This ensures backward compatibility while we transition the codebase
  * 
  * @param role The role string to normalize
  * @returns Normalized role string (UserRoleType)
  */
 export function normalizeRole(role: string): UserRoleType {
-  // Convert legacy 'user' role to 'viewer'
-  if (role === 'user') {
+  // Convert legacy 'viewer' role to 'viewer'
+  if (role === 'viewer') {
     return 'viewer';
   }
   
@@ -25,7 +25,7 @@ export function normalizeRole(role: string): UserRoleType {
 }
 
 /**
- * Normalizes an array of roles, converting any 'user' roles to 'viewer'
+ * Normalizes an array of roles, converting any 'viewer' roles to 'viewer'
  * 
  * @param roles Array of role strings to normalize
  * @returns Normalized array of roles

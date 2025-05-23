@@ -1,7 +1,7 @@
 import React from 'react';
 import { useRouter } from 'next/router';
-import { RoleType } from '@/lib/enhancedRoleService';
-import { useEnhancedRole } from '@/context/EnhancedRoleContext';
+import.*./lib/enhancedRoleService';
+import.*./context/EnhancedRoleContext';
 
 export interface WithRoleAccessOptions {
   // List of roles that can access this component
@@ -34,8 +34,8 @@ export function withRoleAccess<P extends object>(
       );
     }
 
-    // Get current role or default to 'user'
-    const currentRole = roleData?.currentRole || 'user';
+    // Get current role or default to 'viewer'
+    const currentRole = roleData?.currentRole || 'viewer';
     
     // Check if current role is in allowed roles
     const hasAccess = allowedRoles.includes(currentRole as RoleType);

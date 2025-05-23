@@ -85,12 +85,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const userPreferences = await prisma.userPreferences.upsert({
       where: { userId: user.id },
       update: { 
-        currentRole: 'user', // Default to user role
+        currentRole: 'viewer', // Default to user role
         lastRoleChange: new Date()
       },
       create: {
         userId: user.id,
-        currentRole: 'user', // Default to user role
+        currentRole: 'viewer', // Default to user role
         lastRoleChange: new Date()
       }
     });
@@ -109,7 +109,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       }
     });
   } catch (error) {
-    console.error('Error in admin endpoint for enabling roles:', error);
+    console.logger.error('Error in admin endpoint for enabling roles:', error);
     return res.status(500).json({ error: 'Internal server error' });
   }
 }

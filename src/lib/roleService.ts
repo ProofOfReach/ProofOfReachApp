@@ -40,8 +40,8 @@ export class RoleService {
     // Dispatch event to notify components
     const event = new CustomEvent('roleSwitched', {
       detail: {
-        from: this.getCurrentRole() || 'user',
-        to: 'user' // Default back to user role
+        from: this.getCurrentRole() || 'viewer',
+        to: 'viewer' // Default back to user role
       }
     });
     document.dispatchEvent(event);
@@ -60,7 +60,7 @@ export class RoleService {
   ): Promise<boolean> {
     if (typeof window === 'undefined') return false;
     
-    const currentRole = this.getCurrentRole() || 'user';
+    const currentRole = this.getCurrentRole() || 'viewer';
     
     // If we're in test mode, just update localStorage and dispatch event
     if (getTestModeStatus()) {
@@ -98,7 +98,7 @@ export class RoleService {
         });
         
         if (!response.ok) {
-          console.error('Failed to update role via API:', await response.text());
+          console.logger.error('Failed to update role via API:', await response.text());
           return false;
         }
         
@@ -125,7 +125,7 @@ export class RoleService {
         
         return true;
       } catch (error) {
-        console.error('Error updating role:', error);
+        console.logger.error('Error updating role:', error);
         return false;
       }
     }
@@ -141,7 +141,7 @@ export class RoleService {
     if (getTestModeStatus()) {
       try {
         // Store available roles in cache using the new standardized approach
-        const allRoles = ['user', 'advertiser', 'publisher', 'admin', 'stakeholder']; 
+        const allRoles = ['viewer', 'advertiser', 'publisher', 'admin', 'stakeholder']; 
         localStorage.setItem('cachedAvailableRoles', JSON.stringify(allRoles));
         localStorage.setItem('roleCacheTimestamp', Date.now().toString());
         
@@ -159,7 +159,7 @@ export class RoleService {
         
         return true;
       } catch (error) {
-        console.error('Error enabling all roles in test mode:', error);
+        console.logger.error('Error enabling all roles in test mode:', error);
         return false;
       }
     } else {
@@ -170,13 +170,13 @@ export class RoleService {
         });
         
         if (!response.ok) {
-          console.error('Failed to enable all roles via API:', await response.text());
+          console.logger.error('Failed to enable all roles via API:', await response.text());
           return false;
         }
         
         return true;
       } catch (error) {
-        console.error('Error enabling all roles:', error);
+        console.logger.error('Error enabling all roles:', error);
         return false;
       }
     }

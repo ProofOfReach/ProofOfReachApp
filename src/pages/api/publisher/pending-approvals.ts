@@ -61,7 +61,7 @@ async function getPendingApprovals(req: NextApiRequest, res: NextApiResponse, pu
 
     return res.status(200).json(pendingPlacements);
   } catch (error) {
-    logger.error('Error fetching pending approvals:', error);
+    logger.logger.error('Error fetching pending approvals:', error);
     return res.status(500).json({ error: 'Failed to fetch pending approvals' });
   }
 }

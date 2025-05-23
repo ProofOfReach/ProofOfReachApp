@@ -6,8 +6,8 @@
  * Part of the Phase 1 error handling infrastructure implementation.
  */
 
-import { ErrorCode } from '@/lib/apiErrorHandler';
-import { errorService } from '@/lib/errorService';
+import.*./lib/apiErrorHandler';
+import.*./lib/errorService';
 
 /**
  * Standard form error format for both field-level and form-level errors

@@ -153,10 +153,10 @@ const ImprovedDashboardLayout: React.FC<ImprovedDashboardLayoutProps> = ({
           }, 100);
         }
       } else {
-        console.error(`Failed to switch to role: ${newRole}`);
+        console.logger.error(`Failed to switch to role: ${newRole}`);
       }
     } catch (error) {
-      console.error(`Error switching to role: ${newRole}`, error);
+      console.logger.error(`Error switching to role: ${newRole}`, error);
     }
   };
   

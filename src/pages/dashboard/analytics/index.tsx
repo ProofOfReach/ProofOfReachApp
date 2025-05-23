@@ -1,16 +1,16 @@
 import React, { useState } from 'react';
-import { NextPageWithLayout } from '@/pages/_app';
-import { getDashboardLayout } from '@/utils/layoutHelpers';
-import { useRole } from '@/context/RoleContext';
+import.*./pages/_app';
+import.*./utils/layoutHelpers';
+import.*./context/RoleContext';
 import { BarChart2, Calendar, Download, ArrowUp, ArrowDown, Eye, Zap, Target } from 'react-feather';
-import { LineChart, BarChart, PieChart } from '@/components/charts';
+import.*./components/charts';
 import { 
   fetchAdvertiserSummary, 
   fetchAdvertiserDailyMetrics,
   fetchCampaignPerformance,
   DailyMetrics
 } from '@/services/analyticsService';
-import { formatDate, formatNumber, formatSats, formatPercent } from '@/utils/chartHelpers';
+import.*./utils/chartHelpers';
 
 // Mock analytics data types
 interface AnalyticsSummary {

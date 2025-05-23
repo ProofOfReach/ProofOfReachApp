@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { prisma } from '@/lib/prismaClient';
-import { handleError } from '@/lib/errorHandling';
+import.*./lib/prismaClient';
+import.*./lib/errorHandling';
 
 export default async function handler(
   req: NextApiRequest,

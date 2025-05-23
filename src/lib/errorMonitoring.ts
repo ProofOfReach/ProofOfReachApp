@@ -7,7 +7,7 @@
  * Part of the Phase 1 error handling infrastructure implementation.
  */
 
-import { ErrorSeverity, ErrorCategory, errorService } from '@/lib/errorService';
+import.*./lib/errorService';
 import { logger } from './logger';
 
 /**
@@ -98,7 +98,7 @@ class ErrorMonitoringService {
       window.addEventListener('error', (event) => {
         this.captureError(event.error || new Error(event.message), {
           component: 'window.onerror',
-          category: ErrorCategory.PROGRAMMER,
+          category: ErrorCategory.EXTERNAL,
           severity: ErrorSeverity.ERROR
         });
         
@@ -110,7 +110,7 @@ class ErrorMonitoringService {
       window.addEventListener('unhandledrejection', (event) => {
         this.captureError(event.reason || new Error('Unhandled Promise rejection'), {
           component: 'unhandledrejection',
-          category: ErrorCategory.PROGRAMMER,
+          category: ErrorCategory.EXTERNAL,
           severity: ErrorSeverity.ERROR
         });
         
@@ -161,7 +161,7 @@ class ErrorMonitoringService {
       // Process the error using our central error service
       errorService.handleError(error, {
         component: context.component || 'errorMonitoring',
-        category: context.category || ErrorCategory.PROGRAMMER,
+        category: context.category || ErrorCategory.EXTERNAL,
         severity: context.severity || ErrorSeverity.ERROR,
         data: context.data
       });
@@ -177,7 +177,7 @@ class ErrorMonitoringService {
       // Log to console in development
       if (this.config.logToConsole) {
         console.group('Error captured by ErrorMonitoringService');
-        console.error(error);
+        console.logger.error(error);
         console.info('Context:', {
           component,
           category: context.category,
@@ -194,7 +194,7 @@ class ErrorMonitoringService {
     } catch (err) {
       // Avoid infinite loops if our error handling itself has errors
       if (this.config.logToConsole) {
-        console.error('Error in ErrorMonitoringService:', err);
+        console.logger.error('Error in ErrorMonitoringService:', err);
       }
     }
   }

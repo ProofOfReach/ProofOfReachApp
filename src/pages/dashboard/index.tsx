@@ -12,18 +12,18 @@ import {
   AlertCircle
 } from 'react-feather';
 import Link from 'next/link';
-import { useRole } from '@/context/RoleContext';
-import ImprovedDashboardLayout from '@/components/layout/ImprovedDashboardLayout';
-import StatCard from '@/components/ui/StatCard';
-import CurrencyAmount from '@/components/CurrencyAmount';
-import CurrencyWrapper from '@/components/CurrencyWrapper';
-import { RoleService } from '@/lib/roleService';
-import type { UserRole } from '@/context/RoleContext';
+import.*./context/RoleContext';
+import.*./components/layout/ImprovedDashboardLayout';
+import.*./components/ui/StatCard';
+import.*./components/CurrencyAmount';
+import.*./components/CurrencyWrapper';
+import.*./lib/roleService';
+import.*./context/RoleContext';
 import type { ReactElement } from 'react';
 import type { NextPageWithLayout } from '../_app';
-import { DashboardContainer, DashboardCard } from '@/components/ui';
-import { getDashboardLayout } from '@/utils/layoutHelpers';
-import { logger } from '@/lib/logger';
+import.*./components/ui';
+import.*./utils/layoutHelpers';
+import.*./lib/logger';
 
 /**
  * Main dashboard page - serves content based on the current role
@@ -344,8 +344,8 @@ const Dashboard = () => {
     if (!currentRole) return 'Dashboard';
     // Remove quotes if they exist in the role string
     const cleanRole = currentRole.replace(/^["'](.*)["']$/, '$1');
-    // Convert 'user' to 'viewer' for consistency with updated role naming
-    const normalizedRole = cleanRole === 'user' ? 'viewer' : cleanRole;
+    // Convert 'viewer' to 'viewer' for consistency with updated role naming
+    const normalizedRole = cleanRole === 'viewer' ? 'viewer' : cleanRole;
     return `${normalizedRole.charAt(0).toUpperCase() + normalizedRole.slice(1)} Dashboard`;
   };
   
@@ -804,7 +804,7 @@ const Dashboard = () => {
       case 'viewer':
         logger.debug('Rendering VIEWER dashboard');
         return <div key={dashboardKey} data-testid="viewer-dashboard">{renderViewerDashboard()}</div>;
-      case 'user': // Handle the legacy 'user' role as 'viewer'
+      case 'viewer': // Handle the legacy 'viewer' role as 'viewer'
         logger.debug('Rendering legacy USER (as viewer) dashboard');
         return <div key={dashboardKey} data-testid="viewer-dashboard">{renderViewerDashboard()}</div>;
       default:

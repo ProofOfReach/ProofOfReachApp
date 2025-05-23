@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
-import SimplifiedEnhancedSidebar from '@/components/layout/SimplifiedEnhancedSidebar';
-import { IconName } from '@/lib/navigationBuilder';
+import.*./components/layout/SimplifiedEnhancedSidebar';
+import.*./lib/navigationBuilder';
 
 // Mock Icon component
 jest.mock('@/components/ui/icon', () => {

@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { Bell, Search, Filter, CheckCircle, XCircle, EyeOff } from 'react-feather';
-import { getEnhancedDashboardLayout } from '@/components/layout/EnhancedDashboardLayout';
-import { DashboardContainer } from '@/components/ui';
+import.*./components/layout/EnhancedDashboardLayout';
+import.*./components/ui';
 import type { ReactElement } from 'react';
 import type { NextPageWithLayout } from '../../_app';
-import CurrencyAmount from '@/components/CurrencyAmount';
+import.*./components/CurrencyAmount';
 
 /**
  * Admin Ad Approvals Page
@@ -128,7 +128,7 @@ const AdApprovalsPage: NextPageWithLayout = () => {
           }
         }, 1000);
       } catch (error) {
-        console.error('Error fetching ads:', error);
+        console.logger.error('Error fetching ads:', error);
         setIsLoading(false);
       }
     };

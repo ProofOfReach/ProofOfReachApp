@@ -23,8 +23,8 @@ jest.mock('../../services/testModeService', () => {
     testModeService: {
       isActive: jest.fn().mockReturnValue(true),
       getTimeRemaining: jest.fn().mockReturnValue(240),
-      getCurrentRole: jest.fn().mockReturnValue('user'),
-      getAvailableRoles: jest.fn().mockReturnValue(['user', 'advertiser', 'publisher', 'admin', 'stakeholder']),
+      getCurrentRole: jest.fn().mockReturnValue('viewer'),
+      getAvailableRoles: jest.fn().mockReturnValue(['viewer', 'advertiser', 'publisher', 'admin', 'stakeholder']),
       enableTestMode: jest.fn().mockReturnValue(true),
       disableTestMode: jest.fn().mockReturnValue(true),
       setCurrentRole: jest.fn().mockResolvedValue(true),
@@ -61,8 +61,8 @@ describe('useTestMode Hook', () => {
     // Default mock implementations
     testModeService.isActive.mockReturnValue(true);
     testModeService.getTimeRemaining.mockReturnValue(240);
-    testModeService.getCurrentRole.mockReturnValue('user');
-    testModeService.getAvailableRoles.mockReturnValue(['user', 'advertiser', 'publisher', 'admin', 'stakeholder']);
+    testModeService.getCurrentRole.mockReturnValue('viewer');
+    testModeService.getAvailableRoles.mockReturnValue(['viewer', 'advertiser', 'publisher', 'admin', 'stakeholder']);
     testModeService.enableTestMode.mockReturnValue(true);
     testModeService.disableTestMode.mockReturnValue(true);
     testModeService.setCurrentRole.mockResolvedValue(true);
@@ -83,8 +83,8 @@ describe('useTestMode Hook', () => {
     
     expect(result.current.isActive).toBe(true);
     expect(result.current.timeRemaining).toBe(240);
-    expect(result.current.currentRole).toBe('user');
-    expect(result.current.availableRoles).toEqual(['user', 'advertiser', 'publisher', 'admin', 'stakeholder']);
+    expect(result.current.currentRole).toBe('viewer');
+    expect(result.current.availableRoles).toEqual(['viewer', 'advertiser', 'publisher', 'admin', 'stakeholder']);
     expect(result.current.isDevEnvironment).toBe(true);
     expect(result.current.isTestModeAllowed).toBe(true);
   });
@@ -202,8 +202,8 @@ describe('useTestMode Hook', () => {
   it('updates state when role is changed', () => {
     const { result } = renderHook(() => useTestMode());
     
-    // Initially 'user' role
-    expect(result.current.currentRole).toBe('user');
+    // Initially 'viewer' role
+    expect(result.current.currentRole).toBe('viewer');
     
     // Simulate changing role via event
     testModeService.getCurrentRole.mockReturnValue('admin');
@@ -214,9 +214,9 @@ describe('useTestMode Hook', () => {
     // Trigger the handler with role changed event payload
     act(() => {
       if (roleChangedHandler) roleChangedHandler({ 
-        from: 'user', 
+        from: 'viewer', 
         to: 'admin',
-        availableRoles: ['user', 'advertiser', 'publisher', 'admin', 'stakeholder']
+        availableRoles: ['viewer', 'advertiser', 'publisher', 'admin', 'stakeholder']
       });
     });
     

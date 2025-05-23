@@ -6,8 +6,8 @@
  */
 
 import React, { Component, ErrorInfo, ReactNode } from 'react';
-import { errorService } from '@/lib/errorService';
-import { toast } from '@/utils/toast';
+import.*./lib/errorService';
+import.*./utils/toast';
 
 interface ErrorBoundaryProps {
   children: ReactNode;
@@ -71,7 +71,7 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
     }
     
     // Show toast notification
-    toast.error(`An error occurred: ${error.message}`);
+    toast.logger.error(`An error occurred: ${error.message}`);
   }
 
   handleRetry = (): void => {

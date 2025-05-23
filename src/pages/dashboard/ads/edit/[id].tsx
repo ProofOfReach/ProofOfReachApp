@@ -32,7 +32,7 @@ const EditAdPage: React.FC = () => {
           return;
         }
       } catch (err) {
-        console.error('Error parsing stored ad data:', err);
+        console.logger.error('Error parsing stored ad data:', err);
       }
     }
 
@@ -53,7 +53,7 @@ const EditAdPage: React.FC = () => {
       const data = await response.json();
       setAdData(data);
     } catch (err: any) {
-      console.error('Error fetching ad data:', err);
+      console.logger.error('Error fetching ad data:', err);
       setError(err.message || 'Failed to load ad data. Please try again.');
     } finally {
       setIsLoading(false);
@@ -88,7 +88,7 @@ const EditAdPage: React.FC = () => {
       // Redirect to ads list
       router.push('/dashboard/advertiser');
     } catch (err: any) {
-      console.error('Ad update error:', err);
+      console.logger.error('Ad update error:', err);
       setError(err.message || 'Failed to update the ad. Please try again.');
       setIsSubmitting(false);
     }

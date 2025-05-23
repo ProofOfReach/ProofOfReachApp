@@ -23,7 +23,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse, pubkey: string
         return res.status(405).json({ error: 'Method not allowed' });
     }
   } catch (error) {
-    logger.error('Error in ad space endpoint:', error);
+    logger.logger.error('Error in ad space endpoint:', error);
     return res.status(500).json({ error: 'Internal server error' });
   }
 }
@@ -53,7 +53,7 @@ async function getAdSpace(req: NextApiRequest, res: NextApiResponse, id: string,
 
     return res.status(200).json(adSpace);
   } catch (error) {
-    logger.error('Error retrieving ad space:', error);
+    logger.logger.error('Error retrieving ad space:', error);
     return res.status(500).json({ error: 'Failed to retrieve ad space' });
   }
 }
@@ -115,7 +115,7 @@ async function updateAdSpace(req: NextApiRequest, res: NextApiResponse, id: stri
 
     return res.status(200).json(updatedSpace);
   } catch (error) {
-    logger.error('Error updating ad space:', error);
+    logger.logger.error('Error updating ad space:', error);
     return res.status(500).json({ error: 'Failed to update ad space' });
   }
 }
@@ -154,7 +154,7 @@ async function deleteAdSpace(req: NextApiRequest, res: NextApiResponse, id: stri
 
     return res.status(200).json({ message: 'Ad space deleted successfully' });
   } catch (error) {
-    logger.error('Error deleting ad space:', error);
+    logger.logger.error('Error deleting ad space:', error);
     return res.status(500).json({ error: 'Failed to delete ad space' });
   }
 }

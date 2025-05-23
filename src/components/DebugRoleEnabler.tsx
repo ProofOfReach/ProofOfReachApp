@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { RoleService } from '@/lib/roleService';
-import { useTestMode } from '@/hooks/useTestMode';
-import { RoleManager } from '@/services/roleManager';
-import { enhancedStorage } from '@/services/enhancedStorageService';
-import { STORAGE_KEYS } from '@/services/storageService';
-import { UserRoleType } from '@/types/role';
-import { notifyRolesUpdated } from '@/lib/events';
-import { useAppEvent } from '@/hooks/useAppEvent';
-import { ROLE_EVENTS } from '@/lib/events/eventTypes';
-import { logger } from '@/lib/logger';
+import.*./lib/roleService';
+import.*./hooks/useTestMode';
+import.*./services/roleManager';
+import.*./services/enhancedStorageService';
+import.*./services/storageService';
+import.*./types/role';
+import.*./lib/events';
+import.*./hooks/useAppEvent';
+import.*./lib/events/eventTypes';
+import.*./lib/logger';
 import Link from 'next/link';
 
 /**
@@ -65,7 +65,7 @@ const DebugRoleEnabler: React.FC = () => {
       
       if (success) {
         // Get all available roles
-        const allRoles = ['user', 'advertiser', 'publisher', 'admin', 'stakeholder'];
+        const allRoles = ['viewer', 'advertiser', 'publisher', 'admin', 'stakeholder'];
         
         // Store in enhanced storage
         enhancedStorage.setItem(STORAGE_KEYS.AVAILABLE_ROLES, JSON.stringify(allRoles));
@@ -83,12 +83,12 @@ const DebugRoleEnabler: React.FC = () => {
         if (legacySuccess) {
           logger.log('All roles enabled using legacy method');
         } else {
-          logger.error('Failed to enable all roles');
+          logger.logger.error('Failed to enable all roles');
         }
       }
     } catch (error) {
       const errorMsg = error instanceof Error ? error.message : String(error);
-      logger.error('Error enabling all roles:', errorMsg);
+      logger.logger.error('Error enabling all roles:', errorMsg);
     } finally {
       setIsLoading(false);
     }

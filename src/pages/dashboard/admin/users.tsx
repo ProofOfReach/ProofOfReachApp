@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Users, Search, Filter, UserPlus } from 'react-feather';
-import { getEnhancedDashboardLayout } from '@/components/layout/EnhancedDashboardLayout';
-import { DashboardContainer } from '@/components/ui';
+import.*./components/layout/EnhancedDashboardLayout';
+import.*./components/ui';
 import type { ReactElement } from 'react';
 import type { NextPageWithLayout } from '../../_app';
 
@@ -77,7 +77,7 @@ const UserManagementPage: NextPageWithLayout = () => {
           setIsLoading(false);
         }, 1000);
       } catch (error) {
-        console.error('Error fetching users:', error);
+        console.logger.error('Error fetching users:', error);
         setIsLoading(false);
       }
     };

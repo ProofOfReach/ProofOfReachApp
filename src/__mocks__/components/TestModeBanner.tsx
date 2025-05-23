@@ -10,8 +10,8 @@ interface TestModeBannerProps {
 // This component is used to replace the real TestModeBanner in tests
 export default function MockTestModeBanner({ 
   hideRoleControls = false, 
-  currentRole = 'user',
-  availableRoles = ['user', 'advertiser', 'publisher', 'admin'] 
+  currentRole = 'viewer',
+  availableRoles = ['viewer', 'advertiser', 'publisher', 'admin'] 
 }: TestModeBannerProps) {
   return (
     <div data-testid="test-mode-banner-mock" className="test-mode-banner">

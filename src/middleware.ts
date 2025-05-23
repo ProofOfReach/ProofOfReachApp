@@ -7,9 +7,9 @@ const ROLE_PATH_MAP: Record<string, UserRole[]> = {
   '/dashboard/publisher': ['publisher', 'admin'],
   '/dashboard/admin': ['admin'],
   '/dashboard/stakeholder': ['stakeholder', 'admin'],
-  '/dashboard/developer': ['user', 'advertiser', 'publisher', 'admin', 'stakeholder'],
+  '/dashboard/developer': ['viewer', 'advertiser', 'publisher', 'admin', 'stakeholder'],
   // The base user dashboard is accessible to all authenticated users
-  '/dashboard/user': ['user', 'advertiser', 'publisher', 'admin', 'stakeholder'],
+  '/dashboard/user': ['viewer', 'advertiser', 'publisher', 'admin', 'stakeholder'],
 };
 
 // Protected routes that should only be accessible in the dev environment

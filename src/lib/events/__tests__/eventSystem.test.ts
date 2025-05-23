@@ -53,16 +53,16 @@ describe('Event System', () => {
       
       // Dispatch event
       dispatchRoleEvent(ROLE_EVENTS.ROLE_CHANGED, {
-        from: 'user',
+        from: 'viewer',
         to: 'advertiser',
-        availableRoles: ['user', 'advertiser']
+        availableRoles: ['viewer', 'advertiser']
       });
       
       // Verify handler was called with correct payload
       expect(mockHandler).toHaveBeenCalledWith({
-        from: 'user',
+        from: 'viewer',
         to: 'advertiser',
-        availableRoles: ['user', 'advertiser']
+        availableRoles: ['viewer', 'advertiser']
       });
       
       cleanup();
@@ -76,7 +76,7 @@ describe('Event System', () => {
       );
       
       // Dispatch modern event that should trigger legacy events
-      notifyRoleChanged('user', 'advertiser', ['user', 'advertiser']);
+      notifyRoleChanged('viewer', 'advertiser', ['viewer', 'advertiser']);
       
       // Verify legacy handler was called
       expect(mockLegacyHandler).toHaveBeenCalled();
@@ -119,9 +119,9 @@ describe('Event System', () => {
       
       // Dispatch event
       dispatchRoleEvent(ROLE_EVENTS.ROLE_CHANGED, {
-        from: 'user',
+        from: 'viewer',
         to: 'advertiser',
-        availableRoles: ['user', 'advertiser']
+        availableRoles: ['viewer', 'advertiser']
       });
       
       // Verify handler was called
@@ -137,7 +137,7 @@ describe('Event System', () => {
       dispatchRoleEvent(ROLE_EVENTS.ROLE_CHANGED, {
         from: 'advertiser',
         to: 'publisher',
-        availableRoles: ['user', 'advertiser', 'publisher']
+        availableRoles: ['viewer', 'advertiser', 'publisher']
       });
       
       // Verify handler was not called again

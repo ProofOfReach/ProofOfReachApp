@@ -1,15 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import DashboardLayout from '@/components/layout/DashboardLayout';
-import { useRole } from '@/context/RoleContext';
-import { useAuth } from '@/hooks/useAuth';
+import.*./components/layout/DashboardLayout';
+import.*./context/RoleContext';
+import.*./hooks/useAuth';
 import { Download, CreditCard, Plus, Repeat, Download as DownloadIcon, Search } from 'react-feather';
-import SatsIcon from '@/components/icons/SatsIcon';
-import { LineChart, BarChart } from '@/components/charts';
-import { formatSats, formatDate, formatNumber } from '@/utils/chartHelpers';
-import CurrencyAmount from '@/components/CurrencyAmount';
+import.*./components/icons/SatsIcon';
+import.*./components/charts';
+import.*./utils/chartHelpers';
+import.*./components/CurrencyAmount';
 import useSWR from 'swr';
-import TransactionHistory from '@/components/TransactionHistory';
+import.*./components/TransactionHistory';
 import { TransactionType } from '@prisma/client';
 
 // Fetch balance/transactions from the API

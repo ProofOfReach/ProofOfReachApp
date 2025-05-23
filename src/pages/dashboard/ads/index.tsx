@@ -3,11 +3,11 @@ import { useRouter } from 'next/router';
 import Link from 'next/link';
 import { Plus, Search, Filter } from 'react-feather';
 import useSWR from 'swr';
-import AdCard from '@/components/AdCard';
-import { getDashboardLayout } from '@/utils/layoutHelpers';
-import type { NextPageWithLayout } from '@/pages/_app';
-import { DashboardContainer, DashboardHeader, DashboardCard } from '@/components/ui';
-import { AuthContext } from '@/hooks/useAuth';
+import.*./components/AdCard';
+import.*./utils/layoutHelpers';
+import.*./pages/_app';
+import.*./components/ui';
+import.*./hooks/useAuth';
 
 // Fetcher function for SWR
 const fetcher = (url: string) => fetch(url).then(res => res.json());
@@ -59,7 +59,7 @@ const AdsListPage: NextPageWithLayout = () => {
       // Refresh the data
       mutate();
     } catch (error) {
-      console.error('Error updating ad status:', error);
+      console.logger.error('Error updating ad status:', error);
       alert('Failed to update ad status');
     }
   };

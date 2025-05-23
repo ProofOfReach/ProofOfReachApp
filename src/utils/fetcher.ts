@@ -8,12 +8,12 @@ export const fetcher = async (url: string): Promise<unknown> => {
   if (!response.ok) {
     const error = new Error('An error occurred while fetching the data.');
     // Attach the response status code
-    (error as Error & { status?: number }).status = response.status;
+    (error as any & { status?: number }).status = response.status;
     
     // Try to parse the error message from the response
     try {
       const errorData = await response.json();
-      (error as Error & { info?: unknown }).info = errorData;
+      (error as any & { info?: unknown }).info = errorData;
       
       // Use the API's error message if available
       if (errorData && typeof errorData === 'object' && 'message' in errorData) {

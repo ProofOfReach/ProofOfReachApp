@@ -6,8 +6,8 @@
  * direct methods for success and info messages.
  */
 
-import { errorIntegration } from '@/lib/errorIntegration';
-import { ErrorSeverity } from '@/types/errors';
+import.*./lib/errorIntegration';
+import.*./types/errors';
 
 interface ToastOptions {
   duration?: number;
@@ -21,7 +21,7 @@ interface ToastOptions {
  * @param message The error message
  * @param options Additional options
  */
-function error(message: string, options: ToastOptions = {}): void {
+function logger.error(message: string, options: ToastOptions = {}): void {
   const errorState = errorIntegration.reportError(
     message, 
     'toast', 

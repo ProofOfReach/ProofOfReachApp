@@ -6,9 +6,9 @@
  */
 
 import { UserRoleType, isValidUserRole } from '../types/role';
-import { logger } from '@/lib/logger';
+import.*./lib/logger';
 import { StorageService, STORAGE_KEYS } from './storageService';
-import { dispatchTestModeEvent, TEST_MODE_EVENTS } from '@/lib/testModeEvents';
+import.*./lib/testModeEvents';
 
 // Events specific to role management
 export const ROLE_EVENTS = {
@@ -99,7 +99,7 @@ export class RoleManager {
       
       return true;
     } catch (error) {
-      logger.error('Error setting current role:', error);
+      logger.logger.error('Error setting current role:', error);
       return false;
     }
   }
@@ -124,7 +124,7 @@ export class RoleManager {
           }
         }
       } catch (error) {
-        logger.error('Error parsing legacy available roles:', error);
+        logger.logger.error('Error parsing legacy available roles:', error);
       }
     }
     
@@ -173,7 +173,7 @@ export class RoleManager {
       
       return true;
     } catch (error) {
-      logger.error('Error setting available roles:', error);
+      logger.logger.error('Error setting available roles:', error);
       return false;
     }
   }
@@ -234,7 +234,7 @@ export class RoleManager {
     
     // If current role is being removed, also update current role
     if (this.getCurrentRole() === role) {
-      this.setCurrentRole(updatedRoles[0] || 'user');
+      this.setCurrentRole(updatedRoles[0] || 'viewer');
     }
     
     return this.setAvailableRoles(updatedRoles);

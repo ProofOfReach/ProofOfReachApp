@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, screen, fireEvent, act } from '@testing-library/react';
-import OnboardingWizard from '@/components/onboarding/OnboardingWizard';
-import { useOnboarding } from '@/context/OnboardingContext';
+import.*./components/onboarding/OnboardingWizard';
+import.*./context/OnboardingContext';
 
 // Mock the context hook
 jest.mock('@/context/OnboardingContext');

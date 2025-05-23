@@ -62,7 +62,7 @@ export const AuthProviderRefactored: React.FC<AuthProviderProps> = ({ children }
       return newAuthState;
     } catch (error) {
       setIsLoading(false);
-      logger.error('Login error:', error);
+      logger.logger.error('Login error:', error);
       throw error;
     }
   }, []);
@@ -85,7 +85,7 @@ export const AuthProviderRefactored: React.FC<AuthProviderProps> = ({ children }
       setIsLoading(false);
     } catch (error) {
       setIsLoading(false);
-      logger.error('Logout error:', error);
+      logger.logger.error('Logout error:', error);
       
       // Even on error, we should remove the auth state
       setAuthState(null);
@@ -111,7 +111,7 @@ export const AuthProviderRefactored: React.FC<AuthProviderProps> = ({ children }
       return newAuthState;
     } catch (error) {
       setIsLoading(false);
-      logger.error('Refresh roles error:', error);
+      logger.logger.error('Refresh roles error:', error);
       throw error;
     }
   }, []);
@@ -170,7 +170,7 @@ export const AuthProviderRefactored: React.FC<AuthProviderProps> = ({ children }
       return false;
     } catch (error) {
       setIsLoading(false);
-      logger.error('Add role error:', error);
+      logger.logger.error('Add role error:', error);
       return false;
     }
   }, [authState]);
@@ -229,7 +229,7 @@ export const AuthProviderRefactored: React.FC<AuthProviderProps> = ({ children }
       return false;
     } catch (error) {
       setIsLoading(false);
-      logger.error('Remove role error:', error);
+      logger.logger.error('Remove role error:', error);
       return false;
     }
   }, [authState]);
@@ -258,7 +258,7 @@ export const AuthProviderRefactored: React.FC<AuthProviderProps> = ({ children }
         }
       } catch (error) {
         // Log the error but don't crash
-        logger.error('Auth check error:', error);
+        logger.logger.error('Auth check error:', error);
         // Set auth state to null to avoid infinite loading states
         setAuthState(null);
       } finally {

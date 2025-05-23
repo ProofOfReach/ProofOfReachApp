@@ -41,13 +41,13 @@ describe('Error Handling', () => {
   describe('error', () => {
     it('should log errors to console', () => {
       const testErr = new Error('Test error');
-      error('test location', testErr);
+      logger.error('test location', testErr);
       expect(mockConsoleError).toHaveBeenCalled();
       expect(mockConsoleError.mock.calls[0][0]).toContain('Error in test location');
     });
 
     it('should handle errors without details', () => {
-      error('test location');
+      logger.error('test location');
       expect(mockConsoleError).toHaveBeenCalled();
       expect(mockConsoleError.mock.calls[0][0]).toContain('Error in test location');
     });

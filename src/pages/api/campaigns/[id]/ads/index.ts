@@ -1,14 +1,14 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import { adService, CreateAdDto } from '@/services/adService';
-import { apiHandler } from '@/utils/apiHandler';
-import { authenticateRequest } from '@/utils/authMiddleware';
-import { ApiError } from '@/utils/apiError';
+import.*./services/adService';
+import.*./utils/apiHandler';
+import.*./utils/authMiddleware';
+import.*./utils/apiError';
 
 export default apiHandler({
   // GET /api/campaigns/[id]/ads - Get all ads for a specific campaign
   GET: async (req: NextApiRequest, res: NextApiResponse) => {
     const campaignId = req.query.id as string;
-    const user = await authenticateRequest(req);
+    const user = await authenticateRequest(req as any);
     
     if (!user.isAdvertiser) {
       throw new ApiError(403, 'Forbidden: Advertiser role required');
@@ -22,7 +22,7 @@ export default apiHandler({
   // POST /api/campaigns/[id]/ads - Create a new ad in a campaign
   POST: async (req: NextApiRequest, res: NextApiResponse) => {
     const campaignId = req.query.id as string;
-    const user = await authenticateRequest(req);
+    const user = await authenticateRequest(req as any);
     
     if (!user.isAdvertiser) {
       throw new ApiError(403, 'Forbidden: Advertiser role required');

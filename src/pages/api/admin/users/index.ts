@@ -29,7 +29,7 @@ export default async function handler(
     const users = await prisma.user.findMany({
       select: {
         id: true,
-        // pubkey: true, // TODO: add pubkey field to User model
+        // // pubkey: true, // TODO: add pubkey field // TODO: add pubkey field to User model
         name: true,
         createdAt: true,
         updatedAt: true,
@@ -46,7 +46,7 @@ export default async function handler(
     
     return res.status(200).json(users);
   } catch (error) {
-    console.error('Error fetching users:', error);
+    console.logger.error('Error fetching users:', error);
     return res.status(500).json({ error: 'Internal server error' });
   }
 }

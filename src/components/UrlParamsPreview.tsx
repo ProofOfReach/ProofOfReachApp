@@ -28,7 +28,7 @@ const UrlParamsPreview: React.FC<UrlParamsPreviewProps> = ({ baseUrl, urlParams 
       // Reset the copied state after 2 seconds
       setTimeout(() => setCopied(false), 2000);
     } catch (error) {
-      console.error('Failed to copy URL:', error);
+      console.logger.error('Failed to copy URL:', error);
       // Still show "Copied!" for UX consistency
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);

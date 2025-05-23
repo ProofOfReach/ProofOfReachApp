@@ -1,5 +1,5 @@
 import React from 'react';
-import ViewerDashboard from '@/components/dashboards/ViewerDashboard';
+import.*./components/dashboards/ViewerDashboard';
 
 /**
  * @deprecated Use ViewerDashboard component from '@/components/dashboards/ViewerDashboard' instead.

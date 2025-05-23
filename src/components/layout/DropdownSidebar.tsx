@@ -67,7 +67,7 @@ const DropdownSidebar: React.FC = () => {
       
       // Refresh roles if auth is available
       if (refreshRoles) {
-        refreshRoles().catch(err => console.error('Error refreshing roles:', err));
+        refreshRoles().catch(err => console.logger.error('Error refreshing roles:', err));
       }
       
       // Try to enable roles in the database - this is important
@@ -90,7 +90,7 @@ const DropdownSidebar: React.FC = () => {
             console.warn('Failed to enable roles in database:', await response.text());
           }
         } catch (error) {
-          console.error('Error enabling roles in database:', error);
+          console.logger.error('Error enabling roles in database:', error);
         }
       };
       
@@ -286,14 +286,14 @@ const DropdownSidebar: React.FC = () => {
           await router.push(`/dashboard/${newRole}`);
         }
       } else {
-        console.error('Failed to update role:', await response.text());
+        console.logger.error('Failed to update role:', await response.text());
         // Handle API error - still try to navigate but log the error
         if (router.pathname !== '/test-dropdown') {
           await router.push(`/dashboard/${newRole}`);
         }
       }
     } catch (error) {
-      console.error('Error changing role:', error);
+      console.logger.error('Error changing role:', error);
       // As a fallback, use direct navigation, but not for test-dropdown
       if (router.pathname !== '/test-dropdown') {
         window.location.href = `/dashboard/${newRole}`;
@@ -376,11 +376,11 @@ const DropdownSidebar: React.FC = () => {
                            router.pathname.includes('/dashboard/publisher') ? 'publisher' : 
                            router.pathname.includes('/dashboard/admin') ? 'admin' :
                            router.pathname.includes('/dashboard/stakeholder') ? 'stakeholder' :
-                           router.pathname.includes('/dashboard/user') ? 'user' : 'user';
+                           router.pathname.includes('/dashboard/user') ? 'viewer' : 'viewer';
       
       // For styling purposes, use the path-based role for consistent styling
       switch(pathBasedRole) {
-        case 'user':
+        case 'viewer':
           activeClass = 'bg-blue-100 text-blue-700 dark:bg-blue-900/20 dark:text-blue-300';
           break;
         case 'advertiser':

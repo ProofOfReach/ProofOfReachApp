@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { useTestMode } from '@/hooks/useTestMode';
-import { UserRoleType } from '@/types/role';
+import.*./hooks/useTestMode';
+import.*./types/role';
 import { Shield, CheckSquare, AlertCircle, Clock } from 'react-feather';
 
 /**
@@ -27,7 +27,7 @@ const TestModeManager: React.FC = () => {
   } = useTestMode();
 
   const [selectedDuration, setSelectedDuration] = useState<number>(60); // Default: 60 minutes
-  const [selectedRole, setSelectedRole] = useState<UserRoleType>('user');
+  const [selectedRole, setSelectedRole] = useState<UserRoleType>('viewer');
   const [isEnabling, setIsEnabling] = useState(false);
   const [error, setError] = useState<string | null>(null);
   
@@ -41,7 +41,7 @@ const TestModeManager: React.FC = () => {
   ];
   
   // Role options
-  const roleOptions: UserRoleType[] = ['user', 'advertiser', 'publisher', 'admin', 'stakeholder'];
+  const roleOptions: UserRoleType[] = ['viewer', 'advertiser', 'publisher', 'admin', 'stakeholder'];
   
   // Handle enabling test mode with selected duration
   const handleEnableTestMode = async () => {

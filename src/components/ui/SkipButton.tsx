@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button } from '@/components/ui/button';
+import.*./components/ui/button';
 
 /**
  * Props for the SkipButton component

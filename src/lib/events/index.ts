@@ -24,7 +24,7 @@ import {
   dispatchStorageMigrated
 } from './eventDispatcher';
 import { ROLE_EVENTS, TEST_MODE_EVENTS, SYSTEM_EVENTS } from './eventTypes';
-import type { UserRole } from '@/context/RoleContext';
+import.*./context/RoleContext';
 
 /**
  * Convenience function to dispatch a role changed event
@@ -79,8 +79,8 @@ export const notifyTestModeDeactivated = () => {
  */
 export const notifyStorageChanged = (
   key: string,
-  value: any,
-  previousValue: any,
+  value: any
+  previousValue: any
   storageType: 'localStorage' | 'sessionStorage' | 'memory',
   namespace?: string
 ) => {

@@ -75,7 +75,7 @@ const initializeMockLightning = async () => {
     mockLightningInitialized = true;
     console.log("Mock Lightning service initialized successfully");
   } catch (error) {
-    console.error("Failed to initialize Mock Lightning service:", error);
+    console.logger.error("Failed to initialize Mock Lightning service:", error);
     throw new Error("Lightning payment service unavailable");
   }
 };
@@ -98,7 +98,7 @@ const createMockInvoice = async (
       description
     };
   } catch (error) {
-    console.error("Failed to create mock invoice:", error);
+    console.logger.error("Failed to create mock invoice:", error);
     throw new Error("Could not create Lightning invoice");
   }
 };
@@ -119,7 +119,7 @@ const payMockInvoice = async (
       status: 'COMPLETED'
     };
   } catch (error) {
-    console.error("Failed to pay mock invoice:", error);
+    console.logger.error("Failed to pay mock invoice:", error);
     throw new Error("Could not complete Lightning payment");
   }
 };
@@ -139,7 +139,7 @@ const initializeBreezSDK = async () => {
       const apiKey = process.env.BREEZ_API_KEY;
       
       if (!apiKey) {
-        console.error("BREEZ API key not available");
+        console.logger.error("BREEZ API key not available");
         throw new Error("BREEZ API key not configured - please check environment variables");
       }
       
@@ -154,7 +154,7 @@ const initializeBreezSDK = async () => {
     breezSdkInitialized = true;
     console.log("BREEZ SDK initialization complete");
   } catch (error) {
-    console.error("Failed to initialize BREEZ SDK:", error);
+    console.logger.error("Failed to initialize BREEZ SDK:", error);
     throw new Error("Lightning payment service unavailable");
   }
 };
@@ -183,7 +183,7 @@ const createBreezInvoice = async (
       description
     };
   } catch (error) {
-    console.error("Failed to create BREEZ invoice:", error);
+    console.logger.error("Failed to create BREEZ invoice:", error);
     throw new Error("Could not create Lightning invoice");
   }
 };
@@ -213,7 +213,7 @@ const payBreezInvoice = async (
       status: 'COMPLETED'
     };
   } catch (error) {
-    console.error("Failed to pay BREEZ invoice:", error);
+    console.logger.error("Failed to pay BREEZ invoice:", error);
     throw new Error("Could not complete Lightning payment");
   }
 };
@@ -257,7 +257,7 @@ export const simulateTestSatsPayment = async (
     
     return payment;
   } catch (error) {
-    console.error("Error in test payment simulation:", error);
+    console.logger.error("Error in test payment simulation:", error);
     
     if (onError) {
       onError(error instanceof Error ? error : new Error("Unknown error in payment simulation"));
@@ -309,7 +309,7 @@ export const getWebLNProvider = async () => {
     await (window as any).webln.enable();
     return (window as any).webln;
   } catch (error) {
-    console.error("Failed to enable WebLN:", error);
+    console.logger.error("Failed to enable WebLN:", error);
     throw new Error("Could not connect to WebLN provider");
   }
 };
@@ -321,7 +321,7 @@ export const payWithWebLN = async (invoice: string): Promise<any> => {
     const result = await webln.sendPayment(invoice);
     return result;
   } catch (error) {
-    console.error("WebLN payment failed:", error);
+    console.logger.error("WebLN payment failed:", error);
     throw new Error("WebLN payment failed");
   }
 };

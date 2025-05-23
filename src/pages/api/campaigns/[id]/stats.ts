@@ -8,7 +8,7 @@ export default apiHandler({
   // GET /api/campaigns/[id]/stats - Get campaign metrics
   GET: async (req: NextApiRequest, res: NextApiResponse) => {
     const { id } = req.query as { id: string };
-    const user = await authenticateRequest(req);
+    const user = await authenticateRequest(req as any);
     
     if (!user.isAdvertiser) {
       throw new ApiError(403, 'Forbidden: Advertiser role required');

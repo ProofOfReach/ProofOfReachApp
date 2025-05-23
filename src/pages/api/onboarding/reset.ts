@@ -1,8 +1,8 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import { apiHandler } from '@/utils/apiHandler';
-import onboardingService from '@/lib/onboardingService';
-import { UserRoleType } from '@/types/role';
-import { logger } from '@/lib/logger';
+import.*./utils/apiHandler';
+import.*./lib/onboardingService';
+import.*./types/role';
+import.*./lib/logger';
 
 /**
  * @swagger
@@ -50,7 +50,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
     
     return res.status(200).json({ success: true, result });
   } catch (error) {
-    logger.error('Error resetting onboarding', { error, pubkey, role });
+    logger.logger.error('Error resetting onboarding', { error, pubkey, role });
     return res.status(500).json({ 
       error: 'Failed to reset onboarding',
       details: error instanceof Error ? error.message : 'Unknown error'

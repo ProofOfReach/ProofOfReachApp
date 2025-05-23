@@ -1,8 +1,8 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { GetServerSidePropsContext } from 'next';
-import { hasRole, RoleType } from '@/lib/enhancedRoleService';
-// import { prisma } from '@/lib/prisma';
-import logger from '@/lib/logger';
+import.*./lib/enhancedRoleService';
+// import.*./lib/prisma';
+import.*./lib/logger';
 
 type NextHandler = (req: NextApiRequest, res: NextApiResponse) => Promise<void>;
 
@@ -67,7 +67,7 @@ export function withEnhancedRoleProtection(
       // User has at least one of the required roles, continue
       return await handler(req, res);
     } catch (error) {
-      logger.error('Error in enhanced role middleware:', error);
+      logger.logger.error('Error in enhanced role middleware:', error);
       return res.status(500).json({ error: 'Internal server error' });
     }
   };
@@ -140,7 +140,7 @@ export function withEnhancedRoleCheck(allowedRoles: RoleType[] = []) {
         props: {},
       };
     } catch (error) {
-      logger.error('Error in enhanced role check:', error);
+      logger.logger.error('Error in enhanced role check:', error);
       
       // On error, redirect to an error page
       return {

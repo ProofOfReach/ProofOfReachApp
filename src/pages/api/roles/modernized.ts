@@ -3,11 +3,11 @@
  * Uses the new centralized role management system
  */
 import { NextApiRequest, NextApiResponse } from 'next';
-import { roleService } from '@/lib/roles/roleService';
-import { getServerSession } from '@/lib/auth';
-import { logger } from '@/lib/logger';
-import { UserRoleType, RoleErrorType } from '@/lib/roles/types';
-import { prisma } from '@/lib/prismaClient';
+import.*./lib/roles/roleService';
+import.*./lib/auth';
+import.*./lib/logger';
+import.*./lib/roles/types';
+import.*./lib/prismaClient';
 
 export default async function handler(
   req: NextApiRequest,
@@ -20,7 +20,7 @@ export default async function handler(
     logger.debug('Authentication failed in modernized roles API - no valid session');
     return res.status(401).json({
       success: false,
-      error: roleService.formatError(
+      error: null as any // TODO: implement roleService.formatError(
         RoleErrorType.NOT_AUTHENTICATED, 
         'Not authenticated',
         401
@@ -39,7 +39,7 @@ export default async function handler(
       default:
         return res.status(405).json({
           success: false,
-          error: roleService.formatError(
+          error: null as any // TODO: implement roleService.formatError(
             RoleErrorType.INVALID_ROLE, 
             'Method not allowed',
             405
@@ -47,10 +47,10 @@ export default async function handler(
         });
     }
   } catch (error) {
-    logger.error('Error in modernized roles API:', error);
+    logger.logger.error('Error in modernized roles API:', error);
     return res.status(500).json({
       success: false,
-      error: roleService.formatError(
+      error: null as any // TODO: implement roleService.formatError(
         RoleErrorType.UNKNOWN_ERROR, 
         'An error occurred while processing your request',
         500
@@ -65,7 +65,7 @@ export default async function handler(
 async function getRoles(pubkey: string, res: NextApiResponse) {
   try {
     // Get roles by pubkey
-    const { availableRoles, currentRole } = await roleService.getRolesByPubkey(pubkey);
+    const { availableRoles, currentRole } = await null as any // TODO: implement roleService.getRolesByPubkey(pubkey);
     
     // Create the legacy 'roles' object for backward compatibility
     const roles: Record<string, boolean> = {
@@ -87,10 +87,10 @@ async function getRoles(pubkey: string, res: NextApiResponse) {
       currentRole
     });
   } catch (error) {
-    logger.error('Error getting roles:', error);
+    logger.logger.error('Error getting roles:', error);
     return res.status(500).json({
       success: false,
-      error: roleService.formatError(
+      error: null as any // TODO: implement roleService.formatError(
         RoleErrorType.DATABASE_ERROR, 
         'Failed to get roles',
         500
@@ -109,7 +109,7 @@ async function updateRole(pubkey: string, req: NextApiRequest, res: NextApiRespo
     if (!role) {
       return res.status(400).json({
         success: false,
-        error: roleService.formatError(
+        error: null as any // TODO: implement roleService.formatError(
           RoleErrorType.INVALID_ROLE, 
           'Role is required',
           400
@@ -121,7 +121,7 @@ async function updateRole(pubkey: string, req: NextApiRequest, res: NextApiRespo
     if (!['viewer', 'advertiser', 'publisher', 'admin', 'stakeholder', 'developer'].includes(role)) {
       return res.status(400).json({
         success: false,
-        error: roleService.formatError(
+        error: null as any // TODO: implement roleService.formatError(
           RoleErrorType.INVALID_ROLE, 
           'Invalid role. Valid roles are: viewer, advertiser, publisher, admin, stakeholder, developer',
           400
@@ -130,7 +130,7 @@ async function updateRole(pubkey: string, req: NextApiRequest, res: NextApiRespo
     }
     
     // Get current available roles and check if this is a test user
-    const { availableRoles } = await roleService.getRolesByPubkey(pubkey);
+    const { availableRoles } = await null as any // TODO: implement roleService.getRolesByPubkey(pubkey);
     
     // Get the user data to check if they're a test user
     const user = await prisma.user.findFirst({
@@ -176,7 +176,7 @@ async function updateRole(pubkey: string, req: NextApiRequest, res: NextApiRespo
       logger.warn(`User ${pubkey} attempted to switch to role ${role} but does not have it`);
       return res.status(403).json({
         success: false,
-        error: roleService.formatError(
+        error: null as any // TODO: implement roleService.formatError(
           RoleErrorType.ROLE_NOT_ASSIGNED, 
           'You do not have the requested role',
           403,
@@ -196,12 +196,12 @@ async function updateRole(pubkey: string, req: NextApiRequest, res: NextApiRespo
     }
     
     // Update the user's current role
-    const success = await roleService.updateRoleByPubkey(pubkey, role);
+    const success = await null as any // TODO: implement roleService.updateRoleByPubkey(pubkey, role);
     
     if (!success) {
       return res.status(500).json({
         success: false,
-        error: roleService.formatError(
+        error: null as any // TODO: implement roleService.formatError(
           RoleErrorType.DATABASE_ERROR, 
           'Failed to update role',
           500
@@ -216,10 +216,10 @@ async function updateRole(pubkey: string, req: NextApiRequest, res: NextApiRespo
       availableRoles
     });
   } catch (error) {
-    logger.error('Error updating role:', error);
+    logger.logger.error('Error updating role:', error);
     return res.status(500).json({
       success: false,
-      error: roleService.formatError(
+      error: null as any // TODO: implement roleService.formatError(
         RoleErrorType.DATABASE_ERROR, 
         'Failed to update role',
         500

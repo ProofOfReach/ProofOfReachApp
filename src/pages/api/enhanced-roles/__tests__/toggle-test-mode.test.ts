@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { createMocks } from 'node-mocks-http';
 import toggleTestModeHandler from '../toggle-test-mode';
-import { hasRole, toggleTestMode } from '@/lib/enhancedRoleService';
+import.*./lib/enhancedRoleService';
 
 // Mock dependencies
 jest.mock('@/lib/enhancedRoleService', () => ({
@@ -10,7 +10,7 @@ jest.mock('@/lib/enhancedRoleService', () => ({
 }));
 
 jest.mock('@/utils/authMiddleware', () => ({
-  authMiddleware: (handler: any) => async (req: any, res: any) => {
+  authMiddleware: (handler: any) => async (req: any res: any) => {
     // Pass a test user ID
     return handler(req, res, 'test-admin-user');
   }

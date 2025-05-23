@@ -10,7 +10,7 @@ import {
   ResponsiveContainer
 } from 'recharts';
 import ChartContainer from './ChartContainer';
-import { formatDate } from '@/utils/chartHelpers';
+import.*./utils/chartHelpers';
 
 interface DataKey {
   key: string;
@@ -52,7 +52,7 @@ const BarChart: React.FC<BarChartProps> = ({
           <p className="text-gray-600 dark:text-gray-400 text-sm font-medium mb-2">
             {xAxisDataKey === 'date' ? formatDate(label) : label}
           </p>
-          {payload.map((entry: any, index: number) => {
+          {payload.map((entry: any index: number) => {
             const formattedValue = tooltipFormatter 
               ? tooltipFormatter(entry.value, entry.name)[0]
               : entry.value;

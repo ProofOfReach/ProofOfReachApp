@@ -2,10 +2,10 @@ import React from 'react';
 import useSWR from 'swr';
 import { Home } from 'react-feather';
 
-import ImprovedDashboardLayout from '@/components/layout/ImprovedDashboardLayout';
-import CurrencyAmount from '@/components/CurrencyAmount';
+import.*./components/layout/ImprovedDashboardLayout';
+import.*./components/CurrencyAmount';
 // Import our viewer dashboard component
-import ViewerDashboardComponent from '@/components/dashboards/ViewerDashboard';
+import.*./components/dashboards/ViewerDashboard';
 
 // Define fetcher for SWR
 const fetcher = (url: string) => 

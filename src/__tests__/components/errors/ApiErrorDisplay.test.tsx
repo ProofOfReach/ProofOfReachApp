@@ -1,6 +1,6 @@
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
-import ApiErrorDisplay from '@/components/errors/ApiErrorDisplay';
+import.*./components/errors/ApiErrorDisplay';
 
 describe('ApiErrorDisplay', () => {
   const mockError = new Error('Test error message');

@@ -8,8 +8,8 @@ import React from 'react';
 import { ErrorCategory } from '../../types/errors';
 import { render, screen, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import { ErrorProvider, useError, useErrorReporting, useErrorToast } from '@/context/ErrorContext';
-import { toast } from '@/utils/toast';
+import.*./context/ErrorContext';
+import.*./utils/toast';
 
 // Mock errorService
 jest.mock('@/lib/errorService', () => ({

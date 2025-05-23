@@ -14,7 +14,7 @@ export function withErrorHandling(
       // Call the original handler
       await handler(req, res);
     } catch (error) {
-      console.error('API error:', error);
+      console.logger.error('API error:', error);
       
       // If headers have already been sent, we can't send another response
       if (res.headersSent) {

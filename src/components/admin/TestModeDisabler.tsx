@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { StorageService } from '@/services/storageService';
-import logger from '@/lib/logger';
-import { testModeService } from '@/services/testModeService';
-import { RoleManager } from '@/services/roleManager';
+import.*./services/storageService';
+import.*./lib/logger';
+import.*./services/testModeService';
+import.*./services/roleManager';
 
 /**
  * A floating button that appears only for admin users to disable test mode entirely
@@ -21,7 +21,7 @@ export default function TestModeDisabler() {
           setShowDisabler(true);
         }
       } catch (error) {
-        logger.error('Error checking admin status for TestModeDisabler:', error);
+        logger.logger.error('Error checking admin status for TestModeDisabler:', error);
       }
     }
   }, []);
@@ -37,7 +37,7 @@ export default function TestModeDisabler() {
       // Refresh the page to ensure changes take effect
       window.location.reload();
     } catch (error) {
-      logger.error('Error disabling test mode:', error);
+      logger.logger.error('Error disabling test mode:', error);
       alert('Error disabling test mode. Please try again or check the console.');
     }
   };

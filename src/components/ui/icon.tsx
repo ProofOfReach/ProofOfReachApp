@@ -4,11 +4,11 @@ import {
   Shield, Edit3, DollarSign, Code, CheckSquare, 
   PieChart, LogOut, Menu, X
 } from 'react-feather';
-import MegaphoneIcon from '@/components/icons/MegaphoneIcon';
-import SatsIcon from '@/components/icons/SatsIcon';
-import BitcoinIcon from '@/components/icons/BitcoinIcon';
-import { IconName } from '@/lib/navigationBuilder';
-import { cn } from '@/lib/utils';
+import.*./components/icons/MegaphoneIcon';
+import.*./components/icons/SatsIcon';
+import.*./components/icons/BitcoinIcon';
+import.*./lib/navigationBuilder';
+import.*./lib/utils';
 
 export interface IconProps {
   name: IconName;
@@ -33,7 +33,7 @@ const Icon: React.FC<IconProps> = ({
         return <Home size={size} className={className} color={color} />;
       case 'settings':
         return <Settings size={size} className={className} color={color} />;
-      case 'user':
+      case 'viewer':
         return <User size={size} className={className} color={color} />;
       case 'chart':
         return <BarChart2 size={size} className={className} color={color} />;

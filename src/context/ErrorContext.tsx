@@ -7,10 +7,10 @@
  */
 
 import React, { createContext, useState, useEffect, useMemo, useCallback, useContext } from 'react';
-import { ErrorState, ErrorContextState, defaultErrorState, ErrorSeverity, ErrorType } from '@/types/errors';
-import { errorIntegration } from '@/lib/errorIntegration';
-import { errorService } from '@/lib/errorService';
-import { toast } from '@/utils/toast';
+import.*./types/errors';
+import.*./lib/errorIntegration';
+import.*./lib/errorService';
+import.*./utils/toast';
 
 // Create the context with a default value
 export const ErrorContext = createContext<{
@@ -157,10 +157,10 @@ export const useErrorReporting = () => {
     const errorMessage = error instanceof Error ? error.message : error;
     
     // Show error toast
-    toast.error(`Error: ${errorMessage}`);
+    toast.logger.error(`Error: ${errorMessage}`);
     
     // Report error to service
-    errorService.reportError(error, component, (errorType as ErrorType) || 'unknown');
+    errorService.reportError(error, component, (errorType as anyType) || 'unknown');
   }, []);
   
   return { reportError };
@@ -182,7 +182,7 @@ export const useErrorToast = () => {
         break;
       case 'error':
       case 'critical':
-        toast.error(message);
+        toast.logger.error(message);
         break;
       case 'success':
         toast.success(message);

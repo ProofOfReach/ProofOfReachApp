@@ -1,6 +1,6 @@
 import React from 'react';
-import { UserRoleType } from '@/types/role';
-import useRoleAccess from '@/hooks/useRoleAccess';
+import.*./types/role';
+import.*./hooks/useRoleAccess';
 
 interface RoleGuardProps {
   /** 

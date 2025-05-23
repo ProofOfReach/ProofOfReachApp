@@ -1,8 +1,8 @@
 import { TestModeStorageService, TestModeState } from '../testModeStorageService';
 import { EnhancedStorageService, STORAGE_KEYS } from '../enhancedStorageService';
-import { logger } from '@/lib/logger';
-import { dispatchTestModeEvent, notifyTestModeActivated, notifyTestModeDeactivated } from '@/lib/events';
-import { UserRoleType } from '@/types/role';
+import.*./lib/logger';
+import.*./lib/events';
+import.*./types/role';
 
 // Mock dependencies
 jest.mock('../enhancedStorageService', () => ({
@@ -192,7 +192,7 @@ describe('TestModeStorageService', () => {
       const testMode: TestModeState = {
         enabled: true,
         expiryTime: now + 1000, // Expires in 1 second
-        initialRole: 'user',
+        initialRole: 'viewer',
         activatedAt: now - 1000 // Activated 1 second ago
       };
       
@@ -208,7 +208,7 @@ describe('TestModeStorageService', () => {
       const testMode: TestModeState = {
         enabled: false,
         expiryTime: Date.now() + 1000,
-        initialRole: 'user',
+        initialRole: 'viewer',
         activatedAt: Date.now() - 1000
       };
       
@@ -225,7 +225,7 @@ describe('TestModeStorageService', () => {
       const testMode: TestModeState = {
         enabled: true,
         expiryTime: now - 1000, // Expired 1 second ago
-        initialRole: 'user',
+        initialRole: 'viewer',
         activatedAt: now - 2000 // Activated 2 seconds ago
       };
       
@@ -254,7 +254,7 @@ describe('TestModeStorageService', () => {
       // Create a mock implementation that throws specifically for this test
       mockStorage.getSecureItem.mockImplementationOnce(() => {
         const error = new Error('Storage error');
-        logger.error('Error checking test mode:', error);
+        logger.logger.error('Error checking test mode:', error);
         throw error;
       });
       
@@ -329,7 +329,7 @@ describe('TestModeStorageService', () => {
       const testMode: TestModeState = {
         enabled: false,
         expiryTime: Date.now() + 1000,
-        initialRole: 'user',
+        initialRole: 'viewer',
         activatedAt: Date.now() - 1000
       };
       
@@ -370,7 +370,7 @@ describe('TestModeStorageService', () => {
       // Create a mock implementation that throws specifically for this test
       mockStorage.getSecureItem.mockImplementationOnce(() => {
         const error = new Error('Storage error');
-        logger.error('Error getting test mode time remaining:', error);
+        logger.logger.error('Error getting test mode time remaining:', error);
         throw error;
       });
       
@@ -428,7 +428,7 @@ describe('TestModeStorageService', () => {
       const testMode: TestModeState = {
         enabled: false,
         expiryTime: Date.now() + 1000,
-        initialRole: 'user',
+        initialRole: 'viewer',
         activatedAt: Date.now() - 1000
       };
       
@@ -497,7 +497,7 @@ describe('TestModeStorageService', () => {
       // Create a mock implementation that throws with the correct error message
       mockStorage.getSecureItem.mockImplementationOnce(() => {
         const error = new Error('Storage error');
-        logger.error('Error extending test mode duration:', error);
+        logger.logger.error('Error extending test mode duration:', error);
         throw error;
       });
       
@@ -513,7 +513,7 @@ describe('TestModeStorageService', () => {
       const testMode: TestModeState = {
         enabled: true,
         expiryTime: Date.now() + 1000,
-        initialRole: 'user',
+        initialRole: 'viewer',
         activatedAt: Date.now() - 1000
       };
       
@@ -552,7 +552,7 @@ describe('TestModeStorageService', () => {
       const testMode: TestModeState = {
         enabled: false,
         expiryTime: Date.now() + 1000,
-        initialRole: 'user',
+        initialRole: 'viewer',
         activatedAt: Date.now() - 1000
       };
       
@@ -577,7 +577,7 @@ describe('TestModeStorageService', () => {
       const testMode: TestModeState = {
         enabled: true,
         expiryTime: Date.now() + 1000,
-        initialRole: 'user',
+        initialRole: 'viewer',
         activatedAt: Date.now() - 1000
       };
       
@@ -594,7 +594,7 @@ describe('TestModeStorageService', () => {
       // Create a mock implementation that throws with the correct error message
       mockStorage.getSecureItem.mockImplementationOnce(() => {
         const error = new Error('Storage error');
-        logger.error('Error updating test mode initial role:', error);
+        logger.logger.error('Error updating test mode initial role:', error);
         throw error;
       });
       

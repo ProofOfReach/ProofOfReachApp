@@ -34,7 +34,7 @@ const CreateSpacePage: React.FC = () => {
       // Redirect to spaces list
       router.push('/dashboard/publisher');
     } catch (err: any) {
-      console.error('Space creation error:', err);
+      console.logger.error('Space creation error:', err);
       setError(err.message || 'Failed to create the ad space. Please try again.');
       setIsSubmitting(false);
     }

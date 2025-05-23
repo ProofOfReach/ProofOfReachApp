@@ -41,11 +41,11 @@ const RoleManagementPage: NextPage = () => {
       if (success) {
         logger.info(`Successfully switched to ${role} role without page reload`);
       } else {
-        logger.error(`Failed to switch to ${role} role`);
+        logger.logger.error(`Failed to switch to ${role} role`);
         setError(`Failed to switch to ${role} role.`);
       }
     } catch (err) {
-      logger.error('Error switching roles:', err);
+      logger.logger.error('Error switching roles:', err);
       setError('An unexpected error occurred while switching roles.');
     } finally {
       setIsLoading(false);

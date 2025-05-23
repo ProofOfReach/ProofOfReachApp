@@ -3,7 +3,7 @@ import { NextPage } from 'next';
 import { useRouter } from 'next/router';
 import { ArrowLeft, AlertCircle, CheckCircle, Image as ImageIcon, Link as LinkIcon, Target, DollarSign } from 'react-feather';
 
-import DashboardLayout from '@/components/layout/DashboardLayout';
+import.*./components/layout/DashboardLayout';
 
 interface FormData {
   title: string;
@@ -73,7 +73,7 @@ const CreateAdPage: NextPage = () => {
       const data = await response.json();
       setCampaign(data);
     } catch (err) {
-      console.error('Error fetching campaign:', err);
+      console.logger.error('Error fetching campaign:', err);
       setError('Could not load campaign details. Please try again.');
     } finally {
       setIsLoading(false);
@@ -154,7 +154,7 @@ const CreateAdPage: NextPage = () => {
         router.push(`/dashboard/advertiser/campaigns/${campaignId}`);
       }, 1500);
     } catch (err) {
-      console.error('Error creating ad:', err);
+      console.logger.error('Error creating ad:', err);
       setError(err instanceof Error ? err.message : 'An unknown error occurred');
     } finally {
       setIsSubmitting(false);

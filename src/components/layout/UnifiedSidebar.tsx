@@ -14,7 +14,7 @@ import ExchangeRateDisplay from '../ExchangeRateDisplay';
 
 // Define a UserRole type to ensure consistency
 export type UserRole = 'viewer' | 'advertiser' | 'publisher' | 'admin' | 'stakeholder';
-// The 'user' role is now deprecated in favor of 'viewer'
+// The 'viewer' role is now deprecated in favor of 'viewer'
 // This type definition is the source of truth for all valid roles
 
 interface UnifiedSidebarProps {
@@ -273,11 +273,11 @@ const UnifiedSidebar: React.FC<UnifiedSidebarProps> = ({ isTestMode = false }) =
                            router.pathname.includes('/dashboard/publisher') ? 'publisher' : 
                            router.pathname.includes('/dashboard/admin') ? 'admin' :
                            router.pathname.includes('/dashboard/stakeholder') ? 'stakeholder' :
-                           router.pathname.includes('/dashboard/user') ? 'user' : 'user';
+                           router.pathname.includes('/dashboard/user') ? 'viewer' : 'viewer';
       
       // For styling purposes, use the path-based role for consistent styling
       switch(pathBasedRole) {
-        case 'user':
+        case 'viewer':
           activeClass = 'bg-blue-100 text-blue-700 dark:bg-blue-900/20 dark:text-blue-300';
           break;
         case 'advertiser':

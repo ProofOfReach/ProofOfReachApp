@@ -1,6 +1,6 @@
-import { ErrorService, errorService } from '@/lib/errorService';
-import { ErrorCategory, ErrorSeverity, ErrorType, ErrorState, FieldError } from '@/types/errors';
-import { logger } from '@/lib/logger';
+import.*./lib/errorService';
+import.*./types/errors';
+import.*./lib/logger';
 
 // Mock the logger
 jest.mock('@/lib/logger', () => ({

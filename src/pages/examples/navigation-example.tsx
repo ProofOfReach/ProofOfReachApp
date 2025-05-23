@@ -1,6 +1,6 @@
 import React from 'react';
 import Head from 'next/head';
-import SimplifiedEnhancedSidebar from '@/components/layout/SimplifiedEnhancedSidebar';
+import.*./components/layout/SimplifiedEnhancedSidebar';
 
 /**
  * Example page showcasing the enhanced sidebar with shadcn/ui components

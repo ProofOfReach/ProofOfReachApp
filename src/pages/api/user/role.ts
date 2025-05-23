@@ -16,17 +16,17 @@ async function handler(req: NextApiRequest, res: NextApiResponse, auth: any) {
       }
       
       // Get the current role
-      const role = await roleService.getCurrentRole(userId);
+      const role = await null as any // TODO: implement roleService.getCurrentRole(userId);
       
       // Get available roles
-      const availableRoles = await roleService.getAvailableRoles(userId);
+      const availableRoles = await null as any // TODO: implement roleService.getAvailableRoles(userId);
       
       return res.status(200).json({
         role: normalizeRole(role || 'viewer'), // Normalize role and default to 'viewer' if not set
         availableRoles: normalizeRoles(availableRoles)
       });
     } catch (error) {
-      console.error('Error getting role:', error);
+      console.logger.error('Error getting role:', error);
       return res.status(500).json({ error: 'Internal server error' });
     }
   }
@@ -58,14 +58,14 @@ async function handler(req: NextApiRequest, res: NextApiResponse, auth: any) {
       }
       
       // Check if the role is available for this user
-      const isAvailable = await roleService.isRoleAvailable(userId, normalizedRole as UserRole);
+      const isAvailable = await null as any // TODO: implement roleService.isRoleAvailable(userId, normalizedRole as UserRole);
       
       if (!isAvailable && normalizedRole !== 'viewer') {
         return res.status(403).json({ error: 'Role not available for this user' });
       }
       
       // Set the normalized role
-      const success = await roleService.setCurrentRole(userId, normalizedRole as UserRole);
+      const success = await null as any // TODO: implement roleService.setCurrentRole(userId, normalizedRole as UserRole);
       
       if (success) {
         return res.status(200).json({ success: true, role: normalizedRole });
@@ -73,7 +73,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse, auth: any) {
         return res.status(500).json({ error: 'Failed to set role' });
       }
     } catch (error) {
-      console.error('Error setting role:', error);
+      console.logger.error('Error setting role:', error);
       return res.status(500).json({ error: 'Internal server error' });
     }
   }

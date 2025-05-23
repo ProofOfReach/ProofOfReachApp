@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Copy, Check } from 'react-feather';
-import { cn } from '@/lib/utils';
+import.*./lib/utils';
 
 interface CodeSnippetProps {
   code: string;
@@ -31,7 +31,7 @@ const CodeSnippet: React.FC<CodeSnippetProps> = ({
       // Reset after 2 seconds
       setTimeout(() => setCopied(false), 2000);
     } catch (error) {
-      console.error('Failed to copy code:', error);
+      console.logger.error('Failed to copy code:', error);
     }
   };
 

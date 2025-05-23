@@ -1,9 +1,9 @@
 import React from 'react';
 import { NextPageWithLayout } from '../_app';
-import { useAuth } from '@/hooks/useAuth';
-import TestModeManager from '@/components/admin/TestModeManager';
+import.*./hooks/useAuth';
+import.*./components/admin/TestModeManager';
 import { Shield, AlertTriangle } from 'react-feather';
-import { getDashboardLayout } from '@/utils/layoutHelpers';
+import.*./utils/layoutHelpers';
 
 /**
  * Test Mode Management Page

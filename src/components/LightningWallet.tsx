@@ -120,7 +120,7 @@ const LightningWallet: React.FC<LightningWalletProps> = ({
       setInvoice(data.invoice);
       setCurrentTransactionId(data.transactionId);
     } catch (error: any) {
-      console.error('Error generating invoice:', error);
+      console.logger.error('Error generating invoice:', error);
       onError(error.message || 'Failed to generate invoice. Please try again later.');
     } finally {
       setIsGeneratingInvoice(false);
@@ -206,7 +206,7 @@ const LightningWallet: React.FC<LightningWalletProps> = ({
       // Notify success
       onSuccess(`Successfully withdrawn ${withdrawAmount} sats`);
     } catch (error: any) {
-      console.error('Error processing withdrawal:', error);
+      console.logger.error('Error processing withdrawal:', error);
       onError(error.message || 'Failed to process withdrawal. Please try again.');
     } finally {
       setIsProcessingWithdrawal(false);
@@ -227,7 +227,7 @@ const LightningWallet: React.FC<LightningWalletProps> = ({
         checkPaymentStatus(currentTransactionId);
       }
     } catch (error: any) {
-      console.error('WebLN payment error:', error);
+      console.logger.error('WebLN payment error:', error);
       onError(error.message || 'Failed to pay with WebLN');
     }
   };
@@ -297,7 +297,7 @@ const LightningWallet: React.FC<LightningWalletProps> = ({
         onSuccess(`Successfully deposited ${depositAmount} sats`);
       }
     } catch (error: any) {
-      console.error('Error checking payment status:', error);
+      console.logger.error('Error checking payment status:', error);
       // Only show error to user in non-test mode or if explicitly requested through the UI
       if (!isTestMode) {
         onError(error.message || 'Failed to check payment status. Please try again.');
@@ -312,7 +312,7 @@ const LightningWallet: React.FC<LightningWalletProps> = ({
     navigator.clipboard.writeText(invoice).then(() => {
       alert('Invoice copied to clipboard!');
     }).catch(err => {
-      console.error('Could not copy text: ', err);
+      console.logger.error('Could not copy text: ', err);
     });
   };
 

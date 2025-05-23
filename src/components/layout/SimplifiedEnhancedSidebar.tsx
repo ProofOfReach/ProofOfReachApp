@@ -11,7 +11,7 @@ import NavGroup from '../ui/nav-group';
 import Icon from '../ui/icon';
 
 // Import navigation utilities
-import { UserRole, buildNavigation, getRoleIconAndColor, createLogoutItem } from '@/lib/navigationBuilder';
+import.*./lib/navigationBuilder';
 
 /**
  * Simplified Enhanced Sidebar component built with shadcn/ui styled components

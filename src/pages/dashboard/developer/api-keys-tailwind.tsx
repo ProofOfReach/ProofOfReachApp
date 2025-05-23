@@ -80,8 +80,8 @@ const ApiKeysPage: React.FC = () => {
       setDescription('');
       setScopes('read');
     } catch (error) {
-      toast.error('Failed to create API key');
-      console.error(error);
+      toast.logger.error('Failed to create API key');
+      console.logger.error(error);
     } finally {
       setIsLoading(false);
     }
@@ -115,8 +115,8 @@ const ApiKeysPage: React.FC = () => {
       mutate('/api/auth/api-keys'); // Refresh the list
       setIsEditModalVisible(false);
     } catch (error) {
-      toast.error('Failed to update API key');
-      console.error(error);
+      toast.logger.error('Failed to update API key');
+      console.logger.error(error);
     } finally {
       setIsLoading(false);
     }
@@ -140,8 +140,8 @@ const ApiKeysPage: React.FC = () => {
       toast.success('API key deleted successfully');
       mutate('/api/auth/api-keys'); // Refresh the list
     } catch (error) {
-      toast.error('Failed to delete API key');
-      console.error(error);
+      toast.logger.error('Failed to delete API key');
+      console.logger.error(error);
     }
   };
   

@@ -11,14 +11,14 @@ interface EnhancedRoleContextState {
   // Error state
   error: Error | null;
   // Currently active role
-  currentRole: RoleType | 'user';
+  currentRole: RoleType | 'viewer';
   // Available roles for the user
   availableRoles: RoleType[];
   // Whether the user is in test mode
   isTestUser: boolean;
   
   // Actions
-  changeRole: (role: RoleType | 'user') => Promise<void>;
+  changeRole: (role: RoleType | 'viewer') => Promise<void>;
   enableTestMode: () => Promise<void>;
   loadRoleData: (userId: string) => Promise<void>;
   refreshRoleData: () => Promise<void>;
@@ -47,7 +47,7 @@ export const EnhancedRoleProvider: React.FC<EnhancedRoleProviderProps> = ({
   const [error, setError] = useState<Error | null>(null);
   
   // Convenience getters for role data
-  const currentRole = roleData?.currentRole || 'user';
+  const currentRole = roleData?.currentRole || 'viewer';
   const availableRoles = roleData?.availableRoles || [];
   const isTestUser = roleData?.isTestUser || false;
 
@@ -106,14 +106,14 @@ export const EnhancedRoleProvider: React.FC<EnhancedRoleProviderProps> = ({
       }
     } catch (err) {
       setError(err instanceof Error ? err : new Error('Unknown error loading role data'));
-      logger.error('Error loading role data:', err);
+      logger.logger.error('Error loading role data:', err);
     } finally {
       setIsLoading(false);
     }
   };
 
   // Function to change the user's role
-  const changeRole = async (role: RoleType | 'user'): Promise<void> => {
+  const changeRole = async (role: RoleType | 'viewer'): Promise<void> => {
     if (!roleData) {
       setError(new Error('No user role data available'));
       return;
@@ -151,7 +151,7 @@ export const EnhancedRoleProvider: React.FC<EnhancedRoleProviderProps> = ({
       setRoleData(data.data);
     } catch (err) {
       setError(err instanceof Error ? err : new Error('Unknown error changing role'));
-      logger.error('Error changing role:', err);
+      logger.logger.error('Error changing role:', err);
     } finally {
       setIsLoading(false);
     }
@@ -193,7 +193,7 @@ export const EnhancedRoleProvider: React.FC<EnhancedRoleProviderProps> = ({
       setRoleData(data.data);
     } catch (err) {
       setError(err instanceof Error ? err : new Error('Unknown error enabling test mode'));
-      logger.error('Error enabling test mode:', err);
+      logger.logger.error('Error enabling test mode:', err);
     } finally {
       setIsLoading(false);
     }
@@ -237,7 +237,7 @@ export const EnhancedRoleProvider: React.FC<EnhancedRoleProviderProps> = ({
       setRoleData(data.data);
     } catch (err) {
       setError(err instanceof Error ? err : new Error('Unknown error enabling all roles'));
-      logger.error('Error enabling all roles:', err);
+      logger.logger.error('Error enabling all roles:', err);
     } finally {
       setIsLoading(false);
     }
@@ -280,7 +280,7 @@ export const EnhancedRoleProvider: React.FC<EnhancedRoleProviderProps> = ({
       setRoleData(data.data);
     } catch (err) {
       setError(err instanceof Error ? err : new Error('Unknown error toggling test mode'));
-      logger.error('Error toggling test mode:', err);
+      logger.logger.error('Error toggling test mode:', err);
     } finally {
       setIsLoading(false);
     }

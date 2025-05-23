@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useCurrency } from '@/context/CurrencyContext';
+import.*./context/CurrencyContext';
 
 interface CurrencyWrapperProps {
   children: React.ReactNode;

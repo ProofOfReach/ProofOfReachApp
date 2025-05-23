@@ -313,7 +313,7 @@ const APIDocsPage: React.FC<APIDocsProps> = ({ spec }) => {
                                   </tr>
                                 </thead>
                                 <tbody>
-                                  {endpoint.parameters.map((param: any, paramIndex: number) => (
+                                  {endpoint.parameters.map((param: any paramIndex: number) => (
                                     <tr key={paramIndex} className="border-t border-gray-800">
                                       <td className="px-4 py-2 text-sm text-gray-300 font-mono">{param.name}</td>
                                       <td className="px-4 py-2 text-sm text-gray-300">{param.in}</td>
@@ -368,7 +368,7 @@ fetch("${window.location.origin}${endpoint.path}", {
 })
 .then(response => response.json())
 .then(data => console.log(data))
-.catch(error => console.error("Error:", error));`}
+.catch(error => console.logger.error("Error:", error));`}
                                     </pre>
                                   </div>
                                 ) : (
@@ -394,7 +394,7 @@ fetch("${window.location.origin}${endpoint.path}", {
 })
 .then(response => response.json())
 .then(data => console.log(data))
-.catch(error => console.error("Error:", error));`}
+.catch(error => console.logger.error("Error:", error));`}
                                     </pre>
                                   </div>
                                 )}

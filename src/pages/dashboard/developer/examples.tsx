@@ -1,11 +1,11 @@
 import { useState, useRef } from 'react';
 import { Book, Code, Clipboard, Check, Copy, ExternalLink } from 'react-feather';
 import Link from 'next/link';
-import ImprovedDashboardLayout from '@/components/layout/ImprovedDashboardLayout';
-import { Button } from '@/components/ui/button';
-import { Card } from '@/components/ui/card';
-import { Title, Paragraph } from '@/components/ui/Typography';
-import { useAuth } from '@/hooks/useAuth';
+import.*./components/layout/ImprovedDashboardLayout';
+import.*./components/ui/button';
+import.*./components/ui/card';
+import.*./components/ui/Typography';
+import.*./hooks/useAuth';
 
 const SDKExamplesPage = () => {
   const { auth } = useAuth();
@@ -359,7 +359,7 @@ add_shortcode('proofofreach_ad', 'proofofreach_ad_shortcode');
     console.log(\`Received \${sats} satoshis!\`);
   },
   onError: (error) => {            // Called when error occurs
-    console.error(\`Ad error: \${error}\`);
+    console.logger.error(\`Ad error: \${error}\`);
   },
   onLoad: () => {                  // Called when ad loads successfully
     console.log("Ad loaded successfully");

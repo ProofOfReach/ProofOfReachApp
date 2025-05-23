@@ -1,6 +1,6 @@
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
-import NetworkErrorDisplay from '@/components/errors/NetworkErrorDisplay';
+import.*./components/errors/NetworkErrorDisplay';
 
 describe('NetworkErrorDisplay', () => {
   it('renders the default error message when no error is provided', () => {

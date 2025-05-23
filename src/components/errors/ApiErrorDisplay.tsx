@@ -65,7 +65,7 @@ const ApiErrorDisplay: React.FC<ApiErrorDisplayProps> = ({
               
               {showTechnicalDetails && error instanceof Error && (
                 <pre className="mt-2 text-xs text-red-600 bg-red-50 p-2 overflow-auto max-h-40 rounded border border-red-200">
-                  {(error as Error).stack || 'No stack trace available'}
+                  {(error as any).stack || 'No stack trace available'}
                 </pre>
               )}
             </div>

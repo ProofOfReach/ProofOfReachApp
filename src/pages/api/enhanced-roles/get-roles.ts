@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import { getUserRoleData } from '@/lib/enhancedRoleService';
-import { withEnhancedRoleProtection } from '@/utils/enhancedRoleMiddleware';
-import logger from '@/lib/logger';
+import.*./lib/enhancedRoleService';
+import.*./utils/enhancedRoleMiddleware';
+import.*./lib/logger';
 
 /**
  * @swagger
@@ -44,7 +44,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       data: userData
     });
   } catch (error) {
-    logger.error('Error getting user roles:', error);
+    logger.logger.error('Error getting user roles:', error);
     return res.status(500).json({ error: 'Internal server error' });
   }
 };

@@ -1,8 +1,8 @@
 import * as React from "react"
 import { Search } from "react-feather"
 
-import { cn } from "@/lib/utils"
-import { Dialog, DialogContent } from "@/components/ui/dialog"
+import.*./lib/utils"
+import.*./components/ui/dialog"
 
 interface CommandProps extends React.HTMLAttributes<HTMLDivElement> {}
 

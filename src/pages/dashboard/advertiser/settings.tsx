@@ -44,7 +44,7 @@ const AdvertiserSettingsPage = () => {
         setSuccessMessage(null);
       }, 3000);
     } catch (error) {
-      console.error('Error saving settings:', error);
+      console.logger.error('Error saving settings:', error);
     } finally {
       setIsSubmitting(false);
     }

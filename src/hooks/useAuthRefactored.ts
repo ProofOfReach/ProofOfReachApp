@@ -16,7 +16,7 @@ const defaultAuthState: AuthStateContext = {
     pubkey: '',
     isTestMode: false,
     availableRoles: [],
-    currentRole: 'user'
+    currentRole: 'viewer'
   },
   login: async () => {
     logger.debug('Auth context not available - login ignored');

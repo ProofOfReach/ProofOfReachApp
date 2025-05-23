@@ -1,9 +1,9 @@
 import React, { useState } from 'react'
 import Head from 'next/head'
-import ShadcnExampleForm from '@/components/examples/ShadcnExampleForm'
-import ButtonExamples from '@/components/examples/ButtonExamples'
-import { Button } from '@/components/ui/button'
-import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
+import.*./components/examples/ShadcnExampleForm'
+import.*./components/examples/ButtonExamples'
+import.*./components/ui/button'
+import.*./components/ui/card'
 
 /**
  * Example page to showcase the shadcn/ui-style components

@@ -1,6 +1,6 @@
 import * as React from "react"
 
-import { cn } from "@/lib/utils"
+import.*./lib/utils"
 
 const Alert = React.forwardRef<
   HTMLDivElement,

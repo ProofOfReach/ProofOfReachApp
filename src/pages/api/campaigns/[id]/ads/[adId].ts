@@ -1,15 +1,15 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import { adService, UpdateAdDto } from '@/services/adService';
-import { apiHandler } from '@/utils/apiHandler';
-import { authenticateRequest } from '@/utils/authMiddleware';
-import { ApiError } from '@/utils/apiError';
+import.*./services/adService';
+import.*./utils/apiHandler';
+import.*./utils/authMiddleware';
+import.*./utils/apiError';
 import { AdStatus } from '@prisma/client';
 
 export default apiHandler({
   // GET /api/campaigns/[id]/ads/[adId] - Get a specific ad
   GET: async (req: NextApiRequest, res: NextApiResponse) => {
     const { id: campaignId, adId } = req.query as { id: string; adId: string };
-    const user = await authenticateRequest(req);
+    const user = await authenticateRequest(req as any);
     
     if (!user.isAdvertiser) {
       throw new ApiError(403, 'Forbidden: Advertiser role required');
@@ -27,7 +27,7 @@ export default apiHandler({
   // PUT /api/campaigns/[id]/ads/[adId] - Update an ad
   PUT: async (req: NextApiRequest, res: NextApiResponse) => {
     const { id: campaignId, adId } = req.query as { id: string; adId: string };
-    const user = await authenticateRequest(req);
+    const user = await authenticateRequest(req as any);
     
     if (!user.isAdvertiser) {
       throw new ApiError(403, 'Forbidden: Advertiser role required');
@@ -46,7 +46,7 @@ export default apiHandler({
   // DELETE /api/campaigns/[id]/ads/[adId] - Delete an ad
   DELETE: async (req: NextApiRequest, res: NextApiResponse) => {
     const { id: campaignId, adId } = req.query as { id: string; adId: string };
-    const user = await authenticateRequest(req);
+    const user = await authenticateRequest(req as any);
     
     if (!user.isAdvertiser) {
       throw new ApiError(403, 'Forbidden: Advertiser role required');
@@ -60,7 +60,7 @@ export default apiHandler({
   // PATCH /api/campaigns/[id]/ads/[adId] - Update ad status
   PATCH: async (req: NextApiRequest, res: NextApiResponse) => {
     const { id: campaignId, adId } = req.query as { id: string; adId: string };
-    const user = await authenticateRequest(req);
+    const user = await authenticateRequest(req as any);
     
     if (!user.isAdvertiser) {
       throw new ApiError(403, 'Forbidden: Advertiser role required');

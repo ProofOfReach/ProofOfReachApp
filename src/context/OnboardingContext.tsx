@@ -1,10 +1,10 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { useRouter } from 'next/router';
-import { useAuthRefactored } from '@/hooks/useAuthRefactored';
-import { UserRoleType } from '@/types/role';
-import { useRole } from '@/context/RoleContext';
-import clientOnboardingService from '@/lib/clientOnboardingService';
-import { logger } from '@/lib/logger';
+import.*./hooks/useAuthRefactored';
+import.*./types/role';
+import.*./context/RoleContext';
+import.*./lib/clientOnboardingService';
+import.*./lib/logger';
 
 // Create a safer initial value for SSR hydration
 const defaultContextValue = {
@@ -232,7 +232,7 @@ export const OnboardingProvider: React.FC<OnboardingProviderProps> = ({ children
               router.push(redirectWithParam);
             }
           } catch (error) {
-            logger.error('Error checking onboarding status:', { error });
+            logger.logger.error('Error checking onboarding status:', { error });
           }
         }
       }
@@ -277,7 +277,7 @@ export const OnboardingProvider: React.FC<OnboardingProviderProps> = ({ children
       clientOnboardingService.updateOnboardingProgress(pubkeyToUse, selectedRole, {
         currentStep
       }).catch(error => {
-        logger.error('Error saving onboarding progress', { error, pubkey: pubkeyToUse, role: selectedRole });
+        logger.logger.error('Error saving onboarding progress', { error, pubkey: pubkeyToUse, role: selectedRole });
       });
     }
   }, [currentStep, selectedRole, authState, forcePubkey, isFirstStep]);
@@ -293,7 +293,7 @@ export const OnboardingProvider: React.FC<OnboardingProviderProps> = ({ children
         // Redirect to dashboard
         router.push(`/dashboard?timestamp=${Date.now()}`);
       } catch (error) {
-        logger.error('Error completing onboarding:', error);
+        logger.logger.error('Error completing onboarding:', error);
       } finally {
         setIsLoading(false);
       }
@@ -314,7 +314,7 @@ export const OnboardingProvider: React.FC<OnboardingProviderProps> = ({ children
           router.push(`/dashboard?timestamp=${Date.now()}`);
         }
       } catch (error) {
-        logger.error('Error skipping onboarding:', { error, pubkey: pubkeyToUse });
+        logger.logger.error('Error skipping onboarding:', { error, pubkey: pubkeyToUse });
       } finally {
         setIsLoading(false);
       }

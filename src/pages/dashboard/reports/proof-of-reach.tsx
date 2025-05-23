@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
-import ImprovedDashboardLayout from '@/components/layout/ImprovedDashboardLayout';
-import { DashboardCard } from '@/components/ui';
-import Badge from '@/components/ui/Badge';
-import { Button } from '@/components/ui/button';
-import Tabs from '@/components/ui/Tabs';
-import Tab from '@/components/ui/Tab';
-import Tooltip from '@/components/ui/Tooltip';
+import.*./components/layout/ImprovedDashboardLayout';
+import.*./components/ui';
+import.*./components/ui/Badge';
+import.*./components/ui/button';
+import.*./components/ui/Tabs';
+import.*./components/ui/Tab';
+import.*./components/ui/Tooltip';
 import {
   Shield,
   User,
@@ -22,8 +22,8 @@ import {
   Download,
   HelpCircle
 } from 'react-feather';
-import { BarChart } from '@/components/charts';
-import { PieChart } from '@/components/charts';
+import.*./components/charts';
+import.*./components/charts';
 
 /**
  * Proof of Reach Report Page

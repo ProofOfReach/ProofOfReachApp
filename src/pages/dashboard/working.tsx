@@ -7,7 +7,7 @@ import RoleDropdown from '../../components/role/RoleDropdown';
  */
 const WorkingDashboard = () => {
   // State to track current role and transitions
-  const [currentRole, setCurrentRole] = useState<UserRole>('user');
+  const [currentRole, setCurrentRole] = useState<UserRole>('viewer');
   const [transitionCount, setTransitionCount] = useState(0);
   const [transitionHistory, setTransitionHistory] = useState<string[]>([]);
   

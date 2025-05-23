@@ -72,7 +72,7 @@ describe('Enhanced Authentication Middleware', () => {
         res, 
         expect.objectContaining({ 
           pubkey: 'pk_test_user123',
-          roles: ['user', 'advertiser', 'publisher', 'admin', 'stakeholder'],
+          roles: ['viewer', 'advertiser', 'publisher', 'admin', 'stakeholder'],
           currentRole: 'admin',
           isTestMode: true,
         })
@@ -128,7 +128,7 @@ describe('Enhanced Authentication Middleware', () => {
         expect.objectContaining({ 
           userId: 'user123',
           pubkey: 'real_pubkey123',
-          roles: expect.arrayContaining(['user', 'publisher']),
+          roles: expect.arrayContaining(['viewer', 'publisher']),
           currentRole: 'publisher',
           isTestMode: false,
         })
@@ -149,11 +149,11 @@ describe('Enhanced Authentication Middleware', () => {
     });
 
     it('should deny access when user does not have required role', async () => {
-      const req = createMockReq({ nostr_pubkey: 'pk_test_user123', userRole: 'user' });
+      const req = createMockReq({ nostr_pubkey: 'pk_test_user123', userRole: 'viewer' });
       const res = createMockRes();
       const handler = jest.fn();
 
-      // Mock a user with only 'user' role despite being in test mode
+      // Mock a user with only 'viewer' role despite being in test mode
       (prisma.user.findFirst as jest.Mock).mockResolvedValue({
         id: 'user123',
         nostrPubkey: 'pk_test_user123',

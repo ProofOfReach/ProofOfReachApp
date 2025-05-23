@@ -35,7 +35,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
 
     // Validate the role
-    if (!['user', 'advertiser', 'publisher', 'admin', 'stakeholder'].includes(role)) {
+    if (!['viewer', 'advertiser', 'publisher', 'admin', 'stakeholder'].includes(role)) {
       return res.status(400).json({ error: 'Invalid role' });
     }
 
@@ -107,7 +107,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       preferences: userPrefs
     });
   } catch (error) {
-    console.error('Error setting role:', error);
+    console.logger.error('Error setting role:', error);
     return res.status(500).json({ error: 'Failed to set role' });
   }
 }

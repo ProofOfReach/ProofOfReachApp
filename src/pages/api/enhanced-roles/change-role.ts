@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import { changeUserRole, RoleType } from '@/lib/enhancedRoleService';
-import { withEnhancedRoleProtection } from '@/utils/enhancedRoleMiddleware';
-import logger from '@/lib/logger';
+import.*./lib/enhancedRoleService';
+import.*./utils/enhancedRoleMiddleware';
+import.*./lib/logger';
 
 /**
  * @swagger
@@ -55,8 +55,8 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     }
 
     // Validate role
-    const validRoles: (RoleType | 'user')[] = ['user', 'admin', 'advertiser', 'publisher', 'developer', 'stakeholder'];
-    if (!validRoles.includes(role as RoleType | 'user')) {
+    const validRoles: (RoleType | 'viewer')[] = ['viewer', 'admin', 'advertiser', 'publisher', 'developer', 'stakeholder'];
+    if (!validRoles.includes(role as RoleType | 'viewer')) {
       return res.status(400).json({ 
         error: 'Invalid role',
         validRoles
@@ -82,7 +82,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       throw error;
     }
   } catch (error) {
-    logger.error('Error changing user role:', error);
+    logger.logger.error('Error changing user role:', error);
     return res.status(500).json({ error: 'Internal server error' });
   }
 };

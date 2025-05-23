@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { DollarSign, AlertCircle } from 'react-feather';
 import CurrencyAmount from './CurrencyAmount';
-import { useTestMode } from '@/context/TestModeContext';
-import { useTestWallet } from '@/hooks/useTestWallet';
+import.*./context/TestModeContext';
+import.*./hooks/useTestWallet';
 
 interface LightningWalletBalanceProps {
   compact?: boolean;
@@ -90,7 +90,7 @@ const LightningWalletBalance: React.FC<LightningWalletBalanceProps> = ({
       const data = await response.json();
       setBalance(data.balance);
     } catch (err) {
-      console.error('Error fetching wallet balance:', err);
+      console.logger.error('Error fetching wallet balance:', err);
       setError('Failed to fetch wallet balance');
       // Set balance to 0 when error occurs - don't use placeholder values
       setBalance(0);

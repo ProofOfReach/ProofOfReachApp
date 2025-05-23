@@ -7,8 +7,8 @@
 import React from 'react';
 import { render, screen, fireEvent, act } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import { useErrorState } from '@/hooks/useErrorState';
-import * as errorIntegration from '@/lib/errorIntegration';
+import.*./hooks/useErrorState';
+import.*./lib/errorIntegration';
 
 // Mock errorIntegration
 jest.mock('@/lib/errorIntegration', () => ({

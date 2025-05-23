@@ -3,7 +3,7 @@ import { ChevronRight, DollarSign, PieChart, Users } from 'react-feather';
 import { useRole } from '../../../context/RoleContext';
 import DashboardLayout from '../../../components/layout/DashboardLayout';
 import StatCard from '../../../components/ui/StatCard';
-import ImprovedDashboardLayout from '@/components/layout/ImprovedDashboardLayout';
+import.*./components/layout/ImprovedDashboardLayout';
 
 export default function StakeholderDashboard(): React.ReactElement {
   const { role } = useRole();

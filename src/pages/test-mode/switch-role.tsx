@@ -52,7 +52,7 @@ const SwitchRolePage: React.FC = () => {
             console.log('All roles enabled in database');
           }
         } catch (error) {
-          console.error('Error enabling roles in database:', error);
+          console.logger.error('Error enabling roles in database:', error);
         }
       };
       
@@ -63,7 +63,7 @@ const SwitchRolePage: React.FC = () => {
   // Role definitions
   const roles = [
     {
-      id: 'user',
+      id: 'viewer',
       name: 'Viewer Dashboard',
       description: 'Basic user account management and settings',
       path: '/dashboard/user',

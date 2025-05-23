@@ -2,15 +2,15 @@ import React, { useState, useEffect } from 'react';
 import { NextPage } from 'next';
 import { Home, ShoppingBag, Upload, Shield, Briefcase, User } from 'react-feather';
 
-import ImprovedDashboardLayout from '@/components/layout/ImprovedDashboardLayout';
-import { RoleService } from '@/lib/roleService';
-import { UserRole } from '@/context/RoleContext';
+import.*./components/layout/ImprovedDashboardLayout';
+import.*./lib/roleService';
+import.*./context/RoleContext';
 
 // Import our various role-specific dashboard components
-import UserDashboardComponent from '@/components/dashboard/user/UserDashboard';
+import.*./components/dashboard/user/UserDashboard';
 // Component imports would go here in a real implementation
-// import AdvertiserDashboardComponent from '@/components/dashboard/advertiser/AdvertiserDashboard';
-// import PublisherDashboardComponent from '@/components/dashboard/publisher/PublisherDashboard';
+// import.*./components/dashboard/advertiser/AdvertiserDashboard';
+// import.*./components/dashboard/publisher/PublisherDashboard';
 // etc.
 
 /**
@@ -18,7 +18,7 @@ import UserDashboardComponent from '@/components/dashboard/user/UserDashboard';
  * This showcases the power of our improved role management system
  */
 const UnifiedDashboard: NextPage = () => {
-  const [currentRole, setCurrentRole] = useState<UserRole>('user');
+  const [currentRole, setCurrentRole] = useState<UserRole>('viewer');
   
   // Initialize and listen for role changes
   useEffect(() => {
@@ -139,7 +139,7 @@ const UnifiedDashboard: NextPage = () => {
           </div>
         );
       default:
-        // For 'user' role, use our existing component
+        // For 'viewer' role, use our existing component
         return <UserDashboardComponent />;
     }
   };

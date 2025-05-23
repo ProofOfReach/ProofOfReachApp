@@ -1,9 +1,9 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import { ApiError } from '@/utils/apiError';
-import { handleError } from '@/lib/errorHandling';
+import.*./utils/apiError';
+import.*./lib/errorHandling';
 import { PrismaClient } from '@prisma/client';
-import { enhancedAuthMiddleware, AuthenticatedUser } from '@/utils/enhancedAuthMiddleware';
-import { logger } from '@/lib/logger';
+import.*./utils/enhancedAuthMiddleware';
+import.*./lib/logger';
 
 const prisma = new PrismaClient();
 

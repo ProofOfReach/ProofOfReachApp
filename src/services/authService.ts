@@ -187,7 +187,7 @@ export class AuthService {
   /**
    * Get the current error
    */
-  public get error(): Error | null {
+  public get logger.error(): Error | null {
     return this._error;
   }
 
@@ -296,7 +296,7 @@ export class AuthService {
         }
       );
       
-      logger.error('Login failed', { 
+      logger.logger.error('Login failed', { 
         error: this._error.message,
         provider: this._provider,
         correlationId
@@ -372,7 +372,7 @@ export class AuthService {
         }
       );
       
-      logger.error('API key login failed', { 
+      logger.logger.error('API key login failed', { 
         error: this._error.message,
         correlationId
       });
@@ -531,7 +531,7 @@ export class AuthService {
         }
       );
       
-      logger.error('Role switch failed', { 
+      logger.logger.error('Role switch failed', { 
         error: this._error.message,
         role,
         pubkey: this._authState.pubkey
@@ -630,7 +630,7 @@ export class AuthService {
         }
       );
       
-      logger.error('Failed to enable test mode', { 
+      logger.logger.error('Failed to enable test mode', { 
         error: error instanceof Error ? error.message : 'Unknown error' 
       });
       

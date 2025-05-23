@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { PieChart, Calendar, Download, RefreshCw, Filter } from 'react-feather';
-import { getEnhancedDashboardLayout } from '@/components/layout/EnhancedDashboardLayout';
-import { DashboardContainer, DashboardCard } from '@/components/ui';
+import.*./components/layout/EnhancedDashboardLayout';
+import.*./components/ui';
 import type { ReactElement } from 'react';
 import type { NextPageWithLayout } from '../../_app';
-import CurrencyAmount from '@/components/CurrencyAmount';
+import.*./components/CurrencyAmount';
 
 // Import chart components
 import { Line, Bar, Pie } from 'react-chartjs-2';
@@ -139,7 +139,7 @@ const ReportsPage: NextPageWithLayout = () => {
           setIsLoading(false);
         }, 1500);
       } catch (error) {
-        console.error('Error fetching report data:', error);
+        console.logger.error('Error fetching report data:', error);
         setIsLoading(false);
       }
     };
@@ -383,7 +383,7 @@ const ReportsPage: NextPageWithLayout = () => {
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
-                      {reportData.topPerformers.publishers.map((publisher: any, idx: number) => (
+                      {reportData.topPerformers.publishers.map((publisher: any idx: number) => (
                         <tr key={idx} className="hover:bg-gray-50 dark:hover:bg-gray-700">
                           <td className="px-3 py-2 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">
                             {publisher.name}
@@ -410,7 +410,7 @@ const ReportsPage: NextPageWithLayout = () => {
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
-                      {reportData.topPerformers.advertisers.map((advertiser: any, idx: number) => (
+                      {reportData.topPerformers.advertisers.map((advertiser: any idx: number) => (
                         <tr key={idx} className="hover:bg-gray-50 dark:hover:bg-gray-700">
                           <td className="px-3 py-2 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">
                             {advertiser.name}
@@ -440,7 +440,7 @@ const ReportsPage: NextPageWithLayout = () => {
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
-                    {reportData.topPerformers.ads.map((ad: any, idx: number) => (
+                    {reportData.topPerformers.ads.map((ad: any idx: number) => (
                       <tr key={idx} className="hover:bg-gray-50 dark:hover:bg-gray-700">
                         <td className="px-3 py-3 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">
                           {ad.title}

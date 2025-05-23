@@ -10,7 +10,7 @@ interface RoleBasedLayoutProps {
   // Fallback component to render if no matching role is found
   fallback?: ReactNode;
   // Which roles can view this layout component
-  allowedRoles?: Array<RoleType | 'user'>;
+  allowedRoles?: Array<RoleType | 'viewer'>;
   // Whether layout change should happen without reloading
   isFluid?: boolean;
   // ID for test/debug purposes
@@ -24,7 +24,7 @@ interface RoleBasedLayoutProps {
 export const RoleBasedLayout: React.FC<RoleBasedLayoutProps> = ({
   children,
   fallback = <div>Access denied. You don't have the required role to view this content.</div>,
-  allowedRoles = ['user', 'admin', 'advertiser', 'publisher', 'developer', 'stakeholder'],
+  allowedRoles = ['viewer', 'admin', 'advertiser', 'publisher', 'developer', 'stakeholder'],
   isFluid = true,
   id = 'role-based-layout'
 }) => {
@@ -79,7 +79,7 @@ export const RoleBasedLayout: React.FC<RoleBasedLayoutProps> = ({
  */
 export const RoleRestricted: React.FC<{
   children: ReactNode;
-  allowedRoles: Array<RoleType | 'user'>;
+  allowedRoles: Array<RoleType | 'viewer'>;
   fallback?: ReactNode;
 }> = ({ 
   children, 

@@ -4,19 +4,19 @@ import { useRouter } from 'next/router';
 import { ArrowLeft, Calendar, Target, DollarSign, Clock, AlertCircle, CheckCircle, Volume2, Layers, PlusCircle } from 'react-feather';
 import Link from 'next/link';
 import dynamic from 'next/dynamic';
-import { useAuth } from '@/hooks/useAuth';
+import.*./hooks/useAuth';
 
-import { DashboardContainer, DashboardHeader } from '@/components/ui';
-import { getDashboardLayout } from '@/utils/layoutHelpers';
-import ImprovedDashboardLayout from '@/components/layout/ImprovedDashboardLayout';
-import CurrencyAmount from '@/components/CurrencyAmount';
-import { useCurrency } from '@/context/CurrencyContext';
-import LightningWallet from '@/components/LightningWallet';
-import LightningWalletBalance from '@/components/LightningWalletBalance';
+import.*./components/ui';
+import.*./utils/layoutHelpers';
+import.*./components/layout/ImprovedDashboardLayout';
+import.*./components/CurrencyAmount';
+import.*./context/CurrencyContext';
+import.*./components/LightningWallet';
+import.*./components/LightningWalletBalance';
 import type { NextPageWithLayout } from '../../../_app';
 
 // Dynamically import the AdForm component to avoid SSR issues with browser-specific code
-const AdForm = dynamic(() => import('@/components/AdForm'), { ssr: false });
+const AdForm = dynamic(() => import.*./components/AdForm'), { ssr: false });
 
 // Step types
 enum Step {
@@ -217,7 +217,7 @@ const CreateCampaignPage: NextPageWithLayout = () => {
       setCurrentStep(Step.CREATE_ADS);
       
     } catch (err) {
-      console.error('Error creating campaign:', err);
+      console.logger.error('Error creating campaign:', err);
       setError(err instanceof Error ? err.message : 'An unknown error occurred');
     } finally {
       setIsSubmitting(false);
@@ -271,7 +271,7 @@ const CreateCampaignPage: NextPageWithLayout = () => {
       setCurrentStep(Step.CREATE_ADS);
       
     } catch (err) {
-      console.error('Error creating ad:', err);
+      console.logger.error('Error creating ad:', err);
       setError(err instanceof Error ? err.message : 'An unknown error occurred');
     } finally {
       setIsSubmitting(false);
@@ -372,7 +372,7 @@ const CreateCampaignPage: NextPageWithLayout = () => {
       const data = await response.json();
       setWalletBalance(data.balance);
     } catch (err) {
-      console.error('Error fetching wallet balance:', err);
+      console.logger.error('Error fetching wallet balance:', err);
       
       // If we get an error, check if pubkey starts with test prefix
       if (auth?.pubkey && auth.pubkey.startsWith('pk_test_')) {

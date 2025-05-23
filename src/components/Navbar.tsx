@@ -24,7 +24,7 @@ const Navbar: React.FC = () => {
       
       router.push('/login');
     } catch (error) {
-      console.error('Logout error:', error);
+      console.logger.error('Logout error:', error);
     }
   };
 

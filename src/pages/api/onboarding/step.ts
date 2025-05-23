@@ -1,9 +1,9 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import { UserRoleType } from '@/types/role';
-import onboardingService from '@/lib/onboardingService';
-import { logger } from '@/lib/logger';
-import { errorService } from '@/lib/errorService';
-import { ErrorCategory } from '@/types/errors';
+import.*./types/role';
+import.*./lib/onboardingService';
+import.*./lib/logger';
+import.*./lib/errorService';
+import.*./types/errors';
 
 /**
  * API endpoint to save the current step in the onboarding process
@@ -42,7 +42,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     // Log and report the error
     const errorMessage = error instanceof Error ? error.message : 'Unknown error saving onboarding step';
     
-    logger.error(`API Error: ${errorMessage}`, {
+    logger.logger.error(`API Error: ${errorMessage}`, {
       pubkey,
       role,
       step,

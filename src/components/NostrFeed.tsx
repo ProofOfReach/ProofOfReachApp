@@ -128,7 +128,7 @@ const NostrFeed: React.FC<NostrFeedProps> = ({
           console.log('Connected to relay pool:', ndkInstance.pool);
           setNdk(ndkInstance);
         } catch (connErr) {
-          console.error('Failed to connect to relays:', connErr);
+          console.logger.error('Failed to connect to relays:', connErr);
         }
 
         // Always create fallback posts first to ensure we show something
@@ -177,12 +177,12 @@ const NostrFeed: React.FC<NostrFeedProps> = ({
             }
           });
         } catch (fetchErr) {
-          console.error('Error fetching real posts:', fetchErr);
+          console.logger.error('Error fetching real posts:', fetchErr);
           // We already have fallback posts, so no need to handle this error
         }
 
       } catch (err) {
-        console.error('Error in NostrFeed component:', err);
+        console.logger.error('Error in NostrFeed component:', err);
         
         // Create a basic NDK instance for fallback posts
         const basicNdk = new NDK();
@@ -246,13 +246,13 @@ const NostrFeed: React.FC<NostrFeedProps> = ({
             profileData[event.pubkey] = JSON.parse(event.content);
           }
         } catch (e) {
-          console.error('Error parsing profile:', e);
+          console.logger.error('Error parsing profile:', e);
         }
       });
       
       setProfiles(profileData);
     } catch (err) {
-      console.error('Error fetching profiles:', err);
+      console.logger.error('Error fetching profiles:', err);
     }
   };
 

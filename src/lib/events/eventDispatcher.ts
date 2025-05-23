@@ -18,7 +18,7 @@ import {
   SYSTEM_EVENTS,
   LEGACY_EVENTS
 } from './eventTypes';
-import type { UserRoleType } from '@/types/role';
+import.*./types/role';
 
 /**
  * Dispatch an application event with type-safe payload
@@ -40,7 +40,7 @@ export const dispatchAppEvent = <T extends AppEventType>(
     dispatchLegacyEvents(eventType, payload);
     
   } catch (error) {
-    logger.error(`Error dispatching event ${eventType}:`, error);
+    logger.logger.error(`Error dispatching event ${eventType}:`, error);
   }
 };
 
@@ -130,7 +130,7 @@ export const dispatchError = (
  */
 export const dispatchConfigChanged = (
   key: string,
-  value: any,
+  value: any
   previousValue: any
 ): void => {
   dispatchAppEvent(SYSTEM_EVENTS.CONFIG_CHANGED, {
@@ -151,8 +151,8 @@ export const dispatchConfigChanged = (
  */
 export const dispatchStorageChanged = (
   key: string,
-  value: any,
-  previousValue: any,
+  value: any
+  previousValue: any
   storageType: 'localStorage' | 'sessionStorage' | 'memory',
   namespace?: string
 ): void => {

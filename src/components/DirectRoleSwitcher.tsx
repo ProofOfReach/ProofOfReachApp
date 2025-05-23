@@ -14,7 +14,7 @@ import MegaphoneIcon from './icons/MegaphoneIcon';
  */
 const DirectRoleSwitcher: React.FC = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
-  const [currentRole, setCurrentRole] = useState<UserRole>('user');
+  const [currentRole, setCurrentRole] = useState<UserRole>('viewer');
   const [isChangingRole, setIsChangingRole] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   
@@ -31,7 +31,7 @@ const DirectRoleSwitcher: React.FC = () => {
       } else if (path.includes('/dashboard/stakeholder')) {
         setCurrentRole('stakeholder');
       } else {
-        setCurrentRole('user');
+        setCurrentRole('viewer');
       }
       
       // Mark test mode
@@ -138,7 +138,7 @@ const DirectRoleSwitcher: React.FC = () => {
         }
       }
     } catch (error) {
-      console.error('Error enabling roles:', error);
+      console.logger.error('Error enabling roles:', error);
       // Continue with navigation even if DB update fails
     }
     
@@ -151,7 +151,7 @@ const DirectRoleSwitcher: React.FC = () => {
   const getRoleBackgroundColor = (checkRole: UserRole) => {
     if (currentRole === checkRole) {
       switch(checkRole) {
-        case 'user': return 'bg-blue-100 dark:bg-blue-900/20';
+        case 'viewer': return 'bg-blue-100 dark:bg-blue-900/20';
         case 'advertiser': return 'bg-orange-100 dark:bg-orange-900/20';
         case 'publisher': return 'bg-green-100 dark:bg-green-900/20';
         case 'admin': return 'bg-purple-100 dark:bg-purple-900/20';
@@ -165,7 +165,7 @@ const DirectRoleSwitcher: React.FC = () => {
   const getRoleTextColor = (checkRole: UserRole) => {
     if (currentRole === checkRole) {
       switch(checkRole) {
-        case 'user': return 'text-blue-700 dark:text-blue-300';
+        case 'viewer': return 'text-blue-700 dark:text-blue-300';
         case 'advertiser': return 'text-orange-700 dark:text-orange-300';
         case 'publisher': return 'text-green-700 dark:text-green-300';
         case 'admin': return 'text-purple-700 dark:text-purple-300';
@@ -185,7 +185,7 @@ const DirectRoleSwitcher: React.FC = () => {
           const parsedRoles = JSON.parse(cachedRoles) as UserRole[];
           return parsedRoles.filter(roleOption => roleOption !== currentRole);
         } catch (error) {
-          console.error('Error parsing cached roles in DirectRoleSwitcher:', error);
+          console.logger.error('Error parsing cached roles in DirectRoleSwitcher:', error);
         }
       }
     }

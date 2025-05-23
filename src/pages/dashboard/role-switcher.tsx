@@ -1,16 +1,16 @@
 import React, { useEffect, useState } from 'react';
-import { getDashboardLayout } from '@/utils/layoutHelpers';
+import.*./utils/layoutHelpers';
 import type { NextPageWithLayout } from '../_app';
-import { UserRole } from '@/context/RoleContext';
-import { RoleService } from '@/lib/roleService';
-import { DashboardContainer, DashboardHeader, DashboardCard } from '@/components/ui';
+import.*./context/RoleContext';
+import.*./lib/roleService';
+import.*./components/ui';
 
 /**
  * A dedicated page for switching between roles
  * This page demonstrates the direct role management approach
  */
 const RoleSwitcherPage: NextPageWithLayout = () => {
-  const [currentRole, setCurrentRole] = useState<UserRole>('user');
+  const [currentRole, setCurrentRole] = useState<UserRole>('viewer');
   const [isTestMode, setIsTestMode] = useState(false);
   const [availableRoles, setAvailableRoles] = useState<Record<UserRole, boolean>>({
     user: true,

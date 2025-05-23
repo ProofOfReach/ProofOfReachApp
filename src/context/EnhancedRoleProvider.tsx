@@ -29,11 +29,11 @@ interface EnhancedRoleContextType {
  * Default context values (will be overridden by Provider)
  */
 const EnhancedRoleContext = createContext<EnhancedRoleContextType>({
-  role: 'user',
+  role: 'viewer',
   setRole: async () => {},
   isTransitioning: false,
   lastTransition: null,
-  availableRoles: ['user'],
+  availableRoles: ['viewer'],
   isRoleAvailable: () => false
 });
 
@@ -54,7 +54,7 @@ interface EnhancedRoleProviderProps {
  */
 export const EnhancedRoleProvider: React.FC<EnhancedRoleProviderProps> = ({ 
   children,
-  initialRole = 'user',
+  initialRole = 'viewer',
   testMode = false
 }) => {
   const router = useRouter();
@@ -71,7 +71,7 @@ export const EnhancedRoleProvider: React.FC<EnhancedRoleProviderProps> = ({
   useEffect(() => {
     // Set initial roles for test mode
     if (testMode || typeof window !== 'undefined' && localStorage.getItem('isTestMode') === 'true') {
-      setAvailableRoles(['user', 'advertiser', 'publisher', 'admin', 'stakeholder']);
+      setAvailableRoles(['viewer', 'advertiser', 'publisher', 'admin', 'stakeholder']);
     } else {
       // In production, fetch available roles from API
       fetchAvailableRoles();
@@ -113,10 +113,10 @@ export const EnhancedRoleProvider: React.FC<EnhancedRoleProviderProps> = ({
         const data = await response.json();
         setAvailableRoles(data.roles);
       } else {
-        console.error('Failed to fetch available roles:', await response.text());
+        console.logger.error('Failed to fetch available roles:', await response.text());
       }
     } catch (error) {
-      console.error('Error fetching available roles:', error);
+      console.logger.error('Error fetching available roles:', error);
     }
   };
   
@@ -174,7 +174,7 @@ export const EnhancedRoleProvider: React.FC<EnhancedRoleProviderProps> = ({
         }
       }
     } catch (error) {
-      console.error('Error switching role:', error);
+      console.logger.error('Error switching role:', error);
     } finally {
       setIsTransitioning(false);
     }

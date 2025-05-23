@@ -94,7 +94,7 @@ export const TestModeProvider: React.FC<{
     // Simulate role storage
     if (typeof window !== 'undefined') {
       try {
-        const allRoles = ['user', 'advertiser', 'publisher', 'admin', 'stakeholder'];
+        const allRoles = ['viewer', 'advertiser', 'publisher', 'admin', 'stakeholder'];
         localStorage.setItem('cachedAvailableRoles', JSON.stringify(allRoles));
         localStorage.setItem('roleCacheTimestamp', Date.now().toString());
         

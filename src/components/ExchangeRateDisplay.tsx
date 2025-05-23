@@ -31,7 +31,7 @@ const ExchangeRateDisplay: React.FC<ExchangeRateDisplayProps> = ({ className = '
         setLastUpdated(formatLastUpdated(timestamp));
       }
     } catch (error) {
-      console.error('Error fetching exchange rate:', error);
+      console.logger.error('Error fetching exchange rate:', error);
       setExchangeRate('Exchange rate unavailable');
     }
   };

@@ -1,10 +1,10 @@
 import React from 'react';
 import { GetServerSideProps } from 'next';
 import Head from 'next/head';
-import { useEnhancedRole } from '@/context/EnhancedRoleContext';
-import { RoleBasedLayout } from '@/components/layout/RoleBasedLayout';
-import { withRoleAccess } from '@/components/auth/withRoleAccess';
-import { UserRole } from '@/context/RoleContext';
+import.*./context/EnhancedRoleContext';
+import.*./components/layout/RoleBasedLayout';
+import.*./components/auth/withRoleAccess';
+import.*./context/RoleContext';
 
 /**
  * A sample dashboard page that demonstrates the new role management system
@@ -147,7 +147,7 @@ const EnhancedDashboardPage: React.FC = () => {
           </div>
         );
       
-      default: // 'user' role
+      default: // 'viewer' role
         return (
           <div className="bg-gray-50 dark:bg-gray-800 p-6 rounded-lg border border-gray-200 dark:border-gray-700">
             <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-300 mb-4">
@@ -159,7 +159,7 @@ const EnhancedDashboardPage: React.FC = () => {
             
             {/* Role Selection Cards */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mt-6">
-              {availableRoles.filter(role => role !== 'user').map(role => (
+              {availableRoles.filter(role => role !== 'viewer').map(role => (
                 <RoleCard 
                   key={role} 
                   role={role} 
@@ -315,7 +315,7 @@ const StatCard: React.FC<{
 };
 
 // This page is accessible to all authenticated users
-export default withRoleAccess(EnhancedDashboardPage, ['user', 'advertiser', 'publisher', 'admin', 'stakeholder']);
+export default withRoleAccess(EnhancedDashboardPage, ['viewer', 'advertiser', 'publisher', 'admin', 'stakeholder']);
 
 // Server-side props
 export const getServerSideProps: GetServerSideProps = async (context) => {

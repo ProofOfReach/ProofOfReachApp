@@ -6,12 +6,12 @@
  */
 
 import { useState } from 'react';
-import { useError, useErrorToast } from '@/context/ErrorContext';
-import { ErrorState } from '@/types/errors';
-import ApiErrorDisplay from '@/components/errors/ApiErrorDisplay';
-import FormErrorDisplay from '@/components/errors/FormErrorDisplay';
-import NetworkErrorDisplay from '@/components/errors/NetworkErrorDisplay';
-import PermissionErrorDisplay from '@/components/errors/PermissionErrorDisplay';
+import.*./context/ErrorContext';
+import.*./types/errors';
+import.*./components/errors/ApiErrorDisplay';
+import.*./components/errors/FormErrorDisplay';
+import.*./components/errors/NetworkErrorDisplay';
+import.*./components/errors/PermissionErrorDisplay';
 
 export default function ErrorTestingPage(): React.ReactElement {
   const { errorState, setError, clearError } = useError();

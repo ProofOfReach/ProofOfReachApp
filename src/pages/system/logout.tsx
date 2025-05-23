@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { NextPage } from 'next';
 import { useRouter } from 'next/router';
 import { LogOut } from 'react-feather';
-import { RoleService } from '@/lib/roleService';
+import.*./lib/roleService';
 
 /**
  * System logout page
@@ -37,7 +37,7 @@ const SystemLogout: NextPage = () => {
             credentials: 'include',
           });
         } catch (error) {
-          console.error('Error logging out from server:', error);
+          console.logger.error('Error logging out from server:', error);
         }
         
         // Wait briefly to allow cleanup to complete
@@ -46,7 +46,7 @@ const SystemLogout: NextPage = () => {
           router.push('/');
         }, 1000);
       } catch (error) {
-        console.error('Error during logout:', error);
+        console.logger.error('Error during logout:', error);
         
         // Even on error, try to set prevent_auto_login flag and redirect
         if (typeof window !== 'undefined') {

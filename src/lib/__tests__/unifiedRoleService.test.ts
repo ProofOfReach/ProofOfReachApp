@@ -218,7 +218,7 @@ describe('UnifiedRoleService', () => {
       
       service.setRoleData({
         currentRole: 'publisher' as UserRoleType,
-        availableRoles: ['user', 'publisher'] as UserRoleType[],
+        availableRoles: ['viewer', 'publisher'] as UserRoleType[],
         timestamp: Date.now()
       });
       
@@ -242,7 +242,7 @@ describe('UnifiedRoleService', () => {
         nostrPubkey: 'pk_test_user123',
         currentRole: 'viewer',
         preferences: {
-          currentRole: 'user'
+          currentRole: 'viewer'
         }
       });
       
@@ -342,7 +342,7 @@ describe('UnifiedRoleService', () => {
       // Set up local data
       unifiedRoleService.setRoleData({
         currentRole: 'publisher' as UserRoleType,
-        availableRoles: ['user', 'publisher'] as UserRoleType[],
+        availableRoles: ['viewer', 'publisher'] as UserRoleType[],
         timestamp: Date.now() - 3600000 // 1 hour old
       });
       
@@ -351,7 +351,7 @@ describe('UnifiedRoleService', () => {
         ok: true,
         json: () => Promise.resolve({
           currentRole: 'advertiser',
-          availableRoles: ['user', 'advertiser', 'publisher']
+          availableRoles: ['viewer', 'advertiser', 'publisher']
         }),
         status: 200,
         statusText: 'OK'

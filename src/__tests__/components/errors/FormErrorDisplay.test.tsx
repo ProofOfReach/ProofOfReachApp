@@ -1,6 +1,6 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
-import FormErrorDisplay from '@/components/errors/FormErrorDisplay';
+import.*./components/errors/FormErrorDisplay';
 
 describe('FormErrorDisplay', () => {
   it('renders nothing when no errors are provided', () => {

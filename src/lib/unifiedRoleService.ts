@@ -91,7 +91,7 @@ export class UnifiedRoleService {
         this.cache = this.validateRoleData(parsedData);
       }
     } catch (error) {
-      logger.error('Error loading role data from storage:', error);
+      logger.logger.error('Error loading role data from storage:', error);
       // Invalidate the cache on error
       this.cache = null;
     }
@@ -104,7 +104,7 @@ export class UnifiedRoleService {
     try {
       localStorage.setItem(this.config.storageKey, JSON.stringify(data));
     } catch (error) {
-      logger.error('Error saving role data to storage:', error);
+      logger.logger.error('Error saving role data to storage:', error);
     }
   }
   
@@ -130,7 +130,7 @@ export class UnifiedRoleService {
       throw new Error('Invalid role data: timestamp is not a number');
     }
     
-    // Normalize the current role (convert 'user' to 'viewer')
+    // Normalize the current role (convert 'viewer' to 'viewer')
     data.currentRole = normalizeRole(data.currentRole);
     
     // Check if the current role is valid
@@ -183,7 +183,7 @@ export class UnifiedRoleService {
       this.saveToStorage(validatedData);
       this.debug('Role data updated', validatedData);
     } catch (error) {
-      logger.error('Error setting role data:', error);
+      logger.logger.error('Error setting role data:', error);
       throw error;
     }
   }
@@ -257,7 +257,7 @@ export class UnifiedRoleService {
       
       return roles;
     } catch (error) {
-      logger.error('Error getting user roles:', error);
+      logger.logger.error('Error getting user roles:', error);
       return [this.config.defaultRole];
     }
   }
@@ -282,7 +282,7 @@ export class UnifiedRoleService {
    * Check if current user has a specific role (local context version)
    */
   private hasRoleInLocalContext(role: UserRoleType): boolean {
-    // Normalize the role (convert 'user' to 'viewer')
+    // Normalize the role (convert 'viewer' to 'viewer')
     const normalizedRole = normalizeRole(role) as UserRoleType;
     
     const data = this.getRoleData();
@@ -300,7 +300,7 @@ export class UnifiedRoleService {
    * @returns Promise resolving to boolean
    */
   private async hasRoleOnServer(userId: string, role: UserRoleType): Promise<boolean> {
-    // Normalize the role (convert 'user' to 'viewer')
+    // Normalize the role (convert 'viewer' to 'viewer')
     const normalizedRole = normalizeRole(role) as UserRoleType;
     
     // Validate role
@@ -332,7 +332,7 @@ export class UnifiedRoleService {
         return false;
       }
       
-      // Normalize the roles (convert 'user' to 'viewer')
+      // Normalize the roles (convert 'viewer' to 'viewer')
       const normalizedAddRoles = addRoles.map(role => normalizeRole(role)) as UserRoleType[];
       const normalizedRemoveRoles = removeRoles.map(role => normalizeRole(role)) as UserRoleType[];
       
@@ -407,7 +407,7 @@ export class UnifiedRoleService {
       
       return true;
     } catch (error) {
-      logger.error('Error updating user roles:', error);
+      logger.logger.error('Error updating user roles:', error);
       return false;
     }
   }
@@ -437,7 +437,7 @@ export class UnifiedRoleService {
    */
   private async setCurrentRoleOnServer(userId: string, role: UserRoleType): Promise<boolean> {
     try {
-      // Normalize the role (convert 'user' to 'viewer')
+      // Normalize the role (convert 'viewer' to 'viewer')
       const normalizedRole = normalizeRole(role);
       
       // For local state management, update the current context
@@ -490,7 +490,7 @@ export class UnifiedRoleService {
       
       return true;
     } catch (error) {
-      logger.error('Error setting current role on server:', error);
+      logger.logger.error('Error setting current role on server:', error);
       return false;
     }
   }
@@ -500,7 +500,7 @@ export class UnifiedRoleService {
    */
   public setCurrentRoleInLocalContext(role: UserRoleType): boolean {
     try {
-      // Normalize the role (convert 'user' to 'viewer')
+      // Normalize the role (convert 'viewer' to 'viewer')
       const normalizedRole = normalizeRole(role);
       
       const currentData = this.getRoleData();
@@ -520,7 +520,7 @@ export class UnifiedRoleService {
       this.setRoleData(newData);
       return true;
     } catch (error) {
-      logger.error('Error setting current role in local context:', error);
+      logger.logger.error('Error setting current role in local context:', error);
       return false;
     }
   }
@@ -544,7 +544,7 @@ export class UnifiedRoleService {
       
       this.setRoleData(newData);
     } catch (error) {
-      logger.error('Error setting available roles:', error);
+      logger.logger.error('Error setting available roles:', error);
       throw error;
     }
   }
@@ -595,7 +595,7 @@ export class UnifiedRoleService {
       if (userId.startsWith('pk_test_') && typeof window !== 'undefined') {
         const testModeRole = localStorage.getItem('userRole');
         if (testModeRole && isValidUserRole(testModeRole as any)) {
-          // Normalize the role (convert 'user' to 'viewer')
+          // Normalize the role (convert 'viewer' to 'viewer')
           return normalizeRole(testModeRole) as UserRoleType;
         }
       }
@@ -608,7 +608,7 @@ export class UnifiedRoleService {
       
       // If user has a preference, return that (with normalization)
       if (user?.preferences?.currentRole && isValidUserRole(user.preferences.currentRole as any)) {
-        // Normalize the role (convert 'user' to 'viewer')
+        // Normalize the role (convert 'viewer' to 'viewer')
         return normalizeRole(user.preferences.currentRole) as UserRoleType;
       }
       
@@ -618,7 +618,7 @@ export class UnifiedRoleService {
       // If we still don't have roles, return the default (normalized)
       return roles[0] || normalizeRole(this.config.defaultRole);
     } catch (error) {
-      logger.error('Error getting current role from server:', error);
+      logger.logger.error('Error getting current role from server:', error);
       // Return normalized default role
       return normalizeRole(this.config.defaultRole) as UserRoleType;
     }
@@ -643,7 +643,7 @@ export class UnifiedRoleService {
       }
       this.debug('Role data cleared');
     } catch (error) {
-      logger.error('Error clearing role data:', error);
+      logger.logger.error('Error clearing role data:', error);
     }
   }
   
@@ -699,7 +699,7 @@ export class UnifiedRoleService {
       
       return validatedData;
     } catch (error) {
-      logger.error('Error syncing with server:', error);
+      logger.logger.error('Error syncing with server:', error);
       return this.getRoleData();
     }
   }
@@ -724,7 +724,7 @@ export class UnifiedRoleService {
       
       return true;
     } catch (error) {
-      logger.error('Error updating server role:', error);
+      logger.logger.error('Error updating server role:', error);
       return false;
     }
   }

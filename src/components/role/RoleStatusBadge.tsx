@@ -1,5 +1,5 @@
 import React from 'react';
-import { useEnhancedRole } from '@/context/EnhancedRoleContext';
+import.*./context/EnhancedRoleContext';
 
 /**
  * Badge to show the current user role

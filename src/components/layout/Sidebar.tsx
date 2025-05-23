@@ -23,8 +23,8 @@ const Sidebar: React.FC = () => {
   // For backward compatibility, try to use both role context systems
   // with priority to the refactored version
   const storedRole = typeof window !== 'undefined' && localStorage.getItem('userRole') as string;
-  // Convert any 'user' role to 'viewer' for backward compatibility
-  const normalizedRole = storedRole === 'user' ? 'viewer' : storedRole;
+  // Convert any 'viewer' role to 'viewer' for backward compatibility
+  const normalizedRole = storedRole === 'viewer' ? 'viewer' : storedRole;
   const role = (normalizedRole as UserRole) || refactoredRole || originalRole;
   const setRole = refactoredSetRole || originalSetRole;
   const availableRoles = refactoredAvailableRoles.length > 0 ? refactoredAvailableRoles : originalAvailableRoles;
@@ -213,7 +213,7 @@ const Sidebar: React.FC = () => {
       
       // For styling purposes, use the current role for consistent styling
       switch(role) {
-        case 'user':
+        case 'viewer':
           activeClass = 'bg-blue-100 text-blue-700 dark:bg-blue-900/20 dark:text-blue-300';
           break;
         case 'advertiser':

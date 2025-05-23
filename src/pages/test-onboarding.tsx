@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Head from 'next/head';
-import OnboardingWizard from '@/components/onboarding/OnboardingWizard';
-import { OnboardingProvider } from '@/context/OnboardingContext';
+import.*./components/onboarding/OnboardingWizard';
+import.*./context/OnboardingContext';
 import dynamic from 'next/dynamic';
 
 // Create a client-only wrapper

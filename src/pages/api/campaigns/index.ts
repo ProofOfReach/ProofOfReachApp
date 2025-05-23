@@ -8,7 +8,7 @@ import { logger } from '../../../lib/logger';
 export default apiHandler({
   // GET /api/campaigns - Get all campaigns for the authenticated user
   GET: async (req: NextApiRequest, res: NextApiResponse) => {
-    const user = await authenticateRequest(req);
+    const user = await authenticateRequest(req as any);
     
     // Use the proper test mode detection that doesn't conflict with secure test mode
     // This will work with your existing system that's tied to your Nostr key
@@ -62,7 +62,7 @@ export default apiHandler({
   
   // POST /api/campaigns - Create a new campaign
   POST: async (req: NextApiRequest, res: NextApiResponse) => {
-    const user = await authenticateRequest(req);
+    const user = await authenticateRequest(req as any);
     
     // Check for test mode
     const isTestMode = user.isTestMode || (user.pubkey && user.pubkey.startsWith('pk_test_'));

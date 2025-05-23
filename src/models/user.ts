@@ -49,7 +49,7 @@ export class UserManager {
       
       return await response.json();
     } catch (error) {
-      console.error('Error fetching user profile:', error);
+      console.logger.error('Error fetching user profile:', error);
       return null;
     }
   }
@@ -59,7 +59,7 @@ export class UserManager {
     try {
       // Call to API endpoint to fetch user roles
       const response = await fetch(`/api/users/${pubkey}/roles`);
-      if (!response.ok) return ['user'];
+      if (!response.ok) return ['viewer'];
       
       const data = await response.json();
       
@@ -72,10 +72,10 @@ export class UserManager {
       }
       
       // Fallback to default user role
-      return ['user'];
+      return ['viewer'];
     } catch (error) {
-      console.error('Error fetching user roles:', error);
-      return ['user'];
+      console.logger.error('Error fetching user roles:', error);
+      return ['viewer'];
     }
   }
   
@@ -105,7 +105,7 @@ export class UserManager {
         return !!data.isTestMode;
       }
     } catch (error) {
-      console.error('Error checking test mode status:', error);
+      console.logger.error('Error checking test mode status:', error);
       // Continue to fallback methods
     }
     
@@ -132,7 +132,7 @@ export class UserManager {
       
       return response.ok;
     } catch (error) {
-      console.error('Error adding role to user:', error);
+      console.logger.error('Error adding role to user:', error);
       return false;
     }
   }
@@ -147,7 +147,7 @@ export class UserManager {
       
       return response.ok;
     } catch (error) {
-      console.error('Error removing role from user:', error);
+      console.logger.error('Error removing role from user:', error);
       return false;
     }
   }
@@ -176,7 +176,7 @@ export class UserManager {
         });
         
         if (!userFlagResponse.ok) {
-          console.error('Failed to update user flags for test user');
+          console.logger.error('Failed to update user flags for test user');
         }
         
         // Set the user role using our new API endpoint
@@ -187,7 +187,7 @@ export class UserManager {
             'X-Test-Mode': 'true',
             'X-Test-Pubkey': pubkey
           },
-          body: JSON.stringify({ role: 'user' }), // Default role, will be overridden by UI
+          body: JSON.stringify({ role: 'viewer' }), // Default role, will be overridden by UI
         });
         
         if (roleResponse.ok) {
@@ -196,7 +196,7 @@ export class UserManager {
           return true;
         }
       } catch (newApiError) {
-        console.error('Exception calling new role API:', newApiError);
+        console.logger.error('Exception calling new role API:', newApiError);
         // Continue to legacy methods
       }
       
@@ -218,11 +218,11 @@ export class UserManager {
           return true;
         } else {
           const errorData = await response.json();
-          console.error('Failed to enable test roles via API endpoint:', errorData);
+          console.logger.error('Failed to enable test roles via API endpoint:', errorData);
           // Continue to fallback method
         }
       } catch (endpointError) {
-        console.error('Exception calling test roles endpoint:', endpointError);
+        console.logger.error('Exception calling test roles endpoint:', endpointError);
         // Continue to fallback method
       }
       
@@ -291,7 +291,7 @@ export class UserManager {
         console.log('Successfully enabled all roles for test user via individual role updates');
         return true;
       } else {
-        console.error('Failed to enable roles via individual updates:', 
+        console.logger.error('Failed to enable roles via individual updates:', 
                      { 
                        advertiser: advertiserResponse.ok, 
                        publisher: publisherResponse.ok,
@@ -301,7 +301,7 @@ export class UserManager {
         return false;
       }
     } catch (error) {
-      console.error('Error enabling test roles:', error);
+      console.logger.error('Error enabling test roles:', error);
       return false;
     }
   }

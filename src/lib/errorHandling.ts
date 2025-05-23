@@ -40,9 +40,9 @@ declare global {
 /**
  * Log error to the console or monitoring service with proper context
  */
-export function error(message: string, err?: unknown): void {
+export function logger.error(message: string, err?: unknown): void {
   if (!err) {
-    console.error(`Error in ${message}`);
+    console.logger.error(`Error in ${message}`);
     return;
   }
 
@@ -56,7 +56,7 @@ export function error(message: string, err?: unknown): void {
     details: (err as any).details
   };
 
-  console.error(`Error in ${message}:`, errorInfo);
+  console.logger.error(`Error in ${message}:`, errorInfo);
 }
 
 /**
@@ -107,7 +107,7 @@ export function mapError(err: unknown): AppError {
 
     // Check if error name matches one of our types
     if (err.name in errorTypeMap) {
-      const errorType = err.name as ErrorType;
+      const errorType = err.name as anyType;
       return createErrorResponse(
         errorType,
         err.message || getDefaultMessageForErrorType(errorType),
@@ -159,7 +159,7 @@ function getDefaultMessageForErrorType(type: ErrorType): string {
  * Standard error handler for API routes
  */
 export function handleError(
-  err: any,
+  err: any
   req: NextApiRequest,
   res: NextApiResponse
 ): void {
@@ -167,7 +167,7 @@ export function handleError(
   const appError = mapError(err);
   
   // Log the error with context
-  error(`${req.method} ${req.url}`, {
+  logger.error(`${req.method} ${req.url}`, {
     ...err,
     path: req.url,
     method: req.method,

@@ -31,7 +31,7 @@ export async function formatWithUsd(sats: number): Promise<string> {
     const usdValue = await priceService.satsToUsd(sats);
     return `${formatSats(sats)} sats (${formatUsd(usdValue)})`;
   } catch (error) {
-    console.error('Error formatting with USD:', error);
+    console.logger.error('Error formatting with USD:', error);
     return `${formatSats(sats)} sats`;
   }
 }
@@ -46,7 +46,7 @@ export async function formatWithSats(usd: number): Promise<string> {
     const satsValue = await priceService.usdToSats(usd);
     return `${formatUsd(usd)} (${formatSats(Math.round(satsValue))} sats)`;
   } catch (error) {
-    console.error('Error formatting with sats:', error);
+    console.logger.error('Error formatting with sats:', error);
     return `${formatUsd(usd)}`;
   }
 }
@@ -75,7 +75,7 @@ export async function getExchangeRateDisplay(): Promise<string> {
     const btcPrice = await priceService.getBtcPriceUsd();
     return `1 BTC = ${formatUsd(btcPrice)}`;
   } catch (error) {
-    console.error('Error getting exchange rate display:', error);
+    console.logger.error('Error getting exchange rate display:', error);
     return 'Exchange rate unavailable';
   }
 }

@@ -10,6 +10,6 @@ export function success(res: NextApiResponse, data: Record<string, unknown> = {}
 /**
  * Standard error response
  */
-export function error(res: NextApiResponse, message: string, status: number = 400) {
+export function logger.error(res: NextApiResponse, message: string, status: number = 400) {
   res.status(status).json({ error: message });
 }

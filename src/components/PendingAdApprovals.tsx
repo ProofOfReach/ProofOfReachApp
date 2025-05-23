@@ -26,7 +26,7 @@ const PendingAdApprovals: React.FC<PendingAdApprovalsProps> = ({ publisherId, on
       // Refresh the data
       mutate();
     } catch (error) {
-      console.error('Error approving ad:', error);
+      console.logger.error('Error approving ad:', error);
     }
   };
 
@@ -40,7 +40,7 @@ const PendingAdApprovals: React.FC<PendingAdApprovalsProps> = ({ publisherId, on
       // Refresh the data
       mutate();
     } catch (error) {
-      console.error('Error rejecting ad:', error);
+      console.logger.error('Error rejecting ad:', error);
     }
   };
 

@@ -55,7 +55,7 @@ export const useAuthProvider = () => {
           // Get available roles for this user
           let userRoles = await UserManager.getUserRoles(data.pubkey);
           
-          // Normalize roles first to convert any 'user' to 'viewer'
+          // Normalize roles first to convert any 'viewer' to 'viewer'
           userRoles = normalizeRoles(userRoles);
           
           // Convert string[] to UserRole[]
@@ -100,7 +100,7 @@ export const useAuthProvider = () => {
           });
         }
       } catch (error) {
-        console.error('Auth check failed:', error);
+        console.logger.error('Auth check failed:', error);
         setAuth({
           pubkey: '',
           isLoggedIn: false,
@@ -131,7 +131,7 @@ export const useAuthProvider = () => {
       // Get available roles for this user
       let userRoles = await UserManager.getUserRoles(pubkey);
       
-      // Normalize roles to convert any 'user' to 'viewer'
+      // Normalize roles to convert any 'viewer' to 'viewer'
       userRoles = normalizeRoles(userRoles);
       
       // Convert string[] to UserRole[]
@@ -169,7 +169,7 @@ export const useAuthProvider = () => {
       
       return true;
     } catch (error) {
-      console.error('Login failed:', error);
+      console.logger.error('Login failed:', error);
       return false;
     }
   };
@@ -193,7 +193,7 @@ export const useAuthProvider = () => {
           body: JSON.stringify({ role: 'viewer' }),
         });
       } catch (e) {
-        console.error('Failed to reset role during logout:', e);
+        console.logger.error('Failed to reset role during logout:', e);
       }
       
       // Clean up test mode storage if present
@@ -215,7 +215,7 @@ export const useAuthProvider = () => {
         profile: null,
       });
     } catch (error) {
-      console.error('Logout failed:', error);
+      console.logger.error('Logout failed:', error);
     }
   };
   
@@ -243,7 +243,7 @@ export const useAuthProvider = () => {
       // For normal mode, get roles from API
       let userRoles = await UserManager.getUserRoles(auth.pubkey);
       
-      // Normalize roles to convert any 'user' to 'viewer'
+      // Normalize roles to convert any 'viewer' to 'viewer'
       userRoles = normalizeRoles(userRoles);
       
       // Convert string[] to UserRole[]
@@ -259,7 +259,7 @@ export const useAuthProvider = () => {
       
       return availableRoles;
     } catch (error) {
-      console.error('Failed to refresh roles:', error);
+      console.logger.error('Failed to refresh roles:', error);
       return auth.availableRoles;
     }
   };

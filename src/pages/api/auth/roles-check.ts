@@ -3,10 +3,10 @@
  * Special endpoint to query and verify user roles with detailed diagnostics
  */
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { prisma } from '@/lib/prismaClient';
-import { getServerSession } from '@/lib/auth';
-import { logger } from '@/lib/logger';
-import { roleService } from '@/lib/roles/roleService';
+import.*./lib/prismaClient';
+import.*./lib/auth';
+import.*./lib/logger';
+import.*./lib/roles/roleService';
 
 export default async function handler(
   req: NextApiRequest,
@@ -54,7 +54,7 @@ export default async function handler(
     });
     
     // Get roles using the modern role service as well
-    const { availableRoles, currentRole } = await roleService.getRolesByPubkey(pubkey);
+    const { availableRoles, currentRole } = await null as any // TODO: implement roleService.getRolesByPubkey(pubkey);
 
     // Check for inconsistencies
     const hasInconsistency = user.currentRole !== currentRole;
@@ -89,7 +89,7 @@ export default async function handler(
       hasInconsistency,
     });
   } catch (error) {
-    logger.error('Error checking roles:', error);
+    logger.logger.error('Error checking roles:', error);
     return res.status(500).json({
       success: false,
       error: 'Internal server error'

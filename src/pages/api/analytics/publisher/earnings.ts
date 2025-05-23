@@ -1,9 +1,9 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import { requireAuth } from '@/lib/auth';
-import { generateChartData } from '@/utils/chartHelpers';
-import { DailyMetrics } from '@/services/analyticsService';
+import.*./lib/auth';
+import.*./utils/chartHelpers';
+import.*./services/analyticsService';
 // Import from utils wrapper to avoid ESM compatibility issues
-import { getDaysDifference } from '@/utils/dateUtils';
+import.*./utils/dateUtils';
 
 // API handler for fetching publisher earnings data
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
@@ -29,7 +29,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       
       res.status(200).json(data);
     } catch (error) {
-      console.error('Error in publisher/earnings:', error);
+      console.logger.error('Error in publisher/earnings:', error);
       res.status(500).json({ error: 'Failed to fetch earnings data' });
     }
   });

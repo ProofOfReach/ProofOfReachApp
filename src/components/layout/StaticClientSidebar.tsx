@@ -155,9 +155,9 @@ const StaticClientSidebar: React.FC = () => {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ pubkey })
-      }).catch(e => console.error('Error enabling roles in database:', e));
+      }).catch(e => console.logger.error('Error enabling roles in database:', e));
     } catch (e) {
-      console.error('Error in role setup:', e);
+      console.logger.error('Error in role setup:', e);
     }
     
     // Direct navigation with hard reload
@@ -175,7 +175,7 @@ const StaticClientSidebar: React.FC = () => {
     
     if (isActive) {
       switch(currentRole) {
-        case 'user': return 'bg-blue-100 text-blue-700 dark:bg-blue-900/20 dark:text-blue-300';
+        case 'viewer': return 'bg-blue-100 text-blue-700 dark:bg-blue-900/20 dark:text-blue-300';
         case 'advertiser': return 'bg-orange-100 text-orange-700 dark:bg-orange-900/20 dark:text-orange-300';
         case 'publisher': return 'bg-green-100 text-green-700 dark:bg-green-900/20 dark:text-green-300';
         case 'admin': return 'bg-purple-100 text-purple-700 dark:bg-purple-900/20 dark:text-purple-300'; 
@@ -190,7 +190,7 @@ const StaticClientSidebar: React.FC = () => {
   const getRoleBackgroundColor = (role: UserRole) => {
     if (role === currentRole) {
       switch(role) {
-        case 'user': return 'bg-blue-100 dark:bg-blue-900/20';
+        case 'viewer': return 'bg-blue-100 dark:bg-blue-900/20';
         case 'advertiser': return 'bg-orange-100 dark:bg-orange-900/20';
         case 'publisher': return 'bg-green-100 dark:bg-green-900/20';
         case 'admin': return 'bg-purple-100 dark:bg-purple-900/20';
@@ -204,7 +204,7 @@ const StaticClientSidebar: React.FC = () => {
   const getRoleTextColor = (role: UserRole) => {
     if (role === currentRole) {
       switch(role) {
-        case 'user': return 'text-blue-700 dark:text-blue-300';
+        case 'viewer': return 'text-blue-700 dark:text-blue-300';
         case 'advertiser': return 'text-orange-700 dark:text-orange-300';
         case 'publisher': return 'text-green-700 dark:text-green-300';
         case 'admin': return 'text-purple-700 dark:text-purple-300';

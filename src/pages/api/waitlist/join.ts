@@ -76,11 +76,11 @@ export default async function handler(
         message: 'Thanks for joining our waitlist! We\'ll keep you updated on our launch.'
       });
     } catch (dbError) {
-      console.error('Database error:', dbError);
+      console.logger.error('Database error:', dbError);
       throw new Error('Database operation failed');
     }
   } catch (error) {
-    console.error('Waitlist join error:', error);
+    console.logger.error('Waitlist join error:', error);
     return res.status(500).json({
       success: false,
       error: 'An error occurred while processing your request. Please try again later.'

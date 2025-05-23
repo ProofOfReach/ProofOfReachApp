@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
-import { RoleType } from '@/lib/enhancedRoleService';
+import.*./lib/enhancedRoleService';
 
 interface RoleSwitcherProps {
-  currentRole: RoleType | 'user';
+  currentRole: RoleType | 'viewer';
   availableRoles: RoleType[];
   isLoading: boolean;
-  onRoleChange: (role: RoleType | 'user') => void;
+  onRoleChange: (role: RoleType | 'viewer') => void;
 }
 
 /**
@@ -20,7 +20,7 @@ const RoleSwitcher: React.FC<RoleSwitcherProps> = ({
   const [isOpen, setIsOpen] = useState(false);
 
   // Get the display name for a role
-  const getRoleDisplayName = (role: RoleType | 'user'): string => {
+  const getRoleDisplayName = (role: RoleType | 'viewer'): string => {
     const displayNames: Record<string, string> = {
       admin: 'Administrator',
       advertiser: 'Advertiser',
@@ -33,7 +33,7 @@ const RoleSwitcher: React.FC<RoleSwitcherProps> = ({
   };
 
   // Get the color for a role
-  const getRoleColor = (role: RoleType | 'user'): string => {
+  const getRoleColor = (role: RoleType | 'viewer'): string => {
     const colors: Record<string, string> = {
       admin: 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300',
       advertiser: 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300',
@@ -46,7 +46,7 @@ const RoleSwitcher: React.FC<RoleSwitcherProps> = ({
   };
 
   // Handle role change
-  const handleRoleChange = (role: RoleType | 'user') => {
+  const handleRoleChange = (role: RoleType | 'viewer') => {
     setIsOpen(false);
     onRoleChange(role);
   };
@@ -87,12 +87,12 @@ const RoleSwitcher: React.FC<RoleSwitcherProps> = ({
           <div className="py-1 max-h-60 overflow-auto" role="menu" aria-orientation="vertical">
             {/* Always include regular user option */}
             <button
-              className={`w-full text-left px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center ${currentRole === 'user' ? 'bg-gray-50 dark:bg-gray-700' : ''}`}
+              className={`w-full text-left px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center ${currentRole === 'viewer' ? 'bg-gray-50 dark:bg-gray-700' : ''}`}
               role="menuitem"
-              onClick={() => handleRoleChange('user')}
+              onClick={() => handleRoleChange('viewer')}
             >
-              <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getRoleColor('user')} mr-2`}>
-                {getRoleDisplayName('user')}
+              <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getRoleColor('viewer')} mr-2`}>
+                {getRoleDisplayName('viewer')}
               </span>
             </button>
 

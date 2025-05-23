@@ -1,5 +1,5 @@
 import React, { ReactElement } from 'react';
-import ImprovedDashboardLayout from '@/components/layout/ImprovedDashboardLayout';
+import.*./components/layout/ImprovedDashboardLayout';
 
 /**
  * Helper function for creating consistent dashboard layouts

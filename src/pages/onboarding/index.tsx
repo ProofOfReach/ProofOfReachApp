@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
-import { UserRoleType } from '@/types/role';
-import Layout from '@/components/Layout';
-import { useAuthRefactored } from '@/hooks/useAuthRefactored';
-import { logger } from '@/lib/logger';
-import Loading from '@/components/Loading';
-import { useHydration } from '@/hooks/useHydration';
+import.*./types/role';
+import.*./components/Layout';
+import.*./hooks/useAuthRefactored';
+import.*./lib/logger';
+import.*./components/Loading';
+import.*./hooks/useHydration';
 
 /**
  * Role-Based Onboarding Page

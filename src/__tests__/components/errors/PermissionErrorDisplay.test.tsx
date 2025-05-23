@@ -1,6 +1,6 @@
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
-import PermissionErrorDisplay from '@/components/errors/PermissionErrorDisplay';
+import.*./components/errors/PermissionErrorDisplay';
 
 // Mock Next.js Link component
 jest.mock('next/link', () => {

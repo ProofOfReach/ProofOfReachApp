@@ -6,7 +6,7 @@
  * It builds upon the original StorageService but adds more robust features.
  */
 
-import { logger } from '@/lib/logger';
+import.*./lib/logger';
 import { 
   dispatchConfigChanged, 
   dispatchError, 
@@ -31,7 +31,7 @@ export interface ExpiryOptions {
 /**
  * Migration strategy for handling version changes in storage items
  */
-export type MigrationStrategy<T> = (oldData: any, oldVersion: number, newVersion: number) => T;
+export type MigrationStrategy<T> = (oldData: any oldVersion: number, newVersion: number) => T;
 
 /**
  * Encryption configuration 
@@ -251,7 +251,7 @@ export class EnhancedStorageService {
       
       return encrypted.toString();
     } catch (error) {
-      logger.error('Encryption failed:', error instanceof Error ? error.message : String(error));
+      logger.logger.error('Encryption failed:', error instanceof Error ? error.message : String(error));
       return value;
     }
   }
@@ -316,7 +316,7 @@ export class EnhancedStorageService {
       // If not a typical encrypted value, return as is
       return value;
     } catch (error) {
-      logger.error('Decryption failed:', error instanceof Error ? error.message : String(error));
+      logger.logger.error('Decryption failed:', error instanceof Error ? error.message : String(error));
       
       // For tests to catch the error properly, we need to throw it
       if (!isTestEnv) {
@@ -347,7 +347,7 @@ export class EnhancedStorageService {
     } = {}
   ): boolean {
     if (!key) {
-      logger.error('Cannot set item with empty key');
+      logger.logger.error('Cannot set item with empty key');
       return false;
     }
 
@@ -412,7 +412,7 @@ export class EnhancedStorageService {
           storage.setItem(namespaceKey, serialized);
         } catch (storageError) {
           // Handle quota exceeded or other storage errors
-          logger.error(`Storage error when setting ${key}:`, storageError instanceof Error ? storageError.message : String(storageError));
+          logger.logger.error(`Storage error when setting ${key}:`, storageError instanceof Error ? storageError.message : String(storageError));
           return false;
         }
       }
@@ -433,7 +433,7 @@ export class EnhancedStorageService {
       
       return true;
     } catch (error) {
-      logger.error(`Error setting item ${key}:`, error instanceof Error ? error.message : String(error));
+      logger.logger.error(`Error setting item ${key}:`, error instanceof Error ? error.message : String(error));
       try {
         dispatchError(`Failed to store ${key}`, 'STORAGE_ERROR', { error });
       } catch (dispatchError) {
@@ -547,7 +547,7 @@ export class EnhancedStorageService {
         }
       } catch (error) {
         // Catch-all for any unexpected errors
-        logger.error(`Error processing item ${key}: ${error instanceof Error ? error.message : String(error)}`);
+        logger.logger.error(`Error processing item ${key}: ${error instanceof Error ? error.message : String(error)}`);
         return options.defaultValue !== undefined ? options.defaultValue : null;
       }
       
@@ -596,7 +596,7 @@ export class EnhancedStorageService {
     } = {}
   ): boolean {
     if (!key) {
-      logger.error('Cannot remove item with empty key');
+      logger.logger.error('Cannot remove item with empty key');
       return false;
     }
     
@@ -615,7 +615,7 @@ export class EnhancedStorageService {
         try {
           storage.removeItem(namespaceKey);
         } catch (storageError) {
-          logger.error(`Storage error when removing ${key}:`, storageError instanceof Error ? storageError.message : String(storageError));
+          logger.logger.error(`Storage error when removing ${key}:`, storageError instanceof Error ? storageError.message : String(storageError));
           return false;
         }
       }
@@ -636,7 +636,7 @@ export class EnhancedStorageService {
       
       return true;
     } catch (error) {
-      logger.error(`Error removing item ${key}:`, error instanceof Error ? error.message : String(error));
+      logger.logger.error(`Error removing item ${key}:`, error instanceof Error ? error.message : String(error));
       return false;
     }
   }
@@ -704,7 +704,7 @@ export class EnhancedStorageService {
       
       return true;
     } catch (error) {
-      logger.error('Error clearing storage:', error instanceof Error ? error.message : String(error));
+      logger.logger.error('Error clearing storage:', error instanceof Error ? error.message : String(error));
       return false;
     }
   }
@@ -773,7 +773,7 @@ export class EnhancedStorageService {
       
       return cleanedCount;
     } catch (error) {
-      logger.error('Error cleaning expired items:', error instanceof Error ? error.message : String(error));
+      logger.logger.error('Error cleaning expired items:', error instanceof Error ? error.message : String(error));
       return 0;
     }
   }
@@ -809,7 +809,7 @@ export class EnhancedStorageService {
         return keys;
       }
     } catch (error) {
-      logger.error('Error getting keys:', error);
+      logger.logger.error('Error getting keys:', error);
       return [];
     }
   }
@@ -956,7 +956,7 @@ export class EnhancedStorageService {
           throw new Error('Failed to save migrated data');
         }
       } catch (error) {
-        logger.error(`Migration failed for ${key}:`, error);
+        logger.logger.error(`Migration failed for ${key}:`, error);
         
         // Dispatch failed migration event
         notifyStorageMigrated(
@@ -970,7 +970,7 @@ export class EnhancedStorageService {
         return false;
       }
     } catch (error) {
-      logger.error(`Error during migration of ${key}:`, error);
+      logger.logger.error(`Error during migration of ${key}:`, error);
       return false;
     }
   }
@@ -1087,13 +1087,13 @@ export class EnhancedStorageService {
         } catch (error) {
           result.failed++;
           result.errors[key] = error instanceof Error ? error.message : 'Unknown error';
-          logger.error(`Failed to migrate ${key}:`, error);
+          logger.logger.error(`Failed to migrate ${key}:`, error);
         }
       }
       
       return result;
     } catch (error) {
-      logger.error('Batch migration failed:', error);
+      logger.logger.error('Batch migration failed:', error);
       return {
         total: 0,
         succeeded: 0,
@@ -1146,7 +1146,7 @@ if (typeof window !== 'undefined') {
         }
         */
       } catch (error) {
-        logger.error('Error during automatic migration:', error);
+        logger.logger.error('Error during automatic migration:', error);
       }
     }, 1000);
   });

@@ -521,7 +521,7 @@ export function getRoleCapabilities(
     enhancedCapabilities['VIEW_ANALYTICS'].granted = true;
   }
   
-  // Previous special handling for 'user' role removed
+  // Previous special handling for 'viewer' role removed
 
   // Work with a copy of the capabilities for inheritance processing
   // This prevents modifications to the original object during iteration
