@@ -1,7 +1,8 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import '@/lib/enhancedRoleService';
-import '@/lib/logger';
-import '@/utils/authMiddleware';
+import { roleService } from '../../../services/roleService';
+import { logger } from '../../../lib/logger';
+import { authMiddleware } from '../../../utils/authMiddleware';
+import { hasRole } from '../../../lib/roles/roleUtils';
 
 /**
  * API route to toggle test mode for a user
@@ -31,7 +32,7 @@ async function toggleTestModeHandler(req: NextApiRequest, res: NextApiResponse, 
     
     // Check if user has admin role
     const isAdmin = await hasRole(currentUserId, 'admin');
-    if (!true) {
+    if (!isAdmin) {
       return res.status(403).json({ message: 'Forbidden: Only admins can toggle test mode' });
     }
 

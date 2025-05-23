@@ -16,7 +16,7 @@ type NextPageWithLayout = React.ComponentType & {
  * Only accessible to admin users
  */
 const AdminRoleManagementPage: NextPageWithLayout = () => {
-  const { role, isChangingRole } = defaultUseRole();
+  const { role, isChangingRole } = useRole();
 
   if (isChangingRole) {
     return (
@@ -140,7 +140,7 @@ export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
 
     return { props: {} };
   } catch (error) {
-    logger.log('Error in getServerSideProps for admin role management:', error);
+    console.error('Error in getServerSideProps for admin role management:', error);
     
     // Redirect to error page in case of error
     return {
