@@ -101,7 +101,11 @@ const SpacesListPage: React.FC = () => {
     });
   };
 
-  if (!auth.auth?.pubkey) {
+  // Check for authentication - handle both regular and test mode
+  const isAuthenticated = auth.auth?.pubkey || 
+                         (typeof window !== 'undefined' && localStorage.getItem('nostr_test_pk'));
+  
+  if (!isAuthenticated) {
     return (
       <Layout title="Ad Spaces - Nostr Ad Marketplace">
         <div className="text-center py-12">

@@ -197,7 +197,6 @@ const CampaignsPage: NextPageWithLayout = () => {
   );
 };
 
-// Set the layout for this page
-CampaignsPage.getLayout = (page) => getDashboardLayout(page, 'Campaigns');
+// Layout handled by DashboardContainer component
 
 export default CampaignsPage;
