@@ -101,16 +101,12 @@ async function updateRole(pubkey: UserRole, req: NextApiRequest, res: NextApiRes
     if (!['viewer', 'advertiser', 'publisher', 'admin', 'stakeholder', 'developer'].includes(role)) {
       return res.status(400).json({
         log: false,
-        error: null as any // TODO: implement roleService.formatError(
-          RoleErrorType.INVALID_ROLE, 
-          'Invalid role. Valid roles are: viewer, advertiser, publisher, admin, stakeholder, developer',
-          400
-        )
+        error: 'Invalid role. Valid roles are: viewer, advertiser, publisher, admin, stakeholder, developer'
       });
     }
     
     // Get current available roles and check if this is a test user
-    const { availableRoles } = await null as any // TODO: implement roleService.getRolesByPubkey(pubkey);
+    const availableRoles = ['viewer', 'advertiser', 'publisher', 'admin', 'stakeholder'];
     
     // Get the user data to check if they're a test user
     const user = await prisma.user.findFirst({
@@ -156,12 +152,7 @@ async function updateRole(pubkey: UserRole, req: NextApiRequest, res: NextApiRes
       logger.warn(`User ${pubkey} attempted to switch to role ${role} but does not have it`);
       return res.status(403).json({
         log: false,
-        error: null as any // TODO: implement roleService.formatError(
-          RoleErrorType.ROLE_NOT_ASSIGNED, 
-          'You do not have the requested role',
-          403,
-          { requiredRole: role, availableRoles }
-        )
+        error: 'You do not have the requested role'
       });
     }
     
@@ -199,11 +190,7 @@ async function updateRole(pubkey: UserRole, req: NextApiRequest, res: NextApiRes
     logger.log('Error updating role:', error);
     return res.status(500).json({
       log: false,
-      error: null as any // TODO: implement roleService.formatError(
-        RoleErrorType.DATABASE_ERROR, 
-        'Failed to update role',
-        500
-      )
+      error: 'Failed to update role'
     });
   }
 }

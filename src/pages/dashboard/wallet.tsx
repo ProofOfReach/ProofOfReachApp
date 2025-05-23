@@ -146,7 +146,7 @@ const WalletPage: NextPageWithLayout = () => {
       }
       
       // Regular mode - Check if user has sufficient balance
-      if (balanceData && balanceData?.balance ?? 0 < amountNumber) {
+      if (balanceData && (balanceData?.balance ?? 0) < amountNumber) {
         throw new Error('Insufficient balance for this withdrawal');
       }
       
