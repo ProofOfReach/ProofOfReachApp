@@ -48,7 +48,7 @@ const RoleDropdown: React.FC<RoleDropdownProps> = ({
   
   // Type guard to validate roles
   const isUserRole = (role: string): role is UserRole => {
-    return RoleManager.isValidRole(role);
+    return ['viewer', 'advertiser', 'publisher', 'admin'].includes(role);
   };
   
   // Role icons with appropriate colors

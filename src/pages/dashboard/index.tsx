@@ -66,10 +66,10 @@ const Dashboard = () => {
       // In test mode, always prioritize localStorage for initial role to fix mismatch
       const storedRole = localStorage.getItem('currentRole');
       if (storedRole) {
-        logger.debug(`Test mode active: Using localStorage role: ${storedRole}`);
+        console.log(`Test mode active: Using localStorage role: ${storedRole}`);
         // Fix issue with role detection - normalize role value
         const normalizedRole = storedRole.replace(/['"]/g, '');
-        logger.debug(`Normalized role in test mode: ${normalizedRole}`);
+        console.log(`Normalized role in test mode: ${normalizedRole}`);
         setCurrentRole(normalizedRole as UserRole);
         
         // Also set in localStorage to ensure consistency 

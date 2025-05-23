@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { MegaphoneIcon } from '@heroicons/react/24/outline';
 import '@/hooks/useTestMode';
 import '@/lib/roleService';
 import '@/services/roleManager';
@@ -95,10 +96,10 @@ export default function TestModeBanner() {
   });
   
   useLegacyEvent(LEGACY_EVENTS.ROLE_SWITCHED, (event) => {
-    logger.log('TestModeBanner received legacy role-switched event:', event.detail);
+    console.log('TestModeBanner received legacy role-switched event:', event.detail);
     
-    const updatedRole = event.detail?.to || event.detail?.role || RoleManager.getCurrentRole();
-    if (updatedRole && RoleManager.isValidRole(updatedRole)) {
+    const updatedRole = event.detail?.to || event.detail?.role || 'viewer';
+    if (updatedRole && ['viewer', 'advertiser', 'publisher', 'admin'].includes(updatedRole)) {
       setCurrentRole(updatedRole as UserRole);
     }
   });
