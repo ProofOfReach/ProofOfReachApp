@@ -35,7 +35,7 @@ const CreateAdPage: NextPageWithLayout = () => {
         const response = await fetch('/api/wallet');
         if (response.ok) {
           const data = await response.json();
-          setWalletBalance(data.balance || 0);
+          setWalletBalance(data?.balance ?? 0 || 0);
         }
       } catch (error) {
         console.error('Error fetching wallet balance:', error);
@@ -125,8 +125,8 @@ const CreateAdPage: NextPageWithLayout = () => {
       }
       
       const walletData = await walletResponse.json();
-      if (walletData.balance < pendingAdData.budget) {
-        throw new Error(`Insufficient balance. You have ${walletData.balance} sats, but need ${pendingAdData.budget} sats.`);
+      if (walletData?.balance ?? 0 < pendingAdData?.budget ?? 0) {
+        throw new Error(`Insufficient balance. You have ${walletData?.balance ?? 0} sats, but need ${pendingAdData?.budget ?? 0} sats.`);
       }
       
       // Make sure the data sent to API has targetUrl instead of finalDestinationUrl
@@ -187,7 +187,7 @@ const CreateAdPage: NextPageWithLayout = () => {
             </div>
             <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">Insufficient Balance</h2>
             <p className="text-gray-600 dark:text-gray-300 max-w-md mx-auto">
-              You need to fund your wallet with at least <span className="font-bold">{pendingAdData?.budget} sats</span> to create this ad.
+              You need to fund your wallet with at least <span className="font-bold">{pendingAdData??.budget ?? 0} sats</span> to create this ad.
             </p>
           </div>
           

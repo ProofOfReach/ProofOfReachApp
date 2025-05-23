@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { 
   User, Shield, Edit3, DollarSign, LogOut, Lock, ChevronDown
 } from 'react-feather';
-import { UserRole } from '../context/NewRoleContext';
+import type { UserRole } from '../context/NewRoleContext';
 import MegaphoneIcon from './icons/MegaphoneIcon';
 
 /**

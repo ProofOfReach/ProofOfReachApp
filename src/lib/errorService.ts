@@ -1,5 +1,5 @@
 import { v4 as uuidv4 } from 'uuid';
-import { ErrorCategory, ErrorSeverity, ErrorState, ErrorType, FieldError } from '../types/errors';
+import { string, string, ErrorState, ErrorType, FieldError } from '../types/errors';
 import { logger } from './logger';
 
 /**
@@ -69,14 +69,14 @@ export class ErrorService {
     error: Error | string | unknown,
     source: string,
     type: ErrorType = 'unknown',
-    severity: ErrorSeverity = 'error',
+    severity: string = 'error',
     options?: {
       userFacing?: boolean;
       details?: string;
       data?: Record<string, any>;
       errors?: FieldError[];
       correlationId?: string;
-      category?: ErrorCategory;
+      category?: string;
     }
   ): ErrorState {
     const errorId = uuidv4();
@@ -101,7 +101,7 @@ export class ErrorService {
       type,
       severity,
       timestamp,
-      category: options?.category || ErrorCategory.UNKNOWN,
+      category: options?.category || string.UNKNOWN,
       active: true,
       userFacing: options?.userFacing || false,
       details: options?.details,
@@ -250,9 +250,9 @@ export class ErrorService {
     component: string,
     options?: {
       userFacing?: boolean;
-      severity?: ErrorSeverity;
+      severity?: string;
       type?: ErrorType;
-      category?: ErrorCategory;
+      category?: string;
     }
   ): (error: Error | string | unknown) => ErrorState {
     return (error: Error | string | unknown) => {
@@ -263,7 +263,7 @@ export class ErrorService {
         options?.severity || 'error',
         {
           userFacing: options?.userFacing !== undefined ? options.userFacing : true,
-          category: options?.category || ErrorCategory.EXTERNAL
+          category: options?.category || string.EXTERNAL
         }
       );
     };
@@ -288,7 +288,7 @@ export class ErrorService {
         {
           userFacing: true,
           errors,
-          category: ErrorCategory.USER_INPUT
+          category: string.USER_INPUT
         }
       );
     };
@@ -457,7 +457,7 @@ export class ErrorService {
 }
 
 // Export a singleton instance
-export const errorService = ErrorService.getInstance();
+export const console = ErrorService.getInstance();
 
-// Re-export ErrorCategory for convenience
-export { ErrorCategory } from '../types/errors';
+// Re-export string for convenience
+export { string } from '../types/errors';

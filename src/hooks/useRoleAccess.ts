@@ -17,8 +17,8 @@ import '@/lib/logger';
  */
 export interface PermissionCheckResult {
   isAllowed: boolean;
-  currentRole: UserRoleType;
-  requiredRole?: UserRoleType;
+  currentRole: UserRole;
+  requiredRole?: UserRole;
   message?: string;
 }
 
@@ -36,8 +36,8 @@ export interface RoleCapabilities {
  */
 export function useRoleAccess() {
   const router = useRouter();
-  const [currentRole, setCurrentRole] = useState<UserRoleType>('viewer');
-  const [availableRoles, setAvailableRoles] = useState<UserRoleType[]>(['viewer']);
+  const [currentRole, setCurrentRole] = useState<UserRole>('viewer');
+  const [availableRoles, setAvailableRoles] = useState<UserRole[]>(['viewer']);
   const [capabilities, setCapabilities] = useState<RoleCapabilities>({});
 
   // Initialize role state from RoleManager on mount
@@ -55,7 +55,7 @@ export function useRoleAccess() {
       // Listen for role changes
       const handleRoleChange = (event: CustomEvent) => {
         if (event.detail && event.detail.to) {
-          const newRole = event.detail.to as UserRoleType;
+          const newRole = event.detail.to as UserRole;
           setCurrentRole(newRole);
           updateCapabilitiesForRole(newRole);
         }
@@ -74,9 +74,9 @@ export function useRoleAccess() {
   /**
    * Update capabilities based on role
    */
-  const updateCapabilitiesForRole = (role: UserRoleType) => {
+  const updateCapabilitiesForRole = (role: UserRole) => {
     // Define capabilities for each role
-    const roleCapabilities: Record<UserRoleType, RoleCapabilities> = {
+    const roleCapabilities: Record<UserRole, RoleCapabilities> = {
       viewer: {
         viewContent: true,
         createComment: true,
@@ -173,8 +173,8 @@ export function useRoleAccess() {
   /**
    * Check if current role matches or exceeds required role level
    */
-  const checkRole = useCallback((requiredRole: UserRoleType): PermissionCheckResult => {
-    const roleHierarchy: Record<UserRoleType, number> = {
+  const checkRole = useCallback((requiredRole: UserRole): PermissionCheckResult => {
+    const roleHierarchy: Record<UserRole, number> = {
       viewer: 1,
       advertiser: 2,
       publisher: 2,
@@ -203,7 +203,7 @@ export function useRoleAccess() {
     if (!router.pathname) return { isAllowed: true, currentRole };
     
     // Define route access rules
-    const routeAccessRules: Record<string, UserRoleType> = {
+    const routeAccessRules: Record<string, UserRole> = {
       '/dashboard/admin': 'admin',
       '/dashboard/admin/users': 'admin',
       '/dashboard/admin/settings': 'admin',
@@ -222,7 +222,7 @@ export function useRoleAccess() {
         const effectiveRole = currentRole || role;
         
         // Use the role hierarchy to check access
-        const roleHierarchy: Record<UserRoleType, number> = {
+        const roleHierarchy: Record<UserRole, number> = {
           viewer: 1,
           advertiser: 2,
           publisher: 2,
@@ -259,7 +259,7 @@ export function useRoleAccess() {
       logger.warn(`Access denied to route ${router.pathname}. ${access.message}`);
       
       // Redirect to appropriate page based on role
-      const roleDefaultRoutes: Record<UserRoleType, string> = {
+      const roleDefaultRoutes: Record<UserRole, string> = {
         viewer: '/dashboard',
         advertiser: '/dashboard/advertiser',
         publisher: '/dashboard/publisher',
@@ -280,7 +280,7 @@ export function useRoleAccess() {
   /**
    * Set the current role with proper validation
    */
-  const setRole = useCallback(async (role: UserRoleType): Promise<boolean> => {
+  const setRole = useCallback(async (role: UserRole): Promise<boolean> => {
     try {
       if (availableRoles.includes(role)) {
         const success = await RoleManager.setCurrentRole(role);

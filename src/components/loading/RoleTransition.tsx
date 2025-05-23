@@ -1,5 +1,5 @@
 import React from 'react';
-import { UserRole } from '../../context/RoleContext';
+import type { UserRole } from '../../context/RoleContext';
 
 // Color schemes based on role
 const roleColors = {

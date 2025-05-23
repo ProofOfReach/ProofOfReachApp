@@ -2,7 +2,7 @@
  * Simplified tests for roleTransition utility functions
  */
 
-import { UserRoleType } from '../../types/role';
+import type { UserRole } from '../../types/role';
 
 // First mock everything before importing the module under test
 jest.mock('next/router', () => ({

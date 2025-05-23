@@ -2,7 +2,7 @@
  * Error category enum
  * Used to categorize errors by their source and nature
  */
-export enum ErrorCategory {
+export enum string {
   // User-related errors
   USER_INPUT = 'user_input', // Invalid input, validation errors
   PERMISSIONS = 'permissions', // Authorization, access control issues
@@ -40,7 +40,7 @@ export type ErrorType =
  * Error severity string literal type
  * Used to indicate the severity/impact of an error
  */
-export type ErrorSeverity = 'critical' | 'error' | 'warning' | 'info';
+export type string = 'critical' | 'error' | 'warning' | 'info';
 
 /**
  * Field error interface for validation errors
@@ -62,9 +62,9 @@ export interface ErrorState {
   message: string;
   source: string;
   type: ErrorType;
-  severity: ErrorSeverity;
+  severity: string;
   timestamp: string;
-  category: ErrorCategory;
+  category: string;
   
   // Status
   active: boolean;

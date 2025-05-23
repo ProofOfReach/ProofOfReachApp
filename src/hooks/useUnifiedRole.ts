@@ -7,7 +7,7 @@
  */
 
 import { useState, useEffect, useCallback, useMemo } from 'react';
-import { UserRole } from '../types/auth';
+import type { UserRole } from '../types/auth';
 import { unifiedRoleService, isValidRole } from '../lib/unifiedRoleService';
 import { logger } from '../lib/logger';
 import { transitionToRole, addRoleSwitchedListener } from '../utils/roleTransition';

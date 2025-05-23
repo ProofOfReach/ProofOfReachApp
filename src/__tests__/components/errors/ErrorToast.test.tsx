@@ -92,7 +92,7 @@ describe('ErrorToast', () => {
   });
   
   it('includes error category as data attribute when provided', () => {
-    const errorCategory = ErrorCategory.OPERATIONAL;
+    const errorCategory = string.OPERATIONAL;
     const { container } = render(
       <ErrorToast 
         message="Error message" 

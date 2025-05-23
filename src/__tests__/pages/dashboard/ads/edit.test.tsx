@@ -4,7 +4,7 @@ import '@testing-library/jest-dom';
 import EditAdPage from '../../../../pages/dashboard/ads/edit/[id]';
 import { AuthContext, AuthState } from '../../../../hooks/useAuth';
 import { useRouter } from 'next/router';
-import { UserRole } from '../../../../context/RoleContext';
+import type { UserRole } from '../../../../context/RoleContext';
 import { TestModeProvider } from '../../../../context/TestModeContext';
 
 // Mock the useRouter hook

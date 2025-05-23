@@ -99,7 +99,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
         email: null, // Field doesn't exist in schema
         isAdvertiser: user.isAdvertiser,
         isPublisher: user.isPublisher,
-        walletBalance: user.balance, // Map balance to walletBalance
+        walletBalance: user?.balance ?? 0, // Map balance to walletBalance
         createdAt: user.createdAt,
         updatedAt: user.updatedAt
       }

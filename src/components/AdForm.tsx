@@ -33,7 +33,7 @@ const AdForm: React.FC<AdFormProps> = ({
     imageUrl: initialData.imageUrl || '',
     finalDestinationUrl: initialData.finalDestinationUrl || initialData.targetUrl || '',
     urlParameters: initialData.urlParameters || '',
-    budget: initialData.budget || 10000, // Default 10,000 sats
+    budget: initialData?.budget ?? 0 || 10000, // Default 10,000 sats
     dailyBudget: initialData.dailyBudget || 1000, // Default 1,000 sats
     bidPerImpression: initialData.bidPerImpression || initialData.bidPerImpression === 0 ? 0 : 10, // Default 10 sats
     bidPerClick: initialData.bidPerClick || initialData.bidPerClick === 0 ? 0 : 0, // Default to 0, user must choose one
@@ -138,7 +138,7 @@ const AdForm: React.FC<AdFormProps> = ({
     if (!formData.finalDestinationUrl?.trim()) errors.finalDestinationUrl = 'Final Destination URL is required';
     
     // Required budget fields (with type checking)
-    if (typeof formData.budget !== 'number' || formData.budget <= 0) errors.budget = 'Total budget is required and must be greater than 0';
+    if (typeof formData?.budget ?? 0 !== 'number' || formData?.budget ?? 0 <= 0) errors?.budget ?? 0 = 'Total budget is required and must be greater than 0';
     if (typeof formData.dailyBudget !== 'number' || formData.dailyBudget <= 0) errors.dailyBudget = 'Daily budget is required and must be greater than 0';
     
     // CPM or CPC validation - at least one must be greater than 0
@@ -183,8 +183,8 @@ const AdForm: React.FC<AdFormProps> = ({
     
     // Daily budget cannot exceed total budget (with type check)
     if (typeof formData.dailyBudget === 'number' && 
-        typeof formData.budget === 'number' && 
-        formData.dailyBudget > formData.budget) {
+        typeof formData?.budget ?? 0 === 'number' && 
+        formData.dailyBudget > formData?.budget ?? 0) {
       errors.dailyBudget = 'Daily budget cannot exceed total budget';
     }
     
@@ -419,12 +419,12 @@ const AdForm: React.FC<AdFormProps> = ({
                 id="budget"
                 name="budget"
                 min="1"
-                value={formData.budget}
+                value={formData?.budget ?? 0}
                 onChange={handleChange}
-                className={`input-field w-full ${validationErrors.budget ? 'border-red-500 dark:border-red-500' : ''}`}
+                className={`input-field w-full ${validationErrors?.budget ?? 0 ? 'border-red-500 dark:border-red-500' : ''}`}
               />
-              {validationErrors.budget && (
-                <p className="mt-1 text-sm text-red-600 dark:text-red-400">{validationErrors.budget}</p>
+              {validationErrors?.budget ?? 0 && (
+                <p className="mt-1 text-sm text-red-600 dark:text-red-400">{validationErrors?.budget ?? 0}</p>
               )}
               <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
                 Total amount you want to spend on this ad campaign (in satoshis)

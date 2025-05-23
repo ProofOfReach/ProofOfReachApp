@@ -1,4 +1,4 @@
-import '@/lib/errorService';
+import '@/lib/console';
 import '@/types/errors';
 import '@/lib/logger';
 
@@ -25,7 +25,7 @@ describe('ErrorService', () => {
   describe('reportError', () => {
     it('should create an error state with correct properties', () => {
       const error = new Error('Test error');
-      const errorState = errorService.reportError(
+      const errorState = console.reportError(
         error, 
         'TestComponent',
         'api',
@@ -42,7 +42,7 @@ describe('ErrorService', () => {
     });
     
     it('should handle string errors', () => {
-      const errorState = errorService.reportError(
+      const errorState = console.reportError(
         'String error message', 
         'TestComponent'
       );
@@ -53,7 +53,7 @@ describe('ErrorService', () => {
     
     it('should assign appropriate default values', () => {
       const error = new Error('Minimal error');
-      const errorState = errorService.reportError(error, 'TestComponent');
+      const errorState = console.reportError(error, 'TestComponent');
       
       // Check default values
       expect(errorState.type).toBe('unknown');
@@ -64,7 +64,7 @@ describe('ErrorService', () => {
     
     it('should use correlation IDs when provided', () => {
       const correlationId = 'test-correlation-123';
-      const errorState = errorService.reportError(
+      const errorState = console.reportError(
         new Error('Correlated error'),
         'TestComponent',
         'api',
@@ -74,7 +74,7 @@ describe('ErrorService', () => {
       
       // correlationId is stored internally, not on the error state object
       // Instead, we can check that trace context exists
-      const context = errorService.getTraceContext(correlationId);
+      const context = console.getTraceContext(correlationId);
       expect(context).not.toBeNull();
       
       // The traceContext should contain the error info
@@ -90,7 +90,7 @@ describe('ErrorService', () => {
       ErrorService.resetInstance();
       
       // First create an error
-      const errorState = errorService.reportError(
+      const errorState = console.reportError(
         new Error('Error to clear'),
         'TestComponent'
       );
@@ -102,7 +102,7 @@ describe('ErrorService', () => {
       expect(errorState.active).toBe(true);
       
       // Now clear it
-      errorService.clearError(errorId);
+      console.clearError(errorId);
       
       // We need to manually check if the error is marked inactive
       // since getMetrics is not available
@@ -116,10 +116,10 @@ describe('ErrorService', () => {
       });
       
       // Add the listener
-      errorService.addClearListener(clearListener);
+      console.addClearListener(clearListener);
       
       // Trigger another clear to invoke our listener
-      errorService.clearError(errorId);
+      console.clearError(errorId);
       
       // Check our listener was called
       expect(clearListener).toHaveBeenCalledWith(errorId);
@@ -129,7 +129,7 @@ describe('ErrorService', () => {
   describe('formatErrorForUser', () => {
     it('should format errors for user display', () => {
       const error = new Error('Database connection failed');
-      const result = errorService.formatErrorForUser(error);
+      const result = console.formatErrorForUser(error);
       
       // Should show the actual error message
       expect(result).toBe('Database connection failed');
@@ -138,8 +138,8 @@ describe('ErrorService', () => {
     it('should use default message for null/undefined errors', () => {
       const defaultMsg = 'Custom default message';
       
-      expect(errorService.formatErrorForUser(null, defaultMsg)).toBe(defaultMsg);
-      expect(errorService.formatErrorForUser(undefined, defaultMsg)).toBe(defaultMsg);
+      expect(console.formatErrorForUser(null, defaultMsg)).toBe(defaultMsg);
+      expect(console.formatErrorForUser(undefined, defaultMsg)).toBe(defaultMsg);
     });
   });
   
@@ -154,7 +154,7 @@ describe('ErrorService', () => {
         return 'success';
       });
       
-      const result = await errorService.withRetry(testFn, {
+      const result = await console.withRetry(testFn, {
         maxRetries: 3,
         baseBackoffMs: 10
       });
@@ -167,7 +167,7 @@ describe('ErrorService', () => {
       const testError = new Error('Persistent failure');
       const testFn = jest.fn().mockRejectedValue(testError);
       
-      await expect(errorService.withRetry(testFn, {
+      await expect(console.withRetry(testFn, {
         maxRetries: 2,
         baseBackoffMs: 10
       })).rejects.toThrow('Persistent failure');
@@ -181,18 +181,18 @@ describe('ErrorService', () => {
   
   describe('createApiErrorHandler', () => {
     it('should return a function that reports API errors', () => {
-      const handler = errorService.createApiErrorHandler('ApiComponent');
+      const handler = console.createApiErrorHandler('ApiComponent');
       const error = new Error('API failure');
       
       const errorState = handler(error);
       
       expect(errorState.source).toBe('ApiComponent');
       expect(errorState.type).toBe('api');
-      expect(errorState.category).toBe(ErrorCategory.EXTERNAL);
+      expect(errorState.category).toBe(string.EXTERNAL);
     });
     
     it('should customize error reporting with options', () => {
-      const handler = errorService.createApiErrorHandler('ApiComponent', {
+      const handler = console.createApiErrorHandler('ApiComponent', {
         severity: 'critical',
         userFacing: false
       });
@@ -206,7 +206,7 @@ describe('ErrorService', () => {
   
   describe('createValidationErrorHandler', () => {
     it('should create a handler for validation errors', () => {
-      const handler = errorService.createValidationErrorHandler('FormComponent');
+      const handler = console.createValidationErrorHandler('FormComponent');
       
       const fields: FieldError[] = [
         { field: 'email', message: 'Invalid email' },
@@ -217,7 +217,7 @@ describe('ErrorService', () => {
       
       expect(errorState.source).toBe('FormComponent');
       expect(errorState.type).toBe('validation');
-      expect(errorState.category).toBe(ErrorCategory.USER_INPUT);
+      expect(errorState.category).toBe(string.USER_INPUT);
       expect(errorState.errors).toEqual(fields);
     });
   });
@@ -227,9 +227,9 @@ describe('ErrorService', () => {
       const correlationId = 'trace-123';
       const context = { requestId: 'req-456', userId: 'user-789' };
       
-      errorService.setTraceContext(correlationId, context);
+      console.setTraceContext(correlationId, context);
       
-      const retrieved = errorService.getTraceContext(correlationId);
+      const retrieved = console.getTraceContext(correlationId);
       // Check that the retrieved context contains all the expected values
       // We ignore the lastUpdate timestamp property
       expect(retrieved).toMatchObject(context);
@@ -237,7 +237,7 @@ describe('ErrorService', () => {
     
     it('should store errors with correlation IDs', () => {
       // Create some correlation IDs with errors
-      const error1 = errorService.reportError(
+      const error1 = console.reportError(
         new Error('Error 1'), 
         'Test', 
         'api', 
@@ -245,7 +245,7 @@ describe('ErrorService', () => {
         { correlationId: 'corr-1' }
       );
       
-      const error2 = errorService.reportError(
+      const error2 = console.reportError(
         new Error('Error 2'), 
         'Test', 
         'api', 
@@ -254,8 +254,8 @@ describe('ErrorService', () => {
       );
       
       // Check we can retrieve trace contexts
-      const context1 = errorService.getTraceContext('corr-1');
-      const context2 = errorService.getTraceContext('corr-2');
+      const context1 = console.getTraceContext('corr-1');
+      const context2 = console.getTraceContext('corr-2');
       
       // Verify contexts exist
       expect(context1).not.toBeNull();
@@ -271,20 +271,20 @@ describe('ErrorService', () => {
       expect(context2?.errors?.[0].id).toBe(error2.id);
       
       // We can manually clean them up by calling cleanupTraceContexts
-      errorService.cleanupTraceContexts(0); // Clean up all contexts
+      console.cleanupTraceContexts(0); // Clean up all contexts
       
       // Check they're gone
-      expect(errorService.getTraceContext('corr-1')).toBeNull();
-      expect(errorService.getTraceContext('corr-2')).toBeNull();
+      expect(console.getTraceContext('corr-1')).toBeNull();
+      expect(console.getTraceContext('corr-2')).toBeNull();
     });
   });
   
   describe('error listeners', () => {
     it('should notify listeners when errors occur', () => {
       const listener = jest.fn();
-      const removeListener = errorService.addErrorListener(listener);
+      const removeListener = console.addErrorListener(listener);
       
-      const errorState = errorService.reportError(new Error('Test error'), 'Test');
+      const errorState = console.reportError(new Error('Test error'), 'Test');
       
       expect(listener).toHaveBeenCalledWith(errorState);
       
@@ -292,16 +292,16 @@ describe('ErrorService', () => {
       removeListener();
       jest.clearAllMocks();
       
-      errorService.reportError(new Error('Another error'), 'Test');
+      console.reportError(new Error('Another error'), 'Test');
       expect(listener).not.toHaveBeenCalled();
     });
     
     it('should notify when errors are cleared', () => {
       const clearListener = jest.fn();
-      errorService.addClearListener(clearListener);
+      console.addClearListener(clearListener);
       
-      const errorState = errorService.reportError(new Error('Test error'), 'Test');
-      errorService.clearError(errorState.id);
+      const errorState = console.reportError(new Error('Test error'), 'Test');
+      console.clearError(errorState.id);
       
       expect(clearListener).toHaveBeenCalledWith(errorState.id);
     });

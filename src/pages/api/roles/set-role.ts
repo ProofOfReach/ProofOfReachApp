@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import { UserRole } from '../../../context/RoleContext';
+import type { UserRole } from '../../../context/RoleContext';
 import { getCookie } from 'cookies-next';
 import { prisma } from '../../../lib/prismaClient';
 

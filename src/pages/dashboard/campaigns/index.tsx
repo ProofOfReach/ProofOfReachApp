@@ -154,7 +154,7 @@ const CampaignsPage: NextPageWithLayout = () => {
         
         <DashboardCard title="Total Budget">
           <p className="text-2xl font-bold text-gray-900 dark:text-white">
-            {campaigns.reduce((total, campaign) => total + campaign.budget, 0).toLocaleString()} sats
+            {campaigns.reduce((total, campaign) => total + campaign?.budget ?? 0, 0).toLocaleString()} sats
           </p>
         </DashboardCard>
       </div>

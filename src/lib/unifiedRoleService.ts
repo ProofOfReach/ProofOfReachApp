@@ -13,7 +13,7 @@
  */
 
 import { logger } from './logger';
-import { UserRoleType, isValidUserRole, getDefaultRole } from '../types/role';
+import { UserRole, isValidUserRole, getDefaultRole } from '../types/role';
 import { prisma } from './prisma';
 import { normalizeRole, normalizeRoles, normalizeRoleData } from '../utils/roleNormalizer';
 
@@ -24,16 +24,16 @@ export interface RoleServiceConfig {
   /** Enable debug logging */
   debug?: boolean;
   /** Default role if none is set */
-  defaultRole?: UserRoleType;
+  defaultRole?: UserRole;
   /** Storage key for local storage */
   storageKey?: string;
 }
 
 export interface RoleData {
   /** Currently active role */
-  currentRole: UserRoleType;
+  currentRole: UserRole;
   /** Roles available to this user */
-  availableRoles: UserRoleType[];
+  availableRoles: UserRole[];
   /** Timestamp of when this data was last updated */
   timestamp: number;
 }
@@ -54,7 +54,7 @@ const DEFAULT_CONFIG: RoleServiceConfig = {
 export class UnifiedRoleService {
   private config: Required<RoleServiceConfig>;
   private cache: RoleData | null = null;
-  private roleCache: Record<string, UserRoleType[]> = {};
+  private roleCache: Record<string, UserRole[]> = {};
   
   /**
    * Create a new UnifiedRoleService instance
@@ -110,7 +110,7 @@ export class UnifiedRoleService {
   
   /**
    * Validate role data to ensure it has the correct structure
-   * and all role values are valid UserRoleType values
+   * and all role values are valid UserRole values
    */
   private validateRoleData(data: any): RoleData {
     // Check if the structure is valid
@@ -145,8 +145,8 @@ export class UnifiedRoleService {
     );
     
     return {
-      currentRole: data.currentRole as UserRoleType,
-      availableRoles: data.availableRoles as UserRoleType[],
+      currentRole: data.currentRole as UserRole,
+      availableRoles: data.availableRoles as UserRole[],
       timestamp: data.timestamp
     };
   }
@@ -195,7 +195,7 @@ export class UnifiedRoleService {
    * @param forceRefresh Whether to force refresh from database
    * @returns Promise resolving to array of roles
    */
-  public async getUserRoles(userId: string, forceRefresh = false): Promise<UserRoleType[]> {
+  public async getUserRoles(userId: string, forceRefresh = false): Promise<UserRole[]> {
     try {
       // Test mode users have all roles
       if (userId.startsWith('pk_test_')) {
@@ -231,12 +231,12 @@ export class UnifiedRoleService {
       }
       
       // Always include viewer role as a base role
-      const roles: UserRoleType[] = ['viewer'];
+      const roles: UserRole[] = ['viewer'];
       
       // Add all active roles from UserRole table
       if (user.UserRole && user.UserRole.length > 0) {
         user.UserRole.forEach(roleRecord => {
-          const normalizedRole = normalizeRole(roleRecord.role) as UserRoleType;
+          const normalizedRole = normalizeRole(roleRecord.role) as UserRole;
           if (!roles.includes(normalizedRole) && isValidUserRole(normalizedRole)) {
             roles.push(normalizedRole);
           }
@@ -245,7 +245,7 @@ export class UnifiedRoleService {
       
       // Normalize the current role if it's set in the user record
       if (user.currentRole) {
-        const normalizedCurrentRole = normalizeRole(user.currentRole) as UserRoleType;
+        const normalizedCurrentRole = normalizeRole(user.currentRole) as UserRole;
         if (isValidUserRole(normalizedCurrentRole) && !roles.includes(normalizedCurrentRole)) {
           roles.push(normalizedCurrentRole);
         }
@@ -268,26 +268,26 @@ export class UnifiedRoleService {
    * @param roleParam If provided, check if userId has this role on the server
    * @returns Boolean (sync) or Promise<boolean> (async) depending on context
    */
-  public hasRole(roleOrUserId: string, roleParam?: UserRoleType): boolean | Promise<boolean> {
+  public hasRole(roleOrUserId: string, roleParam?: UserRole): boolean | Promise<boolean> {
     // If the second parameter is provided, this is the server version
     if (roleParam) {
       return this.hasRoleOnServer(roleOrUserId, roleParam);
     }
 
     // Otherwise, treat the first parameter as a role and use local context
-    return this.hasRoleInLocalContext(roleOrUserId as UserRoleType);
+    return this.hasRoleInLocalContext(roleOrUserId as UserRole);
   }
   
   /**
    * Check if current user has a specific role (local context version)
    */
-  private hasRoleInLocalContext(role: UserRoleType): boolean {
+  private hasRoleInLocalContext(role: UserRole): boolean {
     // Normalize the role (convert 'viewer' to 'viewer')
-    const normalizedRole = normalizeRole(role) as UserRoleType;
+    const normalizedRole = normalizeRole(role) as UserRole;
     
     const data = this.getRoleData();
     // Make sure we normalize the currentRole for comparison as well
-    const normalizedCurrentRole = normalizeRole(data.currentRole) as UserRoleType;
+    const normalizedCurrentRole = normalizeRole(data.currentRole) as UserRole;
     
     return normalizedCurrentRole === normalizedRole;
   }
@@ -299,9 +299,9 @@ export class UnifiedRoleService {
    * @param role Role to check
    * @returns Promise resolving to boolean
    */
-  private async hasRoleOnServer(userId: string, role: UserRoleType): Promise<boolean> {
+  private async hasRoleOnServer(userId: string, role: UserRole): Promise<boolean> {
     // Normalize the role (convert 'viewer' to 'viewer')
-    const normalizedRole = normalizeRole(role) as UserRoleType;
+    const normalizedRole = normalizeRole(role) as UserRole;
     
     // Validate role
     if (!isValidUserRole(normalizedRole)) {
@@ -323,8 +323,8 @@ export class UnifiedRoleService {
    */
   public async updateUserRoles(
     userId: string,
-    addRoles: UserRoleType[] = [],
-    removeRoles: UserRoleType[] = []
+    addRoles: UserRole[] = [],
+    removeRoles: UserRole[] = []
   ): Promise<boolean> {
     try {
       // Validate input
@@ -333,8 +333,8 @@ export class UnifiedRoleService {
       }
       
       // Normalize the roles (convert 'viewer' to 'viewer')
-      const normalizedAddRoles = addRoles.map(role => normalizeRole(role)) as UserRoleType[];
-      const normalizedRemoveRoles = removeRoles.map(role => normalizeRole(role)) as UserRoleType[];
+      const normalizedAddRoles = addRoles.map(role => normalizeRole(role)) as UserRole[];
+      const normalizedRemoveRoles = removeRoles.map(role => normalizeRole(role)) as UserRole[];
       
       // Check if the user exists
       const user = await prisma.user.findUnique({
@@ -394,7 +394,7 @@ export class UnifiedRoleService {
       }
       
       // Update user's current role if it was removed
-      if (normalizedRemoveRoles.includes(user.currentRole as UserRoleType)) {
+      if (normalizedRemoveRoles.includes(user.currentRole as UserRole)) {
         // Set to default role
         await prisma.user.update({
           where: { id: userId },
@@ -418,14 +418,14 @@ export class UnifiedRoleService {
    * @param roleParam If provided, set this role as current for the userId on the server
    * @returns Boolean (sync) or Promise<boolean> (async) depending on context
    */
-  public setCurrentRole(userIdOrRole: string, roleParam?: UserRoleType): boolean | Promise<boolean> {
+  public setCurrentRole(userIdOrRole: string, roleParam?: UserRole): boolean | Promise<boolean> {
     // If second parameter is provided, this is the async server version
     if (roleParam) {
       return this.setCurrentRoleOnServer(userIdOrRole, roleParam);
     }
     
     // Otherwise, this is the sync local context version
-    return this.setCurrentRoleInLocalContext(userIdOrRole as UserRoleType);
+    return this.setCurrentRoleInLocalContext(userIdOrRole as UserRole);
   }
   
   /**
@@ -435,18 +435,18 @@ export class UnifiedRoleService {
    * @param role Role to set as current
    * @returns Promise resolving to success status
    */
-  private async setCurrentRoleOnServer(userId: string, role: UserRoleType): Promise<boolean> {
+  private async setCurrentRoleOnServer(userId: string, role: UserRole): Promise<boolean> {
     try {
       // Normalize the role (convert 'viewer' to 'viewer')
       const normalizedRole = normalizeRole(role);
       
       // For local state management, update the current context
-      if (!userId || !isValidUserRole(normalizedRole as UserRoleType)) {
+      if (!userId || !isValidUserRole(normalizedRole as UserRole)) {
         return false;
       }
       
       // Check if user has this role
-      const hasThisRole = await this.hasRole(userId, normalizedRole as UserRoleType);
+      const hasThisRole = await this.hasRole(userId, normalizedRole as UserRole);
       if (!hasThisRole) {
         this.debug(`User ${userId} does not have role ${normalizedRole}`);
         return false;
@@ -498,7 +498,7 @@ export class UnifiedRoleService {
   /**
    * Update just the current role for the local context
    */
-  public setCurrentRoleInLocalContext(role: UserRoleType): boolean {
+  public setCurrentRoleInLocalContext(role: UserRole): boolean {
     try {
       // Normalize the role (convert 'viewer' to 'viewer')
       const normalizedRole = normalizeRole(role);
@@ -506,14 +506,14 @@ export class UnifiedRoleService {
       const currentData = this.getRoleData();
       
       // Check if the normalized role is available for this user
-      if (!currentData.availableRoles.includes(normalizedRole as UserRoleType)) {
+      if (!currentData.availableRoles.includes(normalizedRole as UserRole)) {
         this.debug(`Role ${normalizedRole} is not available for this user`);
         return false;
       }
       
       const newData = {
         ...currentData,
-        currentRole: normalizedRole as UserRoleType,
+        currentRole: normalizedRole as UserRole,
         timestamp: Date.now()
       };
       
@@ -528,7 +528,7 @@ export class UnifiedRoleService {
   /**
    * Update the available roles
    */
-  public setAvailableRoles(roles: UserRoleType[]): void {
+  public setAvailableRoles(roles: UserRole[]): void {
     try {
       const currentData = this.getRoleData();
       const newData = {
@@ -552,7 +552,7 @@ export class UnifiedRoleService {
   /**
    * Check if a specific role is available for the current user
    */
-  public isRoleAvailable(role: UserRoleType): boolean {
+  public isRoleAvailable(role: UserRole): boolean {
     const data = this.getRoleData();
     return data.availableRoles.includes(role);
   }
@@ -560,7 +560,7 @@ export class UnifiedRoleService {
   /**
    * Check if the user has any of the specified roles
    */
-  public hasAnyRole(roles: UserRoleType[]): boolean {
+  public hasAnyRole(roles: UserRole[]): boolean {
     const data = this.getRoleData();
     return roles.includes(data.currentRole);
   }
@@ -568,9 +568,9 @@ export class UnifiedRoleService {
   /**
    * Get the current active role - overloaded for both local and server contexts
    * @param userId Optional user ID to get role from server, if not provided uses local context
-   * @returns UserRoleType (sync) or Promise<UserRoleType> (async) depending on context
+   * @returns UserRole (sync) or Promise<UserRole> (async) depending on context
    */
-  public getCurrentRole(userId?: string): UserRoleType | Promise<UserRoleType> {
+  public getCurrentRole(userId?: string): UserRole | Promise<UserRole> {
     if (userId) {
       return this.getCurrentRoleFromServer(userId);
     }
@@ -581,7 +581,7 @@ export class UnifiedRoleService {
   /**
    * Get the current active role from local context
    */
-  public getCurrentRoleFromLocalContext(): UserRoleType {
+  public getCurrentRoleFromLocalContext(): UserRole {
     const data = this.getRoleData();
     return data.currentRole;
   }
@@ -589,14 +589,14 @@ export class UnifiedRoleService {
   /**
    * Get the current active role for a user from the server
    */
-  private async getCurrentRoleFromServer(userId: string): Promise<UserRoleType> {
+  private async getCurrentRoleFromServer(userId: string): Promise<UserRole> {
     try {
       // For test mode users, check localStorage if available
       if (userId.startsWith('pk_test_') && typeof window !== 'undefined') {
         const testModeRole = localStorage.getItem('userRole');
         if (testModeRole && isValidUserRole(testModeRole as any)) {
           // Normalize the role (convert 'viewer' to 'viewer')
-          return normalizeRole(testModeRole) as UserRoleType;
+          return normalizeRole(testModeRole) as UserRole;
         }
       }
       
@@ -609,7 +609,7 @@ export class UnifiedRoleService {
       // If user has a preference, return that (with normalization)
       if (user?.preferences?.currentRole && isValidUserRole(user.preferences.currentRole as any)) {
         // Normalize the role (convert 'viewer' to 'viewer')
-        return normalizeRole(user.preferences.currentRole) as UserRoleType;
+        return normalizeRole(user.preferences.currentRole) as UserRole;
       }
       
       // Otherwise get first available role (will already be normalized in getUserRoles)
@@ -620,14 +620,14 @@ export class UnifiedRoleService {
     } catch (error) {
       logger.error('Error getting current role from server:', error);
       // Return normalized default role
-      return normalizeRole(this.config.defaultRole) as UserRoleType;
+      return normalizeRole(this.config.defaultRole) as UserRole;
     }
   }
   
   /**
    * Get all roles available to the current user
    */
-  public getAvailableRoles(): UserRoleType[] {
+  public getAvailableRoles(): UserRole[] {
     const data = this.getRoleData();
     return [...data.availableRoles];
   }
@@ -707,7 +707,7 @@ export class UnifiedRoleService {
   /**
    * Update the server with the current role selection
    */
-  public async updateServerRole(role: UserRoleType): Promise<boolean> {
+  public async updateServerRole(role: UserRole): Promise<boolean> {
     try {
       const response = await fetch(`${this.config.apiUrl}/set-role`, {
         method: 'POST',
@@ -731,7 +731,7 @@ export class UnifiedRoleService {
 }
 
 /**
- * Check if a string is a valid UserRoleType
+ * Check if a string is a valid UserRole
  */
 export const isValidRole = isValidUserRole;
 

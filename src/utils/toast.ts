@@ -108,7 +108,7 @@ function success(message: string, options: ToastOptions = {}): void {
  * @param severity The severity level
  * @param options Additional options
  */
-function custom(message: string, severity: ErrorSeverity, options: ToastOptions = {}): void {
+function custom(message: string, severity: string, options: ToastOptions = {}): void {
   const errorState = errorIntegration.reportError(
     message, 
     'toast', 

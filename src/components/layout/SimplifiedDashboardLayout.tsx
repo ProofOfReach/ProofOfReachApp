@@ -2,7 +2,7 @@ import { ReactNode, useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import Head from 'next/head';
 import { useLocalRole } from '../../hooks/useLocalRole';
-import { UserRole } from '../../context/RoleContext';
+import type { UserRole } from '../../context/RoleContext';
 import RoleDropdown from '../role/RoleDropdown';
 import RoleTransitionOverlay from '../loading/RoleTransitionOverlay';
 

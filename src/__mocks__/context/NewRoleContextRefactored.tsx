@@ -4,7 +4,7 @@
 import React, { createContext, ReactNode, useContext } from 'react';
 
 export const ALL_ROLES = ['viewer', 'advertiser', 'publisher', 'admin', 'stakeholder'] as const;
-export type UserRoleType = typeof ALL_ROLES[number];
+export type UserRole = typeof ALL_ROLES[number];
 
 // Create a mock context with simplified implementation
 const mockContext = createContext<any>({
@@ -30,11 +30,11 @@ const mockContext = createContext<any>({
  */
 export const RoleProviderRefactored: React.FC<{ 
   children: ReactNode; 
-  initialRole?: UserRoleType;
+  initialRole?: UserRole;
 }> = ({ children, initialRole = 'advertiser' }) => {
-  const [role, setRole] = React.useState<UserRoleType>(initialRole);
+  const [role, setRole] = React.useState<UserRole>(initialRole);
   
-  const mockSetRole = jest.fn().mockImplementation((newRole: UserRoleType) => {
+  const mockSetRole = jest.fn().mockImplementation((newRole: UserRole) => {
     setRole(newRole);
     // Update localStorage to mimic the real implementation
     localStorage.setItem('userRole', newRole);

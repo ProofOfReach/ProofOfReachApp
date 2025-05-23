@@ -8,7 +8,7 @@
  * browser compatibility, and redirectless navigation using Next.js router.
  */
 
-import { UserRoleType } from '../types/role';
+import type { UserRole } from '../types/role';
 import { logger } from '../lib/logger';
 import { unifiedRoleService } from '../lib/unifiedRoleService';
 import Router from 'next/router'; // Import Next.js router for programmatic navigation
@@ -18,8 +18,8 @@ import { accessControl } from '../lib/accessControl';
  * Custom event for role switching
  */
 export interface RoleSwitchedEvent {
-  from: UserRoleType;
-  to: UserRoleType;
+  from: UserRole;
+  to: UserRole;
   timestamp: string;
   path?: string;
 }
@@ -29,8 +29,8 @@ export interface RoleSwitchedEvent {
  */
 export interface RoleTransitionState {
   transitioning: boolean;
-  fromRole: UserRoleType | null;
-  toRole: UserRoleType | null;
+  fromRole: UserRole | null;
+  toRole: UserRole | null;
   startTime: string;
   targetPath?: string;
   completed: boolean;
@@ -50,7 +50,7 @@ const ROLE_PREFERENCES_KEY = 'role_preferences';
  * @param to New role
  * @param path Optional URL path that was navigated to
  */
-export function dispatchRoleSwitchedEvent(from: UserRoleType, to: UserRoleType, path?: string): void {
+export function dispatchRoleSwitchedEvent(from: UserRole, to: UserRole, path?: string): void {
   if (typeof window === 'undefined') {
     return; // Server-side rendering, no events
   }
@@ -82,9 +82,9 @@ export function dispatchRoleSwitchedEvent(from: UserRoleType, to: UserRoleType, 
  * @returns True if transition is allowed, false otherwise
  */
 export function isRoleTransitionAllowed(
-  currentRole: UserRoleType,
-  targetRole: UserRoleType,
-  availableRoles: UserRoleType[]
+  currentRole: UserRole,
+  targetRole: UserRole,
+  availableRoles: UserRole[]
 ): boolean {
   // Same role is always allowed (no-op)
   if (currentRole === targetRole) {
@@ -111,7 +111,7 @@ export function isRoleTransitionAllowed(
  * @param role User role
  * @returns Dashboard path for that role
  */
-export function getRoleDashboardPath(role: UserRoleType): string {
+export function getRoleDashboardPath(role: UserRole): string {
   return accessControl.getRoleDashboardPath(role);
 }
 
@@ -124,8 +124,8 @@ export function getRoleDashboardPath(role: UserRoleType): string {
  * @returns Promise resolving to success status
  */
 export async function transitionToRole(
-  currentRole: UserRoleType,
-  newRole: UserRoleType,
+  currentRole: UserRole,
+  newRole: UserRole,
   preservePath = false
 ): Promise<boolean> {
   try {
@@ -173,7 +173,7 @@ export async function transitionToRole(
       }
     } else {
       // Otherwise just update local context
-      const localSuccess = unifiedRoleService.setCurrentRole(newRole as UserRoleType) as boolean;
+      const localSuccess = unifiedRoleService.setCurrentRole(newRole as UserRole) as boolean;
       if (!localSuccess) {
         logger.warn(`Failed to set current role to ${newRole} for user ${pubkey} in local context`);
         clearRoleTransitionState();
@@ -336,7 +336,7 @@ export function isRoleTransitioning(): boolean {
  * @param role User role
  * @param preferences Preferences object
  */
-export function saveRolePreferences(role: UserRoleType, preferences: Record<string, any>): void {
+export function saveRolePreferences(role: UserRole, preferences: Record<string, any>): void {
   if (typeof window === 'undefined') {
     return;
   }
@@ -364,7 +364,7 @@ export function saveRolePreferences(role: UserRoleType, preferences: Record<stri
  * @param role User role
  * @returns Preferences object for the role
  */
-export function getRolePreferences(role: UserRoleType): Record<string, any> {
+export function getRolePreferences(role: UserRole): Record<string, any> {
   if (typeof window === 'undefined') {
     return {};
   }
@@ -383,21 +383,21 @@ export function getRolePreferences(role: UserRoleType): Record<string, any> {
  * 
  * @returns Record of preferences by role
  */
-export function getRolePreferencesForAllRoles(): Record<UserRoleType, Record<string, any>> {
+export function getRolePreferencesForAllRoles(): Record<UserRole, Record<string, any>> {
   if (typeof window === 'undefined') {
-    return {} as Record<UserRoleType, Record<string, any>>;
+    return {} as Record<UserRole, Record<string, any>>;
   }
   
   try {
     const preferencesJson = localStorage.getItem(ROLE_PREFERENCES_KEY);
     if (preferencesJson) {
-      return JSON.parse(preferencesJson) as Record<UserRoleType, Record<string, any>>;
+      return JSON.parse(preferencesJson) as Record<UserRole, Record<string, any>>;
     }
   } catch (error) {
     logger.error('Error getting all role preferences:', error);
   }
   
-  return {} as Record<UserRoleType, Record<string, any>>;
+  return {} as Record<UserRole, Record<string, any>>;
 }
 
 /**
@@ -407,7 +407,7 @@ export function getRolePreferencesForAllRoles(): Record<UserRoleType, Record<str
  * @param route Current route path
  * @returns True if route is allowed for role
  */
-export function isRouteAllowedForRole(role: UserRoleType, route: string): boolean {
+export function isRouteAllowedForRole(role: UserRole, route: string): boolean {
   return accessControl.checkRouteAccess(route, role);
 }
 

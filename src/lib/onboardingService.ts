@@ -1,7 +1,7 @@
 import '@/lib/prisma';
 import '@/lib/logger';
 import '@/types/role';
-import '@/lib/errorService';
+import '@/lib/console';
 import '@/types/errors';
 
 /**
@@ -14,7 +14,7 @@ const onboardingService = {
    * @param role The role to check onboarding status for (optional)
    * @returns Promise resolving to true if onboarding is complete, false otherwise
    */
-  isOnboardingComplete: async (pubkey: string, role?: UserRoleType): Promise<boolean> => {
+  isOnboardingComplete: async (pubkey: string, role?: UserRole): Promise<boolean> => {
     // If we're running in the browser, we need to call the API instead of accessing Prisma directly
     if (typeof window !== 'undefined') {
       try {
@@ -35,14 +35,14 @@ const onboardingService = {
         return !!data.isComplete;
       } catch (error) {
         // Report the error
-        errorService.reportError(
+        console.reportError(
           error instanceof Error ? error : `API error checking onboarding status`,
           'onboardingService.isOnboardingComplete.clientSide',
           'api',
           'warning',
           {
             data: { pubkey, role },
-            category: ErrorCategory.OPERATIONAL,
+            category: string.OPERATIONAL,
             userFacing: false
           }
         );
@@ -80,14 +80,14 @@ const onboardingService = {
       return !!onboardingRecord?.isComplete;
     } catch (error) {
       // Report the error to the central error service but continue
-      errorService.reportError(
+      console.reportError(
         error instanceof Error ? error : `Database error checking onboarding status`,
         'onboardingService.isOnboardingComplete.serverSide',
         'api',
         'warning',
         {
           data: { pubkey, role },
-          category: ErrorCategory.OPERATIONAL,
+          category: string.OPERATIONAL,
           userFacing: false
         }
       );
@@ -108,7 +108,7 @@ const onboardingService = {
    * @param pubkey The user's public key
    * @param role The role to mark as complete
    */
-  markOnboardingComplete: async (pubkey: string, role: UserRoleType): Promise<void> => {
+  markOnboardingComplete: async (pubkey: string, role: UserRole): Promise<void> => {
     const correlationId = `onboarding-completion-${pubkey}-${role}`;
     
     // If we're running in the browser, use the API instead
@@ -132,14 +132,14 @@ const onboardingService = {
         return;
       } catch (error) {
         // Report client-side error
-        errorService.reportError(
+        console.reportError(
           error instanceof Error ? error : 'Error marking onboarding complete (client-side)',
           'onboardingService.markOnboardingComplete.clientSide',
           'api',
           'error',
           {
             data: { pubkey, role },
-            category: ErrorCategory.OPERATIONAL,
+            category: string.OPERATIONAL,
             userFacing: true,
             correlationId
           }
@@ -166,14 +166,14 @@ const onboardingService = {
         });
       } catch (userError) {
         // Report the error
-        errorService.reportError(
+        console.reportError(
           userError instanceof Error ? userError : 'Error finding user for onboarding completion',
           'onboardingService.markOnboardingComplete.findUser',
           'api',
           'warning',
           {
             data: { pubkey, role },
-            category: ErrorCategory.OPERATIONAL,
+            category: string.OPERATIONAL,
             userFacing: false,
             correlationId
           }
@@ -208,14 +208,14 @@ const onboardingService = {
           });
         } catch (createError) {
           // Report the error using our service
-          errorService.reportError(
+          console.reportError(
             createError instanceof Error ? createError : 'Could not create onboarding record',
             'onboardingService.markOnboardingComplete.createRecord',
             'api',
             'warning',
             {
               data: { pubkey, role },
-              category: ErrorCategory.OPERATIONAL,
+              category: string.OPERATIONAL,
               userFacing: false,
               correlationId,
               details: 'Attempted to create minimal onboarding record without user ID'
@@ -251,14 +251,14 @@ const onboardingService = {
         logger.info(`Onboarding marked complete for user ${pubkey} with role ${role}`);
       } catch (upsertError) {
         // Report the error using our service
-        errorService.reportError(
+        console.reportError(
           upsertError instanceof Error ? upsertError : 'Error upserting onboarding record',
           'onboardingService.markOnboardingComplete.upsertRecord',
           'api',
           'warning',
           {
             data: { pubkey, role, userId: user.id },
-            category: ErrorCategory.OPERATIONAL,
+            category: string.OPERATIONAL,
             userFacing: false,
             correlationId
           }
@@ -268,14 +268,14 @@ const onboardingService = {
       }
     } catch (error) {
       // Report the main function error
-      errorService.reportError(
+      console.reportError(
         error instanceof Error ? error : 'Error in markOnboardingComplete',
         'onboardingService.markOnboardingComplete',
         'api',
         'error',
         {
           data: { pubkey, role },
-          category: ErrorCategory.OPERATIONAL,
+          category: string.OPERATIONAL,
           userFacing: false,
           correlationId
         }
@@ -297,7 +297,7 @@ const onboardingService = {
    * @param pubkey The user's public key
    * @param role The role to reset onboarding for (optional - if not provided, resets all roles)
    */
-  resetOnboardingStatus: async (pubkey: string, role?: UserRoleType): Promise<void> => {
+  resetOnboardingStatus: async (pubkey: string, role?: UserRole): Promise<void> => {
     const correlationId = `onboarding-reset-${pubkey}-${role || 'all'}`;
     
     // Handle client-side scenario
@@ -323,14 +323,14 @@ const onboardingService = {
         return;
       } catch (error) {
         // Report client-side error
-        errorService.reportError(
+        console.reportError(
           error instanceof Error ? error : 'Error resetting onboarding status (client-side)',
           'onboardingService.resetOnboardingStatus.clientSide',
           'api',
           'error',
           {
             data: { pubkey, role },
-            category: ErrorCategory.OPERATIONAL,
+            category: string.OPERATIONAL,
             userFacing: true,
             correlationId
           }
@@ -357,14 +357,14 @@ const onboardingService = {
         });
       } catch (userError) {
         // Report error to the monitoring system
-        errorService.reportError(
+        console.reportError(
           userError instanceof Error ? userError : 'Error finding user for onboarding reset',
           'onboardingService.resetOnboardingStatus.findUser',
           'api', 
           'warning',
           {
             data: { pubkey, role },
-            category: ErrorCategory.OPERATIONAL,
+            category: string.OPERATIONAL,
             userFacing: false,
             correlationId
           }
@@ -397,14 +397,14 @@ const onboardingService = {
           logger.info(`Onboarding reset for user ${pubkey} with role ${role}`);
         } catch (roleError) {
           // Report the error but continue
-          errorService.reportError(
+          console.reportError(
             roleError instanceof Error ? roleError : 'Could not reset onboarding for role',
             'onboardingService.resetOnboardingStatus.resetRole',
             'api',
             'info', // Less critical since we'll try fallback
             {
               data: { pubkey, role },
-              category: ErrorCategory.OPERATIONAL,
+              category: string.OPERATIONAL,
               userFacing: false,
               correlationId,
               details: 'The onboarding record might not exist yet, trying fallback creation'
@@ -438,14 +438,14 @@ const onboardingService = {
             logger.info(`Created fresh onboarding record for user ${pubkey} with role ${role}`);
           } catch (createError) {
             // Report the error
-            errorService.reportError(
+            console.reportError(
               createError instanceof Error ? createError : 'Could not create onboarding record',
               'onboardingService.resetOnboardingStatus.createRecord',
               'api',
               'warning',
               {
                 data: { pubkey, role },
-                category: ErrorCategory.OPERATIONAL,
+                category: string.OPERATIONAL,
                 userFacing: false,
                 correlationId
               }
@@ -471,14 +471,14 @@ const onboardingService = {
           logger.info(`Onboarding reset for user ${pubkey} across all roles`);
         } catch (updateError) {
           // Report the error
-          errorService.reportError(
+          console.reportError(
             updateError instanceof Error ? updateError : 'Could not reset all onboarding records',
             'onboardingService.resetOnboardingStatus.resetAll',
             'api',
             'warning',
             {
               data: { pubkey },
-              category: ErrorCategory.OPERATIONAL,
+              category: string.OPERATIONAL,
               userFacing: false,
               correlationId
             }
@@ -489,14 +489,14 @@ const onboardingService = {
       }
     } catch (error) {
       // Report the main function error
-      errorService.reportError(
+      console.reportError(
         error instanceof Error ? error : 'Error in resetOnboardingStatus',
         'onboardingService.resetOnboardingStatus',
         'api',
         'error',
         {
           data: { pubkey, role },
-          category: ErrorCategory.OPERATIONAL,
+          category: string.OPERATIONAL,
           userFacing: false,
           correlationId
         }
@@ -519,7 +519,7 @@ const onboardingService = {
    * @param role The role being onboarded
    * @param step The current step in the onboarding process
    */
-  saveOnboardingStep: async (pubkey: string, role: UserRoleType, step: string): Promise<void> => {
+  saveOnboardingStep: async (pubkey: string, role: UserRole, step: string): Promise<void> => {
     const correlationId = `onboarding-step-${pubkey}-${role}-${step}`;
     
     // Client-side implementation for browser environment
@@ -542,14 +542,14 @@ const onboardingService = {
         return;
       } catch (error) {
         // Report client-side error
-        errorService.reportError(
+        console.reportError(
           error instanceof Error ? error : 'Error saving onboarding step (client-side)',
           'onboardingService.saveOnboardingStep.clientSide',
           'api',
           'warning',
           {
             data: { pubkey, role, step },
-            category: ErrorCategory.OPERATIONAL,
+            category: string.OPERATIONAL,
             userFacing: false,
             correlationId
           }
@@ -571,14 +571,14 @@ const onboardingService = {
         });
       } catch (userError) {
         // Report the error
-        errorService.reportError(
+        console.reportError(
           userError instanceof Error ? userError : 'Error finding user when saving onboarding step',
           'onboardingService.saveOnboardingStep.findUser',
           'api',
           'warning',
           {
             data: { pubkey, role, step },
-            category: ErrorCategory.OPERATIONAL,
+            category: string.OPERATIONAL,
             userFacing: false,
             correlationId
           }
@@ -618,14 +618,14 @@ const onboardingService = {
         logger.info(`Saved onboarding step "${step}" for user ${pubkey} with role ${role}`);
       } catch (dbError) {
         // Report the error
-        errorService.reportError(
+        console.reportError(
           dbError instanceof Error ? dbError : 'Error saving onboarding step to database',
           'onboardingService.saveOnboardingStep.upsert',
           'api',
           'warning',
           {
             data: { pubkey, role, step, userId: user?.id },
-            category: ErrorCategory.OPERATIONAL,
+            category: string.OPERATIONAL,
             userFacing: false,
             correlationId
           }
@@ -635,14 +635,14 @@ const onboardingService = {
       }
     } catch (error) {
       // Report the main error
-      errorService.reportError(
+      console.reportError(
         error instanceof Error ? error : 'Error in saveOnboardingStep',
         'onboardingService.saveOnboardingStep',
         'api',
         'error',
         {
           data: { pubkey, role, step },
-          category: ErrorCategory.OPERATIONAL,
+          category: string.OPERATIONAL,
           userFacing: false,
           correlationId
         }
@@ -663,7 +663,7 @@ const onboardingService = {
    * @param role The user's current role
    * @returns Promise resolving to the URL to redirect to
    */
-  getPostLoginRedirectUrl: async (pubkey: string, role?: UserRoleType): Promise<string> => {
+  getPostLoginRedirectUrl: async (pubkey: string, role?: UserRole): Promise<string> => {
     const correlationId = `onboarding-redirect-${pubkey}-${role || 'no-role'}`;
     
     try {
@@ -748,14 +748,14 @@ const onboardingService = {
       }
     } catch (error) {
       // Report error through the central system
-      errorService.reportError(
+      console.reportError(
         error instanceof Error ? error : 'Error getting post-login redirect URL',
         'onboardingService.getPostLoginRedirectUrl',
         'api',
         'warning',
         {
           data: { pubkey, role },
-          category: ErrorCategory.OPERATIONAL,
+          category: string.OPERATIONAL,
           userFacing: false,
           correlationId,
           details: 'Defaulting to /onboarding as fallback redirect'

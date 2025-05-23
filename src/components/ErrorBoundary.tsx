@@ -6,7 +6,7 @@
  */
 
 import React, { Component, ErrorInfo, ReactNode } from 'react';
-import '@/lib/errorService';
+import '@/lib/console';
 import '@/utils/toast';
 
 interface ErrorBoundaryProps {
@@ -47,7 +47,7 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
     const { componentName = 'ErrorBoundary', onError } = this.props;
     
     // Log the error to our error service with additional context
-    errorService.reportError(
+    console.reportError(
       error,
       componentName,
       'unexpected',

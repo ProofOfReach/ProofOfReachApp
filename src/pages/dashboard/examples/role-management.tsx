@@ -11,7 +11,7 @@ import Head from 'next/head';
 import DashboardLayout from '../../../components/layout/DashboardLayout';
 import { useRoleAccess } from '../../../hooks/useRoleAccess';
 import RoleAwareComponent from '../../../components/examples/RoleAwareComponent';
-import { UserRoleType } from '../../../types/role';
+import type { UserRole } from '../../../types/role';
 import { logger } from '../../../lib/logger';
 
 const RoleManagementPage: NextPage = () => {
@@ -26,7 +26,7 @@ const RoleManagementPage: NextPage = () => {
   const [error, setError] = useState<string | null>(null);
   
   // Handle role switch with proper loading and error states
-  const handleRoleSwitch = useCallback(async (role: UserRoleType) => {
+  const handleRoleSwitch = useCallback(async (role: UserRole) => {
     if (role === currentRole) return;
     
     setError(null);

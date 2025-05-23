@@ -12,7 +12,7 @@ import {
 import '@/types/errors';
 
 // For tests where we need a simpler category enum
-const TestErrorCategory = {
+const Teststring = {
   OPERATIONAL: 'operational',
   TECHNICAL: 'technical',
   EXTERNAL: 'external'

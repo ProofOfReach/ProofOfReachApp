@@ -12,7 +12,7 @@
  * - stakeholder: Has access to business metrics
  * - developer: Has access to technical metrics and API information
  */
-export type UserRoleType = 'viewer' | 'advertiser' | 'publisher' | 'admin' | 'stakeholder' | 'developer';
+export type UserRole = 'viewer' | 'advertiser' | 'publisher' | 'admin' | 'stakeholder' | 'developer';
 
 /**
  * Role permission mapping
@@ -36,7 +36,7 @@ export interface RolePermissions {
  * Role information including display name and description
  */
 export interface RoleInfo {
-  id: UserRoleType;
+  id: UserRole;
   displayName: string;
   description: string;
   permissions: RolePermissions;
@@ -47,7 +47,7 @@ export interface RoleInfo {
  * Role assignment status
  */
 export interface UserRoleStatus {
-  role: UserRoleType;
+  role: UserRole;
   isActive: boolean;
   isTestRole: boolean;
   assignedAt?: Date;
@@ -58,20 +58,20 @@ export interface UserRoleStatus {
  */
 export interface UserRoleContext {
   // Current active role
-  currentRole: UserRoleType;
+  currentRole: UserRole;
   
   // All roles assigned to the user
-  availableRoles: UserRoleType[];
+  availableRoles: UserRole[];
   
   // Detailed role information with permission status
-  roleDetails: Record<UserRoleType, UserRoleStatus>;
+  roleDetails: Record<UserRole, UserRoleStatus>;
   
   // Session information
   isAuthenticated: boolean;
   isTestMode: boolean;
   
   // Actions
-  setCurrentRole: (role: UserRoleType) => Promise<boolean>;
+  setCurrentRole: (role: UserRole) => Promise<boolean>;
 }
 
 /**

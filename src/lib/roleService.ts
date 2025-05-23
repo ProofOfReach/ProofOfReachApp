@@ -1,4 +1,4 @@
-import { UserRole } from '../context/RoleContext';
+import type { UserRole } from '../context/RoleContext';
 import { getTestModeStatus } from '../context/TestModeContext';
 
 /**

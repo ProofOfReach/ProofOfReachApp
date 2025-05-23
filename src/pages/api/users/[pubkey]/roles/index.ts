@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { UserRole } from '../../../../../types/auth';
+import type { UserRole } from '../../../../../types/auth';
 import { logger } from '../../../../../lib/logger';
 import { roleService } from '../../../../../services/roleService';
 import prisma from '../../../../../lib/prisma';

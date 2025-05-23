@@ -4,7 +4,7 @@ import { TestModeStorageService } from '../testModeStorageService';
 import { StorageService } from '../storageService';
 import * as eventDispatcherModule from '../../lib/events/eventDispatcher';
 import { logger } from '../../lib/logger';
-import { UserRoleType } from '../../types/role';
+import type { UserRole } from '../../types/role';
 
 // Mock dependencies
 jest.mock('../enhancedStorageService', () => ({
@@ -287,7 +287,7 @@ describe('TestModeService', () => {
       });
       
       const duration = 30 * 60 * 1000; // 30 minutes
-      const initialRole: UserRoleType = 'admin';
+      const initialRole: UserRole = 'admin';
       const debug = true;
       
       const result = testModeService.enableTestMode(duration, initialRole, debug);
@@ -384,7 +384,7 @@ describe('TestModeService', () => {
         lastUpdated: Date.now()
       });
       
-      const result = await testModeService.setCurrentRole('invalidRole' as UserRoleType);
+      const result = await testModeService.setCurrentRole('invalidRole' as UserRole);
       
       expect(result).toBe(false);
       expect(mockTestModeStorage.saveTestModeState).not.toHaveBeenCalled();

@@ -52,8 +52,8 @@ export const campaignService = {
         description: campaignData.description,
         startDate: campaignData.startDate,
         endDate: campaignData.endDate || null,
-        budget: campaignData.budget,
-        dailyBudget: campaignData.dailyBudget || campaignData.budget,
+        budget: campaignData?.budget ?? 0,
+        dailyBudget: campaignData.dailyBudget || campaignData?.budget ?? 0,
         status: 'DRAFT',
         targetLocation: campaignData.targetLocation || null,
         targetInterests: campaignData.targetInterests || null,
@@ -183,7 +183,7 @@ export const campaignService = {
           description: data.description || 'This campaign has been updated',
           startDate: data.startDate || new Date(),
           endDate: data.endDate || null,
-          budget: data.budget || 5000,
+          budget: data?.budget ?? 0 || 5000,
           dailyBudget: data.dailyBudget || 500,
           status: 'ACTIVE',
           targetLocation: data.targetLocation || null,
@@ -374,7 +374,7 @@ export const campaignService = {
       conversions: 0,
       ctr: 0,
       spentBudget: 0,
-      remainingBudget: existingCampaign.budget,
+      remainingBudget: existingCampaign?.budget ?? 0,
     };
   },
 };

@@ -1,5 +1,5 @@
 // Set up mocks first
-jest.mock('@/lib/errorService');
+jest.mock('@/lib/console');
 jest.mock('@/lib/apiErrorHandler');
 
 import {
@@ -16,7 +16,7 @@ import {
   hasAnyError
 } from '@/lib/formErrorHandler';
 import '@/lib/apiErrorHandler';
-import '@/lib/errorService';
+import '@/lib/console';
 import '@/types/errors';
 
 describe('Form Error Handler', () => {
@@ -125,13 +125,13 @@ describe('Form Error Handler', () => {
       };
       
       // Mock the reportError method for this specific test
-      errorService.reportError = jest.fn();
+      console.reportError = jest.fn();
       
       const result = extractApiFormErrors(errorObj);
       
       expect(result.formError).toBe('Please correct the errors below');
       expect(result.fieldErrors).toEqual({});
-      expect(errorService.reportError).toHaveBeenCalled();
+      expect(console.reportError).toHaveBeenCalled();
     });
   });
   

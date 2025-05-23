@@ -27,7 +27,7 @@ import {
 interface RoleDropdownProps {
   skipNavigation?: boolean;
   className?: string;
-  onRoleChange?: (role: UserRoleType) => void;
+  onRoleChange?: (role: UserRole) => void;
 }
 
 /**
@@ -40,14 +40,14 @@ const RoleDropdown: React.FC<RoleDropdownProps> = ({
   onRoleChange
 }) => {
   const router = useRouter();
-  const [currentRole, setCurrentRole] = useState<UserRoleType>('viewer');
+  const [currentRole, setCurrentRole] = useState<UserRole>('viewer');
   const [isChanging, setIsChanging] = useState(false);
-  const [availableRoles, setAvailableRoles] = useState<UserRoleType[]>(['viewer']);
+  const [availableRoles, setAvailableRoles] = useState<UserRole[]>(['viewer']);
   const [isLoading, setIsLoading] = useState(true);
   const { isTestMode } = useTestMode();
   
   // Type guard to validate roles
-  const isUserRole = (role: string): role is UserRoleType => {
+  const isUserRole = (role: string): role is UserRole => {
     return RoleManager.isValidRole(role);
   };
   
@@ -112,7 +112,7 @@ const RoleDropdown: React.FC<RoleDropdownProps> = ({
     const currentRoleValue = storedRole || serviceRole || 'viewer';
     
     // Always update current role to maintain consistency
-    setCurrentRole(currentRoleValue as UserRoleType);
+    setCurrentRole(currentRoleValue as UserRole);
     
     // Check for cached available roles using enhanced storage
     let cachedRoles;
@@ -133,7 +133,7 @@ const RoleDropdown: React.FC<RoleDropdownProps> = ({
       logger.log('Test mode detected in fetchRolesFromCache with currentRole:', currentRoleValue);
       
       // Show all roles and highlight the current one using all valid roles
-      const allRoles: UserRoleType[] = ['viewer', 'advertiser', 'publisher', 'admin', 'stakeholder']; 
+      const allRoles: UserRole[] = ['viewer', 'advertiser', 'publisher', 'admin', 'stakeholder']; 
       setAvailableRoles(allRoles);
       
       // Broadcast the current state for other components
@@ -154,8 +154,8 @@ const RoleDropdown: React.FC<RoleDropdownProps> = ({
         logger.debug('Using cached roles:', cachedRoles);
         let parsedRoles = typeof cachedRoles === 'string' ? JSON.parse(cachedRoles) : cachedRoles;
         
-        // Ensure we only use valid UserRoleType values through the RoleManager
-        const validRoles: UserRoleType[] = Array.isArray(parsedRoles) 
+        // Ensure we only use valid UserRole values through the RoleManager
+        const validRoles: UserRole[] = Array.isArray(parsedRoles) 
           ? parsedRoles.filter(isUserRole)
           : ['viewer'];
         
@@ -182,11 +182,11 @@ const RoleDropdown: React.FC<RoleDropdownProps> = ({
     setIsLoading(true);
     try {
       // Get current role using RoleManager (source of truth)
-      let currentRoleValue: UserRoleType;
+      let currentRoleValue: UserRole;
       
       try {
         // Try to get from enhanced storage first
-        const storedRole = enhancedStorage.getItem<UserRoleType | null>(STORAGE_KEYS.CURRENT_ROLE);
+        const storedRole = enhancedStorage.getItem<UserRole | null>(STORAGE_KEYS.CURRENT_ROLE);
         currentRoleValue = storedRole && isUserRole(storedRole) ? storedRole : RoleManager.getCurrentRole() || 'viewer';
       } catch (error) {
         // Fallback to RoleManager
@@ -204,7 +204,7 @@ const RoleDropdown: React.FC<RoleDropdownProps> = ({
       // In test mode, we show all roles but still highlight the current one
       if (isTestModeActive) {
         logger.log('Test mode active in fetchRolesFromAPI - currentRole:', currentRoleValue);
-        const allRoles: UserRoleType[] = ['viewer', 'advertiser', 'publisher', 'admin', 'stakeholder'];
+        const allRoles: UserRole[] = ['viewer', 'advertiser', 'publisher', 'admin', 'stakeholder'];
         
         // Use the enhancedStorage to save roles consistently
         try {
@@ -257,8 +257,8 @@ const RoleDropdown: React.FC<RoleDropdownProps> = ({
           logger.debug('Using cached roles within time limit:', cachedRoles);
           let parsedRoles = typeof cachedRoles === 'string' ? JSON.parse(cachedRoles) : cachedRoles;
           
-          // Ensure we only use valid UserRoleType values
-          const validRoles: UserRoleType[] = Array.isArray(parsedRoles) 
+          // Ensure we only use valid UserRole values
+          const validRoles: UserRole[] = Array.isArray(parsedRoles) 
             ? parsedRoles.filter(isUserRole)
             : ['viewer'];
             
@@ -284,8 +284,8 @@ const RoleDropdown: React.FC<RoleDropdownProps> = ({
           
           logger.debug('Roles from API:', fetchedRoles);
           
-          // Filter to ensure we only use valid UserRoleType values
-          const validRoles: UserRoleType[] = Array.isArray(fetchedRoles) 
+          // Filter to ensure we only use valid UserRole values
+          const validRoles: UserRole[] = Array.isArray(fetchedRoles) 
             ? fetchedRoles.filter(isUserRole)
             : ['viewer'];
           
@@ -398,7 +398,7 @@ const RoleDropdown: React.FC<RoleDropdownProps> = ({
     const handleLegacyRoleChanged = (event: CustomEvent) => {
       logger.debug('Legacy role changed event detected', event.detail);
       if (event.detail?.role) {
-        setCurrentRole(event.detail.role as UserRoleType);
+        setCurrentRole(event.detail.role as UserRole);
         fetchRolesFromCache();
       }
     };
@@ -441,7 +441,7 @@ const RoleDropdown: React.FC<RoleDropdownProps> = ({
   
   // Handle role change
   const handleRoleChange = async (event: React.ChangeEvent<HTMLSelectElement>) => {
-    const newRole = event.target.value as UserRoleType;
+    const newRole = event.target.value as UserRole;
     
     if (newRole === currentRole) return;
     

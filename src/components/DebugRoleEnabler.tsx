@@ -21,7 +21,7 @@ const DebugRoleEnabler: React.FC = () => {
   const { isActive, enableTestMode, disableTestMode, currentRole: testModeCurrentRole } = testModeData;
   const [isExpanded, setIsExpanded] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [currentRole, setCurrentRole] = useState<UserRoleType>('viewer');
+  const [currentRole, setCurrentRole] = useState<UserRole>('viewer');
   
   // Listen for role changes using the new event system
   useAppEvent(ROLE_EVENTS.ROLE_CHANGED, (payload) => {
@@ -51,7 +51,7 @@ const DebugRoleEnabler: React.FC = () => {
       
       const validRole = typeof fallbackRole === 'string' ? fallbackRole : 'viewer';
       if (RoleManager.isValidRole(validRole)) {
-        setCurrentRole(validRole as UserRoleType);
+        setCurrentRole(validRole as UserRole);
       }
     }
   }, []);
@@ -71,7 +71,7 @@ const DebugRoleEnabler: React.FC = () => {
         enhancedStorage.setItem(STORAGE_KEYS.AVAILABLE_ROLES, JSON.stringify(allRoles));
         
         // Dispatch event using the new event system
-        notifyRolesUpdated(allRoles as UserRoleType[], currentRole);
+        notifyRolesUpdated(allRoles as UserRole[], currentRole);
         
         // For backward compatibility
         const legacySuccess = await RoleService.enableAllRoles();

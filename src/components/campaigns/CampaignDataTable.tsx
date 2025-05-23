@@ -183,7 +183,7 @@ const CampaignDataTable: React.FC<CampaignDataTableProps> = ({
         <div>
           <div className="flex items-center text-gray-900 dark:text-white">
             <DollarSign className="h-3 w-3 mr-1 opacity-70" />
-            {formatBudget(row.budget)}
+            {formatBudget(row?.budget ?? 0)}
           </div>
           <div className="text-xs text-gray-500 dark:text-gray-400 ml-4">
             {formatBudget(row.dailyBudget || 0)}/day

@@ -1,6 +1,6 @@
 import { useState, useEffect, createContext, useContext } from 'react';
 import UserManager from '../models/user';
-import { UserRole } from '../context/RoleContext';
+import type { UserRole } from '../context/RoleContext';
 import { normalizeRole, normalizeRoles } from '../utils/roleNormalizer';
 
 // Auth context state type

@@ -5,23 +5,23 @@
  * By centralizing the normalization, we avoid having to update every file individually.
  */
 
-import { UserRoleType } from '../types/role';
+import type { UserRole } from '../types/role';
 
 /**
  * Normalizes a role string, converting legacy 'viewer' role to 'viewer'
  * This ensures backward compatibility while we transition the codebase
  * 
  * @param role The role string to normalize
- * @returns Normalized role string (UserRoleType)
+ * @returns Normalized role string (UserRole)
  */
-export function normalizeRole(role: string): UserRoleType {
+export function normalizeRole(role: string): UserRole {
   // Convert legacy 'viewer' role to 'viewer'
   if (role === 'viewer') {
     return 'viewer';
   }
   
   // Return the role as is if it's already normalized
-  return role as UserRoleType;
+  return role as UserRole;
 }
 
 /**
@@ -30,7 +30,7 @@ export function normalizeRole(role: string): UserRoleType {
  * @param roles Array of role strings to normalize
  * @returns Normalized array of roles
  */
-export function normalizeRoles(roles: string[]): UserRoleType[] {
+export function normalizeRoles(roles: string[]): UserRole[] {
   return roles.map(normalizeRole);
 }
 

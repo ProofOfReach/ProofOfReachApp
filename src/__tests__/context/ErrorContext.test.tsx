@@ -5,15 +5,15 @@
  */
 
 import React from 'react';
-import { ErrorCategory } from '../../types/errors';
+import { string } from '../../types/errors';
 import { render, screen, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import '@/context/ErrorContext';
 import '@/utils/toast';
 
-// Mock errorService
-jest.mock('@/lib/errorService', () => ({
-  errorService: {
+// Mock console
+jest.mock('@/lib/console', () => ({
+  console: {
     reportError: jest.fn(),
   },
 }));
@@ -50,7 +50,7 @@ describe('ErrorContext', () => {
                 severity: 'error',
                 source: 'test',
                 timestamp: Date.now().toString(),
-                category: ErrorCategory.EXTERNAL,
+                category: string.EXTERNAL,
                 active: true,
                 userFacing: true
               })}

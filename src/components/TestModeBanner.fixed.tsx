@@ -44,7 +44,7 @@ export default function TestModeBanner() {
   // State for UI controls
   const [isDebugExpanded, setIsDebugExpanded] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [currentRole, setCurrentRole] = useState<UserRoleType>('viewer');
+  const [currentRole, setCurrentRole] = useState<UserRole>('viewer');
   
   // Role change event handler
   useAppEvent(ROLE_EVENTS.ROLE_CHANGED, (payload) => {
@@ -72,7 +72,7 @@ export default function TestModeBanner() {
       logger.log(`Storage changed for current role: ${prevValue} → ${newValue}`);
       
       if (payload.value && typeof payload.value === 'string' && RoleManager.isValidRole(payload.value)) {
-        setCurrentRole(payload.value as UserRoleType);
+        setCurrentRole(payload.value as UserRole);
       }
     }
   });
@@ -82,7 +82,7 @@ export default function TestModeBanner() {
     logger.log('TestModeBanner received legacy role-changed event:', event.detail);
     
     if (event.detail?.role && RoleManager.isValidRole(event.detail.role)) {
-      setCurrentRole(event.detail.role as UserRoleType);
+      setCurrentRole(event.detail.role as UserRole);
     }
   });
   
@@ -91,7 +91,7 @@ export default function TestModeBanner() {
     
     const updatedRole = event.detail?.to || event.detail?.role || RoleManager.getCurrentRole();
     if (updatedRole && RoleManager.isValidRole(updatedRole)) {
-      setCurrentRole(updatedRole as UserRoleType);
+      setCurrentRole(updatedRole as UserRole);
     }
   });
   
@@ -99,7 +99,7 @@ export default function TestModeBanner() {
   useStorageEvent('currentRole', (newValue, oldValue) => {
     if (newValue && RoleManager.isValidRole(newValue)) {
       logger.log(`Current role changed in storage: ${oldValue} → ${newValue}`);
-      setCurrentRole(newValue as UserRoleType);
+      setCurrentRole(newValue as UserRole);
     }
   });
   
@@ -123,8 +123,8 @@ export default function TestModeBanner() {
       const validRole = typeof fallbackRole === 'string' ? fallbackRole : 'viewer';
       
       if (RoleManager.isValidRole(validRole)) {
-        setCurrentRole(validRole as UserRoleType);
-        RoleManager.setCurrentRole(validRole as UserRoleType);
+        setCurrentRole(validRole as UserRole);
+        RoleManager.setCurrentRole(validRole as UserRole);
       } else {
         setCurrentRole('viewer');
       }
@@ -175,7 +175,7 @@ export default function TestModeBanner() {
   const handleEnableAllRoles = async () => {
     setIsLoading(true);
     try {
-      const allRoles: UserRoleType[] = ['viewer', 'advertiser', 'publisher', 'admin', 'stakeholder'];
+      const allRoles: UserRole[] = ['viewer', 'advertiser', 'publisher', 'admin', 'stakeholder'];
       
       // In test mode, use direct client-side updates
       if (testModeService.isActive()) {
@@ -244,7 +244,7 @@ export default function TestModeBanner() {
       }
       
       // Cast to type
-      const typedRole = role as UserRoleType;
+      const typedRole = role as UserRole;
       const previousRole = currentRole;
       
       // Update component state

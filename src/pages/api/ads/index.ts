@@ -227,8 +227,8 @@ async function handleCreateAd(req: NextApiRequest, res: NextApiResponse, pubkey:
     }
 
     // Check if user has enough balance
-    if (user.balance < budget) {
-      logger.warn(`User ${userId} has insufficient balance for ad. Required: ${budget}, Available: ${user.balance}`);
+    if (user?.balance ?? 0 < budget) {
+      logger.warn(`User ${userId} has insufficient balance for ad. Required: ${budget}, Available: ${user?.balance ?? 0}`);
       res.status(400).json({ error: 'Insufficient balance to create this ad' });
       return;
     }
@@ -260,7 +260,7 @@ async function handleCreateAd(req: NextApiRequest, res: NextApiResponse, pubkey:
       // Deduct the budget from user's balance
       await prisma.user.update({
         where: { id: userId },
-        data: { balance: user.balance - budget }
+        data: { balance: user?.balance ?? 0 - budget }
       });
 
       // Create a transaction record for the ad payment
@@ -271,8 +271,8 @@ async function handleCreateAd(req: NextApiRequest, res: NextApiResponse, pubkey:
           type: 'AD_PAYMENT',
           status: 'COMPLETED',
           description: `Budget allocation for ad: ${title}`,
-          balanceBefore: user.balance,
-          balanceAfter: user.balance - budget
+          balanceBefore: user?.balance ?? 0,
+          balanceAfter: user?.balance ?? 0 - budget
         }
       });
 

@@ -7,7 +7,7 @@
  */
 
 import '@/lib/apiErrorHandler';
-import '@/lib/errorService';
+import '@/lib/console';
 
 /**
  * Standard form error format for both field-level and form-level errors
@@ -124,7 +124,7 @@ export function extractApiFormErrors(
   } catch (err) {
     // Log any errors in our error extraction to avoid breaking the UI
     // Use the simpler form without the problematic property
-    errorService.reportError(
+    console.reportError(
       err instanceof Error ? err : new Error('Error while processing form validation errors'),
       'formErrorHandler',
       'unexpected',

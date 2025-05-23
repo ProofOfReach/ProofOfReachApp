@@ -1,5 +1,5 @@
 // Set up mocks first
-jest.mock('@/lib/errorService');
+jest.mock('@/lib/console');
 
 import { createMocks } from 'node-mocks-http';
 import {
@@ -10,7 +10,7 @@ import {
   createForbiddenError,
   ErrorCode
 } from '@/lib/apiErrorHandler';
-import '@/lib/errorService';
+import '@/lib/console';
 
 describe('API Error Handler', () => {
   beforeEach(() => {
@@ -37,7 +37,7 @@ describe('API Error Handler', () => {
           code: ErrorCode.INTERNAL_ERROR
         }
       });
-      expect(errorService.reportError).toHaveBeenCalled();
+      expect(console.reportError).toHaveBeenCalled();
     });
     
     it('should handle validation errors with 400 status code', () => {
@@ -62,7 +62,7 @@ describe('API Error Handler', () => {
           }
         }
       });
-      expect(errorService.reportError).toHaveBeenCalled();
+      expect(console.reportError).toHaveBeenCalled();
     });
     
     it('should handle not found errors with 404 status code', () => {
@@ -84,7 +84,7 @@ describe('API Error Handler', () => {
           code: ErrorCode.NOT_FOUND
         }
       });
-      expect(errorService.reportError).toHaveBeenCalled();
+      expect(console.reportError).toHaveBeenCalled();
     });
     
     it('should handle unauthorized errors with 401 status code', () => {
@@ -106,7 +106,7 @@ describe('API Error Handler', () => {
           code: ErrorCode.UNAUTHORIZED
         }
       });
-      expect(errorService.reportError).toHaveBeenCalled();
+      expect(console.reportError).toHaveBeenCalled();
     });
     
     it('should handle forbidden errors with 403 status code', () => {
@@ -128,7 +128,7 @@ describe('API Error Handler', () => {
           code: ErrorCode.FORBIDDEN
         }
       });
-      expect(errorService.reportError).toHaveBeenCalled();
+      expect(console.reportError).toHaveBeenCalled();
     });
     
     it('should sanitize headers to remove sensitive information', () => {
@@ -146,10 +146,10 @@ describe('API Error Handler', () => {
       
       handleApiRouteError(error, req, res, 'test-component');
       
-      expect(errorService.reportError).toHaveBeenCalled();
+      expect(console.reportError).toHaveBeenCalled();
       
       // Extract the data passed to reportError
-      const contextData = (errorService.reportError as jest.Mock).mock.calls[0][4];
+      const contextData = (console.reportError as jest.Mock).mock.calls[0][4];
       
       // Get the sanitized headers from the data property
       const headers = contextData.data.headers;

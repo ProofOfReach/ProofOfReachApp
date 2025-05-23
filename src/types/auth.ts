@@ -4,11 +4,11 @@
  * This file contains TypeScript type definitions related to authentication.
  */
 
-// Import the standardized UserRoleType from role.ts
-import { UserRoleType } from './role';
+// Import the standardized UserRole from role.ts
+import type { UserRole } from './role';
 
 // Re-export for backwards compatibility (to be removed in future)
-export type UserRole = UserRoleType;
+export type UserRole = UserRole;
 
 /**
  * Authentication state

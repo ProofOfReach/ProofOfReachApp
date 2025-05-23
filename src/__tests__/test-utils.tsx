@@ -3,7 +3,7 @@ import { render, RenderOptions } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { UserRole, RoleProvider } from '../context/RoleContext';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { UserRoleType } from '../types/role';
+import type { UserRole } from '../types/role';
 
 // Import React
 import * as React from 'react';
@@ -31,7 +31,7 @@ jest.mock('../context/TestModeContext', () => {
 jest.mock('../hooks/useAuthRefactored', () => ({
   useAuthRefactored: () => ({
     authState: {
-      roles: ['viewer', 'advertiser'] as UserRoleType[],
+      roles: ['viewer', 'advertiser'] as UserRole[],
       isAuthenticated: true,
     },
     refreshRoles: jest.fn(),
@@ -103,14 +103,14 @@ jest.mock('../context/NewRoleContextRefactored', () => {
     return React.createElement(mockContext.Provider, { value: contextValue }, children);
   };
   
-  const useRoleRefactored = () => React.useContext(mockContext);
+  const useRole = () => React.useContext(mockContext);
   
   return {
     __esModule: true,
     ALL_ROLES,
     NewRoleContextRefactored: mockContext,
     RoleProviderRefactored,
-    useRoleRefactored,
+    useRole,
     useNewRole: () => ({
       currentRole: 'advertiser',
       hasPermission: jest.fn().mockReturnValue(true),
@@ -183,7 +183,7 @@ const customRender = (
   function Wrapper({ children }: { children: React.ReactNode }): React.ReactElement {
     // Use either the provided auth context or the default mock
     // Cast to the appropriate role type to avoid type errors
-    const initialRole = (options?.initialRole || "advertiser") as UserRole & UserRoleType;
+    const initialRole = (options?.initialRole || "advertiser") as UserRole & UserRole;
     const queryClient = createTestQueryClient();
     
     // Always wrap with QueryClientProvider first as innermost wrapper

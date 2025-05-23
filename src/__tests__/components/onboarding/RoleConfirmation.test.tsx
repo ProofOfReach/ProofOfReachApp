@@ -107,7 +107,7 @@ describe('RoleConfirmation', () => {
     await userEvent.click(viewerButton);
 
     // Should call onConfirm with "viewer"
-    expect(mockOnConfirm).toHaveBeenCalledWith('viewer' as UserRoleType);
+    expect(mockOnConfirm).toHaveBeenCalledWith('viewer' as UserRole);
   });
 
   it('calls onConfirm with "publisher" when publisher role is selected', async () => {
@@ -118,7 +118,7 @@ describe('RoleConfirmation', () => {
     await userEvent.click(publisherButton);
 
     // Should call onConfirm with "publisher"
-    expect(mockOnConfirm).toHaveBeenCalledWith('publisher' as UserRoleType);
+    expect(mockOnConfirm).toHaveBeenCalledWith('publisher' as UserRole);
   });
 
   it('calls onConfirm with "advertiser" when advertiser role is selected', async () => {
@@ -129,7 +129,7 @@ describe('RoleConfirmation', () => {
     await userEvent.click(advertiserButton);
 
     // Should call onConfirm with "advertiser"
-    expect(mockOnConfirm).toHaveBeenCalledWith('advertiser' as UserRoleType);
+    expect(mockOnConfirm).toHaveBeenCalledWith('advertiser' as UserRole);
   });
 
   it('displays proper icons for each role', () => {
@@ -177,7 +177,7 @@ describe('RoleConfirmation', () => {
     await userEvent.click(publisherButton);
 
     // Verify the onConfirm was called with publisher
-    expect(mockOnConfirm).toHaveBeenCalledWith('publisher' as UserRoleType);
-    expect(customMockSetSelectedRole).toHaveBeenCalledWith('publisher' as UserRoleType);
+    expect(mockOnConfirm).toHaveBeenCalledWith('publisher' as UserRole);
+    expect(customMockSetSelectedRole).toHaveBeenCalledWith('publisher' as UserRole);
   });
 });

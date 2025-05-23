@@ -46,7 +46,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
   try {
     const result = await onboardingService.markOnboardingComplete(
       pubkey as string, 
-      role as UserRoleType
+      role as UserRole
     );
     
     return res.status(200).json({ success: true, result });

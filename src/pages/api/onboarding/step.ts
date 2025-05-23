@@ -2,7 +2,7 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import '@/types/role';
 import '@/lib/onboardingService';
 import '@/lib/logger';
-import '@/lib/errorService';
+import '@/lib/console';
 import '@/types/errors';
 
 /**
@@ -32,7 +32,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     // Save the onboarding step
     await onboardingService.saveOnboardingStep(
       pubkey as string,
-      role as UserRoleType,
+      role as UserRole,
       step as string
     );
 
@@ -50,14 +50,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     });
 
     // Report to error tracking system
-    errorService.reportError(
+    console.reportError(
       error instanceof Error ? error : errorMessage,
       'api.onboarding.step',
       'api',
       'warning', // Step saving is non-critical
       {
         data: { pubkey, role, step },
-        category: ErrorCategory.OPERATIONAL,
+        category: string.OPERATIONAL,
         userFacing: false,
         correlationId
       }

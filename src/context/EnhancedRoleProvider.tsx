@@ -1,6 +1,6 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { useRouter } from 'next/router';
-import { UserRole } from './RoleContext';
+import type { UserRole } from './RoleContext';
 import { useLocalRole } from '../hooks/useLocalRole';
 
 /**

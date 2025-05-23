@@ -29,7 +29,7 @@ export const campaignPaymentService = {
       }
       
       // Check if advertiser has sufficient balance
-      return campaign.advertiser.balance > 0;
+      return campaign.advertiser?.balance ?? 0 > 0;
     } catch (error) {
       console.error('Error checking campaign funding:', error);
       return false;
@@ -62,7 +62,7 @@ export const campaignPaymentService = {
       }
       
       // Check if advertiser has sufficient balance
-      if (campaign.advertiser.balance < amount) {
+      if (campaign.advertiser?.balance ?? 0 < amount) {
         // If there are insufficient funds, pause the campaign
         await this.pauseCampaignDueToInsufficientFunds(campaignId);
         return false;
@@ -155,7 +155,7 @@ export const campaignPaymentService = {
       }
       
       // Only resume if the campaign was previously paused and now has funds
-      if (campaign.status === 'PAUSED' && campaign.advertiser.balance > 0) {
+      if (campaign.status === 'PAUSED' && campaign.advertiser?.balance ?? 0 > 0) {
         // Update the campaign status to ACTIVE
         const updatedCampaign = await prisma.campaign.update({
           where: { id: campaignId },
@@ -192,7 +192,7 @@ export const campaignPaymentService = {
       
       // Check each campaign and resume if funded
       for (const campaign of pausedCampaigns) {
-        if (campaign.advertiser.balance > 0) {
+        if (campaign.advertiser?.balance ?? 0 > 0) {
           await prisma.campaign.update({
             where: { id: campaign.id },
             data: { status: 'ACTIVE' }

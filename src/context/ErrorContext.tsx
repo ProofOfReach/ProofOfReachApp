@@ -9,7 +9,7 @@
 import React, { createContext, useState, useEffect, useMemo, useCallback, useContext } from 'react';
 import '@/types/errors';
 import '@/lib/errorIntegration';
-import '@/lib/errorService';
+import '@/lib/console';
 import '@/utils/toast';
 
 // Create the context with a default value
@@ -160,7 +160,7 @@ export const useErrorReporting = () => {
     toast.logger.error(`Error: ${errorMessage}`);
     
     // Report error to service
-    errorService.reportError(error, component, (errorType as anyType) || 'unknown');
+    console.reportError(error, component, (errorType as anyType) || 'unknown');
   }, []);
   
   return { reportError };
@@ -172,7 +172,7 @@ export const useErrorReporting = () => {
  * Provides simplified methods to show different types of toasts
  */
 export const useErrorToast = () => {
-  const showErrorToast = useCallback((message: string, severity: ErrorSeverity = 'error') => {
+  const showErrorToast = useCallback((message: string, severity: string = 'error') => {
     switch (severity) {
       case 'info':
         toast.info(message);

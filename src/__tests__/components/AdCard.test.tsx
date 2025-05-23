@@ -21,13 +21,13 @@ describe('AdCard Component', () => {
     render(<AdCard ad={mockAds[0]} />);
     
     // Initially the budget isn't visible as the card is collapsed
-    expect(screen.queryByText(`${mockAds[0].budget} sats`)).not.toBeInTheDocument();
+    expect(screen.queryByText(`${mockAds[0]?.budget ?? 0} sats`)).not.toBeInTheDocument();
     
     // Click on the card to expand it
     fireEvent.click(screen.getByText(mockAds[0].title));
     
     // After expanding, budget should be visible
-    expect(screen.getByText(`${mockAds[0].budget} sats`)).toBeInTheDocument();
+    expect(screen.getByText(`${mockAds[0]?.budget ?? 0} sats`)).toBeInTheDocument();
   });
 
   it('shows status badge with correct color', () => {

@@ -12,18 +12,18 @@
  * Available user roles in the system
  * This matches the Prisma schema's UserRole enum
  * 
- * @note This should be kept in sync with src/lib/roles/types.ts UserRoleType definition
+ * @note This should be kept in sync with src/lib/roles/types.ts UserRole definition
  */
-export type UserRoleType = 'viewer' | 'advertiser' | 'publisher' | 'admin' | 'stakeholder' | 'developer';
+export type UserRole = 'viewer' | 'advertiser' | 'publisher' | 'admin' | 'stakeholder' | 'developer';
 
 /**
  * Role data structure for consistent storage and retrieval
  */
 export interface RoleData {
   /** The currently active role for the user */
-  currentRole: UserRoleType;
+  currentRole: UserRole;
   /** All roles available to this user */
-  availableRoles: UserRoleType[];
+  availableRoles: UserRole[];
   /** Timestamp of when this data was last updated */
   timestamp: number;
 }
@@ -50,23 +50,23 @@ export interface RoleCapabilities {
 }
 
 /**
- * Check if a string is a valid UserRoleType
+ * Check if a string is a valid UserRole
  */
-export function isValidUserRole(role: string): role is UserRoleType {
-  return ['viewer', 'advertiser', 'publisher', 'admin', 'stakeholder'].includes(role as UserRoleType);
+export function isValidUserRole(role: string): role is UserRole {
+  return ['viewer', 'advertiser', 'publisher', 'admin', 'stakeholder'].includes(role as UserRole);
 }
 
 /**
  * Filter a list of roles to only include valid roles
  */
-export function filterValidRoles(roles: string[]): UserRoleType[] {
+export function filterValidRoles(roles: string[]): UserRole[] {
   return roles.filter(isValidUserRole);
 }
 
 /**
  * Get a safe default role if the provided role is invalid
  */
-export function getDefaultRole(): UserRoleType {
+export function getDefaultRole(): UserRole {
   return 'viewer';
 }
 

@@ -146,7 +146,7 @@ const CreateCampaignPage: NextPageWithLayout = () => {
       targetAge: campaignFormData.targetAge,
       // Pre-populate with campaign info
       advertiserName: campaignFormData.name,
-      budget: campaignFormData.budget, 
+      budget: campaignFormData?.budget ?? 0, 
       dailyBudget: campaignFormData.dailyBudget,
       targetedAdSpaces: []
     });
@@ -170,9 +170,9 @@ const CreateCampaignPage: NextPageWithLayout = () => {
       }
       
       // If total budget is specified, validate it
-      if (campaignFormData.budget && campaignFormData.budget > 0) {
+      if (campaignFormData?.budget ?? 0 && campaignFormData?.budget ?? 0 > 0) {
         // Ensure daily budget doesn't exceed total budget
-        if (campaignFormData.dailyBudget > campaignFormData.budget) {
+        if (campaignFormData.dailyBudget > campaignFormData?.budget ?? 0) {
           throw new Error('Daily spending limit cannot exceed maximum campaign spend.');
         }
       }
@@ -370,7 +370,7 @@ const CreateCampaignPage: NextPageWithLayout = () => {
       }
       
       const data = await response.json();
-      setWalletBalance(data.balance);
+      setWalletBalance(data?.balance ?? 0);
     } catch (err) {
       console.error('Error fetching wallet balance:', err);
       
@@ -685,7 +685,7 @@ const CreateCampaignPage: NextPageWithLayout = () => {
                       type="number"
                       id="budget"
                       name="budget"
-                      value={campaignFormData.budget}
+                      value={campaignFormData?.budget ?? 0}
                       onChange={handleCampaignChange}
                       min="0"
                       step="100"

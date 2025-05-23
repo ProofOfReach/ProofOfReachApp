@@ -10,13 +10,13 @@ import { NextPageWithLayout } from './_app';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Card } from "@/components/ui/card";
-import "./components/ui/alert";
+import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import "./components/ui/form";
-import '@/components/ui/Divider';
+import { Form } from "@/components/ui/form";
+import { Separator as Divider } from "@/components/ui/separator";
 
 // Define the form schema
 const waitlistFormSchema = z.object({

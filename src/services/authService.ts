@@ -1,13 +1,13 @@
 import { useState, useEffect } from 'react';
-import { UserRole } from '@prisma/client';
+import type { UserRole } from '@prisma/client';
 import { v4 as uuidv4 } from 'uuid';
 import { sessionStorage, localStorage } from '../lib/enhancedStorageService';
 import { logger } from '../lib/logger';
 import { nostr } from '../lib/nostr';
-import { errorService, ErrorCategory } from '../lib/errorService';
+import { console, string } from '../lib/console';
 
-// Define UserRoleType for use throughout the application
-export type UserRoleType = UserRole | 'viewer' | 'publisher' | 'advertiser' | 'admin' | 'stakeholder';
+// Define UserRole for use throughout the application
+export type UserRole = UserRole | 'viewer' | 'publisher' | 'advertiser' | 'admin' | 'stakeholder';
 
 /**
  * Authentication State Interface
@@ -16,8 +16,8 @@ export type UserRoleType = UserRole | 'viewer' | 'publisher' | 'advertiser' | 'a
 export interface AuthState {
   isLoggedIn: boolean;
   pubkey: string;
-  currentRole: UserRoleType;
-  availableRoles: UserRoleType[];
+  currentRole: UserRole;
+  availableRoles: UserRole[];
   isTestMode: boolean;
 }
 
@@ -106,13 +106,13 @@ export class AuthService {
         }
       }
     } catch (error) {
-      errorService.reportError(
+      console.reportError(
         error instanceof Error ? error : new Error('Failed to initialize auth from storage'),
         'authService.initializeFromStorage',
         'auth',
         'warning',
         {
-          category: ErrorCategory.OPERATIONAL,
+          category: string.OPERATIONAL,
           userFacing: false
         }
       );
@@ -136,13 +136,13 @@ export class AuthService {
       // Save to local storage for persistence across tabs
       await localStorage.setItem('auth', JSON.stringify(dataToStore));
     } catch (error) {
-      errorService.reportError(
+      console.reportError(
         error instanceof Error ? error : new Error('Failed to persist auth to storage'),
         'authService.persistToStorage',
         'auth',
         'warning',
         {
-          category: ErrorCategory.OPERATIONAL,
+          category: string.OPERATIONAL,
           userFacing: false
         }
       );
@@ -283,13 +283,13 @@ export class AuthService {
         ? error 
         : new Error('Login failed for an unknown reason');
       
-      errorService.reportError(
+      console.reportError(
         this._error,
         'authService.loginWithNostr',
         'auth',
         'error',
         {
-          category: ErrorCategory.OPERATIONAL,
+          category: string.OPERATIONAL,
           userFacing: true,
           correlationId,
           details: `Provider: ${this._provider}`
@@ -360,13 +360,13 @@ export class AuthService {
         ? error 
         : new Error('API key login failed for an unknown reason');
       
-      errorService.reportError(
+      console.reportError(
         this._error,
         'authService.loginWithApiKey',
         'auth',
         'error',
         {
-          category: ErrorCategory.OPERATIONAL,
+          category: string.OPERATIONAL,
           userFacing: true,
           correlationId
         }
@@ -420,13 +420,13 @@ export class AuthService {
       
       logger.info('User logged out successfully');
     } catch (error) {
-      errorService.reportError(
+      console.reportError(
         error instanceof Error ? error : new Error('Logout failed'),
         'authService.logout',
         'auth',
         'warning',
         {
-          category: ErrorCategory.OPERATIONAL,
+          category: string.OPERATIONAL,
           userFacing: false
         }
       );
@@ -457,7 +457,7 @@ export class AuthService {
    * @param role The role to check
    * @returns Whether the user has the specified role
    */
-  public hasRole(role: UserRoleType): boolean {
+  public hasRole(role: UserRole): boolean {
     if (!this._authState.isLoggedIn) {
       return false;
     }
@@ -476,7 +476,7 @@ export class AuthService {
    * @param role The role to switch to
    * @returns Whether the role switch was successful
    */
-  public async switchRole(role: UserRoleType): Promise<boolean> {
+  public async switchRole(role: UserRole): Promise<boolean> {
     if (!this._authState.isLoggedIn) {
       return false;
     }
@@ -519,13 +519,13 @@ export class AuthService {
         ? error 
         : new Error(`Failed to switch to role: ${role}`);
       
-      errorService.reportError(
+      console.reportError(
         this._error,
         'authService.switchRole',
         'auth',
         'error',
         {
-          category: ErrorCategory.OPERATIONAL,
+          category: string.OPERATIONAL,
           userFacing: true,
           data: { role }
         }
@@ -545,7 +545,7 @@ export class AuthService {
    * Refresh the user's available roles
    * @returns The updated available roles
    */
-  public async refreshRoles(): Promise<UserRoleType[]> {
+  public async refreshRoles(): Promise<UserRole[]> {
     if (!this._authState.isLoggedIn) {
       return [];
     }
@@ -580,13 +580,13 @@ export class AuthService {
       
       return this._authState.availableRoles;
     } catch (error) {
-      errorService.reportError(
+      console.reportError(
         error instanceof Error ? error : new Error('Failed to refresh roles'),
         'authService.refreshRoles',
         'auth',
         'warning',
         {
-          category: ErrorCategory.OPERATIONAL,
+          category: string.OPERATIONAL,
           userFacing: false
         }
       );
@@ -619,13 +619,13 @@ export class AuthService {
       
       return true;
     } catch (error) {
-      errorService.reportError(
+      console.reportError(
         error instanceof Error ? error : new Error('Failed to enable test mode'),
         'authService.enableTestMode',
         'auth',
         'error',
         {
-          category: ErrorCategory.OPERATIONAL,
+          category: string.OPERATIONAL,
           userFacing: true
         }
       );
@@ -655,13 +655,13 @@ export class AuthService {
       
       logger.info('Test mode disabled successfully');
     } catch (error) {
-      errorService.reportError(
+      console.reportError(
         error instanceof Error ? error : new Error('Failed to disable test mode'),
         'authService.disableTestMode',
         'auth',
         'warning',
         {
-          category: ErrorCategory.OPERATIONAL,
+          category: string.OPERATIONAL,
           userFacing: false
         }
       );
@@ -723,9 +723,9 @@ export const useAuth = () => {
       AuthService.getInstance().loginWithApiKey(apiKey),
     logout: () => 
       AuthService.getInstance().logout(),
-    hasRole: (role: UserRoleType) => 
+    hasRole: (role: UserRole) => 
       AuthService.getInstance().hasRole(role),
-    switchRole: (role: UserRoleType) => 
+    switchRole: (role: UserRole) => 
       AuthService.getInstance().switchRole(role),
     refreshRoles: () => 
       AuthService.getInstance().refreshRoles(),

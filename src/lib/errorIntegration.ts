@@ -35,7 +35,7 @@ export function createError(
   message: string,
   source: string = 'unknown',
   type: ErrorType = 'unknown',
-  severity: ErrorSeverity = 'error'
+  severity: string = 'error'
 ): ErrorState {
   return {
     id: uuidv4(),
@@ -56,7 +56,7 @@ export function reportError(
   error: string | Error,
   source: string = 'unknown',
   type: ErrorType = 'unknown',
-  severity: ErrorSeverity = 'error',
+  severity: string = 'error',
   options?: {
     details?: string;
     retry?: () => void;

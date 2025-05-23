@@ -1,7 +1,7 @@
 import React, { ReactNode, useEffect, useState } from 'react';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
-import { UserRole } from '../../context/RoleContext';
+import type { UserRole } from '../../context/RoleContext';
 import { RoleService } from '../../lib/roleService';
 import { triggerRoleRefresh } from '../../utils/roleEvents';
 import ClientOnly from '../../utils/clientOnly';

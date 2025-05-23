@@ -1,5 +1,5 @@
 import { prisma } from '../lib/prisma';
-import { UserRole } from '../types/auth'; // Updated to use the new location
+import type { UserRole } from '../types/auth'; // Updated to use the new location
 import { User } from '../types/prisma';
 import { logger } from '../lib/logger';
 

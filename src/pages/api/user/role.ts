@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { authMiddleware } from '../../../lib/authMiddleware';
 import { roleService } from '../../../services/roleService';
-import { UserRole } from '../../../context/NewRoleContext';
+import type { UserRole } from '../../../context/NewRoleContext';
 import { normalizeRole, normalizeRoles } from '../../../utils/roleNormalizer';
 
 async function handler(req: NextApiRequest, res: NextApiResponse, auth: any) {

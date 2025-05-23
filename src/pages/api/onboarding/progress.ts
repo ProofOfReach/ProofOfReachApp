@@ -63,7 +63,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
     // Save the onboarding step using the server-side method
     const result = await onboardingService.saveOnboardingStep(
       pubkey as string, 
-      role as UserRoleType,
+      role as UserRole,
       currentStep as string
     );
     

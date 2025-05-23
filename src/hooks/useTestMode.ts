@@ -22,18 +22,18 @@ export interface UseTestModeResult {
   // State
   isActive: boolean;
   timeRemaining: number | null;
-  currentRole: UserRoleType;
-  availableRoles: UserRoleType[];
+  currentRole: UserRole;
+  availableRoles: UserRole[];
   isDevEnvironment: boolean;
   
   // Actions
-  enableTestMode: (duration?: number, initialRole?: UserRoleType, debug?: boolean) => boolean;
+  enableTestMode: (duration?: number, initialRole?: UserRole, debug?: boolean) => boolean;
   disableTestMode: () => boolean;
-  setCurrentRole: (role: UserRoleType) => Promise<boolean>;
+  setCurrentRole: (role: UserRole) => Promise<boolean>;
   enableAllRoles: () => boolean;
   
   // Utility functions
-  createTimeLimitedSession: (minutes: number, role?: UserRoleType) => boolean;
+  createTimeLimitedSession: (minutes: number, role?: UserRole) => boolean;
   createTestScenario: (scenario: 'admin' | 'publisher' | 'advertiser' | 'stakeholder') => boolean;
   setDebugMode: (enabled: boolean) => void;
   
@@ -50,8 +50,8 @@ export function useTestMode(): UseTestModeResult {
   // Get initial values
   const [isActive, setIsActive] = useState<boolean>(testModeService.isActive());
   const [timeRemaining, setTimeRemaining] = useState<number | null>(testModeService.getTimeRemaining());
-  const [currentRole, setCurrentRole] = useState<UserRoleType>(testModeService.getCurrentRole());
-  const [availableRoles, setAvailableRoles] = useState<UserRoleType[]>(testModeService.getAvailableRoles());
+  const [currentRole, setCurrentRole] = useState<UserRole>(testModeService.getCurrentRole());
+  const [availableRoles, setAvailableRoles] = useState<UserRole[]>(testModeService.getAvailableRoles());
   
   // Environment flags
   const isDevEnvironment = process.env.NODE_ENV === 'development' || (
@@ -71,7 +71,7 @@ export function useTestMode(): UseTestModeResult {
       setTimeRemaining(Math.floor((payload.expiryTime - now) / 1000 / 60));
     }
     if (payload.initialRole) {
-      setCurrentRole(payload.initialRole as UserRoleType);
+      setCurrentRole(payload.initialRole as UserRole);
     }
     logger.debug('TestMode activated event received in useTestMode hook');
   });
@@ -84,16 +84,16 @@ export function useTestMode(): UseTestModeResult {
   
   useAppEvent(ROLE_EVENTS.ROLE_CHANGED, (payload) => {
     if (payload && payload.to) {
-      setCurrentRole(payload.to as UserRoleType);
+      setCurrentRole(payload.to as UserRole);
       logger.debug(`Role changed event received in useTestMode hook: ${payload.from} -> ${payload.to}`);
     }
   });
   
   useAppEvent(ROLE_EVENTS.ROLES_UPDATED, (payload) => {
     if (payload && payload.availableRoles) {
-      setAvailableRoles(payload.availableRoles as UserRoleType[]);
+      setAvailableRoles(payload.availableRoles as UserRole[]);
       if (payload.currentRole) {
-        setCurrentRole(payload.currentRole as UserRoleType);
+        setCurrentRole(payload.currentRole as UserRole);
       }
       logger.debug(`Roles updated event received in useTestMode hook: ${payload.availableRoles.join(', ')}`);
     }
@@ -123,7 +123,7 @@ export function useTestMode(): UseTestModeResult {
   // Actions
   const enableTestMode = useCallback((
     duration?: number,
-    initialRole?: UserRoleType,
+    initialRole?: UserRole,
     debug?: boolean
   ): boolean => {
     return testModeService.enableTestMode(duration, initialRole, debug);
@@ -133,7 +133,7 @@ export function useTestMode(): UseTestModeResult {
     return testModeService.disableTestMode();
   }, []);
   
-  const switchRole = useCallback(async (role: UserRoleType): Promise<boolean> => {
+  const switchRole = useCallback(async (role: UserRole): Promise<boolean> => {
     return testModeService.setCurrentRole(role);
   }, []);
   
@@ -144,7 +144,7 @@ export function useTestMode(): UseTestModeResult {
   // Utility functions
   const createTimeLimitedSession = useCallback((
     minutes: number,
-    role?: UserRoleType
+    role?: UserRole
   ): boolean => {
     return testModeService.createTimeLimitedSession(minutes, role);
   }, []);

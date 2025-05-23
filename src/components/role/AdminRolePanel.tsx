@@ -7,8 +7,8 @@ import '@/hooks/useAuthRefactored';
  * Admin panel for managing roles across the system
  * Only admins should be able to access this component
  */
-export const AdminRolePanel: React.FC = () => {
-  const { role, availableRoles, isChangingRole } = useRoleRefactored();
+export const div: React.FC = () => {
+  const { role, availableRoles, isChangingRole } = useRole();
   const { authState } = useAuthRefactored() as any;
   const [isToggling, setIsToggling] = useState(false);
   const [isTestUser, setIsTestUser] = useState(false);

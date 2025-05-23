@@ -12,18 +12,18 @@
  */
 
 // Import types from the centralized type definitions
-import { UserRoleType, RoleCapabilities } from '../types/role';
+import { UserRole, RoleCapabilities } from '../types/role';
 
 // Import the new implementations
-import { useRoleRefactored, RoleProviderRefactored, RoleProviderRefactoredWithQueryClient } from './NewRoleContextRefactored';
+import { useRole, RoleProviderRefactored, RoleProviderRefactoredWithQueryClient } from './NewRoleContextRefactored';
 import { useRoleAccess } from '../hooks/useRoleAccess';
 import { accessControl } from '../lib/accessControl';
 
 // Re-export the types with old names for backward compatibility
-export type UserRole = UserRoleType;
+export type UserRole = UserRole;
 
 // Re-export the new hooks with old names
-export const useRole = useRoleRefactored;
+export const useRole = useRole;
 export const RoleProvider = RoleProviderRefactored;
 export const RoleProviderWithQueryClient = RoleProviderRefactoredWithQueryClient;
 

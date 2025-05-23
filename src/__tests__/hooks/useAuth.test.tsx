@@ -5,7 +5,7 @@
 import { renderHook, act } from '@testing-library/react';
 import { useAuthProvider, useAuth, AuthContext } from '../../hooks/useAuth';
 import UserManager from '../../models/user';
-import { UserRole } from '../../context/RoleContext';
+import type { UserRole } from '../../context/RoleContext';
 import React from 'react';
 
 // Mock the UserManager model

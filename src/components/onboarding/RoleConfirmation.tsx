@@ -8,7 +8,7 @@ import '@/lib/logger';
 import '@/lib/nostrProfile';
 
 type RoleConfirmationProps = {
-  onConfirm?: (role: UserRoleType) => void;
+  onConfirm?: (role: UserRole) => void;
 };
 
 const RoleConfirmation: React.FC<RoleConfirmationProps> = ({ onConfirm }) => {
@@ -20,7 +20,7 @@ const RoleConfirmation: React.FC<RoleConfirmationProps> = ({ onConfirm }) => {
   const [isClient, setIsClient] = useState(false);
   
   // Create a state to hold available roles, with a default that includes all roles
-  const [availableRoles, setAvailableRoles] = useState<UserRoleType[]>(['viewer', 'publisher', 'advertiser']);
+  const [availableRoles, setAvailableRoles] = useState<UserRole[]>(['viewer', 'publisher', 'advertiser']);
   
   // State for tracking if pubkey was copied
   const [pubkeyCopied, setPubkeyCopied] = useState(false);
@@ -63,7 +63,7 @@ const RoleConfirmation: React.FC<RoleConfirmationProps> = ({ onConfirm }) => {
     }
   }, [availableRoles, roleContext, isTestMode, isClient]);
 
-  const handleRoleSelection = (role: UserRoleType) => {
+  const handleRoleSelection = (role: UserRole) => {
     // First call the context function to update the selected role
     setSelectedRole(role);
     
@@ -105,7 +105,7 @@ const RoleConfirmation: React.FC<RoleConfirmationProps> = ({ onConfirm }) => {
 
   const allRoleCards = [
     {
-      role: 'viewer' as UserRoleType,
+      role: 'viewer' as UserRole,
       title: 'Viewer',
       description: 'Browse ads and content across the Proof Of Reach network',
       icon: <Users className="h-8 w-8 text-[#1a73e8]" />,
@@ -119,7 +119,7 @@ const RoleConfirmation: React.FC<RoleConfirmationProps> = ({ onConfirm }) => {
       color: 'blue'
     },
     {
-      role: 'publisher' as UserRoleType,
+      role: 'publisher' as UserRole,
       title: 'Publisher',
       description: 'Monetize your content through the Proof Of Reach network',
       icon: <Package className="h-8 w-8 text-green-500" />,
@@ -133,7 +133,7 @@ const RoleConfirmation: React.FC<RoleConfirmationProps> = ({ onConfirm }) => {
       color: 'green'
     },
     {
-      role: 'advertiser' as UserRoleType,
+      role: 'advertiser' as UserRole,
       title: 'Advertiser',
       description: 'Promote your products on the Proof Of Reach network',
       icon: <Radio className="h-8 w-8 text-purple-500" />,

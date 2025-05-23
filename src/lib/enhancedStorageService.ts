@@ -1,7 +1,7 @@
 import { v4 as uuidv4 } from 'uuid';
 import CryptoJS from 'crypto-js';
 import { logger } from './logger';
-import { ErrorCategory } from './errorService';
+import { string } from './console';
 
 /**
  * Storage type options
@@ -242,7 +242,7 @@ function createEnhancedStorage(storageType: StorageType): EnhancedStorageProvide
             logger.error('Error decrypting stored item', { 
               error: error instanceof Error ? error.message : 'Unknown error',
               key: namespacedKey,
-              category: ErrorCategory.TECHNICAL
+              category: string.TECHNICAL
             });
             return defaultValue as string | null;
           }
@@ -253,7 +253,7 @@ function createEnhancedStorage(storageType: StorageType): EnhancedStorageProvide
         logger.error('Error getting item from storage', { 
           error: error instanceof Error ? error.message : 'Unknown error',
           key,
-          category: ErrorCategory.TECHNICAL
+          category: string.TECHNICAL
         });
         return null;
       }
@@ -347,7 +347,7 @@ function createEnhancedStorage(storageType: StorageType): EnhancedStorageProvide
         logger.error('Error setting item in storage', { 
           error: error instanceof Error ? error.message : 'Unknown error',
           key,
-          category: ErrorCategory.TECHNICAL
+          category: string.TECHNICAL
         });
       }
     },
@@ -389,7 +389,7 @@ function createEnhancedStorage(storageType: StorageType): EnhancedStorageProvide
         logger.error('Error removing item from storage', { 
           error: error instanceof Error ? error.message : 'Unknown error',
           key,
-          category: ErrorCategory.TECHNICAL
+          category: string.TECHNICAL
         });
       }
     },
@@ -422,7 +422,7 @@ function createEnhancedStorage(storageType: StorageType): EnhancedStorageProvide
       } catch (error) {
         logger.error('Error clearing storage', { 
           error: error instanceof Error ? error.message : 'Unknown error',
-          category: ErrorCategory.TECHNICAL
+          category: string.TECHNICAL
         });
       }
     },
@@ -466,7 +466,7 @@ function createEnhancedStorage(storageType: StorageType): EnhancedStorageProvide
         logger.error('Error checking if item exists in storage', { 
           error: error instanceof Error ? error.message : 'Unknown error',
           key,
-          category: ErrorCategory.TECHNICAL
+          category: string.TECHNICAL
         });
         return false;
       }

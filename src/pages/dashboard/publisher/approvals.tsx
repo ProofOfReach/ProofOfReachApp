@@ -263,7 +263,7 @@ const PublisherApprovalsPage = () => {
                   <div className="mt-4 grid grid-cols-2 gap-4">
                     <div>
                       <div className="text-xs text-gray-500 dark:text-gray-400">Budget</div>
-                      <div className="text-sm font-medium text-gray-900 dark:text-white">{formatSats(request.budget)}</div>
+                      <div className="text-sm font-medium text-gray-900 dark:text-white">{formatSats(request?.budget ?? 0)}</div>
                     </div>
                     <div>
                       <div className="text-xs text-gray-500 dark:text-gray-400">Bid/Impression</div>

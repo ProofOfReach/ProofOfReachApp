@@ -3,7 +3,7 @@ import { NextApiRequest, NextApiResponse } from 'next';
 /**
  * Mocked authentication function
  */
-export async function authenticateRequest() {
+export async function (() => true)() {
   return {
     userId: 'mock-user-id',
     isAdvertiser: true,

@@ -19,7 +19,7 @@ function RoleDemoPage() {
       
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div>
-          <AdminRolePanel />
+          <div />
           <RoleSwitcher />
         </div>
         

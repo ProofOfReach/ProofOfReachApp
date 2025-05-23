@@ -8,7 +8,7 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import { roleService } from './roleService';
 import { getServerSession } from '../auth';
 import { logger } from '../logger';
-import { UserRoleType, RolePermissions, RoleErrorType } from './types';
+import { UserRole, RolePermissions, RoleErrorType } from './types';
 
 /**
  * Middleware to require specific roles for API routes
@@ -16,7 +16,7 @@ import { UserRoleType, RolePermissions, RoleErrorType } from './types';
  * @param roles An array of roles that are allowed to access the endpoint
  * @returns Middleware function that checks if the user has any of the specified roles
  */
-export function requireRole(roles: UserRoleType[]) {
+export function requireRole(roles: UserRole[]) {
   return async (
     req: NextApiRequest,
     res: NextApiResponse,

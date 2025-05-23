@@ -18,7 +18,7 @@ export interface ErrorToastProps {
   retryAction?: () => void;
   autoClose?: boolean;
   duration?: number;
-  errorCategory?: ErrorCategory;
+  errorCategory?: string;
   className?: string;
 }
 

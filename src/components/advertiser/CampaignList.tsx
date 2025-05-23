@@ -101,7 +101,7 @@ const CampaignList: React.FC<CampaignListProps> = ({ campaigns, onStatusChange, 
                     </span>
                   </td>
                   <td className="px-6 py-4 text-sm text-gray-500 dark:text-gray-400">
-                    {campaign.budget.toLocaleString()} sats
+                    {campaign?.budget ?? 0.toLocaleString()} sats
                   </td>
                   <td className="px-6 py-4 text-sm text-gray-500 dark:text-gray-400">
                     {formatDate(campaign.createdAt)}

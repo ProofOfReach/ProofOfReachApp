@@ -170,7 +170,7 @@ const DataTableExample: NextPage = () => {
                   </div>
                   <div>
                     <h4 className="text-sm font-medium">Budget</h4>
-                    <p className="text-sm text-gray-500 dark:text-gray-400">{formatCurrency(selectedCampaign.budget)}</p>
+                    <p className="text-sm text-gray-500 dark:text-gray-400">{formatCurrency(selectedCampaign?.budget ?? 0)}</p>
                   </div>
                   <div>
                     <h4 className="text-sm font-medium">Spent</h4>
@@ -238,7 +238,7 @@ const DataTableExample: NextPage = () => {
       header: 'Budget',
       accessorKey: 'budget' as keyof Campaign,
       sortable: true,
-      cell: (row: Campaign) => formatCurrency(row.budget),
+      cell: (row: Campaign) => formatCurrency(row?.budget ?? 0),
     },
     {
       header: 'Spent',

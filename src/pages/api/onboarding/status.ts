@@ -44,7 +44,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
     // Check if onboarding is complete for this user/role
     const isComplete = await onboardingService.isOnboardingComplete(
       pubkey as string, 
-      role as UserRoleType
+      role as UserRole
     );
     
     // Create a status object to return to the client

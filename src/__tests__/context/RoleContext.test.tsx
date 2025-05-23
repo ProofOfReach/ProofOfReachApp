@@ -1,16 +1,16 @@
 import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { RoleProvider, useRole, UserRole } from '../../context/RoleContext';
-import { UserRoleType } from '../../types/role';
+import type { UserRole } from '../../types/role';
 import { AuthContext } from '../../hooks/useAuth';
 import { RoleProviderRefactored } from '../../context/NewRoleContextRefactored';
 import { AuthProvider } from '../../context/AuthContext';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 // Define type-safe roles for consistent usage
-const VIEWER_ROLE = 'viewer' as UserRoleType;
-const ADVERTISER_ROLE = 'advertiser' as UserRoleType;
-const PUBLISHER_ROLE = 'publisher' as UserRoleType;
+const VIEWER_ROLE = 'viewer' as UserRole;
+const ADVERTISER_ROLE = 'advertiser' as UserRole;
+const PUBLISHER_ROLE = 'publisher' as UserRole;
 
 // Mock the Auth context
 jest.mock('../../hooks/useAuth', () => {
@@ -101,7 +101,7 @@ const TestComponent = () => {
   const { role, setRole, availableRoles, isRoleAvailable } = useRole();
   
   // We need to cast the role strings to UserRole type for the context functions
-  // Since UserRole is just a type alias for UserRoleType in this project,
+  // Since UserRole is just a type alias for UserRole in this project,
   // we can simplify all these functions by applying a consistent type cast
   
   const checkViewerAvailable = () => {
@@ -178,7 +178,7 @@ const TestComponent = () => {
 };
 
 // Helper function to create the test component wrapper
-const renderTestComponent = (initialRole: UserRoleType = VIEWER_ROLE) => {
+const renderTestComponent = (initialRole: UserRole = VIEWER_ROLE) => {
   const queryClient = new QueryClient();
   
   // Create a wrapper component with both old and new providers
@@ -186,7 +186,7 @@ const renderTestComponent = (initialRole: UserRoleType = VIEWER_ROLE) => {
   const useAuthMock = require('../../hooks/useAuth').useAuth;
   
   // Map our role constants to the appropriate type
-  // Since UserRole is a type alias for UserRoleType, we can use the same value
+  // Since UserRole is a type alias for UserRole, we can use the same value
   // The explicit cast ensures TypeScript is happy
   const castedRole = initialRole as unknown as UserRole;
   
@@ -278,7 +278,7 @@ describe('RoleContext', () => {
   
   it('changes role from viewer to publisher', async () => {
     localStorage.setItem('currentRole', 'viewer');
-    renderTestComponent('viewer' as UserRoleType);
+    renderTestComponent('viewer' as UserRole);
     
     // Verify initial role
     expect(screen.getByTestId('current-role')).toHaveTextContent('Current Role: viewer');
@@ -296,7 +296,7 @@ describe('RoleContext', () => {
   
   it('updates localStorage when the role changes', async () => {
     localStorage.setItem('currentRole', 'viewer');
-    renderTestComponent('viewer' as UserRoleType);
+    renderTestComponent('viewer' as UserRole);
     
     // Verify initial localStorage state
     expect(localStorage.getItem('currentRole')).toBe('viewer');
@@ -315,7 +315,7 @@ describe('RoleContext', () => {
   
   it('correctly reports available roles', () => {
     localStorage.setItem('currentRole', 'viewer');
-    renderTestComponent('viewer' as UserRoleType);
+    renderTestComponent('viewer' as UserRole);
     
     // With our mock, all roles should be available
     expect(screen.getByTestId('viewer-available')).toHaveTextContent('Viewer available: Yes');

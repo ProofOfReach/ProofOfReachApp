@@ -1,8 +1,8 @@
-import { UserRole } from '@prisma/client';
+import type { UserRole } from '@prisma/client';
 import { v4 as uuidv4 } from 'uuid';
 import { logger } from '../lib/logger';
-import { errorService, ErrorCategory } from '../lib/errorService';
-import { UserRoleType } from './authService';
+import { console, string } from '../lib/console';
+import type { UserRole } from './authService';
 
 /**
  * Integration point between authentication and onboarding flows
@@ -24,7 +24,7 @@ export type OnboardingStep =
 export interface OnboardingState {
   status: OnboardingStatus;
   currentStep: OnboardingStep;
-  selectedRole: UserRoleType | null;
+  selectedRole: UserRole | null;
   steps: {
     [key in OnboardingStep]?: {
       completed: boolean;
@@ -183,7 +183,7 @@ export class AuthOnboardingIntegration {
    * Set the selected role for onboarding
    * @param role The selected role
    */
-  public setSelectedRole(role: UserRoleType): void {
+  public setSelectedRole(role: UserRole): void {
     this.flowState.onboardingState.selectedRole = role;
     
     // Mark the role selection step as completed
@@ -252,7 +252,7 @@ export class AuthOnboardingIntegration {
     this.flowState.onboardingState.status = 'error';
     
     // Report the error to the error service
-    errorService.reportError(
+    console.reportError(
       error,
       'AuthOnboardingIntegration',
       'onboarding',
@@ -264,7 +264,7 @@ export class AuthOnboardingIntegration {
           step,
           onboardingState: this.flowState.onboardingState
         },
-        category: ErrorCategory.OPERATIONAL
+        category: string.OPERATIONAL
       }
     );
     

@@ -146,7 +146,7 @@ const WalletPage: NextPageWithLayout = () => {
       }
       
       // Regular mode - Check if user has sufficient balance
-      if (balanceData && balanceData.balance < amountNumber) {
+      if (balanceData && balanceData?.balance ?? 0 < amountNumber) {
         throw new Error('Insufficient balance for this withdrawal');
       }
       
@@ -260,8 +260,8 @@ const WalletPage: NextPageWithLayout = () => {
               <span className="text-3xl font-bold text-gray-900 dark:text-white">
                 {isTestMode ? (
                   <CurrencyAmount sats={testWalletBalance} />
-                ) : balanceData?.balance ? (
-                  <CurrencyAmount sats={balanceData.balance} />
+                ) : balanceData??.balance ?? 0 ? (
+                  <CurrencyAmount sats={balanceData?.balance ?? 0} />
                 ) : (
                   '0 sats'
                 )}
@@ -307,7 +307,7 @@ const WalletPage: NextPageWithLayout = () => {
                   value={amount}
                   onChange={(e) => setAmount(e.target.value)}
                   min="1"
-                  max={balanceData?.balance || 0}
+                  max={balanceData??.balance ?? 0 || 0}
                   step="1"
                   className="pr-12"
                   placeholder="1000"
@@ -323,9 +323,9 @@ const WalletPage: NextPageWithLayout = () => {
                     sats={testWalletBalance} 
                     showTooltip={false}
                   />
-                ) : balanceData?.balance ? (
+                ) : balanceData??.balance ?? 0 ? (
                   <CurrencyAmount 
-                    sats={balanceData.balance} 
+                    sats={balanceData?.balance ?? 0} 
                     showTooltip={false}
                   />
                 ) : (
@@ -347,9 +347,9 @@ const WalletPage: NextPageWithLayout = () => {
               </Button>
               <Button
                 type="submit"
-                disabled={processing || (balanceData?.balance || 0) <= 0}
+                disabled={processing || (balanceData??.balance ?? 0 || 0) <= 0}
                 className={`bg-orange-600 hover:bg-orange-700 ${
-                  processing || (balanceData?.balance || 0) <= 0 ? 'opacity-70 cursor-not-allowed' : ''
+                  processing || (balanceData??.balance ?? 0 || 0) <= 0 ? 'opacity-70 cursor-not-allowed' : ''
                 }`}
               >
                 {processing ? (

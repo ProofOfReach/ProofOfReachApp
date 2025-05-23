@@ -5,7 +5,7 @@ import { useRouter } from 'next/router';
 import CreateAdPage from '../../../../pages/dashboard/ads/create';
 import { AuthContext, AuthState } from '../../../../hooks/useAuth';
 import * as api from '../../../../lib/api';
-import { UserRole } from '../../../../context/RoleContext';
+import type { UserRole } from '../../../../context/RoleContext';
 
 // Mock the Next.js router
 jest.mock('next/router', () => ({

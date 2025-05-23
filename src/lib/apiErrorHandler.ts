@@ -13,7 +13,7 @@
  */
 
 import { NextApiRequest, NextApiResponse } from 'next';
-import '@/lib/errorService';
+import '@/lib/console';
 import '@/types/errors';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -37,15 +37,15 @@ export interface ApiErrorResponse {
 /**
  * Maps error types to HTTP status codes
  */
-const errorTypeToStatusCode: Record<ErrorCategory, number> = {
-  [ErrorCategory.USER_INPUT]: 400,
-  [ErrorCategory.PERMISSIONS]: 403,
-  [ErrorCategory.EXTERNAL]: 404,
-  [ErrorCategory.OPERATIONAL]: 500,
-  [ErrorCategory.TECHNICAL]: 500,
-  [ErrorCategory.CONFIGURATION]: 422,
-  [ErrorCategory.NETWORK]: 503,
-  [ErrorCategory.UNKNOWN]: 500
+const errorTypeToStatusCode: Record<string, number> = {
+  [string.USER_INPUT]: 400,
+  [string.PERMISSIONS]: 403,
+  [string.EXTERNAL]: 404,
+  [string.OPERATIONAL]: 500,
+  [string.TECHNICAL]: 500,
+  [string.CONFIGURATION]: 422,
+  [string.NETWORK]: 503,
+  [string.UNKNOWN]: 500
 };
 
 /**
@@ -113,7 +113,7 @@ export function handleApiRouteError(
   const route = `${req.method} ${req.url}`;
 
   // Determine error category and status code
-  let category = ErrorCategory.OPERATIONAL;
+  let category = string.OPERATIONAL;
   let statusCode = 500;
   let userMessage = 'An unexpected error occurred';
   let errorCode = ErrorCode.INTERNAL_ERROR;
@@ -126,7 +126,7 @@ export function handleApiRouteError(
   if (error instanceof Error) {
     // Handle validation errors
     if (error.name === 'ValidationError') {
-      category = ErrorCategory.USER_INPUT;
+      category = string.USER_INPUT;
       statusCode = 400;
       userMessage = error.message;
       errorCode = ErrorCode.VALIDATION_ERROR;
@@ -140,7 +140,7 @@ export function handleApiRouteError(
     }
     // Handle not found errors
     else if (error.name === 'NotFoundError') {
-      category = ErrorCategory.EXTERNAL;
+      category = string.EXTERNAL;
       statusCode = 404;
       userMessage = error.message;
       errorCode = ErrorCode.NOT_FOUND;
@@ -150,7 +150,7 @@ export function handleApiRouteError(
     }
     // Handle authentication/authorization errors
     else if (error.name === 'UnauthorizedError') {
-      category = ErrorCategory.PERMISSIONS;
+      category = string.PERMISSIONS;
       statusCode = 401;
       userMessage = 'Authentication required';
       errorCode = ErrorCode.UNAUTHORIZED;
@@ -159,7 +159,7 @@ export function handleApiRouteError(
       retryable = false;   // Automatic retry won't help
     }
     else if (error.name === 'ForbiddenError') {
-      category = ErrorCategory.PERMISSIONS;
+      category = string.PERMISSIONS;
       statusCode = 403;
       userMessage = 'You do not have permission to perform this action';
       errorCode = ErrorCode.FORBIDDEN;
@@ -169,7 +169,7 @@ export function handleApiRouteError(
     }
     // Handle timeout errors
     else if (error.name === 'TimeoutError' || error.message.toLowerCase().includes('timeout')) {
-      category = ErrorCategory.OPERATIONAL;
+      category = string.OPERATIONAL;
       statusCode = 408;
       userMessage = 'The request timed out';
       errorCode = ErrorCode.TIMEOUT;
@@ -179,7 +179,7 @@ export function handleApiRouteError(
     }
     // Handle rate limiting errors
     else if (error.name === 'RateLimitError' || error.message.toLowerCase().includes('rate limit')) {
-      category = ErrorCategory.OPERATIONAL;
+      category = string.OPERATIONAL;
       statusCode = 429;
       userMessage = 'Too many requests. Please try again later.';
       errorCode = ErrorCode.RATE_LIMITED;
@@ -213,7 +213,7 @@ export function handleApiRouteError(
       if ((error as any).recoverable !== undefined) {
         recoverable = (error as any).recoverable;
       } else {
-        recoverable = retryable || category === ErrorCategory.USER_INPUT;
+        recoverable = retryable || category === string.USER_INPUT;
       }
       if ((error as any).suggestedAction) {
         suggestedAction = (error as any).suggestedAction;
@@ -230,11 +230,11 @@ export function handleApiRouteError(
     } : undefined;
 
   // Log error with enhanced context
-  errorService.reportError(
+  console.reportError(
     error instanceof Error ? error : String(error), 
     `${component}:${route}`,
     'api',
-    category === ErrorCategory.OPERATIONAL ? 'error' : 'warning',
+    category === string.OPERATIONAL ? 'error' : 'warning',
     {
       correlationId: correlationId as string,
       category,
@@ -289,7 +289,7 @@ export function createApiValidationError(
   const error = new Error(message);
   error.name = 'ValidationError';
   (error as any).invalidFields = invalidFields;
-  (error as any).category = ErrorCategory.USER_INPUT;
+  (error as any).category = string.USER_INPUT;
   (error as any).userFacing = true;
   (error as any).code = ErrorCode.VALIDATION_ERROR;
   (error as any).retryable = false;
@@ -322,7 +322,7 @@ export function createNotFoundError(
 ): Error {
   const error = new Error(message);
   error.name = 'NotFoundError';
-  (error as any).category = ErrorCategory.EXTERNAL;
+  (error as any).category = string.EXTERNAL;
   (error as any).userFacing = true;
   (error as any).code = ErrorCode.NOT_FOUND;
   (error as any).retryable = false;
@@ -349,7 +349,7 @@ export function createUnauthorizedError(
 ): Error {
   const error = new Error(message);
   error.name = 'UnauthorizedError';
-  (error as any).category = ErrorCategory.PERMISSIONS;
+  (error as any).category = string.PERMISSIONS;
   (error as any).userFacing = true;
   (error as any).code = ErrorCode.UNAUTHORIZED;
   (error as any).retryable = false;
@@ -370,7 +370,7 @@ export function createForbiddenError(
 ): Error {
   const error = new Error(message);
   error.name = 'ForbiddenError';
-  (error as any).category = ErrorCategory.PERMISSIONS;
+  (error as any).category = string.PERMISSIONS;
   (error as any).userFacing = true;
   (error as any).code = ErrorCode.FORBIDDEN;
   (error as any).retryable = false;
@@ -398,7 +398,7 @@ export function createRateLimitedError(
 ): Error {
   const error = new Error(message);
   error.name = 'RateLimitError';
-  (error as any).category = ErrorCategory.OPERATIONAL;
+  (error as any).category = string.OPERATIONAL;
   (error as any).userFacing = true;
   (error as any).code = ErrorCode.RATE_LIMITED;
   (error as any).retryable = true;
@@ -427,7 +427,7 @@ export function createTimeoutError(
 ): Error {
   const error = new Error(message);
   error.name = 'TimeoutError';
-  (error as any).category = ErrorCategory.OPERATIONAL;
+  (error as any).category = string.OPERATIONAL;
   (error as any).userFacing = true;
   (error as any).code = ErrorCode.TIMEOUT;
   (error as any).retryable = true;
@@ -545,7 +545,7 @@ export async function withRetry<T>(
   fn: () => Promise<T>,
   options?: any
 ): Promise<T> {
-  return errorService.withRetry(fn, options);
+  return console.withRetry(fn, options);
 }
 
 /**

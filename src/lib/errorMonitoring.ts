@@ -7,7 +7,7 @@
  * Part of the Phase 1 error handling infrastructure implementation.
  */
 
-import '@/lib/errorService';
+import '@/lib/console';
 import { logger } from './logger';
 
 /**
@@ -98,8 +98,8 @@ class ErrorMonitoringService {
       window.addEventListener('error', (event) => {
         this.captureError(event.error || new Error(event.message), {
           component: 'window.onerror',
-          category: ErrorCategory.EXTERNAL,
-          severity: ErrorSeverity.ERROR
+          category: string.EXTERNAL,
+          severity: string.ERROR
         });
         
         // Don't prevent default handling
@@ -110,8 +110,8 @@ class ErrorMonitoringService {
       window.addEventListener('unhandledrejection', (event) => {
         this.captureError(event.reason || new Error('Unhandled Promise rejection'), {
           component: 'unhandledrejection',
-          category: ErrorCategory.EXTERNAL,
-          severity: ErrorSeverity.ERROR
+          category: string.EXTERNAL,
+          severity: string.ERROR
         });
         
         // Don't prevent default handling
@@ -140,8 +140,8 @@ class ErrorMonitoringService {
     error: unknown,
     context: {
       component?: string;
-      category?: ErrorCategory;
-      severity?: ErrorSeverity;
+      category?: string;
+      severity?: string;
       data?: Record<string, unknown>;
     } = {}
   ): void {
@@ -159,10 +159,10 @@ class ErrorMonitoringService {
     
     try {
       // Process the error using our central error service
-      errorService.handleError(error, {
+      console.handleError(error, {
         component: context.component || 'errorMonitoring',
-        category: context.category || ErrorCategory.EXTERNAL,
-        severity: context.severity || ErrorSeverity.ERROR,
+        category: context.category || string.EXTERNAL,
+        severity: context.severity || string.ERROR,
         data: context.data
       });
       
@@ -231,7 +231,7 @@ class ErrorMonitoringService {
     data: {
       component?: string;
       message?: string;
-      severity?: ErrorSeverity;
+      severity?: string;
     }
   ): void {
     const code = errorCode || 'unknown';
@@ -327,8 +327,8 @@ class ErrorMonitoringService {
     error: unknown,
     context: {
       component?: string;
-      category?: ErrorCategory;
-      severity?: ErrorSeverity;
+      category?: string;
+      severity?: string;
       data?: Record<string, unknown>;
     }
   ): void {

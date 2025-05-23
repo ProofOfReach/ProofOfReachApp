@@ -15,7 +15,7 @@
  * this module instead of implementing their own logic.
  */
 
-import { UserRoleType, isValidUserRole, filterValidRoles } from '../types/role';
+import { UserRole, isValidUserRole, filterValidRoles } from '../types/role';
 import { logger } from './logger';
 import { unifiedRoleService } from './unifiedRoleService';
 
@@ -36,7 +36,7 @@ export enum PermissionCategory {
 // Define the permission structure with optional properties
 export interface PermissionConfig {
   /** Roles allowed to perform this action */
-  allowedRoles: UserRoleType[];
+  allowedRoles: UserRole[];
   /** Description of what this permission allows */
   description: string;
   /** Category for grouping related permissions */
@@ -54,34 +54,34 @@ export type PermissionsRecord = Record<string, PermissionConfig>;
 export const PERMISSIONS: PermissionsRecord = {
   // Ad management permissions
   CREATE_ADS: {
-    allowedRoles: ['advertiser', 'admin'] as UserRoleType[],
+    allowedRoles: ['advertiser', 'admin'] as UserRole[],
     description: 'Create new ad campaigns',
     category: PermissionCategory.AD_MANAGEMENT
   },
   EDIT_ADS: {
-    allowedRoles: ['advertiser', 'admin'] as UserRoleType[],
+    allowedRoles: ['advertiser', 'admin'] as UserRole[],
     description: 'Edit existing ad campaigns',
     category: PermissionCategory.AD_MANAGEMENT
   },
   VIEW_OWN_ADS: {
-    allowedRoles: ['advertiser', 'admin'] as UserRoleType[],
+    allowedRoles: ['advertiser', 'admin'] as UserRole[],
     description: 'View ads created by the user',
     category: PermissionCategory.AD_MANAGEMENT
   },
   DELETE_ADS: {
-    allowedRoles: ['advertiser', 'admin'] as UserRoleType[],
+    allowedRoles: ['advertiser', 'admin'] as UserRole[],
     description: 'Delete existing ad campaigns',
     category: PermissionCategory.AD_MANAGEMENT,
     isSensitive: true,
     parent: 'EDIT_ADS'
   },
   APPROVE_ADS: {
-    allowedRoles: ['publisher', 'admin'] as UserRoleType[],
+    allowedRoles: ['publisher', 'admin'] as UserRole[],
     description: 'Approve or reject ad submissions',
     category: PermissionCategory.PUBLISHER
   },
   VIEW_ALL_ADS: {
-    allowedRoles: ['admin'] as UserRoleType[],
+    allowedRoles: ['admin'] as UserRole[],
     description: 'View all ads in the system',
     category: PermissionCategory.ADMIN,
     isSensitive: true
@@ -89,18 +89,18 @@ export const PERMISSIONS: PermissionsRecord = {
   
   // Publisher permissions
   MANAGE_AD_PLACEMENTS: {
-    allowedRoles: ['publisher', 'admin'] as UserRoleType[],
+    allowedRoles: ['publisher', 'admin'] as UserRole[],
     description: 'Manage ad placements on publisher sites',
     category: PermissionCategory.PUBLISHER
   },
   UPDATE_PLACEMENT_SETTINGS: {
-    allowedRoles: ['publisher', 'admin'] as UserRoleType[],
+    allowedRoles: ['publisher', 'admin'] as UserRole[],
     description: 'Update settings for ad placements',
     category: PermissionCategory.PUBLISHER,
     parent: 'MANAGE_AD_PLACEMENTS'
   },
   DELETE_PLACEMENT: {
-    allowedRoles: ['publisher', 'admin'] as UserRoleType[],
+    allowedRoles: ['publisher', 'admin'] as UserRole[],
     description: 'Delete ad placements',
     category: PermissionCategory.PUBLISHER,
     parent: 'MANAGE_AD_PLACEMENTS',
@@ -109,54 +109,54 @@ export const PERMISSIONS: PermissionsRecord = {
   
   // Payment permissions
   VIEW_EARNINGS: {
-    allowedRoles: ['publisher', 'advertiser', 'admin'] as UserRoleType[],
+    allowedRoles: ['publisher', 'advertiser', 'admin'] as UserRole[],
     description: 'View earnings from the platform',
     category: PermissionCategory.PAYMENTS
   },
   REQUEST_WITHDRAWAL: {
-    allowedRoles: ['publisher', 'advertiser', 'admin'] as UserRoleType[],
+    allowedRoles: ['publisher', 'advertiser', 'admin'] as UserRole[],
     description: 'Request withdrawal of earnings',
     category: PermissionCategory.PAYMENTS,
     parent: 'VIEW_EARNINGS'
   },
   MANAGE_PAYMENT_METHODS: {
-    allowedRoles: ['publisher', 'advertiser', 'admin'] as UserRoleType[],
+    allowedRoles: ['publisher', 'advertiser', 'admin'] as UserRole[],
     description: 'Manage payment methods',
     category: PermissionCategory.PAYMENTS
   },
   VIEW_PAYMENT_HISTORY: {
-    allowedRoles: ['publisher', 'advertiser', 'admin'] as UserRoleType[],
+    allowedRoles: ['publisher', 'advertiser', 'admin'] as UserRole[],
     description: 'View payment history',
     category: PermissionCategory.PAYMENTS
   },
   
   // Admin permissions
   MANAGE_USERS: {
-    allowedRoles: ['admin'] as UserRoleType[],
+    allowedRoles: ['admin'] as UserRole[],
     description: 'Manage user accounts',
     category: PermissionCategory.ADMIN,
     isSensitive: true
   },
   MANAGE_ROLES: {
-    allowedRoles: ['admin'] as UserRoleType[],
+    allowedRoles: ['admin'] as UserRole[],
     description: 'Assign and change user roles',
     category: PermissionCategory.ADMIN,
     isSensitive: true
   },
   MANAGE_SYSTEM: {
-    allowedRoles: ['admin'] as UserRoleType[],
+    allowedRoles: ['admin'] as UserRole[],
     description: 'Manage system settings and configuration',
     category: PermissionCategory.SYSTEM,
     isSensitive: true
   },
   VIEW_SYSTEM_LOGS: {
-    allowedRoles: ['admin'] as UserRoleType[],
+    allowedRoles: ['admin'] as UserRole[],
     description: 'View system logs',
     category: PermissionCategory.SYSTEM,
     parent: 'MANAGE_SYSTEM'
   },
   MANAGE_SYSTEM_SETTINGS: {
-    allowedRoles: ['admin'] as UserRoleType[],
+    allowedRoles: ['admin'] as UserRole[],
     description: 'Manage system settings',
     category: PermissionCategory.SYSTEM,
     parent: 'MANAGE_SYSTEM'
@@ -164,29 +164,29 @@ export const PERMISSIONS: PermissionsRecord = {
   
   // Analytics permissions
   VIEW_ANALYTICS: {
-    allowedRoles: ['advertiser', 'publisher', 'admin', 'stakeholder', 'viewer'] as UserRoleType[],
+    allowedRoles: ['advertiser', 'publisher', 'admin', 'stakeholder', 'viewer'] as UserRole[],
     description: 'View general analytics',
     category: PermissionCategory.ANALYTICS
   },
   VIEW_BASIC_ANALYTICS: {
-    allowedRoles: ['advertiser', 'publisher', 'admin', 'stakeholder', 'viewer'] as UserRoleType[],
+    allowedRoles: ['advertiser', 'publisher', 'admin', 'stakeholder', 'viewer'] as UserRole[],
     description: 'View basic analytics dashboards',
     category: PermissionCategory.ANALYTICS
   },
   VIEW_ADVANCED_ANALYTICS: {
-    allowedRoles: ['advertiser', 'publisher', 'admin', 'stakeholder'] as UserRoleType[],
+    allowedRoles: ['advertiser', 'publisher', 'admin', 'stakeholder'] as UserRole[],
     description: 'View advanced analytics dashboards',
     category: PermissionCategory.ANALYTICS,
     parent: 'VIEW_BASIC_ANALYTICS'
   },
   EXPORT_ANALYTICS: {
-    allowedRoles: ['advertiser', 'publisher', 'admin', 'stakeholder'] as UserRoleType[],
+    allowedRoles: ['advertiser', 'publisher', 'admin', 'stakeholder'] as UserRole[],
     description: 'Export analytics data',
     category: PermissionCategory.ANALYTICS,
     parent: 'VIEW_ADVANCED_ANALYTICS'
   },
   VIEW_FINANCIAL_REPORTS: {
-    allowedRoles: ['stakeholder', 'admin'] as UserRoleType[],
+    allowedRoles: ['stakeholder', 'admin'] as UserRole[],
     description: 'View financial reports and forecasts',
     category: PermissionCategory.ANALYTICS,
     isSensitive: true
@@ -194,49 +194,49 @@ export const PERMISSIONS: PermissionsRecord = {
   
   // API related permissions
   MANAGE_API_KEYS: {
-    allowedRoles: ['admin', 'publisher', 'advertiser'] as UserRoleType[],
+    allowedRoles: ['admin', 'publisher', 'advertiser'] as UserRole[],
     description: 'Create and manage API keys',
     category: PermissionCategory.API
   },
   CREATE_API_KEY: {
-    allowedRoles: ['admin', 'publisher', 'advertiser'] as UserRoleType[],
+    allowedRoles: ['admin', 'publisher', 'advertiser'] as UserRole[],
     description: 'Create new API keys',
     category: PermissionCategory.API,
     parent: 'MANAGE_API_KEYS'
   },
   REVOKE_API_KEY: {
-    allowedRoles: ['admin', 'publisher', 'advertiser'] as UserRoleType[],
+    allowedRoles: ['admin', 'publisher', 'advertiser'] as UserRole[],
     description: 'Revoke API keys',
     category: PermissionCategory.API,
     parent: 'MANAGE_API_KEYS',
     isSensitive: true
   },
   USE_API: {
-    allowedRoles: ['viewer', 'advertiser', 'publisher', 'admin', 'stakeholder'] as UserRoleType[],
+    allowedRoles: ['viewer', 'advertiser', 'publisher', 'admin', 'stakeholder'] as UserRole[],
     description: 'Use the API with appropriate authentication',
     category: PermissionCategory.API
   },
   
   // Campaign management permissions
   MANAGE_CAMPAIGNS: {
-    allowedRoles: ['advertiser', 'admin'] as UserRoleType[],
+    allowedRoles: ['advertiser', 'admin'] as UserRole[],
     description: 'Manage advertising campaigns',
     category: PermissionCategory.AD_MANAGEMENT
   },
   CREATE_CAMPAIGN: {
-    allowedRoles: ['advertiser', 'admin'] as UserRoleType[],
+    allowedRoles: ['advertiser', 'admin'] as UserRole[],
     description: 'Create new advertising campaigns',
     category: PermissionCategory.AD_MANAGEMENT,
     parent: 'MANAGE_CAMPAIGNS'
   },
   EDIT_CAMPAIGN: {
-    allowedRoles: ['advertiser', 'admin'] as UserRoleType[],
+    allowedRoles: ['advertiser', 'admin'] as UserRole[],
     description: 'Edit existing advertising campaigns',
     category: PermissionCategory.AD_MANAGEMENT,
     parent: 'MANAGE_CAMPAIGNS'
   },
   DELETE_CAMPAIGN: {
-    allowedRoles: ['advertiser', 'admin'] as UserRoleType[],
+    allowedRoles: ['advertiser', 'admin'] as UserRole[],
     description: 'Delete advertising campaigns',
     category: PermissionCategory.AD_MANAGEMENT,
     parent: 'MANAGE_CAMPAIGNS',
@@ -245,14 +245,14 @@ export const PERMISSIONS: PermissionsRecord = {
   
   // Publisher statistics
   VIEW_PUBLISHER_STATS: {
-    allowedRoles: ['publisher', 'admin'] as UserRoleType[],
+    allowedRoles: ['publisher', 'admin'] as UserRole[],
     description: 'View publisher statistics',
     category: PermissionCategory.ANALYTICS
   }
 };
 
 // Define route access permissions
-export const ROUTE_PERMISSIONS: Record<string, UserRoleType[]> = {
+export const ROUTE_PERMISSIONS: Record<string, UserRole[]> = {
   // Public routes (accessible to all authenticated users)
   '/dashboard': ['viewer', 'advertiser', 'publisher', 'admin', 'stakeholder'],
   
@@ -297,7 +297,7 @@ export const PUBLIC_ROUTES = [
  * Routes that are restricted to specific roles and should
  * explicitly block access for other roles
  */
-export const RESTRICTED_ROUTES: Record<string, UserRoleType[]> = {
+export const RESTRICTED_ROUTES: Record<string, UserRole[]> = {
   '/dashboard/admin': ['admin'],
   '/dashboard/users': ['admin'],
   '/dashboard/system': ['admin']
@@ -328,7 +328,7 @@ export interface PermissionContext {
  */
 export function checkPermission(
   permission: keyof typeof PERMISSIONS, 
-  role: UserRoleType | string,
+  role: UserRole | string,
   context: PermissionContext = {}
 ): boolean {
   // Validate role
@@ -365,7 +365,7 @@ export function checkPermission(
   }
   
   // Direct permission check
-  if (permissionConfig.allowedRoles.includes(role as UserRoleType)) {
+  if (permissionConfig.allowedRoles.includes(role as UserRole)) {
     return true;
   }
   
@@ -388,7 +388,7 @@ export function checkPermission(
  * @param role The role to check
  * @returns True if the role can access the route, false otherwise
  */
-export function checkRouteAccess(route: string, role: UserRoleType | string): boolean {
+export function checkRouteAccess(route: string, role: UserRole | string): boolean {
   if (!isValidUserRole(role)) {
     logger.warn(`Invalid role provided to checkRouteAccess: ${role}`);
     return false;
@@ -479,7 +479,7 @@ function getPermissionProperty<T>(
  * @returns Record of permission names mapped to capability information
  */
 export function getRoleCapabilities(
-  role: UserRoleType | string, 
+  role: UserRole | string, 
   includeMetadata: boolean = false
 ): EnhancedCapabilityMap | Record<string, boolean> {
   if (!isValidUserRole(role)) {
@@ -508,7 +508,7 @@ export function getRoleCapabilities(
       enhancedCapabilities[permissionKey].granted = true;
     }
     // Check direct permission
-    else if (permissionConfig.allowedRoles.includes(role as UserRoleType)) {
+    else if (permissionConfig.allowedRoles.includes(role as UserRole)) {
       enhancedCapabilities[permissionKey].granted = true;
     }
   }
@@ -617,14 +617,14 @@ export function getRoleCapabilities(
  * @param availableRoles List of roles available to the user
  * @returns True if the role is available, false otherwise
  */
-export function isRoleAvailable(role: UserRoleType | string, availableRoles: UserRoleType[]): boolean {
+export function isRoleAvailable(role: UserRole | string, availableRoles: UserRole[]): boolean {
   if (!isValidUserRole(role)) {
     logger.warn(`Invalid role provided to isRoleAvailable: ${role}`);
     return false;
   }
   
   // Development or test mode check should be handled by the caller
-  return availableRoles.includes(role as UserRoleType);
+  return availableRoles.includes(role as UserRole);
 }
 
 /**
@@ -632,7 +632,7 @@ export function isRoleAvailable(role: UserRoleType | string, availableRoles: Use
  * @param role The role to get the dashboard path for
  * @returns The default dashboard path for the role
  */
-export function getRoleDashboardPath(role: UserRoleType | string): string {
+export function getRoleDashboardPath(role: UserRole | string): string {
   if (!isValidUserRole(role)) {
     logger.warn(`Invalid role provided to getRoleDashboardPath: ${role}`);
     return '/dashboard';
@@ -655,18 +655,18 @@ export function getRoleDashboardPath(role: UserRoleType | string): string {
 
 // Define the available roles in the system
 export const ROLES = {
-  VIEWER: 'viewer' as UserRoleType,
-  ADVERTISER: 'advertiser' as UserRoleType,
-  PUBLISHER: 'publisher' as UserRoleType,
-  ADMIN: 'admin' as UserRoleType,
-  STAKEHOLDER: 'stakeholder' as UserRoleType,
+  VIEWER: 'viewer' as UserRole,
+  ADVERTISER: 'advertiser' as UserRole,
+  PUBLISHER: 'publisher' as UserRole,
+  ADMIN: 'admin' as UserRole,
+  STAKEHOLDER: 'stakeholder' as UserRole,
 };
 
 /**
  * Get all available roles in the system
  * @returns Array of all role types
  */
-export function getAllRoles(): UserRoleType[] {
+export function getAllRoles(): UserRole[] {
   return ['viewer', 'advertiser', 'publisher', 'admin', 'stakeholder'];
 }
 

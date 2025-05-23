@@ -14,16 +14,16 @@ let useRole = () => ({
 
 // Import hooks that might throw errors in test environments
 let useAuthRefactored = () => null;
-let useRoleRefactored = () => null;
+let useRole = () => null;
 
 // Only attempt to import these if we're not in a test environment
 // This prevents errors when the providers aren't available
 if (typeof window !== 'undefined' && process.env.NODE_ENV !== 'test') {
   try {
     const { useAuthRefactored: importedAuthHook } = require('./useAuthRefactored');
-    const { useRoleRefactored: importedRoleHook } = require('../context/NewRoleContextRefactored');
+    const { useRole: importedRoleHook } = require('../context/NewRoleContextRefactored');
     useAuthRefactored = importedAuthHook;
-    useRoleRefactored = importedRoleHook;
+    useRole = importedRoleHook;
   } catch (error) {
     logger.error('Error importing refactored hooks:', error);
   }
@@ -52,7 +52,7 @@ export function useAuthSwitch() {
   if (typeof window !== 'undefined' && process.env.NODE_ENV !== 'test') {
     try {
       refactoredAuth = useAuthRefactored() as any;
-      refactoredRole = useRoleRefactored();
+      refactoredRole = useRole();
     } catch (error) {
       logger.error('Error using refactored hooks:', error);
     }

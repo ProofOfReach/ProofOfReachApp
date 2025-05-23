@@ -15,7 +15,7 @@ const defaultContextValue = {
   isLastStep: false,
   goToNextStep: () => {},
   goToPreviousStep: () => {},
-  setSelectedRole: (_role: UserRoleType) => {},
+  setSelectedRole: (_role: UserRole) => {},
   selectedRole: null,
   completeOnboarding: async () => {},
   isLoading: false,
@@ -103,8 +103,8 @@ type OnboardingContextType = {
   isLastStep: boolean;
   goToNextStep: () => void;
   goToPreviousStep: () => void;
-  setSelectedRole: (role: UserRoleType) => void;
-  selectedRole: UserRoleType | null;
+  setSelectedRole: (role: UserRole) => void;
+  selectedRole: UserRole | null;
   completeOnboarding: () => Promise<void>;
   isLoading: boolean;
   skipOnboarding: () => Promise<void>;
@@ -116,7 +116,7 @@ const OnboardingContext = createContext<OnboardingContextType>(defaultContextVal
 type OnboardingProviderProps = {
   children: ReactNode;
   forcePubkey?: string | null;
-  initialRole?: UserRoleType | null;
+  initialRole?: UserRole | null;
 };
 
 export const OnboardingProvider: React.FC<OnboardingProviderProps> = ({ children, forcePubkey, initialRole }) => {
@@ -128,7 +128,7 @@ export const OnboardingProvider: React.FC<OnboardingProviderProps> = ({ children
   
   // For SSR compatibility, use basic initial values
   const [currentStep, setCurrentStep] = useState<OnboardingStep>('role-selection');
-  const [selectedRole, setSelectedRole] = useState<UserRoleType | null>(initialRole || null);
+  const [selectedRole, setSelectedRole] = useState<UserRole | null>(initialRole || null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   
   // Initialize steps based on the current role or selected role
@@ -139,7 +139,7 @@ export const OnboardingProvider: React.FC<OnboardingProviderProps> = ({ children
     return !!window?.nostr;
   };
 
-  const getStepsForRole = (role: UserRoleType | null): OnboardingStep[] => {
+  const getStepsForRole = (role: UserRole | null): OnboardingStep[] => {
     switch (role) {
       case 'viewer':
         // Use the simplified 2-step flow for Nostr extension users
@@ -242,7 +242,7 @@ export const OnboardingProvider: React.FC<OnboardingProviderProps> = ({ children
   }, [selectedRole, currentStep, currentRole, authState, router, forcePubkey]);
   
   // Handle role selection
-  const handleRoleSelection = (role: UserRoleType) => {
+  const handleRoleSelection = (role: UserRole) => {
     setSelectedRole(role);
     const steps = getStepsForRole(role);
     setCurrentStep(steps[1]); // Skip to the first step after role selection
@@ -309,7 +309,7 @@ export const OnboardingProvider: React.FC<OnboardingProviderProps> = ({ children
         const role = selectedRole || currentRole;
         if (role) {
           // Use client-side service to mark onboarding complete
-          await clientOnboardingService.completeOnboarding(pubkeyToUse, role as UserRoleType);
+          await clientOnboardingService.completeOnboarding(pubkeyToUse, role as UserRole);
           // Redirect to dashboard
           router.push(`/dashboard?timestamp=${Date.now()}`);
         }

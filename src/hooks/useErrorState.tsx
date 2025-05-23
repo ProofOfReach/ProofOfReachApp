@@ -18,7 +18,7 @@ interface TestErrorState {
   hasError: boolean;
   message: string;
   type: ErrorType;
-  severity: ErrorSeverity;
+  severity: string;
   timestamp?: number | null;
   code?: string | null;
   details?: string | null;
@@ -190,7 +190,7 @@ export function useErrorState() {
     error: Error | string,
     component?: string,
     errorType?: string,
-    severity: ErrorSeverity = 'error'
+    severity: string = 'error'
   ): void => {
     if (isTest) {
       try {

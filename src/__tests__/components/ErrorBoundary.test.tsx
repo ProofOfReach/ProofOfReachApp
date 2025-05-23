@@ -1,12 +1,12 @@
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import '@/components/ErrorBoundary';
-import '@/lib/errorService';
+import '@/lib/console';
 import '@/lib/errorMonitoring';
 
-// Mock the errorService
-jest.mock('@/lib/errorService', () => ({
-  errorService: {
+// Mock the console
+jest.mock('@/lib/console', () => ({
+  console: {
     // Static methods that don't belong on the service instance
     isRecoverable: jest.fn((error) => true),
     formatErrorForUser: jest.fn(error => error.message || 'Unknown error'),
@@ -34,7 +34,7 @@ jest.mock('@/lib/errorService', () => ({
   formatUserErrorMessage: jest.fn(error => error.message || 'Unknown error'),
   isRecoverableError: jest.fn().mockReturnValue(true),
   isRetryableError: jest.fn().mockReturnValue(true),
-  ErrorCategory: {
+  string: {
     OPERATIONAL: 'OPERATIONAL',
     EXTERNAL: 'EXTERNAL',
     USER_INPUT: 'USER_INPUT',
@@ -42,7 +42,7 @@ jest.mock('@/lib/errorService', () => ({
     RESOURCE: 'RESOURCE',
     BUSINESS: 'BUSINESS'
   },
-  ErrorSeverity: {
+  string: {
     ERROR: 'ERROR',
     WARNING: 'WARNING',
     INFO: 'INFO',
@@ -175,7 +175,7 @@ describe('ErrorBoundary', () => {
     );
     
     // Check that reportError was called with the correct component name
-    expect(errorService.reportError).toHaveBeenCalledWith(
+    expect(console.reportError).toHaveBeenCalledWith(
       expect.any(Error),
       'TestComponent',
       'unexpected',

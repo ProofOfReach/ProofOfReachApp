@@ -255,7 +255,7 @@ describe('/api/ads endpoint', () => {
       // Verify balance was deducted
       expect(prisma.user.update).toHaveBeenCalledWith({
         where: { id: mockUser.id },
-        data: { balance: mockUser.balance - mockAdData.budget }
+        data: { balance: mockUser?.balance ?? 0 - mockAdData?.budget ?? 0 }
       });
     });
     
@@ -306,7 +306,7 @@ describe('/api/ads endpoint', () => {
           const { budget } = req.body;
           
           // Validate budget against balance
-          if (user.balance < budget) {
+          if (user?.balance ?? 0 < budget) {
             res.status(400).json({ error: 'Insufficient balance to create this ad' });
             return;
           }

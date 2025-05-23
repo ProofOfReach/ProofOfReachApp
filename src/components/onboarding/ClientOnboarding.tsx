@@ -24,7 +24,7 @@ const ClientOnboarding: React.FC = () => {
   // Extract and validate role from URL parameters
   const urlRole = typeof router.query.role === 'string' && 
     ['viewer', 'publisher', 'advertiser', 'admin'].includes(router.query.role.toLowerCase()) ? 
-    (router.query.role.toLowerCase() as UserRoleType) : undefined;
+    (router.query.role.toLowerCase() as UserRole) : undefined;
   
   // Log initialization for debugging
   useEffect(() => {

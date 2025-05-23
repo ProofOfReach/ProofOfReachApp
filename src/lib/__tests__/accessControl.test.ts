@@ -9,7 +9,7 @@ import {
   getRoleCapabilities,
   PERMISSIONS
 } from '../accessControl';
-import { UserRoleType } from '../../types/role';
+import type { UserRole } from '../../types/role';
 
 describe('Access Control System', () => {
   describe('Permission definitions', () => {
@@ -53,7 +53,7 @@ describe('Access Control System', () => {
     });
 
     it('should return false for unknown role', () => {
-      expect(checkPermission('VIEW_ANALYTICS', 'unknown' as UserRoleType)).toBe(false);
+      expect(checkPermission('VIEW_ANALYTICS', 'unknown' as UserRole)).toBe(false);
     });
     
     it('should respect permission inheritance', () => {
@@ -133,7 +133,7 @@ describe('Access Control System', () => {
         '/dashboard/settings'
       ];
       
-      const roles: UserRoleType[] = ['admin', 'advertiser', 'publisher', 'stakeholder', 'viewer'];
+      const roles: UserRole[] = ['admin', 'advertiser', 'publisher', 'stakeholder', 'viewer'];
       
       for (const route of publicRoutes) {
         for (const role of roles) {
@@ -187,7 +187,7 @@ describe('Access Control System', () => {
     });
 
     it('should handle unknown roles by returning no capabilities', () => {
-      const capabilities = getRoleCapabilities('unknown' as UserRoleType);
+      const capabilities = getRoleCapabilities('unknown' as UserRole);
       
       for (const [permission, value] of Object.entries(capabilities)) {
         expect(value).toBe(false);

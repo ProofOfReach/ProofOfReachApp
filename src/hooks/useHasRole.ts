@@ -1,5 +1,5 @@
 import { useAuthSwitch } from './useAuthSwitch';
-import { UserRole } from '../types/auth';
+import type { UserRole } from '../types/auth';
 
 /**
  * Hook that checks if the current user has a specific role.

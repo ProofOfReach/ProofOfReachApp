@@ -27,7 +27,7 @@ const TestModeManager: React.FC = () => {
   } = useTestMode();
 
   const [selectedDuration, setSelectedDuration] = useState<number>(60); // Default: 60 minutes
-  const [selectedRole, setSelectedRole] = useState<UserRoleType>('viewer');
+  const [selectedRole, setSelectedRole] = useState<UserRole>('viewer');
   const [isEnabling, setIsEnabling] = useState(false);
   const [error, setError] = useState<string | null>(null);
   
@@ -41,7 +41,7 @@ const TestModeManager: React.FC = () => {
   ];
   
   // Role options
-  const roleOptions: UserRoleType[] = ['viewer', 'advertiser', 'publisher', 'admin', 'stakeholder'];
+  const roleOptions: UserRole[] = ['viewer', 'advertiser', 'publisher', 'admin', 'stakeholder'];
   
   // Handle enabling test mode with selected duration
   const handleEnableTestMode = async () => {
@@ -72,7 +72,7 @@ const TestModeManager: React.FC = () => {
   };
   
   // Handle role change
-  const handleRoleChange = async (role: UserRoleType) => {
+  const handleRoleChange = async (role: UserRole) => {
     try {
       await setCurrentRole(role);
     } catch (err: any) {
@@ -175,7 +175,7 @@ const TestModeManager: React.FC = () => {
                       id="initial-role"
                       className="w-full rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 py-2 px-3 text-gray-700 dark:text-gray-300"
                       value={selectedRole}
-                      onChange={(e) => setSelectedRole(e.target.value as UserRoleType)}
+                      onChange={(e) => setSelectedRole(e.target.value as UserRole)}
                     >
                       {roleOptions.map((role) => (
                         <option key={role} value={role}>

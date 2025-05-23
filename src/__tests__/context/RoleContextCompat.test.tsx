@@ -8,14 +8,14 @@
 import React from 'react';
 import '@testing-library/jest-dom';
 import { ROLES, hasPermission, canAccessRoute, getRoleCapabilities } from '../../context/RoleContext';
-import { UserRoleType } from '../../types/role';
+import type { UserRole } from '../../types/role';
 
 // Direct import/test method to avoid React component rendering issues in tests
 describe('RoleContext Compatibility Layer', () => {
   // Define test constants
-  const advertiserRole: UserRoleType = 'advertiser';
-  const adminRole: UserRoleType = 'admin';
-  const publisherRole: UserRoleType = 'publisher';
+  const advertiserRole: UserRole = 'advertiser';
+  const adminRole: UserRole = 'admin';
+  const publisherRole: UserRole = 'publisher';
   
   it('uses the correct ROLES constants', () => {
     expect(ROLES.VIEWER).toBe('viewer');

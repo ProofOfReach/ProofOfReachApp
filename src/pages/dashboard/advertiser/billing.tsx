@@ -145,8 +145,8 @@ const BillingPage: React.FC & { getLayout?: (page: React.ReactElement) => React.
                 <div className="h-10 w-40 bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
               ) : (
                 <span className="text-3xl font-bold text-gray-900 dark:text-white mr-2">
-                  {balanceData?.balance ? (
-                    <CurrencyAmount sats={balanceData.balance} />
+                  {balanceData??.balance ?? 0 ? (
+                    <CurrencyAmount sats={balanceData?.balance ?? 0} />
                   ) : (
                     '0 sats'
                   )}

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { UserRole } from '../../context/RoleContext';
+import type { UserRole } from '../../context/RoleContext';
 import RoleDropdown from '../../components/role/RoleDropdown';
 
 /**

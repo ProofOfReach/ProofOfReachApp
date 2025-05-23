@@ -10,12 +10,12 @@
 
 import React, { ReactNode, memo } from 'react';
 import { useRoleAccess } from '../../hooks/useRoleAccess';
-import { UserRoleType } from '../../types/role';
+import type { UserRole } from '../../types/role';
 import { logger } from '../../lib/logger';
 
 interface RoleBasedButtonProps {
   /** The role required to see this button */
-  requiredRole?: UserRoleType;
+  requiredRole?: UserRole;
   /** Button label text */
   label: string;
   /** Click handler function */
@@ -23,7 +23,7 @@ interface RoleBasedButtonProps {
   /** Optional custom styles */
   className?: string;
   /** Allow multiple roles to access this button */
-  allowedRoles?: UserRoleType[];
+  allowedRoles?: UserRole[];
   /** Optional icon to display before the label */
   icon?: ReactNode;
   /** Whether the button is disabled */

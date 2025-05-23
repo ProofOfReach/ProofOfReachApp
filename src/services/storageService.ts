@@ -154,7 +154,7 @@ export class StorageService {
    * Check if test mode is currently active
    * This checks both the new state object and legacy flags for backward compatibility
    */
-  static getCurrentRole(): UserRoleType {
+  static getCurrentRole(): UserRole {
     // Server-side rendering check
     if (typeof window === 'undefined') return 'viewer';
     
@@ -163,7 +163,7 @@ export class StorageService {
       try {
         const role = RoleManager.getCurrentRole();
         if (role && typeof role === 'string') {
-          return role as UserRoleType;
+          return role as UserRole;
         }
       } catch (e) {
         logger.debug('Error getting role from RoleManager:', e);
@@ -173,7 +173,7 @@ export class StorageService {
       try {
         const storedRole = enhancedStorage.getItem(STORAGE_KEYS.CURRENT_ROLE);
         if (storedRole && typeof storedRole === 'string') {
-          return storedRole as UserRoleType;
+          return storedRole as UserRole;
         }
       } catch (e) {
         logger.debug('Error getting role from enhanced storage:', e);
@@ -183,7 +183,7 @@ export class StorageService {
       try {
         const localRole = localStorage?.getItem('currentRole');
         if (localRole && typeof localRole === 'string') {
-          return localRole as UserRoleType;
+          return localRole as UserRole;
         }
       } catch (e) {
         logger.debug('Error getting role from localStorage:', e);

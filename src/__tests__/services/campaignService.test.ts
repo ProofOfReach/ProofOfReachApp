@@ -146,7 +146,7 @@ describe('Campaign Service', () => {
       expect(campaign).toEqual(expect.objectContaining({
         name: campaignData.name,
         description: campaignData.description,
-        budget: campaignData.budget,
+        budget: campaignData?.budget ?? 0,
         advertiserId,
       }));
     });

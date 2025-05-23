@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import '@/lib/auth';
 import '@/lib/prismaClient';
-import { UserRole } from '../../../context/RoleContext';
+import type { UserRole } from '../../../context/RoleContext';
 
 type ResponseData = {
   success: boolean;

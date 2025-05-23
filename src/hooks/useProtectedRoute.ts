@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { useAuthSwitch } from './useAuthSwitch';
-import { UserRole } from '../types/auth';
+import type { UserRole } from '../types/auth';
 import { logger } from '../lib/logger';
 
 /**

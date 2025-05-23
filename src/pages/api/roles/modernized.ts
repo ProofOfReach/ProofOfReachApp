@@ -104,7 +104,7 @@ async function getRoles(pubkey: string, res: NextApiResponse) {
  */
 async function updateRole(pubkey: string, req: NextApiRequest, res: NextApiResponse) {
   try {
-    const { role } = req.body as { role: UserRoleType };
+    const { role } = req.body as { role: UserRole };
     
     if (!role) {
       return res.status(400).json({

@@ -25,7 +25,7 @@ const OnboardingPage: React.FC = () => {
   const [mounted, setMounted] = useState(false);
   const [checkedStorage, setCheckedStorage] = useState(false);
   const [isRedirecting, setIsRedirecting] = useState(false);
-  const [initialRole, setInitialRole] = useState<UserRoleType | null>(null);
+  const [initialRole, setInitialRole] = useState<UserRole | null>(null);
   
   // Use hydration hook to safely handle client-only rendering
   const isHydrated = useHydration();
@@ -39,7 +39,7 @@ const OnboardingPage: React.FC = () => {
   // Process the role from query parameters when they're available
   useEffect(() => {
     if (role && typeof role === 'string') {
-      const normalizedRole = role.toLowerCase() as UserRoleType;
+      const normalizedRole = role.toLowerCase() as UserRole;
       if (['viewer', 'publisher', 'advertiser', 'admin'].includes(normalizedRole)) {
         setInitialRole(normalizedRole);
         logger.debug('Initialized onboarding with role from URL parameters', { role: normalizedRole });
@@ -100,7 +100,7 @@ const OnboardingPage: React.FC = () => {
         
         // Set the role from session storage
         if (savedRole && ['viewer', 'publisher', 'advertiser', 'admin'].includes(savedRole)) {
-          setInitialRole(savedRole as UserRoleType);
+          setInitialRole(savedRole as UserRole);
         }
         
         // Flag that we checked storage
@@ -204,7 +204,7 @@ const OnboardingPage: React.FC = () => {
   }
   
   // Extract the role from URL params if available
-  const urlRole = typeof router.query.role === 'string' ? router.query.role as UserRoleType : null;
+  const urlRole = typeof router.query.role === 'string' ? router.query.role as UserRole : null;
   
   // Dynamically import the client-side component
   // This is safe because we've already hydrated at this point

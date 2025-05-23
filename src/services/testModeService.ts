@@ -20,22 +20,22 @@ import '@/services/roleManager';
 
 // Define the RoleEvent interface for the event payload
 interface RoleEvent {
-  from: UserRoleType;
-  to: UserRoleType;
-  availableRoles: UserRoleType[];
+  from: UserRole;
+  to: UserRole;
+  availableRoles: UserRole[];
 }
 
 // Type definitions for test mode settings
 interface TestModeSession {
   expiryTime: number;
-  initialRole: UserRoleType;
+  initialRole: UserRole;
   activated: boolean;
   debug: boolean;
 }
 
 // Default session parameters
 const DEFAULT_SESSION_DURATION = 4 * 60 * 60 * 1000; // 4 hours in milliseconds
-const DEFAULT_ROLE = 'viewer' as UserRoleType;
+const DEFAULT_ROLE = 'viewer' as UserRole;
 /**
  * TestModeService singleton
  * 
@@ -133,11 +133,11 @@ export class TestModeService {
   /**
    * Get the current role in test mode
    */
-  public getCurrentRole(): UserRoleType {
+  public getCurrentRole(): UserRole {
     try {
       // Server-side rendering check
       if (typeof window === 'undefined') {
-        return 'viewer' as UserRoleType;
+        return 'viewer' as UserRole;
       }
       
       // First try to get from RoleManager as the single source of truth
@@ -161,21 +161,21 @@ export class TestModeService {
       }
       
       // Default fallback
-      return 'viewer' as UserRoleType;
+      return 'viewer' as UserRole;
     } catch (error) {
       this.handleError('Error getting current role in test mode', error);
-      return 'viewer' as UserRoleType;
+      return 'viewer' as UserRole;
     }
   }
   
   /**
    * Get available roles in test mode
    */
-  public getAvailableRoles(): UserRoleType[] {
+  public getAvailableRoles(): UserRole[] {
     try {
       // Server-side rendering check
       if (typeof window === 'undefined') {
-        return ['viewer'] as UserRoleType[];
+        return ['viewer'] as UserRole[];
       }
       
       // Try to get available roles from the static RoleManager method
@@ -199,10 +199,10 @@ export class TestModeService {
       }
       
       // Default to just the user role
-      return ['viewer'] as UserRoleType[];
+      return ['viewer'] as UserRole[];
     } catch (error) {
       this.handleError('Error getting available roles in test mode', error);
-      return ['viewer'] as UserRoleType[];
+      return ['viewer'] as UserRole[];
     }
   }
   
@@ -222,7 +222,7 @@ export class TestModeService {
    */
   public enableTestMode(
     duration: number = DEFAULT_SESSION_DURATION,
-    initialRole: UserRoleType = DEFAULT_ROLE,
+    initialRole: UserRole = DEFAULT_ROLE,
     debug: boolean = false
   ): boolean {
     try {
@@ -350,7 +350,7 @@ export class TestModeService {
    * Set the current role in test mode
    * @param role The role to set
    */
-  public async setCurrentRole(role: UserRoleType): Promise<boolean> {
+  public async setCurrentRole(role: UserRole): Promise<boolean> {
     try {
       this.debugLog(`Setting current role: ${role}`);
       
@@ -437,7 +437,7 @@ export class TestModeService {
       }
       
       // All potential roles
-      const allRoles: UserRoleType[] = ['viewer', 'advertiser', 'publisher', 'admin', 'stakeholder'];
+      const allRoles: UserRole[] = ['viewer', 'advertiser', 'publisher', 'admin', 'stakeholder'];
       
       // First try using RoleManager (but don't depend on it)
       let success = true;
@@ -531,7 +531,7 @@ export class TestModeService {
    * @param duration Session duration in minutes
    * @param role Initial role for the session
    */
-  public createTimeLimitedSession(duration: number, role: UserRoleType = 'viewer'): boolean {
+  public createTimeLimitedSession(duration: number, role: UserRole = 'viewer'): boolean {
     // Convert minutes to milliseconds
     const durationMs = duration * 60 * 1000;
     return this.enableTestMode(durationMs, role);
@@ -545,7 +545,7 @@ export class TestModeService {
     this.debugLog(`Creating test scenario: ${scenario}`);
     
     // Enable test mode with the appropriate role
-    const success = this.enableTestMode(DEFAULT_SESSION_DURATION, scenario as UserRoleType);
+    const success = this.enableTestMode(DEFAULT_SESSION_DURATION, scenario as UserRole);
     
     if (success) {
       // Enable all roles for flexibility
@@ -562,8 +562,8 @@ export class TestModeService {
    * @param role The role to validate
    */
   private isRoleValid(role: string): boolean {
-    const validRoles: UserRoleType[] = ['viewer', 'advertiser', 'publisher', 'admin', 'stakeholder'];
-    return validRoles.includes(role as UserRoleType);
+    const validRoles: UserRole[] = ['viewer', 'advertiser', 'publisher', 'admin', 'stakeholder'];
+    return validRoles.includes(role as UserRole);
   }
   
   /**
@@ -596,7 +596,7 @@ export class TestModeService {
   /**
    * Dispatch test mode activated event
    */
-  private dispatchTestModeActivated(expiryTime: number, initialRole: UserRoleType): void {
+  private dispatchTestModeActivated(expiryTime: number, initialRole: UserRole): void {
     // New event system
     dispatchAppEvent(TEST_MODE_EVENTS.ACTIVATED, { 
       expiryTime, 
@@ -627,7 +627,7 @@ export class TestModeService {
   /**
    * Dispatch role changed event
    */
-  private dispatchRoleChanged(from: UserRoleType, to: UserRoleType): void {
+  private dispatchRoleChanged(from: UserRole, to: UserRole): void {
     // New event system
     dispatchAppEvent(ROLE_EVENTS.ROLE_CHANGED, { 
       from, 
@@ -650,7 +650,7 @@ export class TestModeService {
   /**
    * Dispatch roles updated event
    */
-  private dispatchRolesUpdated(availableRoles: UserRoleType[], currentRole: UserRoleType): void {
+  private dispatchRolesUpdated(availableRoles: UserRole[], currentRole: UserRole): void {
     // New event system
     dispatchAppEvent(ROLE_EVENTS.ROLES_UPDATED, { 
       availableRoles, 

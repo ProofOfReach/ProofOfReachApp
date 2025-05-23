@@ -7,8 +7,8 @@ import {
   DollarSign, LogOut, Code, ChevronDown, Lock
 } from 'react-feather';
 import { useRole } from '../../context/NewRoleContext';
-import { useRoleRefactored } from '../../context/NewRoleContextRefactored';
-import { UserRole } from '../../types/auth';
+import { useRole } from '../../context/NewRoleContextRefactored';
+import type { UserRole } from '../../types/auth';
 import { useAuth } from '../../hooks/useAuth';
 import MegaphoneIcon from '../icons/MegaphoneIcon';
 import SatsIcon from '../icons/SatsIcon';
@@ -17,7 +17,7 @@ import ExchangeRateDisplay from '../ExchangeRateDisplay';
 
 const Sidebar: React.FC = () => {
   const { role: originalRole, setRole: originalSetRole, availableRoles: originalAvailableRoles, isRoleAvailable: originalIsRoleAvailable } = useRole();
-  const { role: refactoredRole, setRole: refactoredSetRole, availableRoles: refactoredAvailableRoles, isRoleAvailable: refactoredIsRoleAvailable } = useRoleRefactored();
+  const { role: refactoredRole, setRole: refactoredSetRole, availableRoles: refactoredAvailableRoles, isRoleAvailable: refactoredIsRoleAvailable } = useRole();
   const { auth, logout } = useAuth();
   
   // For backward compatibility, try to use both role context systems

@@ -3,5 +3,5 @@
  */
 
 export { default as RoleSwitcher } from './RoleSwitcher';
-export { AdminRolePanel } from './AdminRolePanel';
+export { div } from './div';
 export { RoleStatusBadge } from './RoleStatusBadge';
