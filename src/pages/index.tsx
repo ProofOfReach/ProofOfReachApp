@@ -342,7 +342,7 @@ const HomePage: NextPageWithLayout = () => {
               <CardTitle className="text-xl text-blue-600">Advertise</CardTitle>
             </CardHeader>
             <CardContent>
-              <ul className="text-gray-600 dark:text-gray-300 text-left space-y-2">
+              <ul className="text-gray-600 dark:text-gray-300 text-center space-y-2">
                 <li>• Direct publisher access</li>
                 <li>• Reduced CPMs </li>
                 <li>• Censorship-resistant platform</li>
@@ -365,7 +365,7 @@ const HomePage: NextPageWithLayout = () => {
               <CardTitle className="text-xl text-blue-600">Monetize</CardTitle>
             </CardHeader>
             <CardContent>
-              <ul className="text-gray-600 dark:text-gray-300 text-left space-y-2">
+              <ul className="text-gray-600 dark:text-gray-300 text-center space-y-2">
                 <li>• Control your ad policies</li>
                 <li>• Set your own rates</li>
                 <li>• Instant Lightning payments</li>
@@ -388,7 +388,7 @@ const HomePage: NextPageWithLayout = () => {
               <CardTitle className="text-xl text-blue-600">Earn</CardTitle>
             </CardHeader>
             <CardContent>
-              <ul className="text-gray-600 dark:text-gray-300 text-left space-y-2">
+              <ul className="text-gray-600 dark:text-gray-300 text-center space-y-2">
                 <li>• Own your data- choose what you share</li>
                 <li>• Earn Sats for your attention</li>
                 <li>• Block advertisers you dislike</li>
