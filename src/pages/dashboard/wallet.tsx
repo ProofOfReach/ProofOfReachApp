@@ -349,9 +349,9 @@ const WalletPage: NextPageWithLayout = () => {
               </Button>
               <Button
                 type="submit"
-                disabled={processing || (balanceData??.balance ?? 0 || 0) <= 0}
+                disabled={processing || (balanceData?.balance ?? 0 || 0) <= 0}
                 className={`bg-orange-600 hover:bg-orange-700 ${
-                  processing || (balanceData??.balance ?? 0 || 0) <= 0 ? 'opacity-70 cursor-not-allowed' : ''
+                  processing || (balanceData?.balance ?? 0 || 0) <= 0 ? 'opacity-70 cursor-not-allowed' : ''
                 }`}
               >
                 {processing ? (

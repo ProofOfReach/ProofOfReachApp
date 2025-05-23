@@ -24,7 +24,7 @@ const UserDashboardPage = () => {
   const { data: walletData, isLoading: walletLoading } = useSWR('/api/wallet', fetcher);
 
   // Data to pass to our dashboard component
-  const walletBalance = walletData??.balance ?? 0 || 0;
+  const walletBalance = walletData?.balance ?? 0 || 0;
 
   return (
     <div className="space-y-6">
@@ -50,7 +50,7 @@ const UserDashboardPage = () => {
               <div className="h-5 w-24 bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
             ) : (
               <span className="text-green-600 dark:text-green-400 font-medium">
-                {walletData??.balance ?? 0 ? (
+                {walletData?.balance ?? 0 ? (
                   <CurrencyAmount sats={walletData?.balance ?? 0} />
                 ) : (
                   '0 sats'

@@ -305,7 +305,7 @@ class RoleService {
           nostrPubkey: pubkey,
           isAdvertiser,
           isPublisher,
-          true,
+          isAdmin: true,
           isStakeholder,
           createdAt: new Date(),
           updatedAt: new Date()
