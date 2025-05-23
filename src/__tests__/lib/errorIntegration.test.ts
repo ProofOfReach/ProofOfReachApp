@@ -33,14 +33,14 @@ describe('Error Integration Service', () => {
     global.window.dispatchEvent = jest.fn();
     
     // Initialize the error state with default structure
-    global.window.__errorState = {
+    (global.window as any).__errorState = {
       errors: [],
       globalError: null,
       toastError: null
     };
     
     // Initialize metrics
-    global.window.__errorMetrics = {
+    (global.window as any).__errorMetrics = {
       startTime: Date.now(),
       getMetrics: jest.fn().mockReturnValue({
         totalErrors: 0,
