@@ -12,9 +12,7 @@ import DashboardContainer from '../../components/ui/DashboardContainer';
 import DashboardHeader from '../../components/ui/DashboardHeader';
 import DashboardCard from '../../components/ui/DashboardCard';
 import { Button } from '../../components/ui/button';
-import '@/components/ui';
-import '@/components/ui/button';
-import '@/components/ui/input';
+import { Input } from '@/components/ui/input';
 import { getDashboardLayout } from '@/utils/layoutHelpers';
 import type { NextPageWithLayout } from '../_app';
 import { defaultUseRoleAccess } from '@/hooks/useRoleAccess';
@@ -27,7 +25,7 @@ const fetcher = (url: string) => fetch(url).then(res => res.json());
 const WalletPage: NextPageWithLayout = () => {
   const router = useRouter();
   const { role } = defaultUseRole();
-  const { hasPermission } = defaultUseRoleAccess();
+  const { hasCapability } = defaultUseRoleAccess();
   const { isTestMode } = useTestMode();
   const { balance: testWalletBalance, updateBalance: updateTestBalance } = useTestWallet();
   const [isDepositing, setIsDepositing] = useState(false);
@@ -238,9 +236,9 @@ const WalletPage: NextPageWithLayout = () => {
         </div>
       )}
       
-      {log && (
+      {success && (
         <div className="mb-6 p-4 bg-green-100 dark:bg-green-900/20 text-green-800 dark:text-green-400 rounded-lg">
-          {log}
+          {success}
         </div>
       )}
       
@@ -351,9 +349,9 @@ const WalletPage: NextPageWithLayout = () => {
               </Button>
               <Button
                 type="submit"
-                disabled={processing || (balanceData?.balance ?? 0 || 0) <= 0}
+                disabled={processing || ((balanceData?.balance ?? 0) || 0) <= 0}
                 className={`bg-orange-600 hover:bg-orange-700 ${
-                  processing || (balanceData?.balance ?? 0 || 0) <= 0 ? 'opacity-70 cursor-not-allowed' : ''
+                  processing || ((balanceData?.balance ?? 0) || 0) <= 0 ? 'opacity-70 cursor-not-allowed' : ''
                 }`}
               >
                 {processing ? (
