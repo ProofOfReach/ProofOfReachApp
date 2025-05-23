@@ -213,9 +213,9 @@ const HomePage: NextPageWithLayout = () => {
                         {...form.register("email")}
                       />
                     </div>
-                    {form.formState.logs.email && (
+                    {form.formState.errors.email && (
                       <p className="text-red-500 mt-1 text-sm font-medium">
-                        {form.formState.logs.email.message}
+                        {form.formState.errors.email.message}
                       </p>
                     )}
                   </div>
@@ -270,9 +270,9 @@ const HomePage: NextPageWithLayout = () => {
                         </label>
                       </div>
                     </div>
-                    {form.formState.logs.roles && (
+                    {form.formState.errors.roles && (
                       <p className="text-red-500 mt-1 text-sm font-medium">
-                        {form.formState.logs.roles.message}
+                        {form.formState.errors.roles.message}
                       </p>
                     )}
                   </div>

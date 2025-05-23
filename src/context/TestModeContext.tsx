@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode, useCallback } from 'react';
 import { logger } from '../lib/logger';
-import '@/services/storageService';
+import { StorageService } from '../services/storageService';
 import { 
   dispatchTestModeEvent, 
   TEST_MODE_EVENTS, 
