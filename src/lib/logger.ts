@@ -1,91 +1,78 @@
-// Simple logger implementation that works in both browser and Node.js environments
-// This avoids issues with winston requiring 'fs' which isn't available in the browser
+/**
+ * Simple logger service for the application
+ */
 
-// Define log levels
-type LogLevel = 'error' | 'warn' | 'info' | 'http' | 'debug' | 'log';
+import { UserRole } from '../types/role';
 
-// Detect client/browser environment
-const isClient = typeof window !== 'undefined';
+export interface LogEntry {
+  level: 'debug' | 'info' | 'warn' | 'error';
+  message: string;
+  timestamp: number;
+  context?: Record<string, any>;
+  userRole?: UserRole;
+}
 
-// Simple logger that works in browser and Node
 class Logger {
-  private isDevelopment: boolean;
+  private logs: LogEntry[] = [];
+  private maxLogs = 1000;
 
-  constructor() {
-    // Be careful with process.env in client-side code
-    if (isClient) {
-      // In the browser, we can check for development mode via other means
-      // or just default to false to be safe
-      this.isDevelopment = process.env.NODE_ENV !== 'production';
-    } else {
-      this.isDevelopment = process.env.NODE_ENV !== 'production';
-    }
+  private createEntry(level: LogEntry['level'], message: string, context?: Record<string, any>, userRole?: UserRole): LogEntry {
+    return {
+      level,
+      message,
+      timestamp: Date.now(),
+      context,
+      userRole,
+    };
   }
 
-  private isEnabled(level: LogLevel): boolean {
-    // In production, only show error and warn
-    if (!this.isDevelopment) {
-      return level === 'error' || level === 'warn';
+  debug(message: string, context?: Record<string, any>, userRole?: UserRole): void {
+    const entry = this.createEntry('debug', message, context, userRole);
+    this.logs.push(entry);
+    if (this.logs.length > this.maxLogs) {
+      this.logs.shift();
     }
-    return true;
+    console.debug(`[DEBUG] ${message}`, context);
   }
 
-  private formatMessage(level: LogLevel, message: UserRole, ...args: any[]): string {
-    const timestamp = new Date().toISOString();
-    const formattedArgs = args.map((arg) => {
-      if (typeof arg === 'object') {
-        try {
-          return JSON.stringify(arg);
-        } catch (e) {
-          return '[Object]';
-        }
-      }
-      return String(arg);
-    }).join(' ');
-
-    return `${timestamp} [${level.toUpperCase()}] ${message} ${formattedArgs}`;
+  info(message: string, context?: Record<string, any>, userRole?: UserRole): void {
+    const entry = this.createEntry('info', message, context, userRole);
+    this.logs.push(entry);
+    if (this.logs.length > this.maxLogs) {
+      this.logs.shift();
+    }
+    console.info(`[INFO] ${message}`, context);
   }
 
-  public error(message: UserRole, ...args: any[]): void {
-    if (this.isEnabled('error')) {
-      console.log(this.formatMessage('error', message, ...args));
+  warn(message: string, context?: Record<string, any>, userRole?: UserRole): void {
+    const entry = this.createEntry('warn', message, context, userRole);
+    this.logs.push(entry);
+    if (this.logs.length > this.maxLogs) {
+      this.logs.shift();
     }
+    console.warn(`[WARN] ${message}`, context);
   }
 
-  public warn(message: UserRole, ...args: any[]): void {
-    if (this.isEnabled('warn')) {
-      console.warn(this.formatMessage('warn', message, ...args));
+  error(message: string, context?: Record<string, any>, userRole?: UserRole): void {
+    const entry = this.createEntry('error', message, context, userRole);
+    this.logs.push(entry);
+    if (this.logs.length > this.maxLogs) {
+      this.logs.shift();
     }
+    console.error(`[ERROR] ${message}`, context);
   }
 
-  public info(message: UserRole, ...args: any[]): void {
-    if (this.isEnabled('info')) {
-      console.info(this.formatMessage('info', message, ...args));
-    }
+  log(message: string, context?: Record<string, any>, userRole?: UserRole): void {
+    this.info(message, context, userRole);
   }
 
-  public http(message: UserRole, ...args: any[]): void {
-    if (this.isEnabled('http')) {
-      console.log(this.formatMessage('http', message, ...args));
-    }
+  getLogs(): LogEntry[] {
+    return [...this.logs];
   }
 
-  public debug(message: UserRole, ...args: any[]): void {
-    if (this.isEnabled('debug')) {
-      console.debug(this.formatMessage('debug', message, ...args));
-    }
-  }
-  
-  // Add log method for compatibility with code expecting console.log-like behavior
-  public log(message: UserRole, ...args: any[]): void {
-    if (this.isEnabled('log')) {
-      console.log(this.formatMessage('log', message, ...args));
-    }
+  clearLogs(): void {
+    this.logs = [];
   }
 }
 
-// Create logger instance
 export const logger = new Logger();
-
-// Export for convenience
-export default logger;

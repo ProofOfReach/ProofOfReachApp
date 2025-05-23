@@ -12,3 +12,8 @@ export interface ErrorState {
   details?: string;
   source?: string;
 }
+
+export interface FieldError {
+  message: string;
+  type?: string;
+}

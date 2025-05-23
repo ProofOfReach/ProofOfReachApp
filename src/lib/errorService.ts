@@ -1,5 +1,6 @@
 import { v4 as uuidv4 } from 'uuid';
-import type { any, ErrorType, FieldError } from '../types/errors';
+import type { ErrorType, ErrorSeverity, ErrorState, FieldError } from '../types/errors';
+import { UserRole } from '../types/role';
 import { logger } from './logger';
 
 /**

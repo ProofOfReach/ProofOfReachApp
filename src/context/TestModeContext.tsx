@@ -6,8 +6,7 @@ import {
   TEST_MODE_EVENTS, 
   addTestModeEventListener 
 } from '@/lib/testModeEvents';
-import '@/types/role';
-import '@/services/roleManager';
+import { UserRole, TestModeState, STORAGE_KEYS } from '../types/role';
 
 /**
  * Enhanced TestMode Context Interface
