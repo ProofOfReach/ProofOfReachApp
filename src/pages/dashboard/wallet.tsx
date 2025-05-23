@@ -34,7 +34,7 @@ const WalletPage: NextPageWithLayout = () => {
   const [isWithdrawing, setIsWithdrawing] = useState(false);
   const [amount, setAmount] = useState('');
   const [error, setError] = useState<string | null>(null);
-  const [log, setSuccess] = useState<string | null>(null);
+  const [success, setSuccess] = useState<string | null>(null);
   const [processing, setProcessing] = useState(false);
   
   // Check if user is allowed to access wallet page
