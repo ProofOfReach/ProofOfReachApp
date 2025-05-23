@@ -1,5 +1,43 @@
 # Project Learnings
 
+## 2025-05-23 — Documentation Organization and Project Status Review
+
+**Session Goal:** Organize project documentation and review current application status.
+
+**Problem Identified:**
+- Internal documentation files (PRD.md, LEARNINGS.md, .todo.md) were scattered in the root directory
+- Need for better organization of project reference materials
+- Current application status needed comprehensive documentation of remaining issues
+
+**What Was Done:**
+- Reorganized all documentation into a structured `/docs` folder
+- Created a comprehensive todo.md file capturing all remaining work items and technical debt
+- Added documentation README explaining the purpose of each file
+- Reviewed and consolidated learnings from previous development sessions
+
+**Lessons Learned:**
+- Organized documentation improves project maintainability and team collaboration
+- A centralized TODO system helps track technical debt and priorities
+- Documentation should be visible but organized for professional repository structure
+- Capturing both completed work and remaining issues provides better project continuity
+
+**Current Critical Issues Identified:**
+- RoleManager reference errors causing runtime failures in TestModeBanner component
+- Authentication system has undefined checkAuth function errors
+- Multiple TypeScript type definition conflicts across role management system
+- Error handling system has structural issues with missing exports
+
+**Open Questions / Next Steps:**
+1. Resolve RoleManager dependency issues as highest priority
+2. Fix authentication system undefined references
+3. Address TypeScript type conflicts in role management
+4. Stabilize error handling system exports and interfaces
+5. Complete dashboard component restoration after fixing core dependencies
+
+---
+
+# Project Learnings
+
 ## 2025-05-22 — Pre-Build Checks and Build Reliability Improvements
 
 **Session Goal:** Implement pre-build checks to improve build reliability and prevent production deployment issues.

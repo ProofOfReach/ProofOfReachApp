@@ -1,7 +1,7 @@
 # Nostr Decentralized Ad Marketplace – Product Requirements Document (PRD)
 
-**Version:** 1.4  
-**Last Updated:** 2025-05-20  
+**Version:** 1.5  
+**Last Updated:** 2025-05-23  
 
 ---
 
@@ -38,6 +38,22 @@ Current digital ad systems are centralized and opaque. They extract large rents,
 - **Fix errors in large batches** by category (TypeScript errors, linting issues, etc.)
 - **Combine multiple file changes** in single operations when logically related
 - **Prioritize meaningful progress** over frequent small updates to optimize checkpoint usage
+
+---
+
+## Project Status
+
+**Current Phase:** Core platform development with critical runtime error resolution needed  
+**Development Focus:** Fixing RoleManager dependencies and authentication system stability  
+**Immediate Priority:** Resolve TestModeBanner component errors and restore dashboard functionality  
+**Target Completion:** Q2 2025
+
+**Technical Status:**
+- Application compiles successfully but has runtime JavaScript errors
+- Main blocker: RoleManager reference errors in TestModeBanner component
+- Authentication system has undefined function references
+- Dashboard simplified to prevent crashes but needs full restoration
+- Documentation reorganized into /docs folder for better project management
 
 ---
 
