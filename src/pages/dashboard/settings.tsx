@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useAuth } from '../../hooks/useAuth';
-import '@/utils/layoutHelpers';
+import { getDashboardLayout } from '@/utils/layoutHelpers';
 import '@/components/ui/DashboardContainer';
 import { Settings, Save, RefreshCw, UserCheck, Bell, Moon, Sun, Shield, Lock, Plus, X, AlertCircle, Info, Globe, Wifi } from 'react-feather';
 import { 
