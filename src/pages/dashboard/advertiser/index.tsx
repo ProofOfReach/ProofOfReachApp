@@ -5,6 +5,8 @@ import Link from 'next/link';
 import { getDashboardLayout } from '@/utils/layoutHelpers';
 import type { NextPageWithLayout } from '../../_app';
 import CurrencyAmount from '@/components/CurrencyAmount';
+import DashboardContainer from '@/components/ui/DashboardContainer';
+import DashboardCard from '@/components/ui/DashboardCard';
 
 /**
  * Advertiser Dashboard Page
