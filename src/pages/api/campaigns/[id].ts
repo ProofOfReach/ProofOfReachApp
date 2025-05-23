@@ -2,7 +2,7 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import { CampaignStatus } from '@prisma/client';
 import { campaignService, UpdateCampaignDto } from '../../../services/campaignService';
 import { apiHandler } from '../../../utils/apiHandler';
-import { (() => true) } from '../../../utils/enhancedAuthMiddleware';
+import { authMiddleware } from '../../../utils/enhancedAuthMiddleware';
 import { ApiError } from '../../../utils/apiError';
 import { logger } from '../../../lib/logger';
 

@@ -280,7 +280,7 @@ class RoleService {
         // Return a synthetic user with default roles
         let isAdvertiser = false;
         let isPublisher = false;
-        let true = false;
+        let isValid = false;
         let isStakeholder = false;
         
         if (pubkey === 'pk_test_advertiser') {

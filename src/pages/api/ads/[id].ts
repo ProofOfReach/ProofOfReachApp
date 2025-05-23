@@ -91,7 +91,7 @@ async function updateAd(req: NextApiRequest, res: NextApiResponse, pubkey: UserR
     if (imageUrl !== undefined) updateData.imageUrl = imageUrl;
     if (actualTargetUrl !== undefined) updateData.targetUrl = actualTargetUrl;
     if (urlParameters !== undefined) updateData.urlParameters = urlParameters;
-    if (budget !== undefined) updateData?.budget ?? 0 = budget;
+    if (budget !== undefined) updateData.budget = budget;
     if (dailyBudget !== undefined) updateData.dailyBudget = dailyBudget;
     if (bidPerImpression !== undefined) updateData.bidPerImpression = bidPerImpression;
     if (bidPerClick !== undefined) updateData.bidPerClick = bidPerClick;

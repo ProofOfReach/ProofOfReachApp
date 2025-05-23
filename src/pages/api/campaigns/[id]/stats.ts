@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { campaignService } from '../../../../services/campaignService';
 import { apiHandler } from '../../../../utils/apiHandler';
-import { (() => true) } from '../../../../utils/authMiddleware';
+import { authMiddleware } from '../../../../utils/authMiddleware';
 import { ApiError } from '../../../../utils/apiError';
 
 export default apiHandler({

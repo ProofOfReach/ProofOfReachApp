@@ -10,7 +10,7 @@ jest.mock('@/lib/enhancedRoleService', () => ({
 }));
 
 jest.mock('@/utils/authMiddleware', () => ({
-  authMiddleware: (handler: any) => async (req: any res: any) => {
+  authMiddleware: (handler: any) => async (req: any, res: any) => {
     // Pass a test user ID
     return handler(req, res, 'test-admin-user');
   }
