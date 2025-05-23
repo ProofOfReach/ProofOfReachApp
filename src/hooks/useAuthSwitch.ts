@@ -102,7 +102,13 @@ export function useAuthSwitch() {
             const ROLE_CACHE_KEY = 'roleData';
             try {
               // Create or update the React Query cache
-              let cache: Record<UserRole, any> = {};
+              let cache: Record<UserRole, any> = {
+                viewer: {},
+                advertiser: {},
+                publisher: {},
+                admin: {},
+                stakeholder: {}
+              };
               
               // Try to get existing cache or create a new one
               if (window.localStorage.getItem('_REACT_QUERY_OFFLINE_CACHE')) {

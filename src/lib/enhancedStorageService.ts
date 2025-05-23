@@ -483,7 +483,7 @@ function createEnhancedStorage(storageType: StorageType): EnhancedStorageProvide
  * Create a mock storage object for server-side rendering
  */
 function createMockStorage(): Storage {
-  const data: Record<UserRole, string> = {};
+  const data: Record<string, string> = {};
   
   return {
     getItem(key: string): string | null {

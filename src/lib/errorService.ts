@@ -29,8 +29,20 @@ interface ErrorTraceContext {
  */
 export class ErrorService {
   private static instance: ErrorService;
-  private errors: Record<UserRole, any> = {};
-  private traceContexts: Record<UserRole, ErrorTraceContext> = {};
+  private errors: Record<UserRole, any> = {
+    viewer: {},
+    advertiser: {},
+    publisher: {},
+    admin: {},
+    stakeholder: {}
+  };
+  private traceContexts: Record<UserRole, ErrorTraceContext> = {
+    viewer: { correlationId: '', timestamp: 0, stack: [], lastUpdated: 0 },
+    advertiser: { correlationId: '', timestamp: 0, stack: [], lastUpdated: 0 },
+    publisher: { correlationId: '', timestamp: 0, stack: [], lastUpdated: 0 },
+    admin: { correlationId: '', timestamp: 0, stack: [], lastUpdated: 0 },
+    stakeholder: { correlationId: '', timestamp: 0, stack: [], lastUpdated: 0 }
+  };
   private listeners: Array<(error: any) => void> = [];
   private clearListeners: Array<(errorId: string) => void> = [];
 

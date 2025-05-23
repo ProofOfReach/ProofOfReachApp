@@ -4,6 +4,7 @@ import '@/utils/layoutHelpers';
 import '@/context/RoleContext';
 import { Shield, Plus, XCircle, CheckCircle, Edit, Save, X } from 'react-feather';
 import '@/hooks/useAuth';
+import { getDashboardLayout } from '@/utils/layoutHelpers';
 
 // Rule types
 type RuleType = 'domain_blacklist' | 'keyword_blacklist' | 'pubkey_blacklist' | 'pubkey_whitelist';

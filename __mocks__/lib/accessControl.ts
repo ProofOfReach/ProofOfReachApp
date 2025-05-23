@@ -2,7 +2,7 @@
  * Mock implementation of accessControl module for testing
  */
 
-import { UserRoleType } from '../../src/types/role';
+import type { UserRole as UserRoleType } from '../../src/types/auth';
 
 // Mock of role-based permissions
 export const PERMISSIONS = {
