@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import { useTestMode } from '@/context/TestModeContext';
 import '@/lib/roleService';
-import '@/hooks/useTestMode';
 import '@/services/roleManager';
 import '@/services/enhancedStorageService';
 import '@/services/storageService';
