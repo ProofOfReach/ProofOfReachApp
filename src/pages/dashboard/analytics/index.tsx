@@ -1,7 +1,5 @@
 import React, { useState } from 'react';
-import '@/pages/_app';
-import '@/utils/layoutHelpers';
-import '@/context/RoleContext';
+import ImprovedDashboardLayout from '@/components/layout/ImprovedDashboardLayout';
 import { BarChart2, Calendar, Download, ArrowUp, ArrowDown, Eye, Zap, Target } from 'react-feather';
 import '@/components/charts';
 import { 
@@ -763,7 +761,7 @@ const StakeholderAnalyticsDashboard = ({ dateRange, loading }: { dateRange: User
 
 // Set the layout for this page
 AnalyticsPage.getLayout = function getLayout(page: React.ReactElement) {
-  return getDashboardLayout(page, 'Analytics');
+  return <ImprovedDashboardLayout>{page}</ImprovedDashboardLayout>;
 };
 
 export default AnalyticsPage;
