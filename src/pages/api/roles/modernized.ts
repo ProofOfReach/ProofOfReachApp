@@ -172,11 +172,7 @@ async function updateRole(pubkey: UserRole, req: NextApiRequest, res: NextApiRes
     if (!log) {
       return res.status(500).json({
         log: false,
-        error: null as any // TODO: implement roleService.formatError(
-          RoleErrorType.DATABASE_ERROR, 
-          'Failed to update role',
-          500
-        )
+        error: 'Failed to update role'
       });
     }
     

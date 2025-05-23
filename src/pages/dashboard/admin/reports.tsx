@@ -383,7 +383,7 @@ const ReportsPage: NextPageWithLayout = () => {
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
-                      {reportData.topPerformers.publishers.map((publisher: any idx: number) => (
+                      {reportData.topPerformers.publishers.map((publisher: any, idx: number) => (
                         <tr key={idx} className="hover:bg-gray-50 dark:hover:bg-gray-700">
                           <td className="px-3 py-2 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">
                             {publisher.name}
@@ -410,7 +410,7 @@ const ReportsPage: NextPageWithLayout = () => {
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
-                      {reportData.topPerformers.advertisers.map((advertiser: any idx: number) => (
+                      {reportData.topPerformers.advertisers.map((advertiser: any, idx: number) => (
                         <tr key={idx} className="hover:bg-gray-50 dark:hover:bg-gray-700">
                           <td className="px-3 py-2 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">
                             {advertiser.name}
@@ -440,7 +440,7 @@ const ReportsPage: NextPageWithLayout = () => {
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
-                    {reportData.topPerformers.ads.map((ad: any idx: number) => (
+                    {reportData.topPerformers.ads.map((ad: any, idx: number) => (
                       <tr key={idx} className="hover:bg-gray-50 dark:hover:bg-gray-700">
                         <td className="px-3 py-3 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">
                           {ad.title}
