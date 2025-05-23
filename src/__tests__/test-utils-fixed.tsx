@@ -14,7 +14,7 @@ interface CustomRenderOptions extends Omit<RenderOptions, 'wrapper'> {
 // Mock modules outside component - ensure this is at file scope
 jest.mock('../context/RoleContext', () => {
   return {
-    useRole: jest.fn().mockReturnValue({
+    defaultUseRole: jest.fn().mockReturnValue({
       role: 'viewer', // This will be overridden in the render function
       setRole: jest.fn(),
       availableRoles: ['viewer', 'advertiser', 'publisher', 'admin'],
@@ -174,8 +174,8 @@ export function renderWithProviders(
   } = options;
 
   // Override mock implementations based on options
-  const useRoleMock = require('../context/RoleContext').useRole;
-  useRoleMock.mockReturnValue({
+  const defaultUseRoleMock = require('../context/RoleContext').defaultUseRole;
+  defaultUseRoleMock.mockReturnValue({
     role: initialRole,
     setRole: jest.fn(),
     availableRoles: ['viewer', 'advertiser', 'publisher', 'admin', 'stakeholder'],
@@ -210,7 +210,7 @@ export function renderWithProviders(
     timeRemaining: 240,
     enableAllRoles: jest.fn().mockResolvedValue(true),
     setCurrentRole: jest.fn().mockImplementation(async (role: string) => {
-      useRoleMock.mockReturnValueOnce({
+      defaultUseRoleMock.mockReturnValueOnce({
         role: role,
         setRole: jest.fn(),
         availableRoles: ['viewer', 'advertiser', 'publisher', 'admin', 'stakeholder'],

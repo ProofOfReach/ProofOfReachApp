@@ -1,6 +1,6 @@
 import React from 'react';
 import '@/types/role';
-import '@/hooks/useRoleAccess';
+import '@/hooks/defaultUseRoleAccess';
 
 interface RoleGuardProps {
   /** 
@@ -56,7 +56,7 @@ export const RoleGuard: React.FC<RoleGuardProps> = ({
   children,
   fallback = null
 }) => {
-  const { checkRole, hasCapability } = useRoleAccess();
+  const { checkRole, hasCapability } = defaultUseRoleAccess();
   
   // Validate that at least one requirement is provided
   if (!requiredRole && !requiredCapability) {

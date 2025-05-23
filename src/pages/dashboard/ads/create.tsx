@@ -13,7 +13,7 @@ import '@/utils/layoutHelpers';
 
 const CreateAdPage: NextPageWithLayout = () => {
   const { auth } = useAuth();
-  const { role } = useRole();
+  const { role } = defaultUseRole();
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);

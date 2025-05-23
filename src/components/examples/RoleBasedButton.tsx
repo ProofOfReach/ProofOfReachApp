@@ -1,5 +1,5 @@
 /**
- * Example component demonstrating role-based access control with the useRoleAccess hook
+ * Example component demonstrating role-based access control with the defaultUseRoleAccess hook
  * 
  * This component shows how to conditionally render UI elements based on user roles
  * using the unified role access system.
@@ -9,7 +9,7 @@
  */
 
 import React, { ReactNode, memo } from 'react';
-import { useRoleAccess } from '../../hooks/useRoleAccess';
+import { defaultUseRoleAccess } from '../../hooks/defaultUseRoleAccess';
 import type { UserRole } from '../../types/role';
 import { logger } from '../../lib/logger';
 
@@ -50,7 +50,7 @@ export const RoleBasedButton: React.FC<RoleBasedButtonProps> = memo(({
   ariaLabel
 }) => {
   // Use the role access hook for permission checking
-  const { currentRole, hasRole, hasPermission } = useRoleAccess();
+  const { currentRole, hasRole, hasPermission } = defaultUseRoleAccess();
   
   try {
     // Determine if the button should be shown
@@ -102,7 +102,7 @@ export const RoleBasedControls: React.FC = () => {
     currentRole,
     hasRole,
     hasPermission
-  } = useRoleAccess();
+  } = defaultUseRoleAccess();
   
   // Handler functions (memoize to prevent unnecessary re-renders)
   const handleCreateAd = React.useCallback(() => {

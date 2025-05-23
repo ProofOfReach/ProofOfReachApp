@@ -8,7 +8,7 @@ import '@/hooks/useAuthRefactored';
  * Only admins should be able to access this component
  */
 export const div: React.FC = () => {
-  const { role, availableRoles, isChangingRole } = useRole();
+  const { role, availableRoles, isChangingRole } = defaultUseRole();
   const { authState } = useAuthRefactored() as any;
   const [isToggling, setIsToggling] = useState(false);
   const [isTestUser, setIsTestUser] = useState(false);

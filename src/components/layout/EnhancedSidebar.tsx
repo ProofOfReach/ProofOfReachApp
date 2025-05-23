@@ -6,8 +6,8 @@ import {
   DollarSign, LogOut, Code, ChevronDown, Lock,
   X, Menu
 } from 'react-feather';
-import { useRole } from '../../context/NewRoleContext';
-import { useRole } from '../../context/NewRoleContextRefactored';
+import { defaultUseRole } from '../../context/NewRoleContext';
+import { defaultUseRole } from '../../context/NewRoleContextRefactored';
 import type { UserRole } from '../../types/auth';
 import { useAuth } from '../../hooks/useAuth';
 import MegaphoneIcon from '../icons/MegaphoneIcon';
@@ -26,8 +26,8 @@ import { Button } from '../ui/button';
  * Enhanced Sidebar component built with shadcn/ui styled components
  */
 const EnhancedSidebar: React.FC = () => {
-  const { role: originalRole, setRole: originalSetRole, availableRoles: originalAvailableRoles, isRoleAvailable: originalIsRoleAvailable } = useRole();
-  const { role: refactoredRole, setRole: refactoredSetRole, availableRoles: refactoredAvailableRoles, isRoleAvailable: refactoredIsRoleAvailable } = useRole();
+  const { role: originalRole, setRole: originalSetRole, availableRoles: originalAvailableRoles, isRoleAvailable: originalIsRoleAvailable } = defaultUseRole();
+  const { role: refactoredRole, setRole: refactoredSetRole, availableRoles: refactoredAvailableRoles, isRoleAvailable: refactoredIsRoleAvailable } = defaultUseRole();
   const { auth, logout } = useAuth();
   
   // For backward compatibility, try to use both role context systems

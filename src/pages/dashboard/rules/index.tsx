@@ -17,7 +17,7 @@ interface Rule {
 }
 
 const RulesPage: NextPageWithLayout = () => {
-  const { role } = useRole();
+  const { role } = defaultUseRole();
   const { auth } = useAuth();
   const [activeTab, setActiveTab] = useState<RuleType>('domain_blacklist');
   const [rules, setRules] = useState<Record<RuleType, Rule[]>>({

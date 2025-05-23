@@ -10,7 +10,7 @@ import {
   createForbiddenError,
   ErrorCode
 } from '@/lib/apiErrorHandler';
-import '@/lib/console';
+
 
 describe('API Error Handler', () => {
   beforeEach(() => {

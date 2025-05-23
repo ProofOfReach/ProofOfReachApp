@@ -14,16 +14,16 @@ const defaultUseRole = () => ({
 
 // Import hooks that might throw errors in test environments
 let useAuthRefactored = () => null;
-let useRoleHook = () => null;
+let defaultUseRoleHook = () => null;
 
 // Only attempt to import these if we're not in a test environment
 // This prevents errors when the providers aren't available
 if (typeof window !== 'undefined' && process.env.NODE_ENV !== 'test') {
   try {
     const { useAuthRefactored: importedAuthHook } = require('./useAuthRefactored');
-    const { useRole: importedRoleHook } = require('../context/NewRoleContextRefactored');
+    const { defaultUseRole: importedRoleHook } = require('../context/NewRoleContextRefactored');
     useAuthRefactored = importedAuthHook;
-    useRole = importedRoleHook;
+    defaultUseRole = importedRoleHook;
   } catch (error) {
     logger.error('Error importing refactored hooks:', error);
   }
@@ -42,7 +42,7 @@ const USE_REFACTORED_AUTH = true;
 export function useAuthSwitch() {
   // Get the legacy auth system - this should be safe since it has fallbacks
   const legacyAuth = useAuth();
-  const legacyRole = useRole();
+  const legacyRole = defaultUseRole();
   
   // Try to use refactored auth, falling back to defaults if not available
   let refactoredAuth: any = null;
@@ -52,7 +52,7 @@ export function useAuthSwitch() {
   if (typeof window !== 'undefined' && process.env.NODE_ENV !== 'test') {
     try {
       refactoredAuth = useAuthRefactored() as any;
-      refactoredRole = useRole();
+      refactoredRole = defaultUseRole();
     } catch (error) {
       logger.error('Error using refactored hooks:', error);
     }

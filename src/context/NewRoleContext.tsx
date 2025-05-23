@@ -424,6 +424,6 @@ export const RoleProviderWithQueryClient: React.FC<Omit<RoleProviderProps, 'quer
  * Custom hook for using the role context
  * This provides a clean, consistent API for components
  */
-export const useRole = () => useContext(RoleContext);
+export const defaultUseRole = () => useContext(RoleContext);
 
 export default RoleContext;

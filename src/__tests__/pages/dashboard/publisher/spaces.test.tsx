@@ -2,7 +2,7 @@ import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import PublisherSpacesPage from '../../../../pages/dashboard/publisher/spaces';
 import { useAuth } from '../../../../hooks/useAuth';
-import { useRole } from '../../../../context/RoleContext';
+import { defaultUseRole } from '../../../../context/RoleContext';
 import { useRouter } from 'next/router';
 
 // Mock the hooks
@@ -11,7 +11,7 @@ jest.mock('../../../../hooks/useAuth', () => ({
 }));
 
 jest.mock('../../../../context/RoleContext', () => ({
-  useRole: jest.fn(),
+  defaultUseRole: jest.fn(),
 }));
 
 jest.mock('next/router', () => ({
@@ -32,7 +32,7 @@ describe('Publisher Spaces Page', () => {
       auth: { user: { id: 'test-user-id' } },
     });
     
-    (useRole as jest.Mock).mockReturnValue({
+    (defaultUseRole as jest.Mock).mockReturnValue({
       role: 'publisher',
     });
     

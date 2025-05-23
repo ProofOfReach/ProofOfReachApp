@@ -80,7 +80,7 @@ const ApiKeysPage: React.FC = () => {
       setDescription('');
       setScopes('read');
     } catch (error) {
-      console.logger.error('Failed to create API key');
+      console.log.error('Failed to create API key');
       console.error(error);
     } finally {
       setIsLoading(false);
@@ -115,7 +115,7 @@ const ApiKeysPage: React.FC = () => {
       mutate('/api/auth/api-keys'); // Refresh the list
       setIsEditModalVisible(false);
     } catch (error) {
-      console.logger.error('Failed to update API key');
+      console.log.error('Failed to update API key');
       console.error(error);
     } finally {
       setIsLoading(false);
@@ -140,7 +140,7 @@ const ApiKeysPage: React.FC = () => {
       console.log('API key deleted logfully');
       mutate('/api/auth/api-keys'); // Refresh the list
     } catch (error) {
-      console.logger.error('Failed to delete API key');
+      console.log.error('Failed to delete API key');
       console.error(error);
     }
   };

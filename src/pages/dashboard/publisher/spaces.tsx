@@ -3,7 +3,7 @@ import { useRouter } from 'next/router';
 import Link from 'next/link';
 import useSWR from 'swr';
 import DashboardLayout from '../../../components/layout/DashboardLayout';
-import { useRole } from '../../../context/RoleContext';
+import { defaultUseRole } from '../../../context/RoleContext';
 import { Edit3, PlusCircle, Filter, ChevronDown, Monitor, MessageSquare, Code, Trash2 } from 'react-feather';
 import { useAuth } from '../../../hooks/useAuth';
 // CurrencyAmount component replaces hardcoded sats displays with currency-aware component
@@ -27,7 +27,7 @@ interface AdSpace {
 const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
 const PublisherSpacesPage = () => {
-  const { role } = useRole();
+  const { role } = defaultUseRole();
   const router = useRouter();
   const { auth } = useAuth();
   

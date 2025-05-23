@@ -1,12 +1,12 @@
 import React, { useEffect } from 'react';
 import { ChevronRight, DollarSign, PieChart, Users } from 'react-feather';
-import { useRole } from '../../../context/RoleContext';
+import { defaultUseRole } from '../../../context/RoleContext';
 import DashboardLayout from '../../../components/layout/DashboardLayout';
 import StatCard from '../../../components/ui/StatCard';
 import '@/components/layout/ImprovedDashboardLayout';
 
 export default function StakeholderDashboard(): React.ReactElement {
-  const { role } = useRole();
+  const { role } = defaultUseRole();
 
   // Log for debugging
   useEffect(() => {

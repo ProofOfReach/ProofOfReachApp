@@ -30,7 +30,7 @@ jest.mock('@/context/AuthContext', () => ({
 
 // Mock role context
 jest.mock('@/context/RoleContext', () => ({
-  useRole: jest.fn().mockReturnValue({
+  defaultUseRole: jest.fn().mockReturnValue({
     currentRole: 'viewer',
     hasRole: jest.fn().mockReturnValue(true),
     availableRoles: ['viewer', 'publisher', 'advertiser'],

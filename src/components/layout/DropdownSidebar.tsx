@@ -6,7 +6,7 @@ import {
   Plus, List, CheckSquare, Shield, Edit3,
   DollarSign, LogOut, Code, ChevronDown, Lock
 } from 'react-feather';
-import { useRole, UserRole } from '../../context/RoleContext';
+import { defaultUseRole, UserRole } from '../../context/RoleContext';
 // Debug helper - will remove before final integration
 import { useAuth } from '../../hooks/useAuth';
 import MegaphoneIcon from '../icons/MegaphoneIcon';
@@ -17,7 +17,7 @@ import ExchangeRateDisplay from '../ExchangeRateDisplay';
 const DropdownSidebar: React.FC = () => {
   // Use useState to track local role state in addition to context for more reliable updates
   const [localRole, setLocalRole] = useState<UserRole>('viewer');
-  const { role, setRole, availableRoles, isRoleAvailable, setAvailableRoles } = useRole();
+  const { role, setRole, availableRoles, isRoleAvailable, setAvailableRoles } = defaultUseRole();
   const { auth, refreshRoles } = useAuth();
   const router = useRouter();
   const [sidebarExpanded, setSidebarExpanded] = useState(true);

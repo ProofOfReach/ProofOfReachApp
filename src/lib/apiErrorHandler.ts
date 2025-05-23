@@ -13,7 +13,7 @@
  */
 
 import { NextApiRequest, NextApiResponse } from 'next';
-import '@/lib/console';
+
 import '@/types/errors';
 import { v4 as uuidv4 } from 'uuid';
 

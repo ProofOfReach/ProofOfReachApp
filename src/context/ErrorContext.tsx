@@ -15,10 +15,10 @@ import '@/utils/toast';
 // Create the context with a default value
 export const ErrorContext = createContext<{
   state: any;
-  log: (error: any) => void;
-  log: (id: string) => void;
-  log: () => void;
-  log: (error: any | null) => void;
+  addError: (error: any) => void;
+  clearError: (id: string) => void;
+  clearAllErrors: () => void;
+  setGlobalError: (error: any | null) => void;
   setToastError: (error: any | null) => void;
 } | null>(null);
 
@@ -70,19 +70,19 @@ export const ErrorProvider: React.FC<ErrorProviderProps> = ({
     console.log(error);
   }, []);
   
-  const addError = useCallback((id: string): void => {
+  const clearError = useCallback((id: string): void => {
     console.log(id);
   }, []);
   
-  const addError = useCallback((): void => {
+  const clearAllErrors = useCallback((): void => {
     console.log();
   }, []);
   
-  const setGlobalany = useCallback((error: any | null): void => {
+  const setGlobalError = useCallback((error: any | null): void => {
     console.log(error);
   }, []);
   
-  const setToastany = useCallback((error: any | null): void => {
+  const handleSetToastError = useCallback((error: any | null): void => {
     if (error) {
       console.log(error);
     } else if (toastError) {
@@ -93,11 +93,11 @@ export const ErrorProvider: React.FC<ErrorProviderProps> = ({
   // Create stable context value
   const value = useMemo(() => ({
     state: { errors, globalError, toastError },
-    log,
-    log,
-    log,
-    log: setGlobalany,
-    setToastError: setToastany,
+    addError: handleAddError,
+    clearError: clearError,
+    clearAllErrors: clearAllErrors,
+    setGlobalError: setGlobalError,
+    setToastError: handleSetToastError,
   }), [
     errors, 
     globalError, 
@@ -105,8 +105,8 @@ export const ErrorProvider: React.FC<ErrorProviderProps> = ({
     log, 
     log, 
     log, 
-    setGlobalany, 
-    setToastany
+    setGlobalError, 
+    setToastError
   ]);
   
   return (
@@ -157,7 +157,7 @@ export const useErrorStateReporting = () => {
     const errorMessage = error instanceof Error ? error.message : error;
     
     // Show error toast
-    console.logger.error(`Error: ${errorMessage}`);
+    console.log.error(`Error: ${errorMessage}`);
     
     // Report error to service
     console.error(error, component, (errorType as any) || 'unknown');
@@ -182,7 +182,7 @@ export const useErrorStateToast = () => {
         break;
       case 'error':
       case 'critical':
-        console.logger.error(message);
+        console.log.error(message);
         break;
       case 'log':
         console.log(message);

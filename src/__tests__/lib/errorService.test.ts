@@ -1,4 +1,4 @@
-import '@/lib/console';
+
 import '@/types/errors';
 import '@/lib/logger';
 

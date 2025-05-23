@@ -1,7 +1,7 @@
 import React, { ReactNode, useEffect, useState } from 'react';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
-import { useRole, UserRole } from '../../context/RoleContext';
+import { defaultUseRole, UserRole } from '../../context/RoleContext';
 import Sidebar from './Sidebar';
 import RoleTransition from '../loading/RoleTransition';
 
@@ -26,7 +26,7 @@ interface UnifiedDashboardProps {
 }
 
 const UnifiedDashboard: React.FC<UnifiedDashboardProps> = ({ initialRole }) => {
-  const { role, isChangingRole } = useRole();
+  const { role, isChangingRole } = defaultUseRole();
   const router = useRouter();
   const [currentView, setCurrentView] = useState<string>(router.pathname);
   

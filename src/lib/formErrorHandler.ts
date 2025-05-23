@@ -7,7 +7,7 @@
  */
 
 import '@/lib/apiErrorHandler';
-import '@/lib/console';
+
 
 /**
  * Standard form error format for both field-level and form-level errors

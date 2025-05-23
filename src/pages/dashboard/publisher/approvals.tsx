@@ -3,7 +3,7 @@ import { useRouter } from 'next/router';
 import Link from 'next/link';
 import useSWR from 'swr';
 import DashboardLayout from '../../../components/layout/DashboardLayout';
-import { useRole } from '../../../context/RoleContext';
+import { defaultUseRole } from '../../../context/RoleContext';
 import { CheckSquare, Filter, ChevronDown, ThumbsUp, ThumbsDown, Eye } from 'react-feather';
 import { useAuth } from '../../../hooks/useAuth';
 
@@ -27,7 +27,7 @@ interface ApprovalRequest {
 const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
 const PublisherApprovalsPage = () => {
-  const { role } = useRole();
+  const { role } = defaultUseRole();
   const router = useRouter();
   const { auth } = useAuth();
   const [activeTab, setActiveTab] = useState<string>('pending');

@@ -12,7 +12,7 @@ type RoleConfirmationProps = {
 };
 
 const RoleConfirmation: React.FC<RoleConfirmationProps> = ({ onConfirm }) => {
-  const roleContext = useRole();
+  const roleContext = defaultUseRole();
   const { setSelectedRole, selectedRole } = useOnboarding();
   const { auth } = useAuth();
   

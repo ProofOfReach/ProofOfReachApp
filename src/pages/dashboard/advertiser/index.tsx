@@ -14,7 +14,7 @@ import '@/components/CurrencyAmount';
  * and wallet balance information.
  */
 const AdvertiserDashboard: NextPageWithLayout = () => {
-  const { role } = useRole();
+  const { role } = defaultUseRole();
   
   return (
     <DashboardContainer>

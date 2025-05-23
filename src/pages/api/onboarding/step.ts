@@ -2,7 +2,7 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import '@/types/role';
 import '@/lib/onboardingService';
 import '@/lib/logger';
-import '@/lib/console';
+
 import '@/types/errors';
 
 /**

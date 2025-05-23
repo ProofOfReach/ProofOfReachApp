@@ -32,7 +32,7 @@ jest.mock('next/config', () => () => ({
 
 // Mock the role context hook
 jest.mock('@/context/RoleContext', () => ({
-  useRole: () => ({
+  defaultUseRole: () => ({
     availableRoles: ['viewer', 'publisher', 'advertiser'],
     currentRole: 'viewer',
     setCurrentRole: jest.fn(),

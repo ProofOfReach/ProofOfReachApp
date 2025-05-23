@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import DashboardLayout from '../../../components/layout/DashboardLayout';
-import { useRole } from '../../../context/RoleContext';
+import { defaultUseRole } from '../../../context/RoleContext';
 import { useAuth } from '../../../hooks/useAuth';
 import { Settings, Save, RefreshCw } from 'react-feather';
 
 const AdvertiserSettingsPage = () => {
-  const { role } = useRole();
+  const { role } = defaultUseRole();
   const router = useRouter();
   const { auth } = useAuth();
   

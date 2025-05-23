@@ -16,7 +16,7 @@ import {
   hasAnyError
 } from '@/lib/formErrorHandler';
 import '@/lib/apiErrorHandler';
-import '@/lib/console';
+
 import '@/types/errors';
 
 describe('Form Error Handler', () => {

@@ -1,6 +1,6 @@
 import { renderHook, act } from '@testing-library/react';
 import { useRouter } from 'next/router';
-import useRoleAccess from '../useRoleAccess';
+import defaultUseRoleAccess from '../defaultUseRoleAccess';
 import '@/services/roleManager';
 
 // Mock Next.js router
@@ -17,7 +17,7 @@ jest.mock('@/services/roleManager', () => ({
   },
 }));
 
-describe('useRoleAccess', () => {
+describe('defaultUseRoleAccess', () => {
   // Setup mock router
   const mockRouter = {
     pathname: '/dashboard',
@@ -43,7 +43,7 @@ describe('useRoleAccess', () => {
   it('initializes with the current role from RoleManager', () => {
     (RoleManager.getCurrentRole as jest.Mock).mockReturnValue('publisher');
     
-    const { result } = renderHook(() => useRoleAccess());
+    const { result } = renderHook(() => defaultUseRoleAccess());
     
     expect(result.current.currentRole).toBe('publisher');
     expect(RoleManager.getCurrentRole).toHaveBeenCalled();
@@ -53,7 +53,7 @@ describe('useRoleAccess', () => {
     const mockRoles = ['viewer', 'advertiser', 'publisher', 'admin'];
     (RoleManager.getAvailableRoles as jest.Mock).mockReturnValue(mockRoles);
     
-    const { result } = renderHook(() => useRoleAccess());
+    const { result } = renderHook(() => defaultUseRoleAccess());
     
     expect(result.current.availableRoles).toEqual(mockRoles);
     expect(RoleManager.getAvailableRoles).toHaveBeenCalled();
@@ -62,7 +62,7 @@ describe('useRoleAccess', () => {
   it('checks capability based on current role', () => {
     (RoleManager.getCurrentRole as jest.Mock).mockReturnValue('advertiser');
     
-    const { result } = renderHook(() => useRoleAccess());
+    const { result } = renderHook(() => defaultUseRoleAccess());
     
     // Advertiser capabilities
     expect(result.current.hasCapability('viewContent')).toBe(true);
@@ -76,7 +76,7 @@ describe('useRoleAccess', () => {
   it('validates role access levels correctly', () => {
     (RoleManager.getCurrentRole as jest.Mock).mockReturnValue('admin');
     
-    const { result } = renderHook(() => useRoleAccess());
+    const { result } = renderHook(() => defaultUseRoleAccess());
     
     // Admin can access all roles
     expect(result.current.checkRole('viewer').isAllowed).toBe(true);
@@ -93,7 +93,7 @@ describe('useRoleAccess', () => {
     (RoleManager.getCurrentRole as jest.Mock).mockReturnValue('viewer');
     mockRouter.pathname = '/dashboard/admin';
     
-    const { result, rerender } = renderHook(() => useRoleAccess());
+    const { result, rerender } = renderHook(() => defaultUseRoleAccess());
     
     // Viewer can't access admin routes
     expect(result.current.checkRouteAccess().isAllowed).toBe(false);
@@ -110,7 +110,7 @@ describe('useRoleAccess', () => {
     (RoleManager.getCurrentRole as jest.Mock).mockReturnValue('viewer');
     mockRouter.pathname = '/dashboard/admin/settings';
     
-    const { result } = renderHook(() => useRoleAccess());
+    const { result } = renderHook(() => defaultUseRoleAccess());
     
     // Should redirect and return false
     expect(result.current.enforceRouteAccess()).toBe(false);
@@ -119,7 +119,7 @@ describe('useRoleAccess', () => {
     // Reset and try with admin
     jest.clearAllMocks();
     (RoleManager.getCurrentRole as jest.Mock).mockReturnValue('admin');
-    const { result: adminResult } = renderHook(() => useRoleAccess());
+    const { result: adminResult } = renderHook(() => defaultUseRoleAccess());
     
     // Should not redirect and return true
     expect(adminResult.current.enforceRouteAccess()).toBe(true);
@@ -127,7 +127,7 @@ describe('useRoleAccess', () => {
   });
 
   it('updates role when setRole is called', async () => {
-    const { result } = renderHook(() => useRoleAccess());
+    const { result } = renderHook(() => defaultUseRoleAccess());
     
     await act(async () => {
       const log = await result.current.setRole('publisher');
@@ -147,7 +147,7 @@ describe('useRoleAccess', () => {
       }
     });
     
-    const { result } = renderHook(() => useRoleAccess());
+    const { result } = renderHook(() => defaultUseRoleAccess());
     expect(document.addEventListener).toHaveBeenCalledWith('roleSwitched', expect.any(Function));
     
     // Initial role is viewer
@@ -166,7 +166,7 @@ describe('useRoleAccess', () => {
   });
 
   it('cleans up event listeners on unmount', () => {
-    const { unmount } = renderHook(() => useRoleAccess());
+    const { unmount } = renderHook(() => defaultUseRoleAccess());
     
     unmount();
     

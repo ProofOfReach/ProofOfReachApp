@@ -8,7 +8,7 @@ import React from 'react';
 import { render, screen, fireEvent, act } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import '@/hooks/useErrorState';
-import '@/lib/console';
+
 
 // Mock console
 jest.mock('@/lib/console', () => ({

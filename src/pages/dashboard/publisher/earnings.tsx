@@ -25,7 +25,7 @@ interface EarningsSummary {
 }
 
 const PublisherEarningsPage = () => {
-  const { role } = useRole();
+  const { role } = defaultUseRole();
   const router = useRouter();
   const { auth } = useAuth();
   const [dateRange, setDateRange] = useState<string>('last-7-days');

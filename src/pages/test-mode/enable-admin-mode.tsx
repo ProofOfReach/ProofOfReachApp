@@ -10,7 +10,7 @@ import '@/lib/logger';
  */
 const EnableAdminMode: React.FC = () => {
   const router = useRouter();
-  const { setRole, availableRoles } = useRole();
+  const { setRole, availableRoles } = defaultUseRole();
   const [error, setError] = useState<string | null>(null);
   const [isRedirecting, setIsRedirecting] = useState(true);
   const [debugInfo, setDebugInfo] = useState<Record<string, any>>({});

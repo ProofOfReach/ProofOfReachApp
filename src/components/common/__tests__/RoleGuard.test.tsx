@@ -1,14 +1,14 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
 import RoleGuard from '../RoleGuard';
-import '@/hooks/useRoleAccess';
+import '@/hooks/defaultUseRoleAccess';
 
-// Mock the useRoleAccess hook
-jest.mock('@/hooks/useRoleAccess');
+// Mock the defaultUseRoleAccess hook
+jest.mock('@/hooks/defaultUseRoleAccess');
 
 describe('RoleGuard Component', () => {
   // Test setup
-  const mockUseRoleAccess = useRoleAccess as jest.Mock;
+  const mockUseRoleAccess = defaultUseRoleAccess as jest.Mock;
   
   beforeEach(() => {
     jest.clearAllMocks();

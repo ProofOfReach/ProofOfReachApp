@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import '@/components/ErrorBoundary';
-import '@/lib/console';
+
 import '@/lib/errorMonitoring';
 
 // Mock the console

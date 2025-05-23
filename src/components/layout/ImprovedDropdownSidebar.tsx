@@ -6,7 +6,7 @@ import {
   List, CheckSquare, Shield, Edit3,
   DollarSign, LogOut
 } from 'react-feather';
-import { useRole, UserRole } from '../../context/RoleContext';
+import { defaultUseRole, UserRole } from '../../context/RoleContext';
 import { useAuth } from '../../hooks/useAuth';
 import MegaphoneIcon from '../icons/MegaphoneIcon';
 import CurrencyToggle from '../CurrencyToggle';

@@ -1,7 +1,7 @@
 import '@/lib/prisma';
 import '@/lib/logger';
 import '@/types/role';
-import '@/lib/console';
+
 import '@/types/errors';
 
 /**

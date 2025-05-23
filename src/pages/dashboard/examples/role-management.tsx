@@ -9,7 +9,7 @@ import React, { useState, useCallback } from 'react';
 import { NextPage } from 'next';
 import Head from 'next/head';
 import DashboardLayout from '../../../components/layout/DashboardLayout';
-import { useRoleAccess } from '../../../hooks/useRoleAccess';
+import { defaultUseRoleAccess } from '../../../hooks/defaultUseRoleAccess';
 import RoleAwareComponent from '../../../components/examples/RoleAwareComponent';
 import type { UserRole } from '../../../types/role';
 import { logger } from '../../../lib/logger';
@@ -20,7 +20,7 @@ const RoleManagementPage: NextPage = () => {
     availableRoles,
     switchRole,
     capabilities
-  } = useRoleAccess();
+  } = defaultUseRoleAccess();
   
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);

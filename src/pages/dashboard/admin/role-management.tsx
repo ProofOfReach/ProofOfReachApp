@@ -16,7 +16,7 @@ type NextPageWithLayout = React.ComponentType & {
  * Only accessible to admin users
  */
 const AdminRoleManagementPage: NextPageWithLayout = () => {
-  const { role, isChangingRole } = useRole();
+  const { role, isChangingRole } = defaultUseRole();
 
   if (isChangingRole) {
     return (

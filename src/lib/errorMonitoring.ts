@@ -7,7 +7,7 @@
  * Part of the Phase 1 error handling infrastructure implementation.
  */
 
-import '@/lib/console';
+
 import { logger } from './logger';
 
 /**

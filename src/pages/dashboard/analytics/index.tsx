@@ -49,7 +49,7 @@ interface PlatformMetrics {
 }
 
 const AnalyticsPage: NextPageWithLayout = () => {
-  const { role } = useRole();
+  const { role } = defaultUseRole();
   const [dateRange, setDateRange] = useState<string>('last-7-days');
   const [loading, setLoading] = useState<boolean>(false);
   

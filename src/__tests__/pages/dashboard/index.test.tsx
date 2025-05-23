@@ -29,7 +29,7 @@ jest.mock('swr', () => ({
 
 // Mock RoleContext
 jest.mock('../../../context/RoleContext', () => ({
-  useRole: () => ({
+  defaultUseRole: () => ({
     role: 'viewer',
     setRole: jest.fn(),
     availableRoles: ['viewer', 'advertiser', 'publisher'],

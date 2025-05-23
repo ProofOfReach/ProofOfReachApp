@@ -22,7 +22,7 @@ jest.mock('@/hooks/useAuthRefactored', () => ({
 
 // Mock role hooks - use a simpler mock
 jest.mock('@/context/RoleContext', () => ({
-  useRole: jest.fn(() => ({
+  defaultUseRole: jest.fn(() => ({
     currentRole: 'viewer',
     hasRole: jest.fn(() => true),
     availableRoles: ['viewer', 'publisher', 'advertiser'],

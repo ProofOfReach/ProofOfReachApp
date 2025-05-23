@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import DashboardLayout from '../../../components/layout/DashboardLayout';
-import { useRole } from '../../../context/RoleContext';
+import { defaultUseRole } from '../../../context/RoleContext';
 import { Shield, Plus, XCircle, CheckCircle, Edit, Save, X } from 'react-feather';
 import { useAuth } from '../../../hooks/useAuth';
 
@@ -17,7 +17,7 @@ interface Rule {
 }
 
 const PublisherRulesPage = () => {
-  const { role } = useRole();
+  const { role } = defaultUseRole();
   const router = useRouter();
   const { auth } = useAuth();
   const [activeTab, setActiveTab] = useState<RuleType>('domain_blacklist');

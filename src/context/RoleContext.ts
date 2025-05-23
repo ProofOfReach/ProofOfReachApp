@@ -15,20 +15,20 @@
 import { string, RoleCapabilities } from '../types/role';
 
 // Import the new implementations
-import { useRole, RoleProviderRefactored, RoleProviderRefactoredWithQueryClient } from './NewRoleContextRefactored';
-import { useRoleAccess } from '../hooks/useRoleAccess';
+import { defaultUseRole, RoleProviderRefactored, RoleProviderRefactoredWithQueryClient } from './NewRoleContextRefactored';
+// Default role access functionality
 import { accessControl } from '../lib/accessControl';
 
 // Re-export the types with old names for backward compatibility
 export type UserRole = UserRole;
 
 // Re-export the new hooks with old names
-export const useRole = useRole;
+export const defaultUseRole = defaultUseRole;
 export const RoleProvider = RoleProviderRefactored;
 export const RoleProviderWithQueryClient = RoleProviderRefactoredWithQueryClient;
 
 // Export the new access control hook as an alternative
-export const useRoleWithAccess = useRoleAccess;
+export const defaultUseRoleWithAccess = defaultUseRoleAccess;
 
 /**
  * @deprecated Use accessControl.roles from src/lib/accessControl.ts instead
@@ -50,7 +50,7 @@ export function isValidRole(role: string): role is UserRole {
 
 /**
  * Check if a role has a specific permission
- * @deprecated Use accessControl.checkPermission or useRoleAccess hook instead
+ * @deprecated Use accessControl.checkPermission or defaultUseRoleAccess hook instead
  */
 export function hasPermission(role: string, permission: string): boolean {
   return accessControl.checkPermission(permission as any, role);
@@ -58,7 +58,7 @@ export function hasPermission(role: string, permission: string): boolean {
 
 /**
  * Check if a role can access a specific route
- * @deprecated Use accessControl.checkRouteAccess or useRoleAccess hook instead
+ * @deprecated Use accessControl.checkRouteAccess or defaultUseRoleAccess hook instead
  */
 export function canAccessRoute(role: string, route: string): boolean {
   return accessControl.checkRouteAccess(route, role);
@@ -66,7 +66,7 @@ export function canAccessRoute(role: string, route: string): boolean {
 
 /**
  * Get all capabilities for a specific role
- * @deprecated Use accessControl.getRoleCapabilities or useRoleAccess hook instead
+ * @deprecated Use accessControl.getRoleCapabilities or defaultUseRoleAccess hook instead
  */
 export function getRoleCapabilities(role: string): RoleCapabilities {
   // Convert the object returned by accessControl to the expected RoleCapabilities type
@@ -107,10 +107,10 @@ export function getAllRoles(): string[] {
 
 // Export all components for backward compatibility
 export default {
-  useRole,
+  defaultUseRole,
   RoleProvider,
   RoleProviderWithQueryClient,
-  useRoleWithAccess,
+  defaultUseRoleWithAccess,
   ROLES,
   isValidRole,
   hasPermission,

@@ -34,7 +34,7 @@ export interface RoleCapabilities {
  * Provides a comprehensive API for checking permissions and capabilities
  * based on the user's current role
  */
-export function useRoleAccess() {
+export function defaultUseRoleAccess() {
   const router = useRouter();
   const [currentRole, setCurrentRole] = useState<UserRole>('viewer');
   const [availableRoles, setAvailableRoles] = useState<UserRole[]>(['viewer']);
@@ -67,7 +67,7 @@ export function useRoleAccess() {
         document.removeEventListener('roleSwitched', handleRoleChange as EventListener);
       };
     } catch (error) {
-      logger.error('Error initializing useRoleAccess hook:', error);
+      logger.error('Error initializing defaultUseRoleAccess hook:', error);
     }
   }, []);
   
@@ -315,4 +315,4 @@ export function useRoleAccess() {
   };
 }
 
-export default useRoleAccess;
+export default defaultUseRoleAccess;

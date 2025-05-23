@@ -31,7 +31,7 @@ jest.mock('swr', () => ({
 jest.mock('../../../context/RoleContext', () => {
   const React = require('react');
   return {
-    useRole: () => ({
+    defaultUseRole: () => ({
       role: 'viewer',
       setRole: jest.fn(),
       availableRoles: ['viewer', 'advertiser', 'publisher'],

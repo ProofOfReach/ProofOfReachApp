@@ -121,7 +121,7 @@ type OnboardingProviderProps = {
 
 export const OnboardingProvider: React.FC<OnboardingProviderProps> = ({ children, forcePubkey, initialRole }) => {
   const { authState } = useAuthRefactored() as any;
-  const roleContext = useRole();
+  const roleContext = defaultUseRole();
   // Safely access currentRole with a fallback to prevent hydration errors
   const currentRole = roleContext?.currentRole || 'viewer';
   const router = useRouter();

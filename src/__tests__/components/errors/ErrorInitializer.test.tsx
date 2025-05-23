@@ -5,7 +5,7 @@
 import React from 'react';
 import { render } from '@testing-library/react';
 import '@/components/errors/ErrorInitializer';
-import '@/lib/console';
+
 
 // Mock the console module
 jest.mock('@/lib/console', () => ({

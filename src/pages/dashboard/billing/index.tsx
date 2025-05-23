@@ -17,7 +17,7 @@ import '@/utils/fetcher';
 
 const BillingPage: NextPageWithLayout = () => {
   const { auth } = useAuth();
-  const roleContext = useRole();
+  const roleContext = defaultUseRole();
   const router = useRouter();
   const currencyContext = useCurrency();
   

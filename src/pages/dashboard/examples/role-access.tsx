@@ -13,14 +13,14 @@ import type { NextPageWithLayout } from '../../_app';
 import DashboardLayout from '../../../components/layout/DashboardLayout';
 import RoleBasedControls from '../../../components/examples/RoleBasedButton';
 import RoleAwareComponent from '../../../components/examples/RoleAwareComponent';
-import { useRoleAccess } from '../../../hooks/useRoleAccess';
+import { defaultUseRoleAccess } from '../../../hooks/defaultUseRoleAccess';
 import ErrorBoundary from '../../../components/ErrorBoundary';
 
 /**
  * Role Information Component
  */
 const RoleInfo: React.FC = () => {
-  const { currentRole, availableRoles } = useRoleAccess();
+  const { currentRole, availableRoles } = defaultUseRoleAccess();
   
   return (
     <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
@@ -56,7 +56,7 @@ const RoleInfo: React.FC = () => {
  * Role Access Example Page
  */
 const RoleAccessExamplePage: NextPageWithLayout = () => {
-  const { currentRole, canAccess } = useRoleAccess();
+  const { currentRole, canAccess } = defaultUseRoleAccess();
   
   return (
     <>

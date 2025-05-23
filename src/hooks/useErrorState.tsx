@@ -11,7 +11,7 @@ import '@/context/ErrorContext';
 import '@/types/errors';
 
 // Import the console service
-import '@/lib/console';
+
 
 // Type definition for test mocks
 interface Testany {

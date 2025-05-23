@@ -1,6 +1,6 @@
 import React from 'react';
-import { useRole } from '../../context/NewRoleContextRefactored';
-import { useRole } from '../../context/NewRoleContext';
+import { defaultUseRole } from '../../context/NewRoleContextRefactored';
+import { defaultUseRole } from '../../context/NewRoleContext';
 import RoleTransitionOverlay from './RoleTransitionOverlay';
 
 /**
@@ -16,14 +16,14 @@ const ConnectedRoleTransitionOverlay: React.FC = () => {
   
   try {
     // Try the refactored context first
-    const refactoredContext = useRole();
+    const refactoredContext = defaultUseRole();
     if (refactoredContext) {
       isChangingRole = refactoredContext.isChangingRole;
     }
   } catch (error) {
     // If refactored context fails, try the original one
     try {
-      const originalContext = useRole();
+      const originalContext = defaultUseRole();
       if (originalContext) {
         isChangingRole = originalContext.isChangingRole;
       }

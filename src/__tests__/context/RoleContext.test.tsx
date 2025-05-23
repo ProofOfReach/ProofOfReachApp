@@ -1,6 +1,6 @@
 import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
-import { RoleProvider, useRole, UserRole } from '../../context/RoleContext';
+import { RoleProvider, defaultUseRole, UserRole } from '../../context/RoleContext';
 import type { UserRole } from '../../types/role';
 import { AuthContext } from '../../hooks/useAuth';
 import { RoleProviderRefactored } from '../../context/NewRoleContextRefactored';
@@ -98,7 +98,7 @@ const publisherRole = PUBLISHER_ROLE as unknown as UserRole;
 
 // Test component that uses the role context
 const TestComponent = () => {
-  const { role, setRole, availableRoles, isRoleAvailable } = useRole();
+  const { role, setRole, availableRoles, isRoleAvailable } = defaultUseRole();
   
   // We need to cast the role strings to UserRole type for the context functions
   // Since UserRole is just a type alias for UserRole in this project,

@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { DollarSign, Plus, ArrowDown, ArrowUp, Clock } from 'react-feather';
 import useSWR from 'swr';
-import { useRole } from '../../context/RoleContext';
+import { defaultUseRole } from '../../context/RoleContext';
 import { TransactionType } from '@prisma/client';
 import TransactionHistory from '../../components/TransactionHistory';
 import BitcoinIcon from '../../components/icons/BitcoinIcon';
@@ -13,7 +13,7 @@ import '@/components/ui/button';
 import '@/components/ui/input';
 import '@/utils/layoutHelpers';
 import type { NextPageWithLayout } from '../_app';
-import '@/hooks/useRoleAccess';
+import '@/hooks/defaultUseRoleAccess';
 import '@/context/TestModeContext';
 import '@/hooks/useTestWallet';
 
@@ -22,8 +22,8 @@ const fetcher = (url: string) => fetch(url).then(res => res.json());
 
 const WalletPage: NextPageWithLayout = () => {
   const router = useRouter();
-  const { role } = useRole();
-  const { hasPermission } = useRoleAccess();
+  const { role } = defaultUseRole();
+  const { hasPermission } = defaultUseRoleAccess();
   const { isTestMode } = useTestMode();
   const { balance: testWalletBalance, updateBalance: updateTestBalance } = useTestWallet();
   const [isDepositing, setIsDepositing] = useState(false);

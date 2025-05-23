@@ -6,7 +6,7 @@
  * direct methods for log and info messages.
  */
 
-import '@/lib/console';
+
 import '@/types/errors';
 
 interface ToastOptions {

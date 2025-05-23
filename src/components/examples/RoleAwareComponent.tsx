@@ -1,13 +1,13 @@
 /**
  * Role-Aware Component Example
  * 
- * This component demonstrates how to use the useRoleAccess hook
+ * This component demonstrates how to use the defaultUseRoleAccess hook
  * to create role-adaptive UI components. It changes its appearance
  * and behavior based on the current user's role.
  */
 
 import React, { memo, useCallback } from 'react';
-import { useRoleAccess } from '../../hooks/useRoleAccess';
+import { defaultUseRoleAccess } from '../../hooks/defaultUseRoleAccess';
 import { logger } from '../../lib/logger';
 
 interface RoleAwareComponentProps {
@@ -35,7 +35,7 @@ export const RoleAwareComponent: React.FC<RoleAwareComponentProps> = memo(({
     isPublisher,
     isAdvertiser,
     can
-  } = useRoleAccess();
+  } = defaultUseRoleAccess();
 
   // Event handlers
   const handleAdminAction = useCallback(() => {

@@ -103,14 +103,14 @@ jest.mock('../context/NewRoleContextRefactored', () => {
     return React.createElement(mockContext.Provider, { value: contextValue }, children);
   };
   
-  const useRole = () => React.useContext(mockContext);
+  const defaultUseRole = () => React.useContext(mockContext);
   
   return {
     __esModule: true,
     ALL_ROLES,
     NewRoleContextRefactored: mockContext,
     RoleProviderRefactored,
-    useRole,
+    defaultUseRole,
     useNewRole: () => ({
       currentRole: 'advertiser',
       hasPermission: jest.fn().mockReturnValue(true),
