@@ -5,10 +5,10 @@
 import React from 'react';
 import { render } from '@testing-library/react';
 import '@/components/errors/ErrorInitializer';
-import '@/lib/errorIntegration';
+import '@/lib/console';
 
-// Mock the errorIntegration module
-jest.mock('@/lib/errorIntegration', () => ({
+// Mock the console module
+jest.mock('@/lib/console', () => ({
   initializeErrorHandling: jest.fn()
 }));
 

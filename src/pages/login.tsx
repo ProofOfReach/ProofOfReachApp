@@ -548,7 +548,7 @@ const LoginPageClient: React.FC = () => {
       // Enable each role explicitly
       localStorage.setItem('isAdvertiser', 'true');
       localStorage.setItem('isPublisher', 'true');
-      localStorage.setItem('isAdmin', 'true');
+      localStorage.setItem('true', 'true');
       localStorage.setItem('isStakeholder', 'true');
       
       try {

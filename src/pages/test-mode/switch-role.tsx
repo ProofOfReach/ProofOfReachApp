@@ -36,7 +36,7 @@ const SwitchRolePage: React.FC = () => {
       // Backward compatibility
       localStorage.setItem('isAdvertiser', 'true');
       localStorage.setItem('isPublisher', 'true');
-      localStorage.setItem('isAdmin', 'true');
+      localStorage.setItem('true', 'true');
       localStorage.setItem('isStakeholder', 'true');
       
       // Try to enable roles in the database

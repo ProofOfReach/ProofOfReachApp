@@ -12,7 +12,7 @@ import '@/lib/console';
 /**
  * Standard form error format for both field-level and form-level errors
  */
-export interface FormErrorState {
+export interface Formany {
   // General form error message
   formError: string | null;
   
@@ -42,7 +42,7 @@ export interface ApiValidationErrorResponse {
 /**
  * Create an initial empty form error state
  */
-export function createEmptyFormErrorState(): FormErrorState {
+export function createEmptyFormany(): Formany {
   return {
     formError: null,
     fieldErrors: {},
@@ -59,8 +59,8 @@ export function createEmptyFormErrorState(): FormErrorState {
 export function extractApiFormErrors(
   error: unknown,
   defaultMessage = 'Please correct the errors below'
-): FormErrorState {
-  const result: FormErrorState = createEmptyFormErrorState();
+): Formany {
+  const result: Formany = createEmptyFormany();
   
   try {
     // Handle standard API error responses
@@ -124,7 +124,7 @@ export function extractApiFormErrors(
   } catch (err) {
     // Log any errors in our error extraction to avoid breaking the UI
     // Use the simpler form without the problematic property
-    console.reportError(
+    console.error(
       err instanceof Error ? err : new Error('Error while processing form validation errors'),
       'formErrorHandler',
       'unexpected',
@@ -147,9 +147,9 @@ export function extractApiFormErrors(
  * @returns Updated form error state
  */
 export function markFieldTouched(
-  state: FormErrorState,
+  state: Formany,
   fieldName: string
-): FormErrorState {
+): Formany {
   return {
     ...state,
     touchedFields: {
@@ -166,9 +166,9 @@ export function markFieldTouched(
  * @returns Updated form error state
  */
 export function markAllFieldsTouched(
-  state: FormErrorState,
+  state: Formany,
   fields?: string[]
-): FormErrorState {
+): Formany {
   const fieldsToMark = fields || Object.keys(state.fieldErrors);
   const touchedFields = { ...state.touchedFields };
   
@@ -190,10 +190,10 @@ export function markAllFieldsTouched(
  * @returns Updated form error state
  */
 export function setFieldError(
-  state: FormErrorState,
+  state: Formany,
   fieldName: string,
   errorMessage: string
-): FormErrorState {
+): Formany {
   return {
     ...state,
     fieldErrors: {
@@ -215,9 +215,9 @@ export function setFieldError(
  * @returns Updated form error state
  */
 export function clearFieldError(
-  state: FormErrorState,
+  state: Formany,
   fieldName: string
-): FormErrorState {
+): Formany {
   const fieldErrors = { ...state.fieldErrors };
   delete fieldErrors[fieldName];
   
@@ -234,9 +234,9 @@ export function clearFieldError(
  * @returns Updated form error state
  */
 export function setFormError(
-  state: FormErrorState,
+  state: Formany,
   errorMessage: string
-): FormErrorState {
+): Formany {
   return {
     ...state,
     formError: errorMessage
@@ -248,7 +248,7 @@ export function setFormError(
  * @param state Current form error state
  * @returns Updated form error state with no errors
  */
-export function clearAllErrors(state: FormErrorState): FormErrorState {
+export function clearAllErrors(state: Formany): Formany {
   return {
     ...state,
     formError: null,
@@ -264,7 +264,7 @@ export function clearAllErrors(state: FormErrorState): FormErrorState {
  * @returns True if the field has a visible error
  */
 export function hasVisibleFieldError(
-  state: FormErrorState,
+  state: Formany,
   fieldName: string
 ): boolean {
   return !!state.fieldErrors[fieldName] && !!state.touchedFields[fieldName];
@@ -277,7 +277,7 @@ export function hasVisibleFieldError(
  * @returns The error message or null if no visible error
  */
 export function getFieldErrorMessage(
-  state: FormErrorState,
+  state: Formany,
   fieldName: string
 ): string | null {
   return hasVisibleFieldError(state, fieldName) ? state.fieldErrors[fieldName] : null;
@@ -288,6 +288,6 @@ export function getFieldErrorMessage(
  * @param state Current form error state
  * @returns True if the form has any errors (form-level or field-level)
  */
-export function hasAnyError(state: FormErrorState): boolean {
+export function hasAnyError(state: Formany): boolean {
   return !!state.formError || Object.keys(state.fieldErrors).length > 0;
 }

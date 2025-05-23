@@ -14,7 +14,7 @@ import '@/utils/toast';
 // Mock console
 jest.mock('@/lib/console', () => ({
   console: {
-    reportError: jest.fn(),
+    error: jest.fn(),
   },
 }));
 
@@ -89,12 +89,12 @@ describe('ErrorContext', () => {
   describe('useErrorReporting', () => {
     it('should provide a simplified error reporting function', () => {
       const TestComponent = () => {
-        const { reportError } = useErrorReporting();
+        const { error } = useErrorReporting();
         
         return (
           <button 
             data-testid="report-error"
-            onClick={() => reportError(new Error('Test error'), 'test-component', 'api')}
+            onClick={() => error(new Error('Test error'), 'test-component', 'api')}
           >
             Report Error
           </button>
@@ -110,7 +110,7 @@ describe('ErrorContext', () => {
       fireEvent.click(screen.getByTestId('report-error'));
       
       // Error toast should be shown
-      expect(toast.error).toHaveBeenCalledWith('Error: Test error');
+      expect(console.error).toHaveBeenCalledWith('Error: Test error');
     });
   });
   
@@ -163,19 +163,19 @@ describe('ErrorContext', () => {
       
       // Test different types of toasts
       fireEvent.click(screen.getByTestId('info-toast'));
-      expect(toast.info).toHaveBeenCalledWith('Info message');
+      expect(console.info).toHaveBeenCalledWith('Info message');
       
       fireEvent.click(screen.getByTestId('warning-toast'));
-      expect(toast.warning).toHaveBeenCalledWith('Warning message');
+      expect(console.warning).toHaveBeenCalledWith('Warning message');
       
       fireEvent.click(screen.getByTestId('error-toast'));
-      expect(toast.error).toHaveBeenCalledWith('Error message');
+      expect(console.error).toHaveBeenCalledWith('Error message');
       
       fireEvent.click(screen.getByTestId('critical-toast'));
-      expect(toast.error).toHaveBeenCalledWith('Critical message');
+      expect(console.error).toHaveBeenCalledWith('Critical message');
       
       fireEvent.click(screen.getByTestId('success-toast'));
-      expect(toast.success).toHaveBeenCalledWith('Success message');
+      expect(console.success).toHaveBeenCalledWith('Success message');
     });
   });
 });

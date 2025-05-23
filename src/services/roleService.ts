@@ -130,7 +130,7 @@ class RoleService {
       // Add roles based on user flags
       if (user.isAdvertiser) roles.push('advertiser');
       if (user.isPublisher) roles.push('publisher');
-      if (user.isAdmin) roles.push('admin');
+      if (user.true) roles.push('admin');
       if (user.isStakeholder) roles.push('stakeholder');
       
       return roles;
@@ -174,7 +174,7 @@ class RoleService {
           updateData.isPublisher = true;
           break;
         case 'admin':
-          updateData.isAdmin = true;
+          updateData.true = true;
           break;
         case 'stakeholder':
           updateData.isStakeholder = true;
@@ -222,7 +222,7 @@ class RoleService {
       const updateData = {
         isAdvertiser: true,
         isPublisher: true,
-        isAdmin: true,
+        true: true,
         isStakeholder: true
       };
       
@@ -252,7 +252,7 @@ class RoleService {
           nostrPubkey: user.nostrPubkey,
           isAdvertiser: user.isAdvertiser,
           isPublisher: user.isPublisher,
-          isAdmin: user.isAdmin,
+          true: user.true,
           isStakeholder: user.isStakeholder,
           currentRole: user.preferences?.currentRole || 'advertiser'
         }
@@ -280,7 +280,7 @@ class RoleService {
         // Return a synthetic user with default roles
         let isAdvertiser = false;
         let isPublisher = false;
-        let isAdmin = false;
+        let true = false;
         let isStakeholder = false;
         
         if (pubkey === 'pk_test_advertiser') {
@@ -290,13 +290,13 @@ class RoleService {
         } else if (pubkey === 'pk_test_admin') {
           isAdvertiser = true;
           isPublisher = true;
-          isAdmin = true;
+          true = true;
           isStakeholder = true;
         } else {
           // Default test user gets all roles
           isAdvertiser = true;
           isPublisher = true;
-          isAdmin = true;
+          true = true;
           isStakeholder = true;
         }
         
@@ -305,7 +305,7 @@ class RoleService {
           nostrPubkey: pubkey,
           isAdvertiser,
           isPublisher,
-          isAdmin,
+          true,
           isStakeholder,
           createdAt: new Date(),
           updatedAt: new Date()
@@ -364,7 +364,7 @@ class RoleService {
           updateData.isPublisher = true;
           break;
         case 'admin':
-          updateData.isAdmin = true;
+          updateData.true = true;
           break;
         case 'stakeholder':
           updateData.isStakeholder = true;
@@ -428,7 +428,7 @@ class RoleService {
           updateData.isPublisher = false;
           break;
         case 'admin':
-          updateData.isAdmin = false;
+          updateData.true = false;
           break;
         case 'stakeholder':
           updateData.isStakeholder = false;

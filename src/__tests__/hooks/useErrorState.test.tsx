@@ -1,25 +1,25 @@
 /**
- * useErrorState Hook Unit Tests
+ * useany Hook Unit Tests
  * 
- * Tests the functionality of the useErrorState hook for accessing global error state.
+ * Tests the functionality of the useany hook for accessing global error state.
  */
 
 import React from 'react';
 import { render, screen, fireEvent, act } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import '@/hooks/useErrorState';
-import '@/lib/errorIntegration';
+import '@/hooks/useany';
+import '@/lib/console';
 
-// Mock errorIntegration
-jest.mock('@/lib/errorIntegration', () => ({
-  getErrorState: jest.fn(),
-  updateErrorState: jest.fn(),
+// Mock console
+jest.mock('@/lib/console', () => ({
+  getany: jest.fn(),
+  updateany: jest.fn(),
   resetErrorTracking: jest.fn(),
-  reportError: jest.fn(),
+  error: jest.fn(),
 }));
 
-describe('useErrorState', () => {
-  const mockErrorState = {
+describe('useany', () => {
+  const mockany = {
     hasError: false,
     message: '',
     type: 'unknown',
@@ -35,12 +35,12 @@ describe('useErrorState', () => {
     jest.clearAllMocks();
     
     // Default mock implementation
-    (errorIntegration.getErrorState as jest.Mock).mockReturnValue(mockErrorState);
+    (console.getany as jest.Mock).mockReturnValue(mockany);
   });
   
-  it('should initialize with error state from errorIntegration', () => {
-    (errorIntegration.getErrorState as jest.Mock).mockReturnValue({
-      ...mockErrorState,
+  it('should initialize with error state from console', () => {
+    (console.getany as jest.Mock).mockReturnValue({
+      ...mockany,
       hasError: true,
       message: 'Initial error',
       type: 'api',
@@ -48,7 +48,7 @@ describe('useErrorState', () => {
     });
     
     const TestComponent = () => {
-      const errorState = useErrorState();
+      const errorState = useany();
       
       return (
         <div>
@@ -70,7 +70,7 @@ describe('useErrorState', () => {
   
   it('should provide a setError function that updates error state', () => {
     const TestComponent = () => {
-      const { setError, hasError, message } = useErrorState();
+      const { setError, hasError, message } = useany();
       
       return (
         <div>
@@ -88,9 +88,9 @@ describe('useErrorState', () => {
     
     render(<TestComponent />);
     
-    // Simulate the state update that would happen when updateErrorState is called
-    (errorIntegration.getErrorState as jest.Mock).mockReturnValue({
-      ...mockErrorState,
+    // Simulate the state update that would happen when updateany is called
+    (console.getany as jest.Mock).mockReturnValue({
+      ...mockany,
       hasError: true,
       message: 'New error',
       type: 'network',
@@ -99,8 +99,8 @@ describe('useErrorState', () => {
     
     fireEvent.click(screen.getByTestId('set-error'));
     
-    // Verify updateErrorState was called with the right params
-    expect(errorIntegration.addError).toHaveBeenCalledWith({ 
+    // Verify updateany was called with the right params
+    expect(console.addError).toHaveBeenCalledWith({ 
       message: 'New error', 
       type: 'network', 
       severity: 'warning' 
@@ -109,14 +109,14 @@ describe('useErrorState', () => {
   
   it('should provide a clearError function that resets error state', () => {
     // Initial state with an error
-    (errorIntegration.getErrorState as jest.Mock).mockReturnValue({
-      ...mockErrorState,
+    (console.getany as jest.Mock).mockReturnValue({
+      ...mockany,
       hasError: true,
       message: 'Existing error',
     });
     
     const TestComponent = () => {
-      const { clearError, hasError, message } = useErrorState();
+      const { clearError, hasError, message } = useany();
       
       return (
         <div>
@@ -139,17 +139,17 @@ describe('useErrorState', () => {
     expect(screen.getByTestId('message')).toHaveTextContent('Existing error');
     
     // Simulate the state reset that would happen when resetErrorTracking is called
-    (errorIntegration.getErrorState as jest.Mock).mockReturnValue(mockErrorState);
+    (console.getany as jest.Mock).mockReturnValue(mockany);
     
     fireEvent.click(screen.getByTestId('clear-error'));
     
     // Verify resetErrorTracking was called
-    expect(errorIntegration.resetErrorState).toHaveBeenCalled();
+    expect(console.resetany).toHaveBeenCalled();
   });
   
   it('should provide a error function that reports errors', () => {
     const TestComponent = () => {
-      const { error } = useErrorState();
+      const { error } = useany();
       
       return (
         <button 
@@ -165,8 +165,8 @@ describe('useErrorState', () => {
     
     fireEvent.click(screen.getByTestId('handle-error'));
     
-    // Verify reportError was called with the right params
-    expect(errorIntegration.reportError).toHaveBeenCalledWith(
+    // Verify error was called with the right params
+    expect(console.error).toHaveBeenCalledWith(
       expect.any(Error),
       'test-component',
       'validation',
@@ -183,7 +183,7 @@ describe('useErrorState', () => {
     
     try {
       const TestComponent = () => {
-        const { hasError, message } = useErrorState();
+        const { hasError, message } = useany();
         
         return (
           <div>
@@ -202,8 +202,8 @@ describe('useErrorState', () => {
       );
       
       // Simulate the interval updating the state
-      (errorIntegration.getErrorState as jest.Mock).mockReturnValue({
-        ...mockErrorState,
+      (console.getany as jest.Mock).mockReturnValue({
+        ...mockany,
         hasError: true,
         message: 'Updated via interval',
       });

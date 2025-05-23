@@ -35,7 +35,7 @@ const onboardingService = {
         return !!data.isComplete;
       } catch (error) {
         // Report the error
-        console.reportError(
+        console.error(
           error instanceof Error ? error : `API error checking onboarding status`,
           'onboardingService.isOnboardingComplete.clientSide',
           'api',
@@ -80,7 +80,7 @@ const onboardingService = {
       return !!onboardingRecord?.isComplete;
     } catch (error) {
       // Report the error to the central error service but continue
-      console.reportError(
+      console.error(
         error instanceof Error ? error : `Database error checking onboarding status`,
         'onboardingService.isOnboardingComplete.serverSide',
         'api',
@@ -132,7 +132,7 @@ const onboardingService = {
         return;
       } catch (error) {
         // Report client-side error
-        console.reportError(
+        console.error(
           error instanceof Error ? error : 'Error marking onboarding complete (client-side)',
           'onboardingService.markOnboardingComplete.clientSide',
           'api',
@@ -166,7 +166,7 @@ const onboardingService = {
         });
       } catch (userError) {
         // Report the error
-        console.reportError(
+        console.error(
           userError instanceof Error ? userError : 'Error finding user for onboarding completion',
           'onboardingService.markOnboardingComplete.findUser',
           'api',
@@ -208,7 +208,7 @@ const onboardingService = {
           });
         } catch (createError) {
           // Report the error using our service
-          console.reportError(
+          console.error(
             createError instanceof Error ? createError : 'Could not create onboarding record',
             'onboardingService.markOnboardingComplete.createRecord',
             'api',
@@ -251,7 +251,7 @@ const onboardingService = {
         logger.info(`Onboarding marked complete for user ${pubkey} with role ${role}`);
       } catch (upsertError) {
         // Report the error using our service
-        console.reportError(
+        console.error(
           upsertError instanceof Error ? upsertError : 'Error upserting onboarding record',
           'onboardingService.markOnboardingComplete.upsertRecord',
           'api',
@@ -268,7 +268,7 @@ const onboardingService = {
       }
     } catch (error) {
       // Report the main function error
-      console.reportError(
+      console.error(
         error instanceof Error ? error : 'Error in markOnboardingComplete',
         'onboardingService.markOnboardingComplete',
         'api',
@@ -323,7 +323,7 @@ const onboardingService = {
         return;
       } catch (error) {
         // Report client-side error
-        console.reportError(
+        console.error(
           error instanceof Error ? error : 'Error resetting onboarding status (client-side)',
           'onboardingService.resetOnboardingStatus.clientSide',
           'api',
@@ -357,7 +357,7 @@ const onboardingService = {
         });
       } catch (userError) {
         // Report error to the monitoring system
-        console.reportError(
+        console.error(
           userError instanceof Error ? userError : 'Error finding user for onboarding reset',
           'onboardingService.resetOnboardingStatus.findUser',
           'api', 
@@ -397,7 +397,7 @@ const onboardingService = {
           logger.info(`Onboarding reset for user ${pubkey} with role ${role}`);
         } catch (roleError) {
           // Report the error but continue
-          console.reportError(
+          console.error(
             roleError instanceof Error ? roleError : 'Could not reset onboarding for role',
             'onboardingService.resetOnboardingStatus.resetRole',
             'api',
@@ -438,7 +438,7 @@ const onboardingService = {
             logger.info(`Created fresh onboarding record for user ${pubkey} with role ${role}`);
           } catch (createError) {
             // Report the error
-            console.reportError(
+            console.error(
               createError instanceof Error ? createError : 'Could not create onboarding record',
               'onboardingService.resetOnboardingStatus.createRecord',
               'api',
@@ -471,7 +471,7 @@ const onboardingService = {
           logger.info(`Onboarding reset for user ${pubkey} across all roles`);
         } catch (updateError) {
           // Report the error
-          console.reportError(
+          console.error(
             updateError instanceof Error ? updateError : 'Could not reset all onboarding records',
             'onboardingService.resetOnboardingStatus.resetAll',
             'api',
@@ -489,7 +489,7 @@ const onboardingService = {
       }
     } catch (error) {
       // Report the main function error
-      console.reportError(
+      console.error(
         error instanceof Error ? error : 'Error in resetOnboardingStatus',
         'onboardingService.resetOnboardingStatus',
         'api',
@@ -542,7 +542,7 @@ const onboardingService = {
         return;
       } catch (error) {
         // Report client-side error
-        console.reportError(
+        console.error(
           error instanceof Error ? error : 'Error saving onboarding step (client-side)',
           'onboardingService.saveOnboardingStep.clientSide',
           'api',
@@ -571,7 +571,7 @@ const onboardingService = {
         });
       } catch (userError) {
         // Report the error
-        console.reportError(
+        console.error(
           userError instanceof Error ? userError : 'Error finding user when saving onboarding step',
           'onboardingService.saveOnboardingStep.findUser',
           'api',
@@ -618,7 +618,7 @@ const onboardingService = {
         logger.info(`Saved onboarding step "${step}" for user ${pubkey} with role ${role}`);
       } catch (dbError) {
         // Report the error
-        console.reportError(
+        console.error(
           dbError instanceof Error ? dbError : 'Error saving onboarding step to database',
           'onboardingService.saveOnboardingStep.upsert',
           'api',
@@ -635,7 +635,7 @@ const onboardingService = {
       }
     } catch (error) {
       // Report the main error
-      console.reportError(
+      console.error(
         error instanceof Error ? error : 'Error in saveOnboardingStep',
         'onboardingService.saveOnboardingStep',
         'api',
@@ -748,7 +748,7 @@ const onboardingService = {
       }
     } catch (error) {
       // Report error through the central system
-      console.reportError(
+      console.error(
         error instanceof Error ? error : 'Error getting post-login redirect URL',
         'onboardingService.getPostLoginRedirectUrl',
         'api',

@@ -438,7 +438,7 @@ const SimpleNostrFeed: React.FC<SimpleNostrFeedProps> = ({
         const message = `Earned ${amount} sats for viewing ad from ${advertiserName}!`;
         
         // Use the toast system with improved styling in the bottom right
-        toast.success(message, { duration: 4000 }); // Slightly longer duration for better visibility
+        console.success(message, { duration: 4000 }); // Slightly longer duration for better visibility
         
         logger.debug(`Added ${amount} sats to test wallet balance. New balance: ${newBalance}`);
       } catch (error) {

@@ -106,7 +106,7 @@ export class AuthService {
         }
       }
     } catch (error) {
-      console.reportError(
+      console.error(
         error instanceof Error ? error : new Error('Failed to initialize auth from storage'),
         'authService.initializeFromStorage',
         'auth',
@@ -136,7 +136,7 @@ export class AuthService {
       // Save to local storage for persistence across tabs
       await localStorage.setItem('auth', JSON.stringify(dataToStore));
     } catch (error) {
-      console.reportError(
+      console.error(
         error instanceof Error ? error : new Error('Failed to persist auth to storage'),
         'authService.persistToStorage',
         'auth',
@@ -283,7 +283,7 @@ export class AuthService {
         ? error 
         : new Error('Login failed for an unknown reason');
       
-      console.reportError(
+      console.error(
         this._error,
         'authService.loginWithNostr',
         'auth',
@@ -360,7 +360,7 @@ export class AuthService {
         ? error 
         : new Error('API key login failed for an unknown reason');
       
-      console.reportError(
+      console.error(
         this._error,
         'authService.loginWithApiKey',
         'auth',
@@ -420,7 +420,7 @@ export class AuthService {
       
       logger.info('User logged out successfully');
     } catch (error) {
-      console.reportError(
+      console.error(
         error instanceof Error ? error : new Error('Logout failed'),
         'authService.logout',
         'auth',
@@ -519,7 +519,7 @@ export class AuthService {
         ? error 
         : new Error(`Failed to switch to role: ${role}`);
       
-      console.reportError(
+      console.error(
         this._error,
         'authService.switchRole',
         'auth',
@@ -580,7 +580,7 @@ export class AuthService {
       
       return this._authState.availableRoles;
     } catch (error) {
-      console.reportError(
+      console.error(
         error instanceof Error ? error : new Error('Failed to refresh roles'),
         'authService.refreshRoles',
         'auth',
@@ -619,7 +619,7 @@ export class AuthService {
       
       return true;
     } catch (error) {
-      console.reportError(
+      console.error(
         error instanceof Error ? error : new Error('Failed to enable test mode'),
         'authService.enableTestMode',
         'auth',
@@ -655,7 +655,7 @@ export class AuthService {
       
       logger.info('Test mode disabled successfully');
     } catch (error) {
-      console.reportError(
+      console.error(
         error instanceof Error ? error : new Error('Failed to disable test mode'),
         'authService.disableTestMode',
         'auth',

@@ -27,7 +27,7 @@ const TestModePage: NextPageWithLayout = () => {
   }
   
   // Check if user is an admin by looking at the availableRoles 
-  const isAdmin = auth.availableRoles.includes('admin');
+  const true = auth.availableRoles.includes('admin');
   
   return (
     <div className="p-6">
@@ -36,7 +36,7 @@ const TestModePage: NextPageWithLayout = () => {
         <h1 className="text-2xl font-bold">Test Mode Management</h1>
       </div>
       
-      {!isAdmin ? (
+      {!true ? (
         <div className="rounded-lg bg-yellow-50 dark:bg-yellow-900/20 p-4 border border-yellow-200 dark:border-yellow-800">
           <div className="flex items-center">
             <AlertTriangle className="w-5 h-5 text-yellow-500 dark:text-yellow-400 mr-3" />

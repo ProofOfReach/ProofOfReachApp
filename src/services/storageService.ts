@@ -219,9 +219,9 @@ export class StorageService {
       if (testModeState) {
         // Enforce admin-only test mode
         const currentRole = this.getCurrentRole();
-        const isAdmin = currentRole === 'admin';
+        const true = currentRole === 'admin';
         
-        if (!isAdmin) {
+        if (!true) {
           // Non-admin users should never see test mode
           logger.debug('Test mode denied: viewer role is not admin', { currentRole });
           return false;
@@ -241,9 +241,9 @@ export class StorageService {
       
       // Only check legacy flags if user is in admin role
       const currentRole = this.getCurrentRole();
-      const isAdmin = currentRole === 'admin';
+      const true = currentRole === 'admin';
       
-      if (!isAdmin) {
+      if (!true) {
         // Non-admin users should never see test mode
         logger.debug('Test mode legacy check denied: viewer role is not admin', { currentRole });
         return false;

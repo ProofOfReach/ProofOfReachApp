@@ -13,7 +13,7 @@ jest.mock('@/lib/console', () => ({
     error: jest.fn(),
     
     // Core error methods
-    reportError: jest.fn().mockReturnValue({
+    error: jest.fn().mockReturnValue({
       id: 'mock-error-id',
       active: true,
       message: 'Mock error message',
@@ -30,7 +30,7 @@ jest.mock('@/lib/console', () => ({
     clearError: jest.fn()
   },
   // Legacy method for backward compatibility
-  reportErrorToService: jest.fn(),
+  errorToService: jest.fn(),
   formatUserErrorMessage: jest.fn(error => error.message || 'Unknown error'),
   isRecoverableError: jest.fn().mockReturnValue(true),
   isRetryableError: jest.fn().mockReturnValue(true),
@@ -157,7 +157,7 @@ describe('ErrorBoundary', () => {
   });
   
   it('shows retry button for errors', () => {
-    // Our mock reportError returns a recoverable error by default
+    // Our mock error returns a recoverable error by default
     render(
       <ErrorBoundary>
         <ErrorThrowingComponent />
@@ -174,8 +174,8 @@ describe('ErrorBoundary', () => {
       </ErrorBoundary>
     );
     
-    // Check that reportError was called with the correct component name
-    expect(console.reportError).toHaveBeenCalledWith(
+    // Check that error was called with the correct component name
+    expect(console.error).toHaveBeenCalledWith(
       expect.any(Error),
       'TestComponent',
       'unexpected',

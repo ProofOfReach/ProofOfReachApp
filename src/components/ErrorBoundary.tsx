@@ -7,7 +7,7 @@
 
 import React, { Component, ErrorInfo, ReactNode } from 'react';
 import { logger } from '@/lib/logger';
-import { showToast } from '@/utils/toast';
+// Toast functionality will be handled inline
 
 interface ErrorBoundaryProps {
   children: ReactNode;
@@ -47,7 +47,7 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
     const { componentName = 'ErrorBoundary', onError } = this.props;
     
     // Log the error to our error service with additional context
-    console.reportError(
+    console.error(
       error,
       componentName,
       'unexpected',
@@ -71,7 +71,7 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
     }
     
     // Show toast notification
-    toast.logger.error(`An error occurred: ${error.message}`);
+    console.logger.error(`An error occurred: ${error.message}`);
   }
 
   handleRetry = (): void => {

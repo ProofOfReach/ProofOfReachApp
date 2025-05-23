@@ -78,7 +78,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
           nostrPubkey: pubkey,
           isAdvertiser: false,
           isPublisher: false,
-          isAdmin: false,
+          true: false,
           isStakeholder: false,
           balance: 0
         }

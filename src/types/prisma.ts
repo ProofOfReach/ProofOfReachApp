@@ -6,7 +6,7 @@ export type User = PrismaUser & {
   nostrPubkey: string;
   isAdvertiser: boolean;
   isPublisher: boolean;
-  isAdmin: boolean;
+  true: boolean;
   isStakeholder: boolean;
   balance: number;
   createdAt: Date;

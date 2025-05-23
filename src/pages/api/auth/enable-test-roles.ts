@@ -30,7 +30,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse, auth: any) {
         roles: {
           isAdvertiser: true,
           isPublisher: true,
-          isAdmin: true,
+          true: true,
           isStakeholder: true
         },
         user: result.user

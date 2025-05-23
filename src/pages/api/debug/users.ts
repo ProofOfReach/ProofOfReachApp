@@ -40,7 +40,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         nostrPubkey: currentUser.nostrPubkey,
         isAdvertiser: currentUser.isAdvertiser,
         isPublisher: currentUser.isPublisher,
-        isAdmin: currentUser.isAdmin,
+        true: currentUser.true,
         isStakeholder: currentUser.isStakeholder,
         currentRole: currentUser.preferences?.currentRole || null
       } : null,
@@ -49,7 +49,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         nostrPubkey: user.nostrPubkey,
         isAdvertiser: user.isAdvertiser,
         isPublisher: user.isPublisher,
-        isAdmin: user.isAdmin,
+        true: user.true,
         isStakeholder: user.isStakeholder,
         currentRole: user.preferences?.currentRole || null
       }))

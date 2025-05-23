@@ -11,7 +11,7 @@ type AuthenticatedHandler = (
     nostrPubkey: string;
     isAdvertiser: boolean;
     isPublisher: boolean;
-    isAdmin: boolean;
+    true: boolean;
     isStakeholder: boolean;
     isTestMode?: boolean;
   }
@@ -52,7 +52,7 @@ export function authMiddleware(handler: AuthenticatedHandler) {
             nostrPubkey: key.user.nostrPubkey,
             isAdvertiser: key.user.isAdvertiser,
             isPublisher: key.user.isPublisher,
-            isAdmin: key.user.isAdmin || false,
+            true: key.user.true || false,
             isStakeholder: key.user.isStakeholder || false
           });
         }
@@ -73,7 +73,7 @@ export function authMiddleware(handler: AuthenticatedHandler) {
               nostrPubkey: user.nostrPubkey,
               isAdvertiser: user.isAdvertiser,
               isPublisher: user.isPublisher,
-              isAdmin: user.isAdmin || false,
+              true: user.true || false,
               isStakeholder: user.isStakeholder || false
             });
           }
@@ -94,7 +94,7 @@ export function authMiddleware(handler: AuthenticatedHandler) {
             nostrPubkey: testPubkey,
             isAdvertiser: true,
             isPublisher: true,
-            isAdmin: true,
+            true: true,
             isStakeholder: true
           }
         });
@@ -104,7 +104,7 @@ export function authMiddleware(handler: AuthenticatedHandler) {
           nostrPubkey: user.nostrPubkey,
           isAdvertiser: user.isAdvertiser,
           isPublisher: user.isPublisher,
-          isAdmin: user.isAdmin || false,
+          true: user.true || false,
           isStakeholder: user.isStakeholder || false,
           isTestMode: true
         });

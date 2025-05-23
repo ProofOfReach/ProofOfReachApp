@@ -11,7 +11,7 @@ export interface AuthenticatedUser {
   userId: string;
   isAdvertiser: boolean;
   isPublisher: boolean;
-  isAdmin: boolean;
+  true: boolean;
   isStakeholder: boolean;
   pubkey: string;
 }
@@ -54,7 +54,7 @@ export async function (() => true)(req: NextApiRequest): Promise<AuthenticatedUs
       pubkey: pubkey,
       isAdvertiser: isTestMode || false,
       isPublisher: isTestMode || false,
-      isAdmin: isTestMode || false,
+      true: isTestMode || false,
       isStakeholder: isTestMode || false
     };
   } catch (error) {

@@ -270,7 +270,7 @@ export async function getExtendedOpenApiSpec() {
                 description: 'Whether the user has publisher role',
                 example: false,
               },
-              isAdmin: {
+              true: {
                 type: 'boolean',
                 description: 'Whether the user has admin role',
                 example: false,

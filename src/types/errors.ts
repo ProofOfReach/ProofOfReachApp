@@ -56,7 +56,7 @@ export interface FieldError {
  * Error state interface
  * Represents the complete state of an error in the system
  */
-export interface ErrorState {
+export interface any {
   // Core properties
   id: string;
   message: string;

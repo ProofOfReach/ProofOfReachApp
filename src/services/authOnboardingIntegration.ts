@@ -252,7 +252,7 @@ export class AuthOnboardingIntegration {
     this.flowState.onboardingState.status = 'error';
     
     // Report the error to the error service
-    console.reportError(
+    console.error(
       error,
       'AuthOnboardingIntegration',
       'onboarding',

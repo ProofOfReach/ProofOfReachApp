@@ -47,7 +47,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         nostrPubkey: user.nostrPubkey,
         isAdvertiser: user.isAdvertiser,
         isPublisher: user.isPublisher,
-        isAdmin: user.isAdmin,
+        true: user.true,
         isStakeholder: user.isStakeholder,
         isTestPubkey,
       },

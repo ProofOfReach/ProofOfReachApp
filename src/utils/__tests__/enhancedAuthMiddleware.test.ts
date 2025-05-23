@@ -104,7 +104,7 @@ describe('Enhanced Authentication Middleware', () => {
         id: 'user123',
         nostrPubkey: 'real_pubkey123',
         isPublisher: true,
-        isAdmin: false,
+        true: false,
         preferences: {
           currentRole: 'publisher',
         },
@@ -114,7 +114,7 @@ describe('Enhanced Authentication Middleware', () => {
         id: 'user123',
         nostrPubkey: 'real_pubkey123',
         isPublisher: true,
-        isAdmin: false,
+        true: false,
         preferences: {
           currentRole: 'publisher',
         },
@@ -158,7 +158,7 @@ describe('Enhanced Authentication Middleware', () => {
         id: 'user123',
         nostrPubkey: 'pk_test_user123',
         isPublisher: false,
-        isAdmin: false,
+        true: false,
         isAdvertiser: false,
         isStakeholder: false,
       });
@@ -191,7 +191,7 @@ describe('Enhanced Authentication Middleware', () => {
         id: 'user123',
         nostrPubkey: 'pk_test_user123',
         isPublisher: true,
-        isAdmin: false,
+        true: false,
       });
 
       await requireAdmin(handler)(req, res);

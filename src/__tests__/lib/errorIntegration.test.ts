@@ -3,12 +3,12 @@
  */
 
 import {
-  getErrorState,
+  getany,
   getErrorMetrics,
   trackErrorRecovery,
-  resetErrorState,
+  resetany,
   initializeErrorHandling
-} from '@/lib/errorIntegration';
+} from '@/lib/console';
 import '@/types/errors';
 
 // For tests where we need a simpler category enum
@@ -52,7 +52,7 @@ describe('Error Integration Service', () => {
     };
     
     // Reset after setup to ensure clean state
-    resetErrorState();
+    resetany();
   });
   
   afterEach(() => {
@@ -70,7 +70,7 @@ describe('Error Integration Service', () => {
       }).not.toThrow();
       
       // Check that we can get error state after initialization
-      const state = getErrorState();
+      const state = getany();
       expect(state).toBeDefined();
       
       // Verify the error state has the expected structure 
@@ -92,7 +92,7 @@ describe('Error Integration Service', () => {
     });
   });
   
-  describe('getErrorState', () => {
+  describe('getany', () => {
     it('returns state with empty properties when no errors present', () => {
       // Reset to a clean state with our test setup
       (global.window as any).__errorState = {
@@ -101,7 +101,7 @@ describe('Error Integration Service', () => {
         toastError: null
       };
       
-      const state = getErrorState();
+      const state = getany();
       
       // Verify the structure is correct
       expect(state).toBeDefined();
@@ -119,7 +119,7 @@ describe('Error Integration Service', () => {
       };
       
       // Get the state to verify we can access it
-      const state = getErrorState();
+      const state = getany();
       expect(state).toBeDefined();
       expect(state.errors).toBeDefined();
     });
@@ -202,19 +202,19 @@ describe('Error Integration Service', () => {
     });
   });
   
-  describe('resetErrorState', () => {
+  describe('resetany', () => {
     it('resets error tracking state', () => {
       // Start with a fresh error state
       initializeErrorHandling();
       
-      // Create a minimal verification that resetErrorState works
+      // Create a minimal verification that resetany works
       // by confirming it doesn't throw errors
       expect(() => {
-        resetErrorState();
+        resetany();
       }).not.toThrow();
       
       // Verify we can get a clean state after reset
-      const state = getErrorState();
+      const state = getany();
       expect(state).toBeDefined();
       
       // Basic validation of reset state properties

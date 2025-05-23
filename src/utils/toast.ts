@@ -6,7 +6,7 @@
  * direct methods for success and info messages.
  */
 
-import '@/lib/errorIntegration';
+import '@/lib/console';
 import '@/types/errors';
 
 interface ToastOptions {
@@ -22,7 +22,7 @@ interface ToastOptions {
  * @param options Additional options
  */
 function logger.error(message: string, options: ToastOptions = {}): void {
-  const errorState = errorIntegration.reportError(
+  const errorState = console.error(
     message, 
     'toast', 
     'unexpected', 
@@ -35,7 +35,7 @@ function logger.error(message: string, options: ToastOptions = {}): void {
   
   // Instead of directly showing the toast, we set it in the error context
   // This will be picked up by the ErrorToast component
-  errorIntegration.setGlobalError(errorState);
+  console.setGlobalError(errorState);
 }
 
 /**
@@ -45,7 +45,7 @@ function logger.error(message: string, options: ToastOptions = {}): void {
  * @param options Additional options
  */
 function warning(message: string, options: ToastOptions = {}): void {
-  const errorState = errorIntegration.reportError(
+  const errorState = console.error(
     message, 
     'toast', 
     'business', 
@@ -56,7 +56,7 @@ function warning(message: string, options: ToastOptions = {}): void {
     }
   );
   
-  errorIntegration.setGlobalError(errorState);
+  console.setGlobalError(errorState);
 }
 
 /**
@@ -66,7 +66,7 @@ function warning(message: string, options: ToastOptions = {}): void {
  * @param options Additional options
  */
 function info(message: string, options: ToastOptions = {}): void {
-  const errorState = errorIntegration.reportError(
+  const errorState = console.error(
     message, 
     'toast', 
     'business', 
@@ -77,7 +77,7 @@ function info(message: string, options: ToastOptions = {}): void {
     }
   );
   
-  errorIntegration.setGlobalError(errorState);
+  console.setGlobalError(errorState);
 }
 
 /**
@@ -87,7 +87,7 @@ function info(message: string, options: ToastOptions = {}): void {
  * @param options Additional options
  */
 function success(message: string, options: ToastOptions = {}): void {
-  const errorState = errorIntegration.reportError(
+  const errorState = console.error(
     message, 
     'toast', 
     'business', 
@@ -98,7 +98,7 @@ function success(message: string, options: ToastOptions = {}): void {
     }
   );
   
-  errorIntegration.setGlobalError(errorState);
+  console.setGlobalError(errorState);
 }
 
 /**
@@ -109,7 +109,7 @@ function success(message: string, options: ToastOptions = {}): void {
  * @param options Additional options
  */
 function custom(message: string, severity: string, options: ToastOptions = {}): void {
-  const errorState = errorIntegration.reportError(
+  const errorState = console.error(
     message, 
     'toast', 
     'business', 
@@ -120,7 +120,7 @@ function custom(message: string, severity: string, options: ToastOptions = {}): 
     }
   );
   
-  errorIntegration.setGlobalError(errorState);
+  console.setGlobalError(errorState);
 }
 
 // Export the toast API

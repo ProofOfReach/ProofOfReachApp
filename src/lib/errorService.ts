@@ -1,5 +1,5 @@
 import { v4 as uuidv4 } from 'uuid';
-import { string, string, ErrorState, ErrorType, FieldError } from '../types/errors';
+import type { any, ErrorType, FieldError } from '../types/errors';
 import { logger } from './logger';
 
 /**
@@ -28,9 +28,9 @@ interface ErrorTraceContext {
  */
 export class ErrorService {
   private static instance: ErrorService;
-  private errors: Record<string, ErrorState> = {};
+  private errors: Record<string, any> = {};
   private traceContexts: Record<string, ErrorTraceContext> = {};
-  private listeners: Array<(error: ErrorState) => void> = [];
+  private listeners: Array<(error: any) => void> = [];
   private clearListeners: Array<(errorId: string) => void> = [];
 
   /**
@@ -65,7 +65,7 @@ export class ErrorService {
    * @param options Additional options for the error
    * @returns The created error state
    */
-  public reportError(
+  public error(
     error: Error | string | unknown,
     source: string,
     type: ErrorType = 'unknown',
@@ -78,7 +78,7 @@ export class ErrorService {
       correlationId?: string;
       category?: string;
     }
-  ): ErrorState {
+  ): any {
     const errorId = uuidv4();
     const timestamp = new Date().toISOString();
     
@@ -94,7 +94,7 @@ export class ErrorService {
       message = 'An unknown error occurred';
     }
     
-    const errorState: ErrorState = {
+    const errorState: any = {
       id: errorId,
       message,
       source,
@@ -151,7 +151,7 @@ export class ErrorService {
    * @returns A user-friendly error message
    */
   public formatErrorForUser(
-    error: Error | ErrorState | string | null | undefined,
+    error: Error | any | string | null | undefined,
     defaultMessage = 'An unexpected error occurred. Please try again.'
   ): string {
     if (!error) {
@@ -166,7 +166,7 @@ export class ErrorService {
       return error.message || defaultMessage;
     }
     
-    // If it's an ErrorState object
+    // If it's an any object
     if ('message' in error && typeof error.message === 'string') {
       return error.message;
     }
@@ -254,9 +254,9 @@ export class ErrorService {
       type?: ErrorType;
       category?: string;
     }
-  ): (error: Error | string | unknown) => ErrorState {
+  ): (error: Error | string | unknown) => any {
     return (error: Error | string | unknown) => {
-      return this.reportError(
+      return this.error(
         error,
         component,
         options?.type || 'api',
@@ -277,10 +277,10 @@ export class ErrorService {
    */
   public createValidationErrorHandler(
     component: string
-  ): (errors: FieldError[]) => ErrorState {
+  ): (errors: FieldError[]) => any {
     return (errors: FieldError[]) => {
       const firstError = errors[0];
-      return this.reportError(
+      return this.error(
         firstError?.message || 'Validation failed',
         component,
         'validation',
@@ -345,7 +345,7 @@ export class ErrorService {
    * @param listener The listener function
    * @returns A function to remove the listener
    */
-  public addErrorListener(listener: (error: ErrorState) => void): () => void {
+  public addErrorListener(listener: (error: any) => void): () => void {
     this.listeners.push(listener);
     
     return () => {
@@ -372,7 +372,7 @@ export class ErrorService {
    * 
    * @param error The error to notify about
    */
-  private notifyListeners(error: ErrorState): void {
+  private notifyListeners(error: any): void {
     for (const listener of this.listeners) {
       try {
         listener(error);
@@ -407,7 +407,7 @@ export class ErrorService {
    * @param correlationId The correlation ID
    * @param error The error to add
    */
-  private addErrorToTraceContext(correlationId: string, error: ErrorState): void {
+  private addErrorToTraceContext(correlationId: string, error: any): void {
     const context = this.traceContexts[correlationId] || { lastUpdated: Date.now() };
     
     if (!context.errors) {
@@ -429,7 +429,7 @@ export class ErrorService {
    * 
    * @param error The error to log
    */
-  private logError(error: ErrorState): void {
+  private logError(error: any): void {
     const logData = {
       errorId: error.id,
       source: error.source,

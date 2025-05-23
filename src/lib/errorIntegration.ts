@@ -20,9 +20,9 @@ const ERROR_EVENTS = {
 };
 
 // Store of all current errors
-let currentErrors: ErrorState[] = [];
-let globalError: ErrorState | null = null;
-let toastError: ErrorState | null = null;
+let currentErrors: any[] = [];
+let globalError: any | null = null;
+let toastError: any | null = null;
 let errorListeners: Array<() => void> = [];
 let lastErrorTime = 0;
 let totalErrorCount = 0;
@@ -36,7 +36,7 @@ export function createError(
   source: string = 'unknown',
   type: ErrorType = 'unknown',
   severity: string = 'error'
-): ErrorState {
+): any {
   return {
     id: uuidv4(),
     message,
@@ -52,7 +52,7 @@ export function createError(
 /**
  * Report an error to the error system
  */
-export function reportError(
+export function error(
   error: string | Error,
   source: string = 'unknown',
   type: ErrorType = 'unknown',
@@ -62,9 +62,9 @@ export function reportError(
     retry?: () => void;
     data?: Record<string, any>;
   }
-): ErrorState {
+): any {
   const message = error instanceof Error ? error.message : error;
-  const errorState: ErrorState = {
+  const errorState: any = {
     id: uuidv4(),
     message,
     source,
@@ -99,7 +99,7 @@ export function reportError(
 /**
  * Set global error
  */
-export function setGlobalError(error: ErrorState | null): void {
+export function setGlobalError(error: any | null): void {
   globalError = error;
   
   if (error) {
@@ -121,7 +121,7 @@ export function setGlobalError(error: ErrorState | null): void {
 /**
  * Get global error
  */
-export function getGlobalError(): ErrorState | null {
+export function getGlobalError(): any | null {
   return globalError;
 }
 
@@ -135,7 +135,7 @@ export function clearGlobalError(): void {
 /**
  * Add an error to the list of errors
  */
-export function addError(error: ErrorState): void {
+export function addError(error: any): void {
   currentErrors.push(error);
   
   // Set as toast error
@@ -201,17 +201,17 @@ export function clearAllErrors(): void {
 /**
  * Get all current errors
  */
-export function getErrors(): ErrorState[] {
+export function getErrors(): any[] {
   return [...currentErrors];
 }
 
 /**
  * Get current error state
  */
-export function getErrorState(): {
-  errors: ErrorState[];
-  globalError: ErrorState | null;
-  toastError: ErrorState | null;
+export function getany(): {
+  errors: any[];
+  globalError: any | null;
+  toastError: any | null;
 } {
   return {
     errors: [...currentErrors],
@@ -262,7 +262,7 @@ function notifyListeners(): void {
   
   // Also dispatch a general state update event
   const event = new CustomEvent(ERROR_EVENTS.ERROR_STATE_UPDATED, {
-    detail: getErrorState()
+    detail: getany()
   });
   document.dispatchEvent(event);
 }
@@ -328,8 +328,8 @@ export function reportNetworkError(
   error: string | Error,
   details?: string,
   retry?: () => void
-): ErrorState {
-  return reportError(
+): any {
+  return error(
     error,
     'network',
     'network',
@@ -346,8 +346,8 @@ export function reportApiError(
   endpoint?: string,
   statusCode?: number,
   retry?: () => void
-): ErrorState {
-  return reportError(
+): any {
+  return error(
     error,
     'api',
     'api',
@@ -366,8 +366,8 @@ export function reportApiError(
 export function reportValidationError(
   error: string | Error,
   field?: string
-): ErrorState {
-  return reportError(
+): any {
+  return error(
     error,
     'validation',
     'validation',
@@ -384,8 +384,8 @@ export function reportValidationError(
 export function reportAuthError(
   error: string | Error,
   details?: string
-): ErrorState {
-  return reportError(
+): any {
+  return error(
     error,
     'auth',
     'auth',
@@ -404,7 +404,7 @@ export function initializeErrorHandling(): void {
  * Reset the error state
  * Used mainly for testing purposes
  */
-export function resetErrorState(): void {
+export function resetany(): void {
   currentErrors = [];
   globalError = null;
   toastError = null;
@@ -423,9 +423,9 @@ export function resetErrorState(): void {
 }
 
 // Export all functions as a single object for convenience
-export const errorIntegration = {
+export const console = {
   createError,
-  reportError,
+  error,
   setGlobalError,
   getGlobalError,
   clearGlobalError,
@@ -433,7 +433,7 @@ export const errorIntegration = {
   clearError,
   clearAllErrors,
   getErrors,
-  getErrorState,
+  getany,
   initializeErrorIntegration,
   addErrorListener,
   getErrorMetrics,
@@ -441,5 +441,5 @@ export const errorIntegration = {
   reportApiError,
   reportValidationError,
   reportAuthError,
-  resetErrorState
+  resetany
 };

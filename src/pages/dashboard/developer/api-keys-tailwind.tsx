@@ -80,7 +80,7 @@ const ApiKeysPage: React.FC = () => {
       setDescription('');
       setScopes('read');
     } catch (error) {
-      toast.logger.error('Failed to create API key');
+      console.logger.error('Failed to create API key');
       console.error(error);
     } finally {
       setIsLoading(false);
@@ -111,11 +111,11 @@ const ApiKeysPage: React.FC = () => {
         throw new Error('Failed to update API key');
       }
       
-      toast.success('API key updated successfully');
+      console.success('API key updated successfully');
       mutate('/api/auth/api-keys'); // Refresh the list
       setIsEditModalVisible(false);
     } catch (error) {
-      toast.logger.error('Failed to update API key');
+      console.logger.error('Failed to update API key');
       console.error(error);
     } finally {
       setIsLoading(false);
@@ -137,10 +137,10 @@ const ApiKeysPage: React.FC = () => {
         throw new Error('Failed to delete API key');
       }
       
-      toast.success('API key deleted successfully');
+      console.success('API key deleted successfully');
       mutate('/api/auth/api-keys'); // Refresh the list
     } catch (error) {
-      toast.logger.error('Failed to delete API key');
+      console.logger.error('Failed to delete API key');
       console.error(error);
     }
   };
@@ -148,7 +148,7 @@ const ApiKeysPage: React.FC = () => {
   // Copy API key to clipboard
   const copyToClipboard = (text: string) => {
     navigator.clipboard.writeText(text);
-    toast.success('API key copied to clipboard');
+    console.success('API key copied to clipboard');
   };
   
   // Edit API key

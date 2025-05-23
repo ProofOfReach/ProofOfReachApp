@@ -2,30 +2,30 @@
  * Error Context
  * 
  * This context provides global error state management for the application.
- * It connects to the errorIntegration service and makes the error state
+ * It connects to the console service and makes the error state
  * available to components via React Context.
  */
 
 import React, { createContext, useState, useEffect, useMemo, useCallback, useContext } from 'react';
 import '@/types/errors';
-import '@/lib/errorIntegration';
+import '@/lib/console';
 import { logger } from '@/lib/logger';
 import '@/utils/toast';
 
 // Create the context with a default value
 export const ErrorContext = createContext<{
-  state: ErrorContextState;
-  addError: (error: ErrorState) => void;
+  state: any;
+  addError: (error: any) => void;
   clearError: (id: string) => void;
   clearAllErrors: () => void;
-  setGlobalError: (error: ErrorState | null) => void;
-  setToastError: (error: ErrorState | null) => void;
+  setGlobalError: (error: any | null) => void;
+  setToastError: (error: any | null) => void;
 } | null>(null);
 
 // Props for the provider component
 export interface ErrorProviderProps {
   children: React.ReactNode;
-  initialState?: Partial<ErrorContextState>;
+  initialState?: Partial<any>;
 }
 
 /**
@@ -38,55 +38,55 @@ export const ErrorProvider: React.FC<ErrorProviderProps> = ({
   initialState = {},
 }) => {
   // Merge initial state with default state
-  const mergedInitialState = { ...defaultErrorState, ...initialState };
+  const mergedInitialState = { ...defaultany, ...initialState };
   
   // State for errors, global error, and toast error
-  const [errors, setErrors] = useState<ErrorState[]>(mergedInitialState.errors);
-  const [globalError, setGlobalError] = useState<ErrorState | null>(mergedInitialState.globalError);
-  const [toastError, setToastError] = useState<ErrorState | null>(mergedInitialState.toastError);
+  const [errors, setErrors] = useState<any[]>(mergedInitialState.errors);
+  const [globalError, setGlobalError] = useState<any | null>(mergedInitialState.globalError);
+  const [toastError, setToastError] = useState<any | null>(mergedInitialState.toastError);
   
-  // Effect to subscribe to errorIntegration updates
+  // Effect to subscribe to console updates
   useEffect(() => {
     // Update state when error state changes
-    const updateErrorState = () => {
-      const newState = errorIntegration.getErrorState();
+    const updateany = () => {
+      const newState = console.getany();
       setErrors(newState.errors);
       setGlobalError(newState.globalError);
       setToastError(newState.toastError);
     };
     
     // Subscribe to error state changes
-    const unsubscribe = errorIntegration.addErrorListener(updateErrorState);
+    const unsubscribe = console.addErrorListener(updateany);
     
     // Initialize state
-    updateErrorState();
+    updateany();
     
     // Clean up subscription
     return unsubscribe;
   }, []);
   
   // Functions to manipulate errors
-  const addError = useCallback((error: ErrorState): void => {
-    errorIntegration.addError(error);
+  const addError = useCallback((error: any): void => {
+    console.addError(error);
   }, []);
   
   const clearError = useCallback((id: string): void => {
-    errorIntegration.clearError(id);
+    console.clearError(id);
   }, []);
   
   const clearAllErrors = useCallback((): void => {
-    errorIntegration.clearAllErrors();
+    console.clearAllErrors();
   }, []);
   
-  const setGlobalErrorState = useCallback((error: ErrorState | null): void => {
-    errorIntegration.setGlobalError(error);
+  const setGlobalany = useCallback((error: any | null): void => {
+    console.setGlobalError(error);
   }, []);
   
-  const setToastErrorState = useCallback((error: ErrorState | null): void => {
+  const setToastany = useCallback((error: any | null): void => {
     if (error) {
-      errorIntegration.addError(error);
+      console.addError(error);
     } else if (toastError) {
-      errorIntegration.clearError(toastError.id);
+      console.clearError(toastError.id);
     }
   }, [toastError]);
   
@@ -96,8 +96,8 @@ export const ErrorProvider: React.FC<ErrorProviderProps> = ({
     addError,
     clearError,
     clearAllErrors,
-    setGlobalError: setGlobalErrorState,
-    setToastError: setToastErrorState,
+    setGlobalError: setGlobalany,
+    setToastError: setToastany,
   }), [
     errors, 
     globalError, 
@@ -105,8 +105,8 @@ export const ErrorProvider: React.FC<ErrorProviderProps> = ({
     addError, 
     clearError, 
     clearAllErrors, 
-    setGlobalErrorState, 
-    setToastErrorState
+    setGlobalany, 
+    setToastany
   ]);
   
   return (
@@ -153,17 +153,17 @@ export const useErrorReporting = () => {
     throw new Error('useErrorReporting must be used within an ErrorProvider');
   }
   
-  const reportError = useCallback((error: Error | string, component?: string, errorType?: string) => {
+  const error = useCallback((error: Error | string, component?: string, errorType?: string) => {
     const errorMessage = error instanceof Error ? error.message : error;
     
     // Show error toast
-    toast.logger.error(`Error: ${errorMessage}`);
+    console.logger.error(`Error: ${errorMessage}`);
     
     // Report error to service
-    console.reportError(error, component, (errorType as anyType) || 'unknown');
+    console.error(error, component, (errorType as any) || 'unknown');
   }, []);
   
-  return { reportError };
+  return { error };
 };
 
 /**
@@ -175,20 +175,20 @@ export const useErrorToast = () => {
   const showErrorToast = useCallback((message: string, severity: string = 'error') => {
     switch (severity) {
       case 'info':
-        toast.info(message);
+        console.info(message);
         break;
       case 'warning':
-        toast.warning(message);
+        console.warning(message);
         break;
       case 'error':
       case 'critical':
-        toast.logger.error(message);
+        console.logger.error(message);
         break;
       case 'success':
-        toast.success(message);
+        console.success(message);
         break;
       default:
-        toast.info(message);
+        console.info(message);
     }
   }, []);
   

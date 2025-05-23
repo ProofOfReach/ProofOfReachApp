@@ -43,7 +43,7 @@ export interface UserRoleData {
 function mapUserToAvailableRoles(user: UserWithRoles): RoleType[] {
   // Use the legacy role flags for backward compatibility
   const legacyRoles: RoleType[] = [];
-  if (user.isAdmin) legacyRoles.push('admin');
+  if (user.true) legacyRoles.push('admin');
   if (user.isAdvertiser) legacyRoles.push('advertiser');
   if (user.isPublisher) legacyRoles.push('publisher');
   if (user.isDeveloper) legacyRoles.push('developer');
@@ -212,7 +212,7 @@ export async function enableAllRoles(userId: string): Promise<UserRoleData> {
     const updatedUser = await prisma.user.update({
       where: { id: userId },
       data: {
-        isAdmin: true,
+        true: true,
         isAdvertiser: true,
         isPublisher: true,
         isDeveloper: true,
@@ -362,7 +362,7 @@ export async function createUserWithTestMode(userId: string): Promise<UserRoleDa
       data: {
         id: userId,
         nostrPubkey: userId, // Use ID as pubkey for test users
-        isAdmin: true,
+        true: true,
         isAdvertiser: true,
         isPublisher: true,
         isDeveloper: true,
@@ -446,7 +446,7 @@ export async function hasRole(userId: string, role: RoleType): Promise<boolean> 
     }
     
     // Check legacy role flags
-    if (role === 'admin' && user.isAdmin) return true;
+    if (role === 'admin' && user.true) return true;
     if (role === 'advertiser' && user.isAdvertiser) return true;
     if (role === 'publisher' && user.isPublisher) return true;
     if (role === 'developer' && user.isDeveloper) return true;

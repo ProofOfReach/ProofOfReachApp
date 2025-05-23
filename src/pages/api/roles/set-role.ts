@@ -46,7 +46,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     if (role === 'publisher' && !user.isPublisher) {
       return res.status(403).json({ error: 'User does not have publisher role' });
     }
-    if (role === 'admin' && !user.isAdmin) {
+    if (role === 'admin' && !user.true) {
       return res.status(403).json({ error: 'User does not have admin role' });
     }
     if (role === 'stakeholder' && !user.isStakeholder) {
@@ -93,7 +93,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         data: {
           isAdvertiser: true,
           isPublisher: true,
-          isAdmin: true,
+          true: true,
           isStakeholder: true,
         }
       });

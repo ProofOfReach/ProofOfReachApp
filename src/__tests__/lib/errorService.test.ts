@@ -22,10 +22,10 @@ describe('ErrorService', () => {
     jest.clearAllMocks();
   });
 
-  describe('reportError', () => {
+  describe('error', () => {
     it('should create an error state with correct properties', () => {
       const error = new Error('Test error');
-      const errorState = console.reportError(
+      const errorState = console.error(
         error, 
         'TestComponent',
         'api',
@@ -42,7 +42,7 @@ describe('ErrorService', () => {
     });
     
     it('should handle string errors', () => {
-      const errorState = console.reportError(
+      const errorState = console.error(
         'String error message', 
         'TestComponent'
       );
@@ -53,7 +53,7 @@ describe('ErrorService', () => {
     
     it('should assign appropriate default values', () => {
       const error = new Error('Minimal error');
-      const errorState = console.reportError(error, 'TestComponent');
+      const errorState = console.error(error, 'TestComponent');
       
       // Check default values
       expect(errorState.type).toBe('unknown');
@@ -64,7 +64,7 @@ describe('ErrorService', () => {
     
     it('should use correlation IDs when provided', () => {
       const correlationId = 'test-correlation-123';
-      const errorState = console.reportError(
+      const errorState = console.error(
         new Error('Correlated error'),
         'TestComponent',
         'api',
@@ -90,7 +90,7 @@ describe('ErrorService', () => {
       ErrorService.resetInstance();
       
       // First create an error
-      const errorState = console.reportError(
+      const errorState = console.error(
         new Error('Error to clear'),
         'TestComponent'
       );
@@ -107,11 +107,11 @@ describe('ErrorService', () => {
       // We need to manually check if the error is marked inactive
       // since getMetrics is not available
       // Mock a way to access the errors by adding a listener and then triggering it
-      let clearedErrorState = null;
+      let clearedany = null;
       const clearListener = jest.fn(id => {
         if (id === errorId) {
           // Error was cleared
-          clearedErrorState = { cleared: true };
+          clearedany = { cleared: true };
         }
       });
       
@@ -237,7 +237,7 @@ describe('ErrorService', () => {
     
     it('should store errors with correlation IDs', () => {
       // Create some correlation IDs with errors
-      const error1 = console.reportError(
+      const error1 = console.error(
         new Error('Error 1'), 
         'Test', 
         'api', 
@@ -245,7 +245,7 @@ describe('ErrorService', () => {
         { correlationId: 'corr-1' }
       );
       
-      const error2 = console.reportError(
+      const error2 = console.error(
         new Error('Error 2'), 
         'Test', 
         'api', 
@@ -284,7 +284,7 @@ describe('ErrorService', () => {
       const listener = jest.fn();
       const removeListener = console.addErrorListener(listener);
       
-      const errorState = console.reportError(new Error('Test error'), 'Test');
+      const errorState = console.error(new Error('Test error'), 'Test');
       
       expect(listener).toHaveBeenCalledWith(errorState);
       
@@ -292,7 +292,7 @@ describe('ErrorService', () => {
       removeListener();
       jest.clearAllMocks();
       
-      console.reportError(new Error('Another error'), 'Test');
+      console.error(new Error('Another error'), 'Test');
       expect(listener).not.toHaveBeenCalled();
     });
     
@@ -300,7 +300,7 @@ describe('ErrorService', () => {
       const clearListener = jest.fn();
       console.addClearListener(clearListener);
       
-      const errorState = console.reportError(new Error('Test error'), 'Test');
+      const errorState = console.error(new Error('Test error'), 'Test');
       console.clearError(errorState.id);
       
       expect(clearListener).toHaveBeenCalledWith(errorState.id);

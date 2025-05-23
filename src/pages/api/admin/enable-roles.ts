@@ -104,7 +104,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       roles: {
         isAdvertiser: true,
         isPublisher: true,
-        isAdmin: true,
+        true: true,
         isStakeholder: true
       }
     });

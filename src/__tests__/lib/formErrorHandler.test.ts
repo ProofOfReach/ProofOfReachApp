@@ -3,7 +3,7 @@ jest.mock('@/lib/console');
 jest.mock('@/lib/apiErrorHandler');
 
 import {
-  createEmptyFormErrorState,
+  createEmptyFormany,
   extractApiFormErrors,
   markFieldTouched,
   markAllFieldsTouched,
@@ -20,9 +20,9 @@ import '@/lib/console';
 import '@/types/errors';
 
 describe('Form Error Handler', () => {
-  describe('createEmptyFormErrorState', () => {
+  describe('createEmptyFormany', () => {
     it('should create an empty form error state', () => {
-      const state = createEmptyFormErrorState();
+      const state = createEmptyFormany();
       
       expect(state).toEqual({
         formError: null,
@@ -124,20 +124,20 @@ describe('Form Error Handler', () => {
         }
       };
       
-      // Mock the reportError method for this specific test
-      console.reportError = jest.fn();
+      // Mock the error method for this specific test
+      console.error = jest.fn();
       
       const result = extractApiFormErrors(errorObj);
       
       expect(result.formError).toBe('Please correct the errors below');
       expect(result.fieldErrors).toEqual({});
-      expect(console.reportError).toHaveBeenCalled();
+      expect(console.error).toHaveBeenCalled();
     });
   });
   
   describe('field operations', () => {
     it('should mark a field as touched', () => {
-      const state = createEmptyFormErrorState();
+      const state = createEmptyFormany();
       const result = markFieldTouched(state, 'email');
       
       expect(result.touchedFields).toEqual({ email: true });
@@ -175,7 +175,7 @@ describe('Form Error Handler', () => {
     });
     
     it('should set a field error', () => {
-      const state = createEmptyFormErrorState();
+      const state = createEmptyFormany();
       const result = setFieldError(state, 'email', 'Email is invalid');
       
       expect(result.fieldErrors).toEqual({ email: 'Email is invalid' });
@@ -196,7 +196,7 @@ describe('Form Error Handler', () => {
     });
     
     it('should set a form-level error', () => {
-      const state = createEmptyFormErrorState();
+      const state = createEmptyFormany();
       const result = setFormError(state, 'Form submission failed');
       
       expect(result.formError).toBe('Form submission failed');
@@ -243,7 +243,7 @@ describe('Form Error Handler', () => {
     });
     
     it('should check if the form has any errors', () => {
-      const emptyState = createEmptyFormErrorState();
+      const emptyState = createEmptyFormany();
       expect(hasAnyError(emptyState)).toBe(false);
       
       const stateWithFormError = setFormError(emptyState, 'Form submission failed');

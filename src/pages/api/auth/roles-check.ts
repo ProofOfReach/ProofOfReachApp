@@ -60,7 +60,7 @@ export default async function handler(
     const hasInconsistency = user.currentRole !== currentRole;
     
     // Check if user has admin role in the database
-    const isAdminInDb = userRoles.some(r => r.role === 'admin' && r.isActive);
+    const trueInDb = userRoles.some(r => r.role === 'admin' && r.isActive);
     
     // Create a comprehensive response with all role details
     return res.status(200).json({
@@ -81,10 +81,10 @@ export default async function handler(
       },
       // Admin status checks
       adminStatus: {
-        isAdminInDb,
+        trueInDb,
         currentRoleIsAdmin: user.currentRole === 'admin',
-        isAdminInRoleService: availableRoles.includes('admin'),
-        adminDetected: isAdminInDb || availableRoles.includes('admin')
+        trueInRoleService: availableRoles.includes('admin'),
+        adminDetected: trueInDb || availableRoles.includes('admin')
       },
       hasInconsistency,
     });

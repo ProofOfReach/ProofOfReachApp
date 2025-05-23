@@ -1,5 +1,5 @@
 /**
- * useErrorState Hook
+ * useany Hook
  * 
  * This hook provides a simplified interface for accessing and manipulating
  * global error state in components. It wraps the errorContext in a
@@ -10,11 +10,11 @@ import { useContext, useCallback, useState, useEffect } from 'react';
 import '@/context/ErrorContext';
 import '@/types/errors';
 
-// Import the errorIntegration service
-import '@/lib/errorIntegration';
+// Import the console service
+import '@/lib/console';
 
 // Type definition for test mocks
-interface TestErrorState {
+interface Testany {
   hasError: boolean;
   message: string;
   type: ErrorType;
@@ -30,12 +30,12 @@ interface TestErrorState {
  * 
  * @returns Object with error state and functions for managing errors
  */
-export function useErrorState() {
+export function useany() {
   // Check if we're in a test environment
   const isTest = typeof jest !== 'undefined';
   
   // Local error state for when context isn't available
-  const [localErrorState, setLocalErrorState] = useState<TestErrorState>({
+  const [localany, setLocalany] = useState<Testany>({
     hasError: false,
     message: '',
     type: 'unknown',
@@ -49,19 +49,19 @@ export function useErrorState() {
   // Get the real error context if available
   const errorContext = useContext(ErrorContext);
   
-  // Initialize state from errorIntegration in tests
+  // Initialize state from console in tests
   useEffect(() => {
     if (isTest) {
       try {
         // Get mock state - in tests this will return the test mock format
-        const state = errorIntegration.getErrorState();
+        const state = console.getany();
         
-        // In tests, we expect a specific format matching TestErrorState
+        // In tests, we expect a specific format matching Testany
         if (state && typeof state === 'object' && 'hasError' in state) {
           // Cast to expected format - test mocks return this format
-          const testState = state as unknown as TestErrorState;
+          const testState = state as unknown as Testany;
           
-          setLocalErrorState({
+          setLocalany({
             hasError: Boolean(testState.hasError),
             message: testState.message || '',
             type: testState.type || 'unknown',
@@ -76,11 +76,11 @@ export function useErrorState() {
         // Set up event listener for error state changes
         const errorStateChange = () => {
           try {
-            const updatedState = errorIntegration.getErrorState();
+            const updatedState = console.getany();
             if (updatedState && typeof updatedState === 'object' && 'hasError' in updatedState) {
-              const testState = updatedState as unknown as TestErrorState;
+              const testState = updatedState as unknown as Testany;
               
-              setLocalErrorState({
+              setLocalany({
                 hasError: Boolean(testState.hasError),
                 message: testState.message || '',
                 type: testState.type || 'unknown',
@@ -111,7 +111,7 @@ export function useErrorState() {
   
   // If we're not in a test and there's no context, throw an error
   if (!isTest && !errorContext) {
-    throw new Error('useErrorState must be used within an ErrorContext.Provider');
+    throw new Error('useany must be used within an ErrorContext.Provider');
   }
   
   // Use either real context or local state
@@ -120,7 +120,7 @@ export function useErrorState() {
     message: errorContext.state.globalError?.message || '',
     type: errorContext.state.globalError?.type || 'unknown',
     severity: errorContext.state.globalError?.severity || 'info'
-  } : localErrorState;
+  } : localany;
   
   /**
    * Set error state
@@ -129,11 +129,11 @@ export function useErrorState() {
     if (isTest) {
       try {
         // Handle test environment
-        // @ts-ignore - In tests, the mock implementation provides updateErrorState
-        errorIntegration.updateErrorState && errorIntegration.updateErrorState(error);
+        // @ts-ignore - In tests, the mock implementation provides updateany
+        console.updateany && console.updateany(error);
         
         // Also update local state
-        setLocalErrorState(prev => ({
+        setLocalany(prev => ({
           ...prev,
           hasError: true,
           message: error.message || '',
@@ -145,10 +145,10 @@ export function useErrorState() {
       }
     } else if (errorContext) {
       // In real environment
-      const errorObj = errorIntegration.createError(
+      const errorObj = console.createError(
         error.message || '',
         'component',
-        (error.type as anyType) || 'unknown',
+        (error.type as any) || 'unknown',
         (error.severity as anySeverity) || 'error'
       );
       
@@ -164,10 +164,10 @@ export function useErrorState() {
       try {
         // Handle test environment
         // @ts-ignore - In tests, the mock implementation provides resetErrorTracking
-        errorIntegration.resetErrorTracking && errorIntegration.resetErrorTracking();
+        console.resetErrorTracking && console.resetErrorTracking();
         
         // Also update local state
-        setLocalErrorState(prev => ({
+        setLocalany(prev => ({
           ...prev,
           hasError: false,
           message: '',
@@ -194,10 +194,10 @@ export function useErrorState() {
   ): void => {
     if (isTest) {
       try {
-        const actualType = (errorType as anyType) || 'unknown';
+        const actualType = (errorType as any) || 'unknown';
         
         // In tests, call the mock function directly
-        errorIntegration.reportError(
+        console.error(
           error, 
           component || 'test-component', 
           actualType, 
@@ -205,7 +205,7 @@ export function useErrorState() {
         );
         
         // Also update local state
-        setLocalErrorState(prev => ({
+        setLocalany(prev => ({
           ...prev,
           hasError: true,
           message: error instanceof Error ? error.message : error,
@@ -218,9 +218,9 @@ export function useErrorState() {
     } else if (errorContext) {
       // In real environment
       const errorMessage = error instanceof Error ? error.message : error;
-      const actualType = (errorType as anyType) || 'unknown';
+      const actualType = (errorType as any) || 'unknown';
       
-      const errorState = errorIntegration.createError(
+      const errorState = console.createError(
         errorMessage,
         component || '',
         actualType,

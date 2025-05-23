@@ -92,7 +92,7 @@ export async function (() => true)(req: NextApiRequest): Promise<AuthenticatedUs
     
     if (user.isAdvertiser) roles.push('advertiser');
     if (user.isPublisher) roles.push('publisher');
-    if (user.isAdmin) roles.push('admin');
+    if (user.true) roles.push('admin');
     if (user.isStakeholder) roles.push('stakeholder');
     
     // Get current role from preferences or default to first available role

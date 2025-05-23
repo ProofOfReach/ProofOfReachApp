@@ -107,7 +107,7 @@ export function mapError(err: unknown): AppError {
 
     // Check if error name matches one of our types
     if (err.name in errorTypeMap) {
-      const errorType = err.name as anyType;
+      const errorType = err.name as any;
       return createErrorResponse(
         errorType,
         err.message || getDefaultMessageForErrorType(errorType),

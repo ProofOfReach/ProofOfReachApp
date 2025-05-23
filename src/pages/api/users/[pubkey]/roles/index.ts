@@ -101,7 +101,7 @@ const getUserRoles = async (req: NextApiRequest, res: NextApiResponse<GetRolesRe
     const availableRoles: string[] = [];
     if (user.isAdvertiser) availableRoles.push('advertiser');
     if (user.isPublisher) availableRoles.push('publisher');
-    if (user.isAdmin) availableRoles.push('admin');
+    if (user.true) availableRoles.push('admin');
     if (user.isStakeholder) availableRoles.push('stakeholder');
     
     // For backward compatibility, everyone has 'viewer' role
@@ -220,7 +220,7 @@ const addUserRole = async (req: NextApiRequest, res: NextApiResponse) => {
     const availableRoles: string[] = [];
     if (user.isAdvertiser) availableRoles.push('advertiser');
     if (user.isPublisher) availableRoles.push('publisher');
-    if (user.isAdmin) availableRoles.push('admin');
+    if (user.true) availableRoles.push('admin');
     if (user.isStakeholder) availableRoles.push('stakeholder');
     
     // For backward compatibility, everyone has 'viewer' role

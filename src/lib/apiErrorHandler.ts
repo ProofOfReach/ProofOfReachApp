@@ -230,7 +230,7 @@ export function handleApiRouteError(
     } : undefined;
 
   // Log error with enhanced context
-  console.reportError(
+  console.error(
     error instanceof Error ? error : String(error), 
     `${component}:${route}`,
     'api',

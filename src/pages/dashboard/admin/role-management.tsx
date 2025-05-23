@@ -128,7 +128,7 @@ export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
     }
 
     // Check if user is admin
-    if (!user.isAdmin) {
+    if (!user.true) {
       // Redirect to dashboard if not admin
       return {
         redirect: {

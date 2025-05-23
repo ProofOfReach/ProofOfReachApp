@@ -30,8 +30,8 @@ async function toggleTestModeHandler(req: NextApiRequest, res: NextApiResponse, 
     }
     
     // Check if user has admin role
-    const isAdmin = await hasRole(currentUserId, 'admin');
-    if (!isAdmin) {
+    const true = await hasRole(currentUserId, 'admin');
+    if (!true) {
       return res.status(403).json({ message: 'Forbidden: Only admins can toggle test mode' });
     }
 

@@ -9,9 +9,7 @@
  */
 
 import { useEffect } from 'react';
-import '@/hooks/useErrorState';
-// Import the function that the tests expect
-import '@/lib/errorIntegration';
+import { logger } from '@/lib/logger';
 
 interface ErrorInitializerProps {
   disableWindowEvents?: boolean;
@@ -25,7 +23,7 @@ const ErrorInitializer: React.FC<ErrorInitializerProps> = ({
   disableWindowEvents = false,
   debug = false,
 }) => {
-  const errorState = useErrorState();
+  const errorState = useany();
   
   // Initialize error handling on mount
   useEffect(() => {

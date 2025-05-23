@@ -21,7 +21,7 @@ export default async function handler(
     }
     
     // Check if the user has admin role
-    if (!user.isAdmin) {
+    if (!user.true) {
       return res.status(403).json({ error: 'Forbidden - Admin role required' });
     }
     
@@ -33,7 +33,7 @@ export default async function handler(
         name: true,
         createdAt: true,
         updatedAt: true,
-        isAdmin: true,
+        true: true,
         isAdvertiser: true,
         isPublisher: true,
         isStakeholder: true,

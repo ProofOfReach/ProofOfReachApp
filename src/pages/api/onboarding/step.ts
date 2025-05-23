@@ -50,7 +50,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     });
 
     // Report to error tracking system
-    console.reportError(
+    console.error(
       error instanceof Error ? error : errorMessage,
       'api.onboarding.step',
       'api',
