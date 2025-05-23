@@ -125,8 +125,11 @@ const RoleDropdown: React.FC<RoleDropdownProps> = ({
       console.debug(`Falling back to localStorage for roles: ${cachedRoles}`);
     }
     
-    // Use both React context and utility function for consistent test mode detection
-    const isTestModeActive = isTestMode || getTestModeStatus() || localStorage.getItem('bypass_api_calls') === 'true';
+    // Use multiple methods for robust test mode detection
+    const isTestModeActive = isTestMode || 
+                             localStorage.getItem('isTestMode') === 'true' || 
+                             localStorage.getItem('bypass_api_calls') === 'true' ||
+                             localStorage.getItem('testMode') === 'true';
     
     if (isTestModeActive) {
       // In test mode, we want to show all roles but still highlight the current one
@@ -197,9 +200,19 @@ const RoleDropdown: React.FC<RoleDropdownProps> = ({
       // Always update current role to maintain consistency
       setCurrentRole(currentRoleValue);
       
-      // Use both the React hook isTestMode and the utility function for non-React code
-      // This ensures consistency across all components
-      const isTestModeActive = isTestMode || getTestModeStatus() || enhancedStorage.getItem(STORAGE_KEYS.BYPASS_API_CALLS) === 'true';
+      // Use multiple methods for robust test mode detection
+      const isTestModeActive = isTestMode || 
+                               localStorage.getItem('isTestMode') === 'true' || 
+                               localStorage.getItem('bypass_api_calls') === 'true' ||
+                               localStorage.getItem('testMode') === 'true';
+      
+      console.log('Test mode detection in fetchRolesFromAPI:', {
+        isTestMode,
+        localStorage_isTestMode: localStorage.getItem('isTestMode'),
+        localStorage_bypass: localStorage.getItem('bypass_api_calls'),
+        localStorage_testMode: localStorage.getItem('testMode'),
+        isTestModeActive
+      });
       
       // In test mode, we show all roles but still highlight the current one
       if (isTestModeActive) {
