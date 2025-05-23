@@ -2,7 +2,7 @@
  * Mock implementation of useAuthRefactored hook for testing
  */
 
-import { UserRoleType } from '../src/types/role';
+import type { UserRole as UserRoleType } from '../src/types/auth';
 
 const useAuthRefactoredMock = () => ({
   authState: {

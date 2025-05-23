@@ -2,7 +2,7 @@
  * Mock implementation of UnifiedRoleService for testing
  */
 
-import { UserRoleType } from '../../src/types/role';
+import type { UserRole as UserRoleType } from '../../src/types/auth';
 
 // Create mock service
 const unifiedRoleService = {

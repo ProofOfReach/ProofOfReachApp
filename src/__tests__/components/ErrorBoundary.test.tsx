@@ -13,7 +13,7 @@ jest.mock('@/lib/console', () => ({
     error: jest.fn(),
     
     // Core error methods
-    error: jest.fn().mockReturnValue({
+    logError: jest.fn().mockReturnValue({
       id: 'mock-error-id',
       active: true,
       message: 'Mock error message',

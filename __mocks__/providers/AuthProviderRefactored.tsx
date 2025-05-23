@@ -3,7 +3,7 @@
  */
 
 import React, { ReactNode, createContext } from 'react';
-import { UserRoleType } from '../../src/types/role';
+import type { UserRole as UserRoleType } from '../../src/types/auth';
 
 // Import the mock hook to ensure consistency
 import useAuthRefactoredMock from '../useAuthRefactoredMock';

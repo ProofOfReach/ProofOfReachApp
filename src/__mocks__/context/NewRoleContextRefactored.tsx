@@ -32,10 +32,10 @@ export const RoleProviderRefactored: React.FC<{
   children: ReactNode; 
   initialRole?: string;
 }> = ({ children, initialRole = 'advertiser' }) => {
-  const [role, setRole] = React.useState<UserRole>(initialRole);
+  const [role, setRole] = React.useState<UserRole>(initialRole as UserRole);
   
   const mockSetRole = jest.fn().mockImplementation((newRole: string) => {
-    setRole(newRole);
+    setRole(newRole as UserRole);
     // Update localStorage to mimic the real implementation
     localStorage.setItem('userRole', newRole);
     return Promise.resolve({ log: true });

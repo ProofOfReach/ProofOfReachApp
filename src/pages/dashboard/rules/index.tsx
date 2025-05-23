@@ -5,6 +5,9 @@ import '@/context/RoleContext';
 import { Shield, Plus, XCircle, CheckCircle, Edit, Save, X } from 'react-feather';
 import '@/hooks/useAuth';
 import { getDashboardLayout } from '@/utils/layoutHelpers';
+import { defaultUseRole } from '@/context/RoleContext';
+import { useAuth } from '@/hooks/useAuth';
+import type { NextPageWithLayout } from '@/pages/_app';
 
 // Rule types
 type RuleType = 'domain_blacklist' | 'keyword_blacklist' | 'pubkey_blacklist' | 'pubkey_whitelist';
