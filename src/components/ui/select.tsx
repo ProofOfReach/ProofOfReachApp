@@ -1,5 +1,5 @@
 import * as React from "react"
-import "./lib/utils"
+import { cn } from "@/lib/utils"
 
 /**
  * Select component following shadcn/ui patterns
