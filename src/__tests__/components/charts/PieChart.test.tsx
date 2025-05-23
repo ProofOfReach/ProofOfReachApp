@@ -109,7 +109,7 @@ describe('PieChart Component', () => {
   });
 
   it('passes tooltip formatter function correctly', () => {
-    const tooltipFormatter = (value: number, name: string): [UserRole, string] => [`${value} units`, name || ""];
+    const tooltipFormatter = (value: number, name: string): [string, string] => [`${value} units`, name || ""];
     render(<PieChart 
       data={mockData} 
       tooltipFormatter={tooltipFormatter} 
