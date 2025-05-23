@@ -15,7 +15,7 @@ import {
   Square
 } from 'react-feather';
 import Link from 'next/link';
-import "./components/ui/button";
+// UI import removed to fix module not found error
 
 // Extended Campaign type with ads array
 export interface CampaignWithAds extends Campaign {

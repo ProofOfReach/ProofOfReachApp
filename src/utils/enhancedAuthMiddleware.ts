@@ -33,13 +33,16 @@ export async function enhancedAuthMiddleware(req: NextApiRequest): Promise<Authe
     // Extract authentication data from cookies
     const cookies = req.cookies;
     
-    // Check for required cookies
-    if (!cookies?.nostr_pubkey) {
-      logger.warn('Authentication failed: No pubkey cookie found');
+    // Check for required cookies - also look for test mode pubkey
+    const testPubkey = cookies?.nostr_test_pk || req.cookies?.nostr_test_pk;
+    const pubkeyCookie = cookies?.nostr_pubkey || testPubkey;
+    
+    if (!pubkeyCookie) {
+      logger.warn('Authentication failed: No pubkey cookie found', { cookies: Object.keys(cookies || {}) });
       throw new ApiError(401, 'Unauthorized: Missing authentication');
     }
     
-    const pubkey = cookies.nostr_pubkey;
+    const pubkey = pubkeyCookie;
     // Check all possible test mode indicators
     const isTestMode = pubkey.startsWith('pk_test_') || 
                       cookies.isTestMode === 'true' || 

@@ -10,8 +10,7 @@ import {
   DollarSign
 } from 'react-feather';
 import Link from 'next/link';
-import "./components/ui/button";
-import '@/components/ui/data-table/DataTable';
+// UI imports removed to fix module not found error
 
 // Extended Campaign type with ads array
 export interface CampaignWithAds extends Campaign {
