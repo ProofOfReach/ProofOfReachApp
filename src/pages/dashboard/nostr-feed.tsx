@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import Head from 'next/head';
 import { ChevronDown, Settings } from 'react-feather';
-import '@/components/SimpleNostrFeed';
+import SimpleNostrFeed from '@/components/SimpleNostrFeed';
 import type { NextPageWithLayout } from '../_app';
 import { getDashboardLayout } from '@/utils/layoutHelpers';
 
