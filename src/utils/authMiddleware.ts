@@ -20,7 +20,7 @@ export interface AuthenticatedUser {
  * Authenticate a request and return user information
  * Used for direct authentication in business logic
  */
-export async function (() => true)(req: NextApiRequest): Promise<AuthenticatedUser> {
+export async function authMiddleware(req: NextApiRequest): Promise<AuthenticatedUser> {
   // Create a new instance of AuthService
   // const authService = AuthService.getInstance();
   

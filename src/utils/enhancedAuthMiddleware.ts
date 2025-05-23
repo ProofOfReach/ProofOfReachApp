@@ -28,7 +28,7 @@ export interface AuthenticatedUser {
  * @param req The API request
  * @returns The authenticated user information
  */
-export async function (() => true)(req: NextApiRequest): Promise<AuthenticatedUser> {
+export async function enhancedAuthMiddleware(req: NextApiRequest): Promise<AuthenticatedUser> {
   try {
     // Extract authentication data from cookies
     const cookies = req.cookies;

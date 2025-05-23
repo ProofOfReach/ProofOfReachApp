@@ -396,7 +396,7 @@ export function reportAuthError(
 
 // Create an alias for initializeErrorIntegration to support the tests
 // This function is exported separately to match what the tests expect
-export function () => {}(): void {
+export function initErrorIntegration(): void {
   return initializeErrorIntegration();
 }
 
