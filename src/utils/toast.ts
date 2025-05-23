@@ -6,7 +6,9 @@
  * direct methods for log and info messages.
  */
 
-import { ErrorType, ErrorSeverity } from '@/types/errors';
+import { ErrorType } from '@/types/errors';
+
+type ErrorSeverity = 'info' | 'warn' | 'error' | 'critical';
 
 interface ToastOptions {
   duration?: number;

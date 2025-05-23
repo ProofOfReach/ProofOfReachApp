@@ -71,7 +71,7 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
     }
     
     // Show toast notification
-    console.log.log(`An error occurred: ${error.message}`);
+    console.log(`An error occurred: ${error.message}`);
   }
 
   handleRetry = (): void => {

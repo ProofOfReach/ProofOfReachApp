@@ -7,8 +7,8 @@
  */
 
 import { useContext, useCallback, useState, useEffect } from 'react';
-import { ErrorContext } from '@/context/ErrorContext';
-import { ErrorType, ErrorSeverity } from '@/types/errors';
+import ErrorContext from '@/context/ErrorContext';
+import { ErrorType } from '@/types/errors';
 
 // Import the console service
 
@@ -47,7 +47,14 @@ export function useErrorState() {
   });
   
   // Get the real error context if available
-  const errorContext = useContext(ErrorContext);
+  const errorContext = useContext(ErrorContext) || {
+    state: { errors: [], globalError: null, toastError: null },
+    addError: () => {},
+    clearError: () => {},
+    clearAllErrors: () => {},
+    setGlobalError: () => {},
+    setToastError: () => {},
+  };
   
   // Initialize state from console in tests
   useEffect(() => {
