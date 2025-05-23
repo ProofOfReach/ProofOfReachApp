@@ -95,7 +95,7 @@ describe('Error Integration Service', () => {
   describe('getErrorState', () => {
     it('returns state with empty properties when no errors present', () => {
       // Reset to a clean state with our test setup
-      global.window.__errorState = {
+      (global.window as any).__errorState = {
         errors: [],
         globalError: null,
         toastError: null
@@ -128,7 +128,7 @@ describe('Error Integration Service', () => {
   describe('getErrorMetrics', () => {
     it('returns default metrics when no errors have occurred', () => {
       // Make sure window.__errorMetrics doesn't exist for this test
-      global.window.__errorMetrics = undefined;
+      (global.window as any).__errorMetrics = undefined;
       
       const metrics = getErrorMetrics();
       
@@ -188,14 +188,14 @@ describe('Error Integration Service', () => {
     
     it('uses window.__errorMetrics when available', () => {
       // Set up metrics mock
-      global.window.__errorMetrics = {
+      (global.window as any).__errorMetrics = {
         trackRecovery: jest.fn()
       };
       
       const startTime = Date.now() - 1000;
       trackErrorRecovery(startTime, true);
       
-      expect(window.__errorMetrics.trackRecovery).toHaveBeenCalledWith(
+      expect((window as any).__errorMetrics.trackRecovery).toHaveBeenCalledWith(
         expect.any(Number),
         true
       );
