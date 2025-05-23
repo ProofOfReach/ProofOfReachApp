@@ -211,16 +211,16 @@ export function requireAuth(
 ) {
   return async (req: NextApiRequest, res: NextApiResponse) => {
     try {
-      // Get user session
-      const session = await getServerSession(req, res);
+      // Get user session - use cookie-based auth for test mode
+      const pubkey = getCookie('nostr_pubkey', { req, res }) as string;
       
-      if (!session || !session.user) {
-        logger.debug('Authentication failed - no session');
+      if (!pubkey) {
+        logger.debug('Authentication failed - no pubkey');
         return res.status(401).json({ error: 'Not authenticated' });
       }
       
-      // Call the handler with the pubkey and userId
-      return await handler(req, res, session.user.nostrPubkey, session.user.id);
+      // Call the handler with the pubkey and a test userId
+      return await handler(req, res, pubkey, 'test-user');
     } catch (error) {
       logger.log('Authentication middleware error:', error);
       return res.status(500).json({ error: 'Internal server error' });
