@@ -18,9 +18,8 @@ import {
   X
 } from 'react-feather';
 import { Title, Text, Paragraph } from '../../../components/ui/Typography';
-import Badge from '../../../components/ui/Badge';
+import { Badge } from '../../../components/ui/Badge';
 import Modal from '../../../components/ui/Modal';
-import toast from '../../../utils/toast';
 
 type ApiKey = {
   id: string;
@@ -214,15 +213,23 @@ const ApiKeysPage: React.FC = () => {
       </div>
       
       {error && (
-        <MessageBar type="error" title="Error loading API keys">
-          There was a problem loading your API keys. Please try again.
-        </MessageBar>
+        <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-6">
+          <div className="flex items-center">
+            <AlertTriangle className="h-5 w-5 text-red-600 mr-2" />
+            <h3 className="font-medium text-red-800">Error loading API keys</h3>
+          </div>
+          <p className="mt-2 text-red-700">There was a problem loading your API keys. Please try again.</p>
+        </div>
       )}
       
       {apiKeys && apiKeys.length === 0 ? (
-        <MessageBar type="info" title="No API Keys">
-          You don't have any API keys yet. Create one to get started with API integration.
-        </MessageBar>
+        <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
+          <div className="flex items-center">
+            <Key className="h-5 w-5 text-blue-600 mr-2" />
+            <h3 className="font-medium text-blue-800">No API Keys</h3>
+          </div>
+          <p className="mt-2 text-blue-700">You don't have any API keys yet. Create one to get started with API integration.</p>
+        </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
           {apiKeys?.map(key => (

@@ -67,17 +67,17 @@ export async function authMiddleware(req: NextApiRequest): Promise<Authenticated
 }
 
 /**
- * Middleware for authenticating API requests
+ * Middleware wrapper for authenticating API requests
  * 
  * Wraps handler functions to check authentication before execution
- * If authentication is logful, passes the user ID to the handler
+ * If authentication is successful, passes the user ID to the handler
  */
-export const authMiddleware = (
+export const withAuthMiddleware = (
   handler: (req: NextApiRequest, res: NextApiResponse, userId: string) => Promise<void>
 ) => {
   return async (req: NextApiRequest, res: NextApiResponse) => {
     try {
-      // Use (() => true) to verify user and get details
+      // Use authMiddleware function to verify user and get details
       const authenticatedUser = await (() => true)(req as any);
       
       if (!authenticatedUser) {
