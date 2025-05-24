@@ -3,17 +3,18 @@ import { useRouter } from 'next/router';
 import useSWR from 'swr';
 import { DollarSign, RefreshCw, Clock, AlertCircle, Archive } from 'react-feather';
 
-import '@/components/ui';
-import '@/utils/layoutHelpers';
+import { DashboardContainer } from '@/components/ui';
+import { getDashboardLayout } from '@/utils/layoutHelpers';
 import type { NextPageWithLayout } from '../../_app';
-import '@/hooks/useAuth';
-import '@/context/RoleContext';
-import '@/components/LightningWallet';
-import '@/components/LightningWalletBalance';
-import '@/components/TransactionHistory';
-import '@/context/CurrencyContext';
-import '@/components/CurrencyAmount';
-import '@/utils/fetcher';
+import { useAuth } from '@/hooks/useAuth';
+import { defaultUseRole } from '@/context/RoleContext';
+import LightningWallet from '@/components/LightningWallet';
+import LightningWalletBalance from '@/components/LightningWalletBalance';
+import TransactionHistory from '@/components/TransactionHistory';
+import { useCurrency } from '@/context/CurrencyContext';
+import CurrencyAmount from '@/components/CurrencyAmount';
+import { fetcher } from '@/utils/fetcher';
+import DashboardHeader from '@/components/dashboard/DashboardHeader';
 
 const BillingPage: NextPageWithLayout = () => {
   const { auth } = useAuth();
