@@ -8,6 +8,7 @@ import TransactionHistory from '../../components/TransactionHistory';
 import BitcoinIcon from '../../components/icons/BitcoinIcon';
 import BitcoinBadgeIcon from '../../components/icons/BitcoinBadgeIcon';
 import CurrencyAmount from '../../components/CurrencyAmount';
+import BitcoinConnectWallet from '../../components/BitcoinConnectWallet';
 import DashboardContainer from '../../components/ui/DashboardContainer';
 import DashboardHeader from '../../components/ui/DashboardHeader';
 import DashboardCard from '../../components/ui/DashboardCard';
