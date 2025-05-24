@@ -60,7 +60,7 @@ const BillingPage: NextPageWithLayout = () => {
   }, []);
   
   // Use the appropriate balance based on test mode
-  const walletBalance = isTestMode ? testModeBalance : (balanceData?.balance ?? 0 || 0);
+  const walletBalance = isTestMode ? testModeBalance : ((balanceData?.balance ?? 0) || 0);
   
   // Fetch transaction history with test mode detection 
   const { data: transactionsData, mutate: refreshTransactions, isLoading: transactionsLoading } = useSWR(
