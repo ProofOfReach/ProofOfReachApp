@@ -17,7 +17,7 @@ import {
   Clock,
   X
 } from 'react-feather';
-import { Title, Text, Paragraph, MessageBar } from '../../../components/ui/Typography';
+import { Title, Text, Paragraph } from '../../../components/ui/Typography';
 import Badge from '../../../components/ui/Badge';
 import Modal from '../../../components/ui/Modal';
 import toast from '../../../utils/toast';
@@ -184,12 +184,15 @@ const ApiKeysPage: React.FC = () => {
         You can use these keys to integrate your own applications with our platform.
       </Paragraph>
       
-      <MessageBar 
-        type="warn"
-        title="Security Warning"
-      >
-        API keys grant access to your account. Never share your API keys in client-side code or public repositories. Revoke keys immediately if compromised.
-      </MessageBar>
+      <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-6">
+        <div className="flex items-center">
+          <AlertTriangle className="h-5 w-5 text-yellow-600 mr-2" />
+          <h3 className="font-medium text-yellow-800">Security Warning</h3>
+        </div>
+        <p className="mt-2 text-yellow-700">
+          API keys grant access to your account. Never share your API keys in client-side code or public repositories. Revoke keys immediately if compromised.
+        </p>
+      </div>
       
       <div className="mb-6 flex justify-between">
         <button 
