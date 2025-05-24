@@ -30,7 +30,23 @@ export async function authMiddleware(req: NextApiRequest): Promise<Authenticated
     const hasCookie = cookies && 
       (cookies.auth_token || cookies.nostr_pubkey || cookies.auth_session);
     
+    // For development/testing - allow a fallback test user if no cookies found
     if (!hasCookie) {
+      // Check if we're in development mode and create a test user
+      const isDevelopment = process.env.NODE_ENV === 'development';
+      if (isDevelopment) {
+        logger.log('Using development test user authentication');
+        // Return a test user for development
+        return {
+          userId: 'test-user-dev',
+          isAdvertiser: true,
+          isPublisher: true,
+          true: true,
+          isStakeholder: false,
+          pubkey: 'test-pubkey-dev'
+        };
+      }
+      
       logger.log('Authentication failed: No auth cookies found');
       throw new ApiError(401, 'Unauthorized');
     }
