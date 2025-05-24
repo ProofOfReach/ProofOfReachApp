@@ -31,6 +31,7 @@ const WalletPage: NextPageWithLayout = () => {
   const [isDepositing, setIsDepositing] = useState(false);
   const [isWithdrawing, setIsWithdrawing] = useState(false);
   const [amount, setAmount] = useState('');
+  const [withdrawInvoice, setWithdrawInvoice] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
   const [processing, setProcessing] = useState(false);
@@ -298,6 +299,26 @@ const WalletPage: NextPageWithLayout = () => {
         <DashboardCard title="Withdraw Funds">
           <form onSubmit={handleWithdrawSubmit}>
             <div className="mb-4">
+              <label htmlFor="withdrawInvoice" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                {isTestMode ? 'Test Invoice (any text)' : 'Lightning Invoice'}
+              </label>
+              <textarea
+                id="withdrawInvoice"
+                rows={3}
+                value={withdrawInvoice}
+                onChange={(e) => setWithdrawInvoice(e.target.value)}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                placeholder={isTestMode ? "Any text is fine in test mode..." : "lnbc..."}
+                required
+              />
+              <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
+                {isTestMode ? 
+                  'In test mode, any text is accepted as a valid invoice' : 
+                  'Paste a Lightning invoice from your wallet'
+                }
+              </p>
+            </div>
+            <div className="mb-4">
               <label htmlFor="withdrawAmount" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 Amount (sats)
               </label>
@@ -349,9 +370,9 @@ const WalletPage: NextPageWithLayout = () => {
               </Button>
               <Button
                 type="submit"
-                disabled={processing || ((balanceData?.balance ?? 0) || 0) <= 0}
+                disabled={processing || !withdrawInvoice.trim() || !amount || parseFloat(amount) <= 0 || ((balanceData?.balance ?? 0) || 0) <= 0}
                 className={`bg-orange-600 hover:bg-orange-700 ${
-                  processing || ((balanceData?.balance ?? 0) || 0) <= 0 ? 'opacity-70 cursor-not-allowed' : ''
+                  processing || !withdrawInvoice.trim() || !amount || parseFloat(amount) <= 0 || ((balanceData?.balance ?? 0) || 0) <= 0 ? 'opacity-70 cursor-not-allowed' : ''
                 }`}
               >
                 {processing ? (
