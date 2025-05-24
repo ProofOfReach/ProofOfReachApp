@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import '@/lib/logger';
+import { logger } from '@/lib/logger';
 
 /**
  * Custom hook for managing test mode wallet balance
