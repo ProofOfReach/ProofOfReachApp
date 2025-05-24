@@ -78,7 +78,7 @@ export const withAuthMiddleware = (
   return async (req: NextApiRequest, res: NextApiResponse) => {
     try {
       // Use authMiddleware function to verify user and get details
-      const authenticatedUser = await (() => true)(req as any);
+      const authenticatedUser = await authMiddleware(req);
       
       if (!authenticatedUser) {
         logger.log('Authentication middleware: No user found');
