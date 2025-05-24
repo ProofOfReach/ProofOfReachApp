@@ -10,7 +10,7 @@ import BitcoinBadgeIcon from '../../components/icons/BitcoinBadgeIcon';
 import CurrencyAmount from '../../components/CurrencyAmount';
 import BitcoinConnectWallet from '../../components/BitcoinConnectWallet';
 import DashboardContainer from '../../components/ui/DashboardContainer';
-import DashboardHeader from '../../components/ui/DashboardHeader';
+import DashboardHeader from '../../components/dashboard/DashboardHeader';
 import DashboardCard from '../../components/ui/DashboardCard';
 import { Button } from '../../components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -244,13 +244,49 @@ const WalletPage: NextPageWithLayout = () => {
         </div>
       )}
       
-      {/* Balance Card */}
-      <DashboardCard>
-        <div className="mb-4 flex items-center">
-          <div className="rounded-full bg-orange-100 dark:bg-orange-900/30 p-3 mr-4">
-            <BitcoinIcon className="h-8 w-8 text-orange-600 dark:text-orange-400" />
-          </div>
-          <div>
+      {/* Modern Bitcoin Connect Wallet */}
+      <BitcoinConnectWallet
+        balance={isTestMode ? testWalletBalance : (balanceData?.balance ?? 0)}
+        isTestMode={isTestMode}
+        onSuccess={(message) => {
+          setSuccess(message);
+          setError(null);
+          refreshBalance();
+          refreshTransactions();
+        }}
+        onError={(message) => {
+          setError(message);
+          setSuccess(null);
+        }}
+        onBalanceUpdate={(newBalance) => {
+          if (isTestMode) {
+            updateTestBalance(newBalance);
+          } else {
+            refreshBalance();
+          }
+        }}
+      />
+
+      {/* Transaction History */}
+      <DashboardCard title="Transaction History">
+        {transactionsData?.transactions ? (
+          <TransactionHistory 
+            transactions={transactionsData.transactions} 
+            isLoading={transactionsLoading} 
+          />
+        ) : transactionsLoading ? (
+          <TransactionHistory transactions={[]} isLoading={true} />
+        ) : (
+          <p className="text-gray-600 dark:text-gray-400">No transactions yet.</p>
+        )}
+      </DashboardCard>
+    </DashboardContainer>
+  );
+};
+
+WalletPage.getLayout = getDashboardLayout;
+
+export default WalletPage;
             <h2 className="text-xl font-semibold text-gray-900 dark:text-white">Current Balance</h2>
             <p className="text-gray-600 dark:text-gray-400 text-sm">Available funds for all campaigns</p>
           </div>
