@@ -5,7 +5,7 @@
  * extending the EnhancedStorageService with TestMode-specific methods.
  */
 
-import '@/lib/logger';
+import { logger } from '@/lib/logger';
 import { 
   dispatchTestModeEvent, 
   TEST_MODE_EVENTS, 
@@ -13,7 +13,7 @@ import {
   notifyTestModeDeactivated
 } from '@/lib/events';
 import { EnhancedStorageService, STORAGE_KEYS, enhancedStorage } from './enhancedStorageService';
-import '@/context/RoleContext';
+import type { UserRole } from '@/types/auth';
 
 // Standard expiry time for test mode (1 hour)
 const TEST_MODE_EXPIRY_DURATION = 60 * 60 * 1000; // 1 hour in milliseconds
