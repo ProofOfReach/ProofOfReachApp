@@ -11,4 +11,7 @@ export type { TooltipProps } from './Tooltip';
 export { DataTable } from './DataTable';
 export type { DataTableProps, Column } from './DataTable';
 
+export { DashboardHeader } from './DashboardHeader';
+export type { DashboardHeaderProps } from './DashboardHeader';
+
 export { default as DashboardContainer } from './DashboardContainer';

@@ -1,6 +1,6 @@
 import React from 'react';
 
-interface DashboardHeaderProps {
+export interface DashboardHeaderProps {
   title: string | React.ReactNode;
   description?: string;
   icon?: React.ReactNode;

@@ -104,6 +104,10 @@ args = "Pre-Build Checks"
 task = "workflow.run"
 args = "Quick Type Check"
 
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Quick Build Check"
+
 [[workflows.workflow]]
 name = "Nostr Ad Marketplace Server"
 author = "agent"
@@ -290,6 +294,14 @@ author = "agent"
 [[workflows.workflow.tasks]]
 task = "shell.exec"
 args = "npx tsc --noEmit --maxNodeModuleJsDepth 0"
+
+[[workflows.workflow]]
+name = "Quick Build Check"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "npx tsc --noEmit --skipLibCheck"
 
 [deployment]
 run = ["sh", "-c", "npm install && npx prisma generate && npm run dev"]
