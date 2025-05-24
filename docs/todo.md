@@ -1,14 +1,36 @@
 # TODO: Remaining High-Level Work
 
+## CRITICAL: Production Build Blockers (Immediate Priority)
+
+### 1. Missing UI Component Library - 1,442 TypeScript Errors
+- [ ] **URGENT**: Implement or install missing UI components (Button, DataTable, Badge, Tooltip)
+- [ ] Replace all undefined component references with working alternatives
+- [ ] Choose between implementing full shadcn/ui library vs. simplified HTML components
+- [ ] Fix widespread import errors preventing production builds
+- [ ] Test production build process after component fixes
+
+### 2. Type Definition Conflicts
+- [ ] Fix UserRole type inconsistencies across 50+ files
+- [ ] Resolve access control capability mapping type errors
+- [ ] Fix EnhancedCapabilityMap missing property definitions
+- [ ] Clean up src/lib/api-utils.ts UserRole parameter type error
+
 ## Critical Runtime Errors (High Priority)
 
-### 1. RoleManager Dependency Issues
+### 3. Completed Fixes (Reference)
+- [x] Fixed campaigns API authentication to allow viewer access
+- [x] Resolved ImprovedDashboardLayout import error in proof-of-reach report
+- [x] Replaced broken proof-of-reach report with working simplified version
+- [x] Fixed duplicate import conflicts in Sidebar and EnhancedSidebar components
+- [x] Confirmed role switching functionality working in development
+
+### 4. RoleManager Dependency Issues
 - [ ] Fix `RoleManager is not defined` error in TestModeBanner component
 - [ ] Create proper RoleManager service or replace with simpler role validation
 - [ ] Update all components that reference RoleManager with working alternatives
 - [ ] Test role switching functionality without breaking the app
 
-### 2. Authentication System Fixes
+### 5. Authentication System Fixes
 - [ ] Fix `checkAuth is not a function` error in auth service
 - [ ] Resolve authentication flow issues preventing proper login/logout
 - [ ] Fix auth check errors showing in browser console
