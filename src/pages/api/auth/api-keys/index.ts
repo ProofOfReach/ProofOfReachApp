@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { prisma } from '../../../../lib/prismaClient';
-import { authMiddleware } from '../../../../utils/authMiddleware';
+import { withAuthMiddleware } from '../../../../utils/authMiddleware';
 import { error } from '../../../../lib/errorHandling';
 import crypto from 'crypto';
 
@@ -193,4 +193,4 @@ async function createApiKey(req: NextApiRequest, res: NextApiResponse, userId: s
   });
 }
 
-export default authMiddleware(handler);
+export default withAuthMiddleware(handler);
