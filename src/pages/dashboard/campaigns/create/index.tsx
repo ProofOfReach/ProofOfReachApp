@@ -629,28 +629,22 @@ const CreateCampaignPage: NextPageWithLayout = () => {
                   </div>
                 </div>
                 
-                {/* Fund Wallet Button */}
-                <div className="mt-1">
-                  {!showWalletFunding ? (
-                    <button
-                      type="button"
-                      onClick={() => setShowWalletFunding(true)}
-                      className="inline-flex items-center text-sm text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300"
-                    >
-                      <PlusCircle className="h-4 w-4 mr-1" /> 
-                      Fund Wallet
-                    </button>
-                  ) : (
-                    <button
-                      type="button"
-                      onClick={() => setShowWalletFunding(false)}
-                      className="inline-flex items-center text-sm text-red-600 dark:text-red-400 hover:text-red-800 dark:hover:text-red-300"
-                    >
-                      <AlertCircle className="h-4 w-4 mr-1" /> 
-                      Hide Funding
-                    </button>
-                  )}
-                </div>
+                {/* Funding Status Indicator */}
+                {(campaignFormData?.budget && campaignFormData.budget > 0) && (
+                  <div className="mt-2">
+                    {(walletBalance || 0) >= (campaignFormData?.budget || 0) ? (
+                      <div className="flex items-center text-sm text-green-600 dark:text-green-400">
+                        <CheckCircle className="h-4 w-4 mr-1" />
+                        Sufficient balance for campaign
+                      </div>
+                    ) : (
+                      <div className="flex items-center text-sm text-amber-600 dark:text-amber-400">
+                        <AlertCircle className="h-4 w-4 mr-1" />
+                        Campaign will be created as "Pending Funding"
+                      </div>
+                    )}
+                  </div>
+                )}
               </div>
               
               {/* Wallet Funding UI */}
