@@ -20,6 +20,7 @@ import {
 import { Title, Text, Paragraph } from '../../../components/ui/Typography';
 import { Badge } from '../../../components/ui/Badge';
 import Modal from '../../../components/ui/Modal';
+import MessageBar from '../../../components/ui/MessageBar';
 
 type ApiKey = {
   id: string;
