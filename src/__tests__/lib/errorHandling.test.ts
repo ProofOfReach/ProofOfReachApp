@@ -1,3 +1,4 @@
+import { logger } from "@/lib/logger";
 import { NextApiRequest, NextApiResponse } from 'next';
 import {
   ErrorType,

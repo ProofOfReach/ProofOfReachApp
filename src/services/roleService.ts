@@ -1,3 +1,4 @@
+import { ErrorCode } from "@/types/error";
 import { UserRole } from "@/types/role";
 import { prisma } from '../lib/prisma';
 import type { UserRole } from '../types/auth'; // Updated to use the new location

@@ -1,3 +1,4 @@
+import { ErrorCode } from "@/types/errors";
 /**
  * API Error Handling Utilities for Nostr Ad Marketplace
  * 
@@ -60,21 +61,7 @@ const errorTypeToStatusCode: Record<string, number> = {
  */
 const retryableStatusCodes: number[] = [408, 429, 500, 502, 503, 504];
 
-/**
- * Standard names for common error types
- */
-export enum ErrorCode {
-  VALIDATION_ERROR = 'VALIDATION_ERROR',
-  UNAUTHORIZED = 'UNAUTHORIZED',
-  FORBIDDEN = 'FORBIDDEN',
-  NOT_FOUND = 'NOT_FOUND',
-  RATE_LIMITED = 'RATE_LIMITED',
-  INTERNAL_ERROR = 'INTERNAL_ERROR',
-  BAD_REQUEST = 'BAD_REQUEST',
-  CONFLICT = 'CONFLICT',
-  SERVICE_UNAVAILABLE = 'SERVICE_UNAVAILABLE',
-  TIMEOUT = 'TIMEOUT'
-}
+
 
 /**
  * Suggested user actions for different error types

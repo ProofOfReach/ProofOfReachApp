@@ -1,3 +1,7 @@
+import { dispatchAppEvent } from "@/lib/events/eventDispatcher";
+import { RoleManager } from "@/services/roleManager";
+import { StorageService } from "@/services/storageService";
+import { logger } from "@/lib/logger";
 /**
  * TestModeService - Singleton service for test mode management
  * 

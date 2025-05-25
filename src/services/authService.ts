@@ -1,3 +1,4 @@
+import { ErrorCode } from "@/types/error";
 import { UserRole } from "@/types/role";
 import { useState, useEffect } from 'react';
 import type { UserRole } from '@/types/auth';
