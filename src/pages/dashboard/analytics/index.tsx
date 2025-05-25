@@ -275,69 +275,105 @@ const AdvertiserAnalyticsDashboard = ({ dateRange, loading }: { dateRange: UserR
             tooltipFormatter={(value: number, name: string) => [formatNumber(value), name || ""]}
           />
 
-          {/* Campaign Performance */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {/* Campaign Performance Table */}
-            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm overflow-hidden">
-              <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
+          {/* Campaign Performance - Full Width */}
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm overflow-hidden">
+            <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
+              <div className="flex justify-between items-center">
                 <h2 className="text-lg font-medium text-gray-900 dark:text-white">Campaign Performance</h2>
-              </div>
-              <div className="overflow-x-auto">
-                <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-                  <thead className="bg-gray-50 dark:bg-gray-700">
-                    <tr>
-                      <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                        Campaign
-                      </th>
-                      <th scope="col" className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                        Impressions
-                      </th>
-                      <th scope="col" className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                        Clicks
-                      </th>
-                      <th scope="col" className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                        CTR
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
-                    {campaignPerformance.map((campaign) => (
-                      <tr key={campaign.id} className="hover:bg-gray-50 dark:hover:bg-gray-700">
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          <div className="text-sm font-medium text-gray-900 dark:text-white">{campaign.name}</div>
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-right">
-                          <div className="text-sm text-gray-500 dark:text-gray-400">{formatNumber(campaign.impressions)}</div>
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-right">
-                          <div className="text-sm text-gray-500 dark:text-gray-400">{formatNumber(campaign.clicks)}</div>
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-right">
-                          <div className="text-sm text-gray-500 dark:text-gray-400">{campaign.ctr.toFixed(2)}%</div>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
+                <div className="text-xs text-gray-500 dark:text-gray-400">Click on a campaign for details</div>
               </div>
             </div>
-
-            {/* Campaign Performance Chart */}
-            <BarChart
-              title="Campaign Comparison"
-              subtitle="Impressions and clicks by campaign"
-              data={campaignPerformance.slice(0, 4)}
-              dataKeys={[
-                { key: 'impressions', name: 'Impressions', color: '#0088FE' },
-                { key: 'clicks', name: 'Clicks', color: '#00C49F' }
-              ]}
-              xAxisDataKey="name"
-              loading={loading}
-              error={null}
-              height={300}
-              tooltipFormatter={(value, name) => [formatNumber(value), name || ""]}
-            />
+            <div className="overflow-x-auto">
+              <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                <thead className="bg-gray-50 dark:bg-gray-700">
+                  <tr>
+                    <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                      Campaign
+                    </th>
+                    <th scope="col" className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                      Impressions
+                    </th>
+                    <th scope="col" className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                      Clicks
+                    </th>
+                    <th scope="col" className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                      CTR
+                    </th>
+                    <th scope="col" className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                      Spend
+                    </th>
+                    <th scope="col" className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                      CPC
+                    </th>
+                    <th scope="col" className="px-6 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                      Actions
+                    </th>
+                  </tr>
+                </thead>
+                <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                  {campaignPerformance.map((campaign) => (
+                    <tr 
+                      key={campaign.id} 
+                      className="hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer transition-colors"
+                      onClick={() => {
+                        // Navigate to campaign details page
+                        window.location.href = `/dashboard/campaigns/${campaign.id}`;
+                      }}
+                    >
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <div className="flex items-center">
+                          <div className="text-sm font-medium text-gray-900 dark:text-white">{campaign.name}</div>
+                          <div className="ml-2 text-xs text-blue-600 dark:text-blue-400">View Details →</div>
+                        </div>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-right">
+                        <div className="text-sm text-gray-500 dark:text-gray-400">{formatNumber(campaign.impressions)}</div>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-right">
+                        <div className="text-sm text-gray-500 dark:text-gray-400">{formatNumber(campaign.clicks)}</div>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-right">
+                        <div className="text-sm text-gray-500 dark:text-gray-400">{campaign.ctr.toFixed(2)}%</div>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-right">
+                        <div className="text-sm text-gray-500 dark:text-gray-400">{formatNumber(campaign.spend)} sats</div>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-right">
+                        <div className="text-sm text-gray-500 dark:text-gray-400">{(campaign.spend / campaign.clicks || 0).toFixed(0)} sats</div>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-center">
+                        <button 
+                          className="text-blue-600 hover:text-blue-900 dark:text-blue-400 dark:hover:text-blue-300 text-sm font-medium"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            window.location.href = `/dashboard/campaigns/${campaign.id}`;
+                          }}
+                        >
+                          View Details
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
+
+          {/* Campaign Performance Chart - Full Width */}
+          <BarChart
+            title="Campaign Comparison"
+            subtitle="Impressions and clicks by campaign"
+            data={campaignPerformance.slice(0, 6)}
+            dataKeys={[
+              { key: 'impressions', name: 'Impressions', color: '#0088FE' },
+              { key: 'clicks', name: 'Clicks', color: '#00C49F' }
+            ]}
+            xAxisDataKey="name"
+            loading={loading}
+            error={null}
+            height={400}
+            tooltipFormatter={(value, name) => [formatNumber(value), name || ""]}
+          />
           
           {/* Spend Distribution */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
