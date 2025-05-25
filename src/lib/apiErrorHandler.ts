@@ -239,7 +239,7 @@ export function handleApiRouteError(
         method: req.method,
         query: req.query,
         body: process.env.NODE_ENV !== 'production' ? sanitizeRequestBody(req.body) : '[REDACTED]',
-        headers: sanitizeHeaders(req.headers),
+        headers: sanitizeHeaders(req.headers as Record<string, unknown>),
         requestId
       }
     }
@@ -459,7 +459,7 @@ export function extractCorrelationId(req: NextApiRequest): string | undefined {
  * @param headers Request headers object
  * @returns Sanitized headers object
  */
-export function sanitizeHeaders(headers: Record<UserRole, unknown>): Record<UserRole, unknown> {
+export function sanitizeHeaders(headers: Record<string, unknown>): Record<string, unknown> {
   const sanitized = { ...headers };
   const sensitiveHeaderPatterns = [
     'authorization', 
@@ -476,7 +476,7 @@ export function sanitizeHeaders(headers: Record<UserRole, unknown>): Record<User
   
   for (const key of Object.keys(sanitized)) {
     if (sensitiveHeaderPatterns.some(pattern => key.toLowerCase().includes(pattern))) {
-      sanitized[key] = '[REDACTED]';
+      (sanitized as any)[key] = '[REDACTED]';
     }
   }
   

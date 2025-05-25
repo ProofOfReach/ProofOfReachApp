@@ -112,6 +112,10 @@ args = "Quick Build Check"
 task = "workflow.run"
 args = "Type Check Progress"
 
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Quick Type Check Final"
+
 [[workflows.workflow]]
 name = "Nostr Ad Marketplace Server"
 author = "agent"
@@ -314,6 +318,14 @@ author = "agent"
 [[workflows.workflow.tasks]]
 task = "shell.exec"
 args = "npx tsc --noEmit --skipLibCheck"
+
+[[workflows.workflow]]
+name = "Quick Type Check Final"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "npx tsc --noEmit --skipLibCheck 2>&1 | tail -20"
 
 [deployment]
 run = ["sh", "-c", "npm install && npx prisma generate && npm run dev"]
