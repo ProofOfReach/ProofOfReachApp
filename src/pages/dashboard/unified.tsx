@@ -1,3 +1,4 @@
+import { UserRole } from "@/types/role";
 import React, { useState, useEffect } from 'react';
 import { NextPage } from 'next';
 import { Home, ShoppingBag, Upload, Shield, Briefcase, User } from 'react-feather';

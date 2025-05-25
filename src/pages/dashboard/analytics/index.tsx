@@ -1,3 +1,4 @@
+import { UserRole } from "@/types/role";
 import React, { useState } from 'react';
 import ImprovedDashboardLayout from '@/components/layout/ImprovedDashboardLayout';
 import { defaultUseRole } from '@/context/RoleContext';

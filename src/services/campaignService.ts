@@ -1,3 +1,4 @@
+import { UserRole } from "@/types/role";
 import { Campaign, CampaignStatus } from '@prisma/client';
 import { prisma } from '../lib/prisma';
 import { throwApiError } from '../lib/errorHandling';

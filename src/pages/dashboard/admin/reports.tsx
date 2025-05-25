@@ -1,3 +1,4 @@
+import { UserRole } from "@/types/role";
 import React, { useState, useEffect } from 'react';
 import { PieChart, Calendar, Download, RefreshCw, Filter } from 'react-feather';
 import '@/components/layout/EnhancedDashboardLayout';

@@ -1,3 +1,4 @@
+import { UserRole } from "@/types/role";
 import { Ad, AdStatus } from '@prisma/client';
 import { prisma } from '../lib/prisma';
 import { throwDatabaseError, throwNotFoundError, throwApiError } from '../lib/errorHandling';

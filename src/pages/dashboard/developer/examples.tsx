@@ -1,3 +1,4 @@
+import { UserRole } from "@/types/role";
 import { useState, useRef } from 'react';
 import { Book, Code, Clipboard, Check, Copy, ExternalLink } from 'react-feather';
 import Link from 'next/link';
