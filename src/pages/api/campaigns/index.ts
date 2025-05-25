@@ -5,6 +5,7 @@ import { authMiddleware } from '../../../utils/enhancedAuthMiddleware';
 import { ApiError } from '../../../utils/apiError';
 import { logger } from '../../../lib/logger';
 import { enhancedAuthMiddleware } from '../../../utils/enhancedAuthMiddleware';
+import { isTestModeRequest, authorizeTestModeUser, logTestModeAccess } from '../../../lib/testModeAuth';
 
 export default apiHandler({
   // GET /api/campaigns - Get all campaigns for the authenticated user
@@ -85,12 +86,16 @@ export default apiHandler({
       return res.status(201).json(campaign);
     }
     
-    // For normal operation, check role access
-    // Allow test mode users to bypass role restrictions
-    const isTestUser = user.pubkey && user.pubkey.startsWith('pk_test_');
-    if (!isTestUser && (!user.currentRole || (user.currentRole !== 'advertiser' && user.currentRole !== 'admin'))) {
-      logger.warn(`User ${user.userId} with role ${user.currentRole} attempted to access advertiser-only endpoint`);
-      throw new ApiError(403, 'Forbidden: Advertiser role required');
+    // Check test mode first - test mode users can access all endpoints
+    if (isTestModeRequest(req, user.pubkey)) {
+      logTestModeAccess(user.pubkey, 'advertiser', '/api/campaigns');
+      // Test mode users can proceed with any role
+    } else {
+      // For normal operation, check role access
+      if (!user.currentRole || (user.currentRole !== 'advertiser' && user.currentRole !== 'admin')) {
+        logger.warn(`User ${user.userId} with role ${user.currentRole} attempted to access advertiser-only endpoint`);
+        throw new ApiError(403, 'Forbidden: Advertiser role required');
+      }
     }
     
     const campaignData: CreateCampaignDto = req.body;
