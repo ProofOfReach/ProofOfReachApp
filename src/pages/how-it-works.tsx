@@ -1,3 +1,4 @@
+import { UserRole } from "@/types/role";
 import React from 'react';
 import { ArrowRight, Globe, Shield, Zap } from 'react-feather';
 import Head from 'next/head';

@@ -1,3 +1,4 @@
+import { UserRole } from "@/types/role";
 import React, { useEffect, useState } from 'react';
 import { Loader, RefreshCw } from 'react-feather';
 import { useRouter } from 'next/router';

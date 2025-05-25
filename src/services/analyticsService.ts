@@ -1,3 +1,4 @@
+import { UserRole } from "@/types/role";
 // Analytics service for fetching data for charts and dashboards
 
 // Type definitions

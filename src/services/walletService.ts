@@ -1,3 +1,4 @@
+import { UserRole } from "@/types/role";
 import { TransactionType, User } from '@prisma/client';
 import { ApiError } from '../utils/apiError';
 import { prisma } from '../lib/prismaClient';

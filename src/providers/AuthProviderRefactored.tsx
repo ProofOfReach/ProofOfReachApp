@@ -1,3 +1,4 @@
+import { UserRole } from "@/types/role";
 import { ReactNode, useEffect, useState, useCallback, useRef } from 'react';
 import { AuthContext } from '../hooks/useAuthRefactored';
 import { AuthService } from '../services/authService';
