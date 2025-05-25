@@ -647,20 +647,36 @@ const CreateCampaignPage: NextPageWithLayout = () => {
                 )}
               </div>
               
-              {/* Wallet Funding UI */}
-              {showWalletFunding && (
-                <div className="mb-6 p-4 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm">
-                  <h3 className="text-md font-semibold mb-4 text-gray-900 dark:text-white">
-                    Fund Your Wallet
+              {/* Campaign Budget Information */}
+              {(campaignFormData?.budget && campaignFormData.budget > 0) && (
+                <div className="mb-6 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-700">
+                  <h3 className="text-sm font-medium text-blue-900 dark:text-blue-300 mb-2">
+                    Campaign Budget Summary
                   </h3>
-                  
-                  <SmartFundingFlow
-                    balance={walletBalance || 0}
-                    isTestMode={auth?.isTestMode || false}
-                    onSuccess={handleWalletSuccess}
-                    onError={handleWalletError}
-                    onBalanceUpdate={updateTestModeBalance}
-                  />
+                  <div className="space-y-2 text-sm">
+                    <div className="flex justify-between">
+                      <span className="text-gray-600 dark:text-gray-400">Campaign Budget:</span>
+                      <span className="font-medium text-gray-900 dark:text-white">
+                        <CurrencyAmount sats={campaignFormData.budget} />
+                      </span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-gray-600 dark:text-gray-400">Available Balance:</span>
+                      <span className="font-medium text-gray-900 dark:text-white">
+                        <CurrencyAmount sats={walletBalance || 0} />
+                      </span>
+                    </div>
+                    <div className="flex justify-between pt-2 border-t border-blue-200 dark:border-blue-700">
+                      <span className="text-gray-600 dark:text-gray-400">Status after creation:</span>
+                      <span className={`font-medium ${
+                        (walletBalance || 0) >= campaignFormData.budget 
+                          ? 'text-green-600 dark:text-green-400' 
+                          : 'text-amber-600 dark:text-amber-400'
+                      }`}>
+                        {(walletBalance || 0) >= campaignFormData.budget ? 'Ready to Launch' : 'Pending Funding'}
+                      </span>
+                    </div>
+                  </div>
                 </div>
               )}
               

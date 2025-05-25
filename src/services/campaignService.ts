@@ -36,11 +36,18 @@ export interface UpdateCampaignDto {
 // Campaign service methods
 export const campaignService = {
   /**
-   * Create a new campaign
+   * Create a new campaign with improved status management
    */
-  async createCampaign(advertiserId: UserRole, campaignData: CreateCampaignDto): Promise<Campaign> {
+  async createCampaign(advertiserId: UserRole, campaignData: CreateCampaignDto & { status?: string, walletBalance?: number }): Promise<Campaign> {
     // Check if we're in test mode (pubkey starts with pk_test_)
     const isTestMode = advertiserId.startsWith('pk_test_');
+    
+    // Determine initial status based on wallet balance
+    let initialStatus = campaignData.status || 'DRAFT';
+    if (campaignData.walletBalance !== undefined) {
+      const hasEnoughFunds = campaignData.walletBalance >= (campaignData?.budget ?? 0);
+      initialStatus = hasEnoughFunds ? 'DRAFT' : 'PENDING_FUNDING';
+    }
     
     if (isTestMode) {
       // In test mode, return a mock campaign with the provided data
@@ -55,7 +62,7 @@ export const campaignService = {
         endDate: campaignData.endDate || null,
         budget: campaignData?.budget ?? 0,
         dailyBudget: campaignData.dailyBudget || (campaignData?.budget ?? 0),
-        status: 'DRAFT',
+        status: initialStatus,
         targetLocation: campaignData.targetLocation || null,
         targetInterests: campaignData.targetInterests || null,
         targetAge: campaignData.targetAge || null,
@@ -65,10 +72,11 @@ export const campaignService = {
     }
     
     // Normal flow for non-test mode
+    const { walletBalance, ...cleanCampaignData } = campaignData;
     return prisma.campaign.create({
       data: {
-        ...campaignData,
-        status: 'DRAFT', // Default status for new campaigns
+        ...cleanCampaignData,
+        status: initialStatus,
         advertiserId,
       },
     });
