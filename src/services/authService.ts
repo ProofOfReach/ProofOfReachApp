@@ -540,6 +540,53 @@ export class AuthService {
   }
 
   /**
+   * Check current authentication status
+   * @returns The current authentication state or null if not authenticated
+   */
+  public async checkAuth(): Promise<AuthState | null> {
+    try {
+      // First check if we have local state
+      if (this._authState.isLoggedIn) {
+        return this._authState;
+      }
+      
+      // Check with the server
+      const response = await fetch('/api/auth/check');
+      const data = await response.json();
+      
+      if (data.authenticated && data.pubkey) {
+        // Update our local state based on server response
+        this.updateAuthState({
+          isLoggedIn: true,
+          pubkey: data.pubkey,
+          currentRole: data.currentRole || 'viewer',
+          availableRoles: data.availableRoles || ['viewer'],
+          isTestMode: data.isTestMode || false
+        });
+        
+        await this.persistToStorage();
+        return this._authState;
+      } else {
+        // Not authenticated, ensure local state reflects this
+        this.updateAuthState({
+          isLoggedIn: false,
+          pubkey: '',
+          currentRole: 'viewer',
+          availableRoles: [],
+          isTestMode: false
+        });
+        return null;
+      }
+    } catch (error) {
+      // Don't log empty errors to avoid console noise
+      if (error && Object.keys(error).length > 0) {
+        logger.log('Auth check error:', error);
+      }
+      return null;
+    }
+  }
+
+  /**
    * Refresh the user's available roles
    * @returns The updated available roles
    */
