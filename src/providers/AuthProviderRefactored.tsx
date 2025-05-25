@@ -1,4 +1,3 @@
-import { UserRole } from "@/types/role";
 import { ReactNode, useEffect, useState, useCallback, useRef } from 'react';
 import { AuthContext } from '../hooks/useAuthRefactored';
 import { AuthService } from '../services/authService';
@@ -20,7 +19,7 @@ export const AuthProviderRefactored: React.FC<AuthProviderProps> = ({ children }
   const [isLoading, setIsLoading] = useState<boolean>(true);
   
   // Use a ref to maintain a single instance of auth service to prevent recreation on renders
-  const authServiceRef = useRef<AuthService>(new AuthService());
+  const authServiceRef = useRef<AuthService>(AuthService.getInstance());
   
   /**
    * Function to check if the user has a specific role
