@@ -18,7 +18,7 @@ import SatsIcon from '../icons/SatsIcon';
 import BitcoinIcon from '../icons/BitcoinIcon';
 import CurrencyToggle from '../CurrencyToggle';
 import ExchangeRateDisplay from '../ExchangeRateDisplay';
-import TestModeBanner from '../TestModeBanner';
+import { TestModeBanner } from '../TestModeBanner';
 import TestModeDisabler from '../admin/TestModeDisabler';
 
 export interface ImprovedDashboardLayoutProps {
