@@ -8,6 +8,7 @@
  * Part of the Phase 6 TestMode modernization strategy.
  */
 
+import { UserRole } from '@/types/role';
 import '@/lib/logger';
 import '@/services/storageService';
 import '@/lib/events/eventDispatcher';

@@ -6,6 +6,7 @@
  * It builds upon the original StorageService but adds more robust features.
  */
 
+import { UserRole } from '@/types/role';
 import { logger } from '@/lib/logger';
 import { 
   dispatchConfigChanged, 

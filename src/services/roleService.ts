@@ -1,3 +1,4 @@
+import { UserRole } from "@/types/role";
 import { prisma } from '../lib/prisma';
 import type { UserRole } from '../types/auth'; // Updated to use the new location
 import { User } from '../types/prisma';

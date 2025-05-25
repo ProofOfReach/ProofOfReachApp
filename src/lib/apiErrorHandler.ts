@@ -157,7 +157,7 @@ export function handleApiRouteError(
     }
     // Handle authentication/authorization errors
     else if (error.name === 'UnauthorizedError') {
-      category = string.PERMISSIONS;
+      category = ErrorCategory.PERMISSIONS;
       statusCode = 401;
       userMessage = 'Authentication required';
       errorCode = ErrorCode.UNAUTHORIZED;
@@ -166,7 +166,7 @@ export function handleApiRouteError(
       retryable = false;   // Automatic retry won't help
     }
     else if (error.name === 'ForbiddenError') {
-      category = string.PERMISSIONS;
+      category = ErrorCategory.PERMISSIONS;
       statusCode = 403;
       userMessage = 'You do not have permission to perform this action';
       errorCode = ErrorCode.FORBIDDEN;
@@ -176,7 +176,7 @@ export function handleApiRouteError(
     }
     // Handle timeout errors
     else if (error.name === 'TimeoutError' || error.message.toLowerCase().includes('timeout')) {
-      category = string.OPERATIONAL;
+      category = ErrorCategory.OPERATIONAL;
       statusCode = 408;
       userMessage = 'The request timed out';
       errorCode = ErrorCode.TIMEOUT;
@@ -186,7 +186,7 @@ export function handleApiRouteError(
     }
     // Handle rate limiting errors
     else if (error.name === 'RateLimitError' || error.message.toLowerCase().includes('rate limit')) {
-      category = string.OPERATIONAL;
+      category = ErrorCategory.OPERATIONAL;
       statusCode = 429;
       userMessage = 'Too many requests. Please try again later.';
       errorCode = ErrorCode.RATE_LIMITED;
@@ -220,7 +220,7 @@ export function handleApiRouteError(
       if ((error as any).recoverable !== undefined) {
         recoverable = (error as any).recoverable;
       } else {
-        recoverable = retryable || category === string.USER_INPUT;
+        recoverable = retryable || category === ErrorCategory.USER_INPUT;
       }
       if ((error as any).suggestedAction) {
         suggestedAction = (error as any).suggestedAction;
@@ -241,7 +241,7 @@ export function handleApiRouteError(
     error instanceof Error ? error : String(error), 
     `${component}:${route}`,
     'api',
-    category === string.OPERATIONAL ? 'error' : 'warn',
+    category === ErrorCategory.OPERATIONAL ? 'error' : 'warn',
     {
       correlationId: correlationId as UserRole,
       category,
@@ -356,7 +356,7 @@ export function createUnauthorizedError(
 ): Error {
   const error = new Error(message);
   error.name = 'UnauthorizedError';
-  (error as any).category = string.PERMISSIONS;
+  (error as any).category = ErrorCategory.PERMISSIONS;
   (error as any).userFacing = true;
   (error as any).code = ErrorCode.UNAUTHORIZED;
   (error as any).retryable = false;
@@ -377,7 +377,7 @@ export function createForbiddenError(
 ): Error {
   const error = new Error(message);
   error.name = 'ForbiddenError';
-  (error as any).category = string.PERMISSIONS;
+  (error as any).category = ErrorCategory.PERMISSIONS;
   (error as any).userFacing = true;
   (error as any).code = ErrorCode.FORBIDDEN;
   (error as any).retryable = false;
@@ -405,7 +405,7 @@ export function createRateLimitedError(
 ): Error {
   const error = new Error(message);
   error.name = 'RateLimitError';
-  (error as any).category = string.OPERATIONAL;
+  (error as any).category = ErrorCategory.OPERATIONAL;
   (error as any).userFacing = true;
   (error as any).code = ErrorCode.RATE_LIMITED;
   (error as any).retryable = true;
@@ -434,7 +434,7 @@ export function createTimeoutError(
 ): Error {
   const error = new Error(message);
   error.name = 'TimeoutError';
-  (error as any).category = string.OPERATIONAL;
+  (error as any).category = ErrorCategory.OPERATIONAL;
   (error as any).userFacing = true;
   (error as any).code = ErrorCode.TIMEOUT;
   (error as any).retryable = true;
