@@ -10,7 +10,7 @@ import {
   ResponsiveContainer
 } from 'recharts';
 import ChartContainer from './ChartContainer';
-import '@/utils/chartHelpers';
+import { formatDate } from '@/utils/chartHelpers';
 
 interface DataKey {
   key: string;
