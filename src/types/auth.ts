@@ -1,4 +1,3 @@
-import { UserRole } from "@/types/role";
 /**
  * Authentication Types
  * 
@@ -9,7 +8,7 @@ import { UserRole } from "@/types/role";
 import type { UserRole } from './role';
 
 // Re-export for backwards compatibility (to be removed in future)
-export type UserRole = UserRole;
+export type { UserRole };
 
 /**
  * Authentication state

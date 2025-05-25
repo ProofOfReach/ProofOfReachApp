@@ -1,4 +1,3 @@
-import { UserRole } from "@/types/role";
 import { useState, useEffect } from 'react';
 import { logger } from '../lib/logger';
 import { AuthService } from '../services/authService';
