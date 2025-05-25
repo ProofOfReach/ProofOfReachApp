@@ -24,7 +24,7 @@ const ErrorInitializer: React.FC<ErrorInitializerProps> = ({
   disableWindowEvents = false,
   debug = false,
 }) => {
-  const errorState = useErrorState();
+  const { logError } = useErrorState();
   
   // Initialize error handling on mount
   useEffect(() => {
@@ -53,11 +53,9 @@ const ErrorInitializer: React.FC<ErrorInitializerProps> = ({
     const handleGlobalError = (event: ErrorEvent): void => {
       event.preventDefault();
       
-      errorState.log(
-        event.log || new Error(event.message),
-        'window.onerror',
-        'unknown', 
-        'error'
+      logError(
+        event.error || new Error(event.message),
+        'window.onerror'
       );
       
       if (debug) {
@@ -73,11 +71,9 @@ const ErrorInitializer: React.FC<ErrorInitializerProps> = ({
         ? event.reason 
         : new Error(String(event.reason));
       
-      errorState.log(
+      logError(
         error,
-        'unhandledrejection',
-        'unknown',
-        'error'
+        'unhandledrejection'
       );
       
       if (debug) {
@@ -98,7 +94,7 @@ const ErrorInitializer: React.FC<ErrorInitializerProps> = ({
         console.log('[ErrorInitializer] Cleaned up global error handlers');
       }
     };
-  }, [errorState, disableWindowEvents, debug]);
+  }, [logError, disableWindowEvents, debug]);
   
   // This component doesn't render anything
   return null;
