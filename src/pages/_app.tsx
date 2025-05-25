@@ -8,11 +8,13 @@
 import type { AppProps } from 'next/app';
 import { NextPage } from 'next';
 import { ReactElement, ReactNode } from 'react';
+import { QueryClientProvider } from '@tanstack/react-query';
 import { ErrorProvider } from '@/context/ErrorContext';
 import ErrorInitializer from '@/components/errors/ErrorInitializer';
 import ErrorBoundary from '@/components/ErrorBoundary';
 import { TestModeProvider } from '@/context/TestModeContext';
 import { AuthProviderRefactored } from '@/providers/AuthProviderRefactored';
+import { queryClient } from '@/lib/queryClient';
 import '@/styles/globals.css';
 
 // Define types for pages with layouts
@@ -32,20 +34,22 @@ export default function MyApp({ Component, pageProps }: AppPropsWithLayout) {
   const getLayout = Component.getLayout || ((page) => page);
 
   return (
-    <ErrorBoundary>
-      <ErrorProvider>
-        {/* Initialize error handling system */}
-        <ErrorInitializer />
-        
-        {/* Wrap with Auth provider for access to authentication */}
-        <AuthProviderRefactored>
-          {/* Wrap with TestModeProvider for app-wide availability */}
-          <TestModeProvider>
-            {/* Apply page-specific layout */}
-            {getLayout(<Component {...pageProps} />)}
-          </TestModeProvider>
-        </AuthProviderRefactored>
-      </ErrorProvider>
-    </ErrorBoundary>
+    <QueryClientProvider client={queryClient}>
+      <ErrorBoundary>
+        <ErrorProvider>
+          {/* Initialize error handling system */}
+          <ErrorInitializer />
+          
+          {/* Wrap with Auth provider for access to authentication */}
+          <AuthProviderRefactored>
+            {/* Wrap with TestModeProvider for app-wide availability */}
+            <TestModeProvider>
+              {/* Apply page-specific layout */}
+              {getLayout(<Component {...pageProps} />)}
+            </TestModeProvider>
+          </AuthProviderRefactored>
+        </ErrorProvider>
+      </ErrorBoundary>
+    </QueryClientProvider>
   );
 }

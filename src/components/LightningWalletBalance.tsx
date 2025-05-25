@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { DollarSign, AlertCircle } from 'react-feather';
 import CurrencyAmount from './CurrencyAmount';
 import { useTestMode } from '@/context/TestModeContext';
 import { useTestWallet } from '@/hooks/useTestWallet';
+import { useWalletBalance } from '@/hooks/queries/useWalletBalance';
 
 interface LightningWalletBalanceProps {
   compact?: boolean;
@@ -29,93 +30,25 @@ const LightningWalletBalance: React.FC<LightningWalletBalanceProps> = ({
   const { isTestMode } = useTestMode();
   const { balance: testWalletBalance } = useTestWallet();
   
-  // Force the component to update when testWalletBalance changes
-  useEffect(() => {
-    if (isTestMode) {
-      setBalance(testWalletBalance);
-    }
-  }, [testWalletBalance, isTestMode]);
-  
-  const [balance, setBalance] = useState<number | null>(sats !== undefined ? sats : null);
-  const [isLoading, setIsLoading] = useState(externalIsLoading !== undefined ? externalIsLoading : true);
-  const [error, setError] = useState<string | null>(null);
+  // Use React Query for wallet balance when not using external data
+  const {
+    data: walletData,
+    isLoading: isQueryLoading,
+    error: queryError,
+  } = useWalletBalance({
+    enabled: !skipFetch && sats === undefined && !isTestMode
+  });
 
-  const fetchBalance = async () => {
-    // Skip fetch if balance was provided externally or skipFetch flag is set
-    if (skipFetch || sats !== undefined) {
-      setIsLoading(false);
-      return;
-    }
-
-    setIsLoading(true);
-    setError(null);
-
-    try {
-      // Use the test wallet balance if in test mode
-      if (isTestMode) {
-        // Make sure we're getting the latest value from localStorage
-        const storedBalance = localStorage.getItem('testWalletBalance');
-        const latestBalance = storedBalance ? parseInt(storedBalance, 10) : testWalletBalance;
-        
-        console.log('Test mode active, using wallet balance:', latestBalance);
-        setBalance(latestBalance);
-        setIsLoading(false);
-        return;
-      }
-
-      // Make API call to fetch wallet balance
-      const response = await fetch('/api/wallet', {
-        headers: {
-          'Cache-Control': 'no-cache',
-        },
-        credentials: 'include'
-      });
-      
-      // Handle 401 by falling back to test mode
-      if (response.status === 401) {
-        console.log('Unauthorized error when fetching wallet balance, falling back to test balance');
-        if (typeof localStorage !== 'undefined') {
-          localStorage.setItem('isTestMode', 'true');
-        }
-        // Use the testWalletBalance from our hook instead of a hardcoded value
-        setBalance(testWalletBalance);
-        setIsLoading(false);
-        return;
-      }
-      
-      if (!response.ok) {
-        throw new Error(`Error: ${response.status} ${response.statusText}`);
-      }
-      
-      const data = await response.json();
-      setBalance(data?.balance ?? 0);
-    } catch (err) {
-      console.log('Error fetching wallet balance:', err);
-      setError('Failed to fetch wallet balance');
-      // Set balance to 0 when error occurs - don't use placeholder values
-      setBalance(0);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  // Effect to update state if external balance changes
-  useEffect(() => {
-    if (sats !== undefined) {
-      setBalance(sats);
-    }
-  }, [sats]);
-
-  // Effect to update loading state if external loading state changes
-  useEffect(() => {
-    if (externalIsLoading !== undefined) {
-      setIsLoading(externalIsLoading);
-    }
-  }, [externalIsLoading]);
-
-  useEffect(() => {
-    fetchBalance();
-  }, [skipFetch]);
+  // Determine the actual values to use
+  const balance = sats !== undefined ? sats : 
+                 isTestMode ? testWalletBalance : 
+                 walletData?.balance ?? 0;
+                 
+  const isLoading = externalIsLoading !== undefined ? externalIsLoading : 
+                   (isTestMode || sats !== undefined) ? false : 
+                   isQueryLoading;
+                   
+  const error = queryError ? 'Failed to fetch wallet balance' : null;
 
   if (compact) {
     return (
