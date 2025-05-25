@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { AlertCircle, Zap, CreditCard, ArrowRight, CheckCircle } from 'react-feather';
-import { init, launchModal, requestProvider } from '@getalby/bitcoin-connect';
+import dynamic from 'next/dynamic';
 import CurrencyAmount from './CurrencyAmount';
 import { Button } from './ui/Button';
 
@@ -29,18 +29,29 @@ const SmartFundingFlow: React.FC<SmartFundingFlowProps> = ({
   const shortfall = Math.max(0, requiredAmount - currentBalance);
 
   useEffect(() => {
-    // Initialize Bitcoin Connect
-    if (!isTestMode) {
-      init({
-        appName: 'Nostr Ad Marketplace',
-        showBalance: false,
-      });
-      checkConnection();
+    // Initialize Bitcoin Connect only on client side
+    if (typeof window !== 'undefined' && !isTestMode) {
+      const initBitcoinConnect = async () => {
+        try {
+          const { init, requestProvider } = await import('@getalby/bitcoin-connect');
+          init({
+            appName: 'Nostr Ad Marketplace',
+            showBalance: false,
+          });
+          checkConnection();
+        } catch (error) {
+          console.error('Failed to initialize Bitcoin Connect:', error);
+        }
+      };
+      initBitcoinConnect();
     }
   }, [isTestMode]);
 
   const checkConnection = async () => {
+    if (typeof window === 'undefined') return;
+    
     try {
+      const { requestProvider } = await import('@getalby/bitcoin-connect');
       const provider = await requestProvider();
       if (provider) {
         setIsConnected(true);
@@ -65,13 +76,16 @@ const SmartFundingFlow: React.FC<SmartFundingFlowProps> = ({
         return;
       }
 
-      launchModal();
-      
-      // Check connection after modal
-      setTimeout(() => {
-        checkConnection();
-        setIsConnecting(false);
-      }, 1000);
+      if (typeof window !== 'undefined') {
+        const { launchModal } = await import('@getalby/bitcoin-connect');
+        launchModal();
+        
+        // Check connection after modal
+        setTimeout(() => {
+          checkConnection();
+          setIsConnecting(false);
+        }, 1000);
+      }
     } catch (error) {
       setIsConnecting(false);
     }
@@ -90,6 +104,11 @@ const SmartFundingFlow: React.FC<SmartFundingFlowProps> = ({
         return;
       }
 
+      if (typeof window === 'undefined') {
+        throw new Error('Client-side only feature');
+      }
+      
+      const { requestProvider } = await import('@getalby/bitcoin-connect');
       const provider = await requestProvider();
       if (!provider) {
         throw new Error('No wallet connected');

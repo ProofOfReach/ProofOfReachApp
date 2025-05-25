@@ -10,7 +10,11 @@ import { useCurrency } from '@/context/CurrencyContext';
 import { DashboardContainer, DashboardHeader } from '@/components/ui';
 import CurrencyAmount from '@/components/CurrencyAmount';
 import LightningWallet from '@/components/LightningWallet';
-import SmartFundingFlow from '@/components/SmartFundingFlow';
+// Dynamic import to prevent SSR issues with Bitcoin Connect
+const SmartFundingFlow = dynamic(() => import('@/components/SmartFundingFlow'), {
+  ssr: false,
+  loading: () => <div className="animate-pulse bg-gray-200 dark:bg-gray-700 rounded-lg h-32"></div>
+});
 import { getDashboardLayout } from '@/utils/layoutHelpers';
 import '@/components/layout/ImprovedDashboardLayout';
 import '@/components/CurrencyAmount';
