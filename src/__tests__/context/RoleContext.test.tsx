@@ -1,7 +1,6 @@
 import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { RoleProvider, defaultUseRole, UserRole } from '../../context/RoleContext';
-import type { UserRole } from '../../types/role';
 import { AuthContext } from '../../hooks/useAuth';
 import { RoleProviderRefactored } from '../../context/NewRoleContextRefactored';
 import { AuthProvider } from '../../context/AuthContext';

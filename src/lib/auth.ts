@@ -1,3 +1,4 @@
+import { UserRole } from "@/types/role";
 import { NextApiRequest, NextApiResponse } from 'next';
 import { getCookie, setCookie, deleteCookie, CookieValueTypes } from 'cookies-next';
 import { prisma } from './prismaClient';

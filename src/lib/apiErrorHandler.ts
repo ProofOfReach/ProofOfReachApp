@@ -96,7 +96,7 @@ export function handleApiRouteError(
   // Extract or generate correlation ID for request tracing
   const correlationId = extractCorrelationId(req) || 
                        (error && typeof error === 'object' && 'correlationId' in error) ? 
-                       (error as Record<UserRole, unknown>).correlationId : 
+                       (error as Record<string, unknown>).correlationId : 
                        uuidv4();
 
   // Generate a unique request ID if not already present
@@ -193,7 +193,7 @@ export function handleApiRouteError(
       if ((error as any).code) {
         errorCode = (error as any).code;
         if (errorCode in suggestedActions) {
-          suggestedAction = suggestedActions[errorCode as anyCode];
+          suggestedAction = suggestedActions[errorCode as ErrorCode];
         }
       }
       if ((error as any).details) {

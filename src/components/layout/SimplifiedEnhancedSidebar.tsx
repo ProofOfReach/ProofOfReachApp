@@ -1,3 +1,4 @@
+import { UserRole } from "@/types/role";
 import React, { useState, useRef, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { ChevronDown, X, Menu } from 'react-feather';

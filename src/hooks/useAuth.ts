@@ -1,3 +1,4 @@
+import { UserRole } from "@/types/role";
 import { useState, useEffect, createContext, useContext } from 'react';
 import UserManager from '../models/user';
 import type { UserRole } from '../context/RoleContext';
