@@ -67,29 +67,10 @@ export default apiHandler({
   POST: async (req: NextApiRequest, res: NextApiResponse) => {
     const user = await enhancedAuthMiddleware(req as any);
     
-    // Check for test mode
-    const isTestMode = user.isTestMode || (user.pubkey && user.pubkey.startsWith('pk_test_'));
-    
-    if (isTestMode) {
-      logger.info(`Test mode detected for user ${user.pubkey || user.userId}, creating test campaign`);
-      
-      const campaignData: CreateCampaignDto = req.body;
-      
-      // Validate required fields
-      if (!campaignData.name || !campaignData.startDate || !(campaignData?.budget ?? 0)) {
-        throw new ApiError(400, 'Missing required fields: name, startDate, budget');
-      }
-      
-      // Create the campaign using test user ID
-      const campaign = await campaignService.createCampaign(user.pubkey || user.userId, campaignData);
-      
-      return res.status(201).json(campaign);
-    }
-    
     // Check test mode first - test mode users can access all endpoints
     if (isTestModeRequest(req, user.pubkey)) {
       logTestModeAccess(user.pubkey, 'advertiser', '/api/campaigns');
-      // Test mode users can proceed with any role
+      // Test mode users can proceed with any role - no further checks needed
     } else {
       // For normal operation, check role access
       if (!user.currentRole || (user.currentRole !== 'advertiser' && user.currentRole !== 'admin')) {

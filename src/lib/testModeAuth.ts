@@ -28,11 +28,16 @@ export interface TestModeUser {
  */
 export function isTestModeRequest(req: NextApiRequest, userPubkey?: string): boolean {
   // Check for test mode indicators
-  const testModeHeader = req.headers['x-test-mode'] === 'true';
   const testPubkey = userPubkey && userPubkey.startsWith('pk_test_');
   const isDevelopment = process.env.NODE_ENV === 'development';
   
-  return (testModeHeader || testPubkey) && isDevelopment;
+  // In development, always treat test pubkeys as test mode
+  if (isDevelopment && testPubkey) {
+    console.log(`[TEST MODE] Detected test user: ${userPubkey}`);
+    return true;
+  }
+  
+  return false;
 }
 
 /**
