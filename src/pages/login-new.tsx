@@ -1,3 +1,4 @@
+import { UserRole } from "@/types/role";
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { useAuthSwitch } from '../hooks/useAuthSwitch';

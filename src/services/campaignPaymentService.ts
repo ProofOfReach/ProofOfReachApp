@@ -1,3 +1,4 @@
+import { UserRole } from "@/types/role";
 import { Campaign, TransactionType } from '@prisma/client';
 import { ApiError } from '../utils/apiError';
 import { walletService } from './walletService';

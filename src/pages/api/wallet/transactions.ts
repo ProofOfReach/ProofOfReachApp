@@ -1,3 +1,4 @@
+import { UserRole } from "@/types/role";
 import { NextApiRequest, NextApiResponse } from 'next';
 import { walletService } from '../../../services/walletService';
 import { ApiError } from '../../../utils/apiError';
