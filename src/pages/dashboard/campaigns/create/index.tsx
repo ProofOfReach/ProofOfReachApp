@@ -5,10 +5,12 @@ import { useRouter } from 'next/router';
 import { ArrowLeft, Calendar, Target, DollarSign, Clock, AlertCircle, CheckCircle, Volume2, Layers, PlusCircle } from 'react-feather';
 import Link from 'next/link';
 import dynamic from 'next/dynamic';
-import '@/hooks/useAuth';
-
-import '@/components/ui';
-import '@/utils/layoutHelpers';
+import { useAuth } from '@/hooks/useAuth';
+import { useCurrency } from '@/context/CurrencyContext';
+import { DashboardContainer, DashboardHeader } from '@/components/ui';
+import CurrencyAmount from '@/components/CurrencyAmount';
+import LightningWallet from '@/components/LightningWallet';
+import { getDashboardLayout } from '@/utils/layoutHelpers';
 import '@/components/layout/ImprovedDashboardLayout';
 import '@/components/CurrencyAmount';
 import '@/context/CurrencyContext';
