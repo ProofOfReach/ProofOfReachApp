@@ -1,3 +1,4 @@
+import { UserRole } from "@/types/role";
 /**
  * User Profile API Endpoint
  * 

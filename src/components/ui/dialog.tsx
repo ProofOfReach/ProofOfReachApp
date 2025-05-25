@@ -1,3 +1,4 @@
+import { UserRole } from "@/types/role";
 import * as React from "react"
 import { X } from "react-feather"
 

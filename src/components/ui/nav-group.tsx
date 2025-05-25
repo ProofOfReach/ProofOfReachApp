@@ -1,3 +1,4 @@
+import { UserRole } from "@/types/role";
 import React from 'react';
 import { NavigationMenuList, NavigationMenuItem, NavigationMenuNextLink } from './navigation-menu';
 import '@/lib/utils';
