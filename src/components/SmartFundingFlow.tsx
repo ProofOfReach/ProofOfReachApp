@@ -28,24 +28,7 @@ const SmartFundingFlow: React.FC<SmartFundingFlowProps> = ({
 
   const shortfall = Math.max(0, requiredAmount - currentBalance);
 
-  useEffect(() => {
-    // Initialize Bitcoin Connect only on client side
-    if (typeof window !== 'undefined' && !isTestMode) {
-      const initBitcoinConnect = async () => {
-        try {
-          const { init, requestProvider } = await import('@getalby/bitcoin-connect');
-          init({
-            appName: 'Nostr Ad Marketplace',
-            showBalance: false,
-          });
-          checkConnection();
-        } catch (error) {
-          console.error('Failed to initialize Bitcoin Connect:', error);
-        }
-      };
-      initBitcoinConnect();
-    }
-  }, [isTestMode]);
+  // Remove automatic initialization - only initialize when user clicks connect
 
   const checkConnection = async () => {
     if (typeof window === 'undefined') return;
@@ -77,7 +60,13 @@ const SmartFundingFlow: React.FC<SmartFundingFlowProps> = ({
       }
 
       if (typeof window !== 'undefined') {
-        const { launchModal } = await import('@getalby/bitcoin-connect');
+        // Initialize Bitcoin Connect only when user clicks connect
+        const { init, launchModal } = await import('@getalby/bitcoin-connect');
+        init({
+          appName: 'Nostr Ad Marketplace',
+          showBalance: false,
+        });
+        
         launchModal();
         
         // Check connection after modal
