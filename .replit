@@ -116,10 +116,6 @@ args = "Type Check Progress"
 task = "workflow.run"
 args = "Quick Type Check Final"
 
-[[workflows.workflow.tasks]]
-task = "workflow.run"
-args = "Main Server"
-
 [[workflows.workflow]]
 name = "Nostr Ad Marketplace Server"
 author = "agent"
@@ -330,15 +326,6 @@ author = "agent"
 [[workflows.workflow.tasks]]
 task = "shell.exec"
 args = "npx tsc --noEmit --skipLibCheck 2>&1 | tail -20"
-
-[[workflows.workflow]]
-name = "Main Server"
-author = "agent"
-
-[[workflows.workflow.tasks]]
-task = "shell.exec"
-args = "NODE_OPTIONS='--no-warnings' npx next dev -p 5000 -H 0.0.0.0"
-waitForPort = 5000
 
 [deployment]
 run = ["sh", "-c", "npm install && npx prisma generate && npm run dev"]

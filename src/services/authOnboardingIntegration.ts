@@ -1,9 +1,6 @@
 import { UserRole } from "@/types/role";
-import type { UserRole } from '@prisma/client';
 import { v4 as uuidv4 } from 'uuid';
 import { logger } from '../lib/logger';
-
-import type { UserRole } from './authService';
 
 /**
  * Integration point between authentication and onboarding flows

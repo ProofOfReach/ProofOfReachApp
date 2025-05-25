@@ -2,7 +2,6 @@ import { UserRole } from "@/types/role";
 import { useState, useEffect } from 'react';
 import { getSimplifiedDashboardLayout } from '../../components/layout/SimplifiedDashboardLayout';
 import { useLocalRole } from '../../hooks/useLocalRole';
-import type { UserRole } from '../../context/RoleContext';
 
 /**
  * Main dashboard page using the simplified role switching approach
