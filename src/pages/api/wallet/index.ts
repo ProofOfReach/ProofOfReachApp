@@ -1,3 +1,4 @@
+import { UserRole } from "@/types/role";
 import { NextApiRequest, NextApiResponse } from 'next';
 import { prisma } from '@/lib/prismaClient';
 import { logger } from '@/lib/logger';

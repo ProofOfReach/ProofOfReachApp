@@ -1,3 +1,4 @@
+import { UserRole } from "@/types/role";
 import React, { useState, useEffect } from 'react';
 import { Bell, Search, Filter, CheckCircle, XCircle, EyeOff } from 'react-feather';
 import '@/components/layout/EnhancedDashboardLayout';

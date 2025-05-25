@@ -1,3 +1,4 @@
+import { UserRole } from "@/types/role";
 import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/router';
 import useSWR from 'swr';

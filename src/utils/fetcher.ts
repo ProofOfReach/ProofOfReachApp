@@ -1,3 +1,4 @@
+import { UserRole } from "@/types/role";
 /**
  * Utility function for fetching data from APIs with error handling
  */

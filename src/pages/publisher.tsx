@@ -1,3 +1,4 @@
+import { UserRole } from "@/types/role";
 import React from 'react';
 import { BarChart2, Zap, Target, Settings } from 'react-feather';
 import Head from 'next/head';

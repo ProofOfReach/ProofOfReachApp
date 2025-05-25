@@ -1,3 +1,4 @@
+import { UserRole } from "@/types/role";
 import React, { useEffect, useState, ReactElement } from 'react';
 import { useRouter } from 'next/router';
 import Layout from '../components/Layout';

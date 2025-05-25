@@ -1,3 +1,4 @@
+import { UserRole } from "@/types/role";
 import { NextApiRequest, NextApiResponse } from 'next';
 import { AuthService } from '../services/authService';
 import { ApiError } from './apiError';

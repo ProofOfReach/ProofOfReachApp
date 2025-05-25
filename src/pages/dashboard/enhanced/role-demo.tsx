@@ -1,3 +1,4 @@
+import { UserRole } from "@/types/role";
 import React from 'react';
 import '@/context/EnhancedRoleContext';
 import '@/components/role';

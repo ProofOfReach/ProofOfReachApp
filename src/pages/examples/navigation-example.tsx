@@ -1,3 +1,4 @@
+import { UserRole } from "@/types/role";
 import React from 'react';
 import Head from 'next/head';
 import '@/components/layout/SimplifiedEnhancedSidebar';

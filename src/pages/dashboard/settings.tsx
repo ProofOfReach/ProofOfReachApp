@@ -1,3 +1,4 @@
+import { UserRole } from "@/types/role";
 import React, { useEffect, useState } from 'react';
 import { useAuth } from '../../hooks/useAuth';
 import { getDashboardLayout } from '@/utils/layoutHelpers';

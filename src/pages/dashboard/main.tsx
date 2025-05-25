@@ -1,3 +1,4 @@
+import { UserRole } from "@/types/role";
 import { useState, useEffect } from 'react';
 import { getSimplifiedDashboardLayout } from '../../components/layout/SimplifiedDashboardLayout';
 import { useLocalRole } from '../../hooks/useLocalRole';

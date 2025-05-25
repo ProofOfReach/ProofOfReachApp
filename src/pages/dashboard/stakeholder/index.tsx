@@ -1,3 +1,4 @@
+import { UserRole } from "@/types/role";
 import React, { useEffect } from 'react';
 import { ChevronRight, DollarSign, PieChart, Users } from 'react-feather';
 import { defaultUseRole } from '../../../context/RoleContext';

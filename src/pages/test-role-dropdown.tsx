@@ -1,3 +1,4 @@
+import { UserRole } from "@/types/role";
 import React, { useEffect } from 'react';
 import Head from 'next/head';
 import Script from 'next/script';

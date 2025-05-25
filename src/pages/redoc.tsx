@@ -1,3 +1,4 @@
+import { UserRole } from "@/types/role";
 import React, { useState, useEffect } from 'react';
 import { GetStaticProps } from 'next';
 import { getExtendedOpenApiSpec } from '../lib/extendedOpenapi';

@@ -1,3 +1,4 @@
+import { UserRole } from "@/types/role";
 import React from 'react';
 import { NextPageWithLayout } from '../_app';
 import '@/hooks/useAuth';

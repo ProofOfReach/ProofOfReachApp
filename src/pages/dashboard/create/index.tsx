@@ -1,3 +1,4 @@
+import { UserRole } from "@/types/role";
 import { useEffect } from 'react';
 import { useRouter } from 'next/router';
 import '@/pages/_app';

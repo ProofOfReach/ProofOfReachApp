@@ -1,3 +1,4 @@
+import { UserRole } from "@/types/role";
 import { NextPage } from 'next';
 import '@/components/layout/ImprovedDashboardLayout';
 import '@/components/dashboards/ViewerDashboard';
