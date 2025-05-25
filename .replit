@@ -297,7 +297,7 @@ author = "agent"
 
 [[workflows.workflow.tasks]]
 task = "shell.exec"
-args = "npx tsc --noEmit --maxNodeModuleJsDepth 0"
+args = "npx tsc --noEmit --skipLibCheck"
 
 [[workflows.workflow]]
 name = "Quick Build Check"

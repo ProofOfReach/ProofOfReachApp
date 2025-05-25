@@ -13,9 +13,19 @@
  */
 
 import { NextApiRequest, NextApiResponse } from 'next';
-
+import { UserRole } from '@/types/role';
 import '@/types/errors';
 import { v4 as uuidv4 } from 'uuid';
+
+// Error category constants
+const ErrorCategory = {
+  OPERATIONAL: 'operational',
+  BUSINESS: 'business', 
+  VALIDATION: 'validation',
+  EXTERNAL: 'external',
+  PERMISSIONS: 'permissions',
+  USER_INPUT: 'user_input'
+} as const;
 
 /**
  * Standard API error response format
@@ -137,7 +147,7 @@ export function handleApiRouteError(
     }
     // Handle not found errors
     else if (error.name === 'NotFoundError') {
-      category = string.EXTERNAL;
+      category = ErrorCategory.EXTERNAL;
       statusCode = 404;
       userMessage = error.message;
       errorCode = ErrorCode.NOT_FOUND;
