@@ -37,15 +37,12 @@ export interface ApiErrorResponse {
 /**
  * Maps error types to HTTP status codes
  */
-const errorTypeToStatusCode: Record<UserRole, number> = {
-  [string.USER_INPUT]: 400,
-  [string.PERMISSIONS]: 403,
-  [string.EXTERNAL]: 404,
-  [string.OPERATIONAL]: 500,
-  [string.TECHNICAL]: 500,
-  [string.CONFIGURATION]: 422,
-  [string.NETWORK]: 503,
-  [string.UNKNOWN]: 500
+const errorTypeToStatusCode: Record<string, number> = {
+  'validation': 400,
+  'business': 403,
+  'network': 404,
+  'technical': 500,
+  'unexpected': 500
 };
 
 /**

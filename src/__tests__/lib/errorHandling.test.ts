@@ -7,7 +7,6 @@ import {
   databaseError,
   error,
   externalError,
-  error,
   mapError,
   notFoundError,
   nostrError,
