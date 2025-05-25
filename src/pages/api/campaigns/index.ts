@@ -5,7 +5,7 @@ import { authMiddleware } from '../../../utils/enhancedAuthMiddleware';
 import { ApiError } from '../../../utils/apiError';
 import { logger } from '../../../lib/logger';
 import { enhancedAuthMiddleware } from '../../../utils/enhancedAuthMiddleware';
-import { isTestModeRequest, authorizeTestModeUser, logTestModeAccess } from '../../../lib/testModeAuth';
+import { isTestModeRequest, logTestModeAccess } from '../../../lib/unifiedTestMode';
 
 export default apiHandler({
   // GET /api/campaigns - Get all campaigns for the authenticated user
@@ -68,9 +68,11 @@ export default apiHandler({
     const user = await enhancedAuthMiddleware(req as any);
     
     // Check test mode first - test mode users can access all endpoints
-    if (isTestModeRequest(req, user.pubkey)) {
+    const isTestMode = isTestModeRequest(req, user.pubkey);
+    
+    if (isTestMode) {
       logTestModeAccess(user.pubkey, 'advertiser', '/api/campaigns');
-      // Test mode users can proceed with any role - no further checks needed
+      console.log(`[TEST MODE SUCCESS] User ${user.pubkey} authorized for campaign creation`);
     } else {
       // For normal operation, check role access
       if (!user.currentRole || (user.currentRole !== 'advertiser' && user.currentRole !== 'admin')) {
