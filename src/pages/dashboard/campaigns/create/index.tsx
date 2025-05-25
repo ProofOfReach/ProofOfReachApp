@@ -660,10 +660,9 @@ const CreateCampaignPage: NextPageWithLayout = () => {
                     Fund Your Wallet
                   </h3>
                   
-                  <LightningWallet
+                  <SmartFundingFlow
                     balance={walletBalance || 0}
                     isTestMode={auth?.isTestMode || false}
-                    isLoading={isLoadingBalance}
                     onSuccess={handleWalletSuccess}
                     onError={handleWalletError}
                     onBalanceUpdate={updateTestModeBalance}

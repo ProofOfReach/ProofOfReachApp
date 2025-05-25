@@ -191,7 +191,7 @@ async function handlePaymentCheck(req: NextApiRequest, res: NextApiResponse, pub
 }
 
 // Process API requests with auth middleware
-const handleRequest = async (req: NextApiRequest, res: NextApiResponse, pubkey: UserRole, userId: string) => {
+const handleRequest = async (req: NextApiRequest, res: NextApiResponse, pubkey: string, userId: string) => {
   if (req.method === 'POST') {
     const { action } = req.body;
 
