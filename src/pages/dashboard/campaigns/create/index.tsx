@@ -4,27 +4,15 @@ import { NextPage } from 'next';
 import { useRouter } from 'next/router';
 import { ArrowLeft, Calendar, Target, DollarSign, Clock, AlertCircle, CheckCircle, Volume2, Layers, PlusCircle } from 'react-feather';
 import Link from 'next/link';
-import dynamic from 'next/dynamic';
 import { useAuth } from '@/hooks/useAuth';
 import { useCurrency } from '@/context/CurrencyContext';
 import { DashboardContainer, DashboardHeader } from '@/components/ui';
 import CurrencyAmount from '@/components/CurrencyAmount';
 import LightningWallet from '@/components/LightningWallet';
-// Dynamic import to prevent SSR issues with Bitcoin Connect
-const SmartFundingFlow = dynamic(() => import('@/components/SmartFundingFlow'), {
-  ssr: false,
-  loading: () => <div className="animate-pulse bg-gray-200 dark:bg-gray-700 rounded-lg h-32"></div>
-});
+import SmartFundingFlow from '@/components/SmartFundingFlow';
+import AdForm from '@/components/AdForm';
 import { getDashboardLayout } from '@/utils/layoutHelpers';
-import '@/components/layout/ImprovedDashboardLayout';
-import '@/components/CurrencyAmount';
-import '@/context/CurrencyContext';
-import '@/components/LightningWallet';
-import '@/components/LightningWalletBalance';
 import type { NextPageWithLayout } from '../../../_app';
-
-// Dynamically import the AdForm component to avoid SSR issues with browser-specific code
-const AdForm = dynamic(() => import('@/components/AdForm'), { ssr: false });
 
 // Step types
 enum Step {
