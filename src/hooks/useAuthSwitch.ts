@@ -21,11 +21,10 @@ let defaultUseRoleHook = () => null;
 if (typeof window !== 'undefined' && process.env.NODE_ENV !== 'test') {
   try {
     const { useAuthRefactored: importedAuthHook } = require('./useAuthRefactored');
-    const { defaultUseRole: importedRoleHook } = require('../context/NewRoleContextRefactored');
     useAuthRefactored = importedAuthHook;
-    defaultUseRole = importedRoleHook;
+    // Note: NewRoleContextRefactored doesn't exist, using default implementation
   } catch (error) {
-    logger.log('Error importing refactored hooks:', error);
+    logger.info('Error importing refactored hooks:', error);
   }
 }
 
