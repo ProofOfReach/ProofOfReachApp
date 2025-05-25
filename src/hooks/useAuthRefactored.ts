@@ -40,7 +40,11 @@ const defaultAuthState: AuthStateContext = {
 };
 
 /**
- * Hook for accessing authentication state and methods
+ * @deprecated This hook is deprecated and scheduled for removal.
+ * Use useAuth from './useAuth' instead for the stable authentication system.
+ * 
+ * This was an experimental refactored auth system that has been consolidated
+ * into the proven useAuth implementation for better stability.
  * 
  * @returns The auth context with state and methods
  * @returns Default empty auth state if used outside AuthProviderRefactored

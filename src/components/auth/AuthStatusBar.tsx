@@ -1,47 +1,18 @@
-import { useAuthSwitch } from '../../hooks/useAuthSwitch';
+import { useAuth } from '../../hooks/useAuth';
 
 /**
  * A component that displays the current authentication status
  * and provides login/logout functionality.
  * 
- * This component uses the useAuthSwitch hook to work with
- * both the legacy and refactored authentication systems.
+ * This component uses the stable useAuth system for reliable authentication.
  */
 export default function AuthStatusBar() {
-  // For test environments, we need to conditionally use the hook
-  // to prevent errors when no providers are available
-  const useConditionalAuthSwitch = () => {
-    if (typeof window !== 'undefined' && process.env.NODE_ENV !== 'test') {
-      try {
-        return useAuthSwitch();
-      } catch (error) {
-        console.log('Error in AuthStatusBar:', error);
-        return {
-          isAuthenticated: false,
-          pubkey: '',
-          isTestMode: false,
-          currentRole: null,
-          logout: () => Promise.resolve()
-        };
-      }
-    }
-    // Default values for testing
-    return {
-      isAuthenticated: false,
-      pubkey: '',
-      isTestMode: false,
-      currentRole: null,
-      logout: () => Promise.resolve()
-    };
-  };
+  const { auth, logout } = useAuth();
   
-  const { 
-    isAuthenticated, 
-    pubkey, 
-    isTestMode,
-    currentRole,
-    logout
-  } = useConditionalAuthSwitch();
+  const isAuthenticated = auth?.isLoggedIn || false;
+  const pubkey = auth?.pubkey || '';
+  const isTestMode = auth?.isTestMode || false;
+  const currentRole = auth?.availableRoles?.[0] || 'viewer';
   
   return (
     <div className="bg-gray-100 dark:bg-gray-800 p-2 px-4 flex justify-between items-center text-sm">

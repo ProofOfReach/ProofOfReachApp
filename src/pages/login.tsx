@@ -2,7 +2,7 @@ import { UserRole } from "@/types/role";
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import Layout from '../components/Layout';
-import { useAuthSwitch } from '../hooks/useAuthSwitch';
+import { useAuth } from '../hooks/useAuth';
 import { 
   nostr, 
   hasNostrExtension, 
@@ -43,7 +43,9 @@ const LoginPage: React.FC = () => {
 // Client-side only component - all interactive login functionality goes here
 const LoginPageClient: React.FC = () => {
   const router = useRouter();
-  const { isAuthenticated, pubkey, login } = useAuthSwitch();
+  const { auth, login } = useAuth();
+  const isAuthenticated = auth?.isLoggedIn || false;
+  const pubkey = auth?.pubkey || '';
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [hasExtension, setHasExtension] = useState(false);

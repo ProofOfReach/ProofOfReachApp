@@ -33,10 +33,11 @@ if (typeof window !== 'undefined' && process.env.NODE_ENV !== 'test') {
 const USE_REFACTORED_AUTH = true;
 
 /**
- * This hook provides a unified interface to both auth systems,
- * allowing for a smooth transition between them.
+ * @deprecated This hook is deprecated and scheduled for removal.
+ * Use useAuth from './useAuth' instead for the stable authentication system.
  * 
- * Components can use this hook without knowing which system is active.
+ * This hook was created to bridge between multiple auth systems,
+ * but we've consolidated to use the proven useAuth implementation.
  */
 export function useAuthSwitch() {
   // Get the legacy auth system - this should be safe since it has fallbacks
