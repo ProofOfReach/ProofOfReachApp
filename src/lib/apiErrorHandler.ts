@@ -25,7 +25,7 @@ export interface ApiErrorResponse {
   error: {
     message: string;
     code?: string;
-    details?: Record<UserRole, unknown>;
+    details?: Record<string, unknown>;
     status: number;
     requestId?: string;
     correlationId?: string;
@@ -110,24 +110,24 @@ export function handleApiRouteError(
   const route = `${req.method} ${req.url}`;
 
   // Determine error category and status code
-  let category = string.OPERATIONAL;
+  let category = 'technical';
   let statusCode = 500;
   let userMessage = 'An unexpected error occurred';
-  let errorCode = ErrorCode.INTERNAL_ERROR;
-  let errorDetails: Record<UserRole, unknown> = {};
+  let errorCode = 'INTERNAL_ERROR';
+  let errorDetails: Record<string, unknown> = {};
   let retryable = false;
   let recoverable = false;
-  let suggestedAction = suggestedActions[ErrorCode.INTERNAL_ERROR];
+  let suggestedAction = 'Please try again later or contact support if the problem persists.';
 
   // Extract error properties if available
   if (error instanceof Error) {
     // Handle validation errors
     if (error.name === 'ValidationError') {
-      category = string.USER_INPUT;
+      category = 'validation';
       statusCode = 400;
       userMessage = error.message;
-      errorCode = ErrorCode.VALIDATION_ERROR;
-      suggestedAction = suggestedActions[ErrorCode.VALIDATION_ERROR];
+      errorCode = 'VALIDATION_ERROR';
+      suggestedAction = 'Please check your input and try again.';
       recoverable = true; // User can fix input
       retryable = false;  // Don't automatically retry
       
@@ -286,12 +286,12 @@ export function createApiValidationError(
   const error = new Error(message);
   error.name = 'ValidationError';
   (error as any).invalidFields = invalidFields;
-  (error as any).category = string.USER_INPUT;
+  (error as any).category = 'validation';
   (error as any).userFacing = true;
-  (error as any).code = ErrorCode.VALIDATION_ERROR;
+  (error as any).code = 'VALIDATION_ERROR';
   (error as any).retryable = false;
   (error as any).recoverable = true;
-  (error as any).suggestedAction = suggestedActions[ErrorCode.VALIDATION_ERROR];
+  (error as any).suggestedAction = 'Please check your input and try again.';
   
   if (fieldDetails) {
     (error as any).details = {
@@ -318,10 +318,10 @@ export function createNotFoundError(
   resourceId?: string | number
 ): Error {
   const error = new Error(message);
-  error.name = 'NotFoundError';
-  (error as any).category = string.EXTERNAL;
+  (error as any).name = 'NotFoundError';
+  (error as any).category = 'network';
   (error as any).userFacing = true;
-  (error as any).code = ErrorCode.NOT_FOUND;
+  (error as any).code = 'NOT_FOUND';
   (error as any).retryable = false;
   (error as any).recoverable = false;
   (error as any).suggestedAction = suggestedActions[ErrorCode.NOT_FOUND];
