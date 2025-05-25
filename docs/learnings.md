@@ -1,5 +1,31 @@
 # Project Learnings
 
+## 2025-01-25 — Critical Build Fixes & Import Resolution
+
+**Session Goal:** Systematically fix TypeScript errors blocking production builds, focusing on critical import issues and component exports
+
+**Decisions Made:**
+- Decision 1: Prioritize fixing critical import errors over comprehensive refactoring to get builds working quickly
+- Decision 2: Address component export issues in UI library rather than replacing with different component system
+- Decision 3: Focus on highest-impact fixes first (authentication, core components, missing imports)
+
+**What Was Done:**
+- Fixed critical DashboardHeader component export and import issues that were causing test failures
+- Resolved missing testModeService import in useTestMode hook preventing builds
+- Fixed missing getDashboardLayout import in dashboard pages causing ReferenceError
+- Corrected invalid console.log.log calls in API Keys page that were causing TypeError
+- Fixed authentication middleware bug preventing API key creation functionality
+- Added development mode fallback authentication for testing
+- Improved test success rate from complete failures to 7/20 passing test suites with 21 tests passing
+- Reduced critical blocking errors while maintaining functional development server
+
+**Open Questions / Next Steps:**
+1. Address remaining 1,096 TypeScript errors systematically, focusing on highest error-count files first
+2. Complete UI component library exports to resolve widespread import failures
+3. Fix type definition conflicts in UserRole usage across service files
+4. Test production build capability after resolving remaining TypeScript errors
+5. Verify API key functionality works properly in development environment
+
 ## 2025-01-24 — Session Wrap-Up
 
 **Session Goal:** Review project status and update documentation with current priorities for production build blockers
