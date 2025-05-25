@@ -10,6 +10,7 @@ import { useCurrency } from '@/context/CurrencyContext';
 import { DashboardContainer, DashboardHeader } from '@/components/ui';
 import CurrencyAmount from '@/components/CurrencyAmount';
 import LightningWallet from '@/components/LightningWallet';
+import SmartFundingFlow from '@/components/SmartFundingFlow';
 import { getDashboardLayout } from '@/utils/layoutHelpers';
 import '@/components/layout/ImprovedDashboardLayout';
 import '@/components/CurrencyAmount';
@@ -767,6 +768,20 @@ const CreateCampaignPage: NextPageWithLayout = () => {
                   </div>
                 </div>
               </div>
+
+              {/* Smart Funding Flow - appears when user needs funding */}
+              <SmartFundingFlow
+                currentBalance={walletBalance || 0}
+                requiredAmount={campaignFormData.dailyBudget || 0}
+                onFundingComplete={(newBalance) => {
+                  updateTestModeBalance(newBalance);
+                  handleWalletSuccess('Funding completed successfully! You can now proceed with your campaign.');
+                }}
+                onSkip={() => {
+                  // Allow user to continue without funding
+                }}
+                isTestMode={auth?.isTestMode || false}
+              />
             </div>
 
             {/* Targeting Options */}
