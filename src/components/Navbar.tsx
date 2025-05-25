@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { Menu, X, Activity } from 'react-feather';
-import { useAuthRefactored } from '../hooks/useAuthRefactored';
+import { useAuth } from '../hooks/useAuth';
 import ProfileAvatar from './ProfileAvatar';
 import ForceLogoutButton from './ForceLogoutButton';
 
