@@ -3,7 +3,6 @@ import React, { useState } from 'react';
 import ImprovedDashboardLayout from '@/components/layout/ImprovedDashboardLayout';
 import { defaultUseRole } from '@/context/RoleContext';
 import type { NextPageWithLayout } from '@/pages/_app';
-import type { UserRole } from '@/types/auth';
 import { BarChart2, Calendar, Download, ArrowUp, ArrowDown, Eye, Zap, Target } from 'react-feather';
 import { LineChart, BarChart, PieChart } from 'recharts';
 

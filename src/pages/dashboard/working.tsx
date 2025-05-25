@@ -1,6 +1,5 @@
 import { UserRole } from "@/types/role";
 import React, { useState, useEffect } from 'react';
-import type { UserRole } from '../../context/RoleContext';
 import RoleDropdown from '../../components/role/RoleDropdown';
 
 /**

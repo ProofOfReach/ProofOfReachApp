@@ -12,7 +12,6 @@ import Head from 'next/head';
 import DashboardLayout from '../../../components/layout/DashboardLayout';
 import { defaultUseRoleAccess } from '../../../hooks/defaultUseRoleAccess';
 import RoleAwareComponent from '../../../components/examples/RoleAwareComponent';
-import type { UserRole } from '../../../types/role';
 import { logger } from '../../../lib/logger';
 
 const RoleManagementPage: NextPage = () => {
