@@ -1,45 +1,30 @@
 import React from 'react';
-import '@/components/ui/button';
 
-/**
- * Props for the SkipButton component
- */
-export interface SkipButtonProps {
-  /** Handler function for skip action */
-  onSkip?: () => void;
-  /** Optional test ID for testing */
-  testId?: string;
-  /** Optional class name for additional styling */
+interface SkipButtonProps {
+  onClick: () => void;
+  disabled?: boolean;
   className?: string;
-  /** Optional label text, defaults to "Skip" */
-  label?: string;
 }
 
-/**
- * A reusable Skip button component with consistent styling
- * 
- * @example
- * <SkipButton onSkip={handleSkip} testId="publisher-skip-button" />
- */
-const SkipButton: React.FC<SkipButtonProps> = ({
-  onSkip,
-  testId = 'skip-button',
-  className = '',
-  label = 'Skip'
+export const SkipButton: React.FC<SkipButtonProps> = ({ 
+  onClick, 
+  disabled = false, 
+  className = '' 
 }) => {
-  if (!onSkip) return null;
-  
   return (
-    <Button
-      onClick={onSkip}
-      variant="outline"
-      size="sm"
-      className={`flex-shrink-0 ${className}`}
-      data-testid={testId}
+    <button
+      type="button"
+      onClick={onClick}
+      disabled={disabled}
+      className={`
+        px-4 py-2 text-sm font-medium text-gray-600 hover:text-gray-800
+        border border-gray-300 rounded-md hover:bg-gray-50
+        transition-colors duration-200
+        ${disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}
+        ${className}
+      `}
     >
-      {label}
-    </Button>
+      Skip
+    </button>
   );
 };
-
-export default SkipButton;

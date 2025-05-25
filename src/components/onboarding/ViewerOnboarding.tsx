@@ -1,10 +1,13 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import '@/context/OnboardingContext';
-import '@/components/onboarding/OnboardingProgress';
+import { useOnboarding } from '@/context/OnboardingContext';
+import OnboardingProgress from '@/components/onboarding/OnboardingProgress';
 import { CheckCircle, Search, ChevronRight, ChevronLeft, Check } from 'react-feather';
-import '@/components/ui/switch';
-import '@/components/ui/SkipButton';
-import '@/components/ProfileAvatar';
+import { Switch } from '@/components/ui/Switch';
+import { SkipButton } from '@/components/ui/SkipButton';
+import ProfileAvatar from '@/components/ProfileAvatar';
+
+// Type definitions
+type OnboardingStep = 'role-selection' | 'discovery' | 'privacy' | 'complete';
 
 // Helper function to check for Nostr extension
 const checkForNostrExtension = (): boolean => {
@@ -548,8 +551,8 @@ const ViewerOnboarding: React.FC<ViewerOnboardingProps> = ({
             />
             <div className="flex justify-end mt-1 mb-4">
               <SkipButton 
-                onSkip={handleSkip}
-                testId="viewer-skip-button"
+                onClick={handleSkip}
+                className="viewer-skip-button"
               />
             </div>
           </div>

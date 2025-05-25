@@ -1,4 +1,3 @@
-import { UserRole } from "@/types/role";
 /**
  * Enhanced Authentication Middleware
  * 
