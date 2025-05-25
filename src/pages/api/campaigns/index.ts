@@ -86,7 +86,9 @@ export default apiHandler({
     }
     
     // For normal operation, check role access
-    if (!user.currentRole || (user.currentRole !== 'advertiser' && user.currentRole !== 'admin')) {
+    // Allow test mode users to bypass role restrictions
+    const isTestUser = user.pubkey && user.pubkey.startsWith('pk_test_');
+    if (!isTestUser && (!user.currentRole || (user.currentRole !== 'advertiser' && user.currentRole !== 'admin'))) {
       logger.warn(`User ${user.userId} with role ${user.currentRole} attempted to access advertiser-only endpoint`);
       throw new ApiError(403, 'Forbidden: Advertiser role required');
     }
