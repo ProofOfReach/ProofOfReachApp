@@ -171,9 +171,9 @@ const CreateCampaignPage: NextPageWithLayout = () => {
       }
       
       // If total budget is specified, validate it
-      if (campaignFormData?.budget ?? 0 && campaignFormData?.budget ?? 0 > 0) {
+      if ((campaignFormData?.budget ?? 0) && (campaignFormData?.budget ?? 0) > 0) {
         // Ensure daily budget doesn't exceed total budget
-        if (campaignFormData.dailyBudget > campaignFormData?.budget ?? 0) {
+        if (campaignFormData.dailyBudget > (campaignFormData?.budget ?? 0)) {
           throw new Error('Daily spending limit cannot exceed maximum campaign spend.');
         }
       }
