@@ -1,3 +1,4 @@
+import { UserRole } from "@/types/role";
 /**
  * Unit tests for the EnhancedStorageService
  * 

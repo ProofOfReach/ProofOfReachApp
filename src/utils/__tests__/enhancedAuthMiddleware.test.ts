@@ -1,3 +1,4 @@
+import { UserRole } from "@/types/role";
 /**
  * Tests for Enhanced Authentication Middleware
  */

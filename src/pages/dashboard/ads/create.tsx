@@ -36,7 +36,7 @@ const CreateAdPage: NextPageWithLayout = () => {
         const response = await fetch('/api/wallet');
         if (response.ok) {
           const data = await response.json();
-          setWalletBalance(data?.balance ?? 0 || 0);
+          setWalletBalance((data?.balance ?? 0) || 0);
         }
       } catch (error) {
         console.log('Error fetching wallet balance:', error);

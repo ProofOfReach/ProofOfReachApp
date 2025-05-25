@@ -1,3 +1,4 @@
+import { UserRole } from "@/types/role";
 import type { NextApiRequest, NextApiResponse } from 'next';
 import type { UserRole } from '../../../../../types/auth';
 import { logger } from '../../../../../lib/logger';

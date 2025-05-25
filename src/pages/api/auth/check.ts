@@ -1,3 +1,4 @@
+import { UserRole } from "@/types/role";
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { isAuthenticated } from '../../../lib/auth';
 import { error, throwValidationError } from '../../../lib/errorHandling';

@@ -1,4 +1,3 @@
-import { UserRole } from "@/types/role";
 /**
  * Enhanced Storage Service
  * 
@@ -18,7 +17,6 @@ import {
   SYSTEM_EVENTS 
 } from '@/lib/events';
 import CryptoJS from 'crypto-js';
-import type { UserRole } from '@/types/auth';
 
 // Define storage types for clearer usage
 export type StorageType = 'localStorage' | 'sessionStorage' | 'memory';

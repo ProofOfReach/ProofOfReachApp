@@ -1,3 +1,4 @@
+import { UserRole } from "@/types/role";
 import { TestModeStorageService, TestModeState } from '../testModeStorageService';
 import { EnhancedStorageService, STORAGE_KEYS } from '../enhancedStorageService';
 import '@/lib/logger';
