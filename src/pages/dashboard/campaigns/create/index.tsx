@@ -173,7 +173,7 @@ const CreateCampaignPage: NextPageWithLayout = () => {
         }
       }
 
-      // Format the data for the API
+      // Format the data for the API - include wallet balance for status determination
       const apiData = {
         ...campaignFormData,
         startDate: new Date(campaignFormData.startDate).toISOString(),
@@ -185,6 +185,8 @@ const CreateCampaignPage: NextPageWithLayout = () => {
           : null,
         targetAge: campaignFormData.targetAge || null,
         targetAudience: campaignFormData.targetAudience || null,
+        // Include wallet balance for backend status determination
+        walletBalance: walletBalance || 0,
       };
 
       // Send to the API
