@@ -26,7 +26,7 @@ async function handleDeposit(req: NextApiRequest, res: NextApiResponse, pubkey: 
     const invoice = await createInvoice(amount, `Nostr Ad Marketplace deposit: ${amount} sats`);
 
     // Calculate balance values
-    const currentBalance = user?.balance ?? 0 || 0;
+    const currentBalance = (user?.balance ?? 0) || 0;
     
     // Save the invoice to track payment
     const transaction = await prisma.transaction.create({
@@ -92,7 +92,7 @@ async function handleWithdraw(req: NextApiRequest, res: NextApiResponse, pubkey:
       });
 
       // Calculate balance values
-      const previousBalance = user?.balance ?? 0 || 0;
+      const previousBalance = (user?.balance ?? 0) || 0;
       const newBalance = previousBalance - amount;
       
       // Create a transaction record
