@@ -116,11 +116,19 @@ export const RoleProvider: React.FC<RoleProviderProps> = ({
       // Check for test mode from multiple sources
       const isTestModeEnabled = auth?.isTestMode || 
         (typeof window !== 'undefined' && localStorage.getItem('isTestMode') === 'true') ||
-        (typeof window !== 'undefined' && localStorage.getItem('nostr_pubkey')?.startsWith('pk_test_'));
+        (typeof window !== 'undefined' && localStorage.getItem('nostr_test_pk')?.startsWith('pk_test_'));
+      
+      console.log('Role context test mode check:', {
+        authTestMode: auth?.isTestMode,
+        isTestModeStorage: typeof window !== 'undefined' ? localStorage.getItem('isTestMode') : 'n/a',
+        testPubkey: typeof window !== 'undefined' ? localStorage.getItem('nostr_test_pk') : 'n/a',
+        isTestModeEnabled,
+        isDevEnvironment
+      });
       
       // In development environment or test mode, always provide all roles
       if (isDevEnvironment || isTestModeEnabled) {
-        console.log('Development/Test mode: All roles available');
+        console.log('Test mode detected - enabling all roles');
         const storedRole = localStorage.getItem('userRole') || localStorage.getItem('currentRole');
         
         return {
@@ -158,15 +166,25 @@ export const RoleProvider: React.FC<RoleProviderProps> = ({
       };
     },
     initialData: () => {
-      // Check for test mode first
-      const isTestMode = auth?.isTestMode || (typeof window !== 'undefined' && localStorage.getItem('isTestMode') === 'true');
+      // Force test mode detection from multiple sources
+      const isTestMode = auth?.isTestMode || 
+        (typeof window !== 'undefined' && localStorage.getItem('isTestMode') === 'true') ||
+        (typeof window !== 'undefined' && localStorage.getItem('nostr_test_pk')?.startsWith('pk_test_'));
+      
+      console.log("Initial data test mode check:", {
+        authTestMode: auth?.isTestMode,
+        isTestModeStorage: typeof window !== 'undefined' ? localStorage.getItem('isTestMode') : null,
+        testPubkey: typeof window !== 'undefined' ? localStorage.getItem('nostr_test_pk') : null,
+        isTestMode,
+        isDevEnvironment
+      });
       
       if (isTestMode || isDevEnvironment) {
-        console.log("Test mode or dev mode in initialData");
-        const storedRole = localStorage.getItem('userRole');
+        console.log("Initial data: Test mode or dev mode detected - enabling all roles");
+        const storedRole = localStorage.getItem('userRole') || localStorage.getItem('currentRole');
         return {
           availableRoles: ALL_ROLES,
-          currentRole: isValidRole(storedRole || '') ? storedRole! : 'viewer',
+          currentRole: isValidRole(storedRole || '') ? storedRole! : 'admin',
           timestamp: Date.now()
         };
       }
