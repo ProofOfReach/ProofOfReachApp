@@ -24,8 +24,11 @@ const nextConfig = {
     ],
     // Enable modern bundling
     esmExternals: true,
-    serverComponentsExternalPackages: ['@prisma/client'],
+    // serverComponentsExternalPackages has been moved to serverExternalPackages
   },
+  
+  // External packages that should not be bundled
+  serverExternalPackages: ['@prisma/client'],
   
   async headers() {
     return [
