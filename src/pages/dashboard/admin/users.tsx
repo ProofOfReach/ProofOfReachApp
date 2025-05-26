@@ -2,7 +2,7 @@ import { UserRole } from "@/types/role";
 import React, { useState, useEffect } from 'react';
 import { Users, Search, Filter, UserPlus } from 'react-feather';
 import { getEnhancedDashboardLayout } from '@/components/layout/EnhancedDashboardLayout';
-import '@/components/ui';
+import { DashboardContainer } from '@/components/ui';
 import type { ReactElement } from 'react';
 import type { NextPageWithLayout } from '../../_app';
 

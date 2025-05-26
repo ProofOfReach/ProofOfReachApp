@@ -8,7 +8,7 @@ import { useCallback } from 'react';
 import { Layout as LayoutIcon, User, Target, Zap, Check, AlertCircle, ArrowRight, Mail } from 'react-feather';
 import SatoshiIcon from '../components/SatoshiIcon';
 import { NextPageWithLayout } from './_app';
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";

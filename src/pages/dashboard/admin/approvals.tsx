@@ -2,10 +2,10 @@ import { UserRole } from "@/types/role";
 import React, { useState, useEffect } from 'react';
 import { Bell, Search, Filter, CheckCircle, XCircle, EyeOff } from 'react-feather';
 import { getEnhancedDashboardLayout } from '@/components/layout/EnhancedDashboardLayout';
-import '@/components/ui';
+import { DashboardContainer } from '@/components/ui';
+import CurrencyAmount from '@/components/CurrencyAmount';
 import type { ReactElement } from 'react';
 import type { NextPageWithLayout } from '../../_app';
-import '@/components/CurrencyAmount';
 
 /**
  * Admin Ad Approvals Page
