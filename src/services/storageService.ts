@@ -190,7 +190,12 @@ export class StorageService {
       console.error('Error in getCurrentRole:', e);
     }
     
-    // Default to viewer role
+    // In test mode, default to admin role for better testing experience
+    if (this.isTestModeActive()) {
+      return 'admin';
+    }
+    
+    // Default to viewer role for production
     return 'viewer';
   }
   
@@ -323,8 +328,8 @@ export class StorageService {
     return {
       isActive: true,
       expiryTime: Date.now() + (4 * 60 * 60 * 1000), // 4 hours from now
-      currentRole: 'viewer',
-      availableRoles: ['viewer'],
+      currentRole: 'admin', // Default to admin role for better test experience
+      availableRoles: ['viewer', 'advertiser', 'publisher', 'admin', 'stakeholder'],
       lastUpdated: Date.now()
     };
   }
