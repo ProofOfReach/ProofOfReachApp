@@ -16,20 +16,15 @@ const HomeNavbar: React.FC = () => {
         return;
       }
       
-      // For local development: Check various indicators
       const hostname = window.location.hostname;
-      const simulateDev = localStorage.getItem('SIMULATE_DEV_DOMAIN') === 'true';
+      const simulateDev = localStorage.getItem('SIMULATE_DEV_DOMAIN');
       
-      // Local dev environment toggle takes priority for testing
-      if (simulateDev === false) {
-        setIsDev(false);
-        return;
-      }
-      
-      // Then check various environment indicators
-      const isDevDomain = hostname.startsWith('dev.') || 
-                         hostname.includes('replit.dev') ||
-                         simulateDev ||
+      // Default to development mode for Replit and local development
+      const isDevDomain = hostname.includes('replit.dev') || 
+                         hostname.includes('localhost') ||
+                         hostname.startsWith('dev.') ||
+                         simulateDev === 'true' ||
+                         simulateDev === null || // Default to dev if not explicitly set
                          process.env.NEXT_PUBLIC_ENABLE_DEV_BANNER === 'true';
       
       setIsDev(isDevDomain);
