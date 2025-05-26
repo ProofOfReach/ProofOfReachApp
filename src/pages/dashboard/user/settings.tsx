@@ -1,6 +1,6 @@
 import { UserRole } from "@/types/role";
 import React, { useEffect, useState } from 'react';
-import '@/components/layout/ImprovedDashboardLayout';
+import DashboardLayout from '@/components/layout/DashboardLayout';
 import { Settings, Save, RefreshCw, UserCheck, Bell, Moon, Sun, Shield, Lock, Plus, X, AlertCircle, Info } from 'react-feather';
 
 const UserSettingsPage = () => {
