@@ -3,10 +3,10 @@ import React from 'react';
 import useSWR from 'swr';
 import { Home } from 'react-feather';
 
-import '@/components/layout/ImprovedDashboardLayout';
-import '@/components/CurrencyAmount';
+import ImprovedDashboardLayout from '@/components/layout/ImprovedDashboardLayout';
+import CurrencyAmount from '@/components/CurrencyAmount';
 // Import our viewer dashboard component
-import '@/components/dashboards/ViewerDashboard';
+import ViewerDashboard from '@/components/dashboards/ViewerDashboard';
 
 // Define fetcher for SWR
 const fetcher = (url: string) => 
@@ -35,7 +35,7 @@ const UserDashboardPage = () => {
       </div>
       
       {/* Use the viewer dashboard component */}
-      <ViewerDashboardComponent />
+      <ViewerDashboard />
       
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">

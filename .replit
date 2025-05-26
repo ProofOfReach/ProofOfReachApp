@@ -140,6 +140,10 @@ args = "Type Check Only"
 task = "workflow.run"
 args = "Build Validation"
 
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Production Build"
+
 [[workflows.workflow]]
 name = "Nostr Ad Marketplace Server"
 author = "agent"
@@ -399,6 +403,14 @@ author = "agent"
 [[workflows.workflow.tasks]]
 task = "shell.exec"
 args = "npx tsc --noEmit --skipLibCheck 2>&1 | head -50"
+
+[[workflows.workflow]]
+name = "Production Build"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "npm run build"
 
 [deployment]
 run = ["sh", "-c", "npm install && npx prisma generate && npm run dev"]
