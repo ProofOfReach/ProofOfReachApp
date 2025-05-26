@@ -112,6 +112,8 @@ export const RoleProvider: React.FC<RoleProviderProps> = ({
    */
   const { data: roleData, refetch } = useQuery<RoleDataType>({
     queryKey: [ROLE_CACHE_KEY],
+    staleTime: 0, // Force refresh every time
+    cacheTime: 0, // Don't cache results 
     queryFn: async () => {
       // Check for test mode from multiple sources
       const isTestModeEnabled = auth?.isTestMode || 
@@ -408,13 +410,20 @@ export const RoleProvider: React.FC<RoleProviderProps> = ({
     return ensureValidRole(roleData?.currentRole || 'viewer');
   };
   
+  // Force test mode roles to be available immediately
+  const isTestModeActive = auth?.isTestMode || 
+    (typeof window !== 'undefined' && localStorage.getItem('isTestMode') === 'true') ||
+    (typeof window !== 'undefined' && localStorage.getItem('nostr_test_pk')?.startsWith('pk_test_'));
+  
+  const finalAvailableRoles = (isDevEnvironment || isTestModeActive) ? ALL_ROLES : (roleData?.availableRoles || ['viewer']);
+  
   /**
    * Create the context value with all required properties
    */
   const contextValue: RoleContextType = {
     role: getCurrentRole(),
     setRole,
-    availableRoles: roleData?.availableRoles || ['viewer'],
+    availableRoles: finalAvailableRoles,
     isRoleAvailable,
     clearRole,
     isChangingRole

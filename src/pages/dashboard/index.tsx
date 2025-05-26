@@ -15,6 +15,14 @@ const Dashboard = () => {
   console.log(`Rendering dashboard for role: '${currentRole}' (raw: '${currentRole}')`);
   console.log('Current role value:', currentRole);
   console.log('Available roles:', availableRoles);
+  
+  // Debug test mode detection directly in dashboard
+  const testModeCheck = {
+    isTestModeLS: typeof window !== 'undefined' ? localStorage.getItem('isTestMode') : null,
+    testPubkey: typeof window !== 'undefined' ? localStorage.getItem('nostr_test_pk') : null,
+    hasPkTest: typeof window !== 'undefined' && localStorage.getItem('nostr_test_pk')?.startsWith('pk_test_')
+  };
+  console.log('Dashboard test mode debug:', testModeCheck);
 
   // Simple role-based content rendering
   const renderRoleContent = () => {
