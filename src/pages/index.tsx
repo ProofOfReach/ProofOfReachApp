@@ -23,9 +23,9 @@ const Divider = ({ className }: { className?: string }) => <div className={`bord
 const waitlistFormSchema = z.object({
   email: z.string().email({ message: "Please enter a valid email address" }),
   roles: z.object({
-    advertiser: z.boolean().default(false),
-    publisher: z.boolean().default(false),
-    user: z.boolean().default(false),
+    advertiser: z.boolean(),
+    publisher: z.boolean(),
+    user: z.boolean(),
   }).refine((data) => Object.values(data).some(Boolean), {
     message: "Please select at least one role you are interested in"
   })

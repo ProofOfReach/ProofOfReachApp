@@ -325,7 +325,7 @@ author = "agent"
 
 [[workflows.workflow.tasks]]
 task = "shell.exec"
-args = "npx tsc --noEmit --skipLibCheck"
+args = "npx tsc --noEmit --skipLibCheck 2>&1 | tail -20"
 
 [[workflows.workflow]]
 name = "Quick Type Check Final"

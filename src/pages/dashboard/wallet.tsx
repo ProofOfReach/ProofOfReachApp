@@ -29,7 +29,7 @@ type TransactionType = 'deposit' | 'withdrawal' | 'payout' | 'refund' | 'fee';
 const WalletPage: NextPageWithLayout = () => {
   const router = useRouter();
   const { auth } = useAuth();
-  const user = auth?.user;
+  const userPubkey = auth?.pubkey;
   const isAuthenticated = !!auth;
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
