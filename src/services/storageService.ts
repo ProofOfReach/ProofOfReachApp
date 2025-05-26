@@ -7,7 +7,7 @@
 
 import { UserRole } from '../types/core';
 import { logger } from '../lib/logger';
-import { RoleManager } from './roleManager';
+import RoleManager from './roleManager';
 
 // Define storage key constants to avoid string duplication
 export const STORAGE_KEYS = {
@@ -167,9 +167,9 @@ export class StorageService {
         console.debug('Error getting role from RoleManager:', e);
       }
       
-      // Try enhanced storage next
+      // Try storage service next
       try {
-        const storedRole = enhancedStorage.getItem(STORAGE_KEYS.CURRENT_ROLE);
+        const storedRole = StorageService.getItem<string>(STORAGE_KEYS.CURRENT_ROLE);
         if (storedRole && typeof storedRole === 'string') {
           return storedRole as UserRole;
         }
@@ -263,7 +263,7 @@ export class StorageService {
         }
       } catch (e) {
         // Ignore session storage errors (could happen in some contexts)
-        logger.debug('Error accessing sessionStorage:', e);
+        logger.debug('Error accessing sessionStorage:', e as Error);
       }
       
       // Check local storage legacy flags for dev environments only

@@ -6,9 +6,9 @@
  */
 
 import { UserRole, isValidUserRole } from '../types/role';
-import '@/lib/logger';
+import { logger } from '../lib/logger';
 import { StorageService, STORAGE_KEYS } from './storageService';
-import '@/lib/testModeEvents';
+import { dispatchTestModeEvent, TEST_MODE_EVENTS } from '../lib/testModeEvents';
 
 // Events specific to role management
 export const ROLE_EVENTS = {
