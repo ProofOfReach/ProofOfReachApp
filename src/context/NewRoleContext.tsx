@@ -183,7 +183,10 @@ export const RoleProvider: React.FC<RoleProviderProps> = ({
       
       if (isTestMode || isDevEnvironment) {
         console.log("Initial data: Test mode or dev mode detected - enabling all roles");
-        const storedRole = localStorage.getItem('userRole') || localStorage.getItem('currentRole');
+        // Check if we're on the client side before accessing localStorage
+        const storedRole = typeof window !== 'undefined' 
+          ? (localStorage.getItem('userRole') || localStorage.getItem('currentRole'))
+          : null;
         return {
           availableRoles: ALL_ROLES,
           currentRole: isValidRole(storedRole || '') ? storedRole! : 'admin',
