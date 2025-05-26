@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Button } from '../ui/Button'
+import { Button } from '@/components/ui/Button'
 import { Input } from '../ui/input'
 import { Textarea } from '../ui/textarea'
 import { Select, SelectOption } from '../ui/select'
