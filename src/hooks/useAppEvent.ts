@@ -22,7 +22,7 @@ import type { UserRole } from '@/types/auth';
  * @param eventType The type of event to listen for
  * @param handler The event handler function
  */
-export function useAppEvent<T extends AppEventType>(
+function useAppEvent<T extends AppEventType>(
   eventType: T,
   handler: (payload: T extends keyof AppEventPayloads ? AppEventPayloads[T] : never) => void
 ): void {
@@ -63,7 +63,7 @@ export function useLegacyEvent(
  * @param handler The event handler function
  */
 export function useStorageEvent(
-  key: UserRole,
+  key: string,
   handler: (newValue: string | null, oldValue: string | null) => void
 ): void {
   useEffect(() => {
@@ -81,4 +81,6 @@ export function useStorageEvent(
   }, [key, handler]);
 }
 
+// Export both named and default
+export { useAppEvent };
 export default useAppEvent;
