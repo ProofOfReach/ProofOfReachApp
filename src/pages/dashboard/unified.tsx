@@ -4,7 +4,7 @@ import { NextPage } from 'next';
 import { Home, ShoppingBag, Upload, Shield, Briefcase, User } from 'react-feather';
 
 import '@/components/layout/DashboardLayout';
-import '@/lib/roleService';
+import RoleService from '@/lib/RoleService';
 import '@/context/RoleContext';
 
 // Import our various role-specific dashboard components
