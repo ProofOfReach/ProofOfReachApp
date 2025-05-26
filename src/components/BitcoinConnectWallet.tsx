@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { ArrowDown, ArrowUp, CreditCard, Zap } from 'react-feather';
 import { init, launchModal, requestProvider } from '@getalby/bitcoin-connect';
-import { Button } from './ui/Button';
+import { Button } from './ui/button';
 import DashboardCard from './ui/DashboardCard';
 import CurrencyAmount from './CurrencyAmount';
 
