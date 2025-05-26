@@ -5,7 +5,7 @@ import '@/components/layout/DashboardLayout';
 import '@/context/RoleContext';
 import { useAuth } from '@/hooks/useAuth';
 import { Download, CreditCard, Plus, Repeat, Download as DownloadIcon, Search } from 'react-feather';
-import '@/components/icons/SatsIcon';
+import SatsIcon from '@/components/icons/SatsIcon';
 import '@/components/charts';
 import '@/utils/chartHelpers';
 import '@/components/CurrencyAmount';
