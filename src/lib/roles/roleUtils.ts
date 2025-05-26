@@ -13,7 +13,7 @@ import { unifiedRoleService } from '../unifiedRoleService';
  */
 export async function hasRole(userId: string, role: string): Promise<boolean> {
   try {
-    return await unifiedRoleService.verifyUserHasRole(userId, role as any);
+    return await unifiedRoleService.hasRole(userId, role as any);
   } catch (error) {
     console.error('Error checking role:', error);
     return false;
