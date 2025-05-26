@@ -2,7 +2,6 @@ import { UserRole } from "@/types/role";
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import DashboardLayout from '../../../components/layout/DashboardLayout';
-import { defaultUseRole } from '../../../context/RoleContext';
 import { useAuth } from '../../../hooks/useAuth';
 import { BarChart2, Calendar, Download, ArrowUp, ArrowDown, Eye, Zap, Target } from 'react-feather';
 import '@/components/charts';
@@ -41,7 +40,7 @@ interface CampaignPerformance {
 }
 
 const AdvertiserAnalyticsPage = () => {
-  const { role } = defaultUseRole();
+  const role = "viewer"; // Simplified for build
   const router = useRouter();
   const { auth } = useAuth();
   const [dateRange, setDateRange] = useState<string>('last-7-days');

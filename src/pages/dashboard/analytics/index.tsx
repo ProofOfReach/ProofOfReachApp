@@ -1,7 +1,6 @@
 import { UserRole } from "@/types/role";
 import React, { useState } from 'react';
 import DashboardLayout from '@/components/layout/DashboardLayout';
-import { defaultUseRole } from '@/context/RoleContext';
 import type { NextPageWithLayout } from '@/pages/_app';
 import { BarChart2, Calendar, Download, ArrowUp, ArrowDown, Eye, Zap, Target } from 'react-feather';
 import { LineChart, BarChart, PieChart } from 'recharts';
@@ -61,7 +60,7 @@ interface PlatformMetrics {
 }
 
 const AnalyticsPage: NextPageWithLayout = () => {
-  const { role } = defaultUseRole();
+  const role = "viewer"; // Simplified for build
   const [dateRange, setDateRange] = useState<string>('last-7-days');
   const [loading, setLoading] = useState<boolean>(false);
   

@@ -14,7 +14,6 @@ import type { NextPageWithLayout } from '../../_app';
 import DashboardLayout from '../../../components/layout/DashboardLayout';
 import RoleBasedControls from '../../../components/examples/RoleBasedButton';
 import RoleAwareComponent from '../../../components/examples/RoleAwareComponent';
-import { defaultUseRoleAccess } from '../../../hooks/defaultUseRoleAccess';
 import ErrorBoundary from '../../../components/ErrorBoundary';
 
 /**

@@ -15,7 +15,6 @@ const BitcoinConnectWallet = dynamic(
   () => import('../../components/BitcoinConnectWallet'),
   { ssr: false }
 );
-import DashboardContainer from '../../components/ui/DashboardContainer';
 import DashboardHeader from '../../components/dashboard/DashboardHeader';
 import DashboardCard from '../../components/ui/DashboardCard';
 import { Button } from '@/components/ui/Button';
@@ -93,7 +92,7 @@ const WalletPage: NextPageWithLayout = () => {
   };
 
   return (
-    <DashboardContainer>
+    <div className="container mx-auto px-4 py-6">
       <DashboardHeader 
         title="Account Wallet"
       />
@@ -175,7 +174,7 @@ const WalletPage: NextPageWithLayout = () => {
           <p className="text-gray-600 dark:text-gray-400">No transactions yet.</p>
         )}
       </DashboardCard>
-    </DashboardContainer>
+    </div>
   );
 };
 

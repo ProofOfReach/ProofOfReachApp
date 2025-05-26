@@ -7,7 +7,7 @@ import AdCard from '@/components/AdCard';
 import { getDashboardLayout } from '@/utils/layoutHelpers';
 import { NextPageWithLayout } from '@/pages/_app';
 import { AuthContext } from '@/hooks/useAuth';
-import DashboardContainer from '@/components/ui/DashboardContainer';
+// Removed DashboardContainer import
 import DashboardHeader from '@/components/ui/DashboardHeader';
 import DashboardCard from '@/components/ui/DashboardCard';
 import { UserRole } from '@/types/auth';
@@ -69,7 +69,7 @@ const AdsListPage: NextPageWithLayout = () => {
 
   if (!auth?.pubkey) {
     return (
-      <DashboardContainer>
+      <div className="container mx-auto px-4 py-6">
         <DashboardHeader title="Campaign Ads" description="View your ad campaigns" />
         <div className="text-center py-12">
           <DashboardCard>
@@ -79,12 +79,12 @@ const AdsListPage: NextPageWithLayout = () => {
             </Link>
           </DashboardCard>
         </div>
-      </DashboardContainer>
+      </div>
     );
   }
 
   return (
-    <DashboardContainer>
+    <div className="container mx-auto px-4 py-6">
       <DashboardHeader 
         title="Campaign Ads" 
         description="Manage your ad campaigns"
@@ -180,7 +180,7 @@ const AdsListPage: NextPageWithLayout = () => {
           </DashboardCard>
         )}
       </div>
-    </DashboardContainer>
+    </div>
   );
 };
 

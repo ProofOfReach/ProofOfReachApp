@@ -6,7 +6,6 @@ import { ArrowLeft, Calendar, Target, DollarSign, Clock, AlertCircle, CheckCircl
 import Link from 'next/link';
 import { useAuth } from '@/hooks/useAuth';
 import { useCurrency } from '@/context/CurrencyContext';
-import { DashboardContainer, DashboardHeader } from '@/components/ui';
 import CurrencyAmount from '@/components/CurrencyAmount';
 import LightningWallet from '@/components/LightningWallet';
 import SmartFundingFlow from '@/components/SmartFundingFlow';
@@ -415,7 +414,7 @@ const CreateCampaignPage: NextPageWithLayout = () => {
   }, []);
 
   return (
-    <DashboardContainer>
+    <div className="container mx-auto px-4 py-6">
       <DashboardHeader 
         title={getPageTitle()}
         description="Create and manage your advertising campaigns"
@@ -991,7 +990,7 @@ const CreateCampaignPage: NextPageWithLayout = () => {
           )}
         </div>
       </div>
-    </DashboardContainer>
+    </div>
   );
 };
 

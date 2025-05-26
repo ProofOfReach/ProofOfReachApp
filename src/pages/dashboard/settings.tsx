@@ -2,7 +2,6 @@ import { UserRole } from "@/types/role";
 import React, { useEffect, useState } from 'react';
 import { useAuth } from '../../hooks/useAuth';
 import { getDashboardLayout } from '@/utils/layoutHelpers';
-import DashboardContainer from '@/components/ui/DashboardContainer';
 import CopyToClipboard from '@/components/ui/CopyToClipboard';
 import { Settings, Save, RefreshCw, UserCheck, Bell, Moon, Sun, Shield, Lock, Plus, X, AlertCircle, Info, Globe, Wifi } from 'react-feather';
 import { 
@@ -494,7 +493,7 @@ const UserSettingsPage = () => {
   };
 
   return (
-    <DashboardContainer>
+    <div className="container mx-auto px-4 py-6">
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-2">
           <Settings className="h-8 w-8 text-gray-500" />
@@ -1186,7 +1185,7 @@ const UserSettingsPage = () => {
           Delete Account
         </button>
       </div>
-    </DashboardContainer>
+    </div>
   );
 };
 
