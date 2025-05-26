@@ -10,7 +10,7 @@ import '@/lib/api';
 import '@/components/SatoshiIcon';
 import '@/pages/_app';
 import '@/components/ui';
-import '@/utils/layoutHelpers';
+import { getDashboardLayout } from '@/utils/layoutHelpers';
 
 const CreateAdPage: NextPageWithLayout = () => {
   const { auth } = useAuth();
