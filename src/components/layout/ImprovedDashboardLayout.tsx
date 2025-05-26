@@ -182,7 +182,7 @@ const ImprovedDashboardLayout: React.FC<ImprovedDashboardLayoutProps> = ({
       { role: currentRole, label: 'Settings', icon: <Settings className="w-5 h-5 mr-3" />, href: '/dashboard/settings' }
     ];
     
-    // Role-specific items
+    // Role-specific items - using only verified existing pages
     const roleSpecificItems: Record<UserRole, NavigationItem[]> = {
       viewer: [
         { role: 'viewer', label: 'Nostr Feed', icon: <FileText className="w-5 h-5 mr-3" />, href: '/dashboard/nostr-feed' },
@@ -191,24 +191,21 @@ const ImprovedDashboardLayout: React.FC<ImprovedDashboardLayoutProps> = ({
       advertiser: [
         { role: 'advertiser', label: 'Campaigns', icon: <MegaphoneIcon className="w-5 h-5 mr-3" />, href: '/dashboard/campaigns' },
         { role: 'advertiser', label: 'Analytics', icon: <BarChart2 className="w-5 h-5 mr-3" />, href: '/dashboard/analytics' },
-        { role: 'advertiser', label: 'Proof of Reach', icon: <Shield className="w-5 h-5 mr-3" />, href: '/dashboard/reports/proof-of-reach' },
         { role: 'advertiser', label: 'Billing', icon: <BitcoinIcon className="w-5 h-5 mr-3" />, href: '/dashboard/billing' }
       ],
       publisher: [
         { role: 'publisher', label: 'Ad Spaces', icon: <FileText className="w-5 h-5 mr-3" />, href: '/dashboard/spaces' },
         { role: 'publisher', label: 'Rules', icon: <Shield className="w-5 h-5 mr-3" />, href: '/dashboard/rules' },
-        { role: 'publisher', label: 'Analytics', icon: <BarChart2 className="w-5 h-5 mr-3" />, href: '/dashboard/analytics' },
-        { role: 'publisher', label: 'Wallet', icon: <BitcoinIcon className="w-5 h-5 mr-3" />, href: '/dashboard/wallet' }
+        { role: 'publisher', label: 'Analytics', icon: <BarChart2 className="w-5 h-5 mr-3" />, href: '/dashboard/analytics' }
       ],
       admin: [
         { role: 'admin', label: 'Users', icon: <User className="w-5 h-5 mr-3" />, href: '/dashboard/users' },
-        { role: 'admin', label: 'Approvals', icon: <Shield className="w-5 h-5 mr-3" />, href: '/dashboard/approvals' },
+        { role: 'admin', label: 'Admin Panel', icon: <Shield className="w-5 h-5 mr-3" />, href: '/dashboard/admin' },
         { role: 'admin', label: 'Campaigns', icon: <MegaphoneIcon className="w-5 h-5 mr-3" />, href: '/dashboard/campaigns' }
       ],
       stakeholder: [
         { role: 'stakeholder', label: 'Analytics', icon: <BarChart2 className="w-5 h-5 mr-3" />, href: '/dashboard/analytics' },
-        { role: 'stakeholder', label: 'Users', icon: <User className="w-5 h-5 mr-3" />, href: '/dashboard/users' },
-        { role: 'stakeholder', label: 'Security', icon: <Shield className="w-5 h-5 mr-3" />, href: '/dashboard/security' }
+        { role: 'stakeholder', label: 'Stakeholder', icon: <User className="w-5 h-5 mr-3" />, href: '/dashboard/stakeholder' }
       ]
     };
     
