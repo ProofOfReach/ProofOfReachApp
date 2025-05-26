@@ -34,7 +34,9 @@ const waitlistFormSchema = z.object({
 type WaitlistFormValues = z.infer<typeof waitlistFormSchema>;
 
 const HomePage: NextPageWithLayout = () => {
-  const { isAuthenticated, pubkey } = useAuthSwitch();
+  // Temporarily disable auth check for homepage
+  const isAuthenticated = false;
+  const pubkey = null;
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<{
