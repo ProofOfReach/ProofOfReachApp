@@ -128,6 +128,10 @@ args = "Quick TypeScript Check"
 task = "workflow.run"
 args = "Final Error Count"
 
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Quick Build"
+
 [[workflows.workflow]]
 name = "Nostr Ad Marketplace Server"
 author = "agent"
@@ -363,6 +367,14 @@ author = "agent"
 [[workflows.workflow.tasks]]
 task = "shell.exec"
 args = "npx tsc --noEmit --skipLibCheck 2>&1 | grep -c \"error TS\" || echo \"0\""
+
+[[workflows.workflow]]
+name = "Quick Build"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "npm run build"
 
 [deployment]
 run = ["sh", "-c", "npm install && npx prisma generate && npm run dev"]
