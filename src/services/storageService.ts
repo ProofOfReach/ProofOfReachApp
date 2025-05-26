@@ -7,6 +7,7 @@
 
 import { UserRole } from '../types/core';
 import { logger } from '../lib/logger';
+import { RoleManager } from './roleManager';
 
 // Define storage key constants to avoid string duplication
 export const STORAGE_KEYS = {

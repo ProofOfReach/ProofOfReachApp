@@ -256,3 +256,6 @@ export class RoleManager {
     }
   }
 }
+
+// Export the RoleManager class
+export default RoleManager;
