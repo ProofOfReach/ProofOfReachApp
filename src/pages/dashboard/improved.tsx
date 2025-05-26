@@ -1,7 +1,7 @@
 import { UserRole } from "@/types/role";
 import { NextPage } from 'next';
-import '@/components/layout/DashboardLayout';
-import '@/components/dashboards/ViewerDashboard';
+import DashboardLayout from '@/components/layout/DashboardLayout';
+import ViewerDashboard from '@/components/dashboards/ViewerDashboard';
 
 /**
  * Dashboard page using the improved layout component
