@@ -2,7 +2,7 @@ import React, { ReactNode, useEffect, useState } from 'react';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import type { UserRole } from '../../context/RoleContext';
-import { RoleService } from '../../lib/roleService';
+import { unifiedRoleService } from '../../lib/unifiedRoleService';
 import { triggerRoleRefresh } from '../../utils/roleEvents';
 import ClientOnly from '../../utils/clientOnly';
 import DebugRoleEnabler from '../DebugRoleEnabler';
@@ -53,9 +53,9 @@ const ImprovedDashboardLayout: React.FC<ImprovedDashboardLayoutProps> = ({
   useEffect(() => {
     if (typeof window !== 'undefined') {
       // Get initial role
-      const role = RoleService.getCurrentRole();
+      const role = unifiedRoleService.getCurrentRole();
       if (role) {
-        setCurrentRole(role);
+        setCurrentRole(role as UserRole);
       }
       
       // Listen for role changes via custom events (legacy)
@@ -79,9 +79,9 @@ const ImprovedDashboardLayout: React.FC<ImprovedDashboardLayoutProps> = ({
       
       // Listen for standardized role refresh event
       const handleRoleRefresh = () => {
-        const role = RoleService.getCurrentRole();
+        const role = unifiedRoleService.getCurrentRole();
         if (role) {
-          setCurrentRole(role);
+          setCurrentRole(role as UserRole);
         }
       };
       
@@ -111,12 +111,12 @@ const ImprovedDashboardLayout: React.FC<ImprovedDashboardLayoutProps> = ({
       localStorage.setItem('currentRole', newRole);
       localStorage.setItem('force_role_refresh', 'true');
       
-      // Also use RoleService for proper event handling
-      const log = await RoleService.changeRole(newRole, true);
+      // Also use unifiedRoleService for proper event handling
+      const success = await unifiedRoleService.setCurrentRole(newRole as any);
       
-      if (log) {
+      if (success) {
         // Update local state
-        setCurrentRole(newRole);
+        setCurrentRole(newRole as UserRole);
         
         // Trigger role refresh events
         triggerRoleRefresh();
