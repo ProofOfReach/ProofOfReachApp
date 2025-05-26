@@ -18,9 +18,6 @@ const CreateRedirectPage: NextPageWithLayout = () => {
   return <div className="flex justify-center items-center h-full">Redirecting...</div>;
 };
 
-// Set the layout for the page
-CreateRedirectPage.getLayout = function getLayout(page: React.ReactElement) {
-  return getDashboardLayout(page, 'Create Ad');
-};
+// Layout handled by redirect
 
 export default CreateRedirectPage;

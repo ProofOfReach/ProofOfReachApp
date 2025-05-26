@@ -222,9 +222,6 @@ const RoleSwitcherPage: NextPageWithLayout = () => {
   );
 };
 
-// Set the layout for this page
-RoleSwitcherPage.getLayout = function getLayout(page: React.ReactElement) {
-  return getDashboardLayout(page, 'Role Switcher');
-};
+// Layout will be handled by DashboardContainer
 
 export default RoleSwitcherPage;
