@@ -42,7 +42,7 @@ const onboardingService = {
           'warn',
           {
             data: { pubkey, role },
-            category: string.OPERATIONAL,
+            category: 'OPERATIONAL',
             userFacing: false
           }
         );
@@ -87,7 +87,7 @@ const onboardingService = {
         'warn',
         {
           data: { pubkey, role },
-          category: string.OPERATIONAL,
+          category: 'OPERATIONAL',
           userFacing: false
         }
       );
@@ -139,7 +139,7 @@ const onboardingService = {
           'error',
           {
             data: { pubkey, role },
-            category: string.OPERATIONAL,
+            category: 'OPERATIONAL',
             userFacing: true,
             correlationId
           }
@@ -173,7 +173,7 @@ const onboardingService = {
           'warn',
           {
             data: { pubkey, role },
-            category: string.OPERATIONAL,
+            category: 'OPERATIONAL',
             userFacing: false,
             correlationId
           }
@@ -215,7 +215,7 @@ const onboardingService = {
             'warn',
             {
               data: { pubkey, role },
-              category: string.OPERATIONAL,
+              category: 'OPERATIONAL',
               userFacing: false,
               correlationId,
               details: 'Attempted to create minimal onboarding record without user ID'
@@ -258,7 +258,7 @@ const onboardingService = {
           'warn',
           {
             data: { pubkey, role, userId: user.id },
-            category: string.OPERATIONAL,
+            category: 'OPERATIONAL',
             userFacing: false,
             correlationId
           }
@@ -275,7 +275,7 @@ const onboardingService = {
         'error',
         {
           data: { pubkey, role },
-          category: string.OPERATIONAL,
+          category: 'OPERATIONAL',
           userFacing: false,
           correlationId
         }
@@ -330,7 +330,7 @@ const onboardingService = {
           'error',
           {
             data: { pubkey, role },
-            category: string.OPERATIONAL,
+            category: 'OPERATIONAL',
             userFacing: true,
             correlationId
           }
@@ -364,7 +364,7 @@ const onboardingService = {
           'warn',
           {
             data: { pubkey, role },
-            category: string.OPERATIONAL,
+            category: 'OPERATIONAL',
             userFacing: false,
             correlationId
           }
@@ -404,7 +404,7 @@ const onboardingService = {
             'info', // Less critical since we'll try fallback
             {
               data: { pubkey, role },
-              category: string.OPERATIONAL,
+              category: 'OPERATIONAL',
               userFacing: false,
               correlationId,
               details: 'The onboarding record might not exist yet, trying fallback creation'
@@ -445,7 +445,7 @@ const onboardingService = {
               'warn',
               {
                 data: { pubkey, role },
-                category: string.OPERATIONAL,
+                category: 'OPERATIONAL',
                 userFacing: false,
                 correlationId
               }
@@ -478,7 +478,7 @@ const onboardingService = {
             'warn',
             {
               data: { pubkey },
-              category: string.OPERATIONAL,
+              category: 'OPERATIONAL',
               userFacing: false,
               correlationId
             }
@@ -496,7 +496,7 @@ const onboardingService = {
         'error',
         {
           data: { pubkey, role },
-          category: string.OPERATIONAL,
+          category: 'OPERATIONAL',
           userFacing: false,
           correlationId
         }
@@ -549,7 +549,7 @@ const onboardingService = {
           'warn',
           {
             data: { pubkey, role, step },
-            category: string.OPERATIONAL,
+            category: 'OPERATIONAL',
             userFacing: false,
             correlationId
           }
@@ -578,7 +578,7 @@ const onboardingService = {
           'warn',
           {
             data: { pubkey, role, step },
-            category: string.OPERATIONAL,
+            category: 'OPERATIONAL',
             userFacing: false,
             correlationId
           }
@@ -625,7 +625,7 @@ const onboardingService = {
           'warn',
           {
             data: { pubkey, role, step, userId: user?.id },
-            category: string.OPERATIONAL,
+            category: 'OPERATIONAL',
             userFacing: false,
             correlationId
           }
@@ -642,7 +642,7 @@ const onboardingService = {
         'error',
         {
           data: { pubkey, role, step },
-          category: string.OPERATIONAL,
+          category: 'OPERATIONAL',
           userFacing: false,
           correlationId
         }
@@ -755,7 +755,7 @@ const onboardingService = {
         'warn',
         {
           data: { pubkey, role },
-          category: string.OPERATIONAL,
+          category: 'OPERATIONAL',
           userFacing: false,
           correlationId,
           details: 'Defaulting to /onboarding as fallback redirect'

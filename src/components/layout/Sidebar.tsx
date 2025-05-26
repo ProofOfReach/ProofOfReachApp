@@ -378,25 +378,22 @@ const Sidebar: React.FC = () => {
           <div className="mt-auto">
             <button
               onClick={() => {
-                // Show confirmation dialog
-                if (window.confirm('Are you sure you want to log out?')) {
-                  // Use the logout function from auth context if available
-                  // This is helpful for testing and makes the logout behavior more consistent
-                  if (logout && typeof logout === 'function') {
-                    logout().then(() => {
-                      // After logout completes, redirect to login page
-                      router.push('/login');
-                    });
-                    return; // Exit early if we logfully called logout
-                  }
-                  
-                  // Fallback to direct navigation if context not available
-                  if (typeof window !== 'undefined') {
-                    if (typeof window.location.assign === 'function') {
-                      window.location.assign('/system/logout');
-                    } else {
-                      window.location.href = '/system/logout';
-                    }
+                // Use the logout function from auth context if available
+                // This is helpful for testing and makes the logout behavior more consistent
+                if (logout && typeof logout === 'function') {
+                  logout().then(() => {
+                    // After logout completes, redirect to login page
+                    router.push('/login');
+                  });
+                  return; // Exit early if we logfully called logout
+                }
+                
+                // Fallback to direct navigation if context not available
+                if (typeof window !== 'undefined') {
+                  if (typeof window.location.assign === 'function') {
+                    window.location.assign('/system/logout');
+                  } else {
+                    window.location.href = '/system/logout';
                   }
                 }
               }}
