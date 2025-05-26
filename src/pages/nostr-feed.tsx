@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import Head from 'next/head';
 import { ChevronDown, Settings } from 'react-feather';
-import ImprovedDashboardLayout from '../components/layout/ImprovedDashboardLayout';
+import DashboardLayout from '../components/layout/DashboardLayout';
 import SimpleNostrFeed from '../components/SimpleNostrFeed';
 import type { NextPageWithLayout } from './_app';
 
@@ -201,7 +201,7 @@ const NostrFeedPage: NextPageWithLayout = () => {
 
 // Wrap the page with our improved layout
 NostrFeedPage.getLayout = (page: React.ReactElement) => {
-  return <ImprovedDashboardLayout title="Nostr Feed">{page}</ImprovedDashboardLayout>;
+  return <DashboardLayout title="Nostr Feed">{page}</DashboardLayout>;
 };
 
 export default NostrFeedPage;

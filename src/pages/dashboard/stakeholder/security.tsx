@@ -1,6 +1,6 @@
 import { UserRole } from "@/types/role";
 import React, { useState } from 'react';
-import '@/components/layout/ImprovedDashboardLayout';
+import '@/components/layout/DashboardLayout';
 import '@/components/ui/Typography';
 import '@/components/ui/card';
 import { 
@@ -128,7 +128,7 @@ const SecurityPage = () => {
   };
 
   return (
-    <ImprovedDashboardLayout title="Security Dashboard">
+    <DashboardLayout title="Security Dashboard">
       <div className="space-y-6">
         <div>
           <Title level={1}>Security Dashboard</Title>
@@ -342,7 +342,7 @@ const SecurityPage = () => {
           </div>
         </div>
       </div>
-    </ImprovedDashboardLayout>
+    </DashboardLayout>
   );
 };
 

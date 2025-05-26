@@ -1,6 +1,6 @@
 import { UserRole } from "@/types/role";
 import React, { useState } from 'react';
-import ImprovedDashboardLayout from '@/components/layout/ImprovedDashboardLayout';
+import DashboardLayout from '@/components/layout/DashboardLayout';
 import { defaultUseRole } from '@/context/RoleContext';
 import type { NextPageWithLayout } from '@/pages/_app';
 import { BarChart2, Calendar, Download, ArrowUp, ArrowDown, Eye, Zap, Target } from 'react-feather';
@@ -811,7 +811,7 @@ const StakeholderAnalyticsDashboard = ({ dateRange, loading }: { dateRange: User
 
 // Set the layout for this page
 AnalyticsPage.getLayout = function getLayout(page: React.ReactElement) {
-  return <ImprovedDashboardLayout>{page}</ImprovedDashboardLayout>;
+  return <DashboardLayout>{page}</DashboardLayout>;
 };
 
 export default AnalyticsPage;

@@ -2,7 +2,7 @@ import { UserRole } from "@/types/role";
 import { useState, useRef } from 'react';
 import { Book, Code, Clipboard, Check, Copy, ExternalLink } from 'react-feather';
 import Link from 'next/link';
-import '@/components/layout/ImprovedDashboardLayout';
+import '@/components/layout/DashboardLayout';
 import '@/components/ui/Button';
 import '@/components/ui/card';
 import '@/components/ui/Typography';
@@ -157,7 +157,7 @@ add_shortcode('proofofreach_ad', 'proofofreach_ad_shortcode');
   };
 
   return (
-    <ImprovedDashboardLayout title="SDK & Code Examples">
+    <DashboardLayout title="SDK & Code Examples">
       <div className="space-y-6 max-w-4xl">
         <div>
           <Title level={1}>ProofOfReach SDK</Title>
@@ -370,7 +370,7 @@ add_shortcode('proofofreach_ad', 'proofofreach_ad_shortcode');
           </div>
         </Card>
       </div>
-    </ImprovedDashboardLayout>
+    </DashboardLayout>
   );
 };
 

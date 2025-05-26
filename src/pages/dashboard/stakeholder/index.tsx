@@ -4,7 +4,7 @@ import { ChevronRight, DollarSign, PieChart, Users } from 'react-feather';
 import { defaultUseRole } from '../../../context/RoleContext';
 import DashboardLayout from '../../../components/layout/DashboardLayout';
 import StatCard from '../../../components/ui/StatCard';
-import '@/components/layout/ImprovedDashboardLayout';
+import '@/components/layout/DashboardLayout';
 
 export default function StakeholderDashboard(): React.ReactElement {
   const { role } = defaultUseRole();
@@ -99,5 +99,5 @@ export default function StakeholderDashboard(): React.ReactElement {
 
 // Use the improved dashboard layout
 StakeholderDashboard.getLayout = (page: React.ReactElement) => {
-  return <ImprovedDashboardLayout title="Stakeholder Dashboard">{page}</ImprovedDashboardLayout>;
+  return <DashboardLayout title="Stakeholder Dashboard">{page}</DashboardLayout>;
 };

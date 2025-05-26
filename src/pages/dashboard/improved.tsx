@@ -1,6 +1,6 @@
 import { UserRole } from "@/types/role";
 import { NextPage } from 'next';
-import '@/components/layout/ImprovedDashboardLayout';
+import '@/components/layout/DashboardLayout';
 import '@/components/dashboards/ViewerDashboard';
 
 /**
@@ -8,9 +8,9 @@ import '@/components/dashboards/ViewerDashboard';
  */
 const ImprovedDashboardPage: NextPage = () => {
   return (
-    <ImprovedDashboardLayout title="Improved Dashboard">
+    <DashboardLayout title="Improved Dashboard">
       <ViewerDashboard />
-    </ImprovedDashboardLayout>
+    </DashboardLayout>
   );
 };
 

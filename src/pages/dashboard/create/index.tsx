@@ -6,7 +6,7 @@ import '@/utils/layoutHelpers';
 
 /**
  * Redirect page from /dashboard/create to /dashboard/ads/create
- * This exists to maintain compatibility with links in ImprovedDashboardLayout
+ * This exists to maintain compatibility with links in DashboardLayout
  */
 const CreateRedirectPage: NextPageWithLayout = () => {
   const router = useRouter();

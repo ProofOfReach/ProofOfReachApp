@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import ImprovedDashboardLayout from '@/components/layout/ImprovedDashboardLayout';
+import DashboardLayout from '@/components/layout/DashboardLayout';
 import {
   Shield,
   User,
@@ -191,9 +191,9 @@ const ProofOfReachSimple = () => {
 
 const ProofOfReachWithLayout = () => {
   return (
-    <ImprovedDashboardLayout title="Proof of Reach Report">
+    <DashboardLayout title="Proof of Reach Report">
       <ProofOfReachSimple />
-    </ImprovedDashboardLayout>
+    </DashboardLayout>
   );
 };
 

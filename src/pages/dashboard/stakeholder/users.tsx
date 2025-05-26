@@ -1,6 +1,6 @@
 import { UserRole } from "@/types/role";
 import React, { useState } from 'react';
-import '@/components/layout/ImprovedDashboardLayout';
+import DashboardLayout from '@/components/layout/DashboardLayout';
 import '@/components/ui/Typography';
 import '@/components/ui/card';
 import { Search, Filter, User as UserIcon, Check, X, Shield } from 'react-feather';
@@ -129,13 +129,13 @@ const StakeholderUsersPage = () => {
   });
 
   return (
-    <ImprovedDashboardLayout title="User Management">
+    <DashboardLayout title="User Management">
       <div className="space-y-6">
         <div>
-          <Title level={1}>User Management</Title>
-          <Paragraph className="text-gray-500 dark:text-gray-400">
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-white">User Management</h1>
+          <p className="text-gray-500 dark:text-gray-400">
             View and manage all users on the platform.
-          </Paragraph>
+          </p>
         </div>
         
         <div className="flex flex-col md:flex-row gap-4 justify-between">
@@ -263,7 +263,7 @@ const StakeholderUsersPage = () => {
           </div>
         </div>
       </div>
-    </ImprovedDashboardLayout>
+    </DashboardLayout>
   );
 };
 

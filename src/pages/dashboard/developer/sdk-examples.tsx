@@ -1,6 +1,6 @@
 import { UserRole } from "@/types/role";
 import React, { useState } from 'react';
-import '@/components/layout/ImprovedDashboardLayout';
+import '@/components/layout/DashboardLayout';
 import '@/components/ui/Typography';
 import '@/components/ui/card';
 import { Check, Copy, ExternalLink } from 'react-feather';
@@ -358,7 +358,7 @@ SDK.renderAd("proof-of-reach-ad", {
   ];
 
   return (
-    <ImprovedDashboardLayout title="SDK & Code Examples">
+    <DashboardLayout title="SDK & Code Examples">
       <div className="space-y-6">
         <div>
           <Title level={1}>ProofOfReach SDK</Title>
@@ -506,7 +506,7 @@ SDK.renderAd("proof-of-reach-ad", {
           </div>
         </Card>
       </div>
-    </ImprovedDashboardLayout>
+    </DashboardLayout>
   );
 };
 

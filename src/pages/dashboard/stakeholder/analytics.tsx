@@ -1,6 +1,6 @@
 import { UserRole } from "@/types/role";
 import React from 'react';
-import '@/components/layout/ImprovedDashboardLayout';
+import '@/components/layout/DashboardLayout';
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer
 } from 'recharts';
@@ -19,7 +19,7 @@ const monthlySummary = [
 
 const StakeholderAnalyticsPage = () => {
   return (
-    <ImprovedDashboardLayout title="Stakeholder Analytics">
+    <DashboardLayout title="Stakeholder Analytics">
       <div className="space-y-6">
         <div>
           <Title level={1}>Platform Analytics</Title>
@@ -163,7 +163,7 @@ const StakeholderAnalyticsPage = () => {
           </Card>
         </div>
       </div>
-    </ImprovedDashboardLayout>
+    </DashboardLayout>
   );
 };
 
