@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import '@/services/storageService';
-import '@/lib/logger';
-import '@/services/testModeService';
-import '@/services/roleManager';
+import { StorageService } from '@/services/storageService';
+import { logger } from '@/lib/logger';
+import { testModeService } from '@/services/testModeService';
+import { RoleManager } from '@/services/roleManager';
 
 /**
  * A floating button that appears only for admin users to disable test mode entirely
