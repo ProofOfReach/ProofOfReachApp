@@ -311,7 +311,7 @@ const PublisherEarningsPage = () => {
 
 // Wrap the page with our layout
 PublisherEarningsPage.getLayout = (page: React.ReactElement) => {
-  return <DashboardLayout>{page}</DashboardLayout>;
+  return <ImprovedDashboardLayout>{page}</ImprovedDashboardLayout>;
 };
 
 export default PublisherEarningsPage;

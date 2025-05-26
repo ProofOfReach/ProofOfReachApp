@@ -1,11 +1,8 @@
-import { UserRole } from "@/types/role";
 import React, { useState, useEffect } from 'react';
 import { Bell, Search, Filter, CheckCircle, XCircle, EyeOff } from 'react-feather';
-import '@/components/layout/EnhancedDashboardLayout';
-import '@/components/ui';
 import type { ReactElement } from 'react';
 import type { NextPageWithLayout } from '../../_app';
-import '@/components/CurrencyAmount';
+import ImprovedDashboardLayout from '@/components/layout/ImprovedDashboardLayout';
 
 /**
  * Admin Ad Approvals Page
@@ -236,7 +233,7 @@ const AdApprovalsPage: NextPageWithLayout = () => {
   };
 
   return (
-    <DashboardContainer>
+    <div className="p-6">
       <div className="flex flex-col lg:flex-row gap-6">
         {/* Ad list and filters */}
         <div className="w-full lg:w-7/12 bg-white dark:bg-gray-800 rounded-lg shadow p-6">
@@ -489,10 +486,12 @@ const AdApprovalsPage: NextPageWithLayout = () => {
           )}
         </div>
       </div>
-    </DashboardContainer>
+    </div>
   );
 };
 
-AdApprovalsPage.getLayout = getEnhancedDashboardLayout;
+AdApprovalsPage.getLayout = function getLayout(page: ReactElement) {
+  return <ImprovedDashboardLayout>{page}</ImprovedDashboardLayout>;
+};
 
 export default AdApprovalsPage;
