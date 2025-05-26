@@ -7,6 +7,7 @@ This folder contains project documentation and internal reference files.
 - **[prd.md](./prd.md)** - Product Requirements Document outlining project goals, features, and specifications
 - **[learnings.md](./learnings.md)** - Development session notes, lessons learned, and technical decisions
 - **[todo.md](./todo.md)** - Remaining high-level work items, technical debt, and future improvements
+- **[pre-deployment-validation.md](./pre-deployment-validation.md)** - **CRITICAL**: Commands to run before any deployment to catch errors early
 
 ## Purpose
 
