@@ -60,11 +60,11 @@ const Icon: React.FC<IconProps> = ({
       case 'logout':
         return <LogOut size={size} className={className} color={color} />;
       case 'megaphone':
-        return <MegaphoneIcon className={cn('w-5 h-5', className)} />;
+        return <Settings size={size} className={className} color={color} />; // Fallback to Settings
       case 'sats':
-        return <SatsIcon className={cn('w-5 h-5', className)} />;
+        return <DollarSign size={size} className={className} color={color} />; // Fallback to Dollar
       case 'bitcoin':
-        return <BitcoinIcon className={cn('w-5 h-5', className)} />;
+        return <DollarSign size={size} className={className} color={color} />; // Fallback to Dollar
       default:
         return <span className="text-red-500">Missing icon: {name}</span>;
     }
