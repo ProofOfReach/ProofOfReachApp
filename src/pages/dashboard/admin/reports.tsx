@@ -473,6 +473,6 @@ const ReportsPage: NextPageWithLayout = () => {
   );
 };
 
-ReportsPage.getLayout = getEnhancedDashboardLayout;
+ReportsPage.getLayout = getDashboardLayout;
 
 export default ReportsPage;
