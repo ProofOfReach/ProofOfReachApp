@@ -541,17 +541,25 @@ const LoginPageClient: React.FC = () => {
       const ROLE_ADMIN: string = 'admin';
       const ROLE_STAKEHOLDER: string = 'stakeholder';
       
-      // Set roles directly in localStorage with typed array
-      const ALL_ROLES: string[] = [ROLE_ADVERTISER, ROLE_PUBLISHER, ROLE_ADMIN, ROLE_STAKEHOLDER];
+      // Set roles directly in localStorage with typed array - include viewer role
+      const ALL_ROLES: string[] = ['viewer', ROLE_ADVERTISER, ROLE_PUBLISHER, ROLE_ADMIN, ROLE_STAKEHOLDER];
       localStorage.setItem('cachedAvailableRoles', JSON.stringify(ALL_ROLES));
       localStorage.setItem('roleCacheTimestamp', Date.now().toString());
-      localStorage.setItem('userRole', ROLE_ADVERTISER); // Default role
+      localStorage.setItem('userRole', ROLE_ADMIN); // Default to admin role for test mode
       
-      // Enable each role explicitly
+      // Enable each role explicitly with proper test mode flags
       localStorage.setItem('isAdvertiser', 'true');
       localStorage.setItem('isPublisher', 'true');
-      localStorage.setItem('true', 'true');
+      localStorage.setItem('isAdmin', 'true');
       localStorage.setItem('isStakeholder', 'true');
+      localStorage.setItem('isViewer', 'true');
+      
+      // Set test mode role flags for comprehensive access
+      localStorage.setItem('test_advertiser_role', 'true');
+      localStorage.setItem('test_publisher_role', 'true');
+      localStorage.setItem('test_admin_role', 'true');
+      localStorage.setItem('test_stakeholder_role', 'true');
+      localStorage.setItem('test_viewer_role', 'true');
       
       try {
         // Explicitly pass true for test mode
