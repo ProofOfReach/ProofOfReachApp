@@ -124,6 +124,10 @@ args = "React Query Test Server"
 task = "workflow.run"
 args = "Quick TypeScript Check"
 
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Final Error Count"
+
 [[workflows.workflow]]
 name = "Nostr Ad Marketplace Server"
 author = "agent"
@@ -351,6 +355,14 @@ author = "agent"
 [[workflows.workflow.tasks]]
 task = "shell.exec"
 args = "npx tsc --noEmit --skipLibCheck src/services/testModeService.ts 2>&1 | head -20"
+
+[[workflows.workflow]]
+name = "Final Error Count"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "npx tsc --noEmit --skipLibCheck 2>&1 | grep -c \"error TS\" || echo \"0\""
 
 [deployment]
 run = ["sh", "-c", "npm install && npx prisma generate && npm run dev"]

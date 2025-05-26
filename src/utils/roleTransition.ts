@@ -69,7 +69,7 @@ export function dispatchRoleSwitchedEvent(from: UserRole, to: UserRole, path?: s
     const event = new CustomEvent('roleSwitched', { detail });
     document.dispatchEvent(event);
   } catch (error) {
-    logger.log('Error dispatching role switched event:', error);
+    logger.log('Error dispatching role switched event:', { error });
   }
 }
 
