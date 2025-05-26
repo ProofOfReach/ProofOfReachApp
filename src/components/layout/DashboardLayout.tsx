@@ -1,6 +1,7 @@
 import React, { ReactNode, useEffect, useState } from 'react';
 import Head from 'next/head';
-import { defaultUseRole, UserRole } from '../../context/RoleContext';
+import { defaultUseRole } from '../../context/NewRoleContext';
+import { UserRole } from '../../types/role';
 import ClientOnly from '../../utils/clientOnly';
 import DebugRoleEnabler from '../DebugRoleEnabler';
 import Sidebar from './Sidebar'; // Import the original sidebar (temporarily)
@@ -12,16 +13,8 @@ export interface DashboardLayoutProps {
 }
 
 const DashboardInner: React.FC<DashboardLayoutProps> = ({ children, title, role }) => {
-  const { setRole } = defaultUseRole();
+  const { role: currentRole } = defaultUseRole();
   const [isTestMode, setIsTestMode] = useState(false);
-  
-  // Apply the role from props if provided
-  useEffect(() => {
-    if (role) {
-      console.log(`DashboardInner setting role to: ${role}`);
-      setRole(role as UserRole);
-    }
-  }, [role, setRole]);
   
   // Check if we're in test mode
   useEffect(() => {
