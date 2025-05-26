@@ -213,7 +213,7 @@ export class StorageService {
         }
       } catch (e) {
         // Ignore localStorage errors
-        logger.debug('Error checking forceDisableTestMode flag:', e);
+        logger.debug('Error checking forceDisableTestMode flag:', e as Record<string, any>);
       }
       
       // First check the new state object
