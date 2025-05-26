@@ -1,5 +1,28 @@
 # Project Learnings
 
+## 2025-01-26 — Layout Reference Resolution & Development Server Stabilization
+
+**Session Goal:** Fix widespread DashboardLayout reference errors that were preventing both development and production builds from functioning properly
+
+**Decisions Made:**
+- Decision 1: Systematically fix all 37+ DashboardLayout references across the entire codebase using an automated script approach
+- Decision 2: Create missing essential pages (how-it-works, publisher, terms, test-auth, system/logout) to resolve page not found errors
+- Decision 3: Focus on getting development server stable before tackling production build complexities
+
+**What Was Done:**
+- Created and executed comprehensive layout fix script that corrected all DashboardLayout import references
+- Fixed RoleDropdown component by adding missing useAppEvent imports and required constants
+- Resolved layout reference issues in unified dashboard and advertiser billing pages
+- Created missing pages that were causing 404 errors during build process
+- Successfully restored development server functionality with proper page compilation
+- Cleared build cache and restarted server to eliminate static file loading issues
+
+**Open Questions / Next Steps:**
+1. Address remaining production build failures (missing pages like /dashboard/ads, /auth-direct, /dashboard/advertiser)
+2. Resolve strict production build validation that catches issues development server tolerates
+3. Complete missing page implementations for full production build capability
+4. Consider simplifying production build requirements vs. implementing all missing components
+
 ## 2025-01-25 — Critical Build Fixes & Import Resolution
 
 **Session Goal:** Systematically fix TypeScript errors blocking production builds, focusing on critical import issues and component exports
