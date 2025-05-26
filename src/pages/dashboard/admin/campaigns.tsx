@@ -253,7 +253,7 @@ const AdminCampaignsPage = () => {
                           </button>
                         )}
                         <button className="text-purple-600 hover:text-purple-900">
-                          <BarChart3 className="w-4 h-4" />
+                          <BarChart className="w-4 h-4" />
                         </button>
                       </div>
                     </td>
