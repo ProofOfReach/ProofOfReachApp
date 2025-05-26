@@ -2,7 +2,7 @@ import { UserRole } from "@/types/role";
 import React from 'react';
 import '@/context/EnhancedRoleContext';
 import '@/components/role';
-import '@/components/auth/withRoleAccess';
+import { withRoleAccess } from '@/components/auth/withRoleAccess';
 
 /**
  * Role management demo page

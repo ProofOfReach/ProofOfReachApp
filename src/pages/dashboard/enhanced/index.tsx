@@ -4,7 +4,7 @@ import { GetServerSideProps } from 'next';
 import Head from 'next/head';
 import '@/context/EnhancedRoleContext';
 import '@/components/layout/RoleBasedLayout';
-import '@/components/auth/withRoleAccess';
+import { withRoleAccess } from '@/components/auth/withRoleAccess';
 import '@/context/RoleContext';
 
 /**
