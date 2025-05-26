@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import '@/components/layout/DashboardLayout';
 import '@/context/RoleContext';
-import '@/hooks/useAuth';
+import { useAuth } from '@/hooks/useAuth';
 import { Download, CreditCard, Plus, Repeat, Download as DownloadIcon, Search } from 'react-feather';
 import '@/components/icons/SatsIcon';
 import '@/components/charts';

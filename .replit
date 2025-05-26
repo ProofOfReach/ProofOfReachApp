@@ -176,6 +176,14 @@ args = "Comprehensive Import Check"
 task = "workflow.run"
 args = "Final Production Build"
 
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Quick Final Build"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Complete Production Build"
+
 [[workflows.workflow]]
 name = "Nostr Ad Marketplace Server"
 author = "agent"
@@ -502,6 +510,22 @@ args = "node scripts/validate-imports.js"
 
 [[workflows.workflow]]
 name = "Final Production Build"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "npm run build"
+
+[[workflows.workflow]]
+name = "Quick Final Build"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "npm run build"
+
+[[workflows.workflow]]
+name = "Complete Production Build"
 author = "agent"
 
 [[workflows.workflow.tasks]]
