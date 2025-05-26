@@ -355,7 +355,7 @@ class RoleService {
       }
       
       // Prepare the update data based on role
-      const updateData: Record<UserRole, boolean> = {};
+      const updateData: Record<string, boolean> = {};
       
       switch (role) {
         case 'advertiser':
@@ -365,7 +365,7 @@ class RoleService {
           updateData.isPublisher = true;
           break;
         case 'admin':
-          updateData.true = true;
+          updateData.isAdmin = true;
           break;
         case 'stakeholder':
           updateData.isStakeholder = true;
@@ -419,7 +419,7 @@ class RoleService {
       }
       
       // Prepare the update data based on role
-      const updateData: Record<UserRole, boolean> = {};
+      const updateData: Record<string, boolean> = {};
       
       switch (role) {
         case 'advertiser':
@@ -429,7 +429,7 @@ class RoleService {
           updateData.isPublisher = false;
           break;
         case 'admin':
-          updateData.true = false;
+          updateData.isAdmin = false;
           break;
         case 'stakeholder':
           updateData.isStakeholder = false;

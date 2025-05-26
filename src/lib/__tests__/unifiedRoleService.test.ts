@@ -303,8 +303,19 @@ describe('UnifiedRoleService', () => {
       // Direct mock of all involved Prisma methods
       jest.spyOn(prisma.user, 'findUnique').mockResolvedValue({
         id: 'user123',
+        createdAt: new Date(),
+        updatedAt: new Date(),
         nostrPubkey: 'npub123',
-        currentRole: 'viewer'
+        balance: 0,
+        isAdvertiser: false,
+        isPublisher: false,
+        isAdmin: false,
+        isStakeholder: false,
+        currentRole: 'viewer',
+        previousRole: 'viewer',
+        isTestUser: false,
+        isActive: true,
+        lastRoleChange: new Date()
       });
       
       // Set up mock for userRole operations

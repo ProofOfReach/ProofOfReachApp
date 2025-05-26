@@ -163,7 +163,13 @@ describe('AdvertiserDashboard Component', () => {
   it('handles unauthenticated user', () => {
     // Mock useAuth to return unauthenticated user
     jest.spyOn(useAuthModule, 'useAuth').mockReturnValue({
-      auth: { isLoggedIn: false },
+      auth: { 
+        isLoggedIn: false,
+        pubkey: '',
+        isTestMode: false,
+        availableRoles: [],
+        profile: null
+      },
       loading: false,
       error: null,
       login: jest.fn(),
