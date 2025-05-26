@@ -6,6 +6,11 @@ const { TextEncoder, TextDecoder } = require('util');
 global.TextEncoder = TextEncoder;
 global.TextDecoder = TextDecoder;
 
+// Mock Supabase environment variables for tests
+process.env.NEXT_PUBLIC_SUPABASE_URL = 'https://test.supabase.co';
+process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY = 'test_anon_key';
+process.env.SUPABASE_SERVICE_ROLE_KEY = 'test_service_role_key';
+
 // Mock useAuthRefactored to fix tests
 jest.mock('./src/hooks/useAuthRefactored', () => {
   return {

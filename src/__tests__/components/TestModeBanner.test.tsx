@@ -114,6 +114,7 @@ describe('TestModeBanner', () => {
       isActive: true,
       timeRemaining: 1800, // 30 minutes
       disableTestMode: jest.fn(),
+      enableTestMode: jest.fn(),
       enableAllRoles: jest.fn(),
       setCurrentRole: jest.fn(),
       isTestModeAllowed: true,
