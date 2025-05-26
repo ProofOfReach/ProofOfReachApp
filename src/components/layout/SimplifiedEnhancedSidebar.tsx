@@ -216,3 +216,4 @@ const SimplifiedEnhancedSidebar: React.FC = () => {
 };
 
 export default SimplifiedEnhancedSidebar;
+export { SimplifiedEnhancedSidebar };

@@ -108,3 +108,4 @@ const NetworkErrorDisplay: React.FC<NetworkErrorDisplayProps> = ({
 };
 
 export default NetworkErrorDisplay;
+export { NetworkErrorDisplay };
