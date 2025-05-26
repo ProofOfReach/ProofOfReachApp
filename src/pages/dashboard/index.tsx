@@ -18,6 +18,7 @@ import DashboardCard from '@/components/ui/DashboardCard';
 import StatCard from '@/components/ui/StatCard';
 import CurrencyWrapper from '@/components/CurrencyWrapper';
 import { getDashboardLayout } from '@/utils/layoutHelpers';
+import { enableTestModeRoles, isInTestMode } from '@/utils/testModeRoleFix';
 import type { ReactElement } from 'react';
 import type { NextPageWithLayout } from '../_app';
 
@@ -44,6 +45,15 @@ const Dashboard = () => {
 
   // Client-side role loading to avoid hydration issues
   useEffect(() => {
+    // First check if we're in test mode and enable all roles
+    if (isInTestMode()) {
+      console.log('Test mode detected - enabling all roles');
+      enableTestModeRoles();
+      setIsTestMode(true);
+      setCurrentRole('admin'); // Default to admin for test mode
+      return;
+    }
+    
     const savedRole = getCurrentRoleFromAllSources();
     if (savedRole && ['viewer', 'advertiser', 'publisher', 'admin', 'stakeholder'].includes(savedRole)) {
       setCurrentRole(savedRole as UserRole);
