@@ -32,6 +32,7 @@
     "node_modules",
     "sdk/**/*",
     "server/**/*",
-    ".next/**/*"
+    ".next/**/*",
+    "migration-backup/**/*"
   ]
 }
