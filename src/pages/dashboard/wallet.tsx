@@ -38,6 +38,7 @@ const WalletPage: NextPageWithLayout = () => {
   const [amount, setAmount] = useState('');
   const [withdrawInvoice, setWithdrawInvoice] = useState('');
   const [processing, setProcessing] = useState(false);
+  const [enableRealBitcoinConnect, setEnableRealBitcoinConnect] = useState(false);
 
   // Test wallet functionality
   const { 
@@ -109,10 +110,39 @@ const WalletPage: NextPageWithLayout = () => {
         </div>
       )}
       
+      {/* Testing Mode Toggle */}
+      {isTestMode && (
+        <DashboardCard title="Testing Configuration">
+          <div className="flex items-center justify-between">
+            <div>
+              <h4 className="font-medium text-gray-900 dark:text-gray-100">Bitcoin Connect Integration</h4>
+              <p className="text-sm text-gray-600 dark:text-gray-400">
+                {enableRealBitcoinConnect 
+                  ? "Using real Bitcoin Connect modal (requires wallet)" 
+                  : "Using mock wallet (fast testing)"}
+              </p>
+            </div>
+            <label className="relative inline-flex items-center cursor-pointer">
+              <input
+                type="checkbox"
+                className="sr-only peer"
+                checked={enableRealBitcoinConnect}
+                onChange={(e) => setEnableRealBitcoinConnect(e.target.checked)}
+              />
+              <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
+              <span className="ml-3 text-sm font-medium text-gray-900 dark:text-gray-300">
+                Real Bitcoin Connect
+              </span>
+            </label>
+          </div>
+        </DashboardCard>
+      )}
+
       {/* Modern Bitcoin Connect Wallet */}
       <BitcoinConnectWallet
         balance={isTestMode ? testWalletBalance : (balanceData?.balance ?? 0)}
         isTestMode={isTestMode}
+        enableRealBitcoinConnect={enableRealBitcoinConnect}
         onSuccess={(message) => {
           setSuccess(message);
           setError(null);

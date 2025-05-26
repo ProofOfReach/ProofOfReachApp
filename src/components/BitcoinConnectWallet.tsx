@@ -8,6 +8,7 @@ import CurrencyAmount from './CurrencyAmount';
 interface BitcoinConnectWalletProps {
   balance?: number;
   isTestMode?: boolean;
+  enableRealBitcoinConnect?: boolean; // New prop for integration testing
   onSuccess: (message: string) => void;
   onError: (message: string) => void;
   onBalanceUpdate?: (newBalance: number) => void;
@@ -16,6 +17,7 @@ interface BitcoinConnectWalletProps {
 const BitcoinConnectWallet: React.FC<BitcoinConnectWalletProps> = ({
   balance = 0,
   isTestMode = false,
+  enableRealBitcoinConnect = false,
   onSuccess,
   onError,
   onBalanceUpdate
@@ -53,14 +55,15 @@ const BitcoinConnectWallet: React.FC<BitcoinConnectWalletProps> = ({
 
   const connectWallet = async () => {
     try {
-      if (isTestMode) {
-        // In test mode, simulate connection
+      if (isTestMode && !enableRealBitcoinConnect) {
+        // Mock wallet mode - fast testing without real Bitcoin Connect
         setIsConnected(true);
         setConnectedWallet('Test Wallet');
         onSuccess('Test wallet connected successfully!');
         return;
       }
 
+      // Real Bitcoin Connect integration mode
       launchModal();
       
       // Check connection after modal
