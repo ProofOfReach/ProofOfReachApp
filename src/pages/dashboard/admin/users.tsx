@@ -1,10 +1,8 @@
-import { UserRole } from "@/types/role";
 import React, { useState, useEffect } from 'react';
 import { Users, Search, Filter, UserPlus } from 'react-feather';
-import { getEnhancedDashboardLayout } from '@/components/layout/EnhancedDashboardLayout';
-import { DashboardContainer } from '@/components/ui';
 import type { ReactElement } from 'react';
 import type { NextPageWithLayout } from '../../_app';
+import type { UserRole } from '@/types/auth';
 
 /**
  * Admin User Management Page
@@ -113,7 +111,7 @@ const UserManagementPage: NextPageWithLayout = () => {
   };
 
   return (
-    <DashboardContainer>
+    <div className="container mx-auto px-4 py-6">
       <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
           <h1 className="text-2xl font-bold text-gray-900 dark:text-white flex items-center">
@@ -243,10 +241,11 @@ const UserManagementPage: NextPageWithLayout = () => {
           </div>
         )}
       </div>
-    </DashboardContainer>
+    </div>
   );
 };
 
-UserManagementPage.getLayout = getEnhancedDashboardLayout;
+// Simple layout without enhanced dashboard
+UserManagementPage.getLayout = (page: ReactElement) => page;
 
 export default UserManagementPage;
