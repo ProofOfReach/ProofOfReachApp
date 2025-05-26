@@ -2,7 +2,7 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import { roleService } from '../../../services/roleService';
 import { logger } from '../../../lib/logger';
 import { authMiddleware } from '../../../utils/authMiddleware';
-import { hasRole } from '../../../lib/roles/roleUtils';
+import { hasRole, toggleTestMode } from '../../../lib/roles/roleUtils';
 
 /**
  * API route to toggle test mode for a user
