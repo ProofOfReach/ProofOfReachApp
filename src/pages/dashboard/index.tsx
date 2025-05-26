@@ -54,49 +54,51 @@ const Dashboard = () => {
   useEffect(() => {
     if (typeof window === 'undefined') return;
     
-    // Listen for role changes from the dropdown
-    const handleRoleStorageChange = (event: StorageEvent) => {
-      if (event.key === 'currentRole') {
-        const newRole = event.newValue;
-        if (newRole && ['viewer', 'advertiser', 'publisher', 'admin', 'stakeholder'].includes(newRole)) {
-          console.log('🔄 Dashboard responding to role change:', newRole);
-          setCurrentRole(newRole as UserRole);
+    // Set up test mode
+    const testMode = localStorage.getItem('isTestMode') === 'true';
+    setIsTestMode(testMode);
+    
+    // Listen for custom role change events
+    const handleRoleChangeEvent = (event: CustomEvent) => {
+      const { to } = event.detail;
+      console.log('🔄 Dashboard responding to role change event:', to);
+      setCurrentRole(to as UserRole);
+    };
+    
+    // Listen for localStorage changes (cross-tab)
+    const handleStorageChange = (event: StorageEvent) => {
+      if (event.key === 'currentRole' && event.newValue) {
+        const newRole = event.newValue.replace(/['"]/g, '');
+        console.log('🔄 Dashboard responding to storage change:', newRole);
+        setCurrentRole(newRole as UserRole);
+      }
+    };
+    
+    // More frequent polling for same-tab changes
+    const checkRoleChanges = () => {
+      const currentStoredRole = localStorage.getItem('currentRole');
+      if (currentStoredRole) {
+        const normalizedRole = currentStoredRole.replace(/['"]/g, '');
+        if (normalizedRole !== currentRole) {
+          console.log('🔄 Dashboard detecting role change:', normalizedRole);
+          setCurrentRole(normalizedRole as UserRole);
         }
       }
     };
     
-    // Also listen for manual localStorage changes within the same tab
-    const checkRoleChanges = () => {
-      const currentStoredRole = localStorage.getItem('currentRole');
-      if (currentStoredRole && currentStoredRole !== currentRole) {
-        console.log('🔄 Dashboard detecting role change:', currentStoredRole);
-        setCurrentRole(currentStoredRole as UserRole);
-      }
-    };
-    
     // Set up event listeners
-    window.addEventListener('storage', handleRoleStorageChange);
+    document.addEventListener('roleSwitched', handleRoleChangeEvent as EventListener);
+    window.addEventListener('storage', handleStorageChange);
     
-    // Check for role changes periodically (for same-tab changes)
-    const interval = setInterval(checkRoleChanges, 500);
+    // More frequent polling (every 100ms) for better responsiveness
+    const interval = setInterval(checkRoleChanges, 100);
     
-    return () => {
-      window.removeEventListener('storage', handleRoleStorageChange);
-      clearInterval(interval);
-    };
-    
-    // For test mode, prioritize localStorage role first to ensure consistency with the role selector
-    const testMode = localStorage.getItem('isTestMode') === 'true';
-    setIsTestMode(testMode);
-    
+    // Initial role sync in test mode
     if (testMode) {
-      // In test mode, always prioritize localStorage for initial role to fix mismatch
       const storedRole = localStorage.getItem('currentRole');
       if (storedRole) {
-        console.log(`Test mode active: Using localStorage role: ${storedRole}`);
-        // Fix issue with role detection - normalize role value
         const normalizedRole = storedRole.replace(/['"]/g, '');
-        console.log(`Normalized role in test mode: ${normalizedRole}`);
+        console.log(`Test mode active: Using localStorage role: ${normalizedRole}`);
         setCurrentRole(normalizedRole as UserRole);
         
         // Also set in localStorage to ensure consistency 
@@ -275,29 +277,18 @@ const Dashboard = () => {
         });
       }, 50);
     };
-    
-    // Storage event handler for direct localStorage changes
-    const handleStorageChange = (event: StorageEvent) => {
-      // Handle all possible role-related keys
-      if (event.key === 'userRole' || event.key === 'currentRole' || 
-          event.key === 'nostr-ads:currentRole' || event.key === 'roleData') {
-        if (event.newValue) {
-          // Parse the role from the value (handle both string and JSON formats)
-          let newRole = event.newValue;
-          
-          // Handle the case where the role is stored in JSON format
-          try {
-            const parsedValue = JSON.parse(event.newValue);
-            if (parsedValue && typeof parsedValue === 'object') {
-              if (parsedValue.role) {
-                newRole = parsedValue.role;
-              } else if (parsedValue.currentRole) {
-                newRole = parsedValue.currentRole;
-              }
-            }
-          } catch (e) {
-            // If it's not valid JSON, use the raw value (which could be a simple role string)
-            newRole = event.newValue;
+
+    // Clean up event listeners when component unmounts
+    return () => {
+      document.removeEventListener('roleSwitched', handleRoleChangeEvent as EventListener);
+      window.removeEventListener('storage', handleStorageChange);
+      clearInterval(interval);
+    };
+  }, [currentRole, getCurrentRoleFromAllSources]);
+
+  // Additional useEffect to handle role changes
+  useEffect(() => {
+    console.debug('[DEBUG] Dashboard role changed to:', currentRole);
           }
           
           console.debug(`Storage change detected, updating role to: ${newRole}`);
