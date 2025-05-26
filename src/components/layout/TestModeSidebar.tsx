@@ -1,3 +1,8 @@
+/**
+ * @deprecated This component is DEPRECATED and should not be used.
+ * Use ImprovedDashboardLayout instead which has built-in sidebar navigation.
+ * This file is kept for reference only and may be removed in future versions.
+ */
 import React, { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
