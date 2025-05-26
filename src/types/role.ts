@@ -29,4 +29,7 @@ export const STORAGE_KEYS = {
   TEST_MODE: 'testMode',
   USER_ROLE: 'userRole',
   AUTH_TOKEN: 'authToken',
+  CURRENT_ROLE: 'currentRole',
+  LAST_ROLE_CHANGE: 'lastRoleChange',
+  BYPASS_API_CALLS: 'bypass_api_calls',
 } as const;

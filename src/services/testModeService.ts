@@ -12,16 +12,11 @@ import { logger } from "@/lib/logger";
  * Part of the Phase 6 TestMode modernization strategy.
  */
 
-import { UserRole } from '@/types/role';
-import '@/lib/logger';
-import '@/services/storageService';
-import '@/lib/events/eventDispatcher';
+import { UserRole, TestModeState, STORAGE_KEYS } from '@/types/role';
 import { 
   TEST_MODE_EVENTS, 
   ROLE_EVENTS 
 } from '@/lib/events/eventTypes';
-import '@/types/role';
-import '@/services/roleManager';
 
 // Define the RoleEvent interface for the event payload
 interface RoleEvent {
@@ -688,7 +683,7 @@ export class TestModeService {
    * @param error The error object or value that was caught
    * @param context Optional additional context data for debugging
    */
-  private error(message: UserRole, error: unknown, context: Record<UserRole, unknown> = {}): void {
+  private log(message: string, error: unknown, context: Record<string, unknown> = {}): void {
     // Safe extraction of error details with type narrowing
     const errorMessage = error instanceof Error 
       ? `${error.message} ${error.stack ? `\n${error.stack}` : ''}`
@@ -724,7 +719,7 @@ export class TestModeService {
    * @param message The debug message to log
    * @param context Optional context data for additional debugging information
    */
-  private debugLog(message: UserRole, context: Record<UserRole, unknown> = {}): void {
+  private debugLog(message: string, context: Record<string, unknown> = {}): void {
     if (!this.debugMode) return;
     
     // Use structured logging approach
