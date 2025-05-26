@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { Save, Settings, Shield, Globe, Bell } from 'react-feather';
-import { useRole } from '@/context/RoleContext';
+import { defaultUseRole } from '@/context/RoleContext';
 import { useRouter } from 'next/router';
 
 const AdminSettingsPage = () => {
-  const { role } = useRole();
+  const { role } = defaultUseRole();
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [saveMessage, setSaveMessage] = useState('');

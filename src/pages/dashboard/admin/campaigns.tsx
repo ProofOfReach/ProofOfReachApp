@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Eye, Edit, Trash2, Play, Pause, BarChart3 } from 'react-feather';
-import { useRole } from '@/context/RoleContext';
+import { Eye, Edit, Trash2, Play, Pause, BarChart } from 'react-feather';
+import { defaultUseRole } from '@/context/RoleContext';
 import { useRouter } from 'next/router';
 
 interface Campaign {
@@ -17,7 +17,7 @@ interface Campaign {
 }
 
 const AdminCampaignsPage = () => {
-  const { role } = useRole();
+  const { role } = defaultUseRole();
   const router = useRouter();
   const [campaigns, setCampaigns] = useState<Campaign[]>([]);
   const [loading, setLoading] = useState(true);

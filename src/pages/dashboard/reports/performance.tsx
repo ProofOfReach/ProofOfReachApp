@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { BarChart, TrendingUp, Target, Clock, ArrowUp, ArrowDown } from 'react-feather';
-import { useRole } from '@/context/RoleContext';
+import { defaultUseRole } from '@/context/RoleContext';
 import { useRouter } from 'next/router';
 
 const ReportsPerformancePage = () => {
-  const { role } = useRole();
+  const { role } = defaultUseRole();
   const router = useRouter();
   const [loading, setLoading] = useState(true);
   const [timeRange, setTimeRange] = useState('7d');

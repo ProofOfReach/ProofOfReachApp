@@ -168,6 +168,10 @@ args = "Quick Error Count"
 task = "workflow.run"
 args = "Final Error Count Check"
 
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Final Navigation Test"
+
 [[workflows.workflow]]
 name = "Nostr Ad Marketplace Server"
 author = "agent"
@@ -483,6 +487,14 @@ author = "agent"
 [[workflows.workflow.tasks]]
 task = "shell.exec"
 args = "npx tsc --noEmit --skipLibCheck 2>&1 | grep -c \"error TS\" || echo \"0\""
+
+[[workflows.workflow]]
+name = "Final Navigation Test"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "node scripts/validate-navigation.js"
 
 [deployment]
 run = ["sh", "-c", "npm install && npx prisma generate && npm run dev"]
