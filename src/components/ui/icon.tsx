@@ -11,6 +11,11 @@ import '@/components/icons/BitcoinIcon';
 import '@/lib/navigationBuilder';
 import '@/lib/utils';
 
+export type IconName = 
+  | 'home' | 'settings' | 'viewer' | 'chart' | 'file' | 'shield' 
+  | 'edit' | 'dollar' | 'code' | 'check' | 'pie' | 'logout' 
+  | 'megaphone' | 'sats' | 'bitcoin';
+
 export interface IconProps {
   name: IconName;
   className?: string;

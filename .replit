@@ -188,6 +188,10 @@ args = "Complete Production Build"
 task = "workflow.run"
 args = "Layout Fix Build Test"
 
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Test Build Fix"
+
 [[workflows.workflow]]
 name = "Nostr Ad Marketplace Server"
 author = "agent"
@@ -538,6 +542,14 @@ args = "npm run build"
 
 [[workflows.workflow]]
 name = "Layout Fix Build Test"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "npm run build"
+
+[[workflows.workflow]]
+name = "Test Build Fix"
 author = "agent"
 
 [[workflows.workflow.tasks]]
