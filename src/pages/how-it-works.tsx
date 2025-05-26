@@ -7,7 +7,7 @@ import Link from 'next/link';
 import Layout from '../components/Layout';
 import HowItWorksSection from '../components/marketing/HowItWorksSection';
 import FAQSection from '../components/marketing/FAQSection';
-import '@/components/ui/Divider';
+import Divider from '@/components/ui/Divider';
 
 const HowItWorksPage: React.FC = () => {
   // Platform overview steps
