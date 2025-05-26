@@ -32,12 +32,12 @@ jest.mock('../logger', () => ({
 
 // Mock localStorage for browser environment tests
 const localStorageMock = (() => {
-  let store: Record<UserRole, string> = {};
+  let store: Record<string, string> = {};
   return {
     getItem: jest.fn((key: string) => {
       return store[key] || null;
     }),
-    setItem: jest.fn((key: UserRole, value: string) => {
+    setItem: jest.fn((key: string, value: string) => {
       store[key] = value;
     }),
     removeItem: jest.fn((key: string) => {
