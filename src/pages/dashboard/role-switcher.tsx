@@ -1,10 +1,6 @@
-import { UserRole } from "@/types/role";
 import React, { useEffect, useState } from 'react';
-import '@/utils/layoutHelpers';
 import type { NextPageWithLayout } from '../_app';
-import '@/context/RoleContext';
-import '@/lib/roleService';
-import '@/components/ui';
+import type { UserRole } from '@/types/auth';
 
 /**
  * A dedicated page for switching between roles
@@ -120,10 +116,13 @@ const RoleSwitcherPage: NextPageWithLayout = () => {
   };
   
   return (
-    <DashboardContainer>
-      <DashboardHeader title="Role Switcher" description="Manage your user roles" />
+    <div className="container mx-auto px-4 py-6">
+      <div className="mb-6">
+        <h1 className="text-2xl font-bold">Role Switcher</h1>
+        <p className="text-gray-600">Manage your user roles</p>
+      </div>
       <div className="max-w-2xl mx-auto">
-        <DashboardCard>
+        <div className="bg-white rounded-lg shadow p-6">
           <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
             Switch Roles
           </h2>
@@ -216,9 +215,9 @@ const RoleSwitcherPage: NextPageWithLayout = () => {
               Note: Test mode is for development purposes only and bypasses server-side role validation.
             </p>
           </div>
-        </DashboardCard>
+        </div>
       </div>
-    </DashboardContainer>
+    </div>
   );
 };
 
