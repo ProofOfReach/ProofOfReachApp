@@ -387,8 +387,15 @@ export const RoleProvider: React.FC<RoleProviderProps> = ({
     localStorage.removeItem('cachedAvailableRoles');
     localStorage.removeItem('roleCacheTimestamp');
     
+    // Check if we're in test mode when clearing roles
+    const isTestModeEnabled = auth?.isTestMode || 
+      (typeof window !== 'undefined' && localStorage.getItem('isTestMode') === 'true') ||
+      (typeof window !== 'undefined' && localStorage.getItem('nostr_test_pk')?.startsWith('pk_test_'));
+    
+    const availableRoles = (isDevEnvironment || isTestModeEnabled) ? ALL_ROLES : ['viewer'];
+    
     client.setQueryData<RoleDataType>([ROLE_CACHE_KEY], {
-      availableRoles: ['viewer'],
+      availableRoles,
       currentRole: 'viewer',
       timestamp: Date.now()
     });
@@ -412,6 +419,18 @@ export const RoleProvider: React.FC<RoleProviderProps> = ({
     clearRole,
     isChangingRole
   };
+
+  // Force refresh if we detect test mode but don't have all roles
+  React.useEffect(() => {
+    const isTestModeEnabled = auth?.isTestMode || 
+      (typeof window !== 'undefined' && localStorage.getItem('isTestMode') === 'true') ||
+      (typeof window !== 'undefined' && localStorage.getItem('nostr_test_pk')?.startsWith('pk_test_'));
+    
+    if ((isDevEnvironment || isTestModeEnabled) && roleData?.availableRoles?.length === 1 && roleData.availableRoles[0] === 'viewer') {
+      console.log('Force refreshing roles for test mode');
+      refetch();
+    }
+  }, [auth?.isTestMode, roleData?.availableRoles, refetch]);
   
   return (
     <RoleContext.Provider value={contextValue}>
