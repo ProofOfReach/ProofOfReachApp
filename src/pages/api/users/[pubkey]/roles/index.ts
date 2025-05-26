@@ -207,9 +207,9 @@ const addUserRole = async (req: NextApiRequest, res: NextApiResponse) => {
     }
     
     // Get updated roles
-    const user = await null as any // TODO: implement roleService.getUserByPubkey(pubkey);
+    const userData = await null; // TODO: implement roleService.getUserByPubkey(pubkey);
     
-    if (!user) {
+    if (!userData) {
       return res.status(200).json({ 
         log: true,
         message: 'Role added, but user could not be retrieved' 
