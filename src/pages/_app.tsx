@@ -15,7 +15,6 @@ import ErrorBoundary from '@/components/ErrorBoundary';
 import { TestModeProvider } from '@/context/TestModeContext';
 import { AuthProviderRefactored } from '@/providers/AuthProviderRefactored';
 import { AuthContext as NostrAuthContext } from '@/hooks/useAuthRefactored';
-import { RoleProvider } from '@/context/NewRoleContext';
 import { queryClient } from '@/lib/queryClient';
 import '@/styles/globals.css';
 
@@ -46,11 +45,8 @@ export default function MyApp({ Component, pageProps }: AppPropsWithLayout) {
           <AuthProviderRefactored>
             {/* Wrap with TestModeProvider for app-wide availability */}
             <TestModeProvider>
-              {/* Wrap with RoleProvider for role management */}
-              <RoleProvider queryClient={queryClient}>
-                {/* Apply page-specific layout */}
-                {getLayout(<Component {...pageProps} />)}
-              </RoleProvider>
+              {/* Apply page-specific layout */}
+              {getLayout(<Component {...pageProps} />)}
             </TestModeProvider>
           </AuthProviderRefactored>
         </ErrorProvider>

@@ -112,30 +112,28 @@ export const RoleProvider: React.FC<RoleProviderProps> = ({
    */
   const { data: roleData, refetch } = useQuery<RoleDataType>({
     queryKey: [ROLE_CACHE_KEY],
-    staleTime: 0, // Force refresh every time
-    cacheTime: 0, // Don't cache results 
     queryFn: async () => {
-      // Check for test mode from multiple sources
-      const isTestModeEnabled = auth?.isTestMode || 
-        (typeof window !== 'undefined' && localStorage.getItem('isTestMode') === 'true') ||
-        (typeof window !== 'undefined' && localStorage.getItem('nostr_test_pk')?.startsWith('pk_test_'));
-      
-      console.log('Role context test mode check:', {
-        authTestMode: auth?.isTestMode,
-        isTestModeStorage: typeof window !== 'undefined' ? localStorage.getItem('isTestMode') : 'n/a',
-        testPubkey: typeof window !== 'undefined' ? localStorage.getItem('nostr_test_pk') : 'n/a',
-        isTestModeEnabled,
-        isDevEnvironment
-      });
-      
-      // In development environment or test mode, always provide all roles
-      if (isDevEnvironment || isTestModeEnabled) {
-        console.log('Test mode detected - enabling all roles');
-        const storedRole = localStorage.getItem('userRole') || localStorage.getItem('currentRole');
+      // In development environment, always provide all roles
+      if (isDevEnvironment) {
+        console.log('Development mode: All roles available');
+        const storedRole = localStorage.getItem('userRole');
         
         return {
           availableRoles: ALL_ROLES,
-          currentRole: isValidRole(storedRole || '') ? storedRole! : 'admin',
+          currentRole: isValidRole(storedRole || '') ? storedRole! : 'viewer',
+          timestamp: Date.now()
+        };
+      }
+      
+      // For test mode, ensure all roles are enabled
+      if (auth?.isTestMode) {
+        console.log('Test mode: Refreshing roles');
+        await refreshRoles();
+        const storedRole = localStorage.getItem('userRole');
+        
+        return {
+          availableRoles: ALL_ROLES,
+          currentRole: isValidRole(storedRole || '') ? storedRole! : 'viewer',
           timestamp: Date.now()
         };
       }
@@ -168,28 +166,15 @@ export const RoleProvider: React.FC<RoleProviderProps> = ({
       };
     },
     initialData: () => {
-      // Force test mode detection from multiple sources
-      const isTestMode = auth?.isTestMode || 
-        (typeof window !== 'undefined' && localStorage.getItem('isTestMode') === 'true') ||
-        (typeof window !== 'undefined' && localStorage.getItem('nostr_test_pk')?.startsWith('pk_test_'));
-      
-      console.log("Initial data test mode check:", {
-        authTestMode: auth?.isTestMode,
-        isTestModeStorage: typeof window !== 'undefined' ? localStorage.getItem('isTestMode') : null,
-        testPubkey: typeof window !== 'undefined' ? localStorage.getItem('nostr_test_pk') : null,
-        isTestMode,
-        isDevEnvironment
-      });
+      // Check for test mode first
+      const isTestMode = auth?.isTestMode || (typeof window !== 'undefined' && localStorage.getItem('isTestMode') === 'true');
       
       if (isTestMode || isDevEnvironment) {
-        console.log("Initial data: Test mode or dev mode detected - enabling all roles");
-        // Check if we're on the client side before accessing localStorage
-        const storedRole = typeof window !== 'undefined' 
-          ? (localStorage.getItem('userRole') || localStorage.getItem('currentRole'))
-          : null;
+        console.log("Test mode or dev mode in initialData");
+        const storedRole = localStorage.getItem('userRole');
         return {
           availableRoles: ALL_ROLES,
-          currentRole: isValidRole(storedRole || '') ? storedRole! : 'admin',
+          currentRole: isValidRole(storedRole || '') ? storedRole! : 'viewer',
           timestamp: Date.now()
         };
       }
@@ -365,12 +350,11 @@ export const RoleProvider: React.FC<RoleProviderProps> = ({
    * Check if a role is available to the current user
    */
   const isRoleAvailable = (roleToCheck: string): boolean => {
-    // Check for test mode from multiple sources
-    const isTestModeEnabled = auth?.isTestMode || 
-      (typeof window !== 'undefined' && localStorage.getItem('isTestMode') === 'true') ||
-      (typeof window !== 'undefined' && localStorage.getItem('nostr_pubkey')?.startsWith('pk_test_'));
+    // In development or test mode, all roles are available
+    const isTestModeInLocalStorage = typeof window !== 'undefined' && localStorage.getItem('isTestMode') === 'true';
+    const isTestPubkey = typeof window !== 'undefined' && localStorage.getItem('nostr_pubkey')?.startsWith('pk_test_');
     
-    if (isDevEnvironment || isTestModeEnabled) {
+    if (isDevEnvironment || auth?.isTestMode || isTestModeInLocalStorage || isTestPubkey) {
       console.log(`Test mode detected, all roles are available: ${roleToCheck}`);
       return true;
     }
@@ -392,15 +376,8 @@ export const RoleProvider: React.FC<RoleProviderProps> = ({
     localStorage.removeItem('cachedAvailableRoles');
     localStorage.removeItem('roleCacheTimestamp');
     
-    // Check if we're in test mode when clearing roles
-    const isTestModeEnabled = auth?.isTestMode || 
-      (typeof window !== 'undefined' && localStorage.getItem('isTestMode') === 'true') ||
-      (typeof window !== 'undefined' && localStorage.getItem('nostr_test_pk')?.startsWith('pk_test_'));
-    
-    const availableRoles = (isDevEnvironment || isTestModeEnabled) ? ALL_ROLES : ['viewer'];
-    
     client.setQueryData<RoleDataType>([ROLE_CACHE_KEY], {
-      availableRoles,
+      availableRoles: ['viewer'],
       currentRole: 'viewer',
       timestamp: Date.now()
     });
@@ -413,45 +390,17 @@ export const RoleProvider: React.FC<RoleProviderProps> = ({
     return ensureValidRole(roleData?.currentRole || 'viewer');
   };
   
-  // Force test mode roles to be available immediately
-  const isTestModeActive = auth?.isTestMode || 
-    (typeof window !== 'undefined' && localStorage.getItem('isTestMode') === 'true') ||
-    (typeof window !== 'undefined' && localStorage.getItem('nostr_test_pk')?.startsWith('pk_test_'));
-  
-  console.log('Role context test mode check:', {
-    isTestModeActive,
-    isDevEnvironment,
-    roleDataAvailableRoles: roleData?.availableRoles,
-    shouldShowAllRoles: isDevEnvironment || isTestModeActive
-  });
-  
-  const finalAvailableRoles = (isDevEnvironment || isTestModeActive) ? ALL_ROLES : (roleData?.availableRoles || ['viewer']);
-  
-  console.log('Final available roles:', finalAvailableRoles);
-  
   /**
    * Create the context value with all required properties
    */
   const contextValue: RoleContextType = {
     role: getCurrentRole(),
     setRole,
-    availableRoles: finalAvailableRoles,
+    availableRoles: roleData?.availableRoles || ['viewer'],
     isRoleAvailable,
     clearRole,
     isChangingRole
   };
-
-  // Force refresh if we detect test mode but don't have all roles
-  React.useEffect(() => {
-    const isTestModeEnabled = auth?.isTestMode || 
-      (typeof window !== 'undefined' && localStorage.getItem('isTestMode') === 'true') ||
-      (typeof window !== 'undefined' && localStorage.getItem('nostr_test_pk')?.startsWith('pk_test_'));
-    
-    if ((isDevEnvironment || isTestModeEnabled) && roleData?.availableRoles?.length === 1 && roleData.availableRoles[0] === 'viewer') {
-      console.log('Force refreshing roles for test mode');
-      refetch();
-    }
-  }, [auth?.isTestMode, roleData?.availableRoles, refetch]);
   
   return (
     <RoleContext.Provider value={contextValue}>
@@ -475,14 +424,6 @@ export const RoleProviderWithQueryClient: React.FC<Omit<RoleProviderProps, 'quer
  * Custom hook for using the role context
  * This provides a clean, consistent API for components
  */
-export const defaultUseRole = () => {
-  const context = useContext(RoleContext);
-  console.log('defaultUseRole called, context:', {
-    role: context.role,
-    availableRoles: context.availableRoles,
-    contextExists: !!context
-  });
-  return context;
-};
+export const defaultUseRole = () => useContext(RoleContext);
 
 export default RoleContext;

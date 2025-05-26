@@ -171,20 +171,6 @@ const Sidebar: React.FC = () => {
       .filter(roleOption => roleOption !== role);
   };
 
-  // Simple role availability check for test mode
-  const isRoleAvailableForSwitcher = (roleOption: UserRole) => {
-    // In development/test mode, all roles should be available
-    if (typeof window !== 'undefined') {
-      const isDevMode = window.location.hostname.includes('replit.dev') || window.location.hostname.includes('localhost');
-      if (isDevMode) {
-        return true;
-      }
-    }
-    
-    // Fall back to context availability check
-    return isRoleAvailable ? isRoleAvailable(roleOption) : true;
-  };
-
   // Get background color based on current role
   const getRoleBackgroundColor = (checkRole: string) => {
     switch(checkRole) {
@@ -313,13 +299,13 @@ const Sidebar: React.FC = () => {
                   key={roleOption}
                   onClick={() => handleRoleChange(roleOption)}
                   className={`w-full flex items-center px-3 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-700 
-                    ${isRoleAvailableForSwitcher(roleOption) 
+                    ${isRoleAvailable(roleOption) 
                       ? 'text-gray-700 dark:text-gray-300' 
                       : 'text-gray-400 dark:text-gray-500 italic'}`}
-                  disabled={!isRoleAvailableForSwitcher(roleOption)}
+                  disabled={!isRoleAvailable(roleOption)}
                 >
                   <span className="mr-3">
-                    {isRoleAvailableForSwitcher(roleOption) 
+                    {isRoleAvailable(roleOption) 
                       ? roleIcons[roleOption]
                       : <Lock className="w-5 h-5 text-gray-400 dark:text-gray-500" />
                     }
@@ -392,17 +378,26 @@ const Sidebar: React.FC = () => {
           <div className="mt-auto">
             <button
               onClick={() => {
-                // Clear localStorage and redirect to logout page
-                if (typeof window !== 'undefined') {
-                  // Clear test mode keys and authentication data
-                  localStorage.removeItem('nostr_test_pk');
-                  localStorage.removeItem('nostr_test_sk');
-                  localStorage.removeItem('isTestMode');
-                  localStorage.removeItem('currentRole');
-                  localStorage.removeItem('auth_token');
+                // Show confirmation dialog
+                if (window.confirm('Are you sure you want to log out?')) {
+                  // Use the logout function from auth context if available
+                  // This is helpful for testing and makes the logout behavior more consistent
+                  if (logout && typeof logout === 'function') {
+                    logout().then(() => {
+                      // After logout completes, redirect to login page
+                      router.push('/login');
+                    });
+                    return; // Exit early if we logfully called logout
+                  }
                   
-                  // Redirect to system logout page
-                  window.location.href = '/system/logout';
+                  // Fallback to direct navigation if context not available
+                  if (typeof window !== 'undefined') {
+                    if (typeof window.location.assign === 'function') {
+                      window.location.assign('/system/logout');
+                    } else {
+                      window.location.href = '/system/logout';
+                    }
+                  }
                 }
               }}
               className="w-full flex items-center px-3 py-2 text-sm rounded-md transition-colors transition-all duration-200 text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 dark:text-red-400"

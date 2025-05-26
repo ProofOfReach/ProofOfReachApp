@@ -1,19 +1,13 @@
 import React, { ReactNode, useEffect, Children } from 'react';
 import Head from 'next/head';
 import Navbar from './Navbar';
+import HomeNavbar from './HomeNavbar';
 import AuthStatusBar from './auth/AuthStatusBar';
 import DebugRoleEnabler from './DebugRoleEnabler';
 import TestModeBanner from './TestModeBanner';
 import HackathonBanner from './HackathonBanner';
 import DomainToggleButton from './DomainToggleButton';
 import { useRouter } from 'next/router';
-import dynamic from 'next/dynamic';
-
-// Dynamically import HomeNavbar to avoid webpack runtime errors
-const HomeNavbar = dynamic(() => import('./HomeNavbar'), {
-  loading: () => <div className="h-16 bg-white shadow-md"></div>,
-  ssr: true
-});
 
 /**
  * Conditionally check authentication only when needed
@@ -25,8 +19,19 @@ const useConditionalAuth = (isPublicPage: boolean) => {
     return false;
   }
   
-  // For now, return false to prevent webpack runtime errors
-  // TODO: Implement proper auth checking after fixing the import chain
+  // Only use auth hooks on protected pages and in non-test environments
+  if (typeof window !== 'undefined' && process.env.NODE_ENV !== 'test') {
+    try {
+      const { useIsAuthenticated } = require('../hooks/useHasRole');
+      return useIsAuthenticated();
+    } catch (error) {
+      // Log as debug instead of error since this isn't critical on public pages
+      console.debug('Auth hooks not available:', error);
+      return false;
+    }
+  }
+  
+  // In test environment, return false
   return false;
 };
 

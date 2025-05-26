@@ -51,39 +51,33 @@ const ErrorInitializer: React.FC<ErrorInitializerProps> = ({
     
     // Handler for uncaught exceptions
     const handleGlobalError = (event: ErrorEvent): void => {
-      // Only handle if there's a meaningful error
-      if (event.error || event.message) {
-        event.preventDefault();
-        
-        logError(
-          event.error || new Error(event.message),
-          'window.onerror'
-        );
-        
-        if (debug) {
-          console.log('[ErrorInitializer] Uncaught error:', event);
-        }
+      event.preventDefault();
+      
+      logError(
+        event.error || new Error(event.message),
+        'window.onerror'
+      );
+      
+      if (debug) {
+        console.log('[ErrorInitializer] Uncaught error:', event);
       }
     };
     
     // Handler for unhandled promise rejections
     const handlePromiseRejection = (event: PromiseRejectionEvent): void => {
-      // Don't prevent default to avoid interfering with browser error reporting
+      event.preventDefault();
       
-      // Only log if there's actually an error reason
-      if (event.reason && event.reason !== null && event.reason !== undefined) {
-        const error = event.reason instanceof Error 
-          ? event.reason 
-          : new Error(String(event.reason));
-        
-        logError(
-          error,
-          'unhandledrejection'
-        );
-        
-        if (debug) {
-          console.log('[ErrorInitializer] Unhandled promise rejection:', event.reason);
-        }
+      const error = event.reason instanceof Error 
+        ? event.reason 
+        : new Error(String(event.reason));
+      
+      logError(
+        error,
+        'unhandledrejection'
+      );
+      
+      if (debug) {
+        console.log('[ErrorInitializer] Unhandled promise rejection:', event.reason);
       }
     };
     

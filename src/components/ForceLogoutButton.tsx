@@ -16,6 +16,11 @@ const ForceLogoutButton: React.FC<{
   const handleForceLogout = (e: React.MouseEvent) => {
     e.preventDefault();
     
+    // Confirm the logout action to prevent accidental clicks
+    if (!window.confirm('Are you sure you want to log out?')) {
+      return;
+    }
+    
     // Navigate to the dedicated system logout page
     window.location.href = '/system/logout';
   };
