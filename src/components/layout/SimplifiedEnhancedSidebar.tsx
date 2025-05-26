@@ -7,7 +7,7 @@ import { ChevronDown, X, Menu } from 'react-feather';
 import { cn } from '../../lib/utils';
 import { Sheet, SheetContent, SheetClose } from '../ui/sheet';
 import { NavigationMenu } from '../ui/navigation-menu';
-import { Button } from '../ui/button';
+import { Button } from '../ui/Button';
 import NavGroup from '../ui/nav-group';
 import Icon from '../ui/icon';
 

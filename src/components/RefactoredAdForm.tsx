@@ -4,7 +4,7 @@ import LightningWalletBalance from './LightningWalletBalance';
 import Tooltip from './ui/Tooltip';
 
 // Import shadcn/ui components
-import { Button } from './ui/button';
+import { Button } from './ui/Button';
 import { Input } from './ui/input';
 import { Textarea } from './ui/textarea';
 import { Select, SelectOption } from './ui/select';

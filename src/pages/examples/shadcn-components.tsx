@@ -3,7 +3,7 @@ import React, { useState } from 'react'
 import Head from 'next/head'
 import '@/components/examples/ShadcnExampleForm'
 import '@/components/examples/ButtonExamples'
-import '@/components/ui/button'
+import '@/components/ui/Button'
 import '@/components/ui/card'
 
 /**

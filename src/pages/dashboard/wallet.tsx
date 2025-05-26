@@ -18,7 +18,7 @@ const BitcoinConnectWallet = dynamic(
 import DashboardContainer from '../../components/ui/DashboardContainer';
 import DashboardHeader from '../../components/dashboard/DashboardHeader';
 import DashboardCard from '../../components/ui/DashboardCard';
-import { Button } from '../../components/ui/button';
+import { Button } from '../../components/ui/Button';
 import { Input } from '@/components/ui/input';
 import { getDashboardLayout } from '@/utils/layoutHelpers';
 import type { NextPageWithLayout } from '../_app';
