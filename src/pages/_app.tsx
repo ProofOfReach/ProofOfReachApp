@@ -13,7 +13,8 @@ import { ErrorProvider } from '@/context/ErrorContext';
 import ErrorInitializer from '@/components/errors/ErrorInitializer';
 import ErrorBoundary from '@/components/ErrorBoundary';
 import { TestModeProvider } from '@/context/TestModeContext';
-import { AuthProviderRefactored, AuthContextRefactored as NostrAuthContext } from '@/providers/AuthProviderRefactored';
+import { AuthProviderRefactored } from '@/providers/AuthProviderRefactored';
+import { AuthContext as NostrAuthContext } from '@/hooks/useAuthRefactored';
 import { queryClient } from '@/lib/queryClient';
 import '@/styles/globals.css';
 
@@ -53,3 +54,6 @@ export default function MyApp({ Component, pageProps }: AppPropsWithLayout) {
     </QueryClientProvider>
   );
 }
+
+// Export NostrAuthContext for pages that need it
+export { NostrAuthContext };
