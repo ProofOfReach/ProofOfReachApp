@@ -97,14 +97,12 @@ const HomeNavbar: React.FC = () => {
             >
               Contact
             </Link>
-            {isDev && (
-              <Link 
-                href="/login" 
-                className="px-4 py-2 bg-purple-600 text-white text-sm lg:text-base rounded-md hover:bg-purple-700 transition-colors"
-              >
-                Get Started
-              </Link>
-            )}
+            <Link 
+              href="/login" 
+              className="px-4 py-2 bg-purple-600 text-white text-sm lg:text-base rounded-md hover:bg-purple-700 transition-colors"
+            >
+              Get Started
+            </Link>
           </div>
 
           {/* Mobile menu button */}
@@ -175,15 +173,13 @@ const HomeNavbar: React.FC = () => {
             >
               Contact
             </Link>
-            {isDev && (
-              <Link 
-                href="/login" 
-                onClick={closeMenu} 
-                className="block px-3 py-2 text-purple-600 hover:text-purple-700 dark:text-purple-400 dark:hover:text-purple-500 font-medium"
-              >
-                Get Started
-              </Link>
-            )}
+            <Link 
+              href="/login" 
+              onClick={closeMenu} 
+              className="block px-3 py-2 text-purple-600 hover:text-purple-700 dark:text-purple-400 dark:hover:text-purple-500 font-medium"
+            >
+              Get Started
+            </Link>
           </div>
         </div>
       )}
