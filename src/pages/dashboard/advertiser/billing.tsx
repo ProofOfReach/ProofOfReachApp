@@ -347,7 +347,7 @@ const BillingPage: React.FC & { getLayout?: (page: React.ReactElement) => React.
 
 // Wrap the page with our layout
 BillingPage.getLayout = (page: React.ReactElement) => {
-  return <DashboardLayout>{page}</DashboardLayout>;
+  return page;
 };
 
 export default BillingPage;

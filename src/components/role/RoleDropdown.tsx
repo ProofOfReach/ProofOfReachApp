@@ -1,6 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { User, Shield, Edit3, DollarSign, Speaker } from 'react-feather';
+import { useAppEvent } from '@/hooks/useAppEvent';
+
+// Event constants
+const ROLE_EVENTS = {
+  ROLE_CHANGED: 'role:changed',
+  ROLES_UPDATED: 'roles:updated'
+};
+
+const TEST_MODE_EVENTS = {
+  STATE_CHANGED: 'testmode:changed'
+};
 
 interface RoleDropdownProps {
   skipNavigation?: boolean;

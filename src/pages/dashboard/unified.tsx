@@ -211,7 +211,7 @@ const UnifiedDashboard: NextPage = () => {
 
 // Apply our improved dashboard layout
 UnifiedDashboard.getLayout = (page: React.ReactElement) => {
-  return <DashboardLayout title="Dashboard">{page}</DashboardLayout>;
+  return page;
 };
 
 export default UnifiedDashboard;
