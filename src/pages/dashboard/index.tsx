@@ -4,7 +4,6 @@ import {
   ShoppingBag, 
   Upload, 
   Shield, 
-  Briefcase, 
   User, 
   PieChart, 
   DollarSign, 
