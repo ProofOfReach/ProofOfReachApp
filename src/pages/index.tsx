@@ -180,15 +180,14 @@ const HomePage: NextPageWithLayout = () => {
         {/* Get Started Button - Only in development */}
         {isDev && (
           <div className="mt-8 mb-8 flex justify-center">
-            <Link href="/login">
-              <Button 
-                className="bg-blue-600 hover:bg-blue-700 text-white text-lg px-8 py-3 h-auto font-bold shadow-lg border-2 border-blue-700 transition-all hover:scale-[1.02]"
-                size="lg"
-              >
-                Get Started
-                <ArrowRight className="ml-2 h-5 w-5" />
-              </Button>
-            </Link>
+            <Button 
+              onClick={() => router.push('/login')}
+              className="bg-blue-600 hover:bg-blue-700 text-white text-lg px-8 py-3 h-auto font-bold shadow-lg border-2 border-blue-700 transition-all hover:scale-[1.02]"
+              size="lg"
+            >
+              Get Started
+              <ArrowRight className="ml-2 h-5 w-5" />
+            </Button>
           </div>
         )}
         
