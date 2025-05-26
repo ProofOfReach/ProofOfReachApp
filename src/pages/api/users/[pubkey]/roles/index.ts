@@ -197,17 +197,7 @@ const addUserRole = async (req: NextApiRequest, res: NextApiResponse) => {
       });
     }
     
-    const result = true; // Successfully found user
-    
-    if (!result) {
-      return res.status(404).json({ 
-        error: 'User not found',
-        log: false
-      });
-    }
-    
-    // Get updated roles
-    const user = await null as any // TODO: implement roleService.getUserByPubkey(pubkey);
+    // Successfully found user, now get updated roles from the fetched user data
     
     if (!user) {
       return res.status(200).json({ 
