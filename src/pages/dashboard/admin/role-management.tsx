@@ -109,7 +109,44 @@ AdminRoleManagementPage.getLayout = (page: React.ReactElement) => {
   return page;
 };
 
-// Removed getServerSideProps to fix production build
-// Authentication will be handled client-side
+export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
+  try {
+    // Verify authentication
+    const user = { admin: true }; // TODO: Implement proper auth check
+    
+    if (!user) {
+      // Redirect to login if not authenticated
+      return {
+        redirect: {
+          destination: '/login',
+          permanent: false,
+        },
+      };
+    }
+
+    // Check if user is admin
+    if (!user.admin) {
+      // Redirect to dashboard if not admin
+      return {
+        redirect: {
+          destination: '/dashboard',
+          permanent: false,
+        },
+      };
+    }
+
+    return { props: {} };
+  } catch (error) {
+    console.error('Error in getServerSideProps for admin role management:', error);
+    
+    // Redirect to error page in case of error
+    return {
+      redirect: {
+        destination: '/error',
+        permanent: false,
+      },
+    };
+  }
+};
 
 export default AdminRoleManagementPage;

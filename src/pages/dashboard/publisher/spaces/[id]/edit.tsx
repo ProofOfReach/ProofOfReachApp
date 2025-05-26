@@ -408,7 +408,7 @@ const EditAdSpacePage = () => {
 
 // Wrap the page with our layout
 EditAdSpacePage.getLayout = (page: React.ReactElement) => {
-  return page;
+  return <DashboardLayout>{page}</DashboardLayout>;
 };
 
 export default EditAdSpacePage;

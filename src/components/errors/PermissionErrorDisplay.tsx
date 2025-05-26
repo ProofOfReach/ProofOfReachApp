@@ -129,4 +129,3 @@ const PermissionErrorDisplay: React.FC<PermissionErrorDisplayProps> = ({
 };
 
 export default PermissionErrorDisplay;
-export { PermissionErrorDisplay };

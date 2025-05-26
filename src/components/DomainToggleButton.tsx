@@ -6,12 +6,8 @@ import React, { useState, useEffect } from 'react';
  */
 const DomainToggleButton: React.FC = () => {
   const [isDev, setIsDev] = useState<boolean>(false);
-  const [mounted, setMounted] = useState(false);
   
   useEffect(() => {
-    // Mark component as mounted to prevent hydration mismatch
-    setMounted(true);
-    
     // Check if we're in dev mode initially
     const storedValue = localStorage.getItem('SIMULATE_DEV_DOMAIN');
     const isDevMode = storedValue === 'true';
@@ -42,11 +38,6 @@ const DomainToggleButton: React.FC = () => {
       window.location.href = window.location.pathname; // Use href to get a clean reload
     }, 100);
   };
-
-  // Don't render anything until mounted to prevent hydration mismatch
-  if (!mounted) {
-    return null;
-  }
 
   return (
     <div className="fixed bottom-4 right-4 z-50">

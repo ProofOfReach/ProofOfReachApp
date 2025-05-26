@@ -5,9 +5,12 @@ import '@/components/layout/DashboardLayout';
 import '@/context/RoleContext';
 import { useAuth } from '@/hooks/useAuth';
 import { Download, CreditCard, Plus, Repeat, Download as DownloadIcon, Search } from 'react-feather';
-import SatsIcon from '@/components/icons/SatsIcon';
-import { CurrencyAmount, LineChart, TransactionHistory, formatSats } from '@/components/ui';
+import '@/components/icons/SatsIcon';
+import '@/components/charts';
+import '@/utils/chartHelpers';
+import '@/components/CurrencyAmount';
 import useSWR from 'swr';
+import '@/components/TransactionHistory';
 import { TransactionType } from '@prisma/client';
 
 // Fetch balance/transactions from the API

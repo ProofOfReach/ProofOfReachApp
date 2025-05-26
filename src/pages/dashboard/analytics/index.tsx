@@ -810,7 +810,7 @@ const StakeholderAnalyticsDashboard = ({ dateRange, loading }: { dateRange: User
 
 // Set the layout for this page
 AnalyticsPage.getLayout = function getLayout(page: React.ReactElement) {
-  return page;
+  return <DashboardLayout>{page}</DashboardLayout>;
 };
 
 export default AnalyticsPage;

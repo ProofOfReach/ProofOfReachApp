@@ -11,11 +11,6 @@ import '@/components/icons/BitcoinIcon';
 import '@/lib/navigationBuilder';
 import '@/lib/utils';
 
-export type IconName = 
-  | 'home' | 'settings' | 'viewer' | 'chart' | 'file' | 'shield' 
-  | 'edit' | 'dollar' | 'code' | 'check' | 'pie' | 'logout' 
-  | 'megaphone' | 'sats' | 'bitcoin';
-
 export interface IconProps {
   name: IconName;
   className?: string;
@@ -60,11 +55,11 @@ const Icon: React.FC<IconProps> = ({
       case 'logout':
         return <LogOut size={size} className={className} color={color} />;
       case 'megaphone':
-        return <Settings size={size} className={className} color={color} />; // Fallback to Settings
+        return <MegaphoneIcon className={cn('w-5 h-5', className)} />;
       case 'sats':
-        return <DollarSign size={size} className={className} color={color} />; // Fallback to Dollar
+        return <SatsIcon className={cn('w-5 h-5', className)} />;
       case 'bitcoin':
-        return <DollarSign size={size} className={className} color={color} />; // Fallback to Dollar
+        return <BitcoinIcon className={cn('w-5 h-5', className)} />;
       default:
         return <span className="text-red-500">Missing icon: {name}</span>;
     }

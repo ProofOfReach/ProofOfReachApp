@@ -20,8 +20,7 @@ import ErrorBoundary from '../../../components/ErrorBoundary';
  * Role Information Component
  */
 const RoleInfo: React.FC = () => {
-  const currentRole = 'viewer'; // Simplified for build
-  const availableRoles = ['viewer', 'advertiser', 'publisher'];
+  const { currentRole, availableRoles } = defaultUseRoleAccess();
   
   return (
     <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
@@ -57,8 +56,7 @@ const RoleInfo: React.FC = () => {
  * Role Access Example Page
  */
 const RoleAccessExamplePage: NextPageWithLayout = () => {
-  const currentRole = 'viewer'; // Simplified for build
-  const canAccess = () => true; // Simplified for build
+  const { currentRole, canAccess } = defaultUseRoleAccess();
   
   return (
     <>
@@ -119,7 +117,7 @@ const RoleAccessExamplePage: NextPageWithLayout = () => {
               <div 
                 key={route}
                 className={`p-3 rounded-lg border ${
-                  true
+                  canAccess(route)
                     ? 'border-green-300 bg-green-50 dark:border-green-700 dark:bg-green-900/20'
                     : 'border-red-300 bg-red-50 dark:border-red-700 dark:bg-red-900/20'
                 }`}
@@ -127,12 +125,12 @@ const RoleAccessExamplePage: NextPageWithLayout = () => {
                 <div className="flex items-center">
                   <span 
                     className={`inline-block w-6 h-6 rounded-full mr-2 flex items-center justify-center ${
-                      true
+                      canAccess(route)
                         ? 'bg-green-500 text-white'
                         : 'bg-red-500 text-white'
                     }`}
                   >
-                    {true ? '✓' : '✗'}
+                    {canAccess(route) ? '✓' : '✗'}
                   </span>
                   <span className="font-medium dark:text-white">{route}</span>
                 </div>
@@ -149,7 +147,7 @@ const RoleAccessExamplePage: NextPageWithLayout = () => {
  * Define the layout for this page
  */
 RoleAccessExamplePage.getLayout = function getLayout(page: ReactElement) {
-  return page;
+  return <DashboardLayout>{page}</DashboardLayout>;
 };
 
 export default RoleAccessExamplePage;

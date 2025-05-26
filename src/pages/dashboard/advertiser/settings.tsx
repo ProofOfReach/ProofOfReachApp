@@ -278,7 +278,7 @@ const AdvertiserSettingsPage = () => {
 
 // Wrap the page with our layout
 AdvertiserSettingsPage.getLayout = (page: React.ReactElement) => {
-  return page;
+  return <DashboardLayout>{page}</DashboardLayout>;
 };
 
 export default AdvertiserSettingsPage;
