@@ -1,17 +1,8 @@
-// Export all UI components from a single index file
-export { Button } from './Button';
-export type { ButtonProps } from './Button';
+// Export all UI components
+export { default as Icon } from './icon';
+export { default as CurrencyAmount } from './currency-amount';
+export { default as LineChart } from './line-chart';
+export { default as TransactionHistory } from './transaction-history';
 
-export { Badge } from './Badge';
-export type { BadgeProps } from './Badge';
-
-export { Tooltip } from './Tooltip';
-export type { TooltipProps } from './Tooltip';
-
-export { DataTable } from './DataTable';
-export type { DataTableProps, Column } from './DataTable';
-
-export { DashboardHeader } from './DashboardHeader';
-export type { DashboardHeaderProps } from './DashboardHeader';
-
-export { default as DashboardContainer } from './DashboardContainer';
+// Re-export commonly used utilities
+export { cn, formatNumber, formatSats } from '@/lib/utils';
