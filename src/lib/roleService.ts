@@ -27,7 +27,10 @@ export class RoleService {
 
   static getCurrentRole(): string {
     if (typeof window !== 'undefined') {
-      return localStorage.getItem('selectedRole') || 'viewer';
+      // In test mode, default to admin role for better testing experience
+      const isTestMode = localStorage.getItem('isTestMode') === 'true';
+      const defaultRole = isTestMode ? 'admin' : 'viewer';
+      return localStorage.getItem('selectedRole') || defaultRole;
     }
     return 'viewer';
   }

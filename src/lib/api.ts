@@ -8,7 +8,7 @@
  * @param options Additional fetch options
  * @returns Fetch response
  */
-export const fetchWithAuth = (url: UserRole, options: RequestInit = {}) => {
+export const fetchWithAuth = (url: string, options: RequestInit = {}) => {
   return fetch(url, {
     ...options,
     credentials: 'include',  // Always include credentials
