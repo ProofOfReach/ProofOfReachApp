@@ -38,7 +38,8 @@ export const STORAGE_KEYS = {
  * Filter an array of roles to only include valid UserRole values
  */
 export function filterValidRoles(roles: string[]): UserRole[] {
+  const validRoles: UserRole[] = ['viewer', 'advertiser', 'publisher', 'admin', 'stakeholder'];
   return roles.filter((role): role is UserRole => 
-    VALID_ROLES.includes(role as UserRole)
+    validRoles.includes(role as UserRole)
   );
 }

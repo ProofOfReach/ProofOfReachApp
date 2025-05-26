@@ -4,8 +4,8 @@ import { NextPageWithLayout } from '../../../_app';
 import { getDashboardLayout } from '../../../../utils/layoutHelpers';
 import { useAuth } from '../../../../hooks/useAuth';
 import { useCurrency } from '../../../../context/CurrencyContext';
-import { CurrencyAmount } from '../../../../components/CurrencyAmount';
-import { SmartFundingFlow } from '../../../../components/SmartFundingFlow';
+import CurrencyAmount from '../../../../components/CurrencyAmount';
+import SmartFundingFlow from '../../../../components/SmartFundingFlow';
 
 interface Campaign {
   id: string;

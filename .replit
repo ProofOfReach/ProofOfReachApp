@@ -144,6 +144,10 @@ args = "Build Validation"
 task = "workflow.run"
 args = "Production Build"
 
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Final Build Test"
+
 [[workflows.workflow]]
 name = "Nostr Ad Marketplace Server"
 author = "agent"
@@ -406,6 +410,14 @@ args = "npx tsc --noEmit --skipLibCheck 2>&1 | head -50"
 
 [[workflows.workflow]]
 name = "Production Build"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "npm run build"
+
+[[workflows.workflow]]
+name = "Final Build Test"
 author = "agent"
 
 [[workflows.workflow.tasks]]
