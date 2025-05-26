@@ -1,6 +1,7 @@
 import { v4 as uuidv4 } from 'uuid';
 import { logger } from './logger';
 import { localStorage } from './enhancedStorageService';
+import { UserRole } from '@/types/role';
 
 // Define Nostr-related types
 export interface NostrWindow extends Window {
@@ -267,6 +268,10 @@ class NostrHelpers {
       throw error;
     }
   }
+
+  /**
+   * Generate test keypair with fallback for secure environments
+   */
 
   /**
    * Generate a keypair for test purposes (synchronous version for test compatibility)
