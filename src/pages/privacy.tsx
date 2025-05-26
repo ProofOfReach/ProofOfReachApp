@@ -1,7 +1,7 @@
 import { UserRole } from "@/types/role";
 import React from 'react';
 import Layout from '../components/Layout';
-import '@/components/ui/Typography';
+import { Title, Paragraph } from '@/components/ui/Typography';
 
 const PrivacyPolicy: React.FC = () => {
   return (
