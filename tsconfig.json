@@ -32,10 +32,6 @@
     "node_modules",
     "sdk/**/*",
     "server/**/*",
-    ".next/**/*",
-    "migration-backup/**/*",
-    "src/__tests__/**/*",
-    "**/*.test.ts",
-    "**/*.test.tsx"
+    ".next/**/*"
   ]
 }
