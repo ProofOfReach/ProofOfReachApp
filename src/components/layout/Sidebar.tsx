@@ -378,23 +378,17 @@ const Sidebar: React.FC = () => {
           <div className="mt-auto">
             <button
               onClick={() => {
-                // Use the logout function from auth context if available
-                // This is helpful for testing and makes the logout behavior more consistent
-                if (logout && typeof logout === 'function') {
-                  logout().then(() => {
-                    // After logout completes, redirect to login page
-                    router.push('/login');
-                  });
-                  return; // Exit early if we logfully called logout
-                }
-                
-                // Fallback to direct navigation if context not available
+                // Clear localStorage and redirect to logout page
                 if (typeof window !== 'undefined') {
-                  if (typeof window.location.assign === 'function') {
-                    window.location.assign('/system/logout');
-                  } else {
-                    window.location.href = '/system/logout';
-                  }
+                  // Clear test mode keys and authentication data
+                  localStorage.removeItem('nostr_test_pk');
+                  localStorage.removeItem('nostr_test_sk');
+                  localStorage.removeItem('isTestMode');
+                  localStorage.removeItem('currentRole');
+                  localStorage.removeItem('auth_token');
+                  
+                  // Redirect to system logout page
+                  window.location.href = '/system/logout';
                 }
               }}
               className="w-full flex items-center px-3 py-2 text-sm rounded-md transition-colors transition-all duration-200 text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 dark:text-red-400"
