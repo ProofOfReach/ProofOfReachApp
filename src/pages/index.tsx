@@ -181,7 +181,7 @@ const HomePage: NextPageWithLayout = () => {
         {isDev && (
           <div className="mt-8 mb-8 flex justify-center">
             <Button 
-              onClick={() => router.push('/login')}
+              onClick={() => router.push('/login?stay=true')}
               className="bg-blue-600 hover:bg-blue-700 text-white text-lg px-8 py-3 h-auto font-bold shadow-lg border-2 border-blue-700 transition-all hover:scale-[1.02]"
               size="lg"
             >

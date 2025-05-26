@@ -149,6 +149,7 @@ const LoginPageClient: React.FC = () => {
       const preventAutoLogin = localStorage.getItem('prevent_auto_login') === 'true';
       const clearCacheParam = router.query && router.query.clear_cache === 'true';
       const forceLogoutParam = router.query && router.query.force_logout === 'true';
+      const stayOnLoginParam = router.query && router.query.stay === 'true';
       
       logger.log('Login page - Authentication status check:', {
         isAuthenticated,
@@ -156,11 +157,12 @@ const LoginPageClient: React.FC = () => {
         preventAutoLogin,
         clearCacheParam,
         forceLogoutParam,
+        stayOnLoginParam,
         cookies: document.cookie.split(';').map(c => c.trim()).filter(c => c.startsWith('nostr_')),
         authRelatedCookies: document.cookie.split(';').map(c => c.trim()).filter(c => c.startsWith('auth_'))
       });
       
-      if (preventAutoLogin || clearCacheParam || forceLogoutParam) {
+      if (preventAutoLogin || clearCacheParam || forceLogoutParam || stayOnLoginParam) {
         // Log this for debugging
         logger.log('Auto-login prevented due to flags:', { 
           preventAutoLogin, 
