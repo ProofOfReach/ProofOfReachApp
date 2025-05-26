@@ -19,19 +19,8 @@ const useConditionalAuth = (isPublicPage: boolean) => {
     return false;
   }
   
-  // Only use auth hooks on protected pages and in non-test environments
-  if (typeof window !== 'undefined' && process.env.NODE_ENV !== 'test') {
-    try {
-      const { useIsAuthenticated } = require('../hooks/useHasRole');
-      return useIsAuthenticated();
-    } catch (error) {
-      // Log as debug instead of error since this isn't critical on public pages
-      console.debug('Auth hooks not available:', error);
-      return false;
-    }
-  }
-  
-  // In test environment, return false
+  // For now, return false to prevent webpack runtime errors
+  // TODO: Implement proper auth checking after fixing the import chain
   return false;
 };
 
