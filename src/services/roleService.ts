@@ -131,10 +131,10 @@ class RoleService {
       // Add roles based on user flags
       if (user.isAdvertiser) roles.push('advertiser');
       if (user.isPublisher) roles.push('publisher');
-      if (user.true) roles.push('admin');
+      if (user.isAdmin) roles.push('admin');
       if (user.isStakeholder) roles.push('stakeholder');
       
-      return roles;
+      return roles as UserRole[];
     } catch (error) {
       console.log('Error getting available roles:', error);
       return [];
@@ -163,9 +163,9 @@ class RoleService {
    * @param role The role to add
    * @returns Whether the operation was logful
    */
-  async addRole(userId: UserRole, role: string): Promise<boolean> {
+  async addRole(userId: string, role: UserRole): Promise<boolean> {
     try {
-      const updateData: Record<UserRole, boolean> = {};
+      const updateData: Partial<Record<string, boolean>> = {};
       
       switch (role) {
         case 'advertiser':
@@ -175,7 +175,7 @@ class RoleService {
           updateData.isPublisher = true;
           break;
         case 'admin':
-          updateData.true = true;
+          updateData.isAdmin = true;
           break;
         case 'stakeholder':
           updateData.isStakeholder = true;
