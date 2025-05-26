@@ -6,8 +6,10 @@ import React, { useState, useEffect } from 'react';
  */
 const DomainToggleButton: React.FC = () => {
   const [isDev, setIsDev] = useState<boolean>(false);
+  const [mounted, setMounted] = useState(false);
   
   useEffect(() => {
+    setMounted(true);
     // Check if we're in dev mode initially
     const storedValue = localStorage.getItem('SIMULATE_DEV_DOMAIN');
     const isDevMode = storedValue === 'true';
@@ -16,6 +18,11 @@ const DomainToggleButton: React.FC = () => {
     // Debug the current mode
     console.log('DomainToggleButton - Current mode:', isDevMode ? 'Development' : 'Production');
   }, []);
+
+  // Don't render until mounted to prevent hydration mismatch
+  if (!mounted) {
+    return <div className="w-8 h-8"></div>;
+  }
 
   const toggleMode = () => {
     const newValue = !isDev;
