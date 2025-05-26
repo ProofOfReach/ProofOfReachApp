@@ -2,7 +2,7 @@ import { UserRole } from "@/types/role";
 import React, { useEffect, useState, ReactElement } from 'react';
 import { useRouter } from 'next/router';
 import Layout from '../components/Layout';
-import { useAuthSwitch } from '../hooks/useAuthSwitch';
+// Removed useAuthSwitch - not needed for homepage
 import Link from 'next/link';
 import { useCallback } from 'react';
 import { Layout as LayoutIcon, User, Target, Zap, Check, AlertCircle, ArrowRight, Mail } from 'react-feather';
