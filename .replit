@@ -140,6 +140,18 @@ args = "Production Build Test"
 task = "workflow.run"
 args = "Quick Type Status Check"
 
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "TypeScript Error Count"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Detailed Error Analysis"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Test Status Overview"
+
 [[workflows.workflow]]
 name = "Nostr Ad Marketplace Server"
 author = "agent"
@@ -399,6 +411,30 @@ author = "agent"
 [[workflows.workflow.tasks]]
 task = "shell.exec"
 args = "npx tsc --noEmit --skipLibCheck 2>&1 | head -10"
+
+[[workflows.workflow]]
+name = "TypeScript Error Count"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "npx tsc --noEmit --skipLibCheck 2>&1 | grep -c \"error TS\" || echo \"0\""
+
+[[workflows.workflow]]
+name = "Detailed Error Analysis"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "npx tsc --noEmit --skipLibCheck 2>&1 | head -20"
+
+[[workflows.workflow]]
+name = "Test Status Overview"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "npx jest --listTests --json | jq '.length' && echo \"Total test files found\""
 
 [deployment]
 run = ["sh", "-c", "npm install && npx prisma generate && npm run dev"]
