@@ -59,7 +59,7 @@ export class RoleService {
   // Test mode functionality
   static isTestMode(): boolean {
     try {
-      return localStorage.getItem('testMode') === 'true';
+      return localStorage.getItem('isTestMode') === 'true';
     } catch {
       return false;
     }
@@ -67,7 +67,7 @@ export class RoleService {
 
   static setTestMode(enabled: boolean): void {
     try {
-      localStorage.setItem('testMode', enabled.toString());
+      localStorage.setItem('isTestMode', enabled.toString());
     } catch (error) {
       logger.log('Error setting test mode:', error);
     }

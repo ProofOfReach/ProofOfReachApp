@@ -175,7 +175,11 @@ const LoginPage: React.FC = () => {
       storeTestKeys(testKeys.publicKey, testKeys.privateKey || '');
       
       // Enable test mode
-      localStorage.setItem('testMode', 'true');
+      localStorage.setItem('isTestMode', 'true');
+      
+      // Enable all roles in test mode
+      localStorage.setItem('availableRoles', JSON.stringify(['viewer', 'advertiser', 'publisher', 'admin', 'stakeholder']));
+      localStorage.setItem('currentRole', 'viewer'); // Start with viewer role
       
       await login(testKeys.publicKey, 'test');
       
