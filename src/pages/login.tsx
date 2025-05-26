@@ -582,10 +582,10 @@ const LoginPageClient: React.FC = () => {
         
         // Mark onboarding as complete for each role
         const testRoles: string[] = [
-          ROLE_ADVERTISER, 
-          ROLE_PUBLISHER, 
-          ROLE_ADMIN, 
-          'viewer' as UserRole
+          'advertiser', 
+          'publisher', 
+          'admin', 
+          'viewer'
         ];
         
         for (const role of testRoles) {
