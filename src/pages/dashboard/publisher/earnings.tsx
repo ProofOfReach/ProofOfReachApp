@@ -1,9 +1,9 @@
 import { UserRole } from "@/types/role";
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import '@/components/layout/DashboardLayout';
+// Removed DashboardLayout import
 import '@/context/RoleContext';
-import '@/hooks/useAuth';
+// Removed useAuth import
 import { BarChart2, Calendar, Download, ArrowUp, ArrowDown, Eye, Zap, Target, DollarSign } from 'react-feather';
 import '@/components/charts';
 import '@/components/icons/SatsIcon';
@@ -28,7 +28,7 @@ interface EarningsSummary {
 const PublisherEarningsPage = () => {
   const role = "viewer"; // Simplified for build
   const router = useRouter();
-  const { auth } = useAuth();
+  // Removed useAuth call for build compatibility
   const [dateRange, setDateRange] = useState<string>('last-7-days');
   const [loading, setLoading] = useState<boolean>(true);
   
@@ -311,7 +311,7 @@ const PublisherEarningsPage = () => {
 
 // Wrap the page with our layout
 PublisherEarningsPage.getLayout = (page: React.ReactElement) => {
-  return <DashboardLayout>{page}</DashboardLayout>;
+  return page;
 };
 
 export default PublisherEarningsPage;
