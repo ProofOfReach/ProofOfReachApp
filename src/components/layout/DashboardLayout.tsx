@@ -88,3 +88,8 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children, title, role
 };
 
 export default DashboardLayout;
+
+// Export layout function for use with getLayout pattern
+export const getDashboardLayout = (page: React.ReactElement) => (
+  <DashboardLayout>{page}</DashboardLayout>
+);
