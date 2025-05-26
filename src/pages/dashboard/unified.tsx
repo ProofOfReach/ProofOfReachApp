@@ -3,8 +3,8 @@ import React, { useState, useEffect } from 'react';
 import { NextPage } from 'next';
 import { Home, ShoppingBag, Upload, Shield, Briefcase, User } from 'react-feather';
 
-import '@/components/layout/DashboardLayout';
-import RoleService from '@/lib/RoleService';
+import '@/components/layout/ImprovedDashboardLayout';
+import '@/lib/roleService';
 import '@/context/RoleContext';
 
 // Import our various role-specific dashboard components
@@ -211,7 +211,7 @@ const UnifiedDashboard: NextPage = () => {
 
 // Apply our improved dashboard layout
 UnifiedDashboard.getLayout = (page: React.ReactElement) => {
-  return page;
+  return <ImprovedDashboardLayout title="Dashboard">{page}</ImprovedDashboardLayout>;
 };
 
 export default UnifiedDashboard;

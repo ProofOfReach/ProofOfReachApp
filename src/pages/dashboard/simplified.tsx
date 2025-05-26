@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import '@/utils/layoutHelpers';
 import type { NextPageWithLayout } from '../_app';
 import { useLocalRole } from '../../hooks/useLocalRole';
+import { defaultUseRole } from '../../context/RoleContext';
 import RoleDropdown from '../../components/role/RoleDropdown';
 import '@/components/ui';
 
@@ -10,7 +11,7 @@ import '@/components/ui';
  * Simplified dashboard page with efficient role switching and state management
  */
 const SimplifiedDashboardPage: NextPageWithLayout = () => {
-  const role = "viewer"; // Simplified for build // Context role
+  const { role } = defaultUseRole(); // Context role
   const { currentRole } = useLocalRole(); // Local role (updates immediately)
   const [transitionCount, setTransitionCount] = useState(0);
   const [transitionHistory, setTransitionHistory] = useState<string[]>([]);
@@ -199,7 +200,7 @@ const SimplifiedDashboardPage: NextPageWithLayout = () => {
 
 // Use the standardized dashboard layout
 SimplifiedDashboardPage.getLayout = function getLayout(page: React.ReactElement) {
-  return page;
+  return getDashboardLayout(page, 'Simplified Dashboard');
 };
 
 export default SimplifiedDashboardPage;

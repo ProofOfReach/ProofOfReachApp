@@ -1,12 +1,13 @@
 import { UserRole } from "@/types/role";
 import React, { useEffect } from 'react';
 import { ChevronRight, DollarSign, PieChart, Users } from 'react-feather';
+import { defaultUseRole } from '../../../context/RoleContext';
 import DashboardLayout from '../../../components/layout/DashboardLayout';
 import StatCard from '../../../components/ui/StatCard';
-import '@/components/layout/DashboardLayout';
+import '@/components/layout/ImprovedDashboardLayout';
 
 export default function StakeholderDashboard(): React.ReactElement {
-  const role = "viewer"; // Simplified for build
+  const { role } = defaultUseRole();
 
   // Log for debugging
   useEffect(() => {
@@ -98,5 +99,5 @@ export default function StakeholderDashboard(): React.ReactElement {
 
 // Use the improved dashboard layout
 StakeholderDashboard.getLayout = (page: React.ReactElement) => {
-  return <DashboardLayout title="Stakeholder Dashboard">{page}</DashboardLayout>;
+  return <ImprovedDashboardLayout title="Stakeholder Dashboard">{page}</ImprovedDashboardLayout>;
 };

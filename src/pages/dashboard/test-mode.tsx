@@ -4,7 +4,7 @@ import { NextPageWithLayout } from '../_app';
 import '@/hooks/useAuth';
 import '@/components/admin/TestModeManager';
 import { Shield, AlertTriangle } from 'react-feather';
-import { getDashboardLayout } from '@/components/layout/DashboardLayout';
+import '@/utils/layoutHelpers';
 
 /**
  * Test Mode Management Page

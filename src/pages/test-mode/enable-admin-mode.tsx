@@ -11,9 +11,7 @@ import '@/lib/logger';
  */
 const EnableAdminMode: React.FC = () => {
   const router = useRouter();
-  // Temporarily disable role functionality for build
-  const setRole = () => {};
-  const availableRoles = ['admin', 'viewer'];
+  const { setRole, availableRoles } = defaultUseRole();
   const [error, setError] = useState<string | null>(null);
   const [isRedirecting, setIsRedirecting] = useState(true);
   const [debugInfo, setDebugInfo] = useState<Record<UserRole, any>>({});

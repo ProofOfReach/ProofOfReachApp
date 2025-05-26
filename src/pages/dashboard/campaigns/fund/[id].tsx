@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { NextPageWithLayout } from '../../../_app';
-import { getDashboardLayout } from '../../../../utils/layoutHelpers';
+import { getDashboardLayout } from '../../../../components/layouts/DashboardLayout';
 import { useAuth } from '../../../../hooks/useAuth';
 import { useCurrency } from '../../../../context/CurrencyContext';
-import CurrencyAmount from '../../../../components/CurrencyAmount';
-import SmartFundingFlow from '../../../../components/SmartFundingFlow';
+import { CurrencyAmount } from '../../../../components/CurrencyAmount';
+import { SmartFundingFlow } from '../../../../components/SmartFundingFlow';
 
 interface Campaign {
   id: string;

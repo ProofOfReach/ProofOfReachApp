@@ -6,7 +6,7 @@ import '@/utils/layoutHelpers';
 
 /**
  * Redirect page from /dashboard/create to /dashboard/ads/create
- * This exists to maintain compatibility with links in DashboardLayout
+ * This exists to maintain compatibility with links in ImprovedDashboardLayout
  */
 const CreateRedirectPage: NextPageWithLayout = () => {
   const router = useRouter();
@@ -18,6 +18,9 @@ const CreateRedirectPage: NextPageWithLayout = () => {
   return <div className="flex justify-center items-center h-full">Redirecting...</div>;
 };
 
-// Layout handled by redirect
+// Set the layout for the page
+CreateRedirectPage.getLayout = function getLayout(page: React.ReactElement) {
+  return getDashboardLayout(page, 'Create Ad');
+};
 
 export default CreateRedirectPage;

@@ -228,6 +228,3 @@ export function requireAuth(
     }
   };
 }
-
-// Export alias for compatibility with existing imports
-export const getServerSession = getSessionFromRequest;

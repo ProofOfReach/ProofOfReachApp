@@ -1,6 +1,7 @@
 import { UserRole } from "@/types/role";
 import React, { useState } from 'react';
-import DashboardLayout from '@/components/layout/DashboardLayout';
+import ImprovedDashboardLayout from '@/components/layout/ImprovedDashboardLayout';
+import { defaultUseRole } from '@/context/RoleContext';
 import type { NextPageWithLayout } from '@/pages/_app';
 import { BarChart2, Calendar, Download, ArrowUp, ArrowDown, Eye, Zap, Target } from 'react-feather';
 import { LineChart, BarChart, PieChart } from 'recharts';
@@ -60,7 +61,7 @@ interface PlatformMetrics {
 }
 
 const AnalyticsPage: NextPageWithLayout = () => {
-  const role = "viewer"; // Simplified for build
+  const { role } = defaultUseRole();
   const [dateRange, setDateRange] = useState<string>('last-7-days');
   const [loading, setLoading] = useState<boolean>(false);
   
@@ -810,7 +811,7 @@ const StakeholderAnalyticsDashboard = ({ dateRange, loading }: { dateRange: User
 
 // Set the layout for this page
 AnalyticsPage.getLayout = function getLayout(page: React.ReactElement) {
-  return <DashboardLayout>{page}</DashboardLayout>;
+  return <ImprovedDashboardLayout>{page}</ImprovedDashboardLayout>;
 };
 
 export default AnalyticsPage;

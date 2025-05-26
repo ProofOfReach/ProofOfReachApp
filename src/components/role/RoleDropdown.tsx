@@ -1,21 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { User, Shield, Edit3, DollarSign, Speaker } from 'react-feather';
-import { useAppEvent } from '@/hooks/useAppEvent';
-import type { UserRole } from '@/types/role';
-import { enhancedStorage, STORAGE_KEYS, SYSTEM_EVENTS, notifyRolesUpdated, notifyRoleChanged, getTestModeStatus } from '@/lib/enhancedStorage';
-import RoleManager from '@/lib/RoleManager';
-import RoleService from '@/lib/RoleService';
-
-// Event constants
-const ROLE_EVENTS = {
-  ROLE_CHANGED: 'role:changed',
-  ROLES_UPDATED: 'roles:updated'
-};
-
-const TEST_MODE_EVENTS = {
-  STATE_CHANGED: 'testmode:changed'
-};
 
 interface RoleDropdownProps {
   skipNavigation?: boolean;

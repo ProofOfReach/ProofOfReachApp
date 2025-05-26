@@ -14,7 +14,6 @@ import {
   addAppEventListener,
   addLegacyEventListener
 } from '@/lib/events';
-import type { UserRole } from '@/types/auth';
 
 /**
  * Hook to subscribe to application events
@@ -22,7 +21,7 @@ import type { UserRole } from '@/types/auth';
  * @param eventType The type of event to listen for
  * @param handler The event handler function
  */
-function useAppEvent<T extends AppEventType>(
+export function useAppEvent<T extends AppEventType>(
   eventType: T,
   handler: (payload: T extends keyof AppEventPayloads ? AppEventPayloads[T] : never) => void
 ): void {
@@ -63,7 +62,7 @@ export function useLegacyEvent(
  * @param handler The event handler function
  */
 export function useStorageEvent(
-  key: string,
+  key: UserRole,
   handler: (newValue: string | null, oldValue: string | null) => void
 ): void {
   useEffect(() => {
@@ -81,6 +80,4 @@ export function useStorageEvent(
   }, [key, handler]);
 }
 
-// Export both named and default
-export { useAppEvent };
 export default useAppEvent;

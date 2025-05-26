@@ -1,7 +1,20 @@
 import { UserRole } from "@/types/role";
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
+import '@/components/layout/DashboardLayout';
+import '@/context/RoleContext';
+import '@/hooks/useAuth';
 import { BarChart2, Calendar, Download, ArrowUp, ArrowDown, Eye, Zap, Target, DollarSign } from 'react-feather';
+import '@/components/charts';
+import '@/components/icons/SatsIcon';
+import '@/components/CurrencyAmount';
+import { 
+  fetchPublisherEarnings,
+  fetchAdSpacePerformance,
+  DailyMetrics,
+  AdSpacePerformance
+} from '@/services/analyticsService';
+import '@/utils/chartHelpers';
 
 // Mock earnings data
 interface EarningsSummary {
@@ -13,229 +26,292 @@ interface EarningsSummary {
 }
 
 const PublisherEarningsPage = () => {
-  const role = "viewer"; // Simplified for build
+  const { role } = defaultUseRole();
   const router = useRouter();
+  const { auth } = useAuth();
   const [dateRange, setDateRange] = useState<string>('last-7-days');
   const [loading, setLoading] = useState<boolean>(true);
   
   // State for API data
   const [earningsData, setEarningsData] = useState<any[]>([]);
-  const [adSpaceData, setAdSpaceData] = useState<any[]>([]);
+  const [adSpacesData, setAdSpacesData] = useState<AdSpacePerformance[]>([]);
   const [chartError, setChartError] = useState<string | null>(null);
+  
+  // Date range calculation
+  const getDateRange = () => {
+    const today = new Date();
+    
+    if (dateRange === 'last-7-days') {
+      const start = new Date(today);
+      start.setDate(today.getDate() - 6); // Last 7 days (including today)
+      return {
+        start: start.toISOString().split('T')[0],
+        end: today.toISOString().split('T')[0]
+      };
+    }
+    
+    // Default to last 30 days if unknown range
+    const start = new Date(today);
+    start.setDate(today.getDate() - 29); // Last 30 days (including today)
+    return {
+      start: start.toISOString().split('T')[0],
+      end: today.toISOString().split('T')[0]
+    };
+  };
+  
+  // Redirect if not in publisher role
+  useEffect(() => {
+    if (role !== 'publisher') {
+      router.push(`/dashboard${role !== 'viewer' ? `/${role}` : ''}`);
+    }
+  }, [role, router]);
 
-  // Mock data for build compatibility
+  // Fetch data from API
+  useEffect(() => {
+    const fetchPublisherData = async () => {
+      setLoading(true);
+      setChartError(null);
+      
+      try {
+        const range = getDateRange();
+        
+        // Fetch earnings data
+        const earnings = await fetchPublisherEarnings(undefined, range);
+        setEarningsData(earnings);
+        
+        // Fetch ad space performance data
+        const adSpaces = await fetchAdSpacePerformance(range);
+        setAdSpacesData(adSpaces);
+        
+        setLoading(false);
+      } catch (error) {
+        console.log("Error fetching publisher analytics data:", error);
+        setChartError("Failed to load earnings data. Please try again later.");
+        setLoading(false);
+      }
+    };
+    
+    fetchPublisherData();
+  }, [dateRange]);
+
+  // Mock earnings data
   const summary: EarningsSummary = {
-    impressions: 15420,
-    clicks: 287,
-    ctr: 1.86,
-    earnings: 4523,
-    adspaces: 3
+    impressions: 15230,
+    clicks: 512,
+    ctr: 3.36,
+    earnings: 32550,
+    adspaces: 2
   };
 
-  useEffect(() => {
-    setLoading(false);
-  }, []);
-
-  if (loading) {
+  // Generate percentage change indicator
+  const renderChangeIndicator = (change: number) => {
+    const isPositive = change >= 0;
     return (
-      <div className="flex items-center justify-center h-64">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600"></div>
+      <div className={`flex items-center text-sm ${isPositive ? 'text-green-500' : 'text-red-500'}`}>
+        {isPositive ? <ArrowUp className="w-3 h-3 mr-1" /> : <ArrowDown className="w-3 h-3 mr-1" />}
+        {Math.abs(change)}%
       </div>
     );
-  }
-
-  // Access control check
-  if (role === "viewer") {
-    return (
-      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center">
-        <div className="text-center">
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">Publisher Access Required</h1>
-          <p className="text-gray-600 dark:text-gray-300 mb-6">
-            You need publisher access to view earnings analytics.
-          </p>
-          <button
-            onClick={() => router.push('/dashboard')}
-            className="bg-indigo-600 text-white px-6 py-2 rounded-lg hover:bg-indigo-700 transition-colors"
-          >
-            Return to Dashboard
-          </button>
-        </div>
-      </div>
-    );
-  }
+  };
 
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-2">
-          <DollarSign className="h-8 w-8 text-green-500" />
+          <SatsIcon className="h-8 w-8 text-green-500" />
           <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Earnings Analytics</h1>
         </div>
         <div className="flex space-x-2">
           <div className="relative inline-block">
-            <select
-              value={dateRange}
-              onChange={(e) => setDateRange(e.target.value)}
-              className="bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg px-4 py-2 pr-8 focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
-            >
-              <option value="last-7-days">Last 7 Days</option>
-              <option value="last-30-days">Last 30 Days</option>
-              <option value="last-90-days">Last 90 Days</option>
-              <option value="custom">Custom Range</option>
-            </select>
+            <button className="inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700">
+              <Calendar className="w-4 h-4 mr-2" />
+              {dateRange === 'last-7-days' ? 'Last 7 Days' : 'Custom Range'}
+            </button>
+            {/* Date range dropdown would go here */}
           </div>
-          
-          <button className="flex items-center space-x-2 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg px-4 py-2 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
-            <Download className="w-4 h-4" />
-            <span>Export</span>
+          <button className="inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700">
+            <Download className="w-4 h-4 mr-2" />
+            Export
           </button>
         </div>
       </div>
 
-      {/* Summary Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Total Earnings</p>
-              <div className="flex items-center space-x-1 mt-2">
-                <DollarSign className="w-4 h-4 text-green-500" />
-                <span className="text-2xl font-bold text-gray-900 dark:text-white">
-                  {summary.earnings} sats
-                </span>
+      {loading ? (
+        <div className="py-12 text-center">
+          <Zap className="inline-block w-10 h-10 text-gray-400 animate-pulse mb-2" />
+          <p className="text-gray-500 dark:text-gray-400">Loading earnings data...</p>
+        </div>
+      ) : (
+        <>
+          {/* Summary Cards */}
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-4">
+              <div className="flex items-center justify-between mb-2">
+                <div className="text-sm font-medium text-gray-500 dark:text-gray-400">Total Earnings</div>
+                <SatsIcon className="w-4 h-4 text-green-500" />
               </div>
+              <div className="text-2xl font-bold text-gray-900 dark:text-white">
+                <CurrencyAmount sats={summary.earnings} showTooltip={false} />
+              </div>
+              {renderChangeIndicator(7.8)}
             </div>
-            <div className="p-3 bg-green-100 dark:bg-green-900 rounded-full">
-              <Zap className="w-6 h-6 text-green-600 dark:text-green-400" />
-            </div>
-          </div>
-        </div>
-
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Impressions</p>
-              <p className="text-2xl font-bold text-gray-900 dark:text-white mt-2">
-                {summary.impressions.toLocaleString()}
-              </p>
-            </div>
-            <div className="p-3 bg-blue-100 dark:bg-blue-900 rounded-full">
-              <Eye className="w-6 h-6 text-blue-600 dark:text-blue-400" />
-            </div>
-          </div>
-        </div>
-
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Clicks</p>
-              <p className="text-2xl font-bold text-gray-900 dark:text-white mt-2">
-                {summary.clicks.toLocaleString()}
-              </p>
-            </div>
-            <div className="p-3 bg-purple-100 dark:bg-purple-900 rounded-full">
-              <Target className="w-6 h-6 text-purple-600 dark:text-purple-400" />
-            </div>
-          </div>
-        </div>
-
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm font-medium text-gray-600 dark:text-gray-400">CTR</p>
-              <p className="text-2xl font-bold text-gray-900 dark:text-white mt-2">
-                {summary.ctr}%
-              </p>
-            </div>
-            <div className="p-3 bg-yellow-100 dark:bg-yellow-900 rounded-full">
-              <BarChart2 className="w-6 h-6 text-yellow-600 dark:text-yellow-400" />
-            </div>
-          </div>
-        </div>
-
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Ad Spaces</p>
-              <p className="text-2xl font-bold text-gray-900 dark:text-white mt-2">
+            
+            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-4">
+              <div className="flex items-center justify-between mb-2">
+                <div className="text-sm font-medium text-gray-500 dark:text-gray-400">Ad Spaces</div>
+                <Eye className="w-4 h-4 text-blue-500" />
+              </div>
+              <div className="text-2xl font-bold text-gray-900 dark:text-white">
                 {summary.adspaces}
-              </p>
+              </div>
+              {renderChangeIndicator(0)}
             </div>
-            <div className="p-3 bg-indigo-100 dark:bg-indigo-900 rounded-full">
-              <Calendar className="w-6 h-6 text-indigo-600 dark:text-indigo-400" />
+            
+            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-4">
+              <div className="flex items-center justify-between mb-2">
+                <div className="text-sm font-medium text-gray-500 dark:text-gray-400">Impressions</div>
+                <Eye className="w-4 h-4 text-purple-500" />
+              </div>
+              <div className="text-2xl font-bold text-gray-900 dark:text-white">
+                {formatNumber(summary.impressions)}
+              </div>
+              {renderChangeIndicator(4.3)}
+            </div>
+            
+            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-4">
+              <div className="flex items-center justify-between mb-2">
+                <div className="text-sm font-medium text-gray-500 dark:text-gray-400">CTR</div>
+                <Target className="w-4 h-4 text-yellow-500" />
+              </div>
+              <div className="text-2xl font-bold text-gray-900 dark:text-white">
+                {summary.ctr.toFixed(2)}%
+              </div>
+              {renderChangeIndicator(1.5)}
             </div>
           </div>
-        </div>
-      </div>
 
-      {/* Charts Placeholder */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
-          <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Earnings Over Time</h3>
-          <div className="h-64 flex items-center justify-center text-gray-500 dark:text-gray-400 bg-gray-50 dark:bg-gray-700 rounded-lg">
-            Chart component will be displayed here
-          </div>
-        </div>
+          {/* Daily Earnings Chart */}
+          <LineChart
+            title="Daily Earnings"
+            subtitle={`Data for ${dateRange === 'last-7-days' ? 'last 7 days' : 'selected period'}`}
+            data={earningsData}
+            dataKeys={[
+              { key: 'earnings', name: 'Earnings (sats)', color: '#10B981' }
+            ]}
+            xAxisDataKey="date"
+            loading={loading}
+            error={chartError}
+            height={320}
+            tooltipFormatter={(value: number, name: string) => {
+              // For tooltips, we'll show the formatted sats value
+              // The CurrencyAmount component handles display according to user preferences
+              return [formatSats(value), name.replace(' (sats)', '')];
+            }}
+          />
 
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
-          <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Performance Metrics</h3>
-          <div className="h-64 flex items-center justify-center text-gray-500 dark:text-gray-400 bg-gray-50 dark:bg-gray-700 rounded-lg">
-            Chart component will be displayed here
+          {/* Performance Breakdown */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {/* Metrics Over Time */}
+            <LineChart
+              title="Traffic Metrics"
+              subtitle="Impressions and clicks"
+              data={earningsData}
+              dataKeys={[
+                { key: 'impressions', name: 'Impressions', color: '#0088FE' },
+                { key: 'clicks', name: 'Clicks', color: '#00C49F' }
+              ]}
+              xAxisDataKey="date"
+              loading={loading}
+              error={chartError}
+              height={300}
+              tooltipFormatter={(value: number, name: string) => {
+                return [formatNumber(value), name];
+              }}
+            />
+            
+            {/* Ad Space Distribution */}
+            <PieChart
+              title="Earnings by Ad Space"
+              subtitle="Distribution across your spaces"
+              data={adSpacesData.map(space => ({
+                name: space.name,
+                value: space.earnings,
+                color: space.id === 'adspace-1' ? '#00C49F' : 
+                       space.id === 'adspace-2' ? '#0088FE' : 
+                       space.id === 'adspace-3' ? '#FFBB28' : '#FF8042'
+              }))}
+              loading={loading}
+              error={chartError}
+              tooltipFormatter={(value, name) => {
+                // For tooltips, we'll show the formatted sats value
+                return [formatSats(value), name || ""];
+              }}
+              labelLine={true}
+              height={300}
+            />
           </div>
-        </div>
-      </div>
-
-      {/* Ad Space Performance */}
-      <div className="bg-white dark:bg-gray-800 rounded-lg shadow">
-        <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
-          <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Ad Space Performance</h3>
-        </div>
-        <div className="p-6">
-          <div className="overflow-x-auto">
-            <table className="min-w-full table-auto">
-              <thead>
-                <tr className="text-left">
-                  <th className="px-4 py-2 text-sm font-medium text-gray-600 dark:text-gray-400">Name</th>
-                  <th className="px-4 py-2 text-sm font-medium text-gray-600 dark:text-gray-400">Impressions</th>
-                  <th className="px-4 py-2 text-sm font-medium text-gray-600 dark:text-gray-400">Clicks</th>
-                  <th className="px-4 py-2 text-sm font-medium text-gray-600 dark:text-gray-400">CTR</th>
-                  <th className="px-4 py-2 text-sm font-medium text-gray-600 dark:text-gray-400">Earnings</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
-                <tr>
-                  <td className="px-4 py-3 text-sm text-gray-900 dark:text-white">Homepage Banner</td>
-                  <td className="px-4 py-3 text-sm text-gray-600 dark:text-gray-400">8,420</td>
-                  <td className="px-4 py-3 text-sm text-gray-600 dark:text-gray-400">156</td>
-                  <td className="px-4 py-3 text-sm text-gray-600 dark:text-gray-400">1.85%</td>
-                  <td className="px-4 py-3 text-sm text-gray-900 dark:text-white">2,341 sats</td>
-                </tr>
-                <tr>
-                  <td className="px-4 py-3 text-sm text-gray-900 dark:text-white">Sidebar Ad</td>
-                  <td className="px-4 py-3 text-sm text-gray-600 dark:text-gray-400">4,200</td>
-                  <td className="px-4 py-3 text-sm text-gray-600 dark:text-gray-400">78</td>
-                  <td className="px-4 py-3 text-sm text-gray-600 dark:text-gray-400">1.86%</td>
-                  <td className="px-4 py-3 text-sm text-gray-900 dark:text-white">1,456 sats</td>
-                </tr>
-                <tr>
-                  <td className="px-4 py-3 text-sm text-gray-900 dark:text-white">Footer Banner</td>
-                  <td className="px-4 py-3 text-sm text-gray-600 dark:text-gray-400">2,800</td>
-                  <td className="px-4 py-3 text-sm text-gray-600 dark:text-gray-400">53</td>
-                  <td className="px-4 py-3 text-sm text-gray-600 dark:text-gray-400">1.89%</td>
-                  <td className="px-4 py-3 text-sm text-gray-900 dark:text-white">726 sats</td>
-                </tr>
-              </tbody>
-            </table>
+          
+          {/* Ad Space Performance */}
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm overflow-hidden">
+            <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
+              <h2 className="text-lg font-medium text-gray-900 dark:text-white">Ad Space Performance</h2>
+            </div>
+            <div className="overflow-x-auto">
+              <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                <thead className="bg-gray-50 dark:bg-gray-700">
+                  <tr>
+                    <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                      Ad Space
+                    </th>
+                    <th scope="col" className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                      Impressions
+                    </th>
+                    <th scope="col" className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                      Clicks
+                    </th>
+                    <th scope="col" className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                      CTR
+                    </th>
+                    <th scope="col" className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                      Earnings
+                    </th>
+                  </tr>
+                </thead>
+                <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                  {adSpacesData.map((space) => (
+                    <tr key={space.id} className="hover:bg-gray-50 dark:hover:bg-gray-700">
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <div className="text-sm font-medium text-gray-900 dark:text-white">{space.name}</div>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-right">
+                        <div className="text-sm text-gray-500 dark:text-gray-400">{formatNumber(space.impressions)}</div>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-right">
+                        <div className="text-sm text-gray-500 dark:text-gray-400">{formatNumber(space.clicks)}</div>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-right">
+                        <div className="text-sm text-gray-500 dark:text-gray-400">{space.ctr.toFixed(2)}%</div>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-right">
+                        <div className="text-sm text-green-600 dark:text-green-400 font-medium">
+                          <CurrencyAmount sats={space.earnings} showTooltip={false} />
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
-        </div>
-      </div>
+        </>
+      )}
     </div>
   );
 };
 
 // Wrap the page with our layout
 PublisherEarningsPage.getLayout = (page: React.ReactElement) => {
-  return page;
+  return <DashboardLayout>{page}</DashboardLayout>;
 };
 
 export default PublisherEarningsPage;

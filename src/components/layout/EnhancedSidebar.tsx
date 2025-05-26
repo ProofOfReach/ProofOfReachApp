@@ -19,7 +19,7 @@ import { cn } from '../../lib/utils';
 import { Sheet, SheetContent, SheetClose } from '../ui/sheet';
 import { NavigationMenu, NavigationMenuList, NavigationMenuItem, NavigationMenuNextLink } from '../ui/navigation-menu';
 
-import { Button } from '@/components/ui/Button';
+import { Button } from '../ui/button';
 
 /**
  * Enhanced Sidebar component built with shadcn/ui styled components

@@ -6,7 +6,7 @@ import ViewerOnboarding from './ViewerOnboarding';
 import PublisherOnboarding from './PublisherOnboarding';
 import AdvertiserOnboarding from './AdvertiserOnboarding';
 import '@/components/Loading';
-import '@/components/ui/Button';
+import '@/components/ui/button';
 import { ArrowLeft, ArrowRight } from 'react-feather';
 import '@/types/role';
 

@@ -1,6 +1,6 @@
 import { UserRole } from "@/types/role";
 import React, { useEffect, useState } from 'react';
-import DashboardLayout from '@/components/layout/DashboardLayout';
+import '@/components/layout/ImprovedDashboardLayout';
 import { Settings, Save, RefreshCw, UserCheck, Bell, Moon, Sun, Shield, Lock, Plus, X, AlertCircle, Info } from 'react-feather';
 
 const UserSettingsPage = () => {
@@ -177,7 +177,7 @@ const UserSettingsPage = () => {
   };
 
   return (
-    <DashboardLayout title="User Settings">
+    <ImprovedDashboardLayout title="User Settings">
       <div className="space-y-6">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-2">
@@ -411,7 +411,7 @@ const UserSettingsPage = () => {
           </button>
         </div>
       </div>
-    </DashboardLayout>
+    </ImprovedDashboardLayout>
   );
 };
 

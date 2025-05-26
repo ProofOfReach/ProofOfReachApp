@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 import DashboardLayout from '../../../../../components/layout/DashboardLayout';
+import { defaultUseRole } from '../../../../../context/RoleContext';
 import { Monitor, MessageSquare, Code, ArrowLeft, Save } from 'react-feather';
 import { useAuth } from '../../../../../hooks/useAuth';
 
@@ -19,7 +20,7 @@ interface AdSpace {
 }
 
 const EditAdSpacePage = () => {
-  const role = "viewer"; // Simplified for build
+  const { role } = defaultUseRole();
   const router = useRouter();
   const { id } = router.query;
   const { auth } = useAuth();

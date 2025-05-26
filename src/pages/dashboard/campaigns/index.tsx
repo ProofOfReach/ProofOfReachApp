@@ -3,6 +3,7 @@ import { NextPage } from 'next';
 import { useRouter } from 'next/router';
 import { Campaign, CampaignStatus, Ad } from '@prisma/client';
 import { AlertCircle, CheckCircle, ArrowRight, Plus } from 'react-feather';
+import DashboardContainer from '@/components/ui/DashboardContainer';
 import DashboardHeader from '@/components/ui/DashboardHeader';
 import { getDashboardLayout } from '@/utils/layoutHelpers';
 import type { NextPageWithLayout } from '../../_app';
@@ -104,7 +105,7 @@ const CampaignsPage: NextPageWithLayout = () => {
   };
 
   return (
-    <div className="container mx-auto px-4 py-6">
+    <DashboardContainer>
       <DashboardHeader 
         title="Campaign Management"
         actions={
@@ -236,7 +237,7 @@ const CampaignsPage: NextPageWithLayout = () => {
           </div>
         )}
       </div>
-    </div>
+    </DashboardContainer>
   );
 };
 

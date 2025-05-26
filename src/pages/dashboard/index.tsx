@@ -4,6 +4,7 @@ import {
   ShoppingBag, 
   Upload, 
   Shield, 
+  Briefcase, 
   User, 
   PieChart, 
   DollarSign, 
@@ -777,7 +778,7 @@ const Dashboard = () => {
               className="p-4 border border-blue-200 dark:border-blue-800 bg-blue-50 dark:bg-blue-900/20 rounded-lg flex items-center space-x-3 hover:bg-blue-100 dark:hover:bg-blue-800/30 transition-colors"
               onClick={() => {
                 if (typeof window !== 'undefined') {
-                  const RoleService = require('@/lib/RoleService').default;
+                  const { RoleService } = require('@/lib/roleService');
                   RoleService.changeRole('advertiser');
                 }
               }}
@@ -793,7 +794,7 @@ const Dashboard = () => {
               className="p-4 border border-green-200 dark:border-green-800 bg-green-50 dark:bg-green-900/20 rounded-lg flex items-center space-x-3 hover:bg-green-100 dark:hover:bg-green-800/30 transition-colors"
               onClick={() => {
                 if (typeof window !== 'undefined') {
-                  const RoleService = require('@/lib/RoleService').default;
+                  const { RoleService } = require('@/lib/roleService');
                   RoleService.changeRole('publisher');
                 }
               }}

@@ -40,5 +40,3 @@ export function TestModeBanner() {
     </div>
   )
 }
-
-export default TestModeBanner;

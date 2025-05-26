@@ -33,13 +33,3 @@ export const STORAGE_KEYS = {
   LAST_ROLE_CHANGE: 'lastRoleChange',
   BYPASS_API_CALLS: 'bypass_api_calls',
 } as const;
-
-/**
- * Filter an array of roles to only include valid UserRole values
- */
-export function filterValidRoles(roles: string[]): UserRole[] {
-  const validRoles: UserRole[] = ['viewer', 'advertiser', 'publisher', 'admin', 'stakeholder'];
-  return roles.filter((role): role is UserRole => 
-    validRoles.includes(role as UserRole)
-  );
-}

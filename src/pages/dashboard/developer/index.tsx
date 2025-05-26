@@ -1,5 +1,5 @@
 import React from 'react';
-import DashboardLayout from '@/components/layout/DashboardLayout';
+import ImprovedDashboardLayout from '@/components/layout/ImprovedDashboardLayout';
 import { Title, Paragraph } from '@/components/ui/Typography';
 import { Card } from '@/components/ui/card';
 import { Book, Code, FileText, Key } from 'react-feather';
@@ -75,7 +75,7 @@ sdk.trackClick({ adId: ad.id });`,
   ];
 
   return (
-    <DashboardLayout title="Developer Dashboard">
+    <ImprovedDashboardLayout title="Developer Dashboard">
       <div className="space-y-6">
         <div>
           <Title level={1}>Developer Tools</Title>
@@ -192,7 +192,7 @@ sdk.trackClick({ adId: ad.id });`,
           </div>
         </Card>
       </div>
-    </DashboardLayout>
+    </ImprovedDashboardLayout>
   );
 };
 

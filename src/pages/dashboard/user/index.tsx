@@ -3,10 +3,10 @@ import React from 'react';
 import useSWR from 'swr';
 import { Home } from 'react-feather';
 
-import DashboardLayout from '@/components/layout/DashboardLayout';
-import CurrencyAmount from '@/components/CurrencyAmount';
+import '@/components/layout/ImprovedDashboardLayout';
+import '@/components/CurrencyAmount';
 // Import our viewer dashboard component
-import ViewerDashboard from '@/components/dashboards/ViewerDashboard';
+import '@/components/dashboards/ViewerDashboard';
 
 // Define fetcher for SWR
 const fetcher = (url: string) => 
@@ -25,7 +25,7 @@ const UserDashboardPage = () => {
   const { data: walletData, isLoading: walletLoading } = useSWR('/api/wallet', fetcher);
 
   // Data to pass to our dashboard component
-  const walletBalance = (walletData?.balance ?? 0) || 0;
+  const walletBalance = walletData?.balance ?? 0 || 0;
 
   return (
     <div className="space-y-6">
@@ -35,7 +35,7 @@ const UserDashboardPage = () => {
       </div>
       
       {/* Use the viewer dashboard component */}
-      <ViewerDashboard />
+      <ViewerDashboardComponent />
       
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
@@ -74,7 +74,7 @@ const UserDashboardPage = () => {
 
 // Use our improved dashboard layout
 UserDashboardPage.getLayout = (page: React.ReactElement) => {
-  return <DashboardLayout title="Viewer Dashboard">{page}</DashboardLayout>;
+  return <ImprovedDashboardLayout title="Viewer Dashboard">{page}</ImprovedDashboardLayout>;
 };
 
 export default UserDashboardPage;

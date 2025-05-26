@@ -1,5 +1,6 @@
 import React from 'react';
 import ViewerDashboard from '@/components/dashboards/ViewerDashboard';
+import { DashboardContainer } from '@/components/ui';
 import { getDashboardLayout } from '@/utils/layoutHelpers';
 import type { NextPageWithLayout } from '../../_app';
 
@@ -11,9 +12,9 @@ import type { NextPageWithLayout } from '../../_app';
  */
 const ViewerDashboardPage: NextPageWithLayout = () => {
   return (
-    <div className="container mx-auto px-4 py-6">
+    <DashboardContainer>
       <ViewerDashboard />
-    </div>
+    </DashboardContainer>
   );
 };
 

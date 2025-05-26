@@ -1,6 +1,6 @@
 import { UserRole } from "@/types/role";
 import React, { useState } from 'react';
-import DashboardLayout from '@/components/layout/DashboardLayout';
+import '@/components/layout/ImprovedDashboardLayout';
 import '@/components/ui/Typography';
 import '@/components/ui/card';
 import { Search, Filter, User as UserIcon, Check, X, Shield } from 'react-feather';
@@ -129,13 +129,13 @@ const StakeholderUsersPage = () => {
   });
 
   return (
-    <DashboardLayout title="User Management">
+    <ImprovedDashboardLayout title="User Management">
       <div className="space-y-6">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-white">User Management</h1>
-          <p className="text-gray-500 dark:text-gray-400">
+          <Title level={1}>User Management</Title>
+          <Paragraph className="text-gray-500 dark:text-gray-400">
             View and manage all users on the platform.
-          </p>
+          </Paragraph>
         </div>
         
         <div className="flex flex-col md:flex-row gap-4 justify-between">
@@ -174,7 +174,7 @@ const StakeholderUsersPage = () => {
           </div>
         </div>
         
-        <div className="bg-white dark:bg-gray-900 shadow rounded-lg p-6">
+        <Card>
           <div className="overflow-x-auto">
             <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
               <thead className="bg-gray-50 dark:bg-gray-800">
@@ -247,7 +247,7 @@ const StakeholderUsersPage = () => {
               </tbody>
             </table>
           </div>
-        </div>
+        </Card>
         
         <div className="flex justify-between">
           <div className="text-sm text-gray-700 dark:text-gray-300">
@@ -263,7 +263,7 @@ const StakeholderUsersPage = () => {
           </div>
         </div>
       </div>
-    </DashboardLayout>
+    </ImprovedDashboardLayout>
   );
 };
 

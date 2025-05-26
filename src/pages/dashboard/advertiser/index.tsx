@@ -1,9 +1,11 @@
 import React from 'react';
+import { defaultUseRole } from '@/context/RoleContext';
 import { ChevronRight, ShoppingBag } from 'react-feather';
 import Link from 'next/link';
 import { getDashboardLayout } from '@/utils/layoutHelpers';
 import type { NextPageWithLayout } from '../../_app';
 import CurrencyAmount from '@/components/CurrencyAmount';
+import DashboardContainer from '@/components/ui/DashboardContainer';
 import DashboardCard from '@/components/ui/DashboardCard';
 
 /**
@@ -13,10 +15,10 @@ import DashboardCard from '@/components/ui/DashboardCard';
  * and wallet balance information.
  */
 const AdvertiserDashboard: NextPageWithLayout = () => {
-  const role = "viewer"; // Simplified for build
+  const { role } = defaultUseRole();
   
   return (
-    <div className="container mx-auto px-4 py-6">
+    <DashboardContainer>
       <div className="flex justify-between items-center mb-8">
         <div className="flex items-center space-x-3">
           <ShoppingBag className="h-8 w-8 text-purple-600" />
@@ -57,7 +59,7 @@ const AdvertiserDashboard: NextPageWithLayout = () => {
           </div>
         </div>
       </div>
-    </div>
+    </DashboardContainer>
   );
 };
 

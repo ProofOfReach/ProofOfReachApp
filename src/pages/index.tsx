@@ -2,13 +2,13 @@ import { UserRole } from "@/types/role";
 import React, { useEffect, useState, ReactElement } from 'react';
 import { useRouter } from 'next/router';
 import Layout from '../components/Layout';
-// Removed useAuthSwitch - not needed for homepage
+import { useAuthSwitch } from '../hooks/useAuthSwitch';
 import Link from 'next/link';
 import { useCallback } from 'react';
 import { Layout as LayoutIcon, User, Target, Zap, Check, AlertCircle, ArrowRight, Mail } from 'react-feather';
 import SatoshiIcon from '../components/SatoshiIcon';
 import { NextPageWithLayout } from './_app';
-import { Button } from "@/components/ui/Button";
+import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
@@ -34,9 +34,7 @@ const waitlistFormSchema = z.object({
 type WaitlistFormValues = z.infer<typeof waitlistFormSchema>;
 
 const HomePage: NextPageWithLayout = () => {
-  // Temporarily disable auth check for homepage
-  const isAuthenticated = false;
-  const pubkey = null;
+  const { isAuthenticated, pubkey } = useAuthSwitch();
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<{

@@ -1,5 +1,5 @@
 import React, { ReactElement } from 'react';
-import DashboardLayout from '@/components/layout/DashboardLayout';
+import ImprovedDashboardLayout from '@/components/layout/ImprovedDashboardLayout';
 
 /**
  * Helper function for creating consistent dashboard layouts
@@ -11,7 +11,7 @@ import DashboardLayout from '@/components/layout/DashboardLayout';
 export function getDashboardLayout(page: ReactElement, title?: string): ReactElement {
   // Create the layout using React.createElement instead of JSX
   return React.createElement(
-    DashboardLayout,
+    ImprovedDashboardLayout,
     { 
       children: page,
       title: title 

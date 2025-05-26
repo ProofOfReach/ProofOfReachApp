@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import '@/components/layout/DashboardLayout';
 import '@/context/RoleContext';
-import { useAuth } from '@/hooks/useAuth';
+import '@/hooks/useAuth';
 import { Download, CreditCard, Plus, Repeat, Download as DownloadIcon, Search } from 'react-feather';
 import '@/components/icons/SatsIcon';
 import '@/components/charts';
@@ -17,7 +17,7 @@ import { TransactionType } from '@prisma/client';
 const fetcher = (url: string) => fetch(url).then(res => res.json());
 
 const BillingPage: React.FC & { getLayout?: (page: React.ReactElement) => React.ReactElement } = () => {
-  const role = "viewer"; // Simplified for build
+  const { role } = defaultUseRole();
   const router = useRouter();
   const { auth } = useAuth();
   const [activeTab, setActiveTab] = useState<'transactions' | 'invoices'>('transactions');
@@ -347,7 +347,7 @@ const BillingPage: React.FC & { getLayout?: (page: React.ReactElement) => React.
 
 // Wrap the page with our layout
 BillingPage.getLayout = (page: React.ReactElement) => {
-  return page;
+  return <DashboardLayout>{page}</DashboardLayout>;
 };
 
 export default BillingPage;

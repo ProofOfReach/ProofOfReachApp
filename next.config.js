@@ -2,14 +2,6 @@
 const nextConfig = {
   reactStrictMode: false, // Disable strict mode in development to reduce renders
   
-  // Skip TypeScript and ESLint checks during build for deployment
-  typescript: {
-    ignoreBuildErrors: true,
-  },
-  eslint: {
-    ignoreDuringBuilds: true,
-  },
-  
   // Enhanced build performance
   compiler: {
     removeConsole: process.env.NODE_ENV === 'production',
@@ -32,10 +24,8 @@ const nextConfig = {
     ],
     // Enable modern bundling
     esmExternals: true,
+    serverComponentsExternalPackages: ['@prisma/client'],
   },
-  
-  // External packages for server components
-  serverExternalPackages: ['@prisma/client'],
   
   async headers() {
     return [
