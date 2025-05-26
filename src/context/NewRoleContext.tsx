@@ -415,7 +415,16 @@ export const RoleProvider: React.FC<RoleProviderProps> = ({
     (typeof window !== 'undefined' && localStorage.getItem('isTestMode') === 'true') ||
     (typeof window !== 'undefined' && localStorage.getItem('nostr_test_pk')?.startsWith('pk_test_'));
   
+  console.log('Role context test mode check:', {
+    isTestModeActive,
+    isDevEnvironment,
+    roleDataAvailableRoles: roleData?.availableRoles,
+    shouldShowAllRoles: isDevEnvironment || isTestModeActive
+  });
+  
   const finalAvailableRoles = (isDevEnvironment || isTestModeActive) ? ALL_ROLES : (roleData?.availableRoles || ['viewer']);
+  
+  console.log('Final available roles:', finalAvailableRoles);
   
   /**
    * Create the context value with all required properties
