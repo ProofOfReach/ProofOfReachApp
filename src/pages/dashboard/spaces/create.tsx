@@ -1,91 +1,195 @@
-import { UserRole } from "@/types/role";
-import React, { useContext, useState } from 'react';
+import React, { useState } from 'react';
 import { useRouter } from 'next/router';
 import Layout from '../../../components/Layout';
-import { NostrAuthContext } from '../../_app';
-import Link from 'next/link';
-import { AlertCircle } from 'react-feather';
-import SpaceForm from '../../../components/SpaceForm';
 
-const CreateSpacePage: React.FC = () => {
-  const { auth } = useContext(NostrAuthContext);
+const CreateSpacePage = () => {
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [formData, setFormData] = useState({
+    name: '',
+    description: '',
+    website: '',
+    dimensions: '728x90',
+    contentCategory: 'General',
+    minBidPerImpression: '1',
+    minBidPerClick: '10'
+  });
 
-  const handleSubmit = async (spaceData: any) => {
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
     setIsSubmitting(true);
-    setError(null);
-
+    
     try {
       const response = await fetch('/api/spaces', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        credentials: 'include', // Include cookies for authentication
-        body: JSON.stringify(spaceData),
+        body: JSON.stringify(formData),
       });
 
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.log || 'Failed to create ad space');
+      if (response.ok) {
+        router.push('/dashboard/spaces');
+      } else {
+        alert('Failed to create ad space');
       }
-
-      // Redirect to spaces list
-      router.push('/dashboard/publisher');
-    } catch (err: any) {
-      console.log('Space creation error:', err);
-      setError(err.message || 'Failed to create the ad space. Please try again.');
+    } catch (error) {
+      console.error('Error:', error);
+      alert('Failed to create ad space');
+    } finally {
       setIsSubmitting(false);
     }
   };
 
-  if (!auth.pubkey) {
-    return (
-      <Layout title="Create Ad Space - Nostr Ad Marketplace">
-        <div className="text-center py-12">
-          <p className="text-gray-600 dark:text-gray-300">Please login to create ad spaces.</p>
-          <Link href="/login" className="btn-primary mt-4 inline-block">
-            Go to Login
-          </Link>
-        </div>
-      </Layout>
-    );
-  }
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
+    setFormData(prev => ({
+      ...prev,
+      [e.target.name]: e.target.value
+    }));
+  };
 
   return (
     <Layout title="Create Ad Space - Nostr Ad Marketplace">
-      <div className="max-w-3xl mx-auto">
+      <div className="max-w-2xl mx-auto">
         <h1 className="text-3xl font-bold mb-6 text-gray-900 dark:text-white">Create New Ad Space</h1>
+        
+        <form onSubmit={handleSubmit} className="space-y-6">
+          <div>
+            <label htmlFor="name" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+              Space Name
+            </label>
+            <input
+              type="text"
+              id="name"
+              name="name"
+              value={formData.name}
+              onChange={handleChange}
+              required
+              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
+              placeholder="e.g., Homepage Banner"
+            />
+          </div>
 
-        {/* Info Card */}
-        <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4 mb-8">
-          <div className="flex items-start">
-            <AlertCircle className="h-5 w-5 text-blue-500 mr-3 mt-0.5" />
+          <div>
+            <label htmlFor="description" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+              Description
+            </label>
+            <textarea
+              id="description"
+              name="description"
+              value={formData.description}
+              onChange={handleChange}
+              rows={3}
+              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
+              placeholder="Describe where this ad space appears on your site"
+            />
+          </div>
+
+          <div>
+            <label htmlFor="website" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+              Website URL
+            </label>
+            <input
+              type="url"
+              id="website"
+              name="website"
+              value={formData.website}
+              onChange={handleChange}
+              required
+              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
+              placeholder="https://yourwebsite.com"
+            />
+          </div>
+
+          <div>
+            <label htmlFor="dimensions" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+              Ad Dimensions
+            </label>
+            <select
+              id="dimensions"
+              name="dimensions"
+              value={formData.dimensions}
+              onChange={handleChange}
+              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
+            >
+              <option value="728x90">Banner (728x90)</option>
+              <option value="300x250">Medium Rectangle (300x250)</option>
+              <option value="320x50">Mobile Banner (320x50)</option>
+              <option value="160x600">Wide Skyscraper (160x600)</option>
+              <option value="970x250">Billboard (970x250)</option>
+            </select>
+          </div>
+
+          <div>
+            <label htmlFor="contentCategory" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+              Content Category
+            </label>
+            <select
+              id="contentCategory"
+              name="contentCategory"
+              value={formData.contentCategory}
+              onChange={handleChange}
+              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
+            >
+              <option value="General">General</option>
+              <option value="Technology">Technology</option>
+              <option value="Finance">Finance</option>
+              <option value="Cryptocurrency">Cryptocurrency</option>
+              <option value="News">News</option>
+              <option value="Entertainment">Entertainment</option>
+            </select>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <h3 className="font-medium text-blue-800 dark:text-blue-300">Publisher Information</h3>
-              <p className="text-blue-700 dark:text-blue-400 text-sm mt-1">
-                Create an ad space on your website by filling out the form below. You can set your minimum
-                bid requirements, dimensions, and content categories to attract relevant advertisers.
-              </p>
+              <label htmlFor="minBidPerImpression" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                Min Bid Per Impression (sats)
+              </label>
+              <input
+                type="number"
+                id="minBidPerImpression"
+                name="minBidPerImpression"
+                value={formData.minBidPerImpression}
+                onChange={handleChange}
+                min="1"
+                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
+              />
+            </div>
+
+            <div>
+              <label htmlFor="minBidPerClick" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                Min Bid Per Click (sats)
+              </label>
+              <input
+                type="number"
+                id="minBidPerClick"
+                name="minBidPerClick"
+                value={formData.minBidPerClick}
+                onChange={handleChange}
+                min="1"
+                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
+              />
             </div>
           </div>
-        </div>
 
-        {/* Error Display */}
-        {error && (
-          <div className="mb-6 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
-            <p className="text-red-700 dark:text-red-300">{error}</p>
+          <div className="flex space-x-4">
+            <button
+              type="submit"
+              disabled={isSubmitting}
+              className="flex-1 py-2 px-4 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:opacity-50"
+            >
+              {isSubmitting ? 'Creating...' : 'Create Ad Space'}
+            </button>
+            
+            <button
+              type="button"
+              onClick={() => router.back()}
+              className="py-2 px-4 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400"
+            >
+              Cancel
+            </button>
           </div>
-        )}
-
-        {/* Ad Space Creation Form */}
-        <div className="card">
-          <div className="p-6">
-            <SpaceForm onSubmit={handleSubmit} isSubmitting={isSubmitting} />
-          </div>
-        </div>
+        </form>
       </div>
     </Layout>
   );

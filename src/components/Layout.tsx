@@ -4,7 +4,7 @@ import Navbar from './Navbar';
 import HomeNavbar from './HomeNavbar';
 import AuthStatusBar from './auth/AuthStatusBar';
 import DebugRoleEnabler from './DebugRoleEnabler';
-import TestModeBanner from './TestModeBanner';
+import { TestModeBanner } from './TestModeBanner';
 import HackathonBanner from './HackathonBanner';
 import DomainToggleButton from './DomainToggleButton';
 import { useRouter } from 'next/router';
