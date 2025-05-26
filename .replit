@@ -184,6 +184,10 @@ args = "Quick Final Build"
 task = "workflow.run"
 args = "Complete Production Build"
 
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Quick Production Build Test"
+
 [[workflows.workflow]]
 name = "Nostr Ad Marketplace Server"
 author = "agent"
@@ -526,6 +530,14 @@ args = "npm run build"
 
 [[workflows.workflow]]
 name = "Complete Production Build"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "npm run build"
+
+[[workflows.workflow]]
+name = "Quick Production Build Test"
 author = "agent"
 
 [[workflows.workflow.tasks]]

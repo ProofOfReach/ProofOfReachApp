@@ -1,0 +1,61 @@
+import { UserRole } from '@/types/role';
+import { logger } from './logger';
+
+/**
+ * Role Service - Manages user role operations and transitions
+ */
+export class RoleService {
+  static async getCurrentRole(): Promise<UserRole> {
+    try {
+      const storedRole = localStorage.getItem('userRole');
+      return (storedRole as UserRole) || 'viewer';
+    } catch (error) {
+      logger.log('Error getting current role:', error);
+      return 'viewer';
+    }
+  }
+
+  static async setRole(role: UserRole): Promise<boolean> {
+    try {
+      localStorage.setItem('userRole', role);
+      return true;
+    } catch (error) {
+      logger.log('Error setting role:', error);
+      return false;
+    }
+  }
+
+  static async getAvailableRoles(): Promise<UserRole[]> {
+    try {
+      const cachedRoles = localStorage.getItem('cachedAvailableRoles');
+      if (cachedRoles) {
+        return JSON.parse(cachedRoles);
+      }
+      return ['viewer', 'advertiser', 'publisher'];
+    } catch (error) {
+      logger.log('Error getting available roles:', error);
+      return ['viewer'];
+    }
+  }
+
+  static async switchRole(newRole: UserRole): Promise<boolean> {
+    try {
+      await this.setRole(newRole);
+      // Trigger role change event
+      window.dispatchEvent(new CustomEvent('roleChanged', { 
+        detail: { newRole } 
+      }));
+      return true;
+    } catch (error) {
+      logger.log('Error switching role:', error);
+      return false;
+    }
+  }
+
+  static isValidRole(role: string): role is UserRole {
+    return ['viewer', 'advertiser', 'publisher', 'admin', 'stakeholder'].includes(role);
+  }
+}
+
+// Export default instance
+export default RoleService;

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import type { NextPageWithLayout } from '../_app';
 import type { UserRole } from '@/types/auth';
+import RoleService from '@/lib/RoleService';
 
 /**
  * A dedicated page for switching between roles
