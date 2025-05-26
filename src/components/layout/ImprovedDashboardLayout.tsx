@@ -201,13 +201,13 @@ const ImprovedDashboardLayout: React.FC<ImprovedDashboardLayoutProps> = ({
         { role: 'publisher', label: 'Wallet', icon: <BitcoinIcon className="w-5 h-5 mr-3" />, href: '/dashboard/wallet' }
       ],
       admin: [
-        { role: 'admin', label: 'Users', icon: <User className="w-5 h-5 mr-3" />, href: '/dashboard/users' },
-        { role: 'admin', label: 'Approvals', icon: <Shield className="w-5 h-5 mr-3" />, href: '/dashboard/approvals' },
+        { role: 'admin', label: 'Users', icon: <User className="w-5 h-5 mr-3" />, href: '/dashboard/admin/users' },
+        { role: 'admin', label: 'Approvals', icon: <Shield className="w-5 h-5 mr-3" />, href: '/dashboard/admin/approvals' },
         { role: 'admin', label: 'Campaigns', icon: <MegaphoneIcon className="w-5 h-5 mr-3" />, href: '/dashboard/campaigns' }
       ],
       stakeholder: [
         { role: 'stakeholder', label: 'Analytics', icon: <BarChart2 className="w-5 h-5 mr-3" />, href: '/dashboard/analytics' },
-        { role: 'stakeholder', label: 'Users', icon: <User className="w-5 h-5 mr-3" />, href: '/dashboard/users' },
+        { role: 'stakeholder', label: 'Users', icon: <User className="w-5 h-5 mr-3" />, href: '/dashboard/admin/users' },
         { role: 'stakeholder', label: 'Security', icon: <Shield className="w-5 h-5 mr-3" />, href: '/dashboard/security' }
       ]
     };
