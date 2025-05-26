@@ -35,8 +35,8 @@ const BitcoinConnectWallet: React.FC<BitcoinConnectWalletProps> = ({
       showBalance: true,
     });
 
-    // Check if already connected
-    checkConnection();
+    // Don't automatically check connection to avoid triggering the popup
+    // Connection status will be checked when user clicks connect
   }, []);
 
   const checkConnection = async () => {
