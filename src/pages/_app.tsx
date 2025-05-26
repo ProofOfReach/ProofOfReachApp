@@ -13,7 +13,7 @@ import { ErrorProvider } from '@/context/ErrorContext';
 import ErrorInitializer from '@/components/errors/ErrorInitializer';
 import ErrorBoundary from '@/components/ErrorBoundary';
 import { TestModeProvider } from '@/context/TestModeContext';
-import { AuthProviderRefactored } from '@/providers/AuthProviderRefactored';
+import { AuthProviderRefactored, AuthContextRefactored as NostrAuthContext } from '@/providers/AuthProviderRefactored';
 import { queryClient } from '@/lib/queryClient';
 import '@/styles/globals.css';
 
