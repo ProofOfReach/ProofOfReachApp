@@ -616,8 +616,12 @@ const LoginPageClient: React.FC = () => {
         logger.log('Error setting up test user onboarding:', onboardingError instanceof Error ? onboardingError.message : String(onboardingError));
       }
 
+      // Set admin as the default role for test mode users
+      localStorage.setItem('selectedRole', 'admin');
+      localStorage.setItem('currentRole', 'admin');
+      
       // Redirect to the dashboard after a short delay
-      logger.log('Test Mode: Redirecting to dashboard');
+      logger.log('Test Mode: Redirecting to dashboard with admin role');
       setTimeout(() => {
         window.location.href = '/dashboard';
       }, 500);
