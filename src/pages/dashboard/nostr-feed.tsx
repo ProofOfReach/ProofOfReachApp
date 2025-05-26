@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import Head from 'next/head';
-import { ChevronDown, Settings } from 'react-feather';
+import { ChevronDownIcon, Cog6ToothIcon } from '@heroicons/react/24/outline';
 import SimpleNostrFeed from '@/components/SimpleNostrFeed';
 import type { NextPageWithLayout } from '../_app';
 import { getDashboardLayout } from '@/utils/layoutHelpers';
@@ -63,9 +63,9 @@ const NostrFeedPage: NextPageWithLayout = () => {
                 onClick={() => setShowSettings(!showSettings)} 
                 className="flex items-center text-gray-600 dark:text-gray-300 hover:text-purple-600 dark:hover:text-purple-400"
               >
-                <Settings className="h-5 w-5 mr-1" />
+                <Cog6ToothIcon className="h-5 w-5 mr-1" />
                 <span className="mr-1 text-sm">Settings</span>
-                <ChevronDown 
+                <ChevronDownIcon 
                   className={`h-4 w-4 transition-transform ${showSettings ? 'transform rotate-180' : ''}`} 
                 />
               </button>
