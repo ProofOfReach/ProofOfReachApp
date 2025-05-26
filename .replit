@@ -156,6 +156,10 @@ args = "Test Status Overview"
 task = "workflow.run"
 args = "TypeScript Error Analysis"
 
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Quick Error Check"
+
 [[workflows.workflow]]
 name = "Nostr Ad Marketplace Server"
 author = "agent"
@@ -447,6 +451,14 @@ author = "agent"
 [[workflows.workflow.tasks]]
 task = "shell.exec"
 args = "npx tsc --noEmit --skipLibCheck 2>&1 | grep -E \"error TS[0-9]+\" | sort | uniq -c | sort -nr | head -20"
+
+[[workflows.workflow]]
+name = "Quick Error Check"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "npx tsc --noEmit --skipLibCheck 2>&1 | head -20 | grep -c \"error TS\" || echo \"0\""
 
 [deployment]
 run = ["sh", "-c", "npm install && npx prisma generate && npm run dev"]
