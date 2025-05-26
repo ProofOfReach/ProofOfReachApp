@@ -33,6 +33,9 @@
     "sdk/**/*",
     "server/**/*",
     ".next/**/*",
-    "migration-backup/**/*"
+    "migration-backup/**/*",
+    "src/__tests__/**/*",
+    "**/*.test.ts",
+    "**/*.test.tsx"
   ]
 }

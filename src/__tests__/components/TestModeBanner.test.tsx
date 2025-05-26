@@ -1,6 +1,6 @@
 import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
-import TestModeBanner from '../../components/TestModeBanner';
+import { TestModeBanner } from '../../components/TestModeBanner';
 import { useTestMode } from '../../hooks/useTestMode';
 import { RoleService } from '../../lib/roleService';
 import { RoleManager } from '../../services/roleManager';
