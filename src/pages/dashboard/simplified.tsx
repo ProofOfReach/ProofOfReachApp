@@ -199,7 +199,7 @@ const SimplifiedDashboardPage: NextPageWithLayout = () => {
 
 // Use the standardized dashboard layout
 SimplifiedDashboardPage.getLayout = function getLayout(page: React.ReactElement) {
-  return getDashboardLayout(page, 'Simplified Dashboard');
+  return page;
 };
 
 export default SimplifiedDashboardPage;
