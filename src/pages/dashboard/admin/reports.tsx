@@ -1,7 +1,7 @@
 import { UserRole } from "@/types/role";
 import React, { useState, useEffect } from 'react';
 import { PieChart, Calendar, Download, RefreshCw, Filter } from 'react-feather';
-import { getEnhancedDashboardLayout } from '@/components/layout/EnhancedDashboardLayout';
+import { getDashboardLayout } from '@/components/layout/DashboardLayout';
 import { DashboardContainer } from '@/components/ui';
 import DashboardCard from '@/components/ui/DashboardCard';
 import CurrencyAmount from '@/components/CurrencyAmount';
