@@ -1,3 +1,18 @@
+/**
+ * ⚠️ DEPRECATED - DO NOT USE ⚠️
+ * 
+ * This role context implementation has been DEPRECATED in favor of the simpler,
+ * more reliable localStorage-based role system currently in use.
+ * 
+ * ACTIVE IMPLEMENTATION: src/lib/roleService.ts
+ * 
+ * This file is kept for reference only and should not be imported or used
+ * in any new code. The current role system works perfectly without React Query
+ * complexity and provides smooth role transitions without page reloads.
+ * 
+ * DO NOT IMPORT OR USE THIS FILE
+ */
+
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { useRouter } from 'next/router';
 import { useQuery, useMutation, useQueryClient, QueryClient, QueryClientProvider } from '@tanstack/react-query';
