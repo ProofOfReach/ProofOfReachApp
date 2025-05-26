@@ -50,7 +50,11 @@ const Dashboard = () => {
       console.log('Test mode detected - enabling all roles');
       enableTestModeRoles();
       setIsTestMode(true);
-      setCurrentRole('admin'); // Default to admin for test mode
+      
+      // Get the current role from localStorage, default to admin if none set
+      const testModeRole = localStorage.getItem('userRole') || localStorage.getItem('currentRole') || 'admin';
+      console.log(`Setting test mode role to: ${testModeRole}`);
+      setCurrentRole(testModeRole as UserRole);
       return;
     }
     

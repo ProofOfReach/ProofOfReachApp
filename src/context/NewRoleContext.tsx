@@ -113,27 +113,19 @@ export const RoleProvider: React.FC<RoleProviderProps> = ({
   const { data: roleData, refetch } = useQuery<RoleDataType>({
     queryKey: [ROLE_CACHE_KEY],
     queryFn: async () => {
-      // In development environment, always provide all roles
-      if (isDevEnvironment) {
-        console.log('Development mode: All roles available');
-        const storedRole = localStorage.getItem('userRole');
-        
-        return {
-          availableRoles: ALL_ROLES,
-          currentRole: isValidRole(storedRole || '') ? storedRole! : 'viewer',
-          timestamp: Date.now()
-        };
-      }
+      // Check for test mode from multiple sources
+      const isTestModeEnabled = auth?.isTestMode || 
+        (typeof window !== 'undefined' && localStorage.getItem('isTestMode') === 'true') ||
+        (typeof window !== 'undefined' && localStorage.getItem('nostr_pubkey')?.startsWith('pk_test_'));
       
-      // For test mode, ensure all roles are enabled
-      if (auth?.isTestMode) {
-        console.log('Test mode: Refreshing roles');
-        await refreshRoles();
-        const storedRole = localStorage.getItem('userRole');
+      // In development environment or test mode, always provide all roles
+      if (isDevEnvironment || isTestModeEnabled) {
+        console.log('Development/Test mode: All roles available');
+        const storedRole = localStorage.getItem('userRole') || localStorage.getItem('currentRole');
         
         return {
           availableRoles: ALL_ROLES,
-          currentRole: isValidRole(storedRole || '') ? storedRole! : 'viewer',
+          currentRole: isValidRole(storedRole || '') ? storedRole! : 'admin',
           timestamp: Date.now()
         };
       }
@@ -350,11 +342,12 @@ export const RoleProvider: React.FC<RoleProviderProps> = ({
    * Check if a role is available to the current user
    */
   const isRoleAvailable = (roleToCheck: string): boolean => {
-    // In development or test mode, all roles are available
-    const isTestModeInLocalStorage = typeof window !== 'undefined' && localStorage.getItem('isTestMode') === 'true';
-    const isTestPubkey = typeof window !== 'undefined' && localStorage.getItem('nostr_pubkey')?.startsWith('pk_test_');
+    // Check for test mode from multiple sources
+    const isTestModeEnabled = auth?.isTestMode || 
+      (typeof window !== 'undefined' && localStorage.getItem('isTestMode') === 'true') ||
+      (typeof window !== 'undefined' && localStorage.getItem('nostr_pubkey')?.startsWith('pk_test_'));
     
-    if (isDevEnvironment || auth?.isTestMode || isTestModeInLocalStorage || isTestPubkey) {
+    if (isDevEnvironment || isTestModeEnabled) {
       console.log(`Test mode detected, all roles are available: ${roleToCheck}`);
       return true;
     }
