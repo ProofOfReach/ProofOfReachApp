@@ -4,7 +4,7 @@ import { NextPage } from 'next';
 import { useRouter } from 'next/router';
 import { ArrowLeft, AlertCircle, CheckCircle, Image as ImageIcon, Link as LinkIcon, Target, DollarSign } from 'react-feather';
 
-import '@/components/layout/DashboardLayout';
+import DashboardLayout from '@/components/layout/DashboardLayout';
 
 interface FormData {
   title: string;
