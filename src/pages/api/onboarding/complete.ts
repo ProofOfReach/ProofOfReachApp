@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { apiHandler } from '@/utils/apiHandler';
 import onboardingService from '@/lib/onboardingService';
-import '@/types/role';
+import { UserRole } from '@/types/role';
 import '@/lib/logger';
 
 /**
