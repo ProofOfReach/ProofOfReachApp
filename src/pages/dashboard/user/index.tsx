@@ -74,7 +74,7 @@ const UserDashboardPage = () => {
 
 // Use our improved dashboard layout
 UserDashboardPage.getLayout = (page: React.ReactElement) => {
-  return <DashboardLayout title="Viewer Dashboard">{page}</DashboardLayout>;
+  return page;
 };
 
 export default UserDashboardPage;

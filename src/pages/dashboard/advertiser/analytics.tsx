@@ -402,7 +402,7 @@ const AdvertiserAnalyticsPage = () => {
 
 // Wrap the page with our layout
 AdvertiserAnalyticsPage.getLayout = (page: React.ReactElement) => {
-  return <DashboardLayout>{page}</DashboardLayout>;
+  return page;
 };
 
 export default AdvertiserAnalyticsPage;

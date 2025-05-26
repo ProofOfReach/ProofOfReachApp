@@ -98,5 +98,5 @@ export default function StakeholderDashboard(): React.ReactElement {
 
 // Use the improved dashboard layout
 StakeholderDashboard.getLayout = (page: React.ReactElement) => {
-  return <DashboardLayout title="Stakeholder Dashboard">{page}</DashboardLayout>;
+  return page;
 };

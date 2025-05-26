@@ -201,7 +201,7 @@ const NostrFeedPage: NextPageWithLayout = () => {
 
 // Wrap the page with our improved layout
 NostrFeedPage.getLayout = (page: React.ReactElement) => {
-  return <DashboardLayout title="Nostr Feed">{page}</DashboardLayout>;
+  return page;
 };
 
 export default NostrFeedPage;

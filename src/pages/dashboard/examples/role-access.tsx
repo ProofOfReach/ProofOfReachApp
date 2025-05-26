@@ -147,7 +147,7 @@ const RoleAccessExamplePage: NextPageWithLayout = () => {
  * Define the layout for this page
  */
 RoleAccessExamplePage.getLayout = function getLayout(page: ReactElement) {
-  return <DashboardLayout>{page}</DashboardLayout>;
+  return page;
 };
 
 export default RoleAccessExamplePage;
