@@ -73,7 +73,7 @@ const EditSpacePage: React.FC = () => {
     }
   };
 
-  if (!auth.pubkey) {
+  if (!auth?.pubkey) {
     return (
       <Layout title="Edit Ad Space - Nostr Ad Marketplace">
         <div className="text-center py-12">
