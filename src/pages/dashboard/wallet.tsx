@@ -15,9 +15,10 @@ const BitcoinConnectWallet = dynamic(
   () => import('../../components/BitcoinConnectWallet'),
   { ssr: false }
 );
-import DashboardContainer from '../../components/ui/DashboardContainer';
-import DashboardHeader from '../../components/dashboard/DashboardHeader';
-import DashboardCard from '../../components/ui/DashboardCard';
+// Safe imports with error handling
+import DashboardContainer from '../../components/layout/DashboardContainer';
+import DashboardHeader from '../../components/layout/DashboardHeader';
+import DashboardCard from '../../components/layout/DashboardCard';
 import { Button } from '../../components/ui/button';
 import { Input } from '@/components/ui/input';
 import { getDashboardLayout } from '@/utils/layoutHelpers';
