@@ -1,4 +1,6 @@
-export type UserRole = 'viewer' | 'advertiser' | 'publisher' | 'admin' | 'stakeholder';
+// Re-export UserRole from core types to maintain single source of truth
+export type { UserRole } from './core';
+import type { UserRole } from './core';
 
 /**
  * Check if a string is a valid UserRole

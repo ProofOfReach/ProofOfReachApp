@@ -1,7 +1,6 @@
-import { UserRole } from "@/types/role";
+import { UserRole } from "@/types/core";
 import { ErrorCode } from "@/types/error";
 import { prisma } from '../lib/prisma';
-import type { UserRole } from '../types/auth'; // Updated to use the new location
 import { User } from '../types/prisma';
 import { logger } from '../lib/logger';
 

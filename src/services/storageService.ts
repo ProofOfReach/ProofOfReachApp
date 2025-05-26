@@ -1,4 +1,3 @@
-import { UserRole } from "@/types/role";
 /**
  * Storage Service
  * 
@@ -6,7 +5,7 @@ import { UserRole } from "@/types/role";
  * Provides consistent error handling and type safety.
  */
 
-import { UserRole } from '../types/role';
+import { UserRole } from '../types/core';
 import { logger } from '../lib/logger';
 
 // Define storage key constants to avoid string duplication
