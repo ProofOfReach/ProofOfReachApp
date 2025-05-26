@@ -1,13 +1,19 @@
 import React, { ReactNode, useEffect, Children } from 'react';
 import Head from 'next/head';
 import Navbar from './Navbar';
-import HomeNavbar from './HomeNavbar';
 import AuthStatusBar from './auth/AuthStatusBar';
 import DebugRoleEnabler from './DebugRoleEnabler';
 import TestModeBanner from './TestModeBanner';
 import HackathonBanner from './HackathonBanner';
 import DomainToggleButton from './DomainToggleButton';
 import { useRouter } from 'next/router';
+import dynamic from 'next/dynamic';
+
+// Dynamically import HomeNavbar to avoid webpack runtime errors
+const HomeNavbar = dynamic(() => import('./HomeNavbar'), {
+  loading: () => <div className="h-16 bg-white shadow-md"></div>,
+  ssr: true
+});
 
 /**
  * Conditionally check authentication only when needed
