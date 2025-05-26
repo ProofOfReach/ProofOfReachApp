@@ -14,6 +14,7 @@ import {
   addAppEventListener,
   addLegacyEventListener
 } from '@/lib/events';
+import type { UserRole } from '@/types/auth';
 
 /**
  * Hook to subscribe to application events
