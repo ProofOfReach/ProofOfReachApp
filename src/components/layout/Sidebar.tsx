@@ -171,6 +171,20 @@ const Sidebar: React.FC = () => {
       .filter(roleOption => roleOption !== role);
   };
 
+  // Simple role availability check for test mode
+  const isRoleAvailableForSwitcher = (roleOption: UserRole) => {
+    // In development/test mode, all roles should be available
+    if (typeof window !== 'undefined') {
+      const isDevMode = window.location.hostname.includes('replit.dev') || window.location.hostname.includes('localhost');
+      if (isDevMode) {
+        return true;
+      }
+    }
+    
+    // Fall back to context availability check
+    return isRoleAvailable ? isRoleAvailable(roleOption) : true;
+  };
+
   // Get background color based on current role
   const getRoleBackgroundColor = (checkRole: string) => {
     switch(checkRole) {
@@ -299,13 +313,13 @@ const Sidebar: React.FC = () => {
                   key={roleOption}
                   onClick={() => handleRoleChange(roleOption)}
                   className={`w-full flex items-center px-3 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-700 
-                    ${isRoleAvailable(roleOption) 
+                    ${isRoleAvailableForSwitcher(roleOption) 
                       ? 'text-gray-700 dark:text-gray-300' 
                       : 'text-gray-400 dark:text-gray-500 italic'}`}
-                  disabled={!isRoleAvailable(roleOption)}
+                  disabled={!isRoleAvailableForSwitcher(roleOption)}
                 >
                   <span className="mr-3">
-                    {isRoleAvailable(roleOption) 
+                    {isRoleAvailableForSwitcher(roleOption) 
                       ? roleIcons[roleOption]
                       : <Lock className="w-5 h-5 text-gray-400 dark:text-gray-500" />
                     }
