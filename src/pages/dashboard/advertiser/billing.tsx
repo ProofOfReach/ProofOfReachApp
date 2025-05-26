@@ -1,25 +1,15 @@
-import { UserRole } from "@/types/role";
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import '@/components/layout/DashboardLayout';
-import '@/context/RoleContext';
-import '@/hooks/useAuth';
+import ImprovedDashboardLayout from '@/components/layout/ImprovedDashboardLayout';
 import { Download, CreditCard, Plus, Repeat, Download as DownloadIcon, Search } from 'react-feather';
-import '@/components/icons/SatsIcon';
-import '@/components/charts';
-import '@/utils/chartHelpers';
-import '@/components/CurrencyAmount';
 import useSWR from 'swr';
-import '@/components/TransactionHistory';
 import { TransactionType } from '@prisma/client';
 
 // Fetch balance/transactions from the API
 const fetcher = (url: string) => fetch(url).then(res => res.json());
 
 const BillingPage: React.FC & { getLayout?: (page: React.ReactElement) => React.ReactElement } = () => {
-  const { role } = defaultUseRole();
   const router = useRouter();
-  const { auth } = useAuth();
   const [activeTab, setActiveTab] = useState<'transactions' | 'invoices'>('transactions');
   const [isDepositing, setIsDepositing] = useState(false);
   const [amount, setAmount] = useState('');

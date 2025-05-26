@@ -1,9 +1,6 @@
-import { UserRole } from "@/types/role";
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import '@/components/layout/DashboardLayout';
-import '@/context/RoleContext';
-import '@/hooks/useAuth';
+import ImprovedDashboardLayout from '@/components/layout/ImprovedDashboardLayout';
 import { BarChart2, Calendar, Download, ArrowUp, ArrowDown, Eye, Zap, Target, DollarSign } from 'react-feather';
 import '@/components/charts';
 import '@/components/icons/SatsIcon';
