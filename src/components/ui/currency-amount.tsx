@@ -2,22 +2,28 @@ import React from 'react';
 import { cn, formatSats } from '@/lib/utils';
 
 interface CurrencyAmountProps {
-  amount: number;
+  amount?: number;
+  sats?: number;
   currency?: 'sats' | 'btc' | 'usd';
   className?: string;
   showSymbol?: boolean;
+  showTooltip?: boolean;
 }
 
 export const CurrencyAmount: React.FC<CurrencyAmountProps> = ({
   amount,
+  sats,
   currency = 'sats',
   className,
-  showSymbol = true
+  showSymbol = true,
+  showTooltip = true
 }) => {
+  // Use sats prop if provided, otherwise use amount
+  const finalAmount = sats ?? amount ?? 0;
   const formatAmount = () => {
     switch (currency) {
       case 'sats':
-        return formatSats(amount);
+        return formatSats(finalAmount);
       case 'btc':
         return `${(amount / 100000000).toFixed(8)} BTC`;
       case 'usd':
