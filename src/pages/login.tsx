@@ -174,6 +174,9 @@ const LoginPage: React.FC = () => {
       
       storeTestKeys(testKeys.publicKey, testKeys.privateKey || '');
       
+      // Enable test mode
+      localStorage.setItem('testMode', 'true');
+      
       await login(testKeys.publicKey, 'test');
       
       logger.log('Test login successful', testKeys.publicKey);

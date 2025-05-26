@@ -55,6 +55,45 @@ export class RoleService {
   static isValidRole(role: string): role is UserRole {
     return ['viewer', 'advertiser', 'publisher', 'admin', 'stakeholder'].includes(role);
   }
+
+  // Test mode functionality
+  static isTestMode(): boolean {
+    try {
+      return localStorage.getItem('testMode') === 'true';
+    } catch {
+      return false;
+    }
+  }
+
+  static setTestMode(enabled: boolean): void {
+    try {
+      localStorage.setItem('testMode', enabled.toString());
+    } catch (error) {
+      logger.log('Error setting test mode:', error);
+    }
+  }
+
+  static changeRole(role: UserRole): Promise<boolean> {
+    return this.switchRole(role);
+  }
+
+  static hasRole(role: UserRole): boolean {
+    try {
+      const currentRole = localStorage.getItem('userRole');
+      return currentRole === role;
+    } catch {
+      return false;
+    }
+  }
+
+  static enableAllRoles(): void {
+    try {
+      const allRoles = ['viewer', 'advertiser', 'publisher', 'admin', 'stakeholder'];
+      localStorage.setItem('cachedAvailableRoles', JSON.stringify(allRoles));
+    } catch (error) {
+      logger.log('Error enabling all roles:', error);
+    }
+  }
 }
 
 // Export default instance
