@@ -13,6 +13,14 @@ const OnboardingPage: React.FC = () => {
   const [error, setError] = useState('');
   const [pubkey, setPubkey] = useState('');
   const [hasNostrExtension, setHasNostrExtension] = useState(false);
+  const [privacySettings, setPrivacySettings] = useState({
+    shareLocation: true,
+    shareInterests: true,
+    shareBrowsing: false,
+    shareAge: true,
+    emailNotifications: true,
+    dataSharing: true
+  });
 
   useEffect(() => {
     // Check if user has Nostr extension
@@ -20,10 +28,9 @@ const OnboardingPage: React.FC = () => {
   }, []);
 
   const steps = [
-    { number: 1, title: 'Welcome', icon: User },
-    { number: 2, title: 'Choose Role', icon: Shield },
-    { number: 3, title: 'Connect Wallet', icon: Key },
-    { number: 4, title: 'Complete', icon: CheckCircle }
+    { number: 1, title: 'Choose Role', icon: Shield },
+    { number: 2, title: 'Privacy Settings', icon: User },
+    { number: 3, title: 'Complete', icon: CheckCircle }
   ];
 
   const roles = [
@@ -51,7 +58,7 @@ const OnboardingPage: React.FC = () => {
   ];
 
   const handleNext = () => {
-    if (currentStep < 4) {
+    if (currentStep < 3) {
       setCurrentStep(currentStep + 1);
     }
   };
@@ -64,6 +71,13 @@ const OnboardingPage: React.FC = () => {
 
   const handleRoleSelect = (roleId: string) => {
     setSelectedRole(roleId);
+  };
+
+  const handlePrivacySettingChange = (setting: string) => {
+    setPrivacySettings(prev => ({
+      ...prev,
+      [setting]: !prev[setting as keyof typeof prev]
+    }));
   };
 
   const handleNostrConnect = async () => {
