@@ -1,14 +1,10 @@
-import { UserRole } from "@/types/role";
 import React from 'react';
 import { Eye, Shield, Clock, DollarSign } from 'react-feather';
 import Head from 'next/head';
-
-import RolePageLayout from '../components/marketing/RolePageLayout';
-import HeroSection from '../components/marketing/HeroSection';
+import Layout from '../components/Layout';
 import BenefitsSection from '../components/marketing/BenefitsSection';
 import HowItWorksSection from '../components/marketing/HowItWorksSection';
 import FAQSection from '../components/marketing/FAQSection';
-import Divider from '@/components/ui/Divider';
 
 const ViewerPage: React.FC = () => {
   // Benefits for viewers
@@ -86,53 +82,84 @@ const ViewerPage: React.FC = () => {
   return (
     <>
       <Head>
-        <title>Viewers - ProofofReach</title>
+        <title>Viewers - Proof Of Reach</title>
         <meta name="description" content="Earn Bitcoin rewards while browsing content you love on the Nostr Ad Marketplace." />
       </Head>
 
-      <RolePageLayout 
-        title="Earn While You Browse"
-        roleName="Viewers"
-        roleColor="bg-blue-600"
-      >
+      <Layout>
         {/* Hero Section */}
-        <HeroSection
-          title="Get Paid For Your Attention"
-          subtitle="EARN BITCOIN REWARDS"
-          description="Access content you love while earning Bitcoin rewards. With Nostr Ad Marketplace, your attention has value, and you control your data."
-          ctaText="Start Earning Now"
-          ctaLink="/login"
-          backgroundColor="bg-gradient-to-r from-blue-600 to-blue-800"
-          imageUrl="/images/viewer-hero.svg"
-        />
-
-        <Divider />
+        <div className="bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900 py-20">
+          <div className="max-w-7xl mx-auto px-4 text-center">
+            <div className="inline-flex items-center bg-blue-600/20 text-blue-400 px-4 py-2 rounded-full text-sm font-medium mb-6">
+              <Eye className="w-4 h-4 mr-2" />
+              EARN BITCOIN REWARDS
+            </div>
+            <h1 className="text-4xl md:text-6xl font-bold text-white mb-6">
+              Get Paid For Your 
+              <span className="bg-gradient-to-r from-orange-400 to-orange-600 bg-clip-text text-transparent"> Attention</span>
+            </h1>
+            <p className="text-xl text-gray-300 max-w-3xl mx-auto mb-8 leading-relaxed">
+              Access content you love while earning Bitcoin rewards. With Proof Of Reach, your attention has value, and you control your data.
+            </p>
+            <a 
+              href="/login" 
+              className="inline-flex items-center bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-bold py-4 px-8 rounded-lg text-lg transition-all duration-300 transform hover:scale-105 shadow-lg"
+            >
+              Start Earning Now
+            </a>
+          </div>
+        </div>
 
         {/* Benefits Section */}
-        <BenefitsSection
-          title="Benefits for Viewers"
-          subtitle="Why join Nostr Ad Marketplace as a viewer?"
-          benefits={benefits}
-        />
-
-        <Divider />
+        <div className="py-20 bg-gray-900">
+          <div className="max-w-7xl mx-auto px-4">
+            <div className="text-center mb-16">
+              <h2 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent mb-4">
+                Benefits for Viewers
+              </h2>
+              <p className="text-xl text-gray-400 max-w-3xl mx-auto">
+                Why join Proof Of Reach as a viewer?
+              </p>
+            </div>
+            <BenefitsSection
+              title=""
+              subtitle=""
+              benefits={benefits}
+            />
+          </div>
+        </div>
 
         {/* How It Works */}
-        <HowItWorksSection
-          title="How It Works"
-          subtitle="Getting started is easy"
-          steps={steps}
-        />
-
-        <Divider />
+        <div className="py-20 bg-gray-800">
+          <div className="max-w-7xl mx-auto px-4">
+            <div className="text-center mb-16">
+              <h2 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent mb-4">
+                How It Works
+              </h2>
+              <p className="text-xl text-gray-400 max-w-3xl mx-auto">
+                Getting started is easy
+              </p>
+            </div>
+            <HowItWorksSection
+              title=""
+              subtitle=""
+              steps={steps}
+            />
+          </div>
+        </div>
 
         {/* FAQ Section */}
-        <FAQSection
-          title="Frequently Asked Questions"
-          subtitle="Common questions about being a viewer"
-          faqs={faqItems}
-        />
-      </RolePageLayout>
+        <div className="py-20 bg-gray-900">
+          <div className="max-w-7xl mx-auto px-4">
+            <FAQSection
+              title="Frequently Asked Questions"
+              subtitle="Common questions about being a viewer"
+              faqs={faqItems}
+              maxItems={8}
+            />
+          </div>
+        </div>
+      </Layout>
     </>
   );
 };

@@ -1,13 +1,10 @@
 import React from 'react';
 import { Users, Crosshair, Zap, BarChart2 } from 'react-feather';
 import Head from 'next/head';
-
-import RolePageLayout from '../components/marketing/RolePageLayout';
-import HeroSection from '../components/marketing/HeroSection';
+import Layout from '../components/Layout';
 import BenefitsSection from '../components/marketing/BenefitsSection';
 import HowItWorksSection from '../components/marketing/HowItWorksSection';
 import FAQSection from '../components/marketing/FAQSection';
-import Divider from '@/components/ui/Divider';
 
 const AdvertiserPage: React.FC = () => {
   // Benefits for advertisers
@@ -85,53 +82,84 @@ const AdvertiserPage: React.FC = () => {
   return (
     <>
       <Head>
-        <title>Advertisers - ProofofReach</title>
+        <title>Advertisers - Proof Of Reach</title>
         <meta name="description" content="Reach your target audience with precision through the Nostr Ad Marketplace." />
       </Head>
 
-      <RolePageLayout 
-        title="Advertise Your Products"
-        roleName="Advertisers"
-        roleColor="bg-purple-600"
-      >
+      <Layout>
         {/* Hero Section */}
-        <HeroSection
-          title="Reach Your Ideal Audience"
-          subtitle="ADVERTISE WITH PRECISION"
-          description="Connect with engaged users who are interested in what you offer. Our decentralized platform helps you reach the right people without intermediaries."
-          ctaText="Start Advertising"
-          ctaLink="/login"
-          backgroundColor="bg-gradient-to-r from-purple-600 to-purple-800"
-          imageUrl="/images/advertiser-hero.svg"
-        />
-
-        <Divider />
+        <div className="bg-gradient-to-br from-gray-900 via-purple-900 to-indigo-900 py-20">
+          <div className="max-w-7xl mx-auto px-4 text-center">
+            <div className="inline-flex items-center bg-purple-600/20 text-purple-400 px-4 py-2 rounded-full text-sm font-medium mb-6">
+              <Crosshair className="w-4 h-4 mr-2" />
+              ADVERTISE WITH PRECISION
+            </div>
+            <h1 className="text-4xl md:text-6xl font-bold text-white mb-6">
+              Reach Your Ideal 
+              <span className="bg-gradient-to-r from-orange-400 to-orange-600 bg-clip-text text-transparent"> Audience</span>
+            </h1>
+            <p className="text-xl text-gray-300 max-w-3xl mx-auto mb-8 leading-relaxed">
+              Connect with engaged users who are interested in what you offer. Our decentralized platform helps you reach the right people without intermediaries.
+            </p>
+            <a 
+              href="/login" 
+              className="inline-flex items-center bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-bold py-4 px-8 rounded-lg text-lg transition-all duration-300 transform hover:scale-105 shadow-lg"
+            >
+              Start Advertising
+            </a>
+          </div>
+        </div>
 
         {/* Benefits Section */}
-        <BenefitsSection
-          title="Benefits for Advertisers"
-          subtitle="Why advertise on Nostr Ad Marketplace?"
-          benefits={benefits}
-        />
-
-        <Divider />
+        <div className="py-20 bg-gray-900">
+          <div className="max-w-7xl mx-auto px-4">
+            <div className="text-center mb-16">
+              <h2 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent mb-4">
+                Benefits for Advertisers
+              </h2>
+              <p className="text-xl text-gray-400 max-w-3xl mx-auto">
+                Why advertise on Proof Of Reach?
+              </p>
+            </div>
+            <BenefitsSection
+              title=""
+              subtitle=""
+              benefits={benefits}
+            />
+          </div>
+        </div>
 
         {/* How It Works */}
-        <HowItWorksSection
-          title="How It Works"
-          subtitle="Getting your campaign live is easy"
-          steps={steps}
-        />
-
-        <Divider />
+        <div className="py-20 bg-gray-800">
+          <div className="max-w-7xl mx-auto px-4">
+            <div className="text-center mb-16">
+              <h2 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent mb-4">
+                How It Works
+              </h2>
+              <p className="text-xl text-gray-400 max-w-3xl mx-auto">
+                Getting your campaign live is easy
+              </p>
+            </div>
+            <HowItWorksSection
+              title=""
+              subtitle=""
+              steps={steps}
+            />
+          </div>
+        </div>
 
         {/* FAQ Section */}
-        <FAQSection
-          title="Frequently Asked Questions"
-          subtitle="Common questions about advertising"
-          faqs={faqItems}
-        />
-      </RolePageLayout>
+        <div className="py-20 bg-gray-900">
+          <div className="max-w-7xl mx-auto px-4">
+            <FAQSection
+              title="Frequently Asked Questions"
+              subtitle="Common questions about advertising"
+              faqs={faqItems}
+              maxItems={8}
+            />
+          </div>
+        </div>
+      </Layout>
     </>
   );
 };

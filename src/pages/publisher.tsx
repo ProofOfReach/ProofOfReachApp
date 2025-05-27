@@ -1,14 +1,10 @@
-import { UserRole } from "@/types/role";
 import React from 'react';
 import { BarChart2, Zap, Target, Settings } from 'react-feather';
 import Head from 'next/head';
-
-import RolePageLayout from '../components/marketing/RolePageLayout';
-import HeroSection from '../components/marketing/HeroSection';
+import Layout from '../components/Layout';
 import BenefitsSection from '../components/marketing/BenefitsSection';
 import HowItWorksSection from '../components/marketing/HowItWorksSection';
 import FAQSection from '../components/marketing/FAQSection';
-// import '@/components/ui/Divider';
 
 const PublisherPage: React.FC = () => {
   // Benefits for publishers
@@ -86,53 +82,84 @@ const PublisherPage: React.FC = () => {
   return (
     <>
       <Head>
-        <title>Publishers - ProofofReach</title>
+        <title>Publishers - Proof Of Reach</title>
         <meta name="description" content="Monetize your content with direct Bitcoin payments on the Nostr Ad Marketplace." />
       </Head>
 
-      <RolePageLayout 
-        title="Monetize Your Content"
-        roleName="Publishers"
-        roleColor="bg-green-600"
-      >
+      <Layout>
         {/* Hero Section */}
-        <HeroSection
-          title="Get Paid For Your Content"
-          subtitle="MONETIZE WITH BITCOIN"
-          description="Turn your content into income with the Nostr Ad Marketplace. Connect directly with advertisers and receive Bitcoin payments through the Lightning Network."
-          ctaText="Start Monetizing"
-          ctaLink="/login"
-          backgroundColor="bg-gradient-to-r from-green-600 to-green-800"
-          imageUrl="/images/publisher-hero.svg"
-        />
-
-        <div className="my-16"></div>
+        <div className="bg-gradient-to-br from-gray-900 via-green-900 to-emerald-900 py-20">
+          <div className="max-w-7xl mx-auto px-4 text-center">
+            <div className="inline-flex items-center bg-green-600/20 text-green-400 px-4 py-2 rounded-full text-sm font-medium mb-6">
+              <Zap className="w-4 h-4 mr-2" />
+              MONETIZE WITH BITCOIN
+            </div>
+            <h1 className="text-4xl md:text-6xl font-bold text-white mb-6">
+              Get Paid For Your 
+              <span className="bg-gradient-to-r from-orange-400 to-orange-600 bg-clip-text text-transparent"> Content</span>
+            </h1>
+            <p className="text-xl text-gray-300 max-w-3xl mx-auto mb-8 leading-relaxed">
+              Turn your content into income with Proof Of Reach. Connect directly with advertisers and receive Bitcoin payments through the Lightning Network.
+            </p>
+            <a 
+              href="/login" 
+              className="inline-flex items-center bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-bold py-4 px-8 rounded-lg text-lg transition-all duration-300 transform hover:scale-105 shadow-lg"
+            >
+              Start Monetizing
+            </a>
+          </div>
+        </div>
 
         {/* Benefits Section */}
-        <BenefitsSection
-          title="Benefits for Publishers"
-          subtitle="Why monetize with Nostr Ad Marketplace?"
-          benefits={benefits}
-        />
-
-        <div className="my-16"></div>
+        <div className="py-20 bg-gray-900">
+          <div className="max-w-7xl mx-auto px-4">
+            <div className="text-center mb-16">
+              <h2 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent mb-4">
+                Benefits for Publishers
+              </h2>
+              <p className="text-xl text-gray-400 max-w-3xl mx-auto">
+                Why monetize with Proof Of Reach?
+              </p>
+            </div>
+            <BenefitsSection
+              title=""
+              subtitle=""
+              benefits={benefits}
+            />
+          </div>
+        </div>
 
         {/* How It Works */}
-        <HowItWorksSection
-          title="How It Works"
-          subtitle="Getting started is simple"
-          steps={steps}
-        />
-
-        <div className="my-16"></div>
+        <div className="py-20 bg-gray-800">
+          <div className="max-w-7xl mx-auto px-4">
+            <div className="text-center mb-16">
+              <h2 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent mb-4">
+                How It Works
+              </h2>
+              <p className="text-xl text-gray-400 max-w-3xl mx-auto">
+                Getting started is simple
+              </p>
+            </div>
+            <HowItWorksSection
+              title=""
+              subtitle=""
+              steps={steps}
+            />
+          </div>
+        </div>
 
         {/* FAQ Section */}
-        <FAQSection
-          title="Frequently Asked Questions"
-          subtitle="Common questions about being a publisher"
-          faqs={faqItems}
-        />
-      </RolePageLayout>
+        <div className="py-20 bg-gray-900">
+          <div className="max-w-7xl mx-auto px-4">
+            <FAQSection
+              title="Frequently Asked Questions"
+              subtitle="Common questions about being a publisher"
+              faqs={faqItems}
+              maxItems={8}
+            />
+          </div>
+        </div>
+      </Layout>
     </>
   );
 };
