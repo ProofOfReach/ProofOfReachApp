@@ -80,7 +80,7 @@ const HomeNavbar: React.FC = () => {
             
             {/* Information pages */}
             <Link 
-              href="/how-it-works" 
+              href="/about" 
               className="px-2 lg:px-3 py-2 text-sm lg:text-base text-gray-700 hover:text-purple-600 dark:text-gray-300 dark:hover:text-purple-400"
             >
               About
