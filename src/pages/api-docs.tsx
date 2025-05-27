@@ -3,10 +3,13 @@ import { GetStaticProps } from 'next';
 import { getExtendedOpenApiSpec } from '../lib/extendedOpenapi';
 import Link from 'next/link';
 import Head from 'next/head';
+import HomeNavbar from '../components/HomeNavbar';
 
 interface APIDocsProps {
   spec: any;
 }
+
+type UserRole = string;
 
 // Function to highlight JSON syntax
 const syntaxHighlight = (json: string) => {
@@ -163,19 +166,24 @@ const APIDocsPage: React.FC<APIDocsProps> = ({ spec }) => {
   return (
     <div className="flex flex-col min-h-screen bg-gray-900">
       <Head>
-        <title>API Documentation - ProofofReach</title>
-        <meta name="description" content="API Documentation for the Nostr Ad Marketplace" />
+        <title>API Documentation - Proof Of Reach</title>
+        <meta name="description" content="API Documentation for the Nostr Ad Marketplace - Proof Of Reach" />
       </Head>
       
-      {/* Header */}
-      <header className="bg-gray-800 shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
-          <h1 className="text-xl font-bold text-purple-400">Nostr Ad Marketplace API</h1>
-          <Link href="/" className="px-4 py-2 bg-purple-600 text-white rounded hover:bg-purple-700 transition-colors">
-            Back to Home
-          </Link>
+      {/* Navigation */}
+      <HomeNavbar />
+      
+      {/* Hero Section */}
+      <div className="bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900 py-16">
+        <div className="max-w-7xl mx-auto px-4 text-center">
+          <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
+            API Documentation
+          </h1>
+          <p className="text-xl text-gray-300 max-w-3xl mx-auto">
+            Complete API reference for integrating with the Proof Of Reach advertising marketplace
+          </p>
         </div>
-      </header>
+      </div>
       
       {/* Content */}
       <div className="flex flex-col md:flex-row flex-grow">
@@ -240,50 +248,53 @@ const APIDocsPage: React.FC<APIDocsProps> = ({ spec }) => {
         <div className="flex-grow p-6 overflow-y-auto">
           {activeSection === 'info' && (
             <div className="max-w-3xl">
-              <h1 className="text-2xl font-bold text-white mb-4">{spec.info.title}</h1>
-              <div className="bg-gray-800 rounded-lg p-4 mb-6">
+              <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent mb-6">{spec.info.title}</h1>
+              <div className="bg-gray-800 rounded-lg p-6 mb-8 border border-gray-700">
                 <div 
-                  className="text-gray-300"
+                  className="text-gray-300 text-lg leading-relaxed"
                   dangerouslySetInnerHTML={{ __html: spec.info.description }}
                 ></div>
                 {spec.info.version && (
-                  <p className="mt-2 text-sm text-gray-400">Version: {spec.info.version}</p>
+                  <p className="mt-4 text-sm text-orange-400 font-semibold">Version: {spec.info.version}</p>
                 )}
               </div>
               
-              <h2 className="text-xl font-bold text-white mt-8 mb-4">Authentication</h2>
-              <div className="bg-gray-800 rounded-lg p-4">
-                <p className="text-gray-300 mb-4">
+              <h2 className="text-2xl font-bold bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent mt-12 mb-6">Authentication</h2>
+              <div className="bg-gray-800 rounded-lg p-6 border border-gray-700">
+                <p className="text-gray-300 mb-6 text-lg leading-relaxed">
                   This API requires authentication via API keys. To use the API, you'll need to:
                 </p>
-                <ol className="list-decimal pl-5 text-gray-300 space-y-2">
+                <ol className="list-decimal pl-5 text-gray-300 space-y-3 text-lg">
                   <li>Generate an API key from your dashboard</li>
-                  <li>Include the API key in the <code className="bg-gray-700 px-1 rounded">Authorization</code> header of your requests</li>
+                  <li>Include the API key in the <code className="bg-gray-700 px-2 py-1 rounded text-orange-400 font-semibold">Authorization</code> header of your requests</li>
                 </ol>
-                <pre className="bg-gray-700 p-3 rounded mt-4 overflow-x-auto text-gray-300">
-                  <code>
-                    Authorization: Bearer YOUR_API_KEY
-                  </code>
-                </pre>
+                <div className="mt-6">
+                  <h3 className="text-lg font-semibold text-orange-400 mb-3">Example Header:</h3>
+                  <pre className="bg-gray-900 p-4 rounded-lg border border-gray-600 overflow-x-auto text-gray-300">
+                    <code>
+                      Authorization: Bearer YOUR_API_KEY
+                    </code>
+                  </pre>
+                </div>
               </div>
             </div>
           )}
           
           {activeSection !== 'info' && activeSection !== 'schemas' && activeSection !== 'raw' && (
             <div>
-              <h1 className="text-2xl font-bold text-white mb-6">{activeSection} Endpoints</h1>
+              <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent mb-8">{activeSection} Endpoints</h1>
               <div className="space-y-6">
                 {taggedEndpoints[activeSection]?.map((endpoint, index) => (
-                  <div key={`${endpoint.path}-${endpoint.method}-${index}`} className="bg-gray-800 rounded-lg overflow-hidden">
+                  <div key={`${endpoint.path}-${endpoint.method}-${index}`} className="bg-gray-800 rounded-lg overflow-hidden border border-gray-700 hover:border-gray-600 transition-colors">
                     <div 
-                      className="flex items-center p-4 cursor-pointer"
+                      className="flex items-center p-6 cursor-pointer hover:bg-gray-750"
                       onClick={() => togglePath(`${endpoint.path}-${endpoint.method}`)}
                     >
-                      <span className={`px-2 py-1 rounded text-xs font-bold ${methodColors[endpoint.method] || 'bg-gray-600'}`}>
+                      <span className={`px-3 py-2 rounded text-sm font-bold ${methodColors[endpoint.method] || 'bg-gray-600'}`}>
                         {endpoint.method}
                       </span>
-                      <span className="ml-3 font-mono text-gray-300">{endpoint.path}</span>
-                      <span className="ml-auto text-gray-400">{endpoint.summary}</span>
+                      <span className="ml-4 font-mono text-gray-300 text-lg">{endpoint.path}</span>
+                      <span className="ml-auto text-gray-400 text-base">{endpoint.summary}</span>
                     </div>
                     
                     {expandedPaths[`${endpoint.path}-${endpoint.method}`] && (
