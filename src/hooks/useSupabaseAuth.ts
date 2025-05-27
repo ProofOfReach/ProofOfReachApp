@@ -20,20 +20,31 @@ export interface SupabaseAuthState {
     avatar?: string;
   } | null;
   user: any | null;
+  session: any | null;
 }
 
 // Supabase Auth Context
 export const SupabaseAuthContext = createContext<{
   auth: SupabaseAuthState | null;
+  user: any | null;
+  session: any | null;
   login: (pubkey: UserRole, isTest?: boolean) => Promise<boolean>;
   logout: () => Promise<void>;
+  signUp: (credentials: any) => Promise<any>;
+  signInWithPassword: (credentials: any) => Promise<any>;
+  signOut: () => Promise<void>;
   refreshRoles: () => Promise<UserRole[]>;
   addRole: (role: string) => Promise<boolean>;
   removeRole: (role: string) => Promise<boolean>;
 }>({
   auth: null,
+  user: null,
+  session: null,
   login: async () => false,
   logout: async () => {},
+  signUp: async () => ({ data: null, error: null }),
+  signInWithPassword: async () => ({ data: null, error: null }),
+  signOut: async () => {},
   refreshRoles: async () => ['viewer'],
   addRole: async () => false,
   removeRole: async () => false,
@@ -276,8 +287,19 @@ export const useSupabaseAuthProvider = () => {
 
   return {
     auth,
+    user: auth?.user || null,
+    session: auth?.session || null,
     login,
     logout,
+    signUp: async (credentials: any) => {
+      return await supabase.auth.signUp(credentials);
+    },
+    signInWithPassword: async (credentials: any) => {
+      return await supabase.auth.signInWithPassword(credentials);
+    },
+    signOut: async () => {
+      await logout();
+    },
     refreshRoles,
     addRole,
     removeRole,

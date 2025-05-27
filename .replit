@@ -188,6 +188,22 @@ args = "Phase 4 Complete Migration Tests"
 task = "workflow.run"
 args = "Authentication Examples Tests"
 
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Quick Production Build Test"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "TypeScript Error Pattern Analysis"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "TypeScript Error Categories"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Most Common TypeScript Errors"
+
 [[workflows.workflow]]
 name = "Nostr Ad Marketplace Server"
 author = "agent"
@@ -543,6 +559,38 @@ author = "agent"
 [[workflows.workflow.tasks]]
 task = "shell.exec"
 args = "npx jest src/__tests__/auth/authentication-examples.test.ts"
+
+[[workflows.workflow]]
+name = "Quick Production Build Test"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "npm run build 2>&1 | head -20"
+
+[[workflows.workflow]]
+name = "TypeScript Error Pattern Analysis"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "npx tsc --noEmit --skipLibCheck 2>&1 | head -50"
+
+[[workflows.workflow]]
+name = "TypeScript Error Categories"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "npx tsc --noEmit --skipLibCheck 2>&1 | grep -E \"error TS[0-9]+\" | sort | uniq -c | sort -nr | head -20"
+
+[[workflows.workflow]]
+name = "Most Common TypeScript Errors"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "npx tsc --noEmit --skipLibCheck 2>&1 | grep -E \"Cannot find module|Property.*does not exist|Type.*is not assignable\" | head -15"
 
 [deployment]
 run = ["sh", "-c", "npm install && npx prisma generate && npm run dev"]
