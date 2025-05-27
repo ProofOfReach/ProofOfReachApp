@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { User, Shield, Edit3, DollarSign, Speaker } from 'react-feather';
+import { useAppEvent } from '@/hooks/useAppEvent';
 
 interface RoleDropdownProps {
   skipNavigation?: boolean;
