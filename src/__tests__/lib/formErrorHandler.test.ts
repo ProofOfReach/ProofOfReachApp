@@ -18,6 +18,7 @@ import {
 import '@/lib/apiErrorHandler';
 
 import '@/types/errors';
+import { ErrorCode } from '@/lib/apiErrorHandler';
 
 describe('Form Error Handler', () => {
   describe('createEmptyFormany', () => {

@@ -401,7 +401,7 @@ const RefactoredAdForm: React.FC<AdFormProps> = ({
                     min="1"
                     value={formData.dailyBudget}
                     onChange={handleChange}
-                    error={!!validationErrors.dailyBudget}
+                    className={validationErrors.dailyBudget ? 'border-red-500' : ''}
                   />
                   {validationErrors.dailyBudget && (
                     <FormMessage>{validationErrors.dailyBudget}</FormMessage>
@@ -440,8 +440,7 @@ const RefactoredAdForm: React.FC<AdFormProps> = ({
                         min="0"
                         value={formData.bidPerImpression}
                         onChange={handleChange}
-                        error={!!validationErrors.bidPerImpression}
-                        className="pl-8"
+                        className={`pl-8 ${validationErrors.bidPerImpression ? 'border-red-500' : ''}`}
                       />
                       <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
                         <span className="text-gray-500 dark:text-gray-400">₿</span>
@@ -467,8 +466,7 @@ const RefactoredAdForm: React.FC<AdFormProps> = ({
                         min="0"
                         value={formData.bidPerClick}
                         onChange={handleChange}
-                        error={!!validationErrors.bidPerClick}
-                        className="pl-8"
+                        className={`pl-8 ${validationErrors.bidPerClick ? 'border-red-500' : ''}`}
                       />
                       <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
                         <span className="text-gray-500 dark:text-gray-400">₿</span>
@@ -514,7 +512,7 @@ const RefactoredAdForm: React.FC<AdFormProps> = ({
                       min="1"
                       value={formData.freqCapViews}
                       onChange={handleChange}
-                      error={!!validationErrors.freqCapViews}
+                      className={validationErrors.freqCapViews ? 'border-red-500' : ''}
                     />
                     {validationErrors.freqCapViews && (
                       <FormMessage>{validationErrors.freqCapViews}</FormMessage>
@@ -532,7 +530,7 @@ const RefactoredAdForm: React.FC<AdFormProps> = ({
                       min="1"
                       value={formData.freqCapHours}
                       onChange={handleChange}
-                      error={!!validationErrors.freqCapHours}
+                      className={validationErrors.freqCapHours ? 'border-red-500' : ''}
                     />
                     {validationErrors.freqCapHours && (
                       <FormMessage>{validationErrors.freqCapHours}</FormMessage>

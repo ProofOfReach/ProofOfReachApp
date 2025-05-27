@@ -264,6 +264,38 @@ args = "Progress Check After Auth Fix"
 task = "workflow.run"
 args = "Check Next Error Batch"
 
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Check Input Fix Progress"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Final Error Count After Input Fixes"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Current Error Count Check"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Progress Check"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Next Error Pattern Analysis"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Identify High Impact Errors"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Progress After ErrorCode Fix"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Quick Progress Check"
+
 [[workflows.workflow]]
 name = "Nostr Ad Marketplace Server"
 author = "agent"
@@ -771,6 +803,70 @@ author = "agent"
 [[workflows.workflow.tasks]]
 task = "shell.exec"
 args = "npx tsc --noEmit --skipLibCheck 2>&1 | head -30"
+
+[[workflows.workflow]]
+name = "Check Input Fix Progress"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "npx tsc --noEmit --skipLibCheck 2>&1 | grep -c \"error TS\" || echo \"0\""
+
+[[workflows.workflow]]
+name = "Final Error Count After Input Fixes"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "npx tsc --noEmit --skipLibCheck 2>&1 | grep -c \"error TS\" || echo \"0\""
+
+[[workflows.workflow]]
+name = "Current Error Count Check"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "npx tsc --noEmit --skipLibCheck 2>&1 | grep -c \"error TS\" || echo \"0\""
+
+[[workflows.workflow]]
+name = "Progress Check"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "npx tsc --noEmit --skipLibCheck 2>&1 | grep -c \"error TS\" || echo \"0\""
+
+[[workflows.workflow]]
+name = "Next Error Pattern Analysis"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "npx tsc --noEmit --skipLibCheck 2>&1 | head -30"
+
+[[workflows.workflow]]
+name = "Identify High Impact Errors"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "npx tsc --noEmit --skipLibCheck 2>&1 | grep -E \"Cannot find module|Property.*does not exist|Type.*is not assignable\" | head -15"
+
+[[workflows.workflow]]
+name = "Progress After ErrorCode Fix"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "npx tsc --noEmit --skipLibCheck 2>&1 | grep -c \"error TS\" || echo \"0\""
+
+[[workflows.workflow]]
+name = "Quick Progress Check"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "npx tsc --noEmit --skipLibCheck 2>&1 | grep -c \"error TS\" || echo \"0\""
 
 [deployment]
 run = ["sh", "-c", "npm install && npx prisma generate && npm run dev"]
