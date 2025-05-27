@@ -424,7 +424,7 @@ const HomePage: NextPageWithLayout = () => {
 // Define a custom layout for the HomePage to prevent duplicate navbars
 HomePage.getLayout = function getLayout(page: ReactElement) {
   return (
-    <Layout title="Nostr Ad Marketplace - Home">
+    <Layout title="Home - ProofofReach">
       {page}
     </Layout>
   );

@@ -164,7 +164,7 @@ const APIDocsPage: React.FC<APIDocsProps> = ({ spec }) => {
   return (
     <div className="flex flex-col min-h-screen bg-gray-900">
       <Head>
-        <title>API Documentation | Nostr Ad Marketplace</title>
+        <title>API Documentation - ProofofReach</title>
         <meta name="description" content="API Documentation for the Nostr Ad Marketplace" />
       </Head>
       

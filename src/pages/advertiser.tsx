@@ -85,7 +85,7 @@ const AdvertiserPage: React.FC = () => {
   return (
     <>
       <Head>
-        <title>Advertisers | Nostr Ad Marketplace</title>
+        <title>Advertisers - ProofofReach</title>
         <meta name="description" content="Reach your target audience with precision through the Nostr Ad Marketplace." />
       </Head>
 

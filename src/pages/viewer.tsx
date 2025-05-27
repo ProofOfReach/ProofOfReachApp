@@ -86,7 +86,7 @@ const ViewerPage: React.FC = () => {
   return (
     <>
       <Head>
-        <title>Viewers | Nostr Ad Marketplace</title>
+        <title>Viewers - ProofofReach</title>
         <meta name="description" content="Earn Bitcoin rewards while browsing content you love on the Nostr Ad Marketplace." />
       </Head>
 

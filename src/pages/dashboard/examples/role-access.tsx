@@ -62,7 +62,7 @@ const RoleAccessExamplePage: NextPageWithLayout = () => {
   return (
     <>
       <Head>
-        <title>Role Access Examples | Nostr Ad Marketplace</title>
+        <title>Role Access Examples - ProofofReach</title>
       </Head>
       
       <div className="container mx-auto px-4 py-8">

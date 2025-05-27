@@ -182,7 +182,7 @@ const ClientLoginPage = dynamic(() => Promise.resolve(LoginPageClient), {
 // Main login page container with compact design
 const LoginPage: React.FC = () => {
   return (
-    <Layout title="Login - Nostr Ad Marketplace" hideTestBanner={true}>
+    <Layout title="Login - ProofofReach" hideTestBanner={true}>
       <div className="flex justify-center items-center min-h-[80vh]">
         <div className="w-full max-w-sm p-6 bg-white shadow-lg rounded-lg dark:bg-gray-800">
           <ClientLoginPage />

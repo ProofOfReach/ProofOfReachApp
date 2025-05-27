@@ -281,7 +281,7 @@ const DataTableExample: NextPage = () => {
   return (
     <>
       <Head>
-        <title>DataTable Example - Nostr Ad Marketplace</title>
+        <title>DataTable Example - ProofofReach</title>
       </Head>
       
       <div className="container mx-auto px-4 py-8">

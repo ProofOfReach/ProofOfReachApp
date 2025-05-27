@@ -40,7 +40,7 @@ const ExamplesIndex = () => {
   return (
     <>
       <Head>
-        <title>shadcn/ui Examples - Nostr Ad Marketplace</title>
+        <title>Examples - ProofofReach</title>
       </Head>
       
       <div className="container mx-auto py-10 px-4">

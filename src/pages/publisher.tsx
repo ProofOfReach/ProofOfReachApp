@@ -86,7 +86,7 @@ const PublisherPage: React.FC = () => {
   return (
     <>
       <Head>
-        <title>Publishers | Nostr Ad Marketplace</title>
+        <title>Publishers - ProofofReach</title>
         <meta name="description" content="Monetize your content with direct Bitcoin payments on the Nostr Ad Marketplace." />
       </Head>
 
