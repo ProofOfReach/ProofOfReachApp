@@ -122,8 +122,8 @@ const Layout: React.FC<LayoutProps> = ({
       {/* Hackathon Banner should show on all pages when on dev domain */}
       {isDev && <HackathonBanner isDev={true} />}
 
-      {/* TestModeBanner should only show on authenticated/protected pages */}
-      {!hideTestBanner && !isPublicPage && <TestModeBanner />}
+      {/* TestModeBanner should only show on authenticated/protected pages, NOT on login page */}
+      {!hideTestBanner && !isPublicPage && !isLoginPage && <TestModeBanner />}
       
       {/* Domain toggle button for testing in Replit */}
       {process.env.NODE_ENV !== 'production' && <DomainToggleButton />}
@@ -148,8 +148,8 @@ const Layout: React.FC<LayoutProps> = ({
         {children}
       </main>
 
-      {/* Skip footer for test pages and login page */}
-      {!isTestPage && !isLoginPage && (
+      {/* Skip footer for test pages only */}
+      {!isTestPage && (
         <footer className="bg-gray-100 dark:bg-gray-800 py-6">
           <div className="container mx-auto px-4">
             <div className="flex flex-col md:flex-row justify-between items-center">
