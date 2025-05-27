@@ -30,7 +30,7 @@ export const campaignPaymentService = {
       }
       
       // Check if advertiser has sufficient balance
-      return campaign.advertiser?.balance ?? 0 > 0;
+      return (campaign.advertiser?.balance ?? 0) > 0;
     } catch (error) {
       console.log('Error checking campaign funding:', error);
       return false;
@@ -42,7 +42,7 @@ export const campaignPaymentService = {
    * Deducts from advertiser's balance and creates a transaction record
    */
   async processAdPayment(
-    campaignId: UserRole, 
+    campaignId: string, 
     amount: number,
     description: string
   ): Promise<boolean> {
@@ -89,7 +89,7 @@ export const campaignPaymentService = {
    * Adds to publisher's balance and creates a transaction record
    */
   async processPublisherEarning(
-    publisherId: UserRole,
+    publisherId: string,
     amount: number,
     description: string
   ): Promise<boolean> {

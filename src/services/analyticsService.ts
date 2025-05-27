@@ -73,7 +73,7 @@ export const fetchAdvertiserSummary = async (
  * @returns Array of daily metrics
  */
 export const fetchAdvertiserDailyMetrics = async (
-  advertiserId?: UserRole,
+  advertiserId?: string,
   dateRange?: DateRange
 ): Promise<DailyMetrics[]> => {
   const query = new URLSearchParams();
@@ -103,7 +103,7 @@ export const fetchAdvertiserDailyMetrics = async (
  * @returns Array of campaign performance data
  */
 export const fetchCampaignPerformance = async (
-  advertiserId?: UserRole,
+  advertiserId?: string,
   dateRange?: DateRange
 ): Promise<CampaignPerformance[]> => {
   const query = new URLSearchParams();
@@ -133,7 +133,7 @@ export const fetchCampaignPerformance = async (
  * @returns Array of daily earnings metrics
  */
 export const fetchPublisherEarnings = async (
-  publisherId?: UserRole,
+  publisherId?: string,
   dateRange?: DateRange
 ): Promise<DailyMetrics[]> => {
   const query = new URLSearchParams();
