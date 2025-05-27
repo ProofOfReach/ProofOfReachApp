@@ -3,6 +3,7 @@ import { Bell, Search, Filter, CheckCircle, XCircle, EyeOff } from 'react-feathe
 import type { ReactElement } from 'react';
 import type { NextPageWithLayout } from '../../_app';
 import ImprovedDashboardLayout from '@/components/layout/ImprovedDashboardLayout';
+import CurrencyAmount from '@/components/CurrencyAmount';
 
 /**
  * Admin Ad Approvals Page
@@ -195,7 +196,7 @@ const AdApprovalsPage: NextPageWithLayout = () => {
   };
 
   // Handle ad rejection
-  const handleReject = (adId: UserRole, reason: string = 'Content policy violation') => {
+  const handleReject = (adId: string, reason: string = 'Content policy violation') => {
     setAds(prevAds => 
       prevAds.map(ad => 
         ad.id === adId 
@@ -215,7 +216,7 @@ const AdApprovalsPage: NextPageWithLayout = () => {
   };
 
   // Flag ad for further review
-  const handleFlag = (adId: UserRole, flag: string) => {
+  const handleFlag = (adId: string, flag: string) => {
     setAds(prevAds => 
       prevAds.map(ad => 
         ad.id === adId 
