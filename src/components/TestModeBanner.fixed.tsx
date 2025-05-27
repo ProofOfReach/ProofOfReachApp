@@ -4,7 +4,9 @@ import { useTestMode } from '@/hooks/useTestMode';
 import { logger } from '@/lib/logger';
 import { UserRole } from '@/types/role';
 import { RoleManager } from '@/services/roleManager';
-import { STORAGE_KEYS } from '@/lib/constants';
+import { enhancedStorage } from '@/lib/storage';
+import { testModeService } from '@/services/testModeService';
+import { RoleService } from '@/services/roleService';
 import { 
   useAppEvent, 
   useLegacyEvent, 
