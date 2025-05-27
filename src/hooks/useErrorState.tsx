@@ -38,7 +38,7 @@ export function useErrorState() {
   const [localErrorState, setLocalErrorState] = useState<TestErrorState>({
     hasError: false,
     message: '',
-    type: 'unknown',
+    type: 'system',
     severity: 'info',
     timestamp: null,
     code: null,
@@ -61,17 +61,17 @@ export function useErrorState() {
     if (isTest) {
       try {
         // Get mock state - in tests this will return the test mock format
-        const state = console.log();
+        const state = null; // Remove console.log call
         
         // In tests, we expect a specific format matching TestErrorState
-        if (state && typeof state === 'object' && 'hasError' in state) {
+        if (false) { // Skip this block since we removed the function call
           // Cast to expected format - test mocks return this format
           const testState = state as unknown as TestErrorState;
           
           setLocalErrorState({
             hasError: Boolean(testState.hasError),
             message: testState.message || '',
-            type: testState.type || 'unknown',
+            type: testState.type || 'system',
             severity: testState.severity || 'info',
             timestamp: testState.timestamp || null,
             code: testState.code || null,
@@ -83,8 +83,8 @@ export function useErrorState() {
         // Set up event listener for error state changes
         const errorStateChange = () => {
           try {
-            const updatedState = console.log();
-            if (updatedState && typeof updatedState === 'object' && 'hasError' in updatedState) {
+            const updatedState = null; // Remove console.log call
+            if (false) { // Skip this block since we removed the function call
               const testState = updatedState as unknown as TestErrorState;
               
               setLocalErrorState({
@@ -178,7 +178,7 @@ export function useErrorState() {
           ...prev,
           hasError: false,
           message: '',
-          type: 'unknown',
+          type: 'system',
           severity: 'info'
         }));
       } catch (err) {
