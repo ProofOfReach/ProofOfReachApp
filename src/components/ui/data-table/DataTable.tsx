@@ -28,7 +28,7 @@ interface DataTableProps<T> {
   emptyMessage?: string;
 }
 
-export function DataTable<T extends Record<UserRole, any>>({
+export function DataTable<T extends Record<string, any>>({
   columns,
   data,
   caption,
