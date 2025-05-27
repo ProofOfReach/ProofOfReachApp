@@ -526,7 +526,7 @@ author = "agent"
 
 [[workflows.workflow.tasks]]
 task = "shell.exec"
-args = "npx tsc --noEmit --skipLibCheck 2>&1 | head -20 | grep -c \"error TS\" || echo \"0\""
+args = "npx tsc --noEmit --skipLibCheck 2>&1 | grep -c \"error TS\" || echo \"0\""
 
 [[workflows.workflow]]
 name = "Final Error Count Check"
