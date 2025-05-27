@@ -310,8 +310,8 @@ export function createApiValidationError(
  * @param resourceId ID of the resource that wasn't found
  */
 export function createNotFoundError(
-  message: UserRole,
-  resourceType?: UserRole,
+  message: string,
+  resourceType?: string,
   resourceId?: string | number
 ): Error {
   const error = new Error(message);
@@ -539,7 +539,8 @@ export async function withRetry<T>(
   fn: () => Promise<T>,
   options?: any
 ): Promise<T> {
-  return console.withRetry(fn, options);
+  // Note: withRetry functionality would need to be implemented separately
+  return fn();
 }
 
 /**
@@ -561,3 +562,6 @@ export function withErrorHandling(
     }
   };
 }
+
+// Re-export ErrorCode for external modules
+export { ErrorCode };

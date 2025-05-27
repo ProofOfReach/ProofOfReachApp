@@ -154,7 +154,7 @@ describe('useErrorState', () => {
       return (
         <button 
           data-testid="handle-error"
-          onClick={() => error(new Error('Test error'), 'test-component', 'validation')}
+          onClick={() => logError(new Error('Test error'), 'test-component', 'validation')}
         >
           Handle Error
         </button>

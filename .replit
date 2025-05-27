@@ -260,6 +260,10 @@ args = "Check Auth Fix Progress"
 task = "workflow.run"
 args = "Progress Check After Auth Fix"
 
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Check Next Error Batch"
+
 [[workflows.workflow]]
 name = "Nostr Ad Marketplace Server"
 author = "agent"
@@ -759,6 +763,14 @@ author = "agent"
 [[workflows.workflow.tasks]]
 task = "shell.exec"
 args = "npx tsc --noEmit --skipLibCheck 2>&1 | head -20"
+
+[[workflows.workflow]]
+name = "Check Next Error Batch"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "npx tsc --noEmit --skipLibCheck 2>&1 | head -30"
 
 [deployment]
 run = ["sh", "-c", "npm install && npx prisma generate && npm run dev"]
