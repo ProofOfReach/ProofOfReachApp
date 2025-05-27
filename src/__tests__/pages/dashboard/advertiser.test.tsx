@@ -170,7 +170,7 @@ jest.mock('../../../context/TestModeContext', () => {
       isDevEnvironment: true,
       isDevelopment: true
     }),
-    TestModeProvider: ({ children }) => React.createElement(React.Fragment, null, children)
+    TestModeProvider: ({ children }: { children: React.ReactNode }) => React.createElement(React.Fragment, null, children)
   };
 });
 
@@ -184,7 +184,7 @@ jest.mock('../../../context/RoleContext', () => {
       availableRoles: ['viewer', 'advertiser', 'publisher'],
       isRoleAvailable: jest.fn().mockReturnValue(true),
     }),
-    RoleProvider: ({ children }) => React.createElement(React.Fragment, null, children)
+    RoleProvider: ({ children }: { children: React.ReactNode }) => React.createElement(React.Fragment, null, children)
   };
 });
 

@@ -120,12 +120,11 @@ describe('Dashboard Index Component', () => {
         pubkey: 'test-pubkey', 
         isTestMode: true, 
         isLoggedIn: true,
-        user: {
-          id: 'test-user-id',
-          role: 'viewer',
-          pubkey: 'test-pubkey',
+        availableRoles: ['viewer'],
+        profile: {
           name: 'Test User',
-          email: 'test@example.com'
+          displayName: 'Test User',
+          avatar: undefined
         }
       },
       loading: false,
@@ -143,7 +142,13 @@ describe('Dashboard Index Component', () => {
   it('handles unauthenticated user', () => {
     // Mock useAuth to return unauthenticated user
     jest.spyOn(useAuthModule, 'useAuth').mockReturnValue({
-      auth: { isLoggedIn: false },
+      auth: { 
+        isLoggedIn: false,
+        pubkey: '',
+        isTestMode: false,
+        availableRoles: [],
+        profile: null
+      },
       loading: false,
       error: null,
       login: jest.fn(),

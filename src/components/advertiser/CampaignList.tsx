@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { Edit2, Trash2, Play, Pause, AlertCircle, ChevronDown, ChevronUp } from 'react-feather';
-import '@/types/campaign';
+import { CampaignWithAds, CampaignStatus } from '@/types/campaign';
 
 interface CampaignListProps {
   campaigns: CampaignWithAds[];
-  onStatusChange: (campaignId: UserRole, newStatus: CampaignStatus) => void;
+  onStatusChange: (campaignId: string, newStatus: CampaignStatus) => void;
   onDelete: (campaignId: string) => void;
 }
 
