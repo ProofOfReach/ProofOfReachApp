@@ -121,7 +121,7 @@ export const useSupabaseAuthProvider = () => {
     }
   };
 
-  const login = async (pubkey: UserRole, isTest = false): Promise<boolean> => {
+  const login = async (pubkey: string, isTest = false): Promise<boolean> => {
     try {
       const email = `${pubkey}@nostr.local`;
       const password = `nostr_${pubkey}_auth`;

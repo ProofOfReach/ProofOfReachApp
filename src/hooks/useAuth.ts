@@ -115,7 +115,7 @@ export const useAuthProvider = () => {
   }, []);
 
   // Login function
-  const login = async (pubkey: UserRole, isTest = false): Promise<boolean> => {
+  const login = async (pubkey: string, isTest = false): Promise<boolean> => {
     try {
       // Actual login call to the API
       const response = await fetch('/api/auth/login', {
