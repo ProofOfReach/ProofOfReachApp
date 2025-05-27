@@ -146,7 +146,7 @@ const HomeNavbar: React.FC = () => {
             
             {/* Information pages for mobile */}
             <Link 
-              href="/how-it-works" 
+              href="/about" 
               onClick={closeMenu} 
               className="block px-3 py-2 text-gray-700 hover:text-purple-600 dark:text-gray-300 dark:hover:text-purple-400"
             >

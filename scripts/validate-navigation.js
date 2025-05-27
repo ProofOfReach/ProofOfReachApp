@@ -23,7 +23,7 @@ const ROUTES_BY_ROLE = {
     '/',
     '/dashboard',
     '/dashboard/wallet',
-    '/how-it-works',
+    '/about',
     '/contact'
   ],
   advertiser: [
@@ -33,7 +33,7 @@ const ROUTES_BY_ROLE = {
     '/dashboard/campaigns',
     '/dashboard/campaigns/create',
     '/dashboard/billing',
-    '/how-it-works',
+    '/about',
     '/contact'
   ],
   publisher: [
@@ -43,7 +43,7 @@ const ROUTES_BY_ROLE = {
     '/dashboard/ad-spaces',
     '/dashboard/ad-spaces/create',
     '/dashboard/earnings',
-    '/how-it-works',
+    '/about',
     '/contact'
   ],
   admin: [
@@ -56,7 +56,7 @@ const ROUTES_BY_ROLE = {
     '/dashboard/admin/users',
     '/dashboard/admin/campaigns',
     '/dashboard/admin/settings',
-    '/how-it-works',
+    '/about',
     '/contact'
   ],
   stakeholder: [
@@ -66,7 +66,7 @@ const ROUTES_BY_ROLE = {
     '/dashboard/reports',
     '/dashboard/reports/overview',
     '/dashboard/reports/performance',
-    '/how-it-works',
+    '/about',
     '/contact'
   ]
 };
