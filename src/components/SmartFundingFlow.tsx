@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { AlertCircle, Zap, CreditCard, ArrowRight, CheckCircle } from 'react-feather';
 import dynamic from 'next/dynamic';
 import CurrencyAmount from './CurrencyAmount';
-import { Button } from './ui/button';
+import { Button } from './ui/Button';
 
 interface SmartFundingFlowProps {
   currentBalance: number;
@@ -298,3 +298,4 @@ const SmartFundingFlow: React.FC<SmartFundingFlowProps> = ({
 };
 
 export default SmartFundingFlow;
+export { SmartFundingFlow };

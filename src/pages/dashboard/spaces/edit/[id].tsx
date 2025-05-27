@@ -2,13 +2,13 @@ import { UserRole } from "@/types/role";
 import React, { useContext, useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import Layout from '../../../../components/Layout';
-import { NostrAuthContext } from '../../../_app';
+// Remove NostrAuthContext import - using modern auth system
 import Link from 'next/link';
 import { AlertCircle } from 'react-feather';
 import SpaceForm from '../../../../components/SpaceForm';
 
 const EditSpacePage: React.FC = () => {
-  const { auth } = useContext(NostrAuthContext);
+  // Using modern auth system - removing legacy NostrAuthContext
   const router = useRouter();
   const { id } = router.query;
   

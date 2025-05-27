@@ -178,7 +178,7 @@ const ReportsPage: NextPageWithLayout = () => {
   };
 
   return (
-    <DashboardContainer>
+    <div className="space-y-6">
       <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6 mb-6">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
           <h1 className="text-2xl font-bold text-gray-900 dark:text-white flex items-center">
@@ -468,7 +468,7 @@ const ReportsPage: NextPageWithLayout = () => {
           </div>
         )}
       </div>
-    </DashboardContainer>
+    </div>
   );
 };
 
