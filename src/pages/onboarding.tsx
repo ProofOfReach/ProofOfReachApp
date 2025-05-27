@@ -127,14 +127,23 @@ const OnboardingPage: React.FC = () => {
     setError('');
     
     try {
+      // Get the public key from stored test keys (generated when "Create Account" was clicked)
+      const storedKeys = nostrLib.getStoredTestKeys();
+      if (!storedKeys?.publicKey) {
+        setError('No account keys found. Please try creating an account again.');
+        return;
+      }
+
+      // Send login request to create account with selected role and privacy settings
       const response = await fetch('/api/auth/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ 
-          pubkey,
+          pubkey: storedKeys.publicKey,
           preferredRole: selectedRole,
+          privacySettings: privacySettings,
           isOnboarding: true
         }),
       });
@@ -142,8 +151,9 @@ const OnboardingPage: React.FC = () => {
       const data = await response.json();
 
       if (response.ok) {
-        // Redirect to dashboard
-        router.push('/dashboard');
+        // Redirect to appropriate dashboard based on role
+        const dashboardPath = `/${selectedRole}`;
+        router.push(dashboardPath);
       } else {
         setError(data.message || 'Account creation failed.');
       }
@@ -160,24 +170,47 @@ const OnboardingPage: React.FC = () => {
         return (
           <div className="text-center">
             <div className="mb-8">
-              <img 
-                src="/logo_big_light.png" 
-                alt="Proof Of Reach" 
-                className="h-16 mx-auto mb-6"
-              />
               <h2 className="text-3xl font-bold text-white mb-4">
-                Welcome to Proof Of Reach
+                Choose Your Role
               </h2>
-              <p className="text-gray-300 text-lg max-w-2xl mx-auto">
-                Join the decentralized advertising revolution. Connect with your audience through authentic, value-driven content.
+              <p className="text-gray-300 text-lg max-w-2xl mx-auto mb-8">
+                Select how you'd like to participate in the Proof Of Reach ecosystem.
               </p>
             </div>
-            <button
-              onClick={handleNext}
-              className="bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-bold py-3 px-8 rounded-lg text-lg transition-all duration-300 transform hover:scale-105 shadow-lg inline-flex items-center"
-            >
-              Get Started <ArrowRight className="ml-2 w-5 h-5" />
-            </button>
+            
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+              {roles.map((role) => (
+                <div
+                  key={role.id}
+                  onClick={() => handleRoleSelect(role.id)}
+                  className={`cursor-pointer border-2 rounded-xl p-6 transition-all duration-300 transform hover:scale-105 ${
+                    selectedRole === role.id
+                      ? 'border-orange-500 bg-gray-700/50'
+                      : 'border-gray-600 hover:border-gray-500'
+                  }`}
+                >
+                  <div className={`bg-gradient-to-r ${role.color} w-12 h-12 rounded-lg flex items-center justify-center mx-auto mb-4`}>
+                    <Shield className="w-6 h-6 text-white" />
+                  </div>
+                  <h3 className="text-xl font-bold text-white mb-2">{role.title}</h3>
+                  <p className="text-gray-300 mb-4">{role.description}</p>
+                  <ul className="text-sm text-gray-400 space-y-1">
+                    {role.features.map((feature, index) => (
+                      <li key={index}>• {feature}</li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
+            </div>
+
+            {selectedRole && (
+              <button
+                onClick={handleNext}
+                className="bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-bold py-3 px-8 rounded-lg text-lg transition-all duration-300 transform hover:scale-105 shadow-lg inline-flex items-center"
+              >
+                Continue <ArrowRight className="ml-2 w-5 h-5" />
+              </button>
+            )}
           </div>
         );
 
@@ -185,38 +218,138 @@ const OnboardingPage: React.FC = () => {
         return (
           <div>
             <h2 className="text-3xl font-bold text-white mb-6 text-center">
-              Choose Your Role
+              Privacy Settings
             </h2>
             <p className="text-gray-300 text-center mb-8">
-              Select how you'd like to participate in the marketplace
+              Choose how you'd like to share your data to improve your experience
             </p>
-            <div className="grid md:grid-cols-3 gap-6 mb-8">
-              {roles.map((role) => (
-                <div
-                  key={role.id}
-                  onClick={() => handleRoleSelect(role.id)}
-                  className={`p-6 rounded-lg border-2 cursor-pointer transition-all duration-300 ${
-                    selectedRole === role.id
-                      ? 'border-orange-500 bg-gray-700'
-                      : 'border-gray-600 bg-gray-800 hover:border-gray-500'
-                  }`}
-                >
-                  <div className={`w-12 h-12 rounded-lg bg-gradient-to-r ${role.color} flex items-center justify-center mb-4`}>
-                    <Shield className="w-6 h-6 text-white" />
+            
+            <div className="max-w-2xl mx-auto space-y-6 mb-8">
+              <div className="bg-gray-800 p-6 rounded-lg border border-gray-700">
+                <h3 className="text-lg font-semibold text-white mb-4">Data Sharing Preferences</h3>
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-white font-medium">Share Location Data</p>
+                      <p className="text-sm text-gray-400">Help us show relevant local ads</p>
+                    </div>
+                    <button
+                      onClick={() => handlePrivacySettingChange('shareLocation')}
+                      className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
+                        privacySettings.shareLocation ? 'bg-orange-500' : 'bg-gray-600'
+                      }`}
+                    >
+                      <span
+                        className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                          privacySettings.shareLocation ? 'translate-x-6' : 'translate-x-1'
+                        }`}
+                      />
+                    </button>
                   </div>
-                  <h3 className="text-xl font-bold text-white mb-2">{role.title}</h3>
-                  <p className="text-gray-300 mb-4">{role.description}</p>
-                  <ul className="space-y-1">
-                    {role.features.map((feature, index) => (
-                      <li key={index} className="text-sm text-gray-400 flex items-center">
-                        <CheckCircle className="w-4 h-4 text-green-500 mr-2" />
-                        {feature}
-                      </li>
-                    ))}
-                  </ul>
+                  
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-white font-medium">Share Interests</p>
+                      <p className="text-sm text-gray-400">Get personalized ad recommendations</p>
+                    </div>
+                    <button
+                      onClick={() => handlePrivacySettingChange('shareInterests')}
+                      className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
+                        privacySettings.shareInterests ? 'bg-orange-500' : 'bg-gray-600'
+                      }`}
+                    >
+                      <span
+                        className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                          privacySettings.shareInterests ? 'translate-x-6' : 'translate-x-1'
+                        }`}
+                      />
+                    </button>
+                  </div>
+                  
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-white font-medium">Share Browsing History</p>
+                      <p className="text-sm text-gray-400">Improve ad targeting accuracy</p>
+                    </div>
+                    <button
+                      onClick={() => handlePrivacySettingChange('shareBrowsing')}
+                      className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
+                        privacySettings.shareBrowsing ? 'bg-orange-500' : 'bg-gray-600'
+                      }`}
+                    >
+                      <span
+                        className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                          privacySettings.shareBrowsing ? 'translate-x-6' : 'translate-x-1'
+                        }`}
+                      />
+                    </button>
+                  </div>
+                  
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-white font-medium">Share Age Range</p>
+                      <p className="text-sm text-gray-400">Help us show age-appropriate content</p>
+                    </div>
+                    <button
+                      onClick={() => handlePrivacySettingChange('shareAge')}
+                      className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
+                        privacySettings.shareAge ? 'bg-orange-500' : 'bg-gray-600'
+                      }`}
+                    >
+                      <span
+                        className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                          privacySettings.shareAge ? 'translate-x-6' : 'translate-x-1'
+                        }`}
+                      />
+                    </button>
+                  </div>
                 </div>
-              ))}
+              </div>
+
+              <div className="bg-gray-800 p-6 rounded-lg border border-gray-700">
+                <h3 className="text-lg font-semibold text-white mb-4">Communication Preferences</h3>
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-white font-medium">Email Notifications</p>
+                      <p className="text-sm text-gray-400">Receive updates about campaigns and earnings</p>
+                    </div>
+                    <button
+                      onClick={() => handlePrivacySettingChange('emailNotifications')}
+                      className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
+                        privacySettings.emailNotifications ? 'bg-orange-500' : 'bg-gray-600'
+                      }`}
+                    >
+                      <span
+                        className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                          privacySettings.emailNotifications ? 'translate-x-6' : 'translate-x-1'
+                        }`}
+                      />
+                    </button>
+                  </div>
+                  
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-white font-medium">Data Sharing with Partners</p>
+                      <p className="text-sm text-gray-400">Share anonymized data to improve the platform</p>
+                    </div>
+                    <button
+                      onClick={() => handlePrivacySettingChange('dataSharing')}
+                      className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
+                        privacySettings.dataSharing ? 'bg-orange-500' : 'bg-gray-600'
+                      }`}
+                    >
+                      <span
+                        className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                          privacySettings.dataSharing ? 'translate-x-6' : 'translate-x-1'
+                        }`}
+                      />
+                    </button>
+                  </div>
+                </div>
+              </div>
             </div>
+
             <div className="flex justify-between">
               <button
                 onClick={handleBack}
@@ -226,8 +359,7 @@ const OnboardingPage: React.FC = () => {
               </button>
               <button
                 onClick={handleNext}
-                disabled={!selectedRole}
-                className="bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-bold py-2 px-6 rounded-lg transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed inline-flex items-center"
+                className="bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-bold py-2 px-6 rounded-lg transition-all duration-300 inline-flex items-center"
               >
                 Continue <ArrowRight className="ml-2 w-4 h-4" />
               </button>
@@ -237,47 +369,51 @@ const OnboardingPage: React.FC = () => {
 
       case 3:
         return (
-          <div>
-            <h2 className="text-3xl font-bold text-white mb-6 text-center">
-              Connect Your Wallet
-            </h2>
-            <p className="text-gray-300 text-center mb-8">
-              Connect with Nostr to secure your account and enable transactions
-            </p>
-
-            {error && (
-              <div className="mb-6 p-4 bg-red-900/50 border border-red-500 text-red-300 rounded-lg">
-                {error}
+          <div className="text-center">
+            <div className="mb-8">
+              <CheckCircle className="w-16 h-16 text-green-500 mx-auto mb-6" />
+              <h2 className="text-3xl font-bold text-white mb-4">
+                Ready to Begin!
+              </h2>
+              <p className="text-gray-300 text-lg mb-6">
+                Your {selectedRole} account is set up with your privacy preferences. Let's get started!
+              </p>
+              
+              <div className="bg-gray-800 p-6 rounded-lg mb-6 text-left max-w-md mx-auto">
+                <h3 className="text-lg font-semibold text-white mb-3">Your Settings Summary:</h3>
+                <div className="space-y-2 text-sm">
+                  <div className="flex justify-between">
+                    <span className="text-gray-400">Role:</span>
+                    <span className="text-white capitalize font-medium">{selectedRole}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-400">Location Sharing:</span>
+                    <span className={privacySettings.shareLocation ? "text-green-400" : "text-red-400"}>
+                      {privacySettings.shareLocation ? "Enabled" : "Disabled"}
+                    </span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-400">Interest Targeting:</span>
+                    <span className={privacySettings.shareInterests ? "text-green-400" : "text-red-400"}>
+                      {privacySettings.shareInterests ? "Enabled" : "Disabled"}
+                    </span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-400">Email Notifications:</span>
+                    <span className={privacySettings.emailNotifications ? "text-green-400" : "text-red-400"}>
+                      {privacySettings.emailNotifications ? "Enabled" : "Disabled"}
+                    </span>
+                  </div>
+                </div>
               </div>
-            )}
 
-            <div className="space-y-4 mb-8">
-              <button
-                onClick={handleNostrConnect}
-                disabled={isLoading || !hasNostrExtension}
-                className="w-full bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 px-6 rounded-lg transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                {isLoading ? 'Connecting...' : 'Connect with Nostr Extension'}
-              </button>
-
-              {!hasNostrExtension && (
-                <div className="p-4 bg-yellow-900/50 border border-yellow-500 text-yellow-300 rounded-lg">
-                  <p className="font-semibold mb-2">No Nostr Extension Detected</p>
-                  <p className="text-sm">Install a Nostr browser extension like Alby or nos2x to continue.</p>
+              {error && (
+                <div className="mb-6 p-4 bg-red-900/50 border border-red-500 text-red-300 rounded-lg">
+                  {error}
                 </div>
               )}
-
-              <div className="text-center text-gray-400">or</div>
-
-              <button
-                onClick={handleTestMode}
-                disabled={isLoading}
-                className="w-full bg-yellow-600 hover:bg-yellow-700 text-white font-bold py-3 px-6 rounded-lg transition-all duration-300 disabled:opacity-50"
-              >
-                {isLoading ? 'Activating...' : 'Use Test Mode (Demo Account)'}
-              </button>
             </div>
-
+            
             <div className="flex justify-between">
               <button
                 onClick={handleBack}
@@ -285,35 +421,19 @@ const OnboardingPage: React.FC = () => {
               >
                 Back
               </button>
+              <button
+                onClick={handleComplete}
+                disabled={isLoading}
+                className="bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-bold py-3 px-8 rounded-lg text-lg transition-all duration-300 transform hover:scale-105 shadow-lg disabled:opacity-50 inline-flex items-center"
+              >
+                {isLoading ? 'Setting up account...' : 'Enter Dashboard'}
+                <ArrowRight className="ml-2 w-5 h-5" />
+              </button>
             </div>
           </div>
         );
 
-      case 4:
-        return (
-          <div className="text-center">
-            <div className="mb-8">
-              <CheckCircle className="w-16 h-16 text-green-500 mx-auto mb-6" />
-              <h2 className="text-3xl font-bold text-white mb-4">
-                Account Created Successfully!
-              </h2>
-              <p className="text-gray-300 text-lg mb-6">
-                Welcome to Proof Of Reach! Your {selectedRole} account is ready.
-              </p>
-              <div className="bg-gray-800 p-4 rounded-lg mb-6">
-                <p className="text-sm text-gray-400 mb-2">Your Public Key:</p>
-                <p className="text-white font-mono text-xs break-all">{pubkey}</p>
-              </div>
-            </div>
-            <button
-              onClick={handleComplete}
-              disabled={isLoading}
-              className="bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-bold py-3 px-8 rounded-lg text-lg transition-all duration-300 transform hover:scale-105 shadow-lg disabled:opacity-50"
-            >
-              {isLoading ? 'Setting up account...' : 'Enter Dashboard'}
-            </button>
-          </div>
-        );
+
 
       default:
         return null;
