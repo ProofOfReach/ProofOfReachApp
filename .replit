@@ -232,6 +232,26 @@ args = "Check Import Fix Progress"
 task = "workflow.run"
 args = "Next Error Batch Analysis"
 
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Check Context Test Error Progress"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Next Error Batch Check"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Check Next Error Patterns"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Error Count After Context Fix"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Identify Next Error Batch"
+
 [[workflows.workflow]]
 name = "Nostr Ad Marketplace Server"
 author = "agent"
@@ -675,6 +695,46 @@ author = "agent"
 [[workflows.workflow.tasks]]
 task = "shell.exec"
 args = "npx tsc --noEmit --skipLibCheck 2>&1 | head -20"
+
+[[workflows.workflow]]
+name = "Check Context Test Error Progress"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "npx tsc --noEmit --skipLibCheck 2>&1 | grep -c \"error TS\" || echo \"0\""
+
+[[workflows.workflow]]
+name = "Next Error Batch Check"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "npx tsc --noEmit --skipLibCheck 2>&1 | head -20"
+
+[[workflows.workflow]]
+name = "Check Next Error Patterns"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "npx tsc --noEmit --skipLibCheck 2>&1 | grep -E \"Cannot find module|Property.*does not exist|Type.*is not assignable\" | head -15"
+
+[[workflows.workflow]]
+name = "Error Count After Context Fix"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "npx tsc --noEmit --skipLibCheck 2>&1 | grep -c \"error TS\" || echo \"0\""
+
+[[workflows.workflow]]
+name = "Identify Next Error Batch"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "npx tsc --noEmit --skipLibCheck 2>&1 | head -30"
 
 [deployment]
 run = ["sh", "-c", "npm install && npx prisma generate && npm run dev"]

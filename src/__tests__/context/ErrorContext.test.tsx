@@ -94,7 +94,7 @@ describe('ErrorContext', () => {
         return (
           <button 
             data-testid="report-error"
-            onClick={() => error(new Error('Test error'), 'test-component', 'api')}
+            onClick={() => logError(new Error('Test error'), 'test-component', 'network')}
           >
             Report Error
           </button>
@@ -117,37 +117,37 @@ describe('ErrorContext', () => {
   describe('useErrorStateToast', () => {
     it('should provide simplified toast functions', () => {
       const TestComponent = () => {
-        const { showErrorToast } = useErrorStateToast();
+        const { setError } = useErrorState();
         
         return (
           <div>
             <button 
               data-testid="info-toast"
-              onClick={() => showErrorToast('Info message', 'info')}
+              onClick={() => setError({ id: 'info', message: 'Info message', type: 'business', severity: 'info' })}
             >
               Info Toast
             </button>
             <button 
               data-testid="warn-toast"
-              onClick={() => showErrorToast('Warning message', 'warn')}
+              onClick={() => setError({ id: 'warn', message: 'Warning message', type: 'validation', severity: 'warn' })}
             >
               Warning Toast
             </button>
             <button 
               data-testid="error-toast"
-              onClick={() => showErrorToast('Error message', 'error')}
+              onClick={() => setError({ id: 'error', message: 'Error message', type: 'technical', severity: 'error' })}
             >
               Error Toast
             </button>
             <button 
               data-testid="critical-toast"
-              onClick={() => showErrorToast('Critical message', 'critical')}
+              onClick={() => setError({ id: 'critical', message: 'Critical message', type: 'network', severity: 'critical' })}
             >
               Critical Toast
             </button>
             <button 
               data-testid="log-toast"
-              onClick={() => showErrorToast('Success message', 'critical')}
+              onClick={() => setError({ id: 'success', message: 'Success message', type: 'business', severity: 'info' })}
             >
               Success Toast
             </button>

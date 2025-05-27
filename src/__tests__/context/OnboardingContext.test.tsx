@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, screen, act } from '@testing-library/react';
-import '@/context/OnboardingContext';
-import '@/types/role';
+import { useOnboarding, OnboardingProvider } from '@/context/OnboardingContext';
+import onboardingService from '@/lib/onboardingService';
 
 // Mock dependencies
 jest.mock('next/router', () => ({
