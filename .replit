@@ -224,6 +224,10 @@ args = "Cleanup Progress Check"
 task = "workflow.run"
 args = "Quick Error Count After Tooltip Fix"
 
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Check Import Fix Progress"
+
 [[workflows.workflow]]
 name = "Nostr Ad Marketplace Server"
 author = "agent"
@@ -646,6 +650,14 @@ args = "npx tsc --noEmit --skipLibCheck 2>&1 | grep -c \"error TS\" || echo \"0\
 
 [[workflows.workflow]]
 name = "Quick Error Count After Tooltip Fix"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "npx tsc --noEmit --skipLibCheck 2>&1 | grep -c \"error TS\" || echo \"0\""
+
+[[workflows.workflow]]
+name = "Check Import Fix Progress"
 author = "agent"
 
 [[workflows.workflow.tasks]]

@@ -1,6 +1,6 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
-import { DashboardCard } from '../../../components/ui';
+import DashboardCard from '../../../components/ui/DashboardCard';
 
 describe('DashboardCard Component', () => {
   it('renders children correctly', () => {
