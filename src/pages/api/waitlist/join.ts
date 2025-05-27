@@ -37,6 +37,9 @@ export default async function handler(
     }
 
     try {
+      // Test database connection first
+      await prisma.$queryRaw`SELECT 1`;
+      
       // Check if email already exists
       const existingEmail = await prisma.launchEmail.findUnique({
         where: { email }
@@ -60,7 +63,7 @@ export default async function handler(
       }
 
       // Create new waitlist entry
-      await prisma.launchEmail.create({
+      const result = await prisma.launchEmail.create({
         data: {
           email,
           interestedRoles,
@@ -70,22 +73,41 @@ export default async function handler(
         }
       });
 
+      console.log('Waitlist entry created successfully:', result.id);
+
       // Return log response
       return res.status(201).json({
         log: true,
         message: 'Thanks for joining our waitlist! We\'ll keep you updated on our launch.'
       });
-    } catch (dbError) {
-      console.log('Database error:', dbError);
-      throw new Error('Database operation failed');
+    } catch (dbError: any) {
+      console.error('Database error details:', {
+        message: dbError.message,
+        code: dbError.code,
+        meta: dbError.meta,
+        stack: dbError.stack
+      });
+      
+      // Return a more specific error based on the database error
+      if (dbError.code === 'P2002') {
+        return res.status(409).json({
+          log: false,
+          error: 'This email is already registered for our waitlist.'
+        });
+      }
+      
+      throw new Error(`Database operation failed: ${dbError.message}`);
     }
-  } catch (error) {
-    console.log('Waitlist join error:', error);
+  } catch (error: any) {
+    console.error('Waitlist join error:', {
+      message: error.message,
+      stack: error.stack,
+      body: req.body
+    });
+    
     return res.status(500).json({
       log: false,
       error: 'An error occurred while processing your request. Please try again later.'
     });
-  } finally {
-    await prisma.$disconnect();
   }
 }
