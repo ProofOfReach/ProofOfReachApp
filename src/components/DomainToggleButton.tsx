@@ -6,8 +6,12 @@ import React, { useState, useEffect } from 'react';
  */
 const DomainToggleButton: React.FC = () => {
   const [isDev, setIsDev] = useState<boolean>(false);
+  const [isHydrated, setIsHydrated] = useState<boolean>(false);
   
   useEffect(() => {
+    // Set hydrated to true first to prevent hydration mismatches
+    setIsHydrated(true);
+    
     // Check if we're in dev mode initially
     const storedValue = localStorage.getItem('SIMULATE_DEV_DOMAIN');
     const isDevMode = storedValue === 'true';
@@ -38,6 +42,17 @@ const DomainToggleButton: React.FC = () => {
       window.location.href = window.location.pathname; // Use href to get a clean reload
     }, 100);
   };
+
+  // Don't render until hydrated to prevent server/client mismatch
+  if (!isHydrated) {
+    return (
+      <div className="fixed bottom-4 right-4 z-50">
+        <button className="bg-gray-500 text-white font-medium py-2 px-4 rounded shadow-lg flex items-center space-x-2">
+          <span>Loading...</span>
+        </button>
+      </div>
+    );
+  }
 
   return (
     <div className="fixed bottom-4 right-4 z-50">
