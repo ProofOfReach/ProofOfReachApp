@@ -1,6 +1,7 @@
 import { PrismaClient, Ad, AdStatus, Campaign } from '@prisma/client';
 import { adService, CreateAdDto } from '../../services/adService';
 import { ApiError } from '../../utils/apiError';
+import type { UserRole } from '../../types/role';
 
 // Mock PrismaClient
 jest.mock('@prisma/client', () => {

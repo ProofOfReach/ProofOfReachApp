@@ -51,7 +51,7 @@ const RefactoredAdForm: React.FC<AdFormProps> = ({
     imageUrl: initialData.imageUrl || '',
     finalDestinationUrl: initialData.finalDestinationUrl || initialData.targetUrl || '',
     urlParameters: initialData.urlParameters || '',
-    budget: initialData?.budget ?? 0 || 10000, // Default 10,000 sats
+    budget: (initialData?.budget ?? 0) || 10000, // Default 10,000 sats
     dailyBudget: initialData.dailyBudget || 1000, // Default 1,000 sats
     bidPerImpression: initialData.bidPerImpression || initialData.bidPerImpression === 0 ? 0 : 10, // Default 10 sats
     bidPerClick: initialData.bidPerClick || initialData.bidPerClick === 0 ? 0 : 0, // Default to 0, user must choose one
@@ -201,8 +201,8 @@ const RefactoredAdForm: React.FC<AdFormProps> = ({
     
     // Daily budget cannot exceed total budget (with type check)
     if (typeof formData.dailyBudget === 'number' && 
-        typeof formData?.budget ?? 0 === 'number' && 
-        formData.dailyBudget > formData?.budget ?? 0) {
+        typeof (formData?.budget ?? 0) === 'number' && 
+        formData.dailyBudget > (formData?.budget ?? 0)) {
       errors.dailyBudget = 'Daily budget cannot exceed total budget';
     }
     
@@ -385,8 +385,8 @@ const RefactoredAdForm: React.FC<AdFormProps> = ({
                     onChange={handleChange}
                     className={validationErrors?.budget ? 'border-red-500' : ''}
                   />
-                  {validationErrors?.budget ?? 0 && (
-                    <FormMessage>{validationErrors?.budget ?? 0}</FormMessage>
+                  {validationErrors?.budget && (
+                    <FormMessage>{validationErrors.budget}</FormMessage>
                   )}
                 </FormItem>
               </FormField>

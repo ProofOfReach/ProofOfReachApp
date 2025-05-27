@@ -304,6 +304,18 @@ args = "Progress After Console Fix"
 task = "workflow.run"
 args = "Final Progress Check"
 
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Progress After UserRole Fixes"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Progress After Form Fixes"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Next High Impact Error Analysis"
+
 [[workflows.workflow]]
 name = "Nostr Ad Marketplace Server"
 author = "agent"
@@ -891,6 +903,30 @@ author = "agent"
 [[workflows.workflow.tasks]]
 task = "shell.exec"
 args = "npx tsc --noEmit --skipLibCheck 2>&1 | grep -c \"error TS\" || echo \"0\""
+
+[[workflows.workflow]]
+name = "Progress After UserRole Fixes"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "npx tsc --noEmit --skipLibCheck 2>&1 | grep -c \"error TS\" || echo \"0\""
+
+[[workflows.workflow]]
+name = "Progress After Form Fixes"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "npx tsc --noEmit --skipLibCheck 2>&1 | grep -c \"error TS\" || echo \"0\""
+
+[[workflows.workflow]]
+name = "Next High Impact Error Analysis"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "npx tsc --noEmit --skipLibCheck 2>&1 | head -30"
 
 [deployment]
 run = ["sh", "-c", "npm install && npx prisma generate && npm run dev"]

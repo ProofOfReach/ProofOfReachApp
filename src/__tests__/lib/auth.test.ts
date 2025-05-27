@@ -10,6 +10,7 @@ import {
   SESSION_COOKIE_NAME,
 } from '../../lib/auth';
 import { PrismaClient } from '@prisma/client';
+import type { UserRole } from '../../types/role';
 
 // Mock cookies-next
 jest.mock('cookies-next', () => ({
@@ -61,7 +62,7 @@ describe('Auth Module', () => {
 
   describe('setAuthCookie', () => {
     it('sets the cookie with the pubkey', () => {
-      const testPubkey = 'test-pubkey-123';
+      const testPubkey = 'viewer' as UserRole;
       
       // Import the actual setCookie function to mock
       const { setCookie } = require('cookies-next');
