@@ -24,7 +24,7 @@ import dynamic from 'next/dynamic';
 const LoginPage: React.FC = () => {
   // Use a placeholder during server-side rendering
   return (
-    <Layout title="Login - Nostr Ad Marketplace">
+    <Layout title="Login - Nostr Ad Marketplace" hideTestBanner={true}>
       <div className="flex justify-center items-center min-h-[80vh]">
         <div className="w-full max-w-md p-8 bg-white shadow-lg rounded-lg dark:bg-gray-800">
           <div className="text-center mb-6">
@@ -651,7 +651,7 @@ const LoginPageClient: React.FC = () => {
   
   // Handle prerendering (server-side) vs client-side rendering
   return (
-    <Layout title="Login - Nostr Ad Marketplace">
+    <Layout title="Login - Nostr Ad Marketplace" hideTestBanner={true}>
       <div className="flex justify-center items-center min-h-[80vh]">
         <div className="w-full max-w-md p-8 bg-white shadow-lg rounded-lg dark:bg-gray-800">
           <div className="text-center mb-6">
@@ -787,16 +787,7 @@ const LoginPageClient: React.FC = () => {
               </p>
             )}
 
-            {/* Developer note section */}
-            <div className="mt-6 p-4 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-md">
-              <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                Developer Information
-              </h3>
-              <p className="text-xs text-gray-600 dark:text-gray-400">
-                For development and testing purposes, use your authorized Nostr key to log in with proper permissions.
-                Admin users can enable test mode from the Dashboard's Role Management section.
-              </p>
-            </div>
+
           </div>
         </div>
       </div>
@@ -819,7 +810,7 @@ const ClientLoginPage = dynamic(() => Promise.resolve(LoginPageClient), {
 // Define a new component that uses the client component within our SSR layout
 const LoginPageContainer: React.FC = () => {
   return (
-    <Layout title="Login - Nostr Ad Marketplace">
+    <Layout title="Login - Nostr Ad Marketplace" hideTestBanner={true}>
       <div className="flex justify-center items-center min-h-[80vh]">
         <div className="w-full max-w-md p-8 bg-white shadow-lg rounded-lg dark:bg-gray-800">
           {/* Heading is moved inside the ClientLoginPage component to avoid duplication */}
