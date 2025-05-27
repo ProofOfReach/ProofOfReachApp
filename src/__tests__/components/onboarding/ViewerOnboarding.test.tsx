@@ -1,10 +1,10 @@
 import React from 'react';
 import { render, screen, act, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import '@/components/onboarding/ViewerOnboarding';
-import '@/context/OnboardingContext';
-import '@/context/AuthContext';
-import '@/context/RoleContext';
+import ViewerOnboarding from '@/components/onboarding/ViewerOnboarding';
+import { OnboardingProvider } from '@/context/OnboardingContext';
+import { AuthProvider } from '@/context/AuthContext';
+import { RoleProvider } from '@/context/RoleContext';
 
 // Mock the onboardingService
 jest.mock('@/lib/onboardingService', () => ({

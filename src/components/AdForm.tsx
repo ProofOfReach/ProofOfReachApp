@@ -464,7 +464,9 @@ const AdForm: React.FC<AdFormProps> = ({
                     </div>
                   }
                   className="ml-1"
-                />
+                >
+                  <span className="cursor-help">ℹ️</span>
+                </Tooltip>
               </h3>
             </div>
             
@@ -526,15 +528,16 @@ const AdForm: React.FC<AdFormProps> = ({
                 Targeting Options
               </h3>
               <Tooltip 
-                text={
+                content={
                   <div>
                     <p className="font-medium mb-1">Limited Targeting in MVP</p>
                     <p>The targeting options below are basic in this MVP version. More sophisticated targeting will be available in future updates.</p>
                   </div>
                 }
-                width="wide"
                 className="ml-1"
-              />
+              >
+                <span className="cursor-help">ℹ️</span>
+              </Tooltip>
             </div>
           </div>
           
