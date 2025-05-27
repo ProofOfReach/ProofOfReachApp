@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import { MailService } from '@sendgrid/mail';
+import { Resend } from 'resend';
 
 interface ContactFormData {
   name: string;
@@ -27,22 +27,21 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       return res.status(400).json({ message: 'Invalid email format' });
     }
 
-    // Check if SendGrid API key is available
-    if (!process.env.SENDGRID_API_KEY) {
-      console.error('SendGrid API key not configured');
+    // Check if Resend API key is available
+    if (!process.env.RESEND_API_KEY) {
+      console.error('Resend API key not configured');
       return res.status(500).json({ 
         message: 'Email service not configured. Please contact us directly at admin@proofofreach.xyz' 
       });
     }
 
-    // Initialize SendGrid
-    const mailService = new MailService();
-    mailService.setApiKey(process.env.SENDGRID_API_KEY);
+    // Initialize Resend
+    const resend = new Resend(process.env.RESEND_API_KEY);
 
-    // Prepare email content
-    const emailData = {
+    // Send email using Resend
+    const { data, error } = await resend.emails.send({
+      from: 'onboarding@resend.dev', // Using Resend's default domain for now
       to: 'admin@proofofreach.xyz',
-      from: 'noreply@proofofreach.xyz', // This should be a verified sender in SendGrid
       replyTo: email,
       subject: `Contact Form: ${subject}`,
       html: `
@@ -68,24 +67,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           </div>
         </div>
       `,
-      text: `
-New Contact Form Submission
+    });
 
-Name: ${name}
-Email: ${email}
-Subject: ${subject}
-
-Message:
-${message}
-
----
-This message was sent from the ProofofReach contact form.
-Reply to ${email} to respond directly.
-      `
-    };
-
-    // Send email
-    await mailService.send(emailData);
+    if (error) {
+      console.error('Resend error:', error);
+      throw new Error('Failed to send email via Resend');
+    }
 
     console.log(`Contact form email sent successfully from ${email}`);
     
@@ -97,15 +84,7 @@ Reply to ${email} to respond directly.
     console.error('Contact form error:', error);
     
     // Provide helpful error message
-    let errorMessage = 'Failed to send message. Please try again or contact us directly at admin@proofofreach.xyz';
-    
-    if (error && typeof error === 'object' && 'response' in error) {
-      const sgError = error as any;
-      if (sgError.response?.body?.errors) {
-        console.error('SendGrid errors:', sgError.response.body.errors);
-        errorMessage = 'Email service error. Please contact us directly at admin@proofofreach.xyz';
-      }
-    }
+    const errorMessage = 'Failed to send message. Please try again or contact us directly at admin@proofofreach.xyz';
     
     return res.status(500).json({ message: errorMessage });
   }
