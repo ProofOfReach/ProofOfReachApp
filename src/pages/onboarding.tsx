@@ -14,12 +14,10 @@ const OnboardingPage: React.FC = () => {
   const [pubkey, setPubkey] = useState('');
   const [hasNostrExtension, setHasNostrExtension] = useState(false);
   const [privacySettings, setPrivacySettings] = useState({
-    shareLocation: true,
-    shareInterests: true,
-    shareBrowsing: false,
-    shareAge: true,
-    emailNotifications: true,
-    dataSharing: true
+    shareLocation: true,     // recommended - enabled by default
+    shareInterests: true,    // recommended - enabled by default
+    shareBrowsing: false,    // optional - user choice
+    shareAge: true,          // helpful for age-appropriate ads - enabled by default
   });
 
   useEffect(() => {
@@ -226,12 +224,16 @@ const OnboardingPage: React.FC = () => {
             
             <div className="max-w-2xl mx-auto space-y-6 mb-8">
               <div className="bg-gray-800 p-6 rounded-lg border border-gray-700">
-                <h3 className="text-lg font-semibold text-white mb-4">Data Sharing Preferences</h3>
+                <h3 className="text-lg font-semibold text-white mb-2">Data Sharing Preferences</h3>
+                <p className="text-sm text-gray-400 mb-6">
+                  💰 <strong className="text-orange-400">Higher earnings potential:</strong> Sharing more data helps us show you more relevant ads, 
+                  which typically means higher click rates and more bitcoin earnings for you.
+                </p>
                 <div className="space-y-4">
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="text-white font-medium">Share Location Data</p>
-                      <p className="text-sm text-gray-400">Help us show relevant local ads</p>
+                      <p className="text-white font-medium">Share Location Data <span className="text-orange-400 text-sm">(recommended)</span></p>
+                      <p className="text-sm text-gray-400">Help us show relevant local ads and businesses</p>
                     </div>
                     <button
                       onClick={() => handlePrivacySettingChange('shareLocation')}
@@ -249,8 +251,8 @@ const OnboardingPage: React.FC = () => {
                   
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="text-white font-medium">Share Interests</p>
-                      <p className="text-sm text-gray-400">Get personalized ad recommendations</p>
+                      <p className="text-white font-medium">Share Interests <span className="text-orange-400 text-sm">(recommended)</span></p>
+                      <p className="text-sm text-gray-400">Get personalized ad recommendations that match your preferences</p>
                     </div>
                     <button
                       onClick={() => handlePrivacySettingChange('shareInterests')}
@@ -268,8 +270,8 @@ const OnboardingPage: React.FC = () => {
                   
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="text-white font-medium">Share Browsing History</p>
-                      <p className="text-sm text-gray-400">Improve ad targeting accuracy</p>
+                      <p className="text-white font-medium">Share Browsing Patterns</p>
+                      <p className="text-sm text-gray-400">Improve ad targeting accuracy for maximum earnings</p>
                     </div>
                     <button
                       onClick={() => handlePrivacySettingChange('shareBrowsing')}
@@ -288,7 +290,7 @@ const OnboardingPage: React.FC = () => {
                   <div className="flex items-center justify-between">
                     <div>
                       <p className="text-white font-medium">Share Age Range</p>
-                      <p className="text-sm text-gray-400">Help us show age-appropriate content</p>
+                      <p className="text-sm text-gray-400">Help us show age-appropriate content and offers</p>
                     </div>
                     <button
                       onClick={() => handlePrivacySettingChange('shareAge')}
@@ -299,49 +301,6 @@ const OnboardingPage: React.FC = () => {
                       <span
                         className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
                           privacySettings.shareAge ? 'translate-x-6' : 'translate-x-1'
-                        }`}
-                      />
-                    </button>
-                  </div>
-                </div>
-              </div>
-
-              <div className="bg-gray-800 p-6 rounded-lg border border-gray-700">
-                <h3 className="text-lg font-semibold text-white mb-4">Communication Preferences</h3>
-                <div className="space-y-4">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-white font-medium">Email Notifications</p>
-                      <p className="text-sm text-gray-400">Receive updates about campaigns and earnings</p>
-                    </div>
-                    <button
-                      onClick={() => handlePrivacySettingChange('emailNotifications')}
-                      className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-                        privacySettings.emailNotifications ? 'bg-orange-500' : 'bg-gray-600'
-                      }`}
-                    >
-                      <span
-                        className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-                          privacySettings.emailNotifications ? 'translate-x-6' : 'translate-x-1'
-                        }`}
-                      />
-                    </button>
-                  </div>
-                  
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-white font-medium">Data Sharing with Partners</p>
-                      <p className="text-sm text-gray-400">Share anonymized data to improve the platform</p>
-                    </div>
-                    <button
-                      onClick={() => handlePrivacySettingChange('dataSharing')}
-                      className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-                        privacySettings.dataSharing ? 'bg-orange-500' : 'bg-gray-600'
-                      }`}
-                    >
-                      <span
-                        className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-                          privacySettings.dataSharing ? 'translate-x-6' : 'translate-x-1'
                         }`}
                       />
                     </button>
@@ -399,9 +358,15 @@ const OnboardingPage: React.FC = () => {
                     </span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-gray-400">Email Notifications:</span>
-                    <span className={privacySettings.emailNotifications ? "text-green-400" : "text-red-400"}>
-                      {privacySettings.emailNotifications ? "Enabled" : "Disabled"}
+                    <span className="text-gray-400">Browsing Patterns:</span>
+                    <span className={privacySettings.shareBrowsing ? "text-green-400" : "text-red-400"}>
+                      {privacySettings.shareBrowsing ? "Enabled" : "Disabled"}
+                    </span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-400">Age Range Sharing:</span>
+                    <span className={privacySettings.shareAge ? "text-green-400" : "text-red-400"}>
+                      {privacySettings.shareAge ? "Enabled" : "Disabled"}
                     </span>
                   </div>
                 </div>
