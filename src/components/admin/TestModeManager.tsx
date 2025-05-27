@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import '@/hooks/useTestMode';
-import '@/types/role';
+import { useTestMode } from '@/hooks/useTestMode';
+
+type UserRole = 'viewer' | 'advertiser' | 'publisher' | 'admin' | 'stakeholder';
 import { Shield, CheckSquare, AlertCircle, Clock } from 'react-feather';
 
 /**
