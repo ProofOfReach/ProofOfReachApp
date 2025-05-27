@@ -5,10 +5,11 @@ import '@/components/ui/Typography';
 import '@/components/ui/card';
 import { Check, Copy, ExternalLink } from 'react-feather';
 import Link from 'next/link';
-import '@/hooks/useAuthSwitch';
+import { useAuth } from '@/hooks/useAuth';
 
 const SDKExamplesPage = () => {
-  const { pubkey } = useAuthSwitch();
+  const { auth } = useAuth();
+  const pubkey = auth?.pubkey;
   const [copiedSection, setCopiedSection] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState('html');
   

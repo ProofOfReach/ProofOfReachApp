@@ -6,7 +6,7 @@ import '@/components/layout/ImprovedDashboardLayout';
 import '@/components/ui/Button';
 import '@/components/ui/card';
 import '@/components/ui/Typography';
-import '@/hooks/useAuth';
+import { useAuth } from '@/hooks/useAuth';
 
 const SDKExamplesPage = () => {
   const { auth } = useAuth();
