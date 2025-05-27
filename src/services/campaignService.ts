@@ -76,7 +76,7 @@ export const campaignService = {
     return prisma.campaign.create({
       data: {
         ...cleanCampaignData,
-        status: initialStatus,
+        status: initialStatus as CampaignStatus,
         advertiserId,
       },
     });
@@ -85,7 +85,7 @@ export const campaignService = {
   /**
    * Get a campaign by ID
    */
-  async getCampaign(id: UserRole, advertiserId?: string): Promise<Campaign | null> {
+  async getCampaign(id: string, advertiserId?: string): Promise<Campaign | null> {
     // Check if we're in test mode
     const isTestMode = advertiserId && advertiserId.startsWith('pk_test_');
     
@@ -232,7 +232,7 @@ export const campaignService = {
    * Update campaign status
    */
   async updateCampaignStatus(
-    id: UserRole,
+    id: string,
     status: CampaignStatus,
     advertiserId?: string
   ): Promise<Campaign> {
@@ -290,7 +290,7 @@ export const campaignService = {
   /**
    * Delete a campaign
    */
-  async deleteCampaign(id: UserRole, advertiserId?: string): Promise<Campaign> {
+  async deleteCampaign(id: string, advertiserId?: string): Promise<Campaign> {
     // Check if we're in test mode
     const isTestMode = advertiserId && advertiserId.startsWith('pk_test_');
     

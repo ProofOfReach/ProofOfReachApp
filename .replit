@@ -348,6 +348,14 @@ args = "Progress After Test Fix"
 task = "workflow.run"
 args = "Progress After Campaign Service Fix"
 
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Next Critical Error Analysis"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Progress After Campaign Service Updates"
+
 [[workflows.workflow]]
 name = "Nostr Ad Marketplace Server"
 author = "agent"
@@ -1018,6 +1026,22 @@ args = "npx tsc --noEmit --skipLibCheck 2>&1 | grep -c \"error TS\" || echo \"0\
 
 [[workflows.workflow]]
 name = "Progress After Campaign Service Fix"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "npx tsc --noEmit --skipLibCheck 2>&1 | grep -c \"error TS\" || echo \"0\""
+
+[[workflows.workflow]]
+name = "Next Critical Error Analysis"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "npx tsc --noEmit --skipLibCheck 2>&1 | head -40"
+
+[[workflows.workflow]]
+name = "Progress After Campaign Service Updates"
 author = "agent"
 
 [[workflows.workflow.tasks]]

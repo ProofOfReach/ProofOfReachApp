@@ -44,7 +44,7 @@ export const walletService = {
   /**
    * Check if a user has sufficient balance for a withdrawal or payment
    */
-  async hasSufficientBalance(userId: UserRole, amount: number): Promise<boolean> {
+  async hasSufficientBalance(userId: string, amount: number): Promise<boolean> {
     try {
       const balance = await this.getBalance(userId);
       return balance >= amount;
