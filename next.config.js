@@ -7,7 +7,7 @@ const nextConfig = {
     '127.0.0.1',
     'localhost',
     '*.replit.dev',
-    '*.picard.replit.dev'
+    '98e5b4a9-2b88-4aac-ba4a-5f5554a4abda-00-2kehelnkl25j.picard.replit.dev'
   ],
   
   // Basic security headers
