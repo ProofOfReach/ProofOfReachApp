@@ -388,6 +388,22 @@ args = "Progress After New Batch Fixes"
 task = "workflow.run"
 args = "Final New Batch Progress Check"
 
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Current Error Count Investigation"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Verify Strategy Effectiveness"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Strategy Validation Check"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Final Progress Validation"
+
 [[workflows.workflow]]
 name = "Nostr Ad Marketplace Server"
 author = "agent"
@@ -1138,6 +1154,38 @@ args = "npx tsc --noEmit --skipLibCheck 2>&1 | grep -c \"error TS\" || echo \"0\
 
 [[workflows.workflow]]
 name = "Final New Batch Progress Check"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "npx tsc --noEmit --skipLibCheck 2>&1 | grep -c \"error TS\" || echo \"0\""
+
+[[workflows.workflow]]
+name = "Current Error Count Investigation"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "npx tsc --noEmit --skipLibCheck 2>&1 | head -30"
+
+[[workflows.workflow]]
+name = "Verify Strategy Effectiveness"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "npx tsc --noEmit --skipLibCheck 2>&1 | grep -c \"error TS\" && echo \"Current count\" && echo \"Started with: 2047\" && echo \"Net reduction: $((2047 - $(npx tsc --noEmit --skipLibCheck 2>&1 | grep -c \"error TS\")))\""
+
+[[workflows.workflow]]
+name = "Strategy Validation Check"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "npx tsc --noEmit --skipLibCheck 2>&1 | grep -c \"error TS\" || echo \"0\""
+
+[[workflows.workflow]]
+name = "Final Progress Validation"
 author = "agent"
 
 [[workflows.workflow.tasks]]

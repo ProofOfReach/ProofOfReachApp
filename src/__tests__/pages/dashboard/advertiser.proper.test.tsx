@@ -170,7 +170,6 @@ describe('AdvertiserDashboard Component', () => {
         availableRoles: [],
         profile: null
       },
-      loading: false,
       error: null,
       login: jest.fn(),
       logout: jest.fn()
