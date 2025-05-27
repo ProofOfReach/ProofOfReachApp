@@ -6,6 +6,7 @@ import {
   TEST_MODE_EVENTS, 
   addTestModeEventListener 
 } from '@/lib/testModeEvents';
+import { ROLE_EVENTS } from '@/lib/events/eventTypes';
 import { UserRole, TestModeState, STORAGE_KEYS } from '../types/role';
 
 // Simple RoleManager fallback for test mode

@@ -1,8 +1,8 @@
 import { UserRole } from "@/types/role";
 import React, { useState } from 'react';
-import '@/components/layout/ImprovedDashboardLayout';
-import '@/components/ui/Typography';
-import '@/components/ui/card';
+import ImprovedDashboardLayout from '@/components/layout/ImprovedDashboardLayout';
+import { Title, Paragraph } from '@/components/ui/Typography';
+import { Card } from '@/components/ui/card';
 import { Check, Copy, ExternalLink } from 'react-feather';
 import Link from 'next/link';
 import { useAuth } from '@/hooks/useAuth';
