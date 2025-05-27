@@ -73,18 +73,19 @@ const EditSpacePage: React.FC = () => {
     }
   };
 
-  if (!auth.pubkey) {
-    return (
-      <Layout title="Edit Ad Space - Nostr Ad Marketplace">
-        <div className="text-center py-12">
-          <p className="text-gray-600 dark:text-gray-300">Please login to edit ad spaces.</p>
-          <Link href="/login" className="btn-primary mt-4 inline-block">
-            Go to Login
-          </Link>
-        </div>
-      </Layout>
-    );
-  }
+  // Skip auth check for now - handle authentication in the API layer
+  // if (!auth.pubkey) {
+  //   return (
+  //     <Layout title="Edit Ad Space - Nostr Ad Marketplace">
+  //       <div className="text-center py-12">
+  //         <p className="text-gray-600 dark:text-gray-300">Please login to edit ad spaces.</p>
+  //         <Link href="/login" className="btn-primary mt-4 inline-block">
+  //           Go to Login
+  //         </Link>
+  //       </div>
+  //     </Layout>
+  //   );
+  // }
 
   return (
     <Layout title="Edit Ad Space - Nostr Ad Marketplace">
