@@ -172,6 +172,14 @@ args = "Final Error Count Check"
 task = "workflow.run"
 args = "Final Navigation Test"
 
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Phase 1 Foundation Tests"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Phase 2 Preparation Tests"
+
 [[workflows.workflow]]
 name = "Nostr Ad Marketplace Server"
 author = "agent"
@@ -495,6 +503,22 @@ author = "agent"
 [[workflows.workflow.tasks]]
 task = "shell.exec"
 args = "node scripts/validate-navigation.js"
+
+[[workflows.workflow]]
+name = "Phase 1 Foundation Tests"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "npx jest src/__tests__/auth/phase1-foundation.test.ts"
+
+[[workflows.workflow]]
+name = "Phase 2 Preparation Tests"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "npx jest src/__tests__/auth/supabase-integration.test.ts"
 
 [deployment]
 run = ["sh", "-c", "npm install && npx prisma generate && npm run dev"]
