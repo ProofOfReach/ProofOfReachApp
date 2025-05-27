@@ -402,7 +402,7 @@ const SimpleNostrFeed: React.FC<SimpleNostrFeedProps> = ({
   const { balance: testWalletBalance, updateBalance: updateTestWalletBalance } = useTestWallet();
   
   // Handle ad viewed event - called by child components
-  const handleAdViewed = useCallback((adId: UserRole, advertiserName: string) => {
+  const handleAdViewed = useCallback((adId: string, advertiserName: string) => {
     // Skip if already viewed
     if (viewedAds.has(adId)) return;
     
@@ -443,7 +443,7 @@ const SimpleNostrFeed: React.FC<SimpleNostrFeedProps> = ({
         
         logger.debug(`Added ${amount} sats to test wallet balance. New balance: ${newBalance}`);
       } catch (error) {
-        logger.log('Error updating test wallet balance:', error);
+        logger.log('Error updating test wallet balance:', error as any);
       }
     }
     

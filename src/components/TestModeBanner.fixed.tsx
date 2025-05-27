@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import '@/hooks/useTestMode';
-import '@/lib/roleService';
-import '@/services/roleManager';
-import '@/types/role';
-import '@/lib/logger';
+import { useTestMode } from '@/hooks/useTestMode';
+import { logger } from '@/lib/logger';
+import { UserRole } from '@/types/role';
+import { RoleManager } from '@/services/roleManager';
+import { STORAGE_KEYS } from '@/lib/constants';
 import { 
   useAppEvent, 
   useLegacyEvent, 
