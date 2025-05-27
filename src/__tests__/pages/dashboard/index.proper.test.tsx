@@ -127,7 +127,6 @@ describe('Dashboard Index Component', () => {
           avatar: undefined
         }
       },
-      loading: false,
       error: null,
       login: jest.fn().mockResolvedValue(true),
       logout: jest.fn().mockResolvedValue(true)
@@ -149,7 +148,6 @@ describe('Dashboard Index Component', () => {
         availableRoles: [],
         profile: null
       },
-      loading: false,
       error: null,
       login: jest.fn(),
       logout: jest.fn()

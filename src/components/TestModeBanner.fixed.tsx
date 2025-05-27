@@ -4,14 +4,21 @@ import { useTestMode } from '@/hooks/useTestMode';
 import { logger } from '@/lib/logger';
 import { UserRole } from '@/types/role';
 import { RoleManager } from '@/services/roleManager';
-import { enhancedStorage } from '@/lib/storage';
+import { testModeStorageService } from '@/services/testModeStorageService';
 import { testModeService } from '@/services/testModeService';
-import { RoleService } from '@/services/roleService';
+import { roleService } from '@/services/roleService';
 import { 
   useAppEvent, 
   useLegacyEvent, 
   useStorageEvent 
 } from '@/hooks/useAppEvent';
+
+// Storage keys constants
+const STORAGE_KEYS = {
+  CURRENT_ROLE: 'current_role',
+  TEST_MODE: 'test_mode',
+  USER_DATA: 'user_data'
+};
 import { 
   ROLE_EVENTS, 
   SYSTEM_EVENTS, 
