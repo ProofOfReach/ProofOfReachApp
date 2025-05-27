@@ -136,8 +136,8 @@ const Layout: React.FC<LayoutProps> = ({
           {isAuthPage && <AuthStatusBar />}
 
           {/* NAVBAR SECTION: Show navbar for specific pages */}
-          {/* Show HomeNavbar for home page, role pages, API docs, FAQ pages, and contact page */}
-          {(isHomePage || isApiDocsPage || isFaqPage || isRolePage || isContactPage) && <HomeNavbar />}
+          {/* Show HomeNavbar for home page, login page, role pages, API docs, FAQ pages, and contact page */}
+          {(isHomePage || isLoginPage || isApiDocsPage || isFaqPage || isRolePage || isContactPage) && <HomeNavbar />}
           
           {/* No regular Navbar needed since we use sidebar navigation in dashboard */}
         </>
