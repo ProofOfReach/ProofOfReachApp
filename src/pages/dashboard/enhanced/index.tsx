@@ -2,10 +2,9 @@ import { UserRole } from "@/types/role";
 import React from 'react';
 import { GetServerSideProps } from 'next';
 import Head from 'next/head';
-import '@/context/EnhancedRoleContext';
-import '@/components/layout/RoleBasedLayout';
-import '@/components/auth/withRoleAccess';
-import '@/context/RoleContext';
+import { useEnhancedRole } from '@/context/EnhancedRoleContext';
+import { RoleBasedLayout } from '@/components/layout/RoleBasedLayout';
+import { withRoleAccess } from '@/components/auth/withRoleAccess';
 
 /**
  * A sample dashboard page that demonstrates the new role management system

@@ -1,11 +1,12 @@
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
+import type { NextPageWithLayout } from '../_app';
 
 /**
  * Redirect page to maintain backward compatibility
  * Maps /dashboard/ad-spaces to /dashboard/spaces
  */
-export default function AdSpacesRedirect() {
+const AdSpacesRedirect: NextPageWithLayout = () => {
   const router = useRouter();
 
   useEffect(() => {
@@ -20,4 +21,6 @@ export default function AdSpacesRedirect() {
       </div>
     </div>
   );
-}
+};
+
+export default AdSpacesRedirect;
