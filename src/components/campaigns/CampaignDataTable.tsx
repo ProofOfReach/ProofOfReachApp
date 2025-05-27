@@ -265,7 +265,10 @@ const CampaignDataTable: React.FC<CampaignDataTableProps> = ({
             <tr key={campaign.id} className="hover:bg-gray-50 dark:hover:bg-gray-800">
               {columns.map((column, colIndex) => (
                 <td key={colIndex} className="px-6 py-4 whitespace-nowrap">
-                  {typeof column.cell === 'function' ? column.cell(campaign) : campaign[column.accessorKey as keyof CampaignWithAds]}
+                  {typeof column.cell === 'function' ? column.cell(campaign) : (() => {
+                    const value = campaign[column.accessorKey as keyof CampaignWithAds];
+                    return value instanceof Date ? value.toLocaleDateString() : value;
+                  })()}
                 </td>
               ))}
             </tr>
