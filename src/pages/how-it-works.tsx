@@ -1,13 +1,14 @@
 import { UserRole } from "@/types/role";
 import React from 'react';
-import { ArrowRight, Globe, Shield, Zap } from 'react-feather';
+import { ArrowRight, Globe, Shield, Zap, DollarSign, Users, Award } from 'react-feather';
 import Head from 'next/head';
 import Link from 'next/link';
 
 import Layout from '../components/Layout';
 import HowItWorksSection from '../components/marketing/HowItWorksSection';
 import FAQSection from '../components/marketing/FAQSection';
-import Divider from '@/components/ui/Divider';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
+import { Badge } from '@/components/ui/Badge';
 
 const HowItWorksPage: React.FC = () => {
   // Platform overview steps
@@ -65,58 +66,105 @@ const HowItWorksPage: React.FC = () => {
   return (
     <>
       <Head>
-        <title>How It Works | Proof Of Reach</title>
-        <meta name="description" content="Learn how Proof Of Reach creates a decentralized advertising ecosystem powered by Bitcoin." />
+        <title>How It Works - ProofofReach</title>
+        <meta name="description" content="Learn how ProofofReach creates a decentralized advertising ecosystem powered by Bitcoin." />
       </Head>
 
       <Layout>
-        {/* Hero */}
-        <div className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-20">
-          <div className="container mx-auto px-4 text-center">
-            <h1 className="text-4xl md:text-5xl font-bold mb-6">About Proof Of Reach</h1>
-            <p className="text-xl max-w-3xl mx-auto mb-8">
-              A decentralized advertising platform built on Nostr protocol and powered by Bitcoin
-            </p>
+        {/* Hero Section */}
+        <section className="relative bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 text-white py-24 lg:py-32">
+          <div className="absolute inset-0 bg-grid-white/[0.02] bg-[size:60px_60px]" />
+          <div className="relative container mx-auto px-4 text-center">
+            <div className="max-w-4xl mx-auto">
+              <Badge variant="secondary" className="mb-6 text-sm px-4 py-2">
+                <DollarSign className="h-4 w-4 mr-2" />
+                Bitcoin-Powered Advertising
+              </Badge>
+              <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold mb-8 tracking-tight">
+                How <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-400">ProofofReach</span> Works
+              </h1>
+              <p className="text-xl md:text-2xl text-slate-300 max-w-3xl mx-auto mb-12 leading-relaxed">
+                A revolutionary decentralized advertising platform built on the Nostr protocol, 
+                where transparency meets innovation and Bitcoin powers every transaction.
+              </p>
+              <div className="flex flex-wrap justify-center gap-4 text-sm text-slate-400">
+                <div className="flex items-center gap-2">
+                  <Shield className="h-4 w-4" />
+                  <span>Decentralized</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <DollarSign className="h-4 w-4" />
+                  <span>Bitcoin Payments</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Users className="h-4 w-4" />
+                  <span>Privacy-First</span>
+                </div>
+              </div>
+            </div>
           </div>
-        </div>
+        </section>
 
-        <Divider />
-
-        {/* About Section */}
-        <div className="py-16 bg-white">
+        {/* Mission & Vision Section */}
+        <section className="py-24 bg-gradient-to-br from-slate-50 to-white">
           <div className="container mx-auto px-4">
-            <div className="text-center mb-12">
-              <h2 className="text-3xl font-bold mb-4">Our Mission</h2>
-              <p className="text-lg text-gray-600 max-w-3xl mx-auto mb-8">
-                We're building an advertising platform that respects users, rewards content creators, and delivers value to advertisers - all without centralized control or surveillance.
+            <div className="text-center mb-16">
+              <h2 className="text-4xl md:text-5xl font-bold mb-6 text-slate-900">Our Mission</h2>
+              <p className="text-xl text-slate-600 max-w-4xl mx-auto leading-relaxed">
+                We're building an advertising platform that respects users, rewards content creators, 
+                and delivers value to advertisers - all without centralized control or surveillance.
               </p>
             </div>
             
-            <div className="grid md:grid-cols-2 gap-12 mb-16">
-              <div>
-                <h3 className="text-2xl font-bold mb-4 text-gray-800">What We Believe</h3>
-                <p className="text-gray-600 mb-4">
-                  The current advertising ecosystem is broken. Users are tracked across the web, content creators receive pennies on the dollar, and advertisers struggle with fraud and middlemen taking most of the value.
-                </p>
-                <p className="text-gray-600">
-                  By building on the Nostr protocol and using Bitcoin for payments, we can create a more direct, transparent, and fair system for all participants.
-                </p>
-              </div>
-              <div>
-                <h3 className="text-2xl font-bold mb-4 text-gray-800">Our Approach</h3>
-                <p className="text-gray-600 mb-4">
-                  Instead of building walls and silos, we're creating an open platform where anyone can participate without gatekeepers or massive fees.
-                </p>
-                <p className="text-gray-600">
-                  The Lightning Network enables instant micropayments, allowing for new business models where users can earn for their attention and publishers can be paid directly by their audience.
-                </p>
-              </div>
+            <div className="grid lg:grid-cols-2 gap-8 mb-20">
+              <Card className="h-full border-0 shadow-lg bg-white/80 backdrop-blur-sm">
+                <CardHeader className="pb-4">
+                  <div className="flex items-center gap-3 mb-4">
+                    <div className="p-2 bg-red-100 rounded-full">
+                      <Shield className="h-6 w-6 text-red-600" />
+                    </div>
+                    <CardTitle className="text-2xl text-slate-900">What We Believe</CardTitle>
+                  </div>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <p className="text-slate-600 leading-relaxed">
+                    The current advertising ecosystem is broken. Users are tracked across the web, 
+                    content creators receive pennies on the dollar, and advertisers struggle with fraud 
+                    and middlemen taking most of the value.
+                  </p>
+                  <p className="text-slate-600 leading-relaxed">
+                    By building on the Nostr protocol and using Bitcoin for payments, we can create 
+                    a more direct, transparent, and fair system for all participants.
+                  </p>
+                </CardContent>
+              </Card>
+
+              <Card className="h-full border-0 shadow-lg bg-white/80 backdrop-blur-sm">
+                <CardHeader className="pb-4">
+                  <div className="flex items-center gap-3 mb-4">
+                    <div className="p-2 bg-blue-100 rounded-full">
+                      <Zap className="h-6 w-6 text-blue-600" />
+                    </div>
+                    <CardTitle className="text-2xl text-slate-900">Our Approach</CardTitle>
+                  </div>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <p className="text-slate-600 leading-relaxed">
+                    Instead of building walls and silos, we're creating an open platform where 
+                    anyone can participate without gatekeepers or massive fees.
+                  </p>
+                  <p className="text-slate-600 leading-relaxed">
+                    The Lightning Network enables instant micropayments, allowing for new business 
+                    models where users can earn for their attention and publishers can be paid directly by their audience.
+                  </p>
+                </CardContent>
+              </Card>
             </div>
 
-            <div className="text-center mb-12">
-              <h2 className="text-3xl font-bold mb-4">Platform Overview</h2>
-              <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-                Proof Of Reach connects advertisers, publishers, and viewers in a trustless ecosystem
+            <div className="text-center mb-16">
+              <h2 className="text-4xl md:text-5xl font-bold mb-6 text-slate-900">Platform Overview</h2>
+              <p className="text-xl text-slate-600 max-w-3xl mx-auto">
+                ProofofReach connects advertisers, publishers, and viewers in a trustless ecosystem
               </p>
             </div>
 
@@ -125,9 +173,7 @@ const HowItWorksPage: React.FC = () => {
               steps={platformSteps}
             />
           </div>
-        </div>
-
-        <Divider />
+        </section>
 
         {/* Role-specific sections */}
         <div className="py-16 bg-gray-50">
@@ -185,7 +231,17 @@ const HowItWorksPage: React.FC = () => {
           </div>
         </div>
 
-        <Divider />
+        {/* Section Divider */}
+        <div className="relative">
+          <div className="absolute inset-0 flex items-center">
+            <div className="w-full border-t border-slate-200" />
+          </div>
+          <div className="relative flex justify-center">
+            <div className="bg-white px-6">
+              <div className="h-2 w-2 rounded-full bg-slate-300" />
+            </div>
+          </div>
+        </div>
 
         {/* FAQ Section */}
         <FAQSection
