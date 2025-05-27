@@ -2,10 +2,10 @@ import { UserRole } from "@/types/role";
 import { useState, useRef } from 'react';
 import { Book, Code, Clipboard, Check, Copy, ExternalLink } from 'react-feather';
 import Link from 'next/link';
-import '@/components/layout/ImprovedDashboardLayout';
-import '@/components/ui/Button';
-import '@/components/ui/card';
-import '@/components/ui/Typography';
+import ImprovedDashboardLayout from '@/components/layout/ImprovedDashboardLayout';
+import { Button } from '@/components/ui/Button';
+import { Card } from '@/components/ui/card';
+import { Title, Paragraph } from '@/components/ui/Typography';
 import { useAuth } from '@/hooks/useAuth';
 
 const SDKExamplesPage = () => {
