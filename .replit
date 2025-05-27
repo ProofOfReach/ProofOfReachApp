@@ -180,6 +180,10 @@ args = "Phase 1 Foundation Tests"
 task = "workflow.run"
 args = "Phase 2 Preparation Tests"
 
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Phase 4 Complete Migration Tests"
+
 [[workflows.workflow]]
 name = "Nostr Ad Marketplace Server"
 author = "agent"
@@ -519,6 +523,14 @@ author = "agent"
 [[workflows.workflow.tasks]]
 task = "shell.exec"
 args = "npx jest src/__tests__/auth/supabase-integration.test.ts"
+
+[[workflows.workflow]]
+name = "Phase 4 Complete Migration Tests"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "npx jest src/__tests__/auth/phase4-complete.test.ts"
 
 [deployment]
 run = ["sh", "-c", "npm install && npx prisma generate && npm run dev"]
