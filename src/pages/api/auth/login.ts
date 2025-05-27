@@ -68,25 +68,41 @@ export default async function handler(
         logger.log(`Creating new user for pubkey: ${pubkey.substring(0, 8)}...`);
         
         // First create the user with basic fields
+        // Use preferredRole if provided from onboarding, otherwise default to 'viewer'
+        const initialRole = (preferredRole && ['viewer', 'advertiser', 'publisher'].includes(preferredRole)) 
+          ? preferredRole 
+          : 'viewer';
+          
         user = await prisma.user.create({
           data: {
             nostrPubkey: pubkey,
-            // Set default role to 'viewer'
-            currentRole: 'viewer',
+            currentRole: initialRole,
             // Flag as test user if appropriate
             isTestUser: isTest ? true : false
           }
         });
         
-        // Then create the default role entries
+        // Create the primary role entry
         await prisma.userRole.create({
           data: {
             userId: user.id,
-            role: 'viewer',
+            role: initialRole,
             isActive: true,
             isTestRole: isTest ? true : false
           }
         });
+        
+        // If user chose advertiser or publisher role, also give them viewer role
+        if (initialRole !== 'viewer') {
+          await prisma.userRole.create({
+            data: {
+              userId: user.id,
+              role: 'viewer',
+              isActive: true,
+              isTestRole: isTest ? true : false
+            }
+          });
+        }
         
         // For test users, add advertiser and publisher roles
         if (isTest) {

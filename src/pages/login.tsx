@@ -70,6 +70,31 @@ const LoginPageClient: React.FC = () => {
     }
   };
 
+  const handleCreateAccount = async () => {
+    setIsLoading(true);
+    setError('');
+    setMessage('');
+    
+    try {
+      // Generate fresh Nostr key pair for new account
+      const { privateKey, publicKey } = nostrLib.generateTestKeyPair();
+      
+      // Store the keys securely for this new account
+      nostrLib.storeTestKeys(privateKey, publicKey);
+      
+      setMessage('New account keys generated! Redirecting to onboarding...');
+      
+      // Redirect to onboarding with the new keys
+      setTimeout(() => {
+        router.push('/onboarding');
+      }, 1500);
+    } catch (err) {
+      setError('Failed to create new account. Please try again.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   const handleTestMode = async () => {
     setIsLoading(true);
     setError('');
@@ -148,11 +173,11 @@ const LoginPageClient: React.FC = () => {
 
       {/* Create Account Button */}
       <button
-        onClick={() => router.push('/onboarding')}
+        onClick={handleCreateAccount}
         disabled={isLoading}
         className="w-full bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700 disabled:opacity-50 mb-4"
       >
-        Create an Account
+        {isLoading ? 'Creating Account...' : 'Create an Account'}
       </button>
 
       {/* Test Mode Button */}
