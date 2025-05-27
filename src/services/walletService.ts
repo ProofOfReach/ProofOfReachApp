@@ -153,7 +153,7 @@ export const walletService = {
   /**
    * Get transaction history for a user
    */
-  async getTransactionHistory(userId: UserRole, limit = 10, offset = 0) {
+  async getTransactionHistory(userId: string, limit = 10, offset = 0) {
     try {
       const transactions = await prisma.transaction.findMany({
         where: { userId },

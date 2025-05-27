@@ -183,9 +183,9 @@ const AdItem = memo(({
   ad, 
   onAdViewed 
 }: { 
-  adId: UserRole, 
+  adId: string, 
   ad: typeof DEMO_ADS[0], 
-  onAdViewed: (adId: UserRole, advertiserName: string) => void 
+  onAdViewed: (adId: string, advertiserName: string) => void 
 }) => {
   const [isViewed, setIsViewed] = useState(false);
   const [isAllowed, setIsAllowed] = useState(true); // Whether the ad is allowed by frequency cap
