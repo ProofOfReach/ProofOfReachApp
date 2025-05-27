@@ -159,7 +159,7 @@ const LoginPageClient: React.FC = () => {
       <button
         onClick={handleTestMode}
         disabled={isLoading}
-        className="w-full bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 disabled:opacity-50"
+        className="w-full bg-yellow-200 text-gray-800 py-2 px-4 rounded-md hover:bg-yellow-300 disabled:opacity-50"
       >
         {isLoading ? 'Activating Test Mode...' : 'Test Mode'}
       </button>
