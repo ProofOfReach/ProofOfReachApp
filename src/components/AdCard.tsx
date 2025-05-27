@@ -4,7 +4,7 @@ import SatoshiIcon from './SatoshiIcon';
 
 interface AdCardProps {
   ad: any;
-  onStatusChange?: (adId: UserRole, newStatus: string) => void;
+  onStatusChange?: (adId: string, newStatus: string) => void;
   onDelete?: (adId: string) => void;
   onEdit?: (ad: any) => void;
   showControls?: boolean;

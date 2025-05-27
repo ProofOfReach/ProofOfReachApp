@@ -72,7 +72,7 @@ const DirectRoleSwitcher: React.FC = () => {
   
   // Role icons with appropriate colors
   const roleIcons = {
-    user: <User className="w-5 h-5 text-blue-500" />,
+    viewer: <User className="w-5 h-5 text-blue-500" />,
     advertiser: <MegaphoneIcon className="w-5 h-5 text-orange-500" />,
     publisher: <Edit3 className="w-5 h-5 text-green-500" />,
     admin: <Shield className="w-5 h-5 text-purple-500" />,
@@ -81,7 +81,7 @@ const DirectRoleSwitcher: React.FC = () => {
 
   // Role labels
   const roleLabels = {
-    user: 'User',
+    viewer: 'Viewer',
     advertiser: 'Advertiser',
     publisher: 'Publisher',
     admin: 'Admin',

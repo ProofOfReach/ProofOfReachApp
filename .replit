@@ -360,6 +360,14 @@ args = "Progress After Campaign Service Updates"
 task = "workflow.run"
 args = "Progress After Campaign CreateCampaign Fix"
 
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Current Error Count Check Quick"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Next Error Analysis"
+
 [[workflows.workflow]]
 name = "Nostr Ad Marketplace Server"
 author = "agent"
@@ -1059,6 +1067,22 @@ author = "agent"
 [[workflows.workflow.tasks]]
 task = "shell.exec"
 args = "npx tsc --noEmit --skipLibCheck 2>&1 | grep -c \"error TS\" || echo \"0\""
+
+[[workflows.workflow]]
+name = "Current Error Count Check Quick"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "npx tsc --noEmit --skipLibCheck 2>&1 | grep -c \"error TS\" || echo \"0\""
+
+[[workflows.workflow]]
+name = "Next Error Analysis"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "npx tsc --noEmit --skipLibCheck 2>&1 | head -30"
 
 [deployment]
 run = ["sh", "-c", "npm install && npx prisma generate && npm run dev"]
