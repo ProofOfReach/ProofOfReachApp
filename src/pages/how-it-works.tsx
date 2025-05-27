@@ -7,7 +7,7 @@ import Link from 'next/link';
 import Layout from '../components/Layout';
 import HowItWorksSection from '../components/marketing/HowItWorksSection';
 import FAQSection from '../components/marketing/FAQSection';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/Badge';
 
 const HowItWorksPage: React.FC = () => {
