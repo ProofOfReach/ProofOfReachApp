@@ -348,15 +348,16 @@ const AdForm: React.FC<AdFormProps> = ({
                   Frequency Capping
                 </h3>
                 <Tooltip 
-                  text={
+                  content={
                     <div>
                       <p className="font-medium mb-1">Frequency Capping</p>
                       <p>Limit how often the same user sees your ad to prevent ad fatigue and improve campaign effectiveness.</p>
                     </div>
                   }
-                  width="wide"
                   className="ml-1"
-                />
+                >
+                  <span className="cursor-help">ℹ️</span>
+                </Tooltip>
               </div>
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -454,7 +455,7 @@ const AdForm: React.FC<AdFormProps> = ({
               <h3 className="text-sm font-medium text-gray-800 dark:text-gray-200 flex items-center">
                 Pricing Model: Choose CPM or CPC
                 <Tooltip 
-                  text={
+                  content={
                     <div>
                       <p className="font-medium mb-1">Pricing Models</p>
                       <p className="mb-1"><span className="font-medium">CPM (Cost per Mille):</span> Pay for every 1,000 ad impressions. Best for brand awareness campaigns.</p>
@@ -462,7 +463,6 @@ const AdForm: React.FC<AdFormProps> = ({
                       <p className="mt-1">Note: You can only use one pricing model per ad. Both fields are mutually exclusive.</p>
                     </div>
                   }
-                  width="wide"
                   className="ml-1"
                 />
               </h3>

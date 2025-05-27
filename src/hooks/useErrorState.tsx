@@ -38,7 +38,7 @@ export function useErrorState() {
   const [localErrorState, setLocalErrorState] = useState<TestErrorState>({
     hasError: false,
     message: '',
-    type: 'system',
+    type: 'technical',
     severity: 'info',
     timestamp: null,
     code: null,
@@ -178,7 +178,7 @@ export function useErrorState() {
           ...prev,
           hasError: false,
           message: '',
-          type: 'system',
+          type: 'technical',
           severity: 'info'
         }));
       } catch (err) {
@@ -201,7 +201,7 @@ export function useErrorState() {
   ): void => {
     if (isTest) {
       try {
-        const actualType = errorType || 'unknown';
+        const actualType = errorType || 'technical';
         
         // In tests, call the mock function directly
         console.log(
@@ -216,7 +216,7 @@ export function useErrorState() {
           ...prev,
           hasError: true,
           message: error instanceof Error ? error.message : error,
-          type: actualType,
+          type: actualType as ErrorType,
           severity
         }));
       } catch (err) {
