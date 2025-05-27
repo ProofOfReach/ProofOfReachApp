@@ -4,6 +4,7 @@ import EditAdSpacePage from '../../../../pages/dashboard/publisher/spaces/[id]/e
 import { useAuth } from '../../../../hooks/useAuth';
 import { defaultUseRole } from '../../../../context/RoleContext';
 import { useRouter } from 'next/router';
+import type { UserRole } from '../../../../types/role';
 
 // Mock the hooks
 jest.mock('../../../../hooks/useAuth', () => ({

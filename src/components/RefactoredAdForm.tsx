@@ -417,15 +417,18 @@ const RefactoredAdForm: React.FC<AdFormProps> = ({
                   Bidding Strategy
                 </h3>
                 <Tooltip 
-                  text={
+                  content={
                     <div>
                       <p className="font-medium mb-1">Bidding Strategy</p>
                       <p>Choose whether to pay per impression (CPM) or per click (CPC). You must select at least one.</p>
                     </div>
                   }
-                  width="wide"
                   className="ml-1"
-                />
+                >
+                  <svg className="w-4 h-4 text-gray-400 hover:text-gray-600" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-3a1 1 0 00-.867.5 1 1 0 11-1.731-1A3 3 0 0113 8a3.001 3.001 0 01-2 2.83V11a1 1 0 11-2 0v-1a1 1 0 011-1 1 1 0 100-2zm0 8a1 1 0 100-2 1 1 0 000 2z" clipRule="evenodd" />
+                  </svg>
+                </Tooltip>
               </div>
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -490,15 +493,18 @@ const RefactoredAdForm: React.FC<AdFormProps> = ({
                   Frequency Capping
                 </h3>
                 <Tooltip 
-                  text={
+                  content={
                     <div>
                       <p className="font-medium mb-1">Frequency Capping</p>
                       <p>Limit how often the same user sees your ad to prevent ad fatigue and improve campaign effectiveness.</p>
                     </div>
                   }
-                  width="wide"
                   className="ml-1"
-                />
+                >
+                  <svg className="w-4 h-4 text-gray-400 hover:text-gray-600" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-3a1 1 0 00-.867.5 1 1 0 11-1.731-1A3 3 0 0113 8a3.001 3.001 0 01-2 2.83V11a1 1 0 11-2 0v-1a1 1 0 011-1 1 1 0 100-2zm0 8a1 1 0 100-2 1 1 0 000 2z" clipRule="evenodd" />
+                  </svg>
+                </Tooltip>
               </div>
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

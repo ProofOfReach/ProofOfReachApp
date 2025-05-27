@@ -3,7 +3,8 @@
  */
 
 import * as nostrLib from '../../lib/nostr';
-import { getUserPublicKey } from 'nostr-tools';
+import { getPublicKey } from 'nostr-tools';
+import type { UserRole } from '../../types/role';
 
 // Mock localStorage
 const mockLocalStorage: { [key: string]: string } = {};
@@ -11,7 +12,7 @@ const mockLocalStorage: { [key: string]: string } = {};
 Object.defineProperty(window, 'localStorage', {
   value: {
     getItem: jest.fn((key: string) => mockLocalStorage[key] || null),
-    setItem: jest.fn((key: UserRole, value: string) => {
+    setItem: jest.fn((key: string, value: string) => {
       mockLocalStorage[key] = value;
     }),
     removeItem: jest.fn((key: string) => {
@@ -137,19 +138,19 @@ describe('Nostr Library', () => {
     
     it('derives a public key from a private key', () => {
       const privateKey = nostrLib.generatePrivateKey();
-      const publicKey = nostrLib.getUserPublicKey(privateKey);
+      const publicKey = getPublicKey(privateKey);
       
       expect(typeof publicKey).toBe('string');
       // Since our implementation is a mock using SHA-256, 
       // we just need to confirm we get a consistent output
-      expect(nostrLib.getUserPublicKey(privateKey)).toBe(publicKey);
+      expect(getPublicKey(privateKey)).toBe(publicKey);
     });
     
     it('handles invalid input for getUserPublicKey', () => {
       const consoleSpy = jest.spyOn(console, 'error').mockImplementation();
       
       // Empty string should still return a value, although in a real impl it would fail
-      const result = nostrLib.getUserPublicKey('');
+      const result = getPublicKey('');
       expect(typeof result).toBe('string');
       
       consoleSpy.mockRestore();
