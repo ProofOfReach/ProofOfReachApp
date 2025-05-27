@@ -36,11 +36,11 @@ describe('ErrorContext', () => {
   describe('useErrorState', () => {
     it('should return the error context when used within ErrorProvider', () => {
       const TestComponent = () => {
-        const { errorState, setError, log } = useErrorState();
+        const { hasError, message, setError, clearError } = useErrorState();
         
         return (
           <div>
-            <div data-testid="error-message">{errorState.message}</div>
+            <div data-testid="error-message">{message}</div>
             <button 
               data-testid="set-error"
               onClick={() => setError({ 
@@ -50,7 +50,7 @@ describe('ErrorContext', () => {
                 severity: 'error',
                 source: 'test',
                 timestamp: Date.now().toString(),
-                category: string.EXTERNAL,
+                category: 'EXTERNAL',
                 active: true,
                 userFacing: true
               })}
@@ -59,7 +59,7 @@ describe('ErrorContext', () => {
             </button>
             <button 
               data-testid="clear-error"
-              onClick={log}
+              onClick={clearError}
             >
               Clear Error
             </button>
@@ -89,7 +89,7 @@ describe('ErrorContext', () => {
   describe('useErrorStateReporting', () => {
     it('should provide a simplified error reporting function', () => {
       const TestComponent = () => {
-        const { error } = useErrorStateReporting();
+        const { logError } = useErrorState();
         
         return (
           <button 
