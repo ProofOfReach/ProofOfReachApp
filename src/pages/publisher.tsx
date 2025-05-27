@@ -106,7 +106,7 @@ const PublisherPage: React.FC = () => {
           imageUrl="/images/publisher-hero.svg"
         />
 
-        <Divider />
+        <div className="my-16"></div>
 
         {/* Benefits Section */}
         <BenefitsSection
@@ -115,7 +115,7 @@ const PublisherPage: React.FC = () => {
           benefits={benefits}
         />
 
-        <Divider />
+        <div className="my-16"></div>
 
         {/* How It Works */}
         <HowItWorksSection
@@ -124,7 +124,7 @@ const PublisherPage: React.FC = () => {
           steps={steps}
         />
 
-        <Divider />
+        <div className="my-16"></div>
 
         {/* FAQ Section */}
         <FAQSection
