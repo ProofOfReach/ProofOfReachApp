@@ -2,6 +2,14 @@
 const nextConfig = {
   reactStrictMode: false,
   
+  // Allow cross-origin requests from Replit domains
+  allowedDevOrigins: [
+    '127.0.0.1',
+    'localhost',
+    '*.replit.dev',
+    '*.picard.replit.dev'
+  ],
+  
   // Basic security headers
   async headers() {
     return [
