@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import Layout from '../components/Layout';
 import dynamic from 'next/dynamic';
+import * as nostrLib from '../lib/nostr';
 
 // Create a clean, compact login component
 const LoginPageClient: React.FC = () => {
@@ -25,16 +26,89 @@ const LoginPageClient: React.FC = () => {
     );
   }
 
-  const handleLogin = async () => {
+  const handleNostrLogin = async () => {
     setIsLoading(true);
     setError('');
     setMessage('');
     
     try {
-      // Login logic would go here
-      setMessage('Login successful!');
+      // Check if user has Nostr extension
+      if (!nostrLib.hasNostrExtension()) {
+        setError('Please install a Nostr browser extension to continue.');
+        return;
+      }
+
+      // Get public key from Nostr extension
+      const pubkey = await nostrLib.getNostrPublicKey();
+      if (!pubkey) {
+        setError('Failed to get public key from Nostr extension.');
+        return;
+      }
+
+      // Send login request to API
+      const response = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ pubkey }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok && data.token) {
+        setMessage('Login successful!');
+        // Redirect to dashboard
+        router.push('/dashboard');
+      } else {
+        setError(data.message || 'Login failed. Please try again.');
+      }
     } catch (err) {
       setError('Login failed. Please try again.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleTestMode = async () => {
+    setIsLoading(true);
+    setError('');
+    setMessage('');
+    
+    try {
+      // Generate test key pair
+      const { privateKey, publicKey } = nostrLib.generateTestKeyPair();
+      
+      // Store test keys
+      nostrLib.storeTestKeys(privateKey, publicKey);
+      
+      // Enable test mode
+      nostrLib.enableTestMode();
+
+      // Send login request with test pubkey
+      const response = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ 
+          pubkey: publicKey,
+          testMode: true 
+        }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        setMessage('Test mode activated! Redirecting to dashboard...');
+        setTimeout(() => {
+          router.push('/dashboard');
+        }, 1500);
+      } else {
+        setError(data.message || 'Test mode activation failed.');
+      }
+    } catch (err) {
+      setError('Test mode activation failed.');
     } finally {
       setIsLoading(false);
     }
@@ -62,12 +136,31 @@ const LoginPageClient: React.FC = () => {
         </div>
       )}
 
+      {/* Login with Nostr Button */}
       <button
-        onClick={handleLogin}
+        onClick={handleNostrLogin}
         disabled={isLoading}
-        className="w-full bg-orange-500 text-white py-2 px-4 rounded-md hover:bg-orange-600 disabled:opacity-50"
+        className="w-full bg-orange-500 text-white py-2 px-4 rounded-md hover:bg-orange-600 disabled:opacity-50 mb-4"
       >
         {isLoading ? 'Logging in...' : 'Login with Nostr'}
+      </button>
+
+      {/* Create Account Button */}
+      <button
+        onClick={() => router.push('/onboarding')}
+        disabled={isLoading}
+        className="w-full bg-gray-200 text-gray-800 py-2 px-4 rounded-md hover:bg-gray-300 disabled:opacity-50 mb-4"
+      >
+        Create an Account
+      </button>
+
+      {/* Test Mode Button */}
+      <button
+        onClick={handleTestMode}
+        disabled={isLoading}
+        className="w-full bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 disabled:opacity-50"
+      >
+        {isLoading ? 'Activating Test Mode...' : 'Test Mode'}
       </button>
     </div>
   );
