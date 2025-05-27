@@ -140,7 +140,8 @@ const LoginPageClient: React.FC = () => {
       <button
         onClick={handleNostrLogin}
         disabled={isLoading}
-        className="w-full bg-orange-500 text-white py-2 px-4 rounded-md hover:bg-orange-600 disabled:opacity-50 mb-4"
+        className="w-full text-white py-2 px-4 rounded-md hover:opacity-90 disabled:opacity-50 mb-4"
+        style={{ backgroundColor: 'rgb(169, 21, 255)' }}
       >
         {isLoading ? 'Logging in...' : 'Login with Nostr'}
       </button>
@@ -149,7 +150,7 @@ const LoginPageClient: React.FC = () => {
       <button
         onClick={() => router.push('/onboarding')}
         disabled={isLoading}
-        className="w-full bg-gray-200 text-gray-800 py-2 px-4 rounded-md hover:bg-gray-300 disabled:opacity-50 mb-4"
+        className="w-full bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700 disabled:opacity-50 mb-4"
       >
         Create an Account
       </button>
