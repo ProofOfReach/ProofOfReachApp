@@ -49,3 +49,4 @@ const CurrencyAmount: React.FC<CurrencyAmountProps> = ({
 };
 
 export default CurrencyAmount;
+export { CurrencyAmount };
