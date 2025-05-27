@@ -228,6 +228,10 @@ args = "Quick Error Count After Tooltip Fix"
 task = "workflow.run"
 args = "Check Import Fix Progress"
 
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Next Error Batch Analysis"
+
 [[workflows.workflow]]
 name = "Nostr Ad Marketplace Server"
 author = "agent"
@@ -663,6 +667,14 @@ author = "agent"
 [[workflows.workflow.tasks]]
 task = "shell.exec"
 args = "npx tsc --noEmit --skipLibCheck 2>&1 | grep -c \"error TS\" || echo \"0\""
+
+[[workflows.workflow]]
+name = "Next Error Batch Analysis"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "npx tsc --noEmit --skipLibCheck 2>&1 | head -15"
 
 [deployment]
 run = ["sh", "-c", "npm install && npx prisma generate && npm run dev"]

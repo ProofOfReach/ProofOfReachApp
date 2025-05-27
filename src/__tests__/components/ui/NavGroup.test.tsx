@@ -2,6 +2,7 @@ import React from 'react';
 import { render, screen } from '@testing-library/react';
 import NavGroup from '@/components/ui/nav-group';
 import { IconName } from '@/lib/navigationBuilder';
+import { UserRole } from '@/types/role';
 
 // Mock the Icon component
 jest.mock('@/components/ui/icon', () => {
@@ -45,7 +46,7 @@ describe('NavGroup Component', () => {
   });
 
   it('applies active class to active items', () => {
-    const getActiveClass = (href: UserRole, active?: boolean) => 
+    const getActiveClass = (href: string, active?: boolean) => 
       active ? 'active-class' : '';
       
     render(

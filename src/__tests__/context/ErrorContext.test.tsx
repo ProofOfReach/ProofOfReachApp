@@ -5,10 +5,10 @@
  */
 
 import React from 'react';
-import { UserRole } from '../../types/errors';
 import { render, screen, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import '@/context/ErrorContext';
+import { ErrorProvider } from '@/context/ErrorContext';
+import { useErrorState } from '@/hooks/useErrorState';
 import '@/utils/toast';
 
 // Mock console
