@@ -224,6 +224,31 @@ const customRender = (
   return render(ui, { wrapper: Wrapper, ...options });
 };
 
+// Test utility functions for authentication testing
+export const createMockResponse = (options: {
+  ok: boolean;
+  status?: number;
+  json?: () => Promise<any>;
+}) => {
+  return Promise.resolve({
+    ok: options.ok,
+    status: options.status || (options.ok ? 200 : 400),
+    json: options.json || (() => Promise.resolve({})),
+  });
+};
+
+export const createMockUser = (overrides = {}) => {
+  return {
+    id: '1',
+    pubkey: 'test-pubkey-123',
+    isTestMode: false,
+    name: 'Test User',
+    displayName: 'Test User',
+    avatar: null,
+    ...overrides,
+  };
+};
+
 // re-export everything
 export * from '@testing-library/react';
 
