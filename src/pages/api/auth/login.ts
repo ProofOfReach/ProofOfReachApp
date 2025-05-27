@@ -39,8 +39,7 @@ export default async function handler(
 ): Promise<void> {
   // Only allow POST method
   if (req.method !== 'POST') {
-    res.status(500);
-    throwValidationError('Method not allowed');
+    res.status(405).json({ error: 'Method not allowed' });
     return;
   }
 
