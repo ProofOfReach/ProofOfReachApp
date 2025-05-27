@@ -24,7 +24,6 @@ import { useHydration } from '@/hooks/useHydration';
 const OnboardingPage: React.FC = () => {
   const router = useRouter();
   const { auth } = useAuth();
-  const authLoading = false; // Simplified for production build
   const [mounted, setMounted] = useState(false);
   const [checkedStorage, setCheckedStorage] = useState(false);
   const [isRedirecting, setIsRedirecting] = useState(false);
@@ -38,6 +37,7 @@ const OnboardingPage: React.FC = () => {
   
   // Determine login state - check if we have a pubkey in the auth state
   const isLoggedIn = !!auth?.isLoggedIn || !!auth?.pubkey || false;
+  const authLoading = false; // Auth loading handled by useAuth hook internally
   
   // Process the role from query parameters when they're available
   useEffect(() => {

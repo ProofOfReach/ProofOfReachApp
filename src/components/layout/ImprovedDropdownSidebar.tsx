@@ -50,9 +50,8 @@ const ImprovedDropdownSidebar: React.FC = () => {
     ],
     admin: [
       { href: '/dashboard', label: 'Dashboard', icon: <Home className="w-5 h-5" /> },
-      { href: '/dashboard/admin/users', label: 'Users', icon: <User className="w-5 h-5" /> },
-      { href: '/dashboard/admin/content', label: 'Content', icon: <Edit3 className="w-5 h-5" /> },
-      { href: '/dashboard/admin/settings', label: 'Settings', icon: <Settings className="w-5 h-5" /> },
+      { href: '/dashboard/admin', label: 'Admin Panel', icon: <User className="w-5 h-5" /> },
+      { href: '/dashboard/settings', label: 'Settings', icon: <Settings className="w-5 h-5" /> },
     ],
     stakeholder: [
       { href: '/dashboard', label: 'Dashboard', icon: <Home className="w-5 h-5" /> },
