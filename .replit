@@ -296,6 +296,14 @@ args = "Progress After ErrorCode Fix"
 task = "workflow.run"
 args = "Quick Progress Check"
 
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Progress After Console Fix"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Final Progress Check"
+
 [[workflows.workflow]]
 name = "Nostr Ad Marketplace Server"
 author = "agent"
@@ -862,6 +870,22 @@ args = "npx tsc --noEmit --skipLibCheck 2>&1 | grep -c \"error TS\" || echo \"0\
 
 [[workflows.workflow]]
 name = "Quick Progress Check"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "npx tsc --noEmit --skipLibCheck 2>&1 | grep -c \"error TS\" || echo \"0\""
+
+[[workflows.workflow]]
+name = "Progress After Console Fix"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "npx tsc --noEmit --skipLibCheck 2>&1 | grep -c \"error TS\" || echo \"0\""
+
+[[workflows.workflow]]
+name = "Final Progress Check"
 author = "agent"
 
 [[workflows.workflow.tasks]]
