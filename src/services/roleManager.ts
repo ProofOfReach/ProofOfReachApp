@@ -9,12 +9,7 @@ import { UserRole, isValidUserRole } from '../types/role';
 import { logger } from '../lib/logger';
 import { StorageService, STORAGE_KEYS } from './storageService';
 import { dispatchTestModeEvent, TEST_MODE_EVENTS } from '../lib/testModeEvents';
-
-// Events specific to role management
-export const ROLE_EVENTS = {
-  ROLE_CHANGED: 'role:changed',
-  ROLES_UPDATED: 'role:roles-updated'
-};
+import { ROLE_EVENTS } from '../lib/events/eventTypes';
 
 // Role data structure for storage
 export interface RoleData {
