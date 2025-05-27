@@ -25,7 +25,7 @@ const CampaignList: React.FC<CampaignListProps> = ({ campaigns, onStatusChange, 
     });
   };
 
-  const handleStatusChange = (campaignId: UserRole, currentStatus: CampaignStatus) => {
+  const handleStatusChange = (campaignId: string, currentStatus: CampaignStatus) => {
     const newStatus = currentStatus === 'ACTIVE' ? 'PAUSED' : 'ACTIVE';
     onStatusChange(campaignId, newStatus);
   };
