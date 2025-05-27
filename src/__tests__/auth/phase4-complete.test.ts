@@ -71,7 +71,8 @@ describe('Phase 4: Complete Supabase Migration', () => {
           user: { 
             id: 'test-user-id',
             user_metadata: { pubkey: 'test-pubkey' }
-          }
+          },
+          session: null
         },
         error: null
       });
@@ -81,7 +82,8 @@ describe('Phase 4: Complete Supabase Migration', () => {
           user: { 
             id: 'test-user-id',
             user_metadata: { pubkey: 'test-pubkey' }
-          }
+          },
+          session: { access_token: 'test-token' }
         },
         error: null
       });
@@ -125,12 +127,24 @@ describe('Phase 4: Complete Supabase Migration', () => {
       });
 
       mockSupabase.auth.signUp.mockResolvedValue({
-        data: { user: { id: 'test-id' } },
+        data: { 
+          user: { 
+            id: 'test-id',
+            user_metadata: { pubkey: 'test-pubkey' }
+          },
+          session: null
+        },
         error: null
       });
 
       mockSupabase.auth.signInWithPassword.mockResolvedValue({
-        data: { user: { id: 'test-id' } },
+        data: { 
+          user: { 
+            id: 'test-id',
+            user_metadata: { pubkey: 'test-pubkey' }
+          },
+          session: { access_token: 'test-token' }
+        },
         error: null
       });
 
