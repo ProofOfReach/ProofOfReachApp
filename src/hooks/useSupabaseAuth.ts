@@ -87,6 +87,7 @@ export const useSupabaseAuthProvider = () => {
       availableRoles: metadata.roles || ['viewer'],
       profile: metadata.profile || null,
       user,
+      session,
     });
   };
 
@@ -109,6 +110,7 @@ export const useSupabaseAuthProvider = () => {
           availableRoles: metadata.roles || ['viewer'],
           profile: metadata.profile || null,
           user,
+          session: null, // Will be set by auth state change listener
         });
       } else {
         setAuth(null);

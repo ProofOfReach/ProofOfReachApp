@@ -6,7 +6,7 @@
  */
 
 import { renderHook, act, waitFor } from '@testing-library/react';
-import { useAuthProvider, AuthState } from '../../hooks/useAuth';
+import { useSupabaseAuth } from '../../hooks/useSupabaseAuth';
 import { createMockResponse, createMockUser } from '../test-utils';
 import { UserRole } from '../../context/RoleContext';
 
