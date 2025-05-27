@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Monitor, Code, Trash2, Edit, ChevronDown, ChevronRight, Check, X, Clock, ExternalLink } from 'react-feather';
 import Link from 'next/link';
 import useSWR from 'swr';
+import { UserRole } from '@/types/role';
 
 interface SpaceTableRowProps {
   space: any;

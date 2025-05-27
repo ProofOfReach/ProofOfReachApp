@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import NDK, { NDKEvent, NDKFilter, NDKSubscription } from '@nostr-dev-kit/ndk';
 import { formatDistanceToNow } from 'date-fns';
 import { MessageCircle, Heart, Repeat, ExternalLink, ChevronDown } from 'react-feather';
+import { UserRole } from '@/types/role';
 
 // Default relays to connect to
 const DEFAULT_RELAYS = [

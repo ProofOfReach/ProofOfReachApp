@@ -46,8 +46,8 @@ describe('Logout API', () => {
     } catch (error) {
       // We expect an error to be thrown, so this is actually the log case
       expect(error).toBeDefined();
-      expect(error.name).toBe('ValidationError');
-      expect(error.message).toBe('Method not allowed');
+      expect((error as Error).name).toBe('ValidationError');
+      expect((error as Error).message).toBe('Method not allowed');
     }
 
     // Check that throwValidationError was called with the correct message

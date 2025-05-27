@@ -3,6 +3,7 @@ import { useTestMode } from '@/context/TestModeContext';
 import { useTestWallet } from '@/hooks/useTestWallet';
 import { logger } from '@/lib/logger';
 import { toast } from '@/utils/toast';
+import { UserRole } from '@/types/role';
 // Simple date formatter function to avoid ESM import issues with date-fns
 function formatDistanceToNow(date: Date): string {
   const now = new Date();
