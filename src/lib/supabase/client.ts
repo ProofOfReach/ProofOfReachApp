@@ -1,10 +1,22 @@
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
 
-// Temporarily disable Supabase client to restore app functionality
-// The credentials need to be properly configured
-export const supabase = {
-  auth: {
-    getUser: () => Promise.resolve({ data: { user: null }, error: null }),
-    signOut: () => Promise.resolve({ error: null })
-  }
-} as any
+// Ensure environment variables are available before creating client
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
+const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+
+if (!supabaseUrl || !supabaseAnonKey) {
+  console.warn('Supabase environment variables not found, falling back to mock client')
+}
+
+// Create Supabase client with proper validation
+export const supabase = supabaseUrl && supabaseAnonKey && supabaseUrl.startsWith('https://') 
+  ? createClientComponentClient({
+      supabaseUrl,
+      supabaseKey: supabaseAnonKey
+    })
+  : {
+      auth: {
+        getUser: () => Promise.resolve({ data: { user: null }, error: null }),
+        signOut: () => Promise.resolve({ error: null })
+      }
+    } as any
