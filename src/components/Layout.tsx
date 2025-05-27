@@ -57,9 +57,10 @@ const Layout: React.FC<LayoutProps> = ({
   const isAdvertiserPage = router.pathname === '/advertiser';
   const isPublisherPage = router.pathname === '/publisher';
   const isHowItWorksPage = router.pathname === '/how-it-works';
+  const isContactPage = router.pathname === '/contact';
   const isRolePage = isViewerPage || isAdvertiserPage || isPublisherPage || isHowItWorksPage;
   const isAuthPage = router.pathname.startsWith('/dashboard');
-  const isPublicPage = isHomePage || isLoginPage || isApiDocsPage || isFaqPage || isRolePage;
+  const isPublicPage = isHomePage || isLoginPage || isApiDocsPage || isFaqPage || isRolePage || isContactPage;
   
   // Only attempt to check authentication on non-public pages to prevent console errors
   const isAuthenticated = useConditionalAuth(isPublicPage);
@@ -135,8 +136,8 @@ const Layout: React.FC<LayoutProps> = ({
           {isAuthPage && <AuthStatusBar />}
 
           {/* NAVBAR SECTION: Show navbar for specific pages */}
-          {/* Show HomeNavbar for home page, role pages, API docs, and FAQ pages */}
-          {(isHomePage || isApiDocsPage || isFaqPage || isRolePage) && <HomeNavbar />}
+          {/* Show HomeNavbar for home page, role pages, API docs, FAQ pages, and contact page */}
+          {(isHomePage || isApiDocsPage || isFaqPage || isRolePage || isContactPage) && <HomeNavbar />}
           
           {/* No regular Navbar needed since we use sidebar navigation in dashboard */}
         </>

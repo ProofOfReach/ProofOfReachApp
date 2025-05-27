@@ -428,6 +428,10 @@ args = "Final Production Build Test"
 task = "workflow.run"
 args = "Updated Server"
 
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Contact Page Test Server"
+
 [[workflows.workflow]]
 name = "Nostr Ad Marketplace Server"
 author = "agent"
@@ -1258,6 +1262,15 @@ args = "npm run build"
 
 [[workflows.workflow]]
 name = "Updated Server"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "NODE_OPTIONS='--no-warnings' npx next dev -p 5000 -H 0.0.0.0"
+waitForPort = 5000
+
+[[workflows.workflow]]
+name = "Contact Page Test Server"
 author = "agent"
 
 [[workflows.workflow.tasks]]
