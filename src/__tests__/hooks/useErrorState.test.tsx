@@ -7,7 +7,7 @@
 import React from 'react';
 import { render, screen, fireEvent, act } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import '@/hooks/useErrorState';
+import { useErrorState } from '@/hooks/useErrorState';
 
 
 // Mock console
@@ -116,7 +116,7 @@ describe('useErrorState', () => {
     });
     
     const TestComponent = () => {
-      const { log, hasError, message } = useErrorState();
+      const { logError, hasError, message } = useErrorState();
       
       return (
         <div>
@@ -124,7 +124,7 @@ describe('useErrorState', () => {
           <div data-testid="message">{message}</div>
           <button 
             data-testid="clear-error"
-            onClick={log}
+            onClick={() => logError('test error')}
           >
             Clear Error
           </button>
@@ -144,12 +144,12 @@ describe('useErrorState', () => {
     fireEvent.click(screen.getByTestId('clear-error'));
     
     // Verify resetErrorTracking was called
-    expect(console.resetany).toHaveBeenCalled();
+    expect(console.resetErrorTracking).toHaveBeenCalled();
   });
   
   it('should provide a error function that reports errors', () => {
     const TestComponent = () => {
-      const { error } = useErrorState();
+      const { logError } = useErrorState();
       
       return (
         <button 
