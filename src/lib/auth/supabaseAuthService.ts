@@ -41,7 +41,7 @@ export class SupabaseAuthService {
 
   private initializeAuthListener() {
     // Listen for Supabase auth state changes
-    supabase.auth.onAuthStateChange((event, session) => {
+    supabase.auth.onAuthStateChange((event: any, session: any) => {
       console.log('[Supabase Auth] State change:', event, session?.user?.id);
       
       if (session?.user) {

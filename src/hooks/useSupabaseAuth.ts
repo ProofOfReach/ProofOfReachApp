@@ -63,7 +63,7 @@ export const useSupabaseAuthProvider = () => {
 
     // Listen for auth state changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      async (event, session) => {
+      async (event: any, session: any) => {
         console.log('[Supabase Auth] State change:', event);
         if (session?.user) {
           await updateAuthFromSession(session);
@@ -218,7 +218,9 @@ export const useSupabaseAuthProvider = () => {
       if (!user) return false;
 
       const currentRoles = user.user_metadata?.roles || ['viewer'];
-      const updatedRoles = [...new Set([...currentRoles, role])];
+      const updatedRoles = currentRoles.includes(role) 
+        ? currentRoles 
+        : [...currentRoles, role];
 
       const { error } = await supabase.auth.updateUser({
         data: {

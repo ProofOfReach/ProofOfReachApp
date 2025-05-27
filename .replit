@@ -216,6 +216,10 @@ args = "Final TypeScript Error Count"
 task = "workflow.run"
 args = "Check Final Error Progress"
 
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Cleanup Progress Check"
+
 [[workflows.workflow]]
 name = "Nostr Ad Marketplace Server"
 author = "agent"
@@ -627,6 +631,14 @@ author = "agent"
 [[workflows.workflow.tasks]]
 task = "shell.exec"
 args = "npx tsc --noEmit --skipLibCheck 2>&1 | head -10"
+
+[[workflows.workflow]]
+name = "Cleanup Progress Check"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "npx tsc --noEmit --skipLibCheck 2>&1 | grep -c \"error TS\" || echo \"0\""
 
 [deployment]
 run = ["sh", "-c", "npm install && npx prisma generate && npm run dev"]

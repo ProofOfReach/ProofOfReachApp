@@ -1,9 +1,0 @@
-/**
- * DEPRECATED: This file has been replaced by Supabase Auth
- * Migration completed on 2025-05-25T20:20:43.470Z
- * 
- * If you need to restore old functionality, check the migration-backup folder.
- */
-
-// This file is deprecated and should not be used
-export default null;
