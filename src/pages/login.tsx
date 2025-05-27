@@ -29,7 +29,7 @@ const LoginPage: React.FC = () => {
         <div className="w-full max-w-md p-8 bg-white shadow-lg rounded-lg dark:bg-gray-800">
           <div className="text-center mb-6">
             <img 
-              src="/attached_assets/logo_big_light.png" 
+              src="/logo_big_light.png" 
               alt="ProofOfReach" 
               className="h-12 mx-auto"
             />
@@ -656,7 +656,7 @@ const LoginPageClient: React.FC = () => {
         <div className="w-full max-w-md p-8 bg-white shadow-lg rounded-lg dark:bg-gray-800">
           <div className="text-center mb-6">
             <img 
-              src="/attached_assets/logo_big_light.png" 
+              src="/logo_big_light.png" 
               alt="ProofOfReach" 
               className="h-12 mx-auto"
             />
