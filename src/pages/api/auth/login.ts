@@ -44,7 +44,7 @@ export default async function handler(
   }
 
   try {
-    const { pubkey, isTest } = req.body;
+    const { pubkey, isTest, preferredRole, isOnboarding } = req.body;
 
     // Validate pubkey
     if (!pubkey || typeof pubkey !== 'string') {
