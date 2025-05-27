@@ -2,6 +2,14 @@
  * Utility functions for handling role-related events across components
  */
 
+// Role event constants
+export const ROLE_EVENTS = {
+  ROLE_CHANGED: 'roleChanged',
+  ROLE_REFRESH: 'roleRefresh',
+  TEST_ROLE_UPDATE: 'test-role-update',
+  STORAGE_UPDATE: 'storage'
+} as const;
+
 // Trigger a role refresh event across all components
 export function triggerRoleRefresh() {
   if (typeof window === 'undefined') return;
