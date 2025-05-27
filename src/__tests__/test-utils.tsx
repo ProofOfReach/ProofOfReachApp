@@ -3,7 +3,6 @@ import { render, RenderOptions } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { UserRole, RoleProvider } from '../context/RoleContext';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import type { UserRole } from '../types/role';
 
 // Import React
 import * as React from 'react';
