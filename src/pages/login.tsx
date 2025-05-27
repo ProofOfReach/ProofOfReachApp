@@ -653,12 +653,12 @@ const LoginPageClient: React.FC = () => {
   return (
     <Layout title="Login - Nostr Ad Marketplace" hideTestBanner={true}>
       <div className="flex justify-center items-center min-h-[80vh]">
-        <div className="w-full max-w-md p-8 bg-white shadow-lg rounded-lg dark:bg-gray-800">
+        <div className="w-full max-w-sm p-6 bg-white shadow-lg rounded-lg dark:bg-gray-800">
           <div className="text-center mb-6">
             <img 
               src="/logo_big_light.png" 
               alt="ProofOfReach" 
-              className="h-12 mx-auto"
+              className="h-10 mx-auto"
             />
           </div>
 
