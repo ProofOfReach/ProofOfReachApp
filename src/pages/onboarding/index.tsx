@@ -4,10 +4,11 @@ import Head from 'next/head';
 import { useRouter } from 'next/router';
 import '@/types/role';
 import '@/components/Layout';
-import '@/hooks/useAuthRefactored';
-import '@/lib/logger';
-import '@/components/Loading';
-import '@/hooks/useHydration';
+import { useAuth } from '@/hooks/useAuth';
+import { logger } from '@/lib/logger';
+import Loading from '@/components/Loading';
+import Layout from '@/components/Layout';
+import { useHydration } from '@/hooks/useHydration';
 
 /**
  * Role-Based Onboarding Page
@@ -22,7 +23,8 @@ import '@/hooks/useHydration';
  */
 const OnboardingPage: React.FC = () => {
   const router = useRouter();
-  const { authState, isLoading: authLoading } = useAuthRefactored() as any;
+  const { auth } = useAuth();
+  const authLoading = false; // Simplified for production build
   const [mounted, setMounted] = useState(false);
   const [checkedStorage, setCheckedStorage] = useState(false);
   const [isRedirecting, setIsRedirecting] = useState(false);
@@ -35,7 +37,7 @@ const OnboardingPage: React.FC = () => {
   const { role, timestamp, forced, pubkey, error } = router.query;
   
   // Determine login state - check if we have a pubkey in the auth state
-  const isLoggedIn = !!authState?.isLoggedIn || !!authState?.pubkey || false;
+  const isLoggedIn = !!auth?.isLoggedIn || !!auth?.pubkey || false;
   
   // Process the role from query parameters when they're available
   useEffect(() => {
