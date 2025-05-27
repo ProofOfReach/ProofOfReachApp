@@ -27,9 +27,13 @@ const LoginPage: React.FC = () => {
     <Layout title="Login - Nostr Ad Marketplace">
       <div className="flex justify-center items-center min-h-[80vh]">
         <div className="w-full max-w-md p-8 bg-white shadow-lg rounded-lg dark:bg-gray-800">
-          <h1 className="text-2xl font-bold text-center mb-6 text-gray-900 dark:text-white">
-            Login to Nostr Ad Marketplace
-          </h1>
+          <div className="text-center mb-6">
+            <img 
+              src="/attached_assets/logo_big_light.png" 
+              alt="ProofOfReach" 
+              className="h-12 mx-auto"
+            />
+          </div>
           <div className="animate-pulse space-y-6">
             <div className="h-10 bg-gray-200 dark:bg-gray-700 rounded"></div>
             <div className="h-10 bg-gray-200 dark:bg-gray-700 rounded"></div>
@@ -650,9 +654,13 @@ const LoginPageClient: React.FC = () => {
     <Layout title="Login - Nostr Ad Marketplace">
       <div className="flex justify-center items-center min-h-[80vh]">
         <div className="w-full max-w-md p-8 bg-white shadow-lg rounded-lg dark:bg-gray-800">
-          <h1 className="text-2xl font-bold text-center mb-6 text-gray-900 dark:text-white">
-            Login to Nostr Ad Marketplace
-          </h1>
+          <div className="text-center mb-6">
+            <img 
+              src="/attached_assets/logo_big_light.png" 
+              alt="ProofOfReach" 
+              className="h-12 mx-auto"
+            />
+          </div>
 
           {/* Only render dynamic content when mounted (client-side) */}
           {isMounted ? (
