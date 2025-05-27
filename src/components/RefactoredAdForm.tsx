@@ -243,7 +243,7 @@ const RefactoredAdForm: React.FC<AdFormProps> = ({
                   name="advertiserName"
                   value={formData.advertiserName}
                   onChange={handleChange}
-                  error={!!validationErrors.advertiserName}
+                  className={validationErrors.advertiserName ? 'border-red-500' : ''}
                   placeholder="Enter your company or brand name"
                 />
                 {validationErrors.advertiserName && (
@@ -260,7 +260,7 @@ const RefactoredAdForm: React.FC<AdFormProps> = ({
                   name="title"
                   value={formData.title}
                   onChange={handleChange}
-                  error={!!validationErrors.title}
+                  className={validationErrors.title ? 'border-red-500' : ''}
                   placeholder="Enter a descriptive title for your ad"
                 />
                 {validationErrors.title && (
@@ -295,7 +295,7 @@ const RefactoredAdForm: React.FC<AdFormProps> = ({
                   name="finalDestinationUrl"
                   value={formData.finalDestinationUrl}
                   onChange={handleChange}
-                  error={!!validationErrors.finalDestinationUrl}
+                  className={validationErrors.finalDestinationUrl ? 'border-red-500' : ''}
                   placeholder="https://example.com"
                 />
                 {validationErrors.finalDestinationUrl && (
@@ -315,7 +315,7 @@ const RefactoredAdForm: React.FC<AdFormProps> = ({
                   name="urlParameters"
                   value={formData.urlParameters}
                   onChange={handleChange}
-                  error={!!validationErrors.urlParameters}
+                  className={validationErrors.urlParameters ? 'border-red-500' : ''}
                   placeholder="utm_source=nostr&utm_medium=ad"
                 />
                 {validationErrors.urlParameters && (
@@ -335,7 +335,7 @@ const RefactoredAdForm: React.FC<AdFormProps> = ({
                   name="imageUrl"
                   value={formData.imageUrl}
                   onChange={handleChange}
-                  error={!!validationErrors.imageUrl}
+                  className={validationErrors.imageUrl ? 'border-red-500' : ''}
                   placeholder="https://example.com/image.jpg"
                 />
                 {validationErrors.imageUrl && (
@@ -383,7 +383,7 @@ const RefactoredAdForm: React.FC<AdFormProps> = ({
                     min="1"
                     value={formData?.budget ?? 0}
                     onChange={handleChange}
-                    error={!!validationErrors?.budget ?? 0}
+                    className={validationErrors?.budget ? 'border-red-500' : ''}
                   />
                   {validationErrors?.budget ?? 0 && (
                     <FormMessage>{validationErrors?.budget ?? 0}</FormMessage>
