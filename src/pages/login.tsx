@@ -24,24 +24,20 @@ import dynamic from 'next/dynamic';
 const LoginPage: React.FC = () => {
   // Use a placeholder during server-side rendering
   return (
-    <Layout title="Login - Nostr Ad Marketplace" hideTestBanner={true}>
-      <div className="flex justify-center items-center min-h-[80vh]">
-        <div className="w-full max-w-md p-8 bg-white shadow-lg rounded-lg dark:bg-gray-800">
-          <div className="text-center mb-6">
-            <img 
-              src="/logo_big_light.png" 
-              alt="ProofOfReach" 
-              className="h-12 mx-auto"
-            />
-          </div>
-          <div className="animate-pulse space-y-6">
-            <div className="h-10 bg-gray-200 dark:bg-gray-700 rounded"></div>
-            <div className="h-10 bg-gray-200 dark:bg-gray-700 rounded"></div>
-            <div className="h-10 bg-gray-200 dark:bg-gray-700 rounded"></div>
-          </div>
-        </div>
+    <div>
+      <div className="text-center mb-6">
+        <img 
+          src="/logo_big_light.png" 
+          alt="ProofOfReach" 
+          className="h-10 mx-auto"
+        />
       </div>
-    </Layout>
+      <div className="animate-pulse space-y-6">
+        <div className="h-10 bg-gray-200 dark:bg-gray-700 rounded"></div>
+        <div className="h-10 bg-gray-200 dark:bg-gray-700 rounded"></div>
+        <div className="h-10 bg-gray-200 dark:bg-gray-700 rounded"></div>
+      </div>
+    </div>
   );
 };
 
@@ -651,16 +647,14 @@ const LoginPageClient: React.FC = () => {
   
   // Handle prerendering (server-side) vs client-side rendering
   return (
-    <Layout title="Login - Nostr Ad Marketplace" hideTestBanner={true}>
-      <div className="flex justify-center items-center min-h-[80vh]">
-        <div className="w-full max-w-sm p-6 bg-white shadow-lg rounded-lg dark:bg-gray-800">
-          <div className="text-center mb-6">
-            <img 
-              src="/logo_big_light.png" 
-              alt="ProofOfReach" 
-              className="h-10 mx-auto"
-            />
-          </div>
+    <div>
+      <div className="text-center mb-6">
+        <img 
+          src="/logo_big_light.png" 
+          alt="ProofOfReach" 
+          className="h-10 mx-auto"
+        />
+      </div>
 
           {/* Only render dynamic content when mounted (client-side) */}
           {isMounted ? (
@@ -791,7 +785,7 @@ const LoginPageClient: React.FC = () => {
           </div>
         </div>
       </div>
-    </Layout>
+    </div>
   );
 };
 
@@ -812,7 +806,7 @@ const LoginPageContainer: React.FC = () => {
   return (
     <Layout title="Login - Nostr Ad Marketplace" hideTestBanner={true}>
       <div className="flex justify-center items-center min-h-[80vh]">
-        <div className="w-full max-w-md p-8 bg-white shadow-lg rounded-lg dark:bg-gray-800">
+        <div className="w-full max-w-sm p-6 bg-white shadow-lg rounded-lg dark:bg-gray-800">
           {/* Heading is moved inside the ClientLoginPage component to avoid duplication */}
           <ClientLoginPage />
         </div>
