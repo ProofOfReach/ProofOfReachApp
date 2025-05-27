@@ -6,6 +6,15 @@ import * as nostrLib from '../../lib/nostr';
 import { getPublicKey } from 'nostr-tools';
 import type { UserRole } from '../../types/role';
 
+// Helper function to convert hex string to Uint8Array
+const hexToBytes = (hex: string): Uint8Array => {
+  const bytes = new Uint8Array(hex.length / 2);
+  for (let i = 0; i < hex.length; i += 2) {
+    bytes[i / 2] = parseInt(hex.substr(i, 2), 16);
+  }
+  return bytes;
+};
+
 // Mock localStorage
 const mockLocalStorage: { [key: string]: string } = {};
 
@@ -138,19 +147,19 @@ describe('Nostr Library', () => {
     
     it('derives a public key from a private key', () => {
       const privateKey = nostrLib.generatePrivateKey();
-      const publicKey = getPublicKey(privateKey);
+      const publicKey = getPublicKey(hexToBytes(privateKey));
       
       expect(typeof publicKey).toBe('string');
       // Since our implementation is a mock using SHA-256, 
       // we just need to confirm we get a consistent output
-      expect(getPublicKey(privateKey)).toBe(publicKey);
+      expect(getPublicKey(hexToBytes(privateKey))).toBe(publicKey);
     });
     
     it('handles invalid input for getUserPublicKey', () => {
       const consoleSpy = jest.spyOn(console, 'error').mockImplementation();
       
-      // Empty string should still return a value, although in a real impl it would fail
-      const result = getPublicKey('');
+      // Zero bytes should still return a value, although in a real impl it might fail
+      const result = getPublicKey(new Uint8Array(32));
       expect(typeof result).toBe('string');
       
       consoleSpy.mockRestore();

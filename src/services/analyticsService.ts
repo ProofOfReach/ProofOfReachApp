@@ -43,7 +43,7 @@ export interface AdSpacePerformance {
  * @returns Summary data
  */
 export const fetchAdvertiserSummary = async (
-  advertiserId?: UserRole,
+  advertiserId?: string,
   dateRange?: DateRange
 ): Promise<any> => {
   const query = new URLSearchParams();
