@@ -202,6 +202,24 @@ export async function getSessionFromRequest(
  * @param handler The API route handler function
  * @returns A new handler function that includes authentication checks
  */
+/**
+ * Get server session for API routes
+ */
+export async function getServerSession(req: NextApiRequest, res: NextApiResponse) {
+  const pubkey = getCookie('nostr_pubkey', { req, res }) as string;
+  if (!pubkey) return null;
+  
+  try {
+    const user = await prisma.user.findUnique({
+      where: { nostrPubkey: pubkey }
+    });
+    return user;
+  } catch (error) {
+    logger.error('Server session error:', error);
+    return null;
+  }
+}
+
 export function requireAuth(
   handler: (
     req: NextApiRequest,

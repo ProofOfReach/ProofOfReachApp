@@ -9,6 +9,13 @@ export function isValidUserRole(role: string): role is UserRole {
   return ['viewer', 'advertiser', 'publisher', 'admin', 'stakeholder'].includes(role);
 }
 
+/**
+ * Filter and return only valid roles from an array of strings
+ */
+export function filterValidRoles(roles: string[]): UserRole[] {
+  return roles.filter(isValidUserRole);
+}
+
 export interface RoleCapabilities {
   canCreateAds: boolean;
   canManageOwnAds: boolean;

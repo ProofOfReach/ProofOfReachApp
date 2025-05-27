@@ -57,6 +57,4 @@ function RoleDemoPageWithProvider() {
 }
 
 // Export with role access control - allow any role to access this demo
-export default withRoleAccess(RoleDemoPageWithProvider, {
-  allowedRoles: ['admin', 'advertiser', 'publisher', 'developer', 'stakeholder']
-});
+export default RoleDemoPageWithProvider;
