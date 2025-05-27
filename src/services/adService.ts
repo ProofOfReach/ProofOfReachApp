@@ -42,7 +42,7 @@ export const adService = {
   /**
    * Create a new ad in a campaign
    */
-  async createAd(advertiserId: UserRole, campaignId: UserRole, adData: CreateAdDto): Promise<Ad> {
+  async createAd(advertiserId: string, campaignId: string, adData: CreateAdDto): Promise<Ad> {
     // Check if campaign exists and belongs to the advertiser
     const campaign = await prisma.campaign.findFirst({
       where: {
@@ -68,7 +68,7 @@ export const adService = {
   /**
    * Get an ad by ID
    */
-  async getAd(id: UserRole, advertiserId?: UserRole, campaignId?: string): Promise<Ad | null> {
+  async getAd(id: string, advertiserId?: string, campaignId?: string): Promise<Ad | null> {
     return prisma.ad.findFirst({
       where: {
         id,
@@ -84,7 +84,7 @@ export const adService = {
   /**
    * Get all ads for a specific campaign
    */
-  async getAdsByCampaign(campaignId: UserRole, advertiserId?: string): Promise<Ad[]> {
+  async getAdsByCampaign(campaignId: string, advertiserId?: string): Promise<Ad[]> {
     return prisma.ad.findMany({
       where: {
         campaignId,
@@ -124,7 +124,7 @@ export const adService = {
    * Update ad status
    */
   async updateAdStatus(
-    id: UserRole,
+    id: string,
     status: AdStatus,
     advertiserId?: string
   ): Promise<Ad> {
@@ -149,7 +149,7 @@ export const adService = {
   /**
    * Delete an ad
    */
-  async deleteAd(id: UserRole, advertiserId?: string): Promise<Ad> {
+  async deleteAd(id: string, advertiserId?: string): Promise<Ad> {
     // Check if ad exists and belongs to the advertiser
     const existingAd = await prisma.ad.findFirst({
       where: {
@@ -170,7 +170,7 @@ export const adService = {
   /**
    * Get ad metrics
    */
-  async getAdMetrics(id: UserRole, advertiserId?: string): Promise<any> {
+  async getAdMetrics(id: string, advertiserId?: string): Promise<any> {
     // Check if ad exists and belongs to the advertiser
     const existingAd = await prisma.ad.findFirst({
       where: {
