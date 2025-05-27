@@ -38,7 +38,7 @@ export const campaignService = {
   /**
    * Create a new campaign with improved status management
    */
-  async createCampaign(advertiserId: UserRole, campaignData: CreateCampaignDto & { status?: string, walletBalance?: number }): Promise<Campaign> {
+  async createCampaign(advertiserId: string, campaignData: CreateCampaignDto & { status?: string, walletBalance?: number }): Promise<Campaign> {
     // Check if we're in test mode (pubkey starts with pk_test_)
     const isTestMode = advertiserId.startsWith('pk_test_');
     
