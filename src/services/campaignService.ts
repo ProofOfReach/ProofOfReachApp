@@ -340,7 +340,7 @@ export const campaignService = {
   /**
    * Get campaign metrics
    */
-  async getCampaignMetrics(id: UserRole, advertiserId?: string): Promise<any> {
+  async getCampaignMetrics(id: string, advertiserId?: string): Promise<any> {
     // Check if we're in test mode
     const isTestMode = advertiserId && advertiserId.startsWith('pk_test_');
     

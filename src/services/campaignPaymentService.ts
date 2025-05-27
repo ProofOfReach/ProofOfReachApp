@@ -156,7 +156,7 @@ export const campaignPaymentService = {
       }
       
       // Only resume if the campaign was previously paused and now has funds
-      if (campaign.status === 'PAUSED' && campaign.advertiser?.balance ?? 0 > 0) {
+      if (campaign.status === 'PAUSED' && ((campaign.advertiser?.balance ?? 0) > 0)) {
         // Update the campaign status to ACTIVE
         const updatedCampaign = await prisma.campaign.update({
           where: { id: campaignId },
