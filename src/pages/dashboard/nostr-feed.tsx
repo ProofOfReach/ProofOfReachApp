@@ -47,7 +47,7 @@ const NostrFeedPage: NextPageWithLayout = () => {
   return (
     <>
       <Head>
-        <title>Nostr Feed | Nostr Ad Marketplace</title>
+        <title>Nostr Feed - ProofofReach</title>
         <meta name="description" content="View the latest posts from the Nostr network" />
       </Head>
       
