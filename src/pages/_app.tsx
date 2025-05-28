@@ -13,7 +13,7 @@ import { ErrorProvider } from '@/context/ErrorContext';
 import ErrorInitializer from '@/components/errors/ErrorInitializer';
 import ErrorBoundary from '@/components/ErrorBoundary';
 import { TestModeProvider } from '@/context/TestModeContext';
-import { SupabaseAuthProvider } from '@/components/auth/SupabaseAuthProvider';
+import { UnifiedAuthProvider } from '@/providers/UnifiedAuthProvider';
 import { queryClient } from '@/lib/queryClient';
 import '@/styles/globals.css';
 
@@ -40,14 +40,14 @@ export default function MyApp({ Component, pageProps }: AppPropsWithLayout) {
           {/* Initialize error handling system */}
           <ErrorInitializer />
           
-          {/* Wrap with Supabase Auth provider for enterprise authentication */}
-          <SupabaseAuthProvider>
+          {/* Wrap with Unified Auth provider for enterprise authentication */}
+          <UnifiedAuthProvider>
             {/* Wrap with TestModeProvider for app-wide availability */}
             <TestModeProvider>
               {/* Apply page-specific layout */}
               {getLayout(<Component {...pageProps} />)}
             </TestModeProvider>
-          </SupabaseAuthProvider>
+          </UnifiedAuthProvider>
         </ErrorProvider>
       </ErrorBoundary>
     </QueryClientProvider>

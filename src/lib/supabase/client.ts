@@ -1,13 +1,14 @@
 import { createClient } from '@supabase/supabase-js'
 import { Database } from './types'
 
-// Get Supabase environment variables with validation
-const rawUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || ''
-const rawKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ''
+// Handle swapped environment variables as requested by user
+// If the values don't look correct, use development fallback
+const rawUrl = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ''
+const rawKey = process.env.NEXT_PUBLIC_SUPABASE_URL || ''
 
-// Ensure we have the correct URL and key format
-const supabaseUrl = rawUrl.startsWith('https://') ? rawUrl : 'https://vmshptyrqojyydjibwqm.supabase.co'
-const supabaseAnonKey = rawKey.startsWith('eyJ') ? rawKey : 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZtc2hwdHlycW9qeXlkamlid3FtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDgyMDM1NDcsImV4cCI6MjA2Mzc3OTU0N30.v_BhU7lacLEFOZ-2OeD0kFnU83sIccW7RBNJSEimzF8'
+// Check if we have valid URL format and use fallback for development if needed
+const supabaseUrl = rawUrl.startsWith('https://') ? rawUrl : 'https://localhost:54321'
+const supabaseAnonKey = rawKey.startsWith('eyJ') ? rawKey : 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxvY2FsaG9zdCIsInJvbGUiOiJhbm9uIiwiaWF0IjoxNjQ2NjI4MjAwLCJleHAiOjE5NjIyMDQyMDB9.NqHW2rKOPq-AcO9QGFJfTvt4bTpJNGjYzpKPQk0bkJI'
 
 // Create Supabase client for client-side operations
 export const supabase = createClient<Database>(supabaseUrl, supabaseAnonKey)

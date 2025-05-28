@@ -3,10 +3,12 @@ import { useRouter } from 'next/router';
 import Layout from '../components/Layout';
 import dynamic from 'next/dynamic';
 import * as nostrLib from '../lib/nostr';
+import { useUnifiedAuth } from '../providers/UnifiedAuthProvider';
 
 // Create a clean, compact login component
 const LoginPageClient: React.FC = () => {
   const router = useRouter();
+  const { signInWithNostr, loading } = useUnifiedAuth();
   const [isMounted, setIsMounted] = useState(false);
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
@@ -45,20 +47,16 @@ const LoginPageClient: React.FC = () => {
         return;
       }
 
-      // Send login request to API
-      const response = await fetch('/api/auth/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ pubkey }),
-      });
-
-      const data = await response.json();
-
-      if (response.ok && data.token) {
-        setMessage('Login successful!');
-        // Redirect to dashboard
+      // Use unified auth provider for sign in
+      const success = await signInWithNostr(pubkey, 'viewer');
+      if (success) {
+        setMessage('Login successful! Redirecting...');
+        setTimeout(() => {
+          router.push('/dashboard');
+        }, 1000);
+      } else {
+        setError('Login failed. Please try again.');
+      }
         router.push('/dashboard');
       } else {
         setError(data.message || 'Login failed. Please try again.');
