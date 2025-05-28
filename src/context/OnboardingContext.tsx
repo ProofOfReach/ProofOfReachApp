@@ -143,13 +143,9 @@ export const OnboardingProvider: React.FC<OnboardingProviderProps> = ({ children
   const getStepsForRole = (role: string | null): OnboardingStep[] => {
     switch (role) {
       case 'viewer':
-        // Use the simplified 2-step flow for Nostr extension users
-        const hasNostrExt = checkForNostrExtension();
-        if (hasNostrExt) {
-          logger.debug(`Using simplified 2-step flow for Nostr viewer (hasNostrExtension: ${hasNostrExt})`);
-          return nostrViewerSteps;
-        }
-        logger.debug(`Using standard flow for viewer (hasNostrExtension: ${hasNostrExt})`);
+        // Always use the standard flow to ensure role selection is shown
+        // Only use simplified flow AFTER role has been confirmed as viewer
+        logger.debug(`Using standard flow for viewer (hasNostrExtension: ${checkForNostrExtension()})`);
         return standardViewerSteps;
       case 'publisher':
         return publisherSteps;
