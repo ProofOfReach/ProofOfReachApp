@@ -287,24 +287,29 @@ export const OnboardingProvider: React.FC<OnboardingProviderProps> = ({ children
     
     setIsLoading(true);
     try {
+      // Save the role to localStorage immediately for better UX
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('currentRole', selectedRole);
+        localStorage.setItem('selectedRole', selectedRole);
+        localStorage.setItem('onboardingComplete', 'true');
+        
+        // Dispatch a custom event to notify dashboard of role change
+        window.dispatchEvent(new CustomEvent('roleSwitched', {
+          detail: { from: 'viewer', to: selectedRole, timestamp: new Date().toISOString() }
+        }));
+      }
+
       // Save the role to the database using Supabase authentication
       const success = await userProfileService.updateCurrentUserRole(selectedRole as UserRole);
       
       if (success) {
-        // Save the completed role to localStorage so dashboard can detect it
-        if (typeof window !== 'undefined') {
-          localStorage.setItem('currentRole', selectedRole);
-          // Dispatch a custom event to notify dashboard of role change
-          window.dispatchEvent(new CustomEvent('roleSwitched', {
-            detail: { from: 'viewer', to: selectedRole, timestamp: new Date().toISOString() }
-          }));
-        }
-        
-        // Redirect to dashboard
-        router.push(`/dashboard?timestamp=${Date.now()}`);
+        console.log('✅ Role successfully saved to database:', selectedRole);
       } else {
-        logger.log('Failed to save role to database');
+        console.log('⚠️ Database save failed, but continuing with localStorage role');
       }
+      
+      // Always redirect to dashboard with the selected role
+      router.push(`/dashboard?role=${selectedRole}&timestamp=${Date.now()}`);
     } catch (error) {
       logger.log('Error completing onboarding:', error as Record<string, any>);
     } finally {

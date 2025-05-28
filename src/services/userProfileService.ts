@@ -181,12 +181,21 @@ class UserProfileService {
   // Method for onboarding that works with Supabase current session
   async updateCurrentUserRole(role: UserRole): Promise<boolean> {
     try {
-      // This method will be called from the client-side with Supabase session
-      // We'll make an API call to update the role
+      // Get the current Supabase session to include the auth token
+      const { supabase } = await import('../lib/supabase')
+      const { data: { session } } = await supabase.auth.getSession()
+      
+      if (!session?.access_token) {
+        console.error('No valid Supabase session found')
+        return false
+      }
+
+      // Make API call with proper authorization
       const response = await fetch('/api/user/profile', {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': `Bearer ${session.access_token}`
         },
         body: JSON.stringify({ role })
       })
