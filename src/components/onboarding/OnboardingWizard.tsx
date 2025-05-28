@@ -155,8 +155,8 @@ const OnboardingWizard: React.FC = () => {
       </div>
       
       <div className="p-6">
-        {/* Only show the progress bar and skip button if we're not on role selection and client-side rendered */}
-        {isClient && currentStep !== 'role-selection' && (
+        {/* Only show the progress bar and skip button if we're not on role selection, not on completion, and client-side rendered */}
+        {isClient && currentStep !== 'role-selection' && currentStep !== 'complete' && (
           <div>
             <OnboardingProgress />
             <div className="flex justify-end mt-1 mb-4">
@@ -173,11 +173,18 @@ const OnboardingWizard: React.FC = () => {
             </div>
           </div>
         )}
+        
+        {/* Show progress bar only on completion step without skip button */}
+        {isClient && currentStep === 'complete' && (
+          <div>
+            <OnboardingProgress />
+          </div>
+        )}
         {renderStepContent()}
       </div>
       
-      {/* Only show navigation buttons if client-side rendered to avoid hydration issues */}
-      {isClient && (
+      {/* Only show navigation buttons if client-side rendered and not on completion step */}
+      {isClient && currentStep !== 'complete' && (
         <div className="p-6 border-t border-gray-200 dark:border-gray-700 flex justify-between">
           {!isFirstStep ? (
             <button
