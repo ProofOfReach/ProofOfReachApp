@@ -223,7 +223,16 @@ marketplace.on('adClicked', (event) => {
   };
 
   const renderIntegrationDetails = () => {
-    if (!selectedIntegration) return null;
+    if (!selectedIntegration) {
+      return (
+        <div className="space-y-6">
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Integration Details</h2>
+          <p className="text-gray-600 dark:text-gray-300">
+            Please select an integration method from the previous step to continue.
+          </p>
+        </div>
+      );
+    }
 
     return (
       <div className="space-y-6">
