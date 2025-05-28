@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import '@/context/OnboardingContext';
+import { OnboardingStep } from '@/context/OnboardingContext';
 import { Code, DollarSign, Layout, Settings, CheckCircle, ToggleRight, Archive } from 'react-feather';
 import ApiKeyBox from './ApiKeyBox';
 import CodeSnippet from '@/components/ui/CodeSnippet';
-import SkipButton from '@/components/ui/SkipButton';
+import { SkipButton } from '@/components/ui/SkipButton';
 
 interface PublisherOnboardingProps {
   currentStep: OnboardingStep;
@@ -239,7 +239,7 @@ const PublisherOnboarding: React.FC<PublisherOnboardingProps> = ({
         
         {skipOnboarding && (
           <div className="mb-8">
-            <SkipButton onSkip={skipOnboarding} label="Skip this step" />
+            <SkipButton onClick={skipOnboarding} />
           </div>
         )}
         
