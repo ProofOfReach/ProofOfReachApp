@@ -464,6 +464,26 @@ args = "Onboarding Flow Test"
 task = "workflow.run"
 args = "Working Onboarding Test"
 
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Onboarding Demo Server"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "All Tests"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Test Coverage"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Development Server"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "TypeScript Check"
+
 [[workflows.workflow]]
 name = "Nostr Ad Marketplace Server"
 author = "agent"
@@ -1381,12 +1401,58 @@ task = "shell.exec"
 args = "NODE_OPTIONS='--no-warnings' npx next dev -p 5000 -H 0.0.0.0"
 waitForPort = 5000
 
+[[workflows.workflow]]
+name = "Onboarding Demo Server"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "NODE_OPTIONS='--no-warnings' npx next dev -p 5001 -H 0.0.0.0"
+waitForPort = 5001
+
+[[workflows.workflow]]
+name = "All Tests"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "npx jest --passWithNoTests --maxWorkers=2"
+
+[[workflows.workflow]]
+name = "Test Coverage"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "npx jest --coverage --passWithNoTests --maxWorkers=2"
+
+[[workflows.workflow]]
+name = "Development Server"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "NODE_OPTIONS='--no-warnings' npx next dev -p 5000 -H 0.0.0.0"
+waitForPort = 5000
+
+[[workflows.workflow]]
+name = "TypeScript Check"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "npx tsc --noEmit --skipLibCheck"
+
 [deployment]
 run = ["sh", "-c", "npm install && npx prisma generate && npm run dev"]
 
 [[ports]]
 localPort = 5000
 externalPort = 80
+
+[[ports]]
+localPort = 5001
+externalPort = 3003
 
 [[ports]]
 localPort = 5555

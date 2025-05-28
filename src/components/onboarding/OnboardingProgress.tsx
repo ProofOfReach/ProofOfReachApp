@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import '@/context/OnboardingContext';
+import { useOnboarding } from '@/context/OnboardingContext';
 import '@/components/ui/progress';
 import '@/types/role';
-import '@/context/OnboardingContext';
 import '@/lib/logger';
 
 interface OnboardingProgressProps {
