@@ -509,12 +509,15 @@ const ViewerOnboarding: React.FC<ViewerOnboardingProps> = ({
               customTotalSteps={calculatedTotalSteps}
               className="mb-2"
             />
-            <div className="flex justify-end mt-1 mb-4">
-              <SkipButton 
-                onClick={handleSkip}
-                className="viewer-skip-button"
-              />
-            </div>
+            {/* Only show skip button on steps that require input, not on completion step */}
+            {step !== 'complete' && (
+              <div className="flex justify-end mt-1 mb-4">
+                <SkipButton 
+                  onClick={handleSkip}
+                  className="viewer-skip-button"
+                />
+              </div>
+            )}
           </div>
         )}
       </div>
