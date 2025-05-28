@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useOnboarding } from '@/context/OnboardingContext';
-import '@/components/ui/progress';
-import '@/types/role';
-import '@/lib/logger';
+import { Progress } from '@/components/ui/progress';
+import { logger } from '@/lib/logger';
 
 interface OnboardingProgressProps {
   // These props allow overriding values from the context
