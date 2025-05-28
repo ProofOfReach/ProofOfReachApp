@@ -8,7 +8,7 @@ if (!supabaseUrl || !supabaseAnonKey) {
   console.warn('Supabase environment variables not found, falling back to mock client')
 }
 
-// Create Supabase client with proper validation
+// Create Supabase client with proper validation and complete mock
 export const supabase = supabaseUrl && supabaseAnonKey && supabaseUrl.startsWith('https://') 
   ? createClientComponentClient({
       supabaseUrl,
@@ -17,6 +17,13 @@ export const supabase = supabaseUrl && supabaseAnonKey && supabaseUrl.startsWith
   : {
       auth: {
         getUser: () => Promise.resolve({ data: { user: null }, error: null }),
-        signOut: () => Promise.resolve({ error: null })
+        signOut: () => Promise.resolve({ error: null }),
+        onAuthStateChange: (callback: any) => {
+          // Return a subscription object with unsubscribe method
+          return {
+            data: { subscription: { unsubscribe: () => {} } },
+            error: null
+          }
+        }
       }
     } as any
