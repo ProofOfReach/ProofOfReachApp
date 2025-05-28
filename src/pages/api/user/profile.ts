@@ -1,87 +1,59 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import { UserRole } from '../../../lib/supabase'
+import { supabase } from '../../../lib/supabase'
 import { userProfileService } from '../../../services/userProfileService'
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  if (req.method === 'GET') {
-    return getUserProfile(req, res)
-  } else if (req.method === 'POST') {
-    return createOrUpdateProfile(req, res)
-  } else if (req.method === 'PUT') {
-    return updateUserRole(req, res)
-  } else {
-    res.setHeader('Allow', ['GET', 'POST', 'PUT'])
-    return res.status(405).json({ error: 'Method not allowed' })
-  }
-}
-
-async function getUserProfile(req: NextApiRequest, res: NextApiResponse) {
   try {
-    const { userId } = req.query
-
-    if (!userId || typeof userId !== 'string') {
-      return res.status(400).json({ error: 'User ID is required' })
+    // Get the authorization header
+    const authHeader = req.headers.authorization
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+      return res.status(401).json({ error: 'No valid authorization token provided' })
     }
 
-    const profile = await userProfileService.getUserProfile(userId)
-    
-    if (!profile) {
-      return res.status(500).json({ error: 'Failed to fetch user profile' })
+    const token = authHeader.substring(7) // Remove 'Bearer ' prefix
+
+    // Verify the token with Supabase
+    const { data: { user }, error } = await supabase.auth.getUser(token)
+
+    if (error || !user) {
+      return res.status(401).json({ error: 'Invalid or expired token' })
     }
 
-    return res.status(200).json(profile)
+    if (req.method === 'GET') {
+      // Get user profile
+      const profile = await userProfileService.getUserProfile(user.id)
+      
+      if (!profile) {
+        return res.status(500).json({ error: 'Failed to fetch user profile' })
+      }
+
+      return res.status(200).json(profile)
+    } else if (req.method === 'PUT') {
+      // Update user role
+      const { role } = req.body
+
+      if (!role) {
+        return res.status(400).json({ error: 'Role is required' })
+      }
+
+      // Validate role
+      const validRoles = ['viewer', 'publisher', 'advertiser']
+      if (!validRoles.includes(role)) {
+        return res.status(400).json({ error: 'Invalid role' })
+      }
+
+      const updatedProfile = await userProfileService.updateUserRole(user.id, role)
+      
+      if (!updatedProfile) {
+        return res.status(500).json({ error: 'Failed to update user role' })
+      }
+
+      return res.status(200).json(updatedProfile)
+    } else {
+      return res.status(405).json({ error: 'Method not allowed' })
+    }
   } catch (error) {
-    console.error('Error fetching user profile:', error)
-    return res.status(500).json({ error: 'Failed to fetch user profile' })
-  }
-}
-
-async function createOrUpdateProfile(req: NextApiRequest, res: NextApiResponse) {
-  try {
-    const { userId, email, role } = req.body
-
-    if (!userId) {
-      return res.status(400).json({ error: 'User ID is required' })
-    }
-
-    if (!role || !['viewer', 'advertiser', 'publisher', 'admin', 'stakeholder'].includes(role)) {
-      return res.status(400).json({ error: 'Valid role is required' })
-    }
-
-    const profile = await userProfileService.createOrUpdateProfile(userId, email, role as UserRole)
-    
-    if (!profile) {
-      return res.status(500).json({ error: 'Failed to create/update user profile' })
-    }
-
-    return res.status(200).json(profile)
-  } catch (error) {
-    console.error('Error creating/updating user profile:', error)
-    return res.status(500).json({ error: 'Failed to create/update user profile' })
-  }
-}
-
-async function updateUserRole(req: NextApiRequest, res: NextApiResponse) {
-  try {
-    const { userId, role } = req.body
-
-    if (!userId) {
-      return res.status(400).json({ error: 'User ID is required' })
-    }
-
-    if (!role || !['viewer', 'advertiser', 'publisher', 'admin', 'stakeholder'].includes(role)) {
-      return res.status(400).json({ error: 'Valid role is required' })
-    }
-
-    const profile = await userProfileService.updateUserRole(userId, role as UserRole)
-    
-    if (!profile) {
-      return res.status(500).json({ error: 'Failed to update user role' })
-    }
-
-    return res.status(200).json(profile)
-  } catch (error) {
-    console.error('Error updating user role:', error)
-    return res.status(500).json({ error: 'Failed to update user role' })
+    console.error('Error in /api/user/profile:', error)
+    return res.status(500).json({ error: 'Internal server error' })
   }
 }

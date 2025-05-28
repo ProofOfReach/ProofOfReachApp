@@ -319,7 +319,7 @@ export const OnboardingProvider: React.FC<OnboardingProviderProps> = ({ children
       setIsLoading(true);
       try {
         // Save the role to the database using Supabase authentication
-        const success = await userProfileService.updateUserRole(role as UserRole);
+        const success = await userProfileService.updateCurrentUserRole(role as UserRole);
         
         if (success) {
           // Redirect to dashboard
