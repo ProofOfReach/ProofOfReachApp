@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Loader, AlertCircle, CheckCircle } from 'react-feather';
 import '@/context/NewRoleContextRefactored';
-import '@/hooks/useAuthRefactored';
+import { useAuth } from '@/components/auth/SupabaseAuthProvider';
 
 /**
  * Admin panel for managing roles across the system

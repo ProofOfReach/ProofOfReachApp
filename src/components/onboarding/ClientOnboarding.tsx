@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
-import '@/hooks/useAuthRefactored';
+import { useAuth } from '@/components/auth/SupabaseAuthProvider';
 import OnboardingWizard from './OnboardingWizard';
 import '@/context/OnboardingContext';
 import '@/components/Loading';
