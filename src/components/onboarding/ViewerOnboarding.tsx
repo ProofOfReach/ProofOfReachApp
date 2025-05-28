@@ -123,35 +123,22 @@ const ViewerOnboarding: React.FC<ViewerOnboardingProps> = ({
   // Map from OnboardingContext step names to local step names
   const mapOnboardingStepToLocal = useMemo(() => {
     return (step: OnboardingStep): LocalStep => {
-      // For Nostr users, we have a simplified 2-step flow: privacy -> complete
-      // IMPORTANT: We only show 2 steps to the user for Nostr users
-      if (hasNostrExtension) {
-        // Map all initial steps to privacy (step 1 of 2)
-        if (step !== 'complete') {
-          console.log("ViewerOnboarding - Simplified 2-step flow (Step 1/2: Privacy) for Nostr user");
-          return 'privacy';
-        }
-        
-        // Last step is complete (step 2 of 2)
-        console.log("ViewerOnboarding - Simplified 2-step flow (Step 2/2: Complete) for Nostr user");
-        return 'complete';
-      } else {
-        // Non-Nostr users get the regular 3-step flow: discovery -> privacy -> complete
-        if (step === 'role-selection' || step === 'preferences' || step === 'discovery') {
-          console.log("ViewerOnboarding - Regular 3-step flow (Step 1/3: Discovery)");
-          return 'discovery';
-        }
-        
-        if (step === 'privacy' || step === 'notifications') {
-          console.log("ViewerOnboarding - Regular 3-step flow (Step 2/3: Privacy)");
-          return 'privacy';
-        }
-        
-        console.log("ViewerOnboarding - Regular 3-step flow (Step 3/3: Complete)");
-        return 'complete';
+      // Standard flow for all viewers: discovery -> privacy -> complete
+      // Note: role-selection step is handled by OnboardingWizard, not ViewerOnboarding
+      if (step === 'role-selection' || step === 'preferences' || step === 'discovery') {
+        console.log("ViewerOnboarding - Standard flow (Step 1/3: Discovery)");
+        return 'discovery';
       }
+      
+      if (step === 'privacy' || step === 'notifications') {
+        console.log("ViewerOnboarding - Standard flow (Step 2/3: Privacy)");
+        return 'privacy';
+      }
+      
+      console.log("ViewerOnboarding - Standard flow (Step 3/3: Complete)");
+      return 'complete';
     };
-  }, [hasNostrExtension]);
+  }, []);
   
   // Initialize step from incoming currentStep prop
   const [step, setStep] = useState<LocalStep>(() => mapOnboardingStepToLocal(currentStep));
