@@ -57,10 +57,6 @@ const LoginPageClient: React.FC = () => {
       } else {
         setError('Login failed. Please try again.');
       }
-        router.push('/dashboard');
-      } else {
-        setError(data.message || 'Login failed. Please try again.');
-      }
     } catch (err) {
       setError('Login failed. Please try again.');
     } finally {
@@ -80,12 +76,16 @@ const LoginPageClient: React.FC = () => {
       // Store the keys securely for this new account
       nostrLib.storeTestKeys(privateKey, publicKey);
       
-      setMessage('New account keys generated! Redirecting to onboarding...');
-      
-      // Redirect to onboarding with the new keys
-      setTimeout(() => {
-        router.push('/onboarding');
-      }, 1500);
+      // Use unified auth provider for sign in with new account
+      const success = await signInWithNostr(publicKey, 'viewer');
+      if (success) {
+        setMessage('New account created! Redirecting to onboarding...');
+        setTimeout(() => {
+          router.push('/onboarding');
+        }, 1500);
+      } else {
+        setError('Failed to create new account. Please try again.');
+      }
     } catch (err) {
       setError('Failed to create new account. Please try again.');
     } finally {
@@ -104,6 +104,17 @@ const LoginPageClient: React.FC = () => {
       
       // Store test keys
       nostrLib.storeTestKeys(privateKey, publicKey);
+      
+      // Use unified auth provider for test mode sign in
+      const success = await signInWithNostr(publicKey, 'viewer');
+      if (success) {
+        setMessage('Test mode activated! Redirecting...');
+        setTimeout(() => {
+          router.push('/dashboard');
+        }, 1000);
+      } else {
+        setError('Failed to activate test mode. Please try again.');
+      }
       
       // Enable test mode
       nostrLib.enableTestMode();
