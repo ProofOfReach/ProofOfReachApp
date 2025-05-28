@@ -122,20 +122,24 @@ const ViewerOnboarding: React.FC<ViewerOnboardingProps> = ({
   // Map from OnboardingContext step names to local step names
   const mapOnboardingStepToLocal = useMemo(() => {
     return (step: OnboardingStep): LocalStep => {
-      // Standard flow for all viewers: discovery -> privacy -> complete
-      // Note: role-selection step is handled by OnboardingWizard, not ViewerOnboarding
-      if (step === 'role-selection' || step === 'discovery') {
-        console.log("ViewerOnboarding - Standard flow (Step 1/3: Discovery)");
-        return 'discovery';
-      }
+      // Standard 3-step flow for viewers: discovery -> privacy -> complete
+      console.log("ViewerOnboarding - Mapping step:", step);
       
-      if (step === 'privacy') {
-        console.log("ViewerOnboarding - Standard flow (Step 2/3: Privacy)");
-        return 'privacy';
+      switch (step) {
+        case 'role-selection':
+        case 'discovery':
+          console.log("ViewerOnboarding - Step 1/3: Discovery");
+          return 'discovery';
+        case 'privacy':
+          console.log("ViewerOnboarding - Step 2/3: Privacy");
+          return 'privacy';
+        case 'complete':
+          console.log("ViewerOnboarding - Step 3/3: Complete");
+          return 'complete';
+        default:
+          console.log("ViewerOnboarding - Unknown step, defaulting to discovery");
+          return 'discovery';
       }
-      
-      console.log("ViewerOnboarding - Standard flow (Step 3/3: Complete)");
-      return 'complete';
     };
   }, []);
   

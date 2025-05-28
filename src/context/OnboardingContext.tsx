@@ -50,13 +50,11 @@ export type OnboardingStep =
   | 'complete';
 
 // Define role-specific step sequences
-// Standard viewer steps for regular users
+// Standard viewer steps for regular users (simplified to 3 steps)
 const standardViewerSteps: OnboardingStep[] = [
   'role-selection',
-  'preferences',
   'discovery',
-  'privacy', // Removed 'notifications' step as it's not relevant for viewers using external apps
-  'feedback',
+  'privacy',
   'complete'
 ];
 
