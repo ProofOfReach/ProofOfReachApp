@@ -286,6 +286,16 @@ export const OnboardingProvider: React.FC<OnboardingProviderProps> = ({ children
       try {
         // Use client-side service to mark onboarding complete
         await clientOnboardingService.completeOnboarding(pubkeyToUse, selectedRole);
+        
+        // Save the completed role to localStorage so dashboard can detect it
+        if (typeof window !== 'undefined') {
+          localStorage.setItem('currentRole', selectedRole);
+          // Dispatch a custom event to notify dashboard of role change
+          window.dispatchEvent(new CustomEvent('roleSwitched', {
+            detail: { from: 'viewer', to: selectedRole, timestamp: new Date().toISOString() }
+          }));
+        }
+        
         // Redirect to dashboard
         router.push(`/dashboard?timestamp=${Date.now()}`);
       } catch (error) {

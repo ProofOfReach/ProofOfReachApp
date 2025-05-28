@@ -602,10 +602,10 @@ marketplace.on('adClicked', (event) => {
             
             <button
               onClick={() => {
-                // Complete onboarding first
+                // Complete onboarding and set role to publisher
                 onComplete();
-                // Navigate to publisher dashboard
-                window.location.href = '/dashboard/publisher';
+                // Navigate to main dashboard - it will detect publisher role
+                window.location.href = '/dashboard';
               }}
               className="px-8 py-3 bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-lg hover:from-purple-700 hover:to-blue-700 transition-colors font-medium"
             >
