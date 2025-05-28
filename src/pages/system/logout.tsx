@@ -3,7 +3,7 @@ import { useEffect } from 'react';
 import { NextPage } from 'next';
 import { useRouter } from 'next/router';
 import { LogOut } from 'react-feather';
-import '@/lib/roleService';
+import { RoleService } from '@/lib/roleService';
 
 /**
  * System logout page
@@ -17,12 +17,25 @@ const SystemLogout: NextPage = () => {
   useEffect(() => {
     const performLogout = async () => {
       try {
-        // First, clear local state
-        RoleService.clearLocalState();
+        // First, clear local state (manual cleanup since clearLocalState doesn't exist)
+        // RoleService.clearLocalState();
         
         // Set the prevent_auto_login flag to ensure we don't get auto logged back in
         if (typeof window !== 'undefined') {
           localStorage.setItem('prevent_auto_login', 'true');
+          
+          // Clear ALL role-related localStorage items that cause conflicts
+          localStorage.removeItem('currentRole');
+          localStorage.removeItem('userRole');
+          localStorage.removeItem('selectedRole');
+          localStorage.removeItem('nostr_test_npub');
+          localStorage.removeItem('nostr_test_nsec');
+          localStorage.removeItem('isTestMode');
+          localStorage.removeItem('auth');
+          
+          // Clear sessionStorage too
+          sessionStorage.removeItem('auth');
+          sessionStorage.removeItem('currentRole');
           
           // Clear auth-related cookies directly too
           document.cookie = 'nostr_pubkey=; path=/; max-age=0';

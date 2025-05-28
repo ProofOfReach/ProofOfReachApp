@@ -768,15 +768,16 @@ const Dashboard = () => {
 
   // Render the appropriate dashboard based on the current role
   const renderDashboard = () => {
-    // In test mode, prioritize localStorage role for consistency
+    // Use currentRole as the primary source of truth, ignore localStorage conflicts
     let effectiveRole = currentRole;
     
-    if (isTestMode && typeof window !== 'undefined') {
+    // Only use localStorage role in test mode if currentRole is not set
+    if (isTestMode && typeof window !== 'undefined' && !currentRole) {
       const storedRole = localStorage.getItem('currentRole');
       if (storedRole) {
         // Clean up the stored role to handle any quotes
         effectiveRole = storedRole.replace(/['"]/g, '') as UserRole;
-        console.debug(`Test mode active: Using localStorage role: ${effectiveRole}`);
+        console.debug(`Test mode active: Using localStorage role as fallback: ${effectiveRole}`);
       }
     }
     
@@ -784,13 +785,11 @@ const Dashboard = () => {
     const normalizedRole = effectiveRole?.toString().replace(/['"]/g, '') || 'viewer';
     
     // Add comprehensive logging to help debug role issues
-    console.debug(`Rendering dashboard for role: '${normalizedRole}' (raw: '${currentRole}')`);
-    console.debug(`Current role value: ${currentRole}`);
-    console.debug(`Local storage role: ${typeof window !== 'undefined' ? localStorage.getItem('currentRole') : 'N/A'}`);
+    console.debug(`Rendering dashboard for role: '${normalizedRole}' (currentRole: '${currentRole}')`);
+    console.debug(`localStorage role: ${typeof window !== 'undefined' ? localStorage.getItem('currentRole') : 'N/A'}`);
     
-    // Force dashboard re-render with a unique key that changes with EVERY render
-    // Remove random() to prevent excessive re-renders while still ensuring unique key per render
-    const dashboardKey = `dashboard-${normalizedRole}-${Date.now()}`;
+    // Use a stable key to prevent unnecessary re-renders
+    const dashboardKey = `dashboard-${normalizedRole}`;
 
     // Enhanced switch statement with more explicit case handling
     switch(normalizedRole) {
