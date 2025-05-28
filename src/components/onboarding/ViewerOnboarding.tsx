@@ -28,18 +28,18 @@ interface Publisher {
 
 interface ViewerOnboardingProps {
   currentStep?: OnboardingStep;
-  onComplete?: () => void;
-  showNavigation?: boolean;
+  onComplete?: () => Promise<void>;
+  skipOnboarding?: () => Promise<void>;
+  goToPreviousStep?: () => void;
   totalSteps?: number;
-  skipOnboarding?: () => void;
 }
 
 const ViewerOnboarding: React.FC<ViewerOnboardingProps> = ({ 
   currentStep = 'role-selection', 
   onComplete,
-  showNavigation = true,
-  totalSteps: propTotalSteps,
-  skipOnboarding
+  skipOnboarding,
+  goToPreviousStep: propGoToPreviousStep,
+  totalSteps: propTotalSteps
 }) => {
   // Test ID for component
   const testId = 'viewer-onboarding';
@@ -203,8 +203,8 @@ const ViewerOnboarding: React.FC<ViewerOnboardingProps> = ({
   
   console.log(`ViewerOnboarding - Standard flow (Step ${displayStepNumber}/${calculatedTotalSteps}: ${step})`);
   
-  // The main component will show its own progress indicator when showNavigation is false
-  const shouldShowProgress = showNavigation;
+  // Always show progress for standard OnboardingWizard integration
+  const shouldShowProgress = true;
 
   const handleNext = () => {
     // First update the local step
@@ -460,30 +460,6 @@ const ViewerOnboarding: React.FC<ViewerOnboardingProps> = ({
                   </li>
                 </ul>
               </div>
-              
-              {/* Go to Dashboard Button */}
-              <div className="mt-8 flex justify-center">
-                <button
-                  onClick={() => {
-                    // Complete onboarding and redirect to dashboard
-                    if (onComplete) {
-                      onComplete()
-                        .then(() => {
-                          window.location.href = '/dashboard';
-                        })
-                        .catch(() => {
-                          window.location.href = '/dashboard';
-                        });
-                    } else {
-                      window.location.href = '/dashboard';
-                    }
-                  }}
-                  className="px-6 py-3 bg-[#1a73e8] hover:bg-[#1765cc] text-white rounded-md transition font-medium"
-                  data-testid="go-to-dashboard-button"
-                >
-                  Go To Dashboard
-                </button>
-              </div>
             </div>
           </div>
         );
@@ -539,7 +515,6 @@ const ViewerOnboarding: React.FC<ViewerOnboardingProps> = ({
         )}
       </div>
       {renderStepContent()}
-      {showNavigation && renderNavButtons()}
     </div>
   );
 };
