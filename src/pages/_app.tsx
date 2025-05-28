@@ -13,7 +13,7 @@ import { ErrorProvider } from '@/context/ErrorContext';
 import ErrorInitializer from '@/components/errors/ErrorInitializer';
 import ErrorBoundary from '@/components/ErrorBoundary';
 import { TestModeProvider } from '@/context/TestModeContext';
-import { SupabaseAuthProvider } from '@/components/auth/SupabaseAuthProvider';
+// import { SupabaseAuthProvider } from '@/components/auth/SupabaseAuthProvider';
 import { queryClient } from '@/lib/queryClient';
 import '@/styles/globals.css';
 
