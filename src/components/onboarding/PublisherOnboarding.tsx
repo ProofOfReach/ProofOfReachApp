@@ -560,52 +560,6 @@ marketplace.on('adClicked', (event) => {
 
       case 4:
         return (
-          <div className="space-y-6">
-            <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Go Live</h2>
-            <p className="text-gray-600 dark:text-gray-300">
-              You're ready to start earning with real ads!
-            </p>
-            
-            <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 p-4 rounded-lg">
-              <div className="flex items-start">
-                <div className="flex-shrink-0">
-                  <svg className="h-5 w-5 text-green-400" viewBox="0 0 20 20" fill="currentColor">
-                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                  </svg>
-                </div>
-                <div className="ml-3">
-                  <h3 className="text-sm font-medium text-green-800 dark:text-green-200">
-                    Integration Complete
-                  </h3>
-                  <p className="mt-1 text-sm text-green-700 dark:text-green-300">
-                    Your website is now ready to display ads and earn Lightning payments.
-                  </p>
-                </div>
-              </div>
-            </div>
-            
-            <div className="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg">
-              <h3 className="font-semibold text-gray-900 dark:text-white mb-2">Next Steps</h3>
-              <ul className="space-y-2 text-sm text-gray-600 dark:text-gray-300">
-                <li className="flex items-center">
-                  <span className="text-green-500 mr-2">✓</span>
-                  Monitor your earnings in the Publisher Dashboard
-                </li>
-                <li className="flex items-center">
-                  <span className="text-green-500 mr-2">✓</span>
-                  Optimize ad placements for better performance
-                </li>
-                <li className="flex items-center">
-                  <span className="text-green-500 mr-2">✓</span>
-                  Access detailed analytics and reports
-                </li>
-              </ul>
-            </div>
-          </div>
-        );
-
-      case 5:
-        return (
           <div className="space-y-6 text-center">
             <div className="mx-auto w-16 h-16 bg-green-100 dark:bg-green-900/20 rounded-full flex items-center justify-center">
               <svg className="w-8 h-8 text-green-600 dark:text-green-400" viewBox="0 0 20 20" fill="currentColor">
@@ -617,6 +571,24 @@ marketplace.on('adClicked', (event) => {
             <p className="text-gray-600 dark:text-gray-300">
               Congratulations! You're now ready to start earning with the Nostr Ad Marketplace.
             </p>
+            
+            <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 p-4 rounded-lg mb-6">
+              <div className="flex items-start">
+                <div className="flex-shrink-0">
+                  <svg className="h-5 w-5 text-green-400" viewBox="0 0 20 20" fill="currentColor">
+                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                  </svg>
+                </div>
+                <div className="ml-3 text-left">
+                  <h3 className="text-sm font-medium text-green-800 dark:text-green-200">
+                    Integration Complete & Ready to Go Live
+                  </h3>
+                  <p className="mt-1 text-sm text-green-700 dark:text-green-300">
+                    Your website is now ready to display ads and earn Lightning payments.
+                  </p>
+                </div>
+              </div>
+            </div>
             
             <div className="bg-gradient-to-r from-purple-50 to-blue-50 dark:from-purple-900/20 dark:to-blue-900/20 rounded-lg p-6">
               <h3 className="font-semibold text-gray-900 dark:text-white mb-2">What's Next?</h3>
