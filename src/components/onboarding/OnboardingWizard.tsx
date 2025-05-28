@@ -91,17 +91,6 @@ const OnboardingWizard: React.FC = () => {
       return <RoleConfirmation onConfirm={handleRoleSelection} />;
     }
     
-    // Authentication step (after role selection)
-    if (currentStep === 'authentication') {
-      return (
-        <AuthenticationStep
-          selectedRole={selectedRole || 'viewer'}
-          onComplete={goToNextStep}
-          onBack={goToPreviousStep}
-        />
-      );
-    }
-    
     // Viewer onboarding steps
     if (selectedRole === 'viewer') {
       // The ViewerOnboarding component will calculate the correct total steps
