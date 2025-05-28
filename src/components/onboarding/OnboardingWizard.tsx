@@ -182,8 +182,8 @@ const OnboardingWizard: React.FC = () => {
         {renderStepContent()}
       </div>
       
-      {/* Only show navigation buttons if client-side rendered and not on completion step */}
-      {isClient && currentStep !== 'complete' && (
+      {/* Show navigation buttons if client-side rendered */}
+      {isClient && (
         <div className="p-6 border-t border-gray-200 dark:border-gray-700 flex justify-between">
           {!isFirstStep ? (
             <button

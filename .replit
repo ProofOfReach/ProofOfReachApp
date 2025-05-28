@@ -492,6 +492,18 @@ args = "Phase 1 Auth Test Server"
 task = "workflow.run"
 args = "Clean Viewer Test Server"
 
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Viewer Button Debug Server"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Fixed Viewer Button Server"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Viewer Button Test Server"
+
 [[workflows.workflow]]
 name = "Nostr Ad Marketplace Server"
 author = "agent"
@@ -1468,6 +1480,33 @@ author = "agent"
 task = "shell.exec"
 args = "NODE_OPTIONS='--no-warnings' npx next dev -p 5000 -H 0.0.0.0"
 waitForPort = 5000
+
+[[workflows.workflow]]
+name = "Viewer Button Debug Server"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "NODE_OPTIONS='--no-warnings' npx next dev -p 5000 -H 0.0.0.0"
+waitForPort = 5000
+
+[[workflows.workflow]]
+name = "Fixed Viewer Button Server"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "NODE_OPTIONS='--no-warnings' npx next dev -p 5000 -H 0.0.0.0"
+waitForPort = 5000
+
+[[workflows.workflow]]
+name = "Viewer Button Test Server"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "NODE_OPTIONS='--no-warnings' npx next dev -p 5001 -H 0.0.0.0"
+waitForPort = 5001
 
 [deployment]
 run = ["sh", "-c", "npm install && npx prisma generate && npm run dev"]
