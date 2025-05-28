@@ -307,7 +307,7 @@ marketplace.on('adClicked', (event) => {
       };
       stepNumber = stepMap[currentStep] || 1;
     } else {
-      stepNumber = currentStep;
+      stepNumber = typeof currentStep === 'number' ? currentStep : 1;
     }
     
     switch (stepNumber) {

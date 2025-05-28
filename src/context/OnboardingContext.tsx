@@ -44,14 +44,6 @@ export type OnboardingStep =
   | 'fund-account'
   | 'dashboard-intro'
   | 'complete';
-  | 'create-campaign'
-  | 'set-targeting'
-  | 'budget-schedule'
-  | 'fund-account'
-  | 'dashboard-intro'
-  // Shared steps
-  | 'role-selection'
-  | 'complete';
 
 // Define role-specific step sequences
 // Standard viewer steps for regular users (simplified to 3 steps)
