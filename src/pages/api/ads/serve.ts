@@ -113,18 +113,8 @@ async function handler(req: NextApiRequest, res: NextApiResponse, pubkey: UserRo
       filters.placement = String(placement);
     }
 
-    // Add format filter if provided
-    if (format) {
-      // If format is text-image, include both text and text-image formats
-      if (format === 'text-image') {
-        filters.OR = [
-          { format: 'text-image' },
-          { format: 'text' }
-        ];
-      } else {
-        filters.format = String(format);
-      }
-    }
+    // Note: Format filtering removed as the database schema doesn't include a format field
+    // The Ad model in the schema only has: title, description, imageUrl, targetUrl, etc.
 
     // Add targeting filters if interests provided
     if (interests.length > 0) {
