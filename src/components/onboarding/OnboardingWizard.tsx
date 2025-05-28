@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import '@/context/OnboardingContext';
+import { useOnboarding } from '@/context/OnboardingContext';
 import OnboardingProgress from './OnboardingProgress';
 import RoleConfirmation from './RoleConfirmation';
 import ViewerOnboarding from './ViewerOnboarding';

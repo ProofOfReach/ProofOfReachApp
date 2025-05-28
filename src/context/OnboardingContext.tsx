@@ -218,7 +218,7 @@ export const OnboardingProvider: React.FC<OnboardingProviderProps> = ({ children
         setSelectedRole(currentRole);
         
         // Check if onboarding was already in progress
-        const pubkeyToUse = forcePubkey || authState?.pubkey;
+        const pubkeyToUse = forcePubkey || auth?.auth?.pubkey;
         if (pubkeyToUse) {
           try {
             const status = await clientOnboardingService.getOnboardingStatus(pubkeyToUse, currentRole);
@@ -272,12 +272,12 @@ export const OnboardingProvider: React.FC<OnboardingProviderProps> = ({ children
       return;
     }
     
-    const pubkeyToUse = forcePubkey || authState?.pubkey;
+    const pubkeyToUse = forcePubkey || auth?.auth?.pubkey;
     if (pubkeyToUse && selectedRole && currentStep && !isFirstStep) {
       // Only save steps after the first step
       clientOnboardingService.updateOnboardingProgress(pubkeyToUse, selectedRole, {
         currentStep
-      }).catch(error => {
+      }).catch((error: any) => {
         logger.log('Error saving onboarding progress', { error, pubkey: pubkeyToUse, role: selectedRole });
       });
     }
@@ -285,7 +285,7 @@ export const OnboardingProvider: React.FC<OnboardingProviderProps> = ({ children
 
   // Mark onboarding as complete and redirect to the appropriate dashboard
   const completeOnboarding = async () => {
-    const pubkeyToUse = forcePubkey || authState?.pubkey;
+    const pubkeyToUse = forcePubkey || auth?.auth?.pubkey;
     if (pubkeyToUse && selectedRole) {
       setIsLoading(true);
       try {
@@ -303,7 +303,7 @@ export const OnboardingProvider: React.FC<OnboardingProviderProps> = ({ children
   
   // Skip onboarding and redirect to the appropriate dashboard
   const skipOnboarding = async () => {
-    const pubkeyToUse = forcePubkey || authState?.pubkey;
+    const pubkeyToUse = forcePubkey || auth?.auth?.pubkey;
     if (pubkeyToUse && (selectedRole || currentRole)) {
       setIsLoading(true);
       try {
