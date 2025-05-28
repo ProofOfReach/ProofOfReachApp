@@ -5,8 +5,8 @@ import RoleConfirmation from './RoleConfirmation';
 import ViewerOnboarding from './ViewerOnboarding';
 import PublisherOnboarding from './PublisherOnboarding';
 import AdvertiserOnboarding from './AdvertiserOnboarding';
-import '@/components/Loading';
-import '@/components/ui/Button';
+import Loading from '@/components/Loading';
+import { Button } from '@/components/ui/Button';
 import { ArrowLeft, ArrowRight } from 'react-feather';
 import '@/types/role';
 

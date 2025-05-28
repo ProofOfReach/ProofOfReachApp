@@ -452,6 +452,18 @@ args = "Onboarding Test Server"
 task = "workflow.run"
 args = "Updated Onboarding Server"
 
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Final Onboarding Server"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Onboarding Flow Test"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Working Onboarding Test"
+
 [[workflows.workflow]]
 name = "Nostr Ad Marketplace Server"
 author = "agent"
@@ -1335,6 +1347,33 @@ waitForPort = 5000
 
 [[workflows.workflow]]
 name = "Updated Onboarding Server"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "NODE_OPTIONS='--no-warnings' npx next dev -p 5000 -H 0.0.0.0"
+waitForPort = 5000
+
+[[workflows.workflow]]
+name = "Final Onboarding Server"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "NODE_OPTIONS='--no-warnings' npx next dev -p 5000 -H 0.0.0.0"
+waitForPort = 5000
+
+[[workflows.workflow]]
+name = "Onboarding Flow Test"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "NODE_OPTIONS='--no-warnings' npx next dev -p 5000 -H 0.0.0.0"
+waitForPort = 5000
+
+[[workflows.workflow]]
+name = "Working Onboarding Test"
 author = "agent"
 
 [[workflows.workflow.tasks]]
