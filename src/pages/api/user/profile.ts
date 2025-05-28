@@ -1,54 +1,106 @@
-import { UserRole } from "@/types/role";
-/**
- * User Profile API Endpoint
- * 
- * This endpoint demonstrates the enhanced role-based authentication middleware
- * by providing user profile information including roles and permissions.
- */
+import { NextApiRequest, NextApiResponse } from 'next'
+import { UserRole } from '../../../lib/supabase'
+import { userProfileService } from '../../../services/userProfileService'
 
-import type { NextApiRequest, NextApiResponse } from 'next';
-import { enhancedAuthMiddleware, AuthenticatedUser } from '../../../utils/enhancedAuthMiddleware';
-import { unifiedRoleService } from '../../../lib/unifiedRoleService';
-import { logger } from '../../../lib/logger';
-
-/**
- * Handler for the user profile endpoint
- */
-async function handler(
-  req: NextApiRequest, 
-  res: NextApiResponse, 
-  user: AuthenticatedUser
-) {
-  // Only allow GET requests
-  if (req.method !== 'GET') {
-    return res.status(405).json({ error: 'Method not allowed' });
-  }
-
-  try {
-    // Log the request for monitoring
-    logger.info(`Profile request for user: ${user.pubkey}`);
-
-    // Return the user profile with role information
-    return res.status(200).json({
-      profile: {
-        pubkey: user.pubkey,
-        userId: user.userId,
-        currentRole: user.currentRole,
-        availableRoles: user.roles,
-        isTestMode: user.isTestMode,
-        permissions: {
-          canManageAdvertisements: user.roles.includes('advertiser') || user.roles.includes('admin'),
-          canManagePublisherSpaces: user.roles.includes('publisher') || user.roles.includes('admin'),
-          canAccessAdminDashboard: user.roles.includes('admin'),
-          canViewStakeholderAnalytics: user.roles.includes('stakeholder') || user.roles.includes('admin')
-        }
-      }
-    });
-  } catch (error) {
-    logger.log('Error in profile endpoint:', error);
-    return res.status(500).json({ error: 'An error occurred while fetching profile' });
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+  if (req.method === 'GET') {
+    return getUserProfile(req, res)
+  } else if (req.method === 'POST') {
+    return createOrUpdateProfile(req, res)
+  } else if (req.method === 'PUT') {
+    return updateUserRole(req, res)
+  } else {
+    res.setHeader('Allow', ['GET', 'POST', 'PUT'])
+    return res.status(405).json({ error: 'Method not allowed' })
   }
 }
 
-// Export the handler with authentication middleware
-export default enhancedAuthMiddleware(handler);
+async function getUserProfile(req: NextApiRequest, res: NextApiResponse) {
+  try {
+    const { userId } = req.query
+
+    if (!userId || typeof userId !== 'string') {
+      return res.status(400).json({ error: 'User ID is required' })
+    }
+
+    const profile = await userProfileService.getUserProfile(userId)
+    
+    if (!profile) {
+      return res.status(500).json({ error: 'Failed to fetch user profile' })
+    }
+
+    return res.status(200).json(profile)
+  } catch (error) {
+    console.error('Error fetching user profile:', error)
+    return res.status(500).json({ error: 'Failed to fetch user profile' })
+  }
+}
+
+async function createOrUpdateProfile(req: NextApiRequest, res: NextApiResponse) {
+  try {
+    const { userId, email, role } = req.body
+
+    if (!userId) {
+      return res.status(400).json({ error: 'User ID is required' })
+    }
+
+    if (!role || !['viewer', 'advertiser', 'publisher', 'admin', 'stakeholder'].includes(role)) {
+      return res.status(400).json({ error: 'Valid role is required' })
+    }
+
+    const profileData = {
+      id: userId,
+      email: email || null,
+      role: role as UserRole,
+      updated_at: new Date().toISOString()
+    }
+
+    const { data, error } = await supabase
+      .from('user_profiles')
+      .upsert(profileData, { onConflict: 'id' })
+      .select()
+      .single()
+
+    if (error) {
+      throw error
+    }
+
+    return res.status(200).json(data)
+  } catch (error) {
+    console.error('Error creating/updating user profile:', error)
+    return res.status(500).json({ error: 'Failed to create/update user profile' })
+  }
+}
+
+async function updateUserRole(req: NextApiRequest, res: NextApiResponse) {
+  try {
+    const { userId, role } = req.body
+
+    if (!userId) {
+      return res.status(400).json({ error: 'User ID is required' })
+    }
+
+    if (!role || !['viewer', 'advertiser', 'publisher', 'admin', 'stakeholder'].includes(role)) {
+      return res.status(400).json({ error: 'Valid role is required' })
+    }
+
+    const { data, error } = await supabase
+      .from('user_profiles')
+      .update({ 
+        role: role as UserRole, 
+        updated_at: new Date().toISOString() 
+      })
+      .eq('id', userId)
+      .select()
+      .single()
+
+    if (error) {
+      throw error
+    }
+
+    return res.status(200).json(data)
+  } catch (error) {
+    console.error('Error updating user role:', error)
+    return res.status(500).json({ error: 'Failed to update user role' })
+  }
+}
