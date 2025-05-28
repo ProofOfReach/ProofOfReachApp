@@ -3,7 +3,7 @@ import { useRouter } from 'next/router';
 import { useAuth } from '@/hooks/useAuth';
 import { defaultUseRole } from '@/context/RoleContext';
 import { UserRole } from '@/types/role';
-import clientOnboardingService from '@/lib/clientOnboardingService';
+import { userProfileService } from '@/services/userProfileService';
 import { logger } from '@/lib/logger';
 
 // Create a safer initial value for SSR hydration
@@ -280,13 +280,17 @@ export const OnboardingProvider: React.FC<OnboardingProviderProps> = ({ children
 
   // Mark onboarding as complete and redirect to the appropriate dashboard
   const completeOnboarding = async () => {
-    const pubkeyToUse = forcePubkey || auth?.auth?.pubkey;
-    if (pubkeyToUse && selectedRole) {
-      setIsLoading(true);
-      try {
-        // Use client-side service to mark onboarding complete
-        await clientOnboardingService.completeOnboarding(pubkeyToUse, selectedRole);
-        
+    if (!selectedRole) {
+      logger.log('No role selected for onboarding completion');
+      return;
+    }
+    
+    setIsLoading(true);
+    try {
+      // Save the role to the database using Supabase authentication
+      const success = await userProfileService.updateCurrentUserRole(selectedRole as UserRole);
+      
+      if (success) {
         // Save the completed role to localStorage so dashboard can detect it
         if (typeof window !== 'undefined') {
           localStorage.setItem('currentRole', selectedRole);
@@ -298,29 +302,33 @@ export const OnboardingProvider: React.FC<OnboardingProviderProps> = ({ children
         
         // Redirect to dashboard
         router.push(`/dashboard?timestamp=${Date.now()}`);
-      } catch (error) {
-        logger.log('Error completing onboarding:', error as Record<string, any>);
-      } finally {
-        setIsLoading(false);
+      } else {
+        logger.log('Failed to save role to database');
       }
+    } catch (error) {
+      logger.log('Error completing onboarding:', error as Record<string, any>);
+    } finally {
+      setIsLoading(false);
     }
   };
   
   // Skip onboarding and redirect to the appropriate dashboard
   const skipOnboarding = async () => {
-    const pubkeyToUse = forcePubkey || auth?.auth?.pubkey;
-    if (pubkeyToUse && (selectedRole || currentRole)) {
+    const role = selectedRole || currentRole;
+    if (role) {
       setIsLoading(true);
       try {
-        const role = selectedRole || currentRole;
-        if (role) {
-          // Use client-side service to mark onboarding complete
-          await clientOnboardingService.completeOnboarding(pubkeyToUse, role as UserRole);
+        // Save the role to the database using Supabase authentication
+        const success = await userProfileService.updateUserRole(role as UserRole);
+        
+        if (success) {
           // Redirect to dashboard
           router.push(`/dashboard?timestamp=${Date.now()}`);
+        } else {
+          logger.log('Failed to save role to database during skip');
         }
       } catch (error) {
-        logger.log('Error skipping onboarding:', { error, pubkey: pubkeyToUse });
+        logger.log('Error skipping onboarding:', error as Record<string, any>);
       } finally {
         setIsLoading(false);
       }

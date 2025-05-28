@@ -177,6 +177,31 @@ class UserProfileService {
       return false
     }
   }
+
+  // Method for onboarding that works with Supabase current session
+  async updateCurrentUserRole(role: UserRole): Promise<boolean> {
+    try {
+      // This method will be called from the client-side with Supabase session
+      // We'll make an API call to update the role
+      const response = await fetch('/api/user/profile', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ role })
+      })
+
+      if (response.ok) {
+        return true
+      } else {
+        console.error('Failed to update user role:', response.statusText)
+        return false
+      }
+    } catch (error) {
+      console.error('Error updating current user role:', error)
+      return false
+    }
+  }
 }
 
 export const userProfileService = new UserProfileService()
