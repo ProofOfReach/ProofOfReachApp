@@ -140,7 +140,7 @@ async function getApiKeys(req: NextApiRequest, res: NextApiResponse, userId: str
   if (!apiKeysResult.isSuccess) {
     return res.status(500).json({ 
       error: 'Failed to retrieve API keys', 
-      details: apiKeysResult.log 
+      details: apiKeysResult.error 
     });
   }
   
@@ -152,6 +152,9 @@ async function getApiKeys(req: NextApiRequest, res: NextApiResponse, userId: str
  */
 async function createApiKey(req: NextApiRequest, res: NextApiResponse, userId: string) {
   const { name, description, expiresAt, scopes = 'read', type = 'publisher' } = req.body;
+  
+  // Convert scopes array to string if needed
+  const scopesString = Array.isArray(scopes) ? scopes.join(',') : scopes;
   
   // Validation
   if (!name) {
@@ -166,7 +169,7 @@ async function createApiKey(req: NextApiRequest, res: NextApiResponse, userId: s
     name,
     description,
     expiresAt: expiresAt ? new Date(expiresAt) : null,
-    scopes,
+    scopes: scopesString,
     userId,
     type: type as 'publisher' | 'advertiser' | 'developer'
   });
@@ -181,7 +184,7 @@ async function createApiKey(req: NextApiRequest, res: NextApiResponse, userId: s
   
   // If the creation failed completely
   if (!apiKeyResult.isSuccess) {
-    return res.status(500).json({ error: 'Failed to create API key', details: apiKeyResult.log });
+    return res.status(500).json({ error: 'Failed to create API key', details: apiKeyResult.error });
   }
   
   // Return the newly created API key with the key value (only time it's returned)

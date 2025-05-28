@@ -28,7 +28,7 @@ const PublisherOnboarding: React.FC<PublisherOnboardingProps> = ({
   skipOnboarding,
   goToNextStep 
 }) => {
-  const [selectedIntegration, setSelectedIntegration] = useState<string>('html');
+  const [selectedIntegration, setSelectedIntegration] = useState<string>('');
   const [currentUserPubkey, setCurrentUserPubkey] = useState<string>('');
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [apiKeyData, setApiKeyData] = useState<ApiKeyData>({
