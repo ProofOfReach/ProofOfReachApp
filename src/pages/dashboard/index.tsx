@@ -49,6 +49,24 @@ const Dashboard = () => {
     if (savedRole && ['viewer', 'advertiser', 'publisher', 'admin', 'stakeholder'].includes(savedRole)) {
       setCurrentRole(savedRole as UserRole);
     }
+
+    // Listen for role changes from onboarding completion
+    const handleRoleChange = (event: CustomEvent) => {
+      console.log('🎯 Dashboard detected role change event:', event.detail);
+      const newRole = event.detail?.role;
+      if (newRole && ['viewer', 'advertiser', 'publisher', 'admin', 'stakeholder'].includes(newRole)) {
+        console.log('✅ Updating dashboard to role:', newRole);
+        setCurrentRole(newRole as UserRole);
+      }
+    };
+
+    // Listen for role change events
+    window.addEventListener('roleChanged' as any, handleRoleChange);
+
+    // Cleanup
+    return () => {
+      window.removeEventListener('roleChanged' as any, handleRoleChange);
+    };
   }, [getCurrentRoleFromAllSources]);
 
   // Initialize and listen for role changes
