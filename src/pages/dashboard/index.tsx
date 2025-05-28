@@ -32,12 +32,17 @@ const Dashboard = () => {
   
   // Function to get the current role from all possible sources
   const getCurrentRoleFromAllSources = useCallback((): string => {
-    // If we're in a browser, try localStorage
+    // If we're in a browser, check localStorage first (for onboarding flow)
     if (typeof window !== 'undefined') {
-      // Try all known storage locations for role
-      const storedRole = localStorage.getItem('currentRole') || 'viewer';
+      const storedRole = localStorage.getItem('currentRole');
+      
       console.log('🔍 Dashboard checking localStorage currentRole:', storedRole);
-      return storedRole;
+      
+      // If we have a valid role from onboarding, use it
+      if (storedRole && ['advertiser', 'publisher', 'admin', 'stakeholder', 'viewer'].includes(storedRole)) {
+        console.log('✅ Using role from localStorage:', storedRole);
+        return storedRole;
+      }
     }
     
     return 'viewer';
@@ -790,12 +795,12 @@ const Dashboard = () => {
     // Use currentRole as the primary source of truth, ignore localStorage conflicts
     let effectiveRole = currentRole;
     
-    // Clear conflicting localStorage role data when we have a valid authenticated role
-    if (typeof window !== 'undefined' && currentRole) {
+    // In test mode, prioritize localStorage role over default 'viewer' role
+    if (isTestMode && typeof window !== 'undefined') {
       const storedRole = localStorage.getItem('currentRole');
-      if (storedRole && storedRole !== currentRole) {
-        console.debug(`Clearing conflicting localStorage role: ${storedRole} (authenticated role: ${currentRole})`);
-        localStorage.removeItem('currentRole');
+      if (storedRole && storedRole !== 'viewer') {
+        console.log('✅ Using localStorage role from onboarding:', storedRole);
+        effectiveRole = storedRole;
       }
     }
     
