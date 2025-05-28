@@ -367,7 +367,7 @@ marketplace.on('adClicked', (event) => {
                 onClick={() => {
                   setSelectedIntegration('sdk');
                   // Auto-proceed to next step after selection
-                  setTimeout(() => goToNextStep?.(), 500);
+                  if (goToNextStep) setTimeout(() => goToNextStep(), 500);
                 }}
               >
                 <div className="flex items-center space-x-3">
