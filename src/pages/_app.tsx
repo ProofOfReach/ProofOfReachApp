@@ -40,14 +40,11 @@ export default function MyApp({ Component, pageProps }: AppPropsWithLayout) {
           {/* Initialize error handling system */}
           <ErrorInitializer />
           
-          {/* Wrap with Supabase Auth provider for enterprise authentication */}
-          <SupabaseAuthProvider>
-            {/* Wrap with TestModeProvider for app-wide availability */}
-            <TestModeProvider>
-              {/* Apply page-specific layout */}
-              {getLayout(<Component {...pageProps} />)}
-            </TestModeProvider>
-          </SupabaseAuthProvider>
+          {/* Wrap with TestModeProvider for app-wide availability */}
+          <TestModeProvider>
+            {/* Apply page-specific layout */}
+            {getLayout(<Component {...pageProps} />)}
+          </TestModeProvider>
         </ErrorProvider>
       </ErrorBoundary>
     </QueryClientProvider>
