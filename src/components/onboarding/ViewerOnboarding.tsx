@@ -460,6 +460,30 @@ const ViewerOnboarding: React.FC<ViewerOnboardingProps> = ({
                   </li>
                 </ul>
               </div>
+              
+              {/* Go to Dashboard Button */}
+              <div className="mt-8 flex justify-center">
+                <button
+                  onClick={() => {
+                    // Complete onboarding and redirect to dashboard
+                    if (onComplete) {
+                      onComplete()
+                        .then(() => {
+                          window.location.href = '/dashboard';
+                        })
+                        .catch(() => {
+                          window.location.href = '/dashboard';
+                        });
+                    } else {
+                      window.location.href = '/dashboard';
+                    }
+                  }}
+                  className="px-6 py-3 bg-[#1a73e8] hover:bg-[#1765cc] text-white rounded-md transition font-medium"
+                  data-testid="go-to-dashboard-button"
+                >
+                  Go To Dashboard
+                </button>
+              </div>
             </div>
           </div>
         );
