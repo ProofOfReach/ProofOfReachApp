@@ -59,7 +59,6 @@ describe('ViewerOnboarding', () => {
           <OnboardingProvider>
             <ViewerOnboarding 
               onComplete={mockOnComplete} 
-              showNavigation={true} 
             />
           </OnboardingProvider>
         </RoleProvider>
@@ -79,8 +78,7 @@ describe('ViewerOnboarding', () => {
         <RoleProvider>
           <OnboardingProvider>
             <ViewerOnboarding 
-              onComplete={mockOnComplete} 
-              showNavigation={true}
+              onComplete={mockOnComplete}
             />
           </OnboardingProvider>
         </RoleProvider>

@@ -494,26 +494,6 @@ const ViewerOnboarding: React.FC<ViewerOnboardingProps> = ({
   
   return (
     <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm" data-testid="viewer-onboarding">
-      <div className="px-6 pt-6">
-        {shouldShowProgress && (
-          <div className="w-full">
-            <OnboardingProgress 
-              customCurrentStep={displayStepNumber}
-              customTotalSteps={calculatedTotalSteps}
-              className="mb-2"
-            />
-            {/* Only show skip button on steps that require input, not on completion step */}
-            {step !== 'complete' && (
-              <div className="flex justify-end mt-1 mb-4">
-                <SkipButton 
-                  onClick={handleSkip}
-                  className="viewer-skip-button"
-                />
-              </div>
-            )}
-          </div>
-        )}
-      </div>
       {renderStepContent()}
     </div>
   );
