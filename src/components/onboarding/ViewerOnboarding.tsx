@@ -224,15 +224,8 @@ const ViewerOnboarding: React.FC<ViewerOnboardingProps> = ({
         break;
         
       case 'complete':
-        console.log('ViewerOnboarding - Completing onboarding process');
-        // Use setTimeout to ensure the state update has time to propagate
-        // This helps with test stability and real-world scenarios
-        setTimeout(() => {
-          goToNextStep();
-          if (onComplete) {
-            onComplete();
-          }
-        }, 100);
+        console.log('ViewerOnboarding - Showing completion step');
+        // Don't auto-complete, let the user see the completion page and click the button
         break;
         
       default:
