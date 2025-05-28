@@ -79,6 +79,23 @@ export function useNostrAuth(): NostrAuthState {
       
       // Fetch or create user profile
       await fetchUserProfile(pubkey)
+      
+      // Check for pending role from onboarding and apply it
+      if (typeof window !== 'undefined') {
+        const pendingRole = localStorage.getItem('pendingRole');
+        if (pendingRole && ['viewer', 'publisher', 'advertiser'].includes(pendingRole)) {
+          console.log('🔄 Applying pending role from onboarding:', pendingRole);
+          // Set isAuthenticated true so updateUserRole can work
+          setIsAuthenticated(true)
+          const success = await updateUserRole(pendingRole as UserRole);
+          if (success) {
+            console.log('✅ Pending role successfully applied:', pendingRole);
+            localStorage.removeItem('pendingRole');
+          }
+        }
+      }
+      
+      setIsAuthenticated(true)
       return true
     } catch (error) {
       logger.log('Error authenticating with pubkey:', error)

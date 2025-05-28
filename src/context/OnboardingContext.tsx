@@ -295,12 +295,21 @@ export const OnboardingProvider: React.FC<OnboardingProviderProps> = ({ children
       }
 
       // Save the role to the database using unified authentication
-      const success = await auth.updateUserRole(selectedRole as UserRole);
-      
-      if (success) {
-        console.log('✅ Role successfully saved to database:', selectedRole);
+      // If not authenticated yet, the role will be saved when user connects Nostr
+      if (auth.isAuthenticated && auth.user) {
+        const success = await auth.updateUserRole(selectedRole as UserRole);
+        
+        if (success) {
+          console.log('✅ Role successfully saved to database:', selectedRole);
+        } else {
+          console.log('⚠️ Database save failed, but continuing with localStorage role');
+        }
       } else {
-        console.log('⚠️ Database save failed, but continuing with localStorage role');
+        console.log('ℹ️ User not authenticated yet, role will be saved when they connect Nostr');
+        // Save intended role for when authentication happens
+        if (typeof window !== 'undefined') {
+          localStorage.setItem('pendingRole', selectedRole);
+        }
       }
       
       // Always redirect to dashboard with the selected role
