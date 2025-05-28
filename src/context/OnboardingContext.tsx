@@ -123,13 +123,17 @@ export const OnboardingProvider: React.FC<OnboardingProviderProps> = ({ children
   const auth = useAuth();
   const isLoggedIn = !!auth?.auth;
   const roleContext = defaultUseRole();
-  // Safely access currentRole with a fallback to prevent hydration errors
-  const currentRole = roleContext?.currentRole || 'viewer';
+  // Safely access role with a fallback to prevent hydration errors
+  const currentRole = roleContext?.role || 'viewer';
   const router = useRouter();
   
   // For SSR compatibility, use basic initial values
   const [currentStep, setCurrentStep] = useState<OnboardingStep>('role-selection');
-  const [selectedRole, setSelectedRole] = useState<UserRole | null>(initialRole || null);
+  const [selectedRole, setSelectedRole] = useState<UserRole | null>(
+    (initialRole && ['viewer', 'publisher', 'advertiser', 'admin', 'stakeholder'].includes(initialRole)) 
+      ? initialRole as UserRole 
+      : null
+  );
   const [isLoading, setIsLoading] = useState<boolean>(false);
   
   // Initialize steps based on the current role or selected role

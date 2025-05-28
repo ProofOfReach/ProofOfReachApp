@@ -2,7 +2,7 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { useOnboarding } from '@/context/OnboardingContext';
 import OnboardingProgress from '@/components/onboarding/OnboardingProgress';
 import { CheckCircle, Search, ChevronRight, ChevronLeft, Check } from 'react-feather';
-import { Switch } from '@/components/ui/Switch';
+import { Switch } from '@/components/ui/switch';
 import { SkipButton } from '@/components/ui/SkipButton';
 import ProfileAvatar from '@/components/ProfileAvatar';
 
@@ -361,7 +361,6 @@ const ViewerOnboarding: React.FC<ViewerOnboardingProps> = ({
                       <p className="text-xs text-gray-500 mt-1">Allow advertisers to target based on your country and state only (no precise location)</p>
                     </div>
                     <Switch
-                      id="shareLocation"
                       checked={privacySettings.shareLocation}
                       onCheckedChange={() => handlePrivacySettingChange('shareLocation')}
                       data-testid="share-location-toggle"
@@ -377,7 +376,6 @@ const ViewerOnboarding: React.FC<ViewerOnboardingProps> = ({
                       <p className="text-xs text-gray-500 mt-1">Allow ads based on your interests and preferences</p>
                     </div>
                     <Switch
-                      id="shareInterests"
                       checked={privacySettings.shareInterests}
                       onCheckedChange={() => handlePrivacySettingChange('shareInterests')}
                       data-testid="share-interests-toggle"
@@ -392,7 +390,6 @@ const ViewerOnboarding: React.FC<ViewerOnboardingProps> = ({
                       <p className="text-xs text-gray-500 mt-1">Allow limited tracking of content you view</p>
                     </div>
                     <Switch
-                      id="shareBrowsing"
                       checked={privacySettings.shareBrowsing}
                       onCheckedChange={() => handlePrivacySettingChange('shareBrowsing')}
                       data-testid="share-browsing-toggle"
@@ -407,7 +404,6 @@ const ViewerOnboarding: React.FC<ViewerOnboardingProps> = ({
                       <p className="text-xs text-gray-500 mt-1">Allow age-appropriate content targeting</p>
                     </div>
                     <Switch
-                      id="shareAge"
                       checked={privacySettings.shareAge}
                       onCheckedChange={() => handlePrivacySettingChange('shareAge')}
                       data-testid="share-age-toggle"
