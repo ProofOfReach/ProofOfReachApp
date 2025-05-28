@@ -202,9 +202,18 @@ export const OnboardingProvider: React.FC<OnboardingProviderProps> = ({ children
         setCurrentStep(steps[1]); // Skip to the first role-specific step
       }
       
-      // If coming back to onboarding with a current role but no selected role yet, initialize with that role
-      if (!selectedRole && currentRole && currentRole !== 'admin') {
-        setSelectedRole(currentRole);
+      // Always start with role selection - never auto-assign roles to ensure explicit user choice
+      // This follows best practices by not making assumptions about user intent
+      if (!selectedRole) {
+        // Ensure we're on the role selection step
+        if (currentStep !== 'role-selection') {
+          setCurrentStep('role-selection');
+        }
+        return; // Exit early to prevent automatic role assignment
+      }
+      
+      // Only proceed with role-specific logic if a role was explicitly selected
+      if (selectedRole && currentRole && currentRole !== 'admin') {
         
         // Check if onboarding was already in progress
         const pubkeyToUse = forcePubkey || auth?.auth?.pubkey;
