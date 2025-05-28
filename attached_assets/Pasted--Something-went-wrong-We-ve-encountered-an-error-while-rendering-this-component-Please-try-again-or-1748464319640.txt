@@ -1,0 +1,34 @@
+
+Something went wrong
+We've encountered an error while rendering this component. Please try again or contact support if the problem persists.
+
+Technical Details
+ReferenceError: SkipButton is not defined
+
+Component Stack
+
+    at AdvertiserOnboarding (webpack-internal:///(pages-dir-browser)/./src/components/onboarding/AdvertiserOnboarding.tsx:18:11)
+    at div
+    at div
+    at OnboardingWizard (webpack-internal:///(pages-dir-browser)/./src/components/onboarding/OnboardingWizard.tsx:35:84)
+    at OnboardingProvider (webpack-internal:///(pages-dir-browser)/./src/context/OnboardingContext.tsx:74:11)
+    at div
+    at div
+    at main
+    at div
+    at Layout (webpack-internal:///(pages-dir-browser)/./src/components/Layout.tsx:52:11)
+    at OnboardingPage
+    at TestModeProvider (webpack-internal:///(pages-dir-browser)/./src/context/TestModeContext.tsx:46:11)
+    at SupabaseAuthProvider (webpack-internal:///(pages-dir-browser)/./src/components/auth/SupabaseAuthProvider.tsx:26:11)
+    at ErrorProvider (webpack-internal:///(pages-dir-browser)/./src/context/ErrorContext.tsx:32:11)
+    at ErrorBoundary (webpack-internal:///(pages-dir-browser)/./src/components/ErrorBoundary.tsx:194:9)
+    at QueryClientProvider (webpack-internal:///(pages-dir-browser)/./node_modules/@tanstack/react-query/build/modern/QueryClientProvider.js:28:3)
+    at MyApp (webpack-internal:///(pages-dir-browser)/./src/pages/_app.tsx:33:11)
+    at PathnameContextProviderAdapter (webpack-internal:///(pages-dir-browser)/./node_modules/next/dist/shared/lib/router/adapters.js:81:11)
+    at PagesDevOverlayErrorBoundary (webpack-internal:///(pages-dir-browser)/./node_modules/next/dist/client/components/react-dev-overlay/pages/pages-dev-overlay-error-boundary.js:32:9)
+    at PagesDevOverlay (webpack-internal:///(pages-dir-browser)/./node_modules/next/dist/client/components/react-dev-overlay/pages/pages-dev-overlay.js:18:11)
+    at Container (webpack-internal:///(pages-dir-browser)/./node_modules/next/dist/client/index.js:80:1)
+    at AppContainer (webpack-internal:///(pages-dir-browser)/./node_modules/next/dist/client/index.js:188:11)
+    at Root (webpack-internal:///(pages-dir-browser)/./node_modules/next/dist/client/index.js:417:11)
+Try Again
+Welcome to Proof Of Reach - Let's Get Started

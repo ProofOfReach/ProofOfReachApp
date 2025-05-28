@@ -1,6 +1,6 @@
 import React from 'react';
-import '@/context/OnboardingContext';
-import '@/components/ui/SkipButton';
+import { OnboardingStep } from '@/context/OnboardingContext';
+import { SkipButton } from '@/components/ui/SkipButton';
 import { 
   CheckCircle, 
   Target, 
