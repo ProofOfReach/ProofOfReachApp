@@ -771,6 +771,15 @@ const Dashboard = () => {
     // Use currentRole as the primary source of truth, ignore localStorage conflicts
     let effectiveRole = currentRole;
     
+    // Clear conflicting localStorage role data when we have a valid authenticated role
+    if (typeof window !== 'undefined' && currentRole) {
+      const storedRole = localStorage.getItem('currentRole');
+      if (storedRole && storedRole !== currentRole) {
+        console.debug(`Clearing conflicting localStorage role: ${storedRole} (authenticated role: ${currentRole})`);
+        localStorage.removeItem('currentRole');
+      }
+    }
+    
     // Only use localStorage role in test mode if currentRole is not set
     if (isTestMode && typeof window !== 'undefined' && !currentRole) {
       const storedRole = localStorage.getItem('currentRole');
@@ -786,7 +795,6 @@ const Dashboard = () => {
     
     // Add comprehensive logging to help debug role issues
     console.debug(`Rendering dashboard for role: '${normalizedRole}' (currentRole: '${currentRole}')`);
-    console.debug(`localStorage role: ${typeof window !== 'undefined' ? localStorage.getItem('currentRole') : 'N/A'}`);
     
     // Use a stable key to prevent unnecessary re-renders
     const dashboardKey = `dashboard-${normalizedRole}`;
