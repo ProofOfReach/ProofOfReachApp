@@ -133,19 +133,11 @@ export const OnboardingProvider: React.FC<OnboardingProviderProps> = ({ children
   const [isLoading, setIsLoading] = useState<boolean>(false);
   
   // Initialize steps based on the current role or selected role
-  // Import hasNostrExtension function to detect Nostr extension
-  const checkForNostrExtension = () => {
-    // Only run in browser environment
-    if (typeof window === 'undefined') return false;
-    return !!window?.nostr;
-  };
-
   const getStepsForRole = (role: string | null): OnboardingStep[] => {
     switch (role) {
       case 'viewer':
         // Always use the standard flow to ensure role selection is shown
-        // Only use simplified flow AFTER role has been confirmed as viewer
-        logger.debug(`Using standard flow for viewer (hasNostrExtension: ${checkForNostrExtension()})`);
+        logger.debug(`Using standard flow for viewer`);
         return standardViewerSteps;
       case 'publisher':
         return publisherSteps;
@@ -157,7 +149,8 @@ export const OnboardingProvider: React.FC<OnboardingProviderProps> = ({ children
   };
   
   // Define these variables in a way that's safe for server-side rendering
-  const roleSpecificSteps = getStepsForRole(selectedRole || currentRole);
+  // Only use currentRole if selectedRole is explicitly set, otherwise start with role selection
+  const roleSpecificSteps = getStepsForRole(selectedRole);
   const currentStepIndex = Math.max(0, roleSpecificSteps.indexOf(currentStep));
   const totalSteps = roleSpecificSteps.length;
   const progress = Math.round(((currentStepIndex + 1) / totalSteps) * 100);

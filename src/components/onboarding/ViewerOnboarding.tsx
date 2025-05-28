@@ -232,14 +232,9 @@ const ViewerOnboarding: React.FC<ViewerOnboardingProps> = ({
         break;
         
       default:
-        // For users with Nostr extension, always go to privacy instead of discovery
-        if (hasNostrExtension) {
-          console.log('ViewerOnboarding - Nostr user: Starting with Privacy step');
-          setStep('privacy');
-        } else {
-          console.log('ViewerOnboarding - Regular user: Starting with Discovery step');
-          setStep('discovery');
-        }
+        // All users start with discovery step in the standard flow
+        console.log('ViewerOnboarding - Starting with Discovery step');
+        setStep('discovery');
     }
   };
 
@@ -248,17 +243,10 @@ const ViewerOnboarding: React.FC<ViewerOnboardingProps> = ({
     
     switch (step) {
       case 'privacy':
-        if (hasNostrExtension) {
-          // For Nostr users with a 2-step flow, going back from privacy means 
-          // going back to role selection (outside this component)
-          console.log('ViewerOnboarding - Nostr user going back from Privacy to role selection');
-          goToPreviousStep();
-        } else {
-          // For regular users, go back to discovery
-          console.log('ViewerOnboarding - Regular user going back from Privacy to Discovery');
-          setStep('discovery');
-          goToPreviousStep();
-        }
+        // Standard flow: go back to discovery step
+        console.log('ViewerOnboarding - Going back from Privacy to Discovery');
+        setStep('discovery');
+        goToPreviousStep();
         break;
       
       case 'complete':
