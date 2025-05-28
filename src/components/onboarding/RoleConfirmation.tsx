@@ -1,18 +1,18 @@
 import React, { useEffect, useState } from 'react';
-import '@/types/role';
-import '@/context/RoleContext';
-import '@/context/OnboardingContext';
-import '@/hooks/useAuth';
+import { UserRole } from '@/types/role';
+import { useRole } from '@/context/RoleContext';
+import { useOnboarding } from '@/context/OnboardingContext';
+import { useAuth } from '@/hooks/useAuth';
 import { Users, Radio, Package, Shield, Key } from 'react-feather';
-import '@/lib/logger';
-import '@/lib/nostrProfile';
+import { logger } from '@/lib/logger';
+import { getNostrProfile } from '@/lib/nostrProfile';
 
 type RoleConfirmationProps = {
   onConfirm?: (role: string) => void;
 };
 
 const RoleConfirmation: React.FC<RoleConfirmationProps> = ({ onConfirm }) => {
-  const roleContext = defaultUseRole();
+  const roleContext = useRole();
   const { setSelectedRole, selectedRole } = useOnboarding();
   const { auth } = useAuth();
   
