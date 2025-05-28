@@ -1,5 +1,6 @@
 import React from 'react';
-import { Target } from 'react-feather';
+import { Target, CheckCircle } from 'react-feather';
+import { useOnboarding } from '@/context/OnboardingContext';
 
 interface AdvertiserOnboardingProps {
   currentStep: string;
@@ -12,6 +13,8 @@ const AdvertiserOnboarding: React.FC<AdvertiserOnboardingProps> = ({
   skipOnboarding,
   goToPreviousStep
 }) => {
+  const { goToNextStep, completeOnboarding } = useOnboarding();
+
   // Content for the streamlined advertiser onboarding flow
   const renderStepContent = () => {
     switch (currentStep) {
@@ -57,7 +60,10 @@ const AdvertiserOnboarding: React.FC<AdvertiserOnboardingProps> = ({
             </div>
 
             <div className="flex justify-center mt-8">
-              <button className="bg-orange-500 hover:bg-orange-600 text-white px-8 py-3 rounded-lg font-medium transition-colors">
+              <button 
+                onClick={goToNextStep}
+                className="bg-orange-500 hover:bg-orange-600 text-white px-8 py-3 rounded-lg font-medium transition-colors"
+              >
                 Continue to Dashboard
               </button>
             </div>
@@ -68,6 +74,41 @@ const AdvertiserOnboarding: React.FC<AdvertiserOnboardingProps> = ({
                 className="text-gray-500 hover:text-gray-700 text-sm underline"
               >
                 Skip setup - go to dashboard
+              </button>
+            </div>
+          </div>
+        );
+
+      case 'complete':
+        return (
+          <div className="space-y-6">
+            <div className="text-center">
+              <CheckCircle className="w-16 h-16 text-green-500 mx-auto mb-6" />
+              <h2 className="text-3xl font-semibold text-gray-900 dark:text-white mb-4">
+                You're All Set!
+              </h2>
+              <p className="text-lg text-gray-600 dark:text-gray-300 mb-6">
+                Welcome to your advertiser dashboard. Let's create your first campaign!
+              </p>
+              
+              <div className="bg-orange-50 dark:bg-orange-900/20 border border-orange-200 dark:border-orange-800 rounded-lg p-6 mb-6">
+                <h3 className="font-semibold text-orange-800 dark:text-orange-200 mb-2">
+                  Quick Start Tips:
+                </h3>
+                <ul className="text-sm text-orange-700 dark:text-orange-300 space-y-1 text-left">
+                  <li>• Create your first campaign using the "New Campaign" button</li>
+                  <li>• Set your budget and targeting preferences</li>
+                  <li>• Monitor performance in real-time</li>
+                </ul>
+              </div>
+            </div>
+
+            <div className="flex justify-center">
+              <button 
+                onClick={() => completeOnboarding()}
+                className="bg-orange-500 hover:bg-orange-600 text-white px-8 py-3 rounded-lg font-medium transition-colors"
+              >
+                Go to Dashboard
               </button>
             </div>
           </div>

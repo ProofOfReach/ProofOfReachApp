@@ -75,14 +75,11 @@ const publisherSteps: OnboardingStep[] = [
   'complete-go-live'
 ];
 
+// Streamlined 3-step advertiser flow for quick onboarding
 const advertiserSteps: OnboardingStep[] = [
   'role-selection',
-  'create-campaign',
-  'set-targeting',
-  'budget-schedule',
-  'fund-account',
-  'dashboard-intro',
-  'complete'
+  'create-campaign',    // Business name + advertising goal
+  'complete'           // Welcome to dashboard
 ];
 
 type OnboardingContextType = {
