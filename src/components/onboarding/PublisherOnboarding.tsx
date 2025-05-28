@@ -285,7 +285,45 @@ marketplace.on('adClicked', (event) => {
   };
 
   const renderStepContent = () => {
-    switch (currentStep) {
+    // Debug: Log the currentStep value to understand the issue
+    console.log('PublisherOnboarding currentStep:', currentStep, typeof currentStep);
+    
+    // Convert string step names to numbers for the switch statement
+    let stepNumber;
+    if (typeof currentStep === 'string') {
+      switch (currentStep) {
+        case 'choose-integration':
+          stepNumber = 1;
+          break;
+        case 'integration-details':
+          stepNumber = 2;
+          break;
+        case 'api-key':
+          stepNumber = 3;
+          break;
+        case 'ad-slot-config':
+          stepNumber = 4;
+          break;
+        case 'setup-wallet':
+          stepNumber = 5;
+          break;
+        case 'enable-test-mode':
+          stepNumber = 6;
+          break;
+        case 'go-live':
+          stepNumber = 7;
+          break;
+        case 'complete':
+          stepNumber = 8;
+          break;
+        default:
+          stepNumber = 1; // Default to first step
+      }
+    } else {
+      stepNumber = currentStep;
+    }
+    
+    switch (stepNumber) {
       case 1:
         return (
           <div className="space-y-6">
