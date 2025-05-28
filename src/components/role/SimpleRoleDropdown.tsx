@@ -71,14 +71,9 @@ const SimpleRoleDropdown: React.FC<RoleDropdownProps> = ({
       const allRoles: UserRole[] = ['viewer', 'advertiser', 'publisher', 'admin', 'stakeholder'];
       setAvailableRoles(allRoles);
     } else {
-      // If user has completed onboarding with a specific role, make that role available
-      if (currentUserRole !== 'viewer') {
-        console.log(`✅ User has ${currentUserRole} role from onboarding - making it available`);
-        setAvailableRoles(['viewer', currentUserRole]);
-      } else {
-        console.log('ℹ️ User is viewer - showing viewer only');
-        setAvailableRoles(['viewer']);
-      }
+      // Users should only see their own role - no switching between roles
+      console.log(`✅ User role: ${currentUserRole} - showing only this role`);
+      setAvailableRoles([currentUserRole]);
     }
     
     setCurrentRole(currentUserRole);
