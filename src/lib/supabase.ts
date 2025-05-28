@@ -1,21 +1,24 @@
 import { createClient } from '@supabase/supabase-js'
 
-// Ensure we get the correct environment variables
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || ''
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ''
+// Fix swapped environment variables (URL and KEY were reversed)
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ''
+const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_URL || ''
 
-// Validate environment variables
+// Create Supabase client with proper fallback
+let supabaseClient
 if (!supabaseUrl || !supabaseAnonKey) {
   console.warn('Supabase environment variables not configured properly')
   // Create a dummy client that won't break the app
-  export const supabase = createClient('https://placeholder.supabase.co', 'placeholder-key', {
+  supabaseClient = createClient('https://placeholder.supabase.co', 'placeholder-key', {
     auth: {
       persistSession: false,
     }
   })
 } else {
-  export const supabase = createClient(supabaseUrl, supabaseAnonKey)
+  supabaseClient = createClient(supabaseUrl, supabaseAnonKey)
 }
+
+export const supabase = supabaseClient
 
 export type UserRole = 'viewer' | 'advertiser' | 'publisher' | 'admin' | 'stakeholder'
 
