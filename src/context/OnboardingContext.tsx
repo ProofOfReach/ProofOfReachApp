@@ -1,10 +1,10 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { useRouter } from 'next/router';
-import '@/hooks/useAuthRefactored';
-import '@/types/role';
-import '@/context/RoleContext';
-import '@/lib/clientOnboardingService';
-import '@/lib/logger';
+import { useAuth } from '@/hooks/useAuth';
+import { defaultUseRole } from '@/context/RoleContext';
+import { UserRole } from '@/types/role';
+import clientOnboardingService from '@/lib/clientOnboardingService';
+import { logger } from '@/lib/logger';
 
 // Create a safer initial value for SSR hydration
 const defaultContextValue = {
@@ -120,7 +120,8 @@ type OnboardingProviderProps = {
 };
 
 export const OnboardingProvider: React.FC<OnboardingProviderProps> = ({ children, forcePubkey, initialRole }) => {
-  const { authState } = useAuthRefactored() as any;
+  const auth = useAuth();
+  const isLoggedIn = !!auth?.auth;
   const roleContext = defaultUseRole();
   // Safely access currentRole with a fallback to prevent hydration errors
   const currentRole = roleContext?.currentRole || 'viewer';
@@ -239,7 +240,7 @@ export const OnboardingProvider: React.FC<OnboardingProviderProps> = ({ children
     };
     
     initializeOnboarding();
-  }, [selectedRole, currentStep, currentRole, authState, router, forcePubkey]);
+  }, [selectedRole, currentStep, currentRole, isLoggedIn, router, forcePubkey]);
   
   // Handle role selection
   const handleRoleSelection = (role: string) => {
@@ -280,7 +281,7 @@ export const OnboardingProvider: React.FC<OnboardingProviderProps> = ({ children
         logger.log('Error saving onboarding progress', { error, pubkey: pubkeyToUse, role: selectedRole });
       });
     }
-  }, [currentStep, selectedRole, authState, forcePubkey, isFirstStep]);
+  }, [currentStep, selectedRole, isLoggedIn, forcePubkey, isFirstStep]);
 
   // Mark onboarding as complete and redirect to the appropriate dashboard
   const completeOnboarding = async () => {
