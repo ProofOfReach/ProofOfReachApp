@@ -198,7 +198,7 @@ const OnboardingWizard: React.FC = () => {
             <div></div> // Empty div to maintain flex spacing
           )}
           
-          {isLastStep ? (
+          {(isLastStep || currentStep === 'complete') ? (
             <button
               onClick={() => {
                 // First complete the onboarding process on the server
