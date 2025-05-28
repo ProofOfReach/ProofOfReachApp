@@ -1,8 +1,8 @@
 import { createClient } from '@supabase/supabase-js'
 
-// Fix swapped environment variables (URL and KEY were reversed)
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ''
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_URL || ''
+// Get the correct environment variables (URL should be URL, KEY should be KEY)
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || ''
+const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ''
 
 // Create Supabase client with proper fallback
 let supabaseClient
