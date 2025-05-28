@@ -809,9 +809,6 @@ const Dashboard = () => {
       case 'viewer':
         console.debug('Rendering VIEWER dashboard');
         return <div key={dashboardKey} data-testid="viewer-dashboard">{renderViewerDashboard()}</div>;
-      case 'viewer': // Handle the legacy 'viewer' role as 'viewer'
-        console.debug('Rendering legacy USER (as viewer) dashboard');
-        return <div key={dashboardKey} data-testid="viewer-dashboard">{renderViewerDashboard()}</div>;
       default:
         console.debug(`Unknown role '${normalizedRole}', defaulting to viewer dashboard`);
         return <div key={dashboardKey} data-testid="default-viewer-dashboard">{renderViewerDashboard()}</div>; // Default to viewer dashboard
