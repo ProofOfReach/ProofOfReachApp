@@ -448,6 +448,10 @@ args = "Clean Development Server"
 task = "workflow.run"
 args = "Onboarding Test Server"
 
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Updated Onboarding Server"
+
 [[workflows.workflow]]
 name = "Nostr Ad Marketplace Server"
 author = "agent"
@@ -1322,6 +1326,15 @@ waitForPort = 5000
 
 [[workflows.workflow]]
 name = "Onboarding Test Server"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "NODE_OPTIONS='--no-warnings' npx next dev -p 5000 -H 0.0.0.0"
+waitForPort = 5000
+
+[[workflows.workflow]]
+name = "Updated Onboarding Server"
 author = "agent"
 
 [[workflows.workflow.tasks]]
