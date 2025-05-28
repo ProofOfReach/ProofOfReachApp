@@ -246,7 +246,9 @@ export const OnboardingProvider: React.FC<OnboardingProviderProps> = ({ children
   
   // Handle role selection
   const handleRoleSelection = (role: string) => {
-    setSelectedRole(role);
+    if (['viewer', 'publisher', 'advertiser', 'admin', 'stakeholder'].includes(role)) {
+      setSelectedRole(role as UserRole);
+    }
     const steps = getStepsForRole(role);
     setCurrentStep(steps[1]); // Skip to the first step after role selection
   };
@@ -296,7 +298,7 @@ export const OnboardingProvider: React.FC<OnboardingProviderProps> = ({ children
         // Redirect to dashboard
         router.push(`/dashboard?timestamp=${Date.now()}`);
       } catch (error) {
-        logger.log('Error completing onboarding:', error);
+        logger.log('Error completing onboarding:', error as Record<string, any>);
       } finally {
         setIsLoading(false);
       }

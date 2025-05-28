@@ -124,12 +124,12 @@ const ViewerOnboarding: React.FC<ViewerOnboardingProps> = ({
     return (step: OnboardingStep): LocalStep => {
       // Standard flow for all viewers: discovery -> privacy -> complete
       // Note: role-selection step is handled by OnboardingWizard, not ViewerOnboarding
-      if (step === 'role-selection' || step === 'preferences' || step === 'discovery') {
+      if (step === 'role-selection' || step === 'discovery') {
         console.log("ViewerOnboarding - Standard flow (Step 1/3: Discovery)");
         return 'discovery';
       }
       
-      if (step === 'privacy' || step === 'notifications') {
+      if (step === 'privacy') {
         console.log("ViewerOnboarding - Standard flow (Step 2/3: Privacy)");
         return 'privacy';
       }
