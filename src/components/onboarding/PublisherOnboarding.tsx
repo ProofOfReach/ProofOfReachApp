@@ -42,13 +42,27 @@ const PublisherOnboarding: React.FC<PublisherOnboardingProps> = ({
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        // Generate a demo pubkey for onboarding
-        const demoPubkey = `demo_${Math.random().toString(36).substr(2, 16)}`;
-        setCurrentUserPubkey(demoPubkey);
+        // Try to get actual user pubkey from authentication context
+        // For real publishers, we need authentic user identification
+        const response = await fetch('/api/auth/user');
+        if (response.ok) {
+          const userData = await response.json();
+          if (userData.pubkey) {
+            setCurrentUserPubkey(userData.pubkey);
+            return;
+          }
+        }
+        
+        // If no authenticated user, generate a temporary publisher ID
+        // This will be replaced when the user properly authenticates
+        const tempPubkey = `pub_${Date.now()}_${Math.random().toString(36).substr(2, 12)}`;
+        setCurrentUserPubkey(tempPubkey);
+        console.log('Using temporary publisher ID for onboarding:', tempPubkey);
       } catch (error) {
         console.error('Error fetching user data:', error);
-        // Set a fallback pubkey for demo purposes
-        setCurrentUserPubkey('demo_fallback_pubkey');
+        // Set a fallback pubkey with timestamp for uniqueness
+        const fallbackPubkey = `pub_fallback_${Date.now()}`;
+        setCurrentUserPubkey(fallbackPubkey);
       }
     };
     
@@ -70,32 +84,52 @@ const PublisherOnboarding: React.FC<PublisherOnboardingProps> = ({
     setIsTestModeActive(checkTestMode());
   }, []);
   
-  // Generate a demo API key for the publisher onboarding experience
+  // Generate a real API key for actual publisher integration
   const generateRealApiKey = async (pubkey: string) => {
     setApiKeyData(prev => ({ ...prev, isLoading: true, error: null }));
     
     try {
-      // For onboarding, generate a demo API key immediately
-      // This will be replaced with a real API key after the user completes registration
-      await new Promise(resolve => setTimeout(resolve, 1500)); // Simulate API call
+      console.log('Generating real API key for publisher:', pubkey);
       
-      const demoApiKey = `ak_demo_${Math.random().toString(36).substr(2, 16)}`;
+      // Make actual API call to generate real API key
+      const response = await fetch('/api/auth/api-keys', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          name: 'Publisher API Key',
+          scopes: ['publisher:read', 'publisher:write', 'ad:serve'],
+          type: 'publisher',
+          pubkey: pubkey
+        })
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({ message: 'Unknown error' }));
+        throw new Error(errorData.message || `API responded with status: ${response.status}`);
+      }
+
+      const result = await response.json();
+      console.log('Successfully generated real API key:', result.id);
       
       setApiKeyData({
-        id: `demo_${Date.now()}`,
-        key: demoApiKey,
-        name: 'Demo Publisher API Key',
-        createdAt: new Date().toISOString(),
-        scopes: 'publisher:demo',
+        id: result.id,
+        key: result.key,
+        name: result.name || 'Publisher API Key',
+        createdAt: result.createdAt || new Date().toISOString(),
+        scopes: Array.isArray(result.scopes) ? result.scopes.join(', ') : result.scopes || 'publisher',
         isLoading: false,
         error: null
       });
     } catch (error) {
-      console.error('Error generating demo API key:', error);
+      console.error('Error generating real API key:', error);
+      const errorMessage = error instanceof Error ? error.message : 'Failed to generate API key';
+      
       setApiKeyData(prev => ({ 
         ...prev, 
         isLoading: false, 
-        error: 'Failed to generate demo API key' 
+        error: errorMessage
       }));
     }
   };
