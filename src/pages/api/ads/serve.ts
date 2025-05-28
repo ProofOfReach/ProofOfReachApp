@@ -58,7 +58,7 @@ import { logger } from '../../../lib/logger';
  *       500:
  *         $ref: '#/components/responses/InternalServerError'
  */
-async function handler(req: NextApiRequest, res: NextApiResponse, pubkey: UserRole, userId: string): Promise<void> {
+async function handler(req: NextApiRequest, res: NextApiResponse, pubkey: string, userId: string): Promise<void> {
   // This endpoint only supports GET and requires authentication
   // The authenticated user should have publisher role to access this endpoint
   // In a future implementation, we would check if the user has publisher role

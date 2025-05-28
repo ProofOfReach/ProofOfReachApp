@@ -326,7 +326,11 @@ marketplace.on('adClicked', (event) => {
                     ? 'border-purple-500 bg-purple-50 dark:bg-purple-900/20' 
                     : 'border-gray-200 dark:border-gray-700 hover:border-purple-300 dark:hover:border-purple-700'
                 }`}
-                onClick={() => setSelectedIntegration('html')}
+                onClick={() => {
+                  setSelectedIntegration('html');
+                  // Auto-proceed to next step after selection
+                  if (goToNextStep) setTimeout(() => goToNextStep(), 500);
+                }}
               >
                 <div className="flex items-center space-x-3">
                   <Code className="text-purple-600 dark:text-purple-400" />
@@ -597,7 +601,12 @@ marketplace.on('adClicked', (event) => {
             </div>
             
             <button
-              onClick={onComplete}
+              onClick={() => {
+                // Complete onboarding first
+                onComplete();
+                // Navigate to publisher dashboard
+                window.location.href = '/dashboard/publisher';
+              }}
               className="px-8 py-3 bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-lg hover:from-purple-700 hover:to-blue-700 transition-colors font-medium"
             >
               Go To Dashboard

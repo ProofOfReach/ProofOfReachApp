@@ -24,18 +24,26 @@ const defaultContextValue = {
 
 // Define the steps for each role's onboarding process
 export type OnboardingStep = 
+  // Common steps
+  | 'role-selection'
+  // Publisher steps
+  | 'integration-method'
+  | 'setup-configuration'
+  | 'api-key-testing'
+  | 'complete-go-live'
   // Viewer steps
   | 'preferences'
   | 'discovery'
   | 'notifications'
   | 'privacy'
   | 'feedback'
-  // Publisher steps (streamlined 4-step flow)
-  | 'integration-method'
-  | 'setup-configuration'
-  | 'api-key-testing'
-  | 'complete-go-live'
   // Advertiser steps
+  | 'create-campaign'
+  | 'set-targeting'
+  | 'budget-schedule'
+  | 'fund-account'
+  | 'dashboard-intro'
+  | 'complete';
   | 'create-campaign'
   | 'set-targeting'
   | 'budget-schedule'
