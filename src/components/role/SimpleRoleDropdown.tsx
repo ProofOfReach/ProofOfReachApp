@@ -49,13 +49,18 @@ const SimpleRoleDropdown: React.FC<RoleDropdownProps> = ({
   useEffect(() => {
     if (typeof window === 'undefined') return;
     
+    // Get current role from localStorage
+    const storedRole = localStorage.getItem('currentRole') || 'viewer';
+    const currentUserRole = storedRole as UserRole;
+    
     // Simple test mode detection
     const isTestModeActive = localStorage.getItem('isTestMode') === 'true' || 
                             localStorage.getItem('bypass_api_calls') === 'true' ||
                             localStorage.getItem('testMode') === 'true';
     
-    console.log('🎯 SimpleRoleDropdown test mode check:', {
+    console.log('🎯 SimpleRoleDropdown initialization:', {
       isTestModeActive,
+      currentUserRole,
       localStorage_isTestMode: localStorage.getItem('isTestMode'),
       localStorage_bypass: localStorage.getItem('bypass_api_calls'),
       localStorage_testMode: localStorage.getItem('testMode')
@@ -65,15 +70,18 @@ const SimpleRoleDropdown: React.FC<RoleDropdownProps> = ({
       console.log('✅ Test mode active - showing all roles');
       const allRoles: UserRole[] = ['viewer', 'advertiser', 'publisher', 'admin', 'stakeholder'];
       setAvailableRoles(allRoles);
-      
-      // Get current role from localStorage
-      const storedRole = localStorage.getItem('currentRole') || 'viewer';
-      setCurrentRole(storedRole as UserRole);
     } else {
-      console.log('❌ Test mode not active - showing viewer only');
-      setAvailableRoles(['viewer']);
+      // If user has completed onboarding with a specific role, make that role available
+      if (currentUserRole !== 'viewer') {
+        console.log(`✅ User has ${currentUserRole} role from onboarding - making it available`);
+        setAvailableRoles(['viewer', currentUserRole]);
+      } else {
+        console.log('ℹ️ User is viewer - showing viewer only');
+        setAvailableRoles(['viewer']);
+      }
     }
     
+    setCurrentRole(currentUserRole);
     setIsLoading(false);
   }, []);
 
