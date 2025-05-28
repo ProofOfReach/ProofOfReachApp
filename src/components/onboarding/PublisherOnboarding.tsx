@@ -454,6 +454,53 @@ marketplace.on('adClicked', (event) => {
           </div>
         );
 
+      case 4:
+        return (
+          <div className="space-y-6">
+            <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Configure Ad Slots</h2>
+            <p className="text-gray-600 dark:text-gray-300">
+              Set up where ads will appear on your website. You can add more slots later.
+            </p>
+            
+            <div className="space-y-4">
+              <div className="border border-gray-200 dark:border-gray-700 rounded-lg p-4">
+                <h3 className="font-medium text-gray-900 dark:text-white mb-3">Primary Ad Slot</h3>
+                
+                <div className="space-y-3">
+                  <div>
+                    <label className="block text-sm font-medium mb-1">Slot Name</label>
+                    <input 
+                      type="text" 
+                      placeholder="e.g., Header Banner"
+                      className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded focus:outline-none focus:ring-2 focus:ring-purple-500 bg-white dark:bg-gray-800"
+                    />
+                  </div>
+                  
+                  <div>
+                    <label className="block text-sm font-medium mb-1">Ad Size</label>
+                    <select className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded focus:outline-none focus:ring-2 focus:ring-purple-500 bg-white dark:bg-gray-800">
+                      <option value="728x90">728x90 (Leaderboard)</option>
+                      <option value="300x250">300x250 (Medium Rectangle)</option>
+                      <option value="320x50">320x50 (Mobile Banner)</option>
+                      <option value="160x600">160x600 (Wide Skyscraper)</option>
+                    </select>
+                  </div>
+                  
+                  <div>
+                    <label className="block text-sm font-medium mb-1">Placement</label>
+                    <select className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded focus:outline-none focus:ring-2 focus:ring-purple-500 bg-white dark:bg-gray-800">
+                      <option value="header">Header</option>
+                      <option value="sidebar">Sidebar</option>
+                      <option value="content">Within Content</option>
+                      <option value="footer">Footer</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        );
+
       case 5:
         return (
           <div className="space-y-6">
