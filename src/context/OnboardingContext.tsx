@@ -26,6 +26,7 @@ const defaultContextValue = {
 export type OnboardingStep = 
   // Common steps
   | 'role-selection'
+  | 'authentication'
   // Publisher steps
   | 'integration-method'
   | 'setup-configuration'
@@ -49,6 +50,7 @@ export type OnboardingStep =
 // Standard viewer steps for regular users (simplified to 3 steps)
 const standardViewerSteps: OnboardingStep[] = [
   'role-selection',
+  'authentication',
   'discovery',
   'privacy',
   'complete'
@@ -70,6 +72,7 @@ const viewerSteps: OnboardingStep[] = standardViewerSteps;
 
 const publisherSteps: OnboardingStep[] = [
   'role-selection',
+  'authentication',
   'integration-method',
   'setup-configuration',
   'api-key-testing',
@@ -78,6 +81,7 @@ const publisherSteps: OnboardingStep[] = [
 
 const advertiserSteps: OnboardingStep[] = [
   'role-selection',
+  'authentication',
   'create-campaign',
   'set-targeting',
   'budget-schedule',

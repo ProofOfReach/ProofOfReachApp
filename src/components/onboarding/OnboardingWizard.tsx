@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useOnboarding } from '@/context/OnboardingContext';
 import OnboardingProgress from './OnboardingProgress';
 import RoleConfirmation from './RoleConfirmation';
+import { AuthenticationStep } from './AuthenticationStep';
 import ViewerOnboarding from './ViewerOnboarding';
 import PublisherOnboarding from './PublisherOnboarding';
 import AdvertiserOnboarding from './AdvertiserOnboarding';
@@ -88,6 +89,17 @@ const OnboardingWizard: React.FC = () => {
     // Role selection step
     if (currentStep === 'role-selection') {
       return <RoleConfirmation onConfirm={handleRoleSelection} />;
+    }
+    
+    // Authentication step (after role selection)
+    if (currentStep === 'authentication') {
+      return (
+        <AuthenticationStep
+          selectedRole={selectedRole || 'viewer'}
+          onComplete={goToNextStep}
+          onBack={goToPreviousStep}
+        />
+      );
     }
     
     // Viewer onboarding steps
