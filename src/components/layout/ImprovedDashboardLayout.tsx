@@ -52,10 +52,15 @@ const ImprovedDashboardLayout: React.FC<ImprovedDashboardLayoutProps> = ({
   // Set initial role and setup event listeners on mount
   useEffect(() => {
     if (typeof window !== 'undefined') {
-      // Get initial role
-      const role = unifiedRoleService.getCurrentRole();
-      if (role) {
-        setCurrentRole(role as UserRole);
+      // Use the same role detection logic as the dashboard (single source of truth)
+      const storedRole = localStorage.getItem('currentRole');
+      
+      console.log('🔍 Layout checking localStorage currentRole:', storedRole);
+      
+      // If we have a valid role from onboarding/auth, use it
+      if (storedRole && ['advertiser', 'publisher', 'admin', 'stakeholder', 'viewer'].includes(storedRole)) {
+        console.log('✅ Layout using role from localStorage:', storedRole);
+        setCurrentRole(storedRole as UserRole);
       }
       
       // Listen for role changes via custom events (legacy)
