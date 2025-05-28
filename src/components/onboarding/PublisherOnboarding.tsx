@@ -19,12 +19,14 @@ interface PublisherOnboardingProps {
   currentStep: number;
   onComplete: () => void;
   skipOnboarding?: () => void;
+  goToNextStep?: () => void;
 }
 
 const PublisherOnboarding: React.FC<PublisherOnboardingProps> = ({ 
   currentStep, 
   onComplete,
-  skipOnboarding 
+  skipOnboarding,
+  goToNextStep 
 }) => {
   const [selectedIntegration, setSelectedIntegration] = useState<string>('html');
   const [currentUserPubkey, setCurrentUserPubkey] = useState<string>('');
@@ -341,7 +343,11 @@ marketplace.on('adClicked', (event) => {
                     ? 'border-purple-500 bg-purple-50 dark:bg-purple-900/20' 
                     : 'border-gray-200 dark:border-gray-700 hover:border-purple-300 dark:hover:border-purple-700'
                 }`}
-                onClick={() => setSelectedIntegration('javascript')}
+                onClick={() => {
+                  setSelectedIntegration('javascript');
+                  // Auto-proceed to next step after selection
+                  if (goToNextStep) setTimeout(() => goToNextStep(), 500);
+                }}
               >
                 <div className="flex items-center space-x-3">
                   <Layout className="text-purple-600 dark:text-purple-400" />
@@ -358,7 +364,11 @@ marketplace.on('adClicked', (event) => {
                     ? 'border-purple-500 bg-purple-50 dark:bg-purple-900/20' 
                     : 'border-gray-200 dark:border-gray-700 hover:border-purple-300 dark:hover:border-purple-700'
                 }`}
-                onClick={() => setSelectedIntegration('sdk')}
+                onClick={() => {
+                  setSelectedIntegration('sdk');
+                  // Auto-proceed to next step after selection
+                  setTimeout(() => goToNextStep?.(), 500);
+                }}
               >
                 <div className="flex items-center space-x-3">
                   <Archive className="text-purple-600 dark:text-purple-400" />
