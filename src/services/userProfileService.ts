@@ -14,13 +14,7 @@ class UserProfileService {
     try {
       // Check if user exists in the User table
       let user = await prisma.user.findUnique({
-        where: { id: userId },
-        include: {
-          roles: {
-            where: { isActive: true },
-            orderBy: { assignedAt: 'desc' }
-          }
-        }
+        where: { id: userId }
       })
 
       // If user doesn't exist, create them with viewer role
@@ -29,31 +23,28 @@ class UserProfileService {
           data: {
             id: userId,
             nostrPubkey: userId, // Use userId as pubkey for Supabase users
+            currentRole: 'viewer',
             isActive: true,
-            isTestUser: false,
-            roles: {
-              create: {
-                role: 'viewer',
-                isActive: true,
-                assignedAt: new Date()
-              }
-            }
-          },
-          include: {
-            roles: {
-              where: { isActive: true },
-              orderBy: { assignedAt: 'desc' }
-            }
+            isTestUser: false
+          }
+        })
+
+        // Create UserRole entry
+        await prisma.userRole.create({
+          data: {
+            userId: userId,
+            role: 'viewer',
+            isActive: true
           }
         })
       }
 
-      // Get the most recent active role
-      const currentRole = user.roles[0]?.role || 'viewer'
+      // Get the current role from the user record
+      const currentRole = user.currentRole || 'viewer'
 
       return {
         id: userId,
-        email: user.email || undefined,
+        email: undefined, // User table doesn't have email field
         role: currentRole as UserRole,
         created_at: user.createdAt,
         updated_at: user.updatedAt
@@ -72,42 +63,44 @@ class UserProfileService {
         create: {
           id: userId,
           nostrPubkey: userId,
-          email: email || null,
+          currentRole: role || 'viewer',
           isActive: true,
-          isTestUser: false,
-          roles: {
-            create: {
-              role: role || 'viewer',
-              isActive: true,
-              assignedAt: new Date()
-            }
-          }
+          isTestUser: false
         },
         update: {
-          email: email || undefined,
           updatedAt: new Date()
-        },
-        include: {
-          roles: {
-            where: { isActive: true },
-            orderBy: { assignedAt: 'desc' }
-          }
         }
       })
 
       // If role is provided and different from current, update it
-      if (role && user.roles[0]?.role !== role) {
+      if (role && user.currentRole !== role) {
         await this.updateUserRole(userId, role)
         // Refetch user with updated role
         return this.getUserProfile(userId)
       }
 
-      const currentRole = user.roles[0]?.role || 'viewer'
+      // Ensure UserRole entry exists
+      const existingRole = await prisma.userRole.findFirst({
+        where: {
+          userId: userId,
+          role: user.currentRole
+        }
+      })
+
+      if (!existingRole) {
+        await prisma.userRole.create({
+          data: {
+            userId: userId,
+            role: user.currentRole,
+            isActive: true
+          }
+        })
+      }
 
       return {
         id: userId,
-        email: user.email || undefined,
-        role: currentRole as UserRole,
+        email: undefined, // User table doesn't have email field
+        role: user.currentRole as UserRole,
         created_at: user.createdAt,
         updated_at: user.updatedAt
       }
@@ -135,8 +128,7 @@ class UserProfileService {
         data: {
           userId: userId,
           role: role,
-          isActive: true,
-          assignedAt: new Date()
+          isActive: true
         }
       })
 
@@ -169,7 +161,6 @@ class UserProfileService {
           userId: userId,
           userPubkey: userId,
           role: role,
-          step: 'complete',
           isComplete: true,
           completedAt: new Date()
         },

@@ -48,24 +48,13 @@ async function createOrUpdateProfile(req: NextApiRequest, res: NextApiResponse) 
       return res.status(400).json({ error: 'Valid role is required' })
     }
 
-    const profileData = {
-      id: userId,
-      email: email || null,
-      role: role as UserRole,
-      updated_at: new Date().toISOString()
+    const profile = await userProfileService.createOrUpdateProfile(userId, email, role as UserRole)
+    
+    if (!profile) {
+      return res.status(500).json({ error: 'Failed to create/update user profile' })
     }
 
-    const { data, error } = await supabase
-      .from('user_profiles')
-      .upsert(profileData, { onConflict: 'id' })
-      .select()
-      .single()
-
-    if (error) {
-      throw error
-    }
-
-    return res.status(200).json(data)
+    return res.status(200).json(profile)
   } catch (error) {
     console.error('Error creating/updating user profile:', error)
     return res.status(500).json({ error: 'Failed to create/update user profile' })
@@ -84,21 +73,13 @@ async function updateUserRole(req: NextApiRequest, res: NextApiResponse) {
       return res.status(400).json({ error: 'Valid role is required' })
     }
 
-    const { data, error } = await supabase
-      .from('user_profiles')
-      .update({ 
-        role: role as UserRole, 
-        updated_at: new Date().toISOString() 
-      })
-      .eq('id', userId)
-      .select()
-      .single()
-
-    if (error) {
-      throw error
+    const profile = await userProfileService.updateUserRole(userId, role as UserRole)
+    
+    if (!profile) {
+      return res.status(500).json({ error: 'Failed to update user role' })
     }
 
-    return res.status(200).json(data)
+    return res.status(200).json(profile)
   } catch (error) {
     console.error('Error updating user role:', error)
     return res.status(500).json({ error: 'Failed to update user role' })
