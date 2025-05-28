@@ -188,7 +188,7 @@ export function useNostrAuth(): NostrAuthState {
         localStorage.setItem('currentRole', newRole)
       }
       
-      logger.log('✅ User role updated successfully:', newRole)
+      logger.log('✅ User role updated successfully:', { role: newRole })
       return true
     } catch (error) {
       console.error('Error in updateUserRole:', error)

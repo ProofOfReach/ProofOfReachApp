@@ -1,9 +1,7 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { useRouter } from 'next/router';
-import { useAuth } from '@/hooks/useAuth';
-import { defaultUseRole } from '@/context/RoleContext';
+import { useAuth } from '@/components/auth/SupabaseAuthProvider';
 import { UserRole } from '@/types/role';
-import { userProfileService } from '@/services/userProfileService';
 import { logger } from '@/lib/logger';
 
 // Create a safer initial value for SSR hydration
@@ -113,10 +111,8 @@ type OnboardingProviderProps = {
 
 export const OnboardingProvider: React.FC<OnboardingProviderProps> = ({ children, forcePubkey, initialRole }) => {
   const auth = useAuth();
-  const isLoggedIn = !!auth?.auth;
-  const roleContext = defaultUseRole();
-  // Safely access role with a fallback to prevent hydration errors
-  const currentRole = roleContext?.role || 'viewer';
+  const isLoggedIn = auth?.isAuthenticated;
+  const currentRole = auth?.role || 'viewer';
   const router = useRouter();
   
   // For SSR compatibility, use basic initial values
@@ -212,13 +208,11 @@ export const OnboardingProvider: React.FC<OnboardingProviderProps> = ({ children
       if (selectedRole && currentRole && currentRole !== 'admin') {
         
         // Check if onboarding was already in progress
-        const pubkeyToUse = forcePubkey || auth?.auth?.pubkey;
-        if (pubkeyToUse) {
+        const pubkeyToUse = forcePubkey || auth?.user?.pubkey;
+        if (pubkeyToUse && auth?.userProfile) {
           try {
-            const status = await clientOnboardingService.getOnboardingStatus(pubkeyToUse, currentRole);
-            const isComplete = status?.isComplete || false;
-            
-            if (isComplete && !forcePubkey && !preventRedirects) { // Don't redirect if forcePubkey is provided or if preventing redirects
+            // Check if user already has a role set in their profile
+            if (auth.userProfile.role !== 'viewer' && !forcePubkey && !preventRedirects) {
               // Redirect to dashboard if onboarding is already complete
               const redirectUrl = `/dashboard`;
               
@@ -268,14 +262,14 @@ export const OnboardingProvider: React.FC<OnboardingProviderProps> = ({ children
       return;
     }
     
-    const pubkeyToUse = forcePubkey || auth?.auth?.pubkey;
+    const pubkeyToUse = forcePubkey || auth?.user?.pubkey;
     if (pubkeyToUse && selectedRole && currentStep && !isFirstStep) {
-      // Only save steps after the first step
-      clientOnboardingService.updateOnboardingProgress(pubkeyToUse, selectedRole, {
-        currentStep
-      }).catch((error: any) => {
-        logger.log('Error saving onboarding progress', { error, pubkey: pubkeyToUse, role: selectedRole });
-      });
+      // Save progress in localStorage as a simple progress tracking method
+      localStorage.setItem(`onboarding_progress_${pubkeyToUse}`, JSON.stringify({
+        currentStep,
+        selectedRole,
+        timestamp: Date.now()
+      }));
     }
   }, [currentStep, selectedRole, isLoggedIn, forcePubkey, isFirstStep]);
 
@@ -300,8 +294,8 @@ export const OnboardingProvider: React.FC<OnboardingProviderProps> = ({ children
         }));
       }
 
-      // Save the role to the database using Supabase authentication
-      const success = await userProfileService.updateCurrentUserRole(selectedRole as UserRole);
+      // Save the role to the database using unified authentication
+      const success = await auth.updateUserRole(selectedRole as UserRole);
       
       if (success) {
         console.log('✅ Role successfully saved to database:', selectedRole);
@@ -324,8 +318,8 @@ export const OnboardingProvider: React.FC<OnboardingProviderProps> = ({ children
     if (role) {
       setIsLoading(true);
       try {
-        // Save the role to the database using Supabase authentication
-        const success = await userProfileService.updateCurrentUserRole(role as UserRole);
+        // Save the role to the database using unified authentication
+        const success = await auth.updateUserRole(role as UserRole);
         
         if (success) {
           // Redirect to dashboard
