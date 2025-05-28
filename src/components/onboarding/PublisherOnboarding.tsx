@@ -284,40 +284,26 @@ marketplace.on('adClicked', (event) => {
     );
   };
 
+  // SINGLE SOURCE OF TRUTH - Publisher Flow Steps
+  const PUBLISHER_STEPS = [
+    { id: 1, key: 'integration-method', title: 'Integration Method', description: 'Choose your integration approach' },
+    { id: 2, key: 'setup-configuration', title: 'Setup & Configuration', description: 'Website details and content settings' },
+    { id: 3, key: 'api-key-testing', title: 'API Key & Testing', description: 'Generate your key and configure test mode' },
+    { id: 4, key: 'complete-go-live', title: 'Complete & Go Live', description: 'Ready to start earning' }
+  ];
+
   const renderStepContent = () => {
+    // Map step names to numbers using our PUBLISHER_STEPS configuration
+    let stepNumber: number;
     
-    // Convert string step names to numbers for the streamlined 5-step flow
-    let stepNumber;
     if (typeof currentStep === 'string') {
-      switch (currentStep) {
-        case 'choose-integration':
-          stepNumber = 1;
-          break;
-        case 'setup-configuration':
-          stepNumber = 2;
-          break;
-        case 'api-key-testing':
-          stepNumber = 3;
-          break;
-        case 'go-live':
-          stepNumber = 4;
-          break;
-        case 'complete':
-          stepNumber = 5;
-          break;
-        // Legacy step mapping for backward compatibility
-        case 'integration-details':
-        case 'ad-slot-config':
-        case 'setup-wallet':
-          stepNumber = 2; // Combined into setup-configuration
-          break;
-        case 'api-key':
-        case 'enable-test-mode':
-          stepNumber = 3; // Combined into api-key-testing
-          break;
-        default:
-          stepNumber = 1; // Default to first step
-      }
+      const stepMap: Record<string, number> = {
+        'integration-method': 1,
+        'setup-configuration': 2, 
+        'api-key-testing': 3,
+        'complete-go-live': 4
+      };
+      stepNumber = stepMap[currentStep] || 1;
     } else {
       stepNumber = currentStep;
     }

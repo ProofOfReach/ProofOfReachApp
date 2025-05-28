@@ -30,15 +30,11 @@ export type OnboardingStep =
   | 'notifications'
   | 'privacy'
   | 'feedback'
-  // Publisher steps
-  | 'choose-integration'
-  | 'create-api-key'
-  | 'integration-details'
-  | 'ad-slot-config'
-  | 'setup-wallet'
-  | 'enable-test-mode'
-  | 'go-live'
-  | 'setup-complete'
+  // Publisher steps (streamlined 4-step flow)
+  | 'integration-method'
+  | 'setup-configuration'
+  | 'api-key-testing'
+  | 'complete-go-live'
   // Advertiser steps
   | 'create-campaign'
   | 'set-targeting'
@@ -74,13 +70,10 @@ const viewerSteps: OnboardingStep[] = standardViewerSteps;
 
 const publisherSteps: OnboardingStep[] = [
   'role-selection',
-  'choose-integration',
-  'integration-details',
-  'ad-slot-config',
-  'setup-wallet',
-  'enable-test-mode',
-  'go-live',
-  'complete'
+  'integration-method',
+  'setup-configuration',
+  'api-key-testing',
+  'complete-go-live'
 ];
 
 const advertiserSteps: OnboardingStep[] = [
