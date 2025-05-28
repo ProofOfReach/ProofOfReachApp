@@ -173,6 +173,28 @@ const { RoleProviderRefactored } = require('../context/NewRoleContextRefactored'
 // Get TestModeProvider from our mocks
 const { TestModeProvider } = require('../context/TestModeContext');
 
+// Mock UnifiedAuthProvider
+jest.mock('../providers/UnifiedAuthProvider', () => {
+  const React = require('react');
+  return {
+    UnifiedAuthProvider: ({ children }: { children: React.ReactNode }) => {
+      return React.createElement(React.Fragment, null, children);
+    },
+    useUnifiedAuth: jest.fn().mockReturnValue({
+      user: { id: 'test-user', pubkey: 'test-pubkey' },
+      isAuthenticated: true,
+      isLoading: false,
+      signInWithNostr: jest.fn().mockResolvedValue(true),
+      signInWithEmail: jest.fn().mockResolvedValue(true),
+      signOut: jest.fn().mockResolvedValue(undefined),
+      supabaseUser: null,
+      nostrUser: { pubkey: 'test-pubkey' }
+    })
+  };
+});
+
+const { UnifiedAuthProvider } = require('../providers/UnifiedAuthProvider');
+
 // Custom render that includes providers
 const customRender = (
   ui: ReactElement,
@@ -206,6 +228,13 @@ const customRender = (
         <RoleProviderRefactored initialRole={initialRole}>
           {wrappedUI}
         </RoleProviderRefactored>
+      );
+      
+      // Then wrap with UnifiedAuthProvider
+      wrappedUI = (
+        <UnifiedAuthProvider>
+          {wrappedUI}
+        </UnifiedAuthProvider>
       );
       
       // Finally wrap with TestModeProvider
