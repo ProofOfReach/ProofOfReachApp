@@ -117,8 +117,7 @@ const ViewerOnboarding: React.FC<ViewerOnboardingProps> = ({
     ));
   };
   
-  // Get the Nostr extension status once at the component level
-  const hasNostrExtension = useMemo(() => checkForNostrExtension(), []);
+  // Removed automatic Nostr extension detection - users should explicitly choose their path
 
   // Map from OnboardingContext step names to local step names
   const mapOnboardingStepToLocal = useMemo(() => {
@@ -151,21 +150,15 @@ const ViewerOnboarding: React.FC<ViewerOnboardingProps> = ({
   }, [currentStep, mapOnboardingStepToLocal]);
   
   // Initialize current step index and total steps for progress tracking
-  // Create different step sequences based on whether user has Nostr extension
-  // THIS IS THE KEY FIX: We define exactly 2 steps for Nostr users, 3 steps for regular users
+  // Standard 3-step flow for all viewers: Discovery → Privacy → Complete
   const stepSequence = useMemo(() => {
-    console.log('ViewerOnboarding - Creating step sequence with hasNostrExtension:', hasNostrExtension);
-    return hasNostrExtension ? 
-      [
-        'privacy',  // Step 1/2 for Nostr users: Privacy Settings
-        'complete'  // Step 2/2 for Nostr users: You're All Set!
-      ] : 
-      [
-        'discovery', // Step 1/3 for regular users: Discover Publishers
-        'privacy',   // Step 2/3 for regular users: Privacy Settings
-        'complete'   // Step 3/3 for regular users: You're All Set!
-      ];
-  }, [hasNostrExtension]);
+    console.log('ViewerOnboarding - Using standard 3-step flow for all users');
+    return [
+      'discovery', // Step 1/3: Discover Publishers
+      'privacy',   // Step 2/3: Privacy Settings
+      'complete'   // Step 3/3: You're All Set!
+    ];
+  }, []);
   
   // Add CSS for toggle switches
   React.useEffect(() => {
@@ -198,30 +191,20 @@ const ViewerOnboarding: React.FC<ViewerOnboardingProps> = ({
   // Calculate the current step number and total for display
   const currentStepIndex = stepSequence.indexOf(step);
   
-  // For Nostr users with 2-step flow: Privacy(1) → Complete(2)
-  // For standard users with 3-step flow: Discovery(1) → Privacy(2) → Complete(3)
-  const calculatedTotalSteps = hasNostrExtension ? 2 : 3;
+  // Standard 3-step flow for all users: Discovery(1) → Privacy(2) → Complete(3)
+  const calculatedTotalSteps = 3;
   
-  // For Nostr users in privacy step: step 1 of 2 
-  // For Nostr users in complete step: step 2 of 2
-  // For regular users: steps mapped to 1, 2, or 3 of 3
-  let displayStepNumber = 1;
-  if (hasNostrExtension) {
-    // For Nostr users, map step to either 1 or 2
-    displayStepNumber = step === 'complete' ? 2 : 1;
-  } else {
-    // For regular users, map step based on stepSequence
-    displayStepNumber = currentStepIndex + 1;
-  }
+  // Map step based on stepSequence for consistent numbering
+  const displayStepNumber = currentStepIndex + 1;
   
-  console.log(`ViewerOnboarding - ${hasNostrExtension ? 'Simplified' : 'Regular'} flow (Step ${displayStepNumber}/${calculatedTotalSteps}: ${step}) for ${hasNostrExtension ? 'Nostr' : 'regular'} user`);
+  console.log(`ViewerOnboarding - Standard flow (Step ${displayStepNumber}/${calculatedTotalSteps}: ${step})`);
   
   // The main component will show its own progress indicator when showNavigation is false
   const shouldShowProgress = showNavigation;
 
   const handleNext = () => {
     // First update the local step
-    console.log(`ViewerOnboarding - Handling next from step: ${step} (Nostr: ${hasNostrExtension ? 'yes' : 'no'})`);
+    console.log(`ViewerOnboarding - Handling next from step: ${step}`);
     
     switch (step) {
       case 'discovery': 
