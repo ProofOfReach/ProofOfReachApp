@@ -1,17 +1,27 @@
 import React, { useEffect, useState } from 'react';
 import { UserRole } from '@/types/role';
 import { useOnboarding } from '@/context/OnboardingContext';
-import { useAuth } from '@/hooks/useAuth';
+import { useSupabaseAuth } from '@/hooks/useSupabaseAuth';
 import { Users, Radio, Package, Shield, Key } from 'react-feather';
 import { logger } from '@/lib/logger';
+import { nip19 } from 'nostr-tools';
 
 type RoleConfirmationProps = {
   onConfirm?: (role: string) => void;
 };
 
+// Helper function to convert hex to npub
+const hexToNpub = (hex: string): string | null => {
+  try {
+    return nip19.npubEncode(hex);
+  } catch (error) {
+    return null;
+  }
+};
+
 const RoleConfirmation: React.FC<RoleConfirmationProps> = ({ onConfirm }) => {
   const { setSelectedRole, selectedRole } = useOnboarding();
-  const { auth } = useAuth();
+  const { user } = useSupabaseAuth();
   
   // Add isClient state to prevent hydration mismatches
   const [isClient, setIsClient] = useState(false);
@@ -70,10 +80,10 @@ const RoleConfirmation: React.FC<RoleConfirmationProps> = ({ onConfirm }) => {
   };
 
   const copyPubkeyToClipboard = () => {
-    if (!isClient || !auth || !auth.pubkey) return;
+    if (!isClient || !user?.user_metadata?.pubkey) return;
     
     // Convert hex to npub if possible
-    const npubKey = hexToNpub(auth.pubkey) || auth.pubkey;
+    const npubKey = hexToNpub(user.user_metadata.pubkey) || user.user_metadata.pubkey;
     
     navigator.clipboard.writeText(npubKey)
       .then(() => {
@@ -179,11 +189,11 @@ const RoleConfirmation: React.FC<RoleConfirmationProps> = ({ onConfirm }) => {
         </p>
         
         {/* Nostr pubkey display */}
-        {auth && auth.pubkey && (
+        {user?.user_metadata?.pubkey && (
           <div className="mt-4 inline-flex items-center bg-gray-100 dark:bg-gray-800 rounded-lg p-2">
             <Key className="h-5 w-5 text-gray-500 dark:text-gray-400 mr-2" />
             <span className="text-sm font-mono text-gray-700 dark:text-gray-300" data-testid="user-pubkey">
-              {formatPubkey(auth.pubkey)}
+              {formatPubkey(user.user_metadata.pubkey)}
             </span>
             <button 
               onClick={copyPubkeyToClipboard}
@@ -290,9 +300,8 @@ const RoleConfirmation: React.FC<RoleConfirmationProps> = ({ onConfirm }) => {
             <p className="font-mono"><strong>Debug info:</strong></p>
             <p className="font-mono">Is test mode: {isTestMode ? 'Yes' : 'No'}</p>
             <p className="font-mono">Available roles: {availableRoles.join(', ') || 'None'}</p>
-            <p className="font-mono">Context roles: {roleContext?.availableRoles?.join(', ') || 'None'}</p>
             <p className="font-mono">Showing roles: {roleCards.map(r => r.role).join(', ')}</p>
-            <p className="font-mono">User pubkey: {auth && auth.pubkey ? auth.pubkey : 'Not available'}</p>
+            <p className="font-mono">User pubkey: {user?.user_metadata?.pubkey || 'Not available'}</p>
           </div>
         )}
       </div>
