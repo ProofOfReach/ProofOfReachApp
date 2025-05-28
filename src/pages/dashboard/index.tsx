@@ -36,6 +36,7 @@ const Dashboard = () => {
     if (typeof window !== 'undefined') {
       // Try all known storage locations for role
       const storedRole = localStorage.getItem('currentRole') || 'viewer';
+      console.log('🔍 Dashboard checking localStorage currentRole:', storedRole);
       return storedRole;
     }
     
