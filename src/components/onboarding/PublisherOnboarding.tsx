@@ -285,36 +285,35 @@ marketplace.on('adClicked', (event) => {
   };
 
   const renderStepContent = () => {
-    // Debug: Log the currentStep value to understand the issue
-    console.log('PublisherOnboarding currentStep:', currentStep, typeof currentStep);
     
-    // Convert string step names to numbers for the switch statement
+    // Convert string step names to numbers for the streamlined 5-step flow
     let stepNumber;
     if (typeof currentStep === 'string') {
       switch (currentStep) {
         case 'choose-integration':
           stepNumber = 1;
           break;
-        case 'integration-details':
+        case 'setup-configuration':
           stepNumber = 2;
           break;
-        case 'api-key':
+        case 'api-key-testing':
           stepNumber = 3;
           break;
-        case 'ad-slot-config':
+        case 'go-live':
           stepNumber = 4;
           break;
-        case 'setup-wallet':
+        case 'complete':
           stepNumber = 5;
           break;
+        // Legacy step mapping for backward compatibility
+        case 'integration-details':
+        case 'ad-slot-config':
+        case 'setup-wallet':
+          stepNumber = 2; // Combined into setup-configuration
+          break;
+        case 'api-key':
         case 'enable-test-mode':
-          stepNumber = 6;
-          break;
-        case 'go-live':
-          stepNumber = 7;
-          break;
-        case 'complete':
-          stepNumber = 8;
+          stepNumber = 3; // Combined into api-key-testing
           break;
         default:
           stepNumber = 1; // Default to first step
@@ -388,16 +387,110 @@ marketplace.on('adClicked', (event) => {
         );
 
       case 2:
-        return renderIntegrationDetails();
+        return (
+          <div className="space-y-6">
+            <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Setup & Configuration</h2>
+            <p className="text-gray-600 dark:text-gray-300">
+              Configure your website details, ad placements, and payment settings.
+            </p>
+            
+            {/* Website Information */}
+            <div className="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg">
+              <h3 className="font-semibold text-gray-900 dark:text-white mb-4">Website Information</h3>
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                    Website URL
+                  </label>
+                  <input
+                    type="url"
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                    placeholder="https://example.com"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                    Category
+                  </label>
+                  <select className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white">
+                    <option>Technology</option>
+                    <option>Finance</option>
+                    <option>Gaming</option>
+                    <option>News</option>
+                    <option>Other</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            {/* Ad Slot Configuration */}
+            <div className="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg">
+              <h3 className="font-semibold text-gray-900 dark:text-white mb-4">Ad Slot Configuration</h3>
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                    Primary Ad Slot Name
+                  </label>
+                  <input
+                    type="text"
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                    placeholder="header-banner"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                    Ad Size
+                  </label>
+                  <select className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white">
+                    <option>728x90 (Leaderboard)</option>
+                    <option>300x250 (Medium Rectangle)</option>
+                    <option>160x600 (Wide Skyscraper)</option>
+                    <option>320x50 (Mobile Banner)</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            {/* Lightning Wallet Setup */}
+            <div className="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg">
+              <h3 className="font-semibold text-gray-900 dark:text-white mb-2">Payment Setup</h3>
+              <div className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 p-3 rounded-lg mb-4">
+                <div className="flex items-start">
+                  <div className="flex-shrink-0">
+                    <svg className="h-5 w-5 text-yellow-400" viewBox="0 0 20 20" fill="currentColor">
+                      <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                    </svg>
+                  </div>
+                  <div className="ml-3">
+                    <p className="text-sm text-yellow-700 dark:text-yellow-300">
+                      Lightning wallet required for instant payments. Recommended: Alby or Phoenix wallet.
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                  Lightning Address (Optional)
+                </label>
+                <input
+                  type="text"
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                  placeholder="you@getalby.com"
+                />
+              </div>
+            </div>
+          </div>
+        );
 
       case 3:
         return (
           <div className="space-y-6">
-            <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Your API Key</h2>
+            <h2 className="text-2xl font-bold text-gray-900 dark:text-white">API Key & Testing</h2>
             <p className="text-gray-600 dark:text-gray-300">
-              Here's your API key for accessing the Nostr Ad Marketplace. Keep this secure and never share it publicly.
+              Get your API key and test your integration before going live.
             </p>
             
+            {/* API Key Section */}
             {apiKeyData.isLoading ? (
               <div className="bg-gray-50 dark:bg-gray-800 rounded p-4 border border-gray-200 dark:border-gray-700">
                 <div className="flex items-center justify-center space-x-2 py-4">
@@ -433,61 +526,34 @@ marketplace.on('adClicked', (event) => {
                 </button>
               </div>
             )}
-          </div>
-        );
-
-      case 4:
-        return (
-          <div className="space-y-6">
-            <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Configure Ad Slots</h2>
-            <p className="text-gray-600 dark:text-gray-300">
-              Set up your ad placement preferences to maximize revenue while maintaining user experience.
-            </p>
             
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div className="border border-gray-200 dark:border-gray-700 rounded p-4">
-                <h3 className="font-medium mb-2">Header Banner</h3>
-                <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">
-                  Top of page placement for maximum visibility
-                </p>
-                <label className="flex items-center">
-                  <input type="checkbox" className="mr-2" defaultChecked />
-                  <span className="text-sm">Enable header ads</span>
-                </label>
+            {/* Test Mode Configuration */}
+            <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 p-4 rounded-lg">
+              <div className="flex items-start mb-4">
+                <div className="flex-shrink-0">
+                  <svg className="h-5 w-5 text-blue-400" viewBox="0 0 20 20" fill="currentColor">
+                    <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
+                  </svg>
+                </div>
+                <div className="ml-3">
+                  <h3 className="text-sm font-medium text-blue-800 dark:text-blue-200">
+                    Test Mode Benefits
+                  </h3>
+                  <p className="mt-1 text-sm text-blue-700 dark:text-blue-300">
+                    Test your integration with sample ads before going live. Verify everything works correctly without affecting real campaigns.
+                  </p>
+                </div>
               </div>
-              
-              <div className="border border-gray-200 dark:border-gray-700 rounded p-4">
-                <h3 className="font-medium mb-2">Sidebar</h3>
-                <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">
-                  Sidebar placement for continuous visibility
-                </p>
-                <label className="flex items-center">
-                  <input type="checkbox" className="mr-2" />
-                  <span className="text-sm">Enable sidebar ads</span>
-                </label>
-              </div>
-              
-              <div className="border border-gray-200 dark:border-gray-700 rounded p-4">
-                <h3 className="font-medium mb-2">In-Content</h3>
-                <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">
-                  Ads within article content for high engagement
-                </p>
-                <label className="flex items-center">
-                  <input type="checkbox" className="mr-2" defaultChecked />
-                  <span className="text-sm">Enable in-content ads</span>
-                </label>
-              </div>
-              
-              <div className="border border-gray-200 dark:border-gray-700 rounded p-4">
-                <h3 className="font-medium mb-2">Footer</h3>
-                <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">
-                  Bottom of page placement for additional revenue
-                </p>
-                <label className="flex items-center">
-                  <input type="checkbox" className="mr-2" />
-                  <span className="text-sm">Enable footer ads</span>
-                </label>
-              </div>
+              <label className="flex items-center">
+                <input
+                  type="checkbox"
+                  className="rounded border-gray-300 dark:border-gray-600 text-blue-600 focus:ring-blue-500"
+                  defaultChecked
+                />
+                <span className="ml-2 text-sm text-gray-700 dark:text-gray-300">
+                  Enable test mode for initial integration
+                </span>
+              </label>
             </div>
           </div>
         );
@@ -495,191 +561,56 @@ marketplace.on('adClicked', (event) => {
       case 4:
         return (
           <div className="space-y-6">
-            <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Configure Ad Slots</h2>
+            <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Go Live</h2>
             <p className="text-gray-600 dark:text-gray-300">
-              Set up where ads will appear on your website. You can add more slots later.
+              You're ready to start earning with real ads!
             </p>
             
-            <div className="space-y-4">
-              <div className="border border-gray-200 dark:border-gray-700 rounded-lg p-4">
-                <h3 className="font-medium text-gray-900 dark:text-white mb-3">Primary Ad Slot</h3>
-                
-                <div className="space-y-3">
-                  <div>
-                    <label className="block text-sm font-medium mb-1">Slot Name</label>
-                    <input 
-                      type="text" 
-                      placeholder="e.g., Header Banner"
-                      className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded focus:outline-none focus:ring-2 focus:ring-purple-500 bg-white dark:bg-gray-800"
-                    />
-                  </div>
-                  
-                  <div>
-                    <label className="block text-sm font-medium mb-1">Ad Size</label>
-                    <select className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded focus:outline-none focus:ring-2 focus:ring-purple-500 bg-white dark:bg-gray-800">
-                      <option value="728x90">728x90 (Leaderboard)</option>
-                      <option value="300x250">300x250 (Medium Rectangle)</option>
-                      <option value="320x50">320x50 (Mobile Banner)</option>
-                      <option value="160x600">160x600 (Wide Skyscraper)</option>
-                    </select>
-                  </div>
-                  
-                  <div>
-                    <label className="block text-sm font-medium mb-1">Placement</label>
-                    <select className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded focus:outline-none focus:ring-2 focus:ring-purple-500 bg-white dark:bg-gray-800">
-                      <option value="header">Header</option>
-                      <option value="sidebar">Sidebar</option>
-                      <option value="content">Within Content</option>
-                      <option value="footer">Footer</option>
-                    </select>
-                  </div>
+            <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 p-4 rounded-lg">
+              <div className="flex items-start">
+                <div className="flex-shrink-0">
+                  <svg className="h-5 w-5 text-green-400" viewBox="0 0 20 20" fill="currentColor">
+                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                  </svg>
+                </div>
+                <div className="ml-3">
+                  <h3 className="text-sm font-medium text-green-800 dark:text-green-200">
+                    Integration Complete
+                  </h3>
+                  <p className="mt-1 text-sm text-green-700 dark:text-green-300">
+                    Your website is now ready to display ads and earn Lightning payments.
+                  </p>
                 </div>
               </div>
+            </div>
+            
+            <div className="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg">
+              <h3 className="font-semibold text-gray-900 dark:text-white mb-2">Next Steps</h3>
+              <ul className="space-y-2 text-sm text-gray-600 dark:text-gray-300">
+                <li className="flex items-center">
+                  <span className="text-green-500 mr-2">✓</span>
+                  Monitor your earnings in the Publisher Dashboard
+                </li>
+                <li className="flex items-center">
+                  <span className="text-green-500 mr-2">✓</span>
+                  Optimize ad placements for better performance
+                </li>
+                <li className="flex items-center">
+                  <span className="text-green-500 mr-2">✓</span>
+                  Access detailed analytics and reports
+                </li>
+              </ul>
             </div>
           </div>
         );
 
       case 5:
         return (
-          <div className="space-y-6">
-            <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Setup Lightning Wallet</h2>
-            <p className="text-gray-600 dark:text-gray-300">
-              Connect your Lightning wallet to receive instant payments for ad impressions and clicks.
-            </p>
-            
-            <div className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-md p-4">
-              <div className="flex items-start">
-                <DollarSign className="text-yellow-600 dark:text-yellow-400 mr-3 mt-0.5" size={18} />
-                <div>
-                  <h3 className="font-medium text-yellow-800 dark:text-yellow-200">Lightning Network Integration</h3>
-                  <p className="text-sm text-yellow-700 dark:text-yellow-300 mt-1">
-                    Lightning payments enable instant, low-fee Bitcoin transactions for your ad revenue.
-                  </p>
-                </div>
-              </div>
-            </div>
-            
-            <div className="space-y-4">
-              <div className="border border-gray-200 dark:border-gray-700 rounded p-4">
-                <label className="block text-sm font-medium mb-2">Lightning Address</label>
-                <input 
-                  type="text" 
-                  placeholder="your-wallet@example.com"
-                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded focus:outline-none focus:ring-2 focus:ring-purple-500 bg-white dark:bg-gray-800"
-                />
-                <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                  Your Lightning address for receiving payments
-                </p>
-              </div>
-              
-              <div className="border border-gray-200 dark:border-gray-700 rounded p-4">
-                <label className="block text-sm font-medium mb-2">LNURL-Pay</label>
-                <input 
-                  type="text" 
-                  placeholder="LNURL1DP68GURN8GHJ7..."
-                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded focus:outline-none focus:ring-2 focus:ring-purple-500 bg-white dark:bg-gray-800"
-                />
-                <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                  Alternative: Paste your LNURL-Pay string
-                </p>
-              </div>
-            </div>
-          </div>
-        );
-
-      case 6:
-        return (
-          <div className="space-y-6">
-            <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Enable Test Mode</h2>
-            <p className="text-gray-600 dark:text-gray-300">
-              Test your ad integration with sample ads before going live. This helps ensure everything works correctly.
-            </p>
-            
-            <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-md p-4">
-              <div className="flex items-start">
-                <Settings className="text-blue-600 dark:text-blue-400 mr-3 mt-0.5" size={18} />
-                <div>
-                  <h3 className="font-medium text-blue-800 dark:text-blue-200">Recommended: Test First</h3>
-                  <p className="text-sm text-blue-700 dark:text-blue-300 mt-1">
-                    We recommend testing your integration before enabling live ads to ensure optimal performance.
-                  </p>
-                </div>
-              </div>
-            </div>
-            
-            <div className="space-y-4">
-              <label className="flex items-center p-4 border border-gray-200 dark:border-gray-700 rounded cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800">
-                <input type="checkbox" className="mr-3" defaultChecked />
-                <div>
-                  <div className="font-medium">Enable Test Mode</div>
-                  <div className="text-sm text-gray-600 dark:text-gray-400">
-                    Show sample ads to verify your integration works correctly
-                  </div>
-                </div>
-              </label>
-              
-              <label className="flex items-center p-4 border border-gray-200 dark:border-gray-700 rounded cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800">
-                <input type="checkbox" className="mr-3" />
-                <div>
-                  <div className="font-medium">Email Test Reports</div>
-                  <div className="text-sm text-gray-600 dark:text-gray-400">
-                    Receive daily reports during test period
-                  </div>
-                </div>
-              </label>
-            </div>
-          </div>
-        );
-
-      case 7:
-        return (
-          <div className="space-y-6">
-            <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Go Live</h2>
-            <p className="text-gray-600 dark:text-gray-300">
-              You're ready to start earning! Enable live ads to begin receiving real advertisers and payments.
-            </p>
-            
-            <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-md p-4">
-              <div className="flex items-start">
-                <CheckCircle className="text-green-600 dark:text-green-400 mr-3 mt-0.5" size={18} />
-                <div>
-                  <h3 className="font-medium text-green-800 dark:text-green-200">Setup Complete</h3>
-                  <p className="text-sm text-green-700 dark:text-green-300 mt-1">
-                    Your publisher account is configured and ready to go live.
-                  </p>
-                </div>
-              </div>
-            </div>
-            
-            <div className="space-y-4">
-              <div className="flex items-center justify-between p-4 border border-gray-200 dark:border-gray-700 rounded">
-                <div>
-                  <div className="font-medium">Enable Live Ads</div>
-                  <div className="text-sm text-gray-600 dark:text-gray-400">
-                    Start showing real ads and earning revenue
-                  </div>
-                </div>
-                <ToggleRight className="text-green-600 dark:text-green-400" size={24} />
-              </div>
-              
-              <div className="p-4 border border-gray-200 dark:border-gray-700 rounded">
-                <h3 className="font-medium mb-2">Next Steps</h3>
-                <ul className="text-sm text-gray-600 dark:text-gray-400 space-y-1">
-                  <li>• Monitor your earnings in the dashboard</li>
-                  <li>• Optimize ad placements for better performance</li>
-                  <li>• Set up additional ad slots as needed</li>
-                  <li>• Review analytics and adjust targeting</li>
-                </ul>
-              </div>
-            </div>
-          </div>
-        );
-
-      case 8:
-        return (
           <div className="space-y-6 text-center">
             <div className="mx-auto w-16 h-16 bg-green-100 dark:bg-green-900/20 rounded-full flex items-center justify-center">
-              <CheckCircle className="text-green-600 dark:text-green-400" size={32} />
+              <svg className="w-8 h-8 text-green-600 dark:text-green-400" viewBox="0 0 20 20" fill="currentColor">
+                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+              </svg>
             </div>
             
             <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Publisher Setup Complete!</h2>
