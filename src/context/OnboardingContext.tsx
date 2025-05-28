@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { useRouter } from 'next/router';
 import { useAuth } from '@/components/auth/SupabaseAuthProvider';
-import { UserRole } from '@/types/role';
+import { UserRole } from '@/lib/supabase';
 import { logger } from '@/lib/logger';
 
 // Create a safer initial value for SSR hydration
