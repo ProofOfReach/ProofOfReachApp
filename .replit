@@ -504,6 +504,10 @@ args = "Fixed Viewer Button Server"
 task = "workflow.run"
 args = "Viewer Button Test Server"
 
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Clean Test Server"
+
 [[workflows.workflow]]
 name = "Nostr Ad Marketplace Server"
 author = "agent"
@@ -1507,6 +1511,15 @@ author = "agent"
 task = "shell.exec"
 args = "NODE_OPTIONS='--no-warnings' npx next dev -p 5001 -H 0.0.0.0"
 waitForPort = 5001
+
+[[workflows.workflow]]
+name = "Clean Test Server"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "NODE_OPTIONS='--no-warnings' npx next dev -p 5000 -H 0.0.0.0"
+waitForPort = 5000
 
 [deployment]
 run = ["sh", "-c", "npm install && npx prisma generate && npm run dev"]
