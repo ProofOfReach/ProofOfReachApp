@@ -119,7 +119,8 @@ export function UnifiedAuthProvider({ children }: UnifiedAuthProviderProps) {
       setAuthState(prev => ({ ...prev, loading: true }))
 
       // Create or sign in user with Supabase using Nostr pubkey as email
-      const email = `${pubkey}@nostr.local`
+      // Use a proper email format that Supabase will accept
+      const email = `${pubkey}@example.com`
       const password = pubkey // Use pubkey as password for simplicity
       
       // Try to sign in first
