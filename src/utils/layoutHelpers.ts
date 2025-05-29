@@ -18,3 +18,6 @@ export function getDashboardLayout(page: ReactElement, title?: string): ReactEle
     }
   );
 }
+
+// Export ImprovedDashboardLayout as default export to fix import issues
+export { default as ImprovedDashboardLayout } from '@/components/layout/ImprovedDashboardLayout';
