@@ -72,7 +72,7 @@ const TestAd: React.FC<{
 };
 
 const Phase1Analytics: React.FC = () => {
-  const { isConnected, publicKey, connect, encrypt, decrypt } = usePrivateVault();
+  const { isUnlocked, pubkey, connectWallet, encryptData, decryptData } = usePrivateVault();
   const [interactions, setInteractions] = useState<any[]>([]);
   const [expandedItems, setExpandedItems] = useState<Set<number>>(new Set());
   const [dateFilter, setDateFilter] = useState<string>('all');
