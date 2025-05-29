@@ -538,10 +538,6 @@ args = "Final Build Validation"
 
 [[workflows.workflow.tasks]]
 task = "workflow.run"
-args = "Stage 5 Complete Server"
-
-[[workflows.workflow.tasks]]
-task = "workflow.run"
 args = "Critical Build Test"
 
 [[workflows.workflow.tasks]]
@@ -551,6 +547,14 @@ args = "Comprehensive Build Validation"
 [[workflows.workflow.tasks]]
 task = "workflow.run"
 args = "Critical Build Fix Test"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Clean Development Server Fix"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Fixed Clean Server"
 
 [[workflows.workflow]]
 name = "Nostr Ad Marketplace Server"
@@ -1625,15 +1629,6 @@ task = "shell.exec"
 args = "npm run build"
 
 [[workflows.workflow]]
-name = "Stage 5 Complete Server"
-author = "agent"
-
-[[workflows.workflow.tasks]]
-task = "shell.exec"
-args = "NODE_OPTIONS='--no-warnings' npx next dev -p 5000 -H 0.0.0.0"
-waitForPort = 5000
-
-[[workflows.workflow]]
 name = "Critical Build Test"
 author = "agent"
 
@@ -1656,6 +1651,24 @@ author = "agent"
 [[workflows.workflow.tasks]]
 task = "shell.exec"
 args = "npm run build"
+
+[[workflows.workflow]]
+name = "Clean Development Server Fix"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "NODE_OPTIONS='--no-warnings' npx next dev -p 5000 -H 0.0.0.0"
+waitForPort = 5000
+
+[[workflows.workflow]]
+name = "Fixed Clean Server"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "NODE_OPTIONS='--no-warnings' npx next dev -p 5000 -H 0.0.0.0"
+waitForPort = 5000
 
 [deployment]
 run = ["sh", "-c", "npm install && npx prisma generate && npm run dev"]
