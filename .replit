@@ -516,6 +516,30 @@ args = "Critical Build Fix Server"
 task = "workflow.run"
 args = "Stage 3 Complete Server"
 
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Stage 5 Validation Server"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Comprehensive Test Suite"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "TypeScript Validation"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Critical Fix Test"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Final Build Validation"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Stage 5 Complete Server"
+
 [[workflows.workflow]]
 name = "Nostr Ad Marketplace Server"
 author = "agent"
@@ -1540,6 +1564,56 @@ waitForPort = 5000
 
 [[workflows.workflow]]
 name = "Stage 3 Complete Server"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "NODE_OPTIONS='--no-warnings' npx next dev -p 5000 -H 0.0.0.0"
+waitForPort = 5000
+
+[[workflows.workflow]]
+name = "Stage 5 Validation Server"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "NODE_OPTIONS='--no-warnings' npx next dev -p 5000 -H 0.0.0.0"
+waitForPort = 5000
+
+[[workflows.workflow]]
+name = "Comprehensive Test Suite"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "npx jest --passWithNoTests --maxWorkers=2"
+
+[[workflows.workflow]]
+name = "TypeScript Validation"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "npx tsc --noEmit --skipLibCheck"
+
+[[workflows.workflow]]
+name = "Critical Fix Test"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "npm run build"
+
+[[workflows.workflow]]
+name = "Final Build Validation"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "npm run build"
+
+[[workflows.workflow]]
+name = "Stage 5 Complete Server"
 author = "agent"
 
 [[workflows.workflow.tasks]]

@@ -1,9 +1,7 @@
-import { UserRole } from "@/types/role";
 import { useEffect } from 'react';
 import { NextPage } from 'next';
 import { useRouter } from 'next/router';
 import { LogOut } from 'react-feather';
-import { RoleService } from '@/lib/roleService';
 
 /**
  * System logout page
