@@ -72,7 +72,7 @@ const TestAd: React.FC<{
 };
 
 const Phase1Analytics: React.FC = () => {
-  const { isUnlocked, pubkey, connectWallet, encryptData, decryptData } = usePrivateVault();
+  const { isUnlocked, pubkey, unlockVault, hasNostrExtension } = usePrivateVault();
   const [interactions, setInteractions] = useState<any[]>([]);
   const [expandedItems, setExpandedItems] = useState<Set<number>>(new Set());
   const [dateFilter, setDateFilter] = useState<string>('all');
@@ -268,7 +268,7 @@ const Phase1Analytics: React.FC = () => {
   };
 
   const handleAdView = (adId: string) => {
-    if (isConnected) {
+    if (isUnlocked) {
       const interaction = {
         adId,
         type: 'view',
@@ -281,7 +281,7 @@ const Phase1Analytics: React.FC = () => {
   };
 
   const handleAdClick = (adId: string) => {
-    if (isConnected) {
+    if (isUnlocked) {
       const interaction = {
         adId,
         type: 'click',
@@ -482,8 +482,8 @@ const Phase1Analytics: React.FC = () => {
                 <p className={`text-sm ${
                   isConnected ? 'text-emerald-600' : 'text-amber-600'
                 }`}>
-                  {isConnected 
-                    ? `Connected with key: ${publicKey?.slice(0, 12)}...` 
+                  {isUnlocked 
+                    ? `Connected with key: ${pubkey?.slice(0, 12)}...` 
                     : 'Connect your Nostr extension to start tracking'
                   }
                 </p>
