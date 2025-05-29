@@ -414,10 +414,6 @@ args = "Deployment Readiness Check"
 
 [[workflows.workflow.tasks]]
 task = "workflow.run"
-args = "Final Deployment Server"
-
-[[workflows.workflow.tasks]]
-task = "workflow.run"
 args = "Current Error Analysis"
 
 [[workflows.workflow.tasks]]
@@ -575,6 +571,10 @@ args = "Improved Private Vault Demo"
 [[workflows.workflow.tasks]]
 task = "workflow.run"
 args = "Private Vault Demo"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Private Vault Demo Server"
 
 [[workflows.workflow]]
 name = "Nostr Ad Marketplace Server"
@@ -1381,14 +1381,6 @@ task = "shell.exec"
 args = "npm run build"
 
 [[workflows.workflow]]
-name = "Final Deployment Server"
-author = "agent"
-
-[[workflows.workflow.tasks]]
-task = "shell.exec"
-args = "NODE_OPTIONS='--no-warnings' npx next dev -p 5000 -H 0.0.0.0"
-
-[[workflows.workflow]]
 name = "Current Error Analysis"
 author = "agent"
 
@@ -1728,6 +1720,15 @@ waitForPort = 5000
 
 [[workflows.workflow]]
 name = "Private Vault Demo"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "NODE_OPTIONS='--no-warnings' npx next dev -p 5000 -H 0.0.0.0"
+waitForPort = 5000
+
+[[workflows.workflow]]
+name = "Private Vault Demo Server"
 author = "agent"
 
 [[workflows.workflow.tasks]]
