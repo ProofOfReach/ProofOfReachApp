@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { useRouter } from 'next/router';
-import { useAuth } from '@/components/auth/SupabaseAuthProvider';
+import { useUnifiedAuth } from '@/providers/UnifiedAuthProvider';
 import { UserRole } from '@/lib/supabase';
 import { logger } from '@/lib/logger';
 
@@ -107,7 +107,7 @@ type OnboardingProviderProps = {
 };
 
 export const OnboardingProvider: React.FC<OnboardingProviderProps> = ({ children, forcePubkey, initialRole }) => {
-  const auth = useAuth();
+  const auth = useUnifiedAuth();
   const isLoggedIn = auth?.isAuthenticated;
   const currentRole = auth?.role || 'viewer';
   const router = useRouter();
