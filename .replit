@@ -564,6 +564,10 @@ args = "Phase 1 Private Vault Server"
 task = "workflow.run"
 args = "Phase 1 Demo Server"
 
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Phase 1 Working Demo"
+
 [[workflows.workflow]]
 name = "Nostr Ad Marketplace Server"
 author = "agent"
@@ -1689,6 +1693,15 @@ waitForPort = 5000
 
 [[workflows.workflow]]
 name = "Phase 1 Demo Server"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "NODE_OPTIONS='--no-warnings' npx next dev -p 5000 -H 0.0.0.0"
+waitForPort = 5000
+
+[[workflows.workflow]]
+name = "Phase 1 Working Demo"
 author = "agent"
 
 [[workflows.workflow.tasks]]
