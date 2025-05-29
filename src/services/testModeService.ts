@@ -13,7 +13,7 @@ import { logger } from "@/lib/logger";
  */
 
 import { UserRole, TestModeState, STORAGE_KEYS } from '@/types/role';
-import { ROLE_EVENTS } from '@/utils/roleEvents';
+import { ROLE_EVENTS, TEST_MODE_EVENTS } from '@/lib/events/eventTypes';
 
 // Define the RoleEvent interface for the event payload
 interface RoleEvent {

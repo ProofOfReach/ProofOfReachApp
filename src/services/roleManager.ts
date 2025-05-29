@@ -9,7 +9,7 @@ import { UserRole, isValidUserRole } from '../types/role';
 import { logger } from '../lib/logger';
 import { StorageService, STORAGE_KEYS } from './storageService';
 import { dispatchTestModeEvent, TEST_MODE_EVENTS } from '../lib/testModeEvents';
-import { ROLE_EVENTS } from '../utils/roleEvents';
+import { ROLE_EVENTS } from '../lib/events/eventTypes';
 
 // Role data structure for storage
 export interface RoleData {
