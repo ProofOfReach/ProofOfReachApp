@@ -12,6 +12,7 @@ interface AuthState {
   role: UserRole
   loading: boolean
   isAuthenticated: boolean
+  error?: string | null
 }
 
 interface AuthContextType extends AuthState {
@@ -34,7 +35,8 @@ export function UnifiedAuthProvider({ children }: UnifiedAuthProviderProps) {
     userProfile: null,
     role: 'viewer',
     loading: true,
-    isAuthenticated: false
+    isAuthenticated: false,
+    error: null
   })
 
   // Initialize authentication state
@@ -120,7 +122,7 @@ export function UnifiedAuthProvider({ children }: UnifiedAuthProviderProps) {
 
       // Create or sign in user with Supabase using Nostr pubkey as email
       // Use a proper email format that Supabase will accept
-      const email = `${pubkey}@nostr.marketplace`
+      const email = `${pubkey}@example.com`
       // Generate a secure password based on pubkey for better security
       const password = `nostr_${pubkey}_auth`
       
