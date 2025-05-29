@@ -113,6 +113,30 @@ const VaultDashboard: React.FC<{
         website: 'decentral.app',
         category: 'Software',
         price: 'Free'
+      },
+      'ad-1': {
+        title: 'Bitcoin Lightning Wallet',
+        content: 'Fast, secure Lightning Network payments for everyone',
+        publisher: 'Strike Technologies',
+        website: 'strike.me',
+        category: 'Financial Services',
+        price: '0.05 BTC per 1000 views'
+      },
+      'ad-2': {
+        title: 'Nostr Social Network',
+        content: 'Decentralized social media built on Nostr protocol',
+        publisher: 'Damus Inc.',
+        website: 'damus.io',
+        category: 'Social Media',
+        price: '0.03 BTC per 1000 views'
+      },
+      'ad-3': {
+        title: 'Privacy-First VPN',
+        content: 'Protect your online privacy with our secure VPN service',
+        publisher: 'ProtonVPN',
+        website: 'protonvpn.com',
+        category: 'Privacy & Security',
+        price: '0.08 BTC per 1000 views'
       }
     };
     return adMap[adId] || { 
