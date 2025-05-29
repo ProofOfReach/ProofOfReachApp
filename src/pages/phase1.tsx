@@ -12,7 +12,8 @@ const TestAd: React.FC<{
   content: string;
   onView: () => void;
   onClick: () => void;
-}> = ({ adId, title, content, onView, onClick }) => {
+  isViewed: boolean;
+}> = ({ adId, title, content, onView, onClick, isViewed }) => {
   const [viewStartTime, setViewStartTime] = useState<number | null>(null);
 
   useEffect(() => {
@@ -20,15 +21,17 @@ const TestAd: React.FC<{
     const startTime = Date.now();
     setViewStartTime(startTime);
     
-    // Log view after 1 second
-    const viewTimer = setTimeout(() => {
-      onView();
-    }, 1000);
+    // Only auto-log view if not already viewed in this session
+    if (!isViewed) {
+      const viewTimer = setTimeout(() => {
+        onView();
+      }, 1000);
 
-    return () => {
-      clearTimeout(viewTimer);
-    };
-  }, [onView]);
+      return () => {
+        clearTimeout(viewTimer);
+      };
+    }
+  }, [onView, isViewed]);
 
   const handleClick = () => {
     const duration = viewStartTime ? Date.now() - viewStartTime : 0;
@@ -36,16 +39,31 @@ const TestAd: React.FC<{
   };
 
   return (
-    <div className="border-2 border-blue-200 rounded-lg p-6 bg-blue-50 max-w-md">
-      <h3 className="text-lg font-semibold text-blue-900 mb-2">{title}</h3>
-      <p className="text-blue-800 mb-4">{content}</p>
+    <div className={`border-2 rounded-lg p-6 max-w-md transition-all ${
+      isViewed 
+        ? 'border-green-300 bg-green-50' 
+        : 'border-blue-200 bg-blue-50'
+    }`}>
+      <div className="flex justify-between items-start mb-2">
+        <h3 className={`text-lg font-semibold ${isViewed ? 'text-green-900' : 'text-blue-900'}`}>
+          {title}
+        </h3>
+        {isViewed && (
+          <span className="text-green-600 text-sm font-medium bg-green-100 px-2 py-1 rounded">
+            ✓ Viewed
+          </span>
+        )}
+      </div>
+      <p className={`mb-4 ${isViewed ? 'text-green-800' : 'text-blue-800'}`}>{content}</p>
       <button
         onClick={handleClick}
-        className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition-colors"
+        className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition-colors mb-2"
       >
         Click Ad
       </button>
-      <p className="text-xs text-blue-600 mt-2">Ad ID: {adId}</p>
+      <p className={`text-xs mt-2 ${isViewed ? 'text-green-600' : 'text-blue-600'}`}>
+        Ad ID: {adId} {isViewed && '• View logged this session'}
+      </p>
     </div>
   );
 };
@@ -165,10 +183,16 @@ export default function Phase1() {
   const handleAdView = async (adId: string) => {
     if (!isUnlocked) return;
     
+    // Check if this ad was already viewed in this session
+    if (viewedAds.has(adId)) {
+      setMessage(`ℹ️ Already viewed ${adId} in this session`);
+      return;
+    }
+    
     try {
       await logInteraction(adId, 'view', 1000);
       setViewedAds(prev => new Set(Array.from(prev).concat(adId)));
-      setMessage(`📊 Logged view for ${adId}`);
+      setMessage(`📊 Logged view for ${adId} (first time this session)`);
     } catch (error) {
       setMessage(`❌ Failed to log view: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
@@ -288,6 +312,7 @@ export default function Phase1() {
                 content="Secure your Bitcoin with the latest hardware wallet technology."
                 onView={() => handleAdView('test-ad-001')}
                 onClick={() => handleAdClick('test-ad-001')}
+                isViewed={viewedAds.has('test-ad-001')}
               />
               <TestAd
                 adId="test-ad-002"
@@ -295,6 +320,7 @@ export default function Phase1() {
                 content="Learn how to build on the Lightning Network with this comprehensive course."
                 onView={() => handleAdView('test-ad-002')}
                 onClick={() => handleAdClick('test-ad-002')}
+                isViewed={viewedAds.has('test-ad-002')}
               />
               <TestAd
                 adId="test-ad-003"
@@ -302,6 +328,7 @@ export default function Phase1() {
                 content="Experience the decentralized social web with our new Nostr client."
                 onView={() => handleAdView('test-ad-003')}
                 onClick={() => handleAdClick('test-ad-003')}
+                isViewed={viewedAds.has('test-ad-003')}
               />
             </div>
           </div>
