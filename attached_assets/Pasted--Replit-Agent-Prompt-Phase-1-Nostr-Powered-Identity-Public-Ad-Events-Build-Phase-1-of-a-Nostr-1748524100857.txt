@@ -1,0 +1,120 @@
+🟦 Replit Agent Prompt: Phase 1 – Nostr-Powered Identity & Public Ad Events
+Build Phase 1 of a Nostr-native, user-owned advertising data layer. Use only currently supported NIPs (no proposals), and follow best practices for interoperability with existing Nostr clients and relays. Build in Next.js + TypeScript + Tailwind.
+
+📌 Objectives
+You are building a prototype where:
+
+Users log in using their Nostr pubkey via window.nostr (NIP-07).
+
+Ad interactions (views, clicks) are posted as custom Nostr events (kind 30078).
+
+Events are sent to a public Nostr relay and stored locally.
+
+Users can view a dashboard of their public interaction history.
+
+All behavior aligns with known NIPs: no private key handling, no proprietary behavior.
+
+🧱 Core Features
+✅ 1. Nostr Login (NIP-07 + NIP-19)
+Implement login via window.nostr.getPublicKey().
+
+Display logged-in user's npub (NIP-19).
+
+Store pubkey in memory or localStorage (not cookies or DB).
+
+Show a warning if Nostr extension is missing.
+
+✅ 2. Event Posting: Ad Interactions (Custom Kind: 30078)
+Define a custom kind: 30078 event.
+
+Structure:
+
+json
+Copy
+Edit
+{
+  "kind": 30078,
+  "created_at": unix_timestamp,
+  "pubkey": "<user_pubkey>",
+  "tags": [
+    ["d", "ad-interaction"],
+    ["ad", "<ad_id>"],
+    ["action", "view"] // or "click"
+  ],
+  "content": "{\"duration_ms\": 3400}",
+  "sig": "..."
+}
+Use window.nostr.signEvent() to create a valid signed event.
+
+Use nostr-tools to send the event to a relay (e.g. wss://relay.damus.io).
+
+✅ 3. Local Event Logging
+Store signed events in a local Supabase DB or SQLite (for dashboard rendering).
+
+Fields: pubkey, ad_id, action, duration_ms, created_at.
+
+✅ 4. Minimal UI
+Landing Page:
+
+“Login with Nostr” button
+
+Show npub and a “Test Ad”
+
+Buttons: "View Ad", "Click Ad" → trigger event creation + posting
+
+Dashboard Page:
+
+Fetch and render logged local events
+
+Show: Ad ID, action, duration, timestamp
+
+✅ UX & Security Best Practices
+Guideline	Implementation
+Never request private keys	Use window.nostr exclusively for signing
+Explicit transparency	Tooltip: “Ad interactions are posted publicly to the Nostr network.”
+Data minimization	Only post essential metadata (no PII)
+User control	Add a toggle: “Post public activity to Nostr (on/off)”
+Trustworthy UX	Display each posted event ID + relay in a confirmation toast
+Fallback	If no extension, explain how to get Alby or nos2x
+
+🌐 Compatibility Targets
+Event kind 30078 is a valid custom kind (per NIP-01).
+
+Will be accepted by:
+
+Relays like relay.damus.io, nostr.mom, or your own
+
+Indexers like nostr.band (tagged queries)
+
+Viewers like nostr.guru, njump.me
+
+🔧 Stack & Libraries
+Next.js (frontend app)
+
+TypeScript (type safety)
+
+TailwindCSS (fast UI)
+
+nostr-tools (event creation/signing)
+
+Supabase or SQLite (local event log)
+
+zustand or useState (state)
+
+✅ Acceptance Criteria (Test Cases)
+ Can log in with window.nostr and display npub
+
+ Ad actions trigger event creation with proper structure and signature
+
+ Event is successfully posted to at least one public relay
+
+ Event is saved to local DB
+
+ Dashboard page shows logged ad interactions
+
+📤 Future-Proofing (optional additions)
+Include "app": "ProofOfReach" tag for filtering in indexers
+
+Provide link: https://njump.me/nevent1... after posting
+
+Prepare a draft JSON schema to eventually standardize kind: 30078

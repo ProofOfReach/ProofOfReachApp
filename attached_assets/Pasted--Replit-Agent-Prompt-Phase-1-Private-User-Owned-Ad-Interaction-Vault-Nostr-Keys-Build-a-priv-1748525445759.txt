@@ -1,0 +1,109 @@
+🟦 Replit Agent Prompt: Phase 1 – Private, User-Owned Ad Interaction Vault (Nostr Keys)
+Build a private, verifiable, and portable system for ad interaction metadata tied to a user's Nostr identity. All data is encrypted locally or stored off-chain in a user-owned vault. Use Nostr keys for authentication and permissions — not public posting. Build with Next.js + TypeScript + Tailwind.
+
+🎯 Core Objectives
+Authenticate users using their Nostr pubkey via browser signer (NIP-07).
+
+Locally or remotely log ad interaction events (view, click, etc.) in a secure, user-owned format.
+
+Encrypt data client-side using the user’s Nostr key.
+
+Allow user to unlock/decrypt their data for selected apps using their private key or signer.
+
+Provide a dashboard that only shows data when user is authenticated and has given permission.
+
+🧱 Features & Implementation
+✅ 1. User Login (NIP-07 + NIP-19)
+Connect to window.nostr.getPublicKey() (Alby, nos2x).
+
+Display npub as the logged-in user.
+
+Store in-memory or localStorage (optional encryption key derivation from pubkey).
+
+✅ 2. Private Event Logging (Local or Encrypted Remote)
+For each ad interaction:
+
+Structure event with: ad_id, action, duration_ms, timestamp
+
+Encrypt the JSON event using user’s derived AES key from Nostr key (see note below)
+
+Save encrypted blob to:
+
+LocalStorage OR
+
+Remote storage (e.g. Supabase, S3, IPFS) tied to their pubkey as an identifier
+
+Example Unencrypted JSON:
+json
+Copy
+Edit
+{
+  "ad_id": "xyz",
+  "action": "click",
+  "duration_ms": 4200,
+  "timestamp": 1688250099
+}
+Encrypt using:
+nostr-tools/nip04.encrypt(pubkey, content)
+
+Or derive AES key from pubkey with PBKDF2, use WebCrypto
+
+🔒 Only the user can decrypt it. No relay posting.
+
+✅ 3. Permissioned Decryption UX
+When user visits a participating platform:
+
+Prompt them to unlock their interaction vault via window.nostr
+
+Decrypt local or remote data for read access
+
+Show: “You’re granting this platform permission to read your ad engagement history.”
+
+You now have verifiable consent without any public events.
+
+✅ 4. Dashboard UI
+Show:
+
+"Your Ad Vault" (decrypted data only if user is authenticated)
+
+Time of last interaction, ad ID, type
+
+Add export/download button (JSON or ZIP)
+
+✅ UX + Security Best Practices
+Practice	Implementation
+Private by default	No Nostr relays involved in event posting
+Clear consent flows	“Unlock your ad vault for this app?” prompt
+Verifiability	Data is signed/encrypted with user keys (via nip04)
+Portability	Downloadable, decryptable, and shareable by user
+Interop	Apps verify ownership via signed challenge (NIP-98 optional)
+
+🔧 Tech Stack
+Next.js + TypeScript + TailwindCSS
+
+nostr-tools (NIP-07, NIP-04 for encryption)
+
+Optional: Supabase, IPFS, or localStorage for encrypted data
+
+zustand or useState for session state
+
+✅ Acceptance Criteria
+ User can log in with window.nostr and view their npub
+
+ Ad events are encrypted and saved locally or remotely
+
+ No data is posted to relays
+
+ Authenticated user can decrypt and view event history
+
+ User can export or clear their data vault
+
+🛡️ Optional Hooks for Future Phases
+Add NIP-98 for app-to-user auth delegation
+
+Use Taproot Assets (if stablecoin rewards are involved later)
+
+Wrap encrypted data vault as a “Capability Token” for 3rd-party agents
+
+Enable syncing encrypted blob via Nostr replaceable event (e.g. kind: 30000) for future recovery
+
