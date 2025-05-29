@@ -576,6 +576,10 @@ args = "Private Vault Demo Server"
 task = "workflow.run"
 args = "Enhanced Analytics Demo"
 
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Private Vault Demo Test"
+
 [[workflows.workflow]]
 name = "Nostr Ad Marketplace Server"
 author = "agent"
@@ -1729,6 +1733,15 @@ waitForPort = 5000
 
 [[workflows.workflow]]
 name = "Enhanced Analytics Demo"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "NODE_OPTIONS='--no-warnings' npx next dev -p 5000 -H 0.0.0.0"
+waitForPort = 5000
+
+[[workflows.workflow]]
+name = "Private Vault Demo Test"
 author = "agent"
 
 [[workflows.workflow.tasks]]

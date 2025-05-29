@@ -456,17 +456,17 @@ const Phase1Analytics: React.FC = () => {
 
         {/* Connection Status */}
         <div className={`mb-12 p-6 rounded-2xl border-2 ${
-          isConnected 
+          isUnlocked 
             ? 'bg-emerald-50 border-emerald-200' 
             : 'bg-amber-50 border-amber-200'
         }`}>
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
               <div className={`p-3 rounded-xl ${
-                isConnected ? 'bg-emerald-600' : 'bg-amber-600'
+                isUnlocked ? 'bg-emerald-600' : 'bg-amber-600'
               }`}>
                 <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  {isConnected ? (
+                  {isUnlocked ? (
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                   ) : (
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
@@ -475,12 +475,12 @@ const Phase1Analytics: React.FC = () => {
               </div>
               <div>
                 <h3 className={`text-lg font-semibold ${
-                  isConnected ? 'text-emerald-800' : 'text-amber-800'
+                  isUnlocked ? 'text-emerald-800' : 'text-amber-800'
                 }`}>
-                  {isConnected ? 'Securely Connected' : 'Connection Required'}
+                  {isUnlocked ? 'Securely Connected' : 'Connection Required'}
                 </h3>
                 <p className={`text-sm ${
-                  isConnected ? 'text-emerald-600' : 'text-amber-600'
+                  isUnlocked ? 'text-emerald-600' : 'text-amber-600'
                 }`}>
                   {isUnlocked 
                     ? `Connected with key: ${pubkey?.slice(0, 12)}...` 
@@ -489,9 +489,9 @@ const Phase1Analytics: React.FC = () => {
                 </p>
               </div>
             </div>
-            {!isConnected && (
+            {!isUnlocked && (
               <button
-                onClick={connect}
+                onClick={unlockVault}
                 className="bg-amber-600 hover:bg-amber-700 text-white px-6 py-3 rounded-xl font-medium transition-colors"
               >
                 Connect Nostr
