@@ -332,8 +332,7 @@ export default function Phase1Improved() {
     unlockVault,
     exportData,
     clearVault,
-    recordView,
-    recordClick
+    logInteraction
   } = usePrivateVault();
 
   const [toast, setToast] = useState<string | null>(null);
@@ -346,14 +345,14 @@ export default function Phase1Improved() {
 
   const handleAdView = async (adId: string) => {
     if (!viewedAds.has(adId)) {
-      await recordView(adId);
-      setViewedAds(prev => new Set([...prev, adId]));
+      await logInteraction(adId, 'view');
+      setViewedAds(prev => new Set(Array.from(prev).concat([adId])));
       showToast(`Ad view recorded: ${adId}`);
     }
   };
 
   const handleAdClick = async (adId: string) => {
-    await recordClick(adId);
+    await logInteraction(adId, 'click');
     showToast(`Ad click recorded: ${adId}`);
   };
 
