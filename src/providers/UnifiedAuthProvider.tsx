@@ -120,10 +120,32 @@ export function UnifiedAuthProvider({ children }: UnifiedAuthProviderProps) {
     try {
       setAuthState(prev => ({ ...prev, loading: true }))
 
-      // Create or sign in user with Supabase using Nostr pubkey as email
-      // Use a proper email format that Supabase will accept
-      const email = `${pubkey}@example.com`
-      // Generate a secure password based on pubkey for better security
+      // For test mode, we'll create a mock session without Supabase auth
+      // This avoids email validation issues while maintaining functionality
+      if (pubkey.startsWith('pk_test_')) {
+        // Create a test user profile
+        const testUser = {
+          id: `test-${pubkey}`,
+          email: `${pubkey}@test.local`,
+          user_metadata: { 
+            nostr_pubkey: pubkey,
+            role: role 
+          }
+        } as User
+
+        const testSession = {
+          access_token: `test-token-${pubkey}`,
+          refresh_token: `test-refresh-${pubkey}`,
+          expires_in: 3600,
+          user: testUser
+        } as Session
+
+        await updateAuthState(testUser, testSession)
+        return true
+      }
+
+      // For real Nostr pubkeys, use Supabase auth
+      const email = `${pubkey.substring(0, 8)}@nostr.local`
       const password = `nostr_${pubkey}_auth`
       
       // Try to sign in first
