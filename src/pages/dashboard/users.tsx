@@ -237,7 +237,7 @@ const UsersPage: React.FC & { getLayout?: (page: React.ReactElement) => React.Re
 
 // Wrap the page with our layout
 UsersPage.getLayout = (page: React.ReactElement) => {
-  return <ImprovedDashboardLayout>{page}</ImprovedDashboardLayout>;
+  return <EnhancedDashboardLayout>{page}</EnhancedDashboardLayout>;
 };
 
 export default UsersPage;

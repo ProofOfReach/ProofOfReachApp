@@ -75,7 +75,7 @@ sdk.trackClick({ adId: ad.id });`,
   ];
 
   return (
-    <ImprovedDashboardLayout title="Developer Dashboard">
+    <EnhancedDashboardLayout title="Developer Dashboard">
       <div className="space-y-6">
         <div>
           <Title level={1}>Developer Tools</Title>
@@ -192,7 +192,7 @@ sdk.trackClick({ adId: ad.id });`,
           </div>
         </Card>
       </div>
-    </ImprovedDashboardLayout>
+    </EnhancedDashboardLayout>
   );
 };
 
