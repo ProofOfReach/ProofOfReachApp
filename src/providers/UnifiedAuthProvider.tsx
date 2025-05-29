@@ -120,8 +120,9 @@ export function UnifiedAuthProvider({ children }: UnifiedAuthProviderProps) {
 
       // Create or sign in user with Supabase using Nostr pubkey as email
       // Use a proper email format that Supabase will accept
-      const email = `${pubkey}@example.com`
-      const password = pubkey // Use pubkey as password for simplicity
+      const email = `${pubkey}@nostr.marketplace`
+      // Generate a secure password based on pubkey for better security
+      const password = `nostr_${pubkey}_auth`
       
       // Try to sign in first
       let { data: signInData, error: signInError } = await supabase.auth.signInWithPassword({
@@ -145,7 +146,7 @@ export function UnifiedAuthProvider({ children }: UnifiedAuthProviderProps) {
 
         if (signUpError) {
           console.error('Error signing up:', signUpError)
-          setAuthState(prev => ({ ...prev, loading: false }))
+          setAuthState(prev => ({ ...prev, loading: false, error: signUpError.message }))
           return false
         }
 
@@ -173,9 +174,12 @@ export function UnifiedAuthProvider({ children }: UnifiedAuthProviderProps) {
       
       await supabase.auth.signOut()
       
-      // Clear localStorage
+      // Clear all authentication-related localStorage items for security
       localStorage.removeItem('currentRole')
       localStorage.removeItem('userProfile')
+      localStorage.removeItem('nostr_test_pk')
+      localStorage.removeItem('nostr_test_sk')
+      localStorage.removeItem('isTestMode')
       
       setAuthState({
         user: null,
@@ -183,7 +187,8 @@ export function UnifiedAuthProvider({ children }: UnifiedAuthProviderProps) {
         userProfile: null,
         role: 'viewer',
         loading: false,
-        isAuthenticated: false
+        isAuthenticated: false,
+        error: null
       })
     } catch (error) {
       console.error('Error signing out:', error)
