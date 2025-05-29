@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import ImprovedDashboardLayout from '@/components/layout/ImprovedDashboardLayout';
+import EnhancedDashboardLayout from '@/components/layout/EnhancedDashboardLayout';
 import { User, Search, Filter, Edit3, Trash2, Shield, Eye } from 'react-feather';
 
 interface UserData {

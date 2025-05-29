@@ -9,10 +9,10 @@ import { UserRole } from "@/types/role";
 import '@/lib/logger';
 import { 
   dispatchRoleEvent, 
-  ROLE_EVENTS,
   notifyRoleChanged,
   notifyRolesUpdated
 } from '@/lib/events';
+import { ROLE_EVENTS } from '@/lib/events/eventTypes';
 import { EnhancedStorageService, STORAGE_KEYS, enhancedStorage } from './enhancedStorageService';
 import '@/context/RoleContext';
 import { testModeStorage } from './testModeStorageService';

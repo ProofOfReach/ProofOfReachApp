@@ -1,5 +1,5 @@
 import React from 'react';
-import ImprovedDashboardLayout from '@/components/layout/ImprovedDashboardLayout';
+import EnhancedDashboardLayout from '@/components/layout/EnhancedDashboardLayout';
 import { Title, Paragraph } from '@/components/ui/Typography';
 import { Card } from '@/components/ui/card';
 import { Book, Code, FileText, Key } from 'react-feather';

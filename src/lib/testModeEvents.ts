@@ -13,9 +13,9 @@ import {
   dispatchAppEvent,
   addAppEventListener,
   TEST_MODE_EVENTS as NEW_TEST_MODE_EVENTS,
-  ROLE_EVENTS,
   TestModeEventPayloads as NewTestModeEventPayloads
 } from './events';
+import { ROLE_EVENTS } from './events/eventTypes';
 import '@/context/RoleContext';
 import '@/services/storageService';
 
