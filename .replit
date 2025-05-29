@@ -422,10 +422,6 @@ args = "Final Production Build Test"
 
 [[workflows.workflow.tasks]]
 task = "workflow.run"
-args = "Updated Server"
-
-[[workflows.workflow.tasks]]
-task = "workflow.run"
 args = "Contact Page Test Server"
 
 [[workflows.workflow.tasks]]
@@ -575,6 +571,10 @@ args = "Private Vault Demo"
 [[workflows.workflow.tasks]]
 task = "workflow.run"
 args = "Private Vault Demo Server"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Enhanced Analytics Demo"
 
 [[workflows.workflow]]
 name = "Nostr Ad Marketplace Server"
@@ -1397,15 +1397,6 @@ task = "shell.exec"
 args = "npm run build"
 
 [[workflows.workflow]]
-name = "Updated Server"
-author = "agent"
-
-[[workflows.workflow.tasks]]
-task = "shell.exec"
-args = "NODE_OPTIONS='--no-warnings' npx next dev -p 5000 -H 0.0.0.0"
-waitForPort = 5000
-
-[[workflows.workflow]]
 name = "Contact Page Test Server"
 author = "agent"
 
@@ -1729,6 +1720,15 @@ waitForPort = 5000
 
 [[workflows.workflow]]
 name = "Private Vault Demo Server"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "NODE_OPTIONS='--no-warnings' npx next dev -p 5000 -H 0.0.0.0"
+waitForPort = 5000
+
+[[workflows.workflow]]
+name = "Enhanced Analytics Demo"
 author = "agent"
 
 [[workflows.workflow.tasks]]

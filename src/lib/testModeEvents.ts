@@ -1,25 +1,31 @@
 /**
- * Modernized Test Mode Event System
+ * Self-contained Test Mode Event System
  * 
- * This file serves as a compatibility layer between the legacy test mode event system
- * and the new unified event system. It directly uses the modern event system internally
- * while maintaining the original API for backward compatibility.
+ * This file provides a simple event system for test mode functionality
+ * without circular dependencies.
  */
 
 import { logger } from './logger';
-import {
-  dispatchRoleEvent,
-  dispatchTestModeEvent as newDispatchTestModeEvent,
-  dispatchAppEvent,
-  addAppEventListener,
-  TEST_MODE_EVENTS as NEW_TEST_MODE_EVENTS,
-  TestModeEventPayloads as NewTestModeEventPayloads
-} from './events';
-import { ROLE_EVENTS } from './events/eventTypes';
-import '@/context/RoleContext';
-import '@/services/storageService';
 
-// Re-export the new event names with the old naming for backward compatibility
+// Define event constants directly
+const ROLE_EVENTS = {
+  ROLE_CHANGED: 'role:changed',
+  ROLES_UPDATED: 'role:roles-updated',
+  PERMISSION_CHANGED: 'role:permission-changed',
+  ROLE_ERROR: 'role:error',
+  PERMISSION_DENIED: 'role:permission-denied',
+} as const;
+
+const NEW_TEST_MODE_EVENTS = {
+  STATE_CHANGED: 'testmode:state-changed',
+  ACTIVATED: 'testmode:activated',
+  DEACTIVATED: 'testmode:deactivated',
+} as const;
+
+// Test mode state type
+export type TestModeState = 'enabled' | 'disabled';
+
+// Re-export the event names for backward compatibility
 export const TEST_MODE_EVENTS = {
   STATE_CHANGED: NEW_TEST_MODE_EVENTS.STATE_CHANGED,
   ROLE_CHANGED: ROLE_EVENTS.ROLE_CHANGED,
@@ -31,7 +37,7 @@ export const TEST_MODE_EVENTS = {
 // Define the type for event names
 export type TestModeEventType = typeof TEST_MODE_EVENTS[keyof typeof TEST_MODE_EVENTS];
 
-// Define the payload types for each event (for compatibility)
+// Define the payload types for each event
 export type TestModeEventPayloads = {
   [TEST_MODE_EVENTS.STATE_CHANGED]: { state: TestModeState };
   [TEST_MODE_EVENTS.ROLE_CHANGED]: { 
@@ -52,7 +58,7 @@ export type TestModeEventPayloads = {
 
 /**
  * Dispatch a test mode event with type-safe payload
- * This implementation now directly uses the modern event system
+ * Simple implementation that uses custom events to avoid circular dependencies
  */
 export const dispatchTestModeEvent = <T extends TestModeEventType>(
   eventType: T, 
@@ -61,55 +67,45 @@ export const dispatchTestModeEvent = <T extends TestModeEventType>(
   try {
     if (typeof window === 'undefined') return;
     
-    // Directly use the modern event system
-    switch (eventType) {
-      case TEST_MODE_EVENTS.STATE_CHANGED:
-        newDispatchTestModeEvent(NEW_TEST_MODE_EVENTS.STATE_CHANGED, payload as any);
-        break;
-      case TEST_MODE_EVENTS.ROLE_CHANGED:
-        dispatchRoleEvent(ROLE_EVENTS.ROLE_CHANGED, payload as any);
-        break;
-      case TEST_MODE_EVENTS.ACTIVATED:
-        newDispatchTestModeEvent(NEW_TEST_MODE_EVENTS.ACTIVATED, payload as any);
-        break;
-      case TEST_MODE_EVENTS.DEACTIVATED:
-        newDispatchTestModeEvent(NEW_TEST_MODE_EVENTS.DEACTIVATED, payload as any);
-        break;
-      case TEST_MODE_EVENTS.ROLES_UPDATED:
-        dispatchRoleEvent(ROLE_EVENTS.ROLES_UPDATED, payload as any);
-        break;
-      default:
-        logger.log(`Unknown event type: ${eventType}`);
-    }
+    // Use native CustomEvent to avoid circular dependencies
+    const event = new CustomEvent(eventType, { 
+      detail: payload,
+      bubbles: true
+    });
+    
+    window.dispatchEvent(event);
+    logger.log(`Dispatched event: ${eventType}`);
   } catch (error) {
-    logger.log(`Error dispatching test mode event ${eventType}:`, error);
+    logger.log(`Error dispatching test mode event ${eventType}: ${String(error)}`);
   }
 };
 
 /**
  * Add an event listener for a test mode event
- * This implementation now directly uses the modern event system
+ * Simple implementation using native event listeners
  */
 export const addTestModeEventListener = <T extends TestModeEventType>(
   eventType: T,
   handler: (payload: T extends keyof TestModeEventPayloads ? TestModeEventPayloads[T] : never) => void
 ): () => void => {
-  // Map to the corresponding event in the new system
-  switch (eventType) {
-    case TEST_MODE_EVENTS.STATE_CHANGED:
-      return addAppEventListener(NEW_TEST_MODE_EVENTS.STATE_CHANGED, handler as any);
-    case TEST_MODE_EVENTS.ROLE_CHANGED:
-      return addAppEventListener(ROLE_EVENTS.ROLE_CHANGED, handler as any);
-    case TEST_MODE_EVENTS.ACTIVATED:
-      return addAppEventListener(NEW_TEST_MODE_EVENTS.ACTIVATED, handler as any);
-    case TEST_MODE_EVENTS.DEACTIVATED:
-      return addAppEventListener(NEW_TEST_MODE_EVENTS.DEACTIVATED, handler as any);
-    case TEST_MODE_EVENTS.ROLES_UPDATED:
-      return addAppEventListener(ROLE_EVENTS.ROLES_UPDATED, handler as any);
-    default:
-      logger.log(`Unknown event type: ${eventType}`);
-      return () => {}; // Return a no-op cleanup function
+  if (typeof window === 'undefined') {
+    return () => {}; // No-op for SSR
   }
+
+  const wrappedHandler = (event: CustomEvent) => {
+    try {
+      handler(event.detail);
+    } catch (error) {
+      logger.log(`Error in event handler for ${eventType}: ${String(error)}`);
+    }
+  };
+
+  window.addEventListener(eventType, wrappedHandler as EventListener);
+  
+  // Return cleanup function
+  return () => {
+    window.removeEventListener(eventType, wrappedHandler as EventListener);
+  };
 };
 
 /**
